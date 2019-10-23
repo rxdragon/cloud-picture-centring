@@ -71,6 +71,7 @@ import CrewSelect from '@SelectBox/CrewSelect'
 
 import * as ReviewCheck from '@/api/reviewCheck.js'
 import { SearchType } from '@/utils/enumerate'
+import { joinTimeSpan } from '@/utils/timespan.js'
 
 export default {
   name: 'CrewAuditHistory',
@@ -155,8 +156,8 @@ export default {
       this.pager.page = page || this.pager.page
       const reqData = {
         range: 'group',
-        startTime: this.searchTime[0],
-        endAt: this.searchTime[1],
+        startTime: joinTimeSpan(this.searchTime[0]),
+        endAt: joinTimeSpan(this.searchTime[1]),
         pageSize: this.pager.pageSize,
         page: this.pager.page
       }

@@ -46,8 +46,8 @@ export function getPhotoInfo (params) {
       retouchGroup: createData.stream.retoucher.retouch_group.name,
       reviewer: createData.stream.reviewer && createData.stream.reviewer.name || '-',
       watcherName: createData.stream.tags.values && createData.stream.tags.values.watcher_name,
-      storeEvaluateStar: createData.stream.store_evaluate_stream.store_evaluate_star,
-      storeEvaluateReason: createData.stream.store_evaluate_stream.store_evaluate_reason
+      storeEvaluateStar: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_star,
+      storeEvaluateReason: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_reason
     }
     return createData
   })

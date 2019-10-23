@@ -9,7 +9,7 @@
       </el-table-column>
       <el-table-column prop="productName" label="拍摄产品" />
       <el-table-column prop="photoNum" label="照片张数" />
-      <el-table-column label="修片标准">
+      <el-table-column label="修图标准">
         <template slot-scope="scope">
           {{ scope.row.type | toRetouchClass }}
         </template>

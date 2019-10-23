@@ -69,8 +69,8 @@ export function getSpotCheckResult (params) {
       item.productName = item.photoData.stream.product.name
       item.isPull = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('pull') || false
       item.isPlant = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('plant') || false
-      item.grassReason = item.photoData.tags && item.photoData.tags.values.grass_reason || '暂无原因'
-      item.reworkReason = item.photoData.tags && item.photoData.tags.values.rework_reason || '暂无重修原因'
+      item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason || '暂无原因'
+      item.reworkReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.rework_reason || '暂无重修原因'
       item.retouchRequire = {
         eye: '暂无',
         face: '暂无',

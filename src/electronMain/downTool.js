@@ -1,4 +1,4 @@
-const { session, app, ipcMain }  = __non_webpack_require__('electron')
+const { session, app, ipcMain } = __non_webpack_require__('electron')
 import path from 'path'
 import fs from 'fs'
 

@@ -1,6 +1,6 @@
 console.log(global, 'global')
 console.log(global.electron, 'electron')
-// const { app } = global.electron.remote 
+// const { app } = global.electron.remote
 console.log(electron)
 
 // 封装一个函数

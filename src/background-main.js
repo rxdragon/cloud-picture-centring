@@ -1,92 +1,93 @@
 'use strict'
 
 // 下方代码回被 webpack 处理为正确的 require
-const {app, BrowserWindow, ipcMain} = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron')
 import path from 'path'
+// import * as User from '@/api/user.js'
 // import * as DownTool from './electronMain/downTool.js'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win;
+let win
 
-async function createWindow() {
-    // Create the browser window.
-    win = new BrowserWindow({
-      width: 1440,
-      height: 800,
-      show: false,
-      minWidth: 1440,
-      minHeight: 800,
-      webPreferences: {
-        nodeIntegration: true,
-        scrollBounce: true
-      },
-      titleBarStyle: 'hiddenInset',
-      // icon: path.join(__dirname, 'icon.png'),
-      preload: path.join(__dirname, './electronMain/renderer.js')
-    })
+async function createWindow () {
+  // Create the browser window.
+  win = new BrowserWindow({
+    width: 1440,
+    height: 800,
+    show: false,
+    minWidth: 1440,
+    minHeight: 800,
+    webPreferences: {
+      nodeIntegration: true,
+      scrollBounce: true
+    },
+    titleBarStyle: 'hiddenInset',
+    // icon: path.join(__dirname, 'icon.png'),
+    preload: path.join(__dirname, './electronMain/renderer.js')
+  })
 
-    win.on('closed', () => {
-        win = null
-    });
+  win.on('closed', () => {
+    win = null
+  })
 
-    // 注册下载监听
-    // DownTool.onWillDownload(win)
-    // DownTool.downPhoto(win)
-    // DownTool.onDownEvent()
+  // 注册下载监听
+  // DownTool.onWillDownload(win)
+  // DownTool.downPhoto(win)
+  // DownTool.onDownEvent()
 
-    // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
-    win.once('ready-to-show', () => {
-        if (win) win.show();
-        if (global.initWindow) global.initWindow.close();
-    });
+  // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
+  win.once('ready-to-show', () => {
+    if (win) win.show()
+    if (global.initWindow) global.initWindow.close()
+  })
 
-    global.emit.on('version:find-new', (info) => {
-        // 这里处理准备升级的逻辑
-        if (win) win.webContents.send("version:find-new", info)
-    });
+  global.emit.on('version:find-new', (info) => {
+    // 这里处理准备升级的逻辑
+    if (win) win.webContents.send('version:find-new', info)
+  })
 
-    ipcMain.on('version:do-upgrade', () => {
-        // 这里处理唤起升级的逻辑，下面一句话将会触发升级并重启
-        global.emit.emit('version:do-upgrade');
-    });
+  ipcMain.on('version:do-upgrade', () => {
+    // 这里处理唤起升级的逻辑，下面一句话将会触发升级并重启
+    global.emit.emit('version:do-upgrade')
+  })
 
-    if (global.isDevelopment && global.isInSingleMode) {
-        // Load the url of the dev server if in development mode
-        console.log(process.env.WEBPACK_DEV_SERVER_URL)
-        await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-        if (!global.isTest) win.webContents.openDevTools()
-    } else {
-        await win.loadURL('cloud://' + global.env + '/index.html');
-    }
+  if (global.isDevelopment && global.isInSingleMode) {
+    // Load the url of the dev server if in development mode
+    console.log(process.env.WEBPACK_DEV_SERVER_URL)
+    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    if (!global.isTest) win.webContents.openDevTools()
+  } else {
+    await win.loadURL('cloud://' + global.env + '/index.html')
+  }
 }
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-    app.quit()
-});
+  app.quit()
+})
 
 app.on('activate', async () => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (win === null) {
-        await createWindow()
-    }
-});
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (win === null) {
+    await createWindow()
+  }
+})
 
 // Exit cleanly on request from parent process in development mode.
 if (global.isDevelopment) {
-    if (process.platform === 'win32') {
-        process.on('message', data => {
-            if (data === 'graceful-exit') {
-                app.quit()
-            }
-        })
-    } else {
-        process.on('SIGTERM', () => {
-            app.quit()
-        })
-    }
+  if (process.platform === 'win32') {
+    process.on('message', data => {
+      if (data === 'graceful-exit') {
+        app.quit()
+      }
+    })
+  } else {
+    process.on('SIGTERM', () => {
+      app.quit()
+    })
+  }
 }
 
-createWindow().then();
+createWindow().then()

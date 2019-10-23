@@ -10,7 +10,7 @@
       <div class="panel-content">
         <div class="base-info panel-row">
           <template v-if="isGrade">
-            <span>修片标准：{{ photoInfoData.retouchStandard | toRetouchClass }}</span>
+            <span>修图标准：{{ photoInfoData.retouchStandard | toRetouchClass }}</span>
             <span>产品名称：{{ photoInfoData.productName }}</span>
           </template>
           <template v-else>

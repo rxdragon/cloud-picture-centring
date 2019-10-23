@@ -8,7 +8,7 @@
         <div class="caid">流水号</div>
         <div class="institution">机构</div>
         <div class="institution">摄影师</div>
-        <div class="type">修片标准</div>
+        <div class="type">修图标准</div>
         <div class="product">拍摄产品</div>
         <div class="wait-time">顾客等待时间</div>
         <div class="photo-count">照片数量</div>

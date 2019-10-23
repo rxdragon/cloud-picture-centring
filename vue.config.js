@@ -20,7 +20,7 @@ module.exports = {
       }
     },
     externals: {
-      "electron": 'require("electron")'
+      'electron': 'require("electron")'
     }
   },
   css: {

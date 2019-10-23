@@ -10,7 +10,7 @@
           <date-picker v-model="timeSpan" value-format="yyyy-MM-dd" />
         </div>
         <div class="search-item">
-          <span>修片标准</span>
+          <span>修图标准</span>
           <institution-type v-model="institutionType" />
         </div>
         <div class="sample-num search-item">
@@ -195,6 +195,7 @@ export default {
       this.pager.total = this.spotAllNum = data.total
       this.$nextTick(() => {
         this.$store.dispatch('setting/hiddenLoading')
+        this.$newMessage.success('抽取成功')
       })
     },
     /**

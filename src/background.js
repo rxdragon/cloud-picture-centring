@@ -1,34 +1,33 @@
-'use strict';
+'use strict'
 
-import {app, BrowserWindow, protocol} from 'electron'
+import { app, BrowserWindow, protocol } from 'electron'
 import EventEmitter from 'events'
 
 // !!! 不要修改此文件，修改此文件没有任何作用，请修改对应 starter 项目文件 !!!
-global.env = process.env.NODE_ENV || 'dev';
-global.isDevelopment = global.env !== 'production';
-global.isTest = !!process.env.IS_TEST;
-global.initWindow = null;
-global.currentVersion = "";
-global.successInit = false;
-global.userDir = app.getPath("userData");
-global.emit = new EventEmitter();
+global.env = process.env.NODE_ENV || 'dev'
+global.isDevelopment = global.env !== 'production'
+global.isTest = !!process.env.IS_TEST
+global.initWindow = null
+global.currentVersion = ''
+global.successInit = false
+global.userDir = app.getPath('userData')
+global.emit = new EventEmitter()
 
-global.isInSingleMode = global.env !== 'production';
+global.isInSingleMode = global.env !== 'production'
 
-
-console.log(`cache dir: ${global.userDir}`);
+console.log(`cache dir: ${global.userDir}`)
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win;
+let win
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{scheme: 'cloud', privileges: {secure: true, standard: true}}]);
+protocol.registerSchemesAsPrivileged([{ scheme: 'cloud', privileges: { secure: true, standard: true }}])
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   app.quit()
-});
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -49,8 +48,8 @@ app.on('ready', async () => {
 
   }
 
-  require("./background-main")
-});
+  require('./background-main')
+})
 
 // Exit cleanly on request from parent process in development mode.
 if (global.isDevelopment) {
