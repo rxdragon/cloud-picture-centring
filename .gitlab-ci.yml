@@ -1,0 +1,39 @@
+image: node:12
+
+stages:
+  - deploy
+  - upload
+
+deploy:
+  stage: deploy
+  cache:
+    key: cache
+    paths:
+      - node_modules/
+  script:
+    - yarn
+    - yarn run build
+    - yarn run build-background
+    - yarn run pack-vue
+    - "echo '{\"version\": \"'$CI_COMMIT_SHA'\"}' > ./dist_electron/version.json"
+    - mv ./dist_electron/vue_dist.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
+  variables:
+    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
+  artifacts:
+    paths:
+      - dist_electron
+    expire_in: 1 day
+  only:
+    - dev
+
+upload:
+  image: registry.cn-hangzhou.aliyuncs.com/mainto_micro/service-minio-client-master
+  stage: upload
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - mc config host add mainto $S3_HOST $S3_KEY $S3_SECRET
+    - cd ./dist_electron
+    - mc mirror --overwrite . mainto/demo/electron/
+  only:
+    - dev

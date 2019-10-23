@@ -1,0 +1,29 @@
+.el-button {
+  &--primary {
+    background: linear-gradient(90deg,rgba(79,136,255,1) 0%,rgba(70,105,251,1) 100%);
+    transition: all 0.3s;
+    
+    &:focus,
+    &:hover {
+      background: linear-gradient(90deg,rgba(79,136,255,1) 100%,rgba(70,105,251,1) 0%);
+    }
+  }
+
+  &--warning {
+    background: linear-gradient(90deg,rgba(255,171,63,1) 0%,rgba(255,122,0,1) 100%);
+    
+    &:focus,
+    &:hover {
+      background: linear-gradient(90deg,rgba(255,171,63,1) 100%,rgba(255,122,0,1) 0%);
+    }
+
+    &.is-plain:focus,
+    &.is-plain:hover {
+      background: linear-gradient(90deg,rgba(255,171,63,1) 0%,rgba(255,122,0,1) 100%);
+    }
+  }
+  
+  &--small {
+    border-radius: 4px;
+  }
+}
