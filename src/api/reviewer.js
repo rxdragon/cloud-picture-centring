@@ -21,7 +21,7 @@ export function getReviewInfo () {
         version: 'original_photo'
       }, {
         id: photoItem.id,
-        path: photoItem.last_first_photo.path,
+        path: photoItem.last_first_photo && photoItem.last_first_photo.path,
         version: 'first_photo'
       }]
       photoItem.canGlass = true

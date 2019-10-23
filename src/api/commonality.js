@@ -46,7 +46,7 @@ export function getStreamInfo (params) {
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
       if (photoItem.tags) {
-        reworkNum = reworkNum < photoItem.tags.values.rework_num
+        reworkNum = photoItem.tags.values && photoItem.tags.values.rework_num && reworkNum < photoItem.tags.values.rework_num
           ? photoItem.tags.values.rework_num
           : reworkNum
       }
@@ -58,8 +58,8 @@ export function getStreamInfo (params) {
         photoItem.grass = 'pull'
         pullNum++
       }
-      const filmEvaluation = photoItem.tags && photoItem.tags.values.film_evaluation || ''
-      const spotGrass = photoItem.tags && photoItem.tags.values.audit_glass || ''
+      const filmEvaluation = photoItem.tags && photoItem.tags.values && photoItem.tags.values.film_evaluation || ''
+      const spotGrass = photoItem.tags && photoItem.tags.values && photoItem.tags.values.audit_glass || ''
       photoItem.spotGrass = spotGrass
       if (filmEvaluation && filmEvaluation === 'plant') { checkPlantNum++ }
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }

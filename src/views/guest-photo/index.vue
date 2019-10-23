@@ -136,7 +136,7 @@ export default {
       }
       const searchType = ['streamNum', 'customerName', 'telephone']
       if (this.orderSearchValue) {
-        reqData[searchType[this.orderType + 1]] = this.orderSearchValue
+        reqData[searchType[this.orderType - 1]] = this.orderSearchValue
       } else {
         if (!this.timeSpan) {
           this.$newMessage.warning('请填写时间')

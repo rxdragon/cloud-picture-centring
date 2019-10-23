@@ -11,15 +11,15 @@
     <div class="check-data">
       <div v-if="photoData.grass === 'plant'" class="panel-box plant-box">
         <div class="content-title">审核种草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values.grass_reason || '暂无审核种草理由' }}</div>
+        <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核种草理由' }}</div>
       </div>
       <div v-if="photoData.grass === 'pull'" class="panel-box danger-box">
         <div class="content-title">审核拔草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values.grass_reason || '暂无审核种草理由' }}</div>
+        <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核拔草理由' }}</div>
       </div>
     </div>
     <!-- 纠偏 -->
-    <div v-if="photoData.tags && photoData.tags.values.audit_correction" class="correct-data">
+    <div v-if="photoData.tags && photoData.tags.values&&photoData.tags.values.audit_correction" class="correct-data">
       <div class="panel-box primary-box">
         <div class="content-title">{{ [photoData.tags.values.audit_correction, photoData.spotGrass] | toAuditChange }}</div>
         <div class="panel-content">{{ photoData.tags.values.audit_note || '暂无纠偏理由' }}</div>

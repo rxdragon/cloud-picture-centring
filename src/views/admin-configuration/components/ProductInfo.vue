@@ -413,6 +413,7 @@ export default {
         normalIncomeConfig: this.productConfig.notJointMoney,
         splicingIncomeConfig: this.productConfig.jointMoney,
         seaGrassConfig: this.productConfig.grassData,
+        splicingSeaGrassConfig: this.productConfig.joinGrassData,
         note: this.productConfig.productRemark
       }
       if (this.productConfig.standard === 'blue') {

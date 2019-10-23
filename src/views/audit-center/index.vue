@@ -7,7 +7,7 @@
         <template v-if="!isChecking">
           <span v-if="state !== 2" class="queue-info queue-length">审核排队中的流水：{{ queueInfo.reviewQueueStreamNums }}</span>
           <span v-if="state === 2" class="queue-info">排队接单中（顺序{{ queueInfo.reviewQueueIndex }}）</span>
-          <el-button v-if="state === 1" type="primary" :disabled="state === 3" @click="joinReviewQueue">排队接单</el-button>
+          <el-button v-if="state === 1" type="primary" :disabled="state === 3" @click="joinReviewQueue">接单</el-button>
           <el-button v-if="state === 2" type="info" @click="exitQueue">取消排队</el-button>
         </template>
         <template v-else>
