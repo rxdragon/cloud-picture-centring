@@ -1,0 +1,108 @@
+import axios from '@/plugins/axios.js'
+
+/**
+ * @description 获取全部产品
+ */
+export function getAllProduct () {
+  return axios({
+    url: '/project_cloud/common/getAllProduct',
+    method: 'get'
+  }).then(msg => {
+    const createData = [
+      {
+        value: 'blue',
+        label: '蓝标',
+        children: []
+      }, {
+        value: 'master',
+        label: '大师',
+        children: []
+      }, {
+        value: 'kids',
+        label: 'kids',
+        children: []
+      }, {
+        value: 'mainto',
+        label: '缦图',
+        children: []
+      }
+    ]
+    msg.forEach(productItem => {
+      const findType = createData.find(typeItem => typeItem.value === productItem.retouch_standard)
+      if (findType) {
+        findType.children.push({
+          label: productItem.name,
+          value: productItem.id
+        })
+      }
+    })
+    return createData
+  })
+}
+
+/**
+ * @description 获取产品面板数据
+ */
+export function getAllProductPanel () {
+  return axios({
+    url: '/project_cloud/common/getAllProduct',
+    method: 'get'
+  }).then(msg => {
+    let createData = [
+      {
+        id: -1,
+        pid: 0,
+        name: 'blue',
+        label: '蓝标',
+        children: []
+      }, {
+        id: -2,
+        pid: 0,
+        name: 'master',
+        label: '大师',
+        children: []
+      }, {
+        id: -3,
+        pid: 0,
+        name: 'kids',
+        label: 'kids',
+        children: []
+      }, {
+        id: -4,
+        pid: 0,
+        name: 'mainto',
+        label: '缦图',
+        children: []
+      }
+    ]
+    msg.forEach(productItem => {
+      const findType = createData.find(typeItem => typeItem.name === productItem.retouch_standard)
+      if (findType) {
+        const productInfo = {
+          children: [],
+          id: productItem.id,
+          pid: findTypeId(findType.name),
+          label: productItem.name
+        }
+        findType.children = [...findType.children, productInfo]
+      }
+    })
+    createData = createData.filter(listItem => listItem.children.length)
+    return createData
+  })
+}
+
+function findTypeId (value) {
+  switch (value) {
+    case 'blue':
+      return -1
+    case 'master':
+      return -2
+    case 'kids':
+      return -3
+    case 'mainto':
+      return -4
+    default:
+      return -1
+  }
+}

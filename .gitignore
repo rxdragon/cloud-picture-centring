@@ -1,0 +1,5 @@
+node_modules
+/dist
+#Electron-builder output
+/dist_electron
+/dist_vue

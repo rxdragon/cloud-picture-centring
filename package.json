@@ -1,0 +1,73 @@
+{
+  "name": "cloud-picture-centring",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "vue-cli-service build --dest=dist_vue",
+    "build-background": "webpack-cli --mode=production --config='background-main.webpack-config.js'",
+    "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
+    "build-asar": "yarn build && yarn build-background && yarn pack-vue",
+    "serve": "vue-cli-service serve --mode development",
+    "build-dev": "vue-cli-service build --mode development --dest=dist_vue",
+    "lint": "vue-cli-service lint",
+    "eserve": "vue-cli-service electron:serve",
+    "new": "plop",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
+  },
+  "main": "background.js",
+  "dependencies": {
+    "asar": "^2.0.1",
+    "driver.js": "^0.9.8",
+    "element-ui": "^2.4.5",
+    "nprogress": "^0.2.0",
+    "stylelint-config-standard": "^18.3.0",
+    "stylelint-webpack-plugin": "^0.10.5",
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.3",
+    "vuex": "^3.0.1",
+    "webpack-cli": "^3.3.9"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.11.0",
+    "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "axios": "^0.18.0",
+    "babel-eslint": "^10.0.1",
+    "electron": "^6.0.0",
+    "electron-icon-builder": "^1.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "vue-cli-plugin-axios": "^0.0.4",
+    "vue-cli-plugin-electron-builder": "^1.4.0",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/standard"
+    ],
+    "rules": "./.eslintrc.js",
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}

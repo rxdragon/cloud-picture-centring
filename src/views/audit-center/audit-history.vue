@@ -1,0 +1,216 @@
+<template>
+  <div class="audit-history">
+    <div class="header">
+      <h3>审核历史记录</h3>
+    </div>
+    <div class="search-box">
+      <div class="search-item">
+        <span>时间</span>
+        <date-picker v-model="timeSpan" />
+      </div>
+      <div class="audit-grass-box search-item">
+        <span>审核中拔草</span>
+        <grass-select v-model="auditType" />
+      </div>
+      <div class="audit-box search-item">
+        <span>纠偏</span>
+        <check-grass-select v-model="correcType" />
+      </div>
+      <div class="spot-check-box search-item">
+        <span>抽查种拔草</span>
+        <grass-select v-model="spotCheckType" />
+      </div>
+      <div class="button-box">
+        <el-button type="primary" @click="getReviewList(1)">查 询</el-button>
+      </div>
+    </div>
+
+    <div class="table-box">
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column prop="staffName" label="组员" />
+        <el-table-column prop="stream_num" label="流水号" width="200" />
+        <el-table-column prop="pass_at" label="审核通过时间" width="200" />
+        <el-table-column prop="retouchAllTime" label="修图总时长" />
+        <el-table-column prop="reviewPhoto" label="审核种 / 拔草" />
+        <el-table-column label="纠偏">
+          <template slot-scope="scope">
+            <div>意见相同：{{ scope.row.rectify_same_photo_num }}</div>
+            <div>意见不同：{{ scope.row.rectify_different_photo_num }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="checkPhoto" label="抽查种 / 拔草" />
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="linkto(scope.row.id)">详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <div class="page-box">
+        <el-pagination
+          :hide-on-single-page="true"
+          :current-page.sync="pager.page"
+          :page-size="pager.pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="pager.total"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import DatePicker from '@/components/DatePicker'
+import GrassSelect from '@SelectBox/GrassSelect'
+import CheckGrassSelect from '@SelectBox/CheckGrassSelect'
+import { joinTimeSpan } from '@/utils/timespan.js'
+
+import { parseTime } from '@/utils/index.js'
+import { SearchType } from '@/utils/enumerate'
+import * as ReviewCheck from '@/api/reviewCheck.js'
+
+export default {
+  name: 'AuditHistory',
+  components: { DatePicker, GrassSelect, CheckGrassSelect },
+  data () {
+    return {
+      timeSpan: null,
+      auditType: 0,
+      spotCheckType: 0,
+      correcType: 0,
+      tableData: [],
+      pager: {
+        page: 1,
+        pageSize: 10,
+        total: 10
+      }
+    }
+  },
+  created () {
+    if (this.$route.query.timeSpan) {
+      this.timeSpan = this.$route.query.timeSpan.split(',')
+    } else {
+      const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
+      this.timeSpan = [nowTime, nowTime]
+    }
+    const searchType = this.$route.query.searchType
+    switch (searchType) {
+      case SearchType.CheckPlant:
+        this.auditType = 'plant'
+        break
+      case SearchType.CheckPull:
+        this.auditType = 'pull'
+        break
+      case SearchType.SpotPlant:
+        this.spotCheckType = 'plant'
+        break
+      case SearchType.SpotPull:
+        this.spotCheckType = 'pull'
+        break
+      case SearchType.RectifySame:
+        this.correcType = SearchType.RectifySame
+        break
+      case SearchType.RectifyPlant:
+        this.correcType = SearchType.RectifyPlant
+        break
+      case SearchType.RectifyPull:
+        this.correcType = SearchType.RectifyPull
+        break
+      case SearchType.RectifyNone:
+        this.correcType = SearchType.RectifyNone
+        break
+      default:
+        break
+    }
+    if (Object.keys(this.$route.query).length) {
+      this.$router.replace({
+        path: '/audit-center/audit-history'
+      })
+    }
+    this.getReviewList()
+  },
+  methods: {
+    /**
+     * @description 页面切换
+     */
+    handleCurrentChange () {
+      this.getReviewList()
+    },
+    /**
+     * @description 查看详情
+     */
+    linkto (streamId) {
+      this.$router.push({
+        path: '/order-detail',
+        query: { streamId }
+      })
+    },
+    /**
+     * @description 获取审核历史记录
+     */
+    async getReviewList (page) {
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请输入时间')
+        return false
+      }
+      this.pager.page = page || this.pager.page
+      const reqData = {
+        range: 'self',
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1),
+        pageSize: this.pager.pageSize,
+        page: this.pager.page
+      }
+      this.auditType && (reqData.plantOrPull = this.auditType)
+      this.spotCheckType && (reqData.spotCheckPlantOrPull = this.spotCheckType)
+      if (this.correcType) {
+        switch (this.correcType) {
+          case SearchType.RectifySame:
+            reqData.rectify = 'same'
+            break
+          case SearchType.RectifyDifferent:
+            reqData.rectify = 'diffrent'
+            break
+          case SearchType.RectifyPlant:
+            reqData.rectify = 'diffrent'
+            reqData.rectifyGrass = 'plant'
+            break
+          case SearchType.RectifyPull:
+            reqData.rectify = 'diffrent'
+            reqData.rectifyGrass = 'pull'
+            break
+          case SearchType.RectifyNone:
+            reqData.rectify = 'diffrent'
+            reqData.rectifyGrass = 'none'
+            break
+          default:
+            break
+        }
+      }
+      this.$store.dispatch('setting/showLoading')
+      const data = await ReviewCheck.getReviewList(reqData)
+      this.tableData = data.list
+      this.pager.total = data.total
+      this.$store.dispatch('setting/hiddenLoading')
+    }
+  }
+}
+</script>
+
+<style lang="less">
+@import "~@/styles/variables.less";
+.audit-history {
+  .search-item {
+    margin-right: 16px;
+  }
+
+  .audit-grass-box,
+  .spot-check-box {
+    .el-select {
+      width: 120px;
+    }
+  }
+
+}
+</style>
