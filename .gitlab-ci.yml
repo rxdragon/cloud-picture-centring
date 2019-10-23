@@ -16,7 +16,7 @@ deploy:
     - yarn run build-background
     - yarn run pack-vue
     - "echo '{\"version\": \"'$CI_COMMIT_SHA'\"}' > ./dist_electron/version.json"
-    - mv ./dist_electron/vue_dist.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
+    - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
   variables:
     ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
   artifacts:
