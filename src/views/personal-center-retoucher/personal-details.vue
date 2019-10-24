@@ -38,9 +38,9 @@
               trigger="hover"
             >
               <div class="tip-content">
-                <div>修片等级升级规则：</div>
-                <div>1、种草率：近期修片获得的<span class="emphasis">种草数</span>占比，升级条件需<span class="emphasis">达到</span>种草达标率</div>
-                <div>2、拔草率：近期修片获得的<span class="emphasis">拔草数</span>占比，升级条件需<span class="emphasis">低于</span>拔草合格率</div>
+                <div>修图等级升级规则：</div>
+                <div>1、种草率：近期修图获得的<span class="emphasis">种草数</span>占比，升级条件需<span class="emphasis">达到</span>种草达标率</div>
+                <div>2、拔草率：近期修图获得的<span class="emphasis">拔草数</span>占比，升级条件需<span class="emphasis">低于</span>拔草合格率</div>
                 <div>3、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
                 <div>系统按照过去30天内（滚动周期，由当天往前推30天）的
                   <span class="emphasis">种草数、拔草数</span>

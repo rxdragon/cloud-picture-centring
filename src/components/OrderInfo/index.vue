@@ -26,7 +26,7 @@
         <div class="photo-count">{{ orderData.photoNum }}</div>
       </div>
       <div class="panel-title">
-        修片要求
+        修图要求
       </div>
       <div class="panel-require-concent">
         <div class="require-label">

@@ -7,7 +7,7 @@ const retoucherCenter = {
   component: Layout,
   redirect: '/retoucher-center/wait-retoucher',
   alwaysShow: true,
-  meta: { title: '修片师中心', icon: 'iconfont iconcurrent' },
+  meta: { title: '修图师中心', icon: 'iconfont iconcurrent' },
   children: [
     {
       path: 'wait-retoucher',

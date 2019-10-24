@@ -151,7 +151,7 @@ export function editRole (params) {
 }
 
 /**
- * @description 获取按照产品划分的 修片师类别 列表
+ * @description 获取按照产品划分的 修图师类别 列表
  * @param {*} params
  */
 export function getRetoucherClassList (params) {
@@ -168,7 +168,7 @@ export function getRetoucherClassList (params) {
 }
 
 /**
- * @description 添加按照产品划分的 修片师类别
+ * @description 添加按照产品划分的 修图师类别
  * @param {*} params
  */
 export function addRetoucherClass (params) {
@@ -180,7 +180,7 @@ export function addRetoucherClass (params) {
 }
 
 /**
- * @description 删除按照产品划分的 修片师类别
+ * @description 删除按照产品划分的 修图师类别
  * @param {*} params
  */
 export function delRetoucherClass (params) {
@@ -192,7 +192,7 @@ export function delRetoucherClass (params) {
 }
 
 /**
- * @description 编辑按照产品划分的 修片师类别
+ * @description 编辑按照产品划分的 修图师类别
  * @param {*} params
  */
 export function editRetoucherClass (params) {
@@ -204,7 +204,7 @@ export function editRetoucherClass (params) {
 }
 
 /**
- * @description 获取按照产品划分的 修片师类别
+ * @description 获取按照产品划分的 修图师类别
  * @param {*} params
  */
 export function getRetoucherClassInfo (params) {

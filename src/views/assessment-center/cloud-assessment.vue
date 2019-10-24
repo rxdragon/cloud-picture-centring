@@ -151,6 +151,11 @@ export default {
       if (!req) return false
       this.$store.dispatch('setting/showLoading')
       const data = await AssessmentCenter.takePhoto(req)
+      if(!data.length){
+        this.$newMessage.warning('当前暂无可被抽取的订单。')
+        this.$store.dispatch('setting/hiddenLoading')
+        return
+      }
       this.uuid = data
       this.isTakePhoto = true
       await this.getSpotCheckResult()

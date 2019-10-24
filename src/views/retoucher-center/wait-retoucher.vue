@@ -7,7 +7,7 @@
         <div class="header-left">
           <span v-if="state !== 2" class="queue-info queue-length">修图排队中流水：{{ queueInfo.waitRetouchStream }}</span>
           <span v-if="state === 2" class="queue-info">排队接单中（顺序{{ queueInfo.retouchQueueIndex }}）</span>
-          <el-button v-if="state === 1" type="primary" :disabled="state === 3 || Boolean(retouchingListNum)" @click="joinQueue">接单</el-button>
+          <el-button v-if="state === 1 || state === 3" type="primary" :disabled="state === 3 || Boolean(retouchingListNum)" @click="joinQueue">接单</el-button>
           <el-button v-if="state === 2" type="info" @click="exitQueue">取消排队</el-button>
         </div>
       </div>
@@ -154,6 +154,9 @@ export default {
     this.initializeData()
     this.hasReturn()
   },
+  activated: function () {
+    this.showDetail = false
+  },
   methods: {
     /**
      * @description 获取个人今日指标
@@ -192,7 +195,7 @@ export default {
           this.getStreamQueueInfo()
         }, 3000)
       }
-      if (+this.queueInfo.retouchStreamId && SessionTool.getSureRetouchOrder(this.queueInfo.retouchStreamId)) {
+      if (+this.queueInfo.retouchStreamId && !SessionTool.getSureRetouchOrder(this.queueInfo.retouchStreamId)) {
         this.$confirm('', '你有新的订单请及时处理', {
           confirmButtonText: '确定',
           center: true,

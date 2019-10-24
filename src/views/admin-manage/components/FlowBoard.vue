@@ -26,14 +26,14 @@
               <el-button slot="reference" size="mini" class="detail" type="text">详情</el-button>
             </el-popover>
           </div>
-          <div class="panel-footer">正在修片{{ flowInfo.retouchingPersonNum + flowInfo.outerRetouchingPersonNum }}人</div>
+          <div class="panel-footer">正在修图{{ flowInfo.retouchingPersonNum + flowInfo.outerRetouchingPersonNum }}人</div>
           <div class="line-to-right" />
           <div class="line-to-left" />
         </div>
       </div>
       <div class="middle">
         <div class="panel-wrap panel-orange" @click.stop="">
-          <div class="header-nav">外包修片 / 重修</div>
+          <div class="header-nav">外包修图 / 重修</div>
           <div class="panel-content">订单数 {{ flowInfo.outerRetouching.streamNum.retouching }} / {{ flowInfo.outerRetouching.streamNum.reworking }}</div>
           <div class="panel-content">
             <span>照片数 {{ flowInfo.outerRetouching.photoNum.retouching }} / {{ flowInfo.outerRetouching.photoNum.reworking }}</span>
@@ -44,7 +44,7 @@
               <div class="flowInfo-panel">
                 <div class="panel-content panel-title">
                   <span>产品名称</span>
-                  <span class="state-tpye">修片 / 重修</span>
+                  <span class="state-tpye">修图 / 重修</span>
                 </div>
                 <div v-for="(photoItem, photoIndex) in flowInfo.outerRetouching.photos" :key="photoIndex" class="panel-content">
                   <span>{{ photoItem.name }}</span>
@@ -54,12 +54,12 @@
               <el-button slot="reference" size="mini" class="detail" type="text">详情</el-button>
             </el-popover>
           </div>
-          <div class="panel-footer">正在修片{{ flowInfo.outerRetouchingPersonNum }}人</div>
+          <div class="panel-footer">正在修图{{ flowInfo.outerRetouchingPersonNum }}人</div>
           <div class="line-to-top" />
           <div class="line-to-bottom" />
         </div>
         <div class="panel-wrap panel-orange" @click.stop="">
-          <div class="header-nav">云端修片 / 重修</div>
+          <div class="header-nav">云端修图 / 重修</div>
           <div class="panel-content">订单数 {{ flowInfo.cloudRetouching.streamNum.retouching }} / {{ flowInfo.cloudRetouching.streamNum.reworking }}</div>
           <div class="panel-content">
             <span>照片数 {{ flowInfo.cloudRetouching.photoNum.retouching }} / {{ flowInfo.cloudRetouching.photoNum.reworking }}</span>
@@ -70,7 +70,7 @@
               <div class="flowInfo-panel">
                 <div class="panel-content panel-title">
                   <span>产品名称</span>
-                  <span class="state-tpye">修片 / 重修</span>
+                  <span class="state-tpye">修图 / 重修</span>
                 </div>
                 <div v-for="(photoItem, photoIndex) in flowInfo.cloudRetouching.photos" :key="photoIndex" class="panel-content">
                   <span>{{ photoItem.name }}</span>
@@ -80,7 +80,7 @@
               <el-button slot="reference" size="mini" class="detail" type="text">详情</el-button>
             </el-popover>
           </div>
-          <div class="panel-footer">正在修片{{ flowInfo.retouchingPersonNum }}人</div>
+          <div class="panel-footer">正在修图{{ flowInfo.retouchingPersonNum }}人</div>
           <div class="line-to-top" />
           <div class="line-to-bottom" />
         </div>
@@ -151,7 +151,9 @@ export default {
      * @description 获取流量看板数据
      */
     async getFlowInfo () {
+      this.$store.dispatch('setting/showLoading')
       this.flowInfo = await AdminManage.getFlowInfo()
+      this.$store.dispatch('setting/hiddenLoading')
     }
   }
 }

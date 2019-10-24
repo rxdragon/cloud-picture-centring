@@ -16,7 +16,7 @@ import personalCenterAudit from './modules/personalCenterAudit.js' // 个人中�
 import personalCenterAuditLeader from './modules/personalCenterAuditLeader.js' // 个人中心（审核组长）
 import personalCenterRetoucher from './modules/personalCenterRetoucher.js' // 个人中心（组员）
 import personalCenterRetoucherLeader from './modules/personalCenterRetoucherLeader.js' // 个人中心（组长）
-import retoucherCenter from './modules/retoucherCenter.js' // 修片师中心
+import retoucherCenter from './modules/retoucherCenter.js' // 修图师中心
 
 // 基础权限路由
 export const constantRoutes = [

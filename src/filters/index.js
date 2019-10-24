@@ -18,7 +18,7 @@ export function toPhotoVerName (str) {
 }
 
 /**
- * @description 转换修片类型
+ * @description 转换修图类型
  * @param {*} str
  */
 export function toRetouchClass (str) {

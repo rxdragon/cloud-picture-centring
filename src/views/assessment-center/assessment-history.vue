@@ -46,7 +46,7 @@
       </div>
     </div>
     <div class="search-box">
-      <!-- 修片师 -->
+      <!-- 修图师 -->
       <div class="staff-search search-item">
         <span>修图师</span>
         <staff-select v-model="staffId" :props="staffSearchSelect" />

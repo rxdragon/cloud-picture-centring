@@ -48,9 +48,9 @@
         <div class="panel-content">{{ orderInfo.retoucherName }}</div>
       </div>
     </template>
-    <!--修片要求 -->
+    <!--修图要求 -->
     <div class="panel-require">
-      <div class="panel-title">修片要求</div>
+      <div class="panel-title">修图要求</div>
       <div class="panel-main">
         <div v-if="orderInfo.requireLabel" class="panel-require-concent">
           <el-tag size="medium">眼睛增大幅度：{{ orderInfo.requireLabel.eye | toLabelName }}</el-tag>

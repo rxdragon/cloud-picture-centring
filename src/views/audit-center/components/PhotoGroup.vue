@@ -145,6 +145,7 @@ export default {
      * @description 覆盖上传
      */
     createPhotoVersion (path) {
+      this.$store.dispatch('setting/showLoading')
       const req = {
         version: 'first_photo',
         photoId: this.photos.id,
