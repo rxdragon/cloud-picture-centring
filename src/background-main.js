@@ -3,7 +3,6 @@
 // 下方代码回被 webpack 处理为正确的 require
 const { app, BrowserWindow, ipcMain } = require('electron')
 import path from 'path'
-// import * as User from '@/api/user.js'
 // import * as DownTool from './electronMain/downTool.js'
 
 // Keep a global reference of the window object, if you don't, the window will

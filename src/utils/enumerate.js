@@ -13,9 +13,9 @@ export function RetouchStandard () {
 // 流水状态
 export function StreamState () {
   return {
-    wait_retouch: '待修片',
-    retouching: '修片中',
-    review_return_retouch: '审核退回修片中',
+    wait_retouch: '待修图',
+    retouching: '修图中',
+    review_return_retouch: '审核退回修图中',
     wait_review: '等待审核',
     reviewing: '审核中',
     finish: '已经完成'
@@ -82,7 +82,7 @@ export const WeightEnum = {
   weight_fifth: '五类产品'
 }
 
-// 修片师等级
+// 修图师等级
 export const StaffLevelEnum = {
   retouchingAssistant: '修图助理',
   juniorRetoucher: '初级修图师',

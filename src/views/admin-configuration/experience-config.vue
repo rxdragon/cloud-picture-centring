@@ -3,7 +3,7 @@
     <transition name="fade-transform" mode="out-in">
       <div v-if="!isAddConfig" class="data-list">
         <div class="header">
-          <h3>修片师翻倍经验配置</h3>
+          <h3>修图师翻倍经验配置</h3>
           <el-button type="primary" @click="addConfig">添加新配置</el-button>
         </div>
         <!-- 含有数据 -->

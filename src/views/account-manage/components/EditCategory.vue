@@ -1,7 +1,7 @@
 <template>
   <div class="edit-category">
     <div class="header">
-      <h3>{{ editData ? '编辑修片类别' : '新增修片类型' }}</h3>
+      <h3>{{ editData ? '编辑修图类别' : '新增修图类型' }}</h3>
       <el-button type="info" @click="toBack">返回</el-button>
     </div>
     <div class="category-name search-item">

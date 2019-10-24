@@ -270,7 +270,7 @@ export default {
       }
     },
     /**
-     * @description 获取修片流水列表
+     * @description 获取修图流水列表
      */
     async getRetouchStreamList (page) {
       if (page) { this.pager.page = page }

@@ -11,7 +11,7 @@ export function getPhotoList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.list.forEach(listItem => {
+    msg.list && msg.list.forEach(listItem => {
       const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
       listItem.src = findCompletePhoto && findCompletePhoto.path || ''
     })

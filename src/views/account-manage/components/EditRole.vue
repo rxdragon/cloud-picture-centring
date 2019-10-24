@@ -50,12 +50,14 @@ export default {
      * @description 获取权限信息
      */
     async getRoleInfo () {
+      this.$store.dispatch('setting/showLoading')
       if (this.isNewAdd) return false
       const reqData = {
         roleId: this.roleId,
         additionInfo: true
       }
       const data = await AccountManage.getRoleInfo(reqData)
+      this.$store.dispatch('setting/hiddenLoading')
       this.roleName = data.title
       console.log(data.permissions)
       const permissions = data.permissions.flatMap(permissionItem => [permissionItem.permission_id])
@@ -80,6 +82,7 @@ export default {
       }
       AccountManage.addRole(reqData)
         .then(() => {
+          this.$store.dispatch('setting/hiddenLoading')
           this.$newMessage.success('添加角色组成功')
           this.toBack()
         })

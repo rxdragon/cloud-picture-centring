@@ -82,7 +82,7 @@ export function getStreamInfo (params) {
       checkPlantNum,
       checkPullNum,
       requireLabel: data.tags.values.retouch_claim,
-      retouchRemark: data.note.retouch_note || '暂无修片备注',
+      retouchRemark: data.note.retouch_note || '暂无修图备注',
       reviewerNote: data.reviewerNote || '暂无审核备注'
     }
     createData.photos = data.photos

@@ -26,11 +26,11 @@
           <span class="describe">(摄影师上传到修图师接单平均用时)</span>
         </div>
         <div class="title">
-          <span>修片总平均时长</span>
+          <span>修图总平均时长</span>
           <span class="describe">(修图师接单至审核通过的平均时长)</span>
         </div>
         <div class="title">
-          <span>外包修片时长</span>
+          <span>外包修图时长</span>
           <span class="describe">(云端修图师接单至审核通过的平均时长)</span>
         </div>
         <div class="title">

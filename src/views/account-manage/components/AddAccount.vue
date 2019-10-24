@@ -255,10 +255,12 @@ export default {
     getStaffPermission () {
       if (!this.jobNumber) { return false }
       const req = { staffNum: this.jobNumber }
+      this.$store.dispatch('setting/showLoading')
       AccountManage.getStaffPermission(req)
         .then(data => {
           console.log(data)
           this.hasPermission = data.base_auth.map(item => item.id)
+          this.$store.dispatch('setting/hiddenLoading')
         })
     }
   }

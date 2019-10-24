@@ -149,7 +149,7 @@ export default {
       }
       this.$store.dispatch('setting/showLoading')
       const data = await GuestPhoto.getPhotoList(reqData)
-      this.photos = data.list
+      this.photos = data.list || []
       this.pager.total = data.total
       this.$store.dispatch('setting/hiddenLoading')
     }

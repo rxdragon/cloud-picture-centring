@@ -118,8 +118,10 @@ export default {
       const reqData = {
         roleId: item.role_id
       }
+      this.$store.dispatch('setting/showLoading')
       AccountManage.delRole(reqData)
         .then(() => {
+          this.$store.dispatch('setting/hiddenLoading')
           this.$newMessage.success('删除成功')
           this.getRoleList()
         })

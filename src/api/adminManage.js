@@ -68,7 +68,7 @@ export function getStreamList (params) {
 }
 
 /**
- * @description 获取修片流水列表
+ * @description 获取修图流水列表
  * @param {*} params
  */
 export function getRetouchStreamList (params) {
@@ -165,7 +165,7 @@ export function getStreamInfo (params) {
       productName: data.product.name,
       photoNum: data.photos.length,
       requireLabel: data.tags && data.tags.values && data.tags.values.retouch_claim || {},
-      retouchRemark: data.note.retouch_note || '暂无修片备注',
+      retouchRemark: data.note.retouch_note || '暂无修图备注',
       reviewerNote: data.reviewerNote || '暂无审核备注',
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,

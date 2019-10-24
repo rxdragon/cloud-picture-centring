@@ -44,6 +44,7 @@ export function logout () {
     url: '/manage_auth/logout',
     method: 'GET'
   }).then(() => {
+    localStorage.clear()
     SessionTool.removeSession()
   })
 }
