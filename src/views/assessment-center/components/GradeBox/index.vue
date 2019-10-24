@@ -196,16 +196,8 @@ export default {
      * @description 获取评价参数
      */
     getCommitparams () {
-      if (!this.sameOpinion && this.sameOpinion !== 0) {
-        this.$newMessage.warning('请完成纠偏')
-        return false
-      }
       if (!this.weedOpinion && !this.sameOpinion) {
         this.$newMessage.warning('请完成纠偏选项')
-        return false
-      }
-      if (!this.flakinessEvaluate) {
-        this.$newMessage.warning('请完成成片评价')
         return false
       }
       const req = {

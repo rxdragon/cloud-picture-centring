@@ -12,7 +12,12 @@ export function joinTimeSpan (time, addDay) {
     if (addDay) {
       time = new Date(time)
       time = time.setDate(time.getDate() + 1)
-      regArr = new Date(time).toLocaleDateString().replace(/\//g, '-')
+      regArr = new Date(time).toLocaleDateString().split(/\//g).map(item => {
+        if (item < 10) {
+          item = `0${item}`
+        }
+        return item
+      }).join('-')
     }
     time = `${regArr} 08:00:00`
   }
