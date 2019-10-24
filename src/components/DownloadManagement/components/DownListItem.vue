@@ -44,7 +44,7 @@
 
 <script>
 import { parseTime } from '@/utils/index.js'
-// import { openFileFolder } from '@/utils/openFile.js'
+import { openFileFolder } from '@/utils/openFile.js'
 
 export default {
   name: 'DownListItem',
@@ -101,7 +101,7 @@ export default {
       this.$emit('cancelItem', index)
     },
     downOpenFileFolder () {
-      // this.hasFile = openFileFolder(this.listItem.savePath)
+      this.hasFile = openFileFolder(this.listItem.savePath)
     }
   }
 }

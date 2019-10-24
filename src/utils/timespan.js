@@ -3,23 +3,13 @@
  * @param {*} time
  * @param {*} addDay
  */
+import moment from 'moment'
+
 export function joinTimeSpan (time, addDay) {
-  const reg = /^\d{4}-\d{2}-\d{2}\s+([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/
-  const reg2 = /^\d{4}-\d{2}-\d{2}/
-  const res = reg.test(time)
-  if (!res) {
-    let regArr = reg2.exec(time)
-    if (addDay) {
-      time = new Date(time)
-      time = time.setDate(time.getDate() + 1)
-      regArr = new Date(time).toLocaleDateString().split(/\//g).map(item => {
-        if (item < 10) {
-          item = `0${item}`
-        }
-        return item
-      }).join('-')
-    }
-    time = `${regArr} 08:00:00`
+  const date = moment(time)
+  if (addDay) {
+    date.add(1, 'day')
   }
-  return time
+
+  return date.format('YYYY-MM-DD 08:00:00')
 }
