@@ -1,5 +1,5 @@
 <template>
-  <div class="photo">
+  <div v-if="src!='null'" class="photo">
     <div class="img-box">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel[0] }}-{{ jointLabel[1] }}</div>
       <el-image :src="imgDomain + src + breviary" fit="cover" :preview-src-list="preview ? [imgDomain + src] : []">
@@ -20,6 +20,7 @@
       重修原因： {{ recedeReason }}
     </div>
   </div>
+  <span v-else class="noSrc">暂无</span>
 </template>
 
 <script>
@@ -166,5 +167,9 @@ export default {
   margin: 0 6px 6px;
   padding-top: 9px;
   border-top: 1px solid #DDDFE6;
+}
+
+.noSrc{
+  margin-left: -12px;
 }
 </style>

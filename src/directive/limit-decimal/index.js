@@ -2,8 +2,8 @@ import Vue from 'vue'
 Vue.directive('decimalOnly', {
   inserted: (el, bind) => {
     el.addEventListener('keyup', () => {
-      const reg = /^[0-9]+$/g
-      const reg2 = /^\d+\.?\d{0,2}/
+      const reg = /^d+\.?\d{0,2}$/g
+      const reg2 = /\d+\.?\d{0,2}/g
       const val = event.target.value
       const has = !reg.test(val)
       if (has) {
