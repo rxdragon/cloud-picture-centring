@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0d91ae58-f27f-45e6-96f6-6d318e312c8f" name="Default Changelist" comment="">
+    <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="download manager">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PhotoBox/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PhotoBox/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/background-main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/background-main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DownloadManagement/components/DownListItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DownloadManagement/components/DownListItem.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DownloadManagement/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DownloadManagement/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/electronMain/downTool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/electronMain/downTool.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/components/Navbar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/components/Navbar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/getFileIcon.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/getFileIcon.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/timespan.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/timespan.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
+    <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,17 +21,41 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1SdA5r1Hr0YwhQGohHvyHr1fqY6" />
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1RxfRMWKQfi9IN3bSA5W229Me27" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/dist_electron" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/assets" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/dist_electron" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -36,18 +69,115 @@
       </list>
     </option>
   </component>
+  <component name="RunManager" selected="npm.eserve">
+    <configuration name="build-asar" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build-asar" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build-background" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build-background" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="eserve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="eserve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="pack-vue" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="pack-vue" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.eserve" />
+        <item itemvalue="npm.build-asar" />
+        <item itemvalue="npm.pack-vue" />
+        <item itemvalue="npm.build-background" />
+        <item itemvalue="npm.build" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0d91ae58-f27f-45e6-96f6-6d318e312c8f" name="Default Changelist" comment="" />
-      <created>1571882918518</created>
+      <changelist id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="" />
+      <changelist id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
+      <created>1570613658264</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1571882918518</updated>
-      <workItem from="1571882920117" duration="12400000" />
+      <updated>1570613658264</updated>
+      <workItem from="1570613659419" duration="714000" />
+      <workItem from="1570614996888" duration="779000" />
+      <workItem from="1570789014659" duration="3737000" />
+      <workItem from="1571725098114" duration="955000" />
+      <workItem from="1571728124049" duration="39000" />
+      <workItem from="1571734151844" duration="8000" />
+      <workItem from="1571798690071" duration="619000" />
+      <workItem from="1571799316589" duration="1502000" />
+      <workItem from="1571814098527" duration="1698000" />
+      <workItem from="1571893679781" duration="2040000" />
+      <workItem from="1571896180524" duration="1247000" />
+      <workItem from="1571900314691" duration="1921000" />
+      <workItem from="1571917460234" duration="111000" />
+      <workItem from="1571917573762" duration="1262000" />
     </task>
+    <task id="LOCAL-00001" summary="CI">
+      <created>1571799918873</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1571799918873</updated>
+    </task>
+    <task id="LOCAL-00002" summary="CI fix">
+      <created>1571800213319</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1571800213319</updated>
+    </task>
+    <task id="LOCAL-00003" summary="CI fix">
+      <created>1571902158476</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1571902158476</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -56,12 +186,49 @@
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="1">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+    <option name="OPEN_TABS">
+      <set>
+        <option value="1" />
+      </set>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="CI" />
+    <MESSAGE value="CI fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="CI fix" />
   </component>
 </project>

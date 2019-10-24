@@ -3,7 +3,7 @@
 // 下方代码回被 webpack 处理为正确的 require
 const { app, BrowserWindow, ipcMain } = require('electron')
 import path from 'path'
-// import * as DownTool from './electronMain/downTool.js'
+import * as DownTool from './electronMain/downTool.js'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -31,9 +31,9 @@ async function createWindow () {
   })
 
   // 注册下载监听
-  // DownTool.onWillDownload(win)
-  // DownTool.downPhoto(win)
-  // DownTool.onDownEvent()
+  DownTool.onWillDownload(win)
+  DownTool.downPhoto(win)
+  DownTool.onDownEvent()
 
   // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
   win.once('ready-to-show', () => {

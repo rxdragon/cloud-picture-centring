@@ -36,7 +36,7 @@
 <script>
 import * as SessionTool from '@/utils/sessionTool.js'
 import DownListItem from './components/DownListItem'
-// import { getFileIcon } from '@/utils/getFileIcon.js'
+import { getFileIcon } from '@/utils/getFileIcon.js'
 export default {
   name: 'DownloadManagement',
   components: { DownListItem },

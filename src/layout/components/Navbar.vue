@@ -8,7 +8,7 @@
       </div>
       <span class="nav-main">缦图云端 修图中心</span>
       <div class="nav-right">
-        <!-- <download-management /> -->
+        <download-management />
         <el-avatar :src="userInfo.avatarImg" />
         <div class="user-name">{{ userInfo.nickname }}</div>
         <div class="label">{{ userInfo.departmentName }}</div>
