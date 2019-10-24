@@ -21,6 +21,7 @@
 
 <script>
 import { AppMain, Navbar, TagsView, Sidebar } from './components'
+const { ipcRenderer } = window.require('electron')
 export default {
   name: 'Layout',
   components: {
@@ -28,6 +29,17 @@ export default {
     Navbar,
     TagsView,
     Sidebar
+  },
+  mounted () {
+    ipcRenderer.on('version:find-new', (event, info) => {
+      this.$confirm('', '发现现版本，是否重启更新', {
+          confirmButtonText: '确定',
+          center: true,
+          type: 'warning',
+        }).then(() => {
+          ipcRenderer.send('version:do-upgrade')
+        }).catch(() => {})
+    })
   }
 }
 </script>

@@ -86,7 +86,7 @@
               <div v-for="(grassItem, grassIndex) in productConfig.grassData" :key="grassIndex" class="panel">
                 <div class="info-title">{{ grassIndex }} 人</div>
                 <div class="panel-contetn">
-                  <el-input :key="grassIndex" v-model.number="productConfig.grassData[grassIndex]" placeholder="0" />
+                  <el-input :key="grassIndex" v-model.number="productConfig.grassData[grassIndex]" v-decimalOnly placeholder="0" />
                 </div>
               </div>
             </div>
@@ -365,6 +365,7 @@ export default {
       this.retouchRequire = data.retouchRequire
       this.samplePhoto = data.simpleImages
       this.photographerOrgName = data.photographerOrg.name
+      this.productConfig.joinGrassData = data.splicingSeaGrassConfig || {}
       if (!this.isPending) {
         this.productConfig.standard = data.retouchStandard
         this.productConfig.weightType = data.weightLevel

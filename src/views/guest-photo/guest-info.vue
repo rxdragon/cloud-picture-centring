@@ -120,7 +120,7 @@ export default {
       return this.$refs.scrollContainer.$refs.wrap
     }
   },
-  created () {
+  activated () {
     const { uuid } = this.$route.query
     this.uuid = uuid
     this.getPhotoInfo()
