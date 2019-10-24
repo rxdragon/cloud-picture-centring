@@ -22,6 +22,7 @@ yarn run lint
 
 ### 项目结构
 
+```
 ├─ public                       // 公共内容
 │    ├─ icon.ico 
 │    ├─ icon.png                // 图标
@@ -133,3 +134,4 @@ yarn run lint
 ├── .gitignore                 // git 忽略项
 ├── favicon.ico                // favicon图标
 └── package.json               // package.json
+```
