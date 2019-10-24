@@ -134,18 +134,17 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      const searchType = ['streamNum', 'customerName', 'telephone']
-      if (this.orderSearchValue) {
-        reqData[searchType[this.orderType - 1]] = this.orderSearchValue
-      } else {
-        if (!this.timeSpan) {
-          this.$newMessage.warning('请填写时间')
-          return false
-        }
-        reqData.startAt = joinTimeSpan(this.timeSpan[0])
-        reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
-        if (this.staffId.length) { reqData.staffIds = this.staffId }
-        if (this.checkValue) { reqData.evaluateStar = this.checkValue }
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请填写时间')
+        return false
+      }
+      reqData.startAt = joinTimeSpan(this.timeSpan[0])
+      reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
+      if (this.staffId.length) {
+        reqData.staffIds = this.staffId
+      }
+      if (this.checkValue) {
+        reqData.evaluateStar = this.checkValue
       }
       this.$store.dispatch('setting/showLoading')
       const data = await GuestPhoto.getPhotoList(reqData)

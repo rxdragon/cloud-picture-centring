@@ -73,7 +73,6 @@ export default {
         url: this.imgDomain + this.src,
         path: savePath
       }
-      console.log(data)
       this.$ipcRenderer.send('downPhoto', data)
     }
   }
