@@ -21,6 +21,7 @@
     "asar": "^2.0.1",
     "driver.js": "^0.9.8",
     "element-ui": "^2.4.5",
+    "node-rsa": "^1.0.6",
     "nprogress": "^0.2.0",
     "stylelint-config-standard": "^18.3.0",
     "stylelint-webpack-plugin": "^0.10.5",

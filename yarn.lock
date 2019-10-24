@@ -1791,7 +1791,7 @@ asn1.js@^4.0.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
 
-asn1@~0.2.3:
+asn1@^0.2.4, asn1@~0.2.3:
   version "0.2.4"
   resolved "https://registry.npm.taobao.org/asn1/download/asn1-0.2.4.tgz#8d2475dfab553bb33e77b54e59e880bb8ce23136"
   integrity sha1-jSR136tVO7M+d7VOWeiAu4ziMTY=
@@ -6980,6 +6980,13 @@ node-releases@^1.1.29:
   integrity sha1-hqV8ZYejDs1nJkSeXSk0ZrCgu4Y=
   dependencies:
     semver "^5.3.0"
+
+node-rsa@^1.0.6:
+  version "1.0.6"
+  resolved "https://npm.code.hzmantu.com/node-rsa/-/node-rsa-1.0.6.tgz#47d22eba8b41192cd6f06db15870c67126f00aa4"
+  integrity sha512-v42495lozKpuQmrcIzld9ds/Tn7pwjuh0BHSHnhPrKkAVSyTAyrZodFLFafOfWiUKamLt4lgWdngP8W/LzCm2w==
+  dependencies:
+    asn1 "^0.2.4"
 
 nopt@^4.0.1:
   version "4.0.1"
