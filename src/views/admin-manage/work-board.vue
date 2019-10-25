@@ -91,7 +91,7 @@
         <!-- 修图标准 -->
         <div class="retouch-type search-item">
           <span>修图标准</span>
-          <Retouch-kind-select v-model="retouchType" />
+          <Retouch-kind-select v-model="retouchType" :all-optision="true" />
         </div>
         <!-- 状态 -->
         <div class="retouch-state search-item">

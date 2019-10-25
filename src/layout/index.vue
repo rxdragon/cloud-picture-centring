@@ -33,12 +33,12 @@ export default {
   mounted () {
     ipcRenderer.on('version:find-new', (event, info) => {
       this.$confirm('', '发现现版本，是否重启更新', {
-          confirmButtonText: '确定',
-          center: true,
-          type: 'warning',
-        }).then(() => {
-          ipcRenderer.send('version:do-upgrade')
-        }).catch(() => {})
+        confirmButtonText: '确定',
+        center: true,
+        type: 'warning'
+      }).then(() => {
+        ipcRenderer.send('version:do-upgrade')
+      }).catch(() => {})
     })
   }
 }

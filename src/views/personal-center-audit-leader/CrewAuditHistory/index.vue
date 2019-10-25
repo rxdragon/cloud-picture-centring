@@ -14,7 +14,7 @@
         <crew-select v-model="staffId" />
       </div>
       <div class="audit-box search-item">
-        <span>审核中拔草</span>
+        <span>审核种拔草</span>
         <grass-select v-model="auditType" />
       </div>
       <div class="audit-box search-item">
@@ -84,7 +84,7 @@ export default {
   },
   data () {
     return {
-      auditType: 0, // 审核中拔草
+      auditType: 0, // 审核种拔草
       spotCheckType: 0, // 抽查中拔草
       correcType: 0, // 纠偏冲拔草
       staffId: 0, // 伙伴id
