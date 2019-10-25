@@ -255,6 +255,7 @@ export default {
     async hasReturn () {
       const data = await Retoucher.haveReworkStream()
       if (data) {
+        this.exitQueue()
         this.$confirm('您有新的重修流水，未免影响沙漏时间请及时处理。', '', {
           confirmButtonText: '现在处理',
           cancelButtonText: '稍后处理',

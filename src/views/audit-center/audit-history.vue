@@ -9,7 +9,7 @@
         <date-picker v-model="timeSpan" />
       </div>
       <div class="audit-grass-box search-item">
-        <span>审核中拔草</span>
+        <span>审核种拔草</span>
         <grass-select v-model="auditType" />
       </div>
       <div class="audit-box search-item">

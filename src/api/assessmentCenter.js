@@ -126,7 +126,7 @@ export function getSearchHistory (params) {
 
       item.isPull = false
       item.isPlant = false
-      if (item.photoData.tags.statics) {
+      if (item.photoData.tags && item.photoData.tags.statics) {
         item.isPull = item.photoData.tags.statics.includes('pull')
         item.isPlant = item.photoData.tags.statics.includes('plant')
       }

@@ -79,7 +79,9 @@ export default {
     return {
       baseTime: '',
       addTime: '',
-      productValue: {},
+      productValue: {
+        product: []
+      },
       checkList: [],
       retouchStandard: '',
       canCheck: true

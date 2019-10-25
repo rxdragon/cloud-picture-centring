@@ -14,7 +14,7 @@
         <crew-select v-model="staffId" />
       </div>
       <div class="audit-box search-item">
-        <span>审核中拔草</span>
+        <span>审核种拔草</span>
         <grass-select v-model="auditType" />
       </div>
       <div class="spot-check-box search-item">

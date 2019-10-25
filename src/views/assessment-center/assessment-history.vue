@@ -80,6 +80,7 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import ReviewerSelect from '@SelectBox/ReviewerSelect'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
+import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
 export default {
   name: 'AssessmentHistory',
@@ -100,6 +101,15 @@ export default {
       },
       uuid: ''
     }
+  },
+  created () {
+    const initReq = {
+      startAt: joinTimeSpan(moment().subtract('day', 28).locale('zh-cn').format('YYYY-MM-DD')),
+      endAt: joinTimeSpan(moment().locale('zh-cn').format('YYYY-MM-DD')),
+      page: this.pager.page,
+      pageSize: this.pager.pageSize
+    }
+    this.getSearchHistory(1, initReq)
   },
   methods: {
     /**
@@ -126,9 +136,9 @@ export default {
      * @description 获取历史抽片数据
      * @param {*} page
      */
-    async getSearchHistory (page) {
+    async getSearchHistory (page, init) {
       this.pager.page = page || this.pager.page
-      const req = this.getSearchParams()
+      const req = this.getSearchParams() || init
       if (!req) return false
       this.$store.dispatch('setting/showLoading')
       const data = await AssessmentCenter.getSearchHistory(req)

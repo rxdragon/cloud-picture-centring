@@ -21,7 +21,8 @@
 export default {
   name: 'RetouchKindSelect',
   props: {
-    importData: { type: Boolean }
+    importData: { type: Boolean },
+    allOptision: { type: Boolean }
   },
   data () {
     return {
@@ -39,6 +40,12 @@ export default {
         value: 'mainto'
       }]
     }
+  },
+  created () {
+    this.allOptision && this.options.unshift({
+      label: '全部',
+      value: ''
+    })
   }
 }
 </script>

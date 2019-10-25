@@ -1,6 +1,6 @@
 <template>
   <div class="Home">
-    <div id="app" v-if="upload">
+    <div v-if="upload" id="app">
       <div class="onUpload">
         <p>检查到版本更新</p>
         <p class="version">版本号: <span>{{ upload }}</span></p>
