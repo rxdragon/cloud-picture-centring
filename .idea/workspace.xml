@@ -2,16 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="download manager">
+      <change beforePath="$PROJECT_DIR$/.env.production" beforeDir="false" afterPath="$PROJECT_DIR$/.env.production" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/background-main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/background-main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DownloadManagement/components/DownListItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DownloadManagement/components/DownListItem.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DownloadManagement/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DownloadManagement/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/electronMain/downTool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/electronMain/downTool.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layout/components/Navbar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/components/Navbar.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/getFileIcon.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/getFileIcon.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/timespan.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/timespan.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/print_version.js" beforeDir="false" afterPath="$PROJECT_DIR$/print_version.js" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
