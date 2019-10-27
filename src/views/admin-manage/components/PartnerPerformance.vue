@@ -48,7 +48,7 @@ export default {
         value: '-'
       }, {
         key: 'reviewPull',
-        label: '种草率（单位：%）',
+        label: '拔草率（单位：%）',
         value: '-'
       }, {
         key: 'retouchRework',

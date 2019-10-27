@@ -17,19 +17,7 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start() // 读取进度条
   document.title = getPageTitle(to.meta.title)
   const hasXStreamId = getXStreamId() // 获取token
-
   console.log(hasXStreamId, 'hasXStreamId')
-
-  // 调试
-  // if (nickname) {
-  //   next()
-  // } else {
-  //   console.log(1)
-  //   const accessRoutes = await store.dispatch('permission/generateRoutes', '')
-  //   router.addRoutes(accessRoutes)
-  //   nickname = 1
-  //   next({ ...to, replace: true })
-  // }
 
   // 没有过期时的操作
   async function noExpire () {
@@ -63,6 +51,7 @@ router.beforeEach(async (to, from, next) => {
     console.log(expireTime, 'expireTime')
     console.log(nowTime, 'nowTime')
     console.log(discrepancyTime, 'discrepancyTime')
+    console.log(to.path)
     if (discrepancyTime > 0) {
       if (discrepancyTime < 60 * 60 * 1000 * 1000) { await User.userExpire() }
       console.log('noExpire')

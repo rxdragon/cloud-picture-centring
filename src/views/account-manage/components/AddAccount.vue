@@ -10,7 +10,7 @@
         <span>工号</span>
         <el-input v-model="jobNumber" v-numberOnly type="number" placeholder="请输入伙伴工号" />
       </div>
-      <div class="button-box">
+      <div v-if="!isEdit" class="button-box">
         <el-button type="primary" @click="getStaff">查询</el-button>
       </div>
     </div>
@@ -26,7 +26,7 @@
 
       <div class="table-box main-content" :class="{'no-border': activeName === 'retouchCategory'}">
         <!-- 修图类配置 -->
-        <div v-if="activeName === 'retouchCategory'" class="retouch-category-box">
+        <div v-show="activeName === 'retouchCategory'" class="retouch-category-box">
           <el-alert title="提示：若非修图伙伴请勿配置可接产品" type="info" show-icon />
           <div class="retouch-select search-item">
             <span>修图类别</span>
@@ -147,8 +147,8 @@ export default {
         this.$newMessage.warning('请填写工号')
         return false
       }
-      if (!this.retouchSelectType) {
-        this.$newMessage.warning('请填写修图类别')
+      if (!this.retouchSelectType && !this.toData.length) {
+        this.$newMessage.warning('请选择修图类别或产品')
         return false
       }
       return true
@@ -216,7 +216,7 @@ export default {
       this.hasPermission = []
       this.retouchSelectType = ''
       this.roleValue = ''
-      this.toData = []
+      console.log('resetParams')
     },
     /**
      * @description 查询伙伴
@@ -245,7 +245,6 @@ export default {
       Staff.getStaffInfo(req)
         .then(data => {
           this.staffInfo = data
-          this.resetParams()
           this.$store.dispatch('setting/hiddenLoading')
         })
     },

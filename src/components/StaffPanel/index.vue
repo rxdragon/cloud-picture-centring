@@ -55,6 +55,9 @@ export default {
     remove (fromData, toData, obj) {
       this.$emit('update:toData', toData)
     },
+    /**
+     * @description 获取伙伴信息
+     */
     async getStaffList () {
       const list = await Staff.getStaffList()
       this.fromData = JSON.parse(JSON.stringify(list))

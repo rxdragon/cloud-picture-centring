@@ -5,8 +5,14 @@
 </template>
 
 <script>
+import { clearAllStorage } from '@/utils/sessionTool'
 export default {
-  name: 'App'
+  name: 'App',
+  mounted () {
+    this.$ipcRenderer.on('closed-win', (e, item) => {
+      clearAllStorage()
+    })
+  }
 }
 </script>
 

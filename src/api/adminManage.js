@@ -113,12 +113,20 @@ export function getReviewStreamList (params) {
   }).then(msg => {
     const streamState = StreamState()
     msg.list = msg.list.map(item => {
+      let retouchLeader = '-'
+      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.name) {
+        retouchLeader = item.retoucher.retoucher_leader.name
+      }
+      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.nickname) {
+        retouchLeader = item.retoucher.retoucher_leader.nickname
+      }
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.tags && item.tags.values && item.tags.values.retoucher_name,
-        retouchLeader: '没有数据', // 调试
-        reviewerName: item.reviewer && item.reviewer.name,
+        retoucherName: item.retoucher && item.retoucher.name || '-',
+        retouchLeader,
+        retouchType: item.product && item.product.retouch_standard,
+        reviewerName: item.reviewer && item.reviewer.name || '-',
         waitTime: waitTime(item.created_at),
         streamState: streamState[item.state] || item.state
       })

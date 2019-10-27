@@ -104,11 +104,13 @@ export default {
      * @description 下载照片
      */
     downing (src) {
+      console.log(src)
+      const savePath = `/${this.streamNum}`
       const data = {
-        url: this.imgDomain + src + '?_upd=true',
-        caid: this.streamNum
+        url: this.imgDomain + src,
+        path: savePath
       }
-      this.$ipcRenderer.send('downOnePhoto', data)
+      this.$ipcRenderer.send('downPhoto', data)
     },
     /**
      * @description 展示预览

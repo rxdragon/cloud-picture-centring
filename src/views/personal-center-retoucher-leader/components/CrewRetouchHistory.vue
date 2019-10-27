@@ -92,7 +92,7 @@ export default {
         this.auditType = 'pull'
         break
       case 'spotPlant':
-        this.spotCheckType = 'pull'
+        this.spotCheckType = 'plant'
         break
       case 'spotPull':
         this.spotCheckType = 'pull'

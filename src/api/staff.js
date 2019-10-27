@@ -48,7 +48,7 @@ export function getStaffList () {
       const staffInfo = {
         children: [],
         id: staff.id,
-        label: staff.name,
+        label: staff.nickname || staff.name || '暂无姓名',
         pid: staff.department_id ? staff.department_id * -2 : -1,
         sid: staff.id
       }
@@ -93,7 +93,7 @@ export function getStaffSelectList () {
     msg.forEach(staff => {
       const staffInfo = {
         value: staff.id,
-        label: staff.name
+        label: staff.nickname || staff.name || '暂无姓名'
       }
       if (staff.department_id) {
         const groudInfo = staff.department
@@ -182,10 +182,12 @@ export function getSelfStaffs () {
     url: '/project_cloud/common/getSelfStaffs',
     method: 'get'
   }).then(msg => {
+    // 调试
     const createData = []
+    console.log(msg)
     msg.forEach(selfStaffItem => {
       createData.push({
-        label: selfStaffItem.name,
+        label: selfStaffItem.nickname || selfStaffItem.name || '-',
         value: selfStaffItem.id
       })
     })

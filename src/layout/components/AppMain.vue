@@ -1,5 +1,5 @@
 <template>
-  <section v-loading.lock="loading" class="app-main" :class="{'overhidden':loading}">
+  <section v-loading.lock="loading" element-loading-spinner="main-loading" class="app-main" :class="{'overhidden':loading}">
     <transition :name="transitionName" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key" />
@@ -58,7 +58,7 @@ export default {
   overflow: hidden !important;
 }
 
-.el-loading-mask {
+.main-loading {
   top: 78px !important;
   left: @sideBarWidth !important;
   position: fixed !important;

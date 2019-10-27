@@ -68,7 +68,13 @@ export function getStreamInfo (params) {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && photoTool.handlePicPath(findOriginalPhoto.path)
     })
-    createData.photos = msg.photos
+    if (msg.tags && msg.tags.statics && msg.tags.statics.includes('rework')) {
+      createData.photos = msg.photos.filter(photoItem => {
+        return photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
+      })
+    } else {
+      createData.photos = msg.photos
+    }
     createData.hourGlass = msg.hour_glass
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     return createData

@@ -45,6 +45,7 @@ export function getStreamInfo (params) {
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
+      const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
       if (photoItem.tags) {
         reworkNum = photoItem.tags.values && photoItem.tags.values.rework_num && reworkNum < photoItem.tags.values.rework_num
           ? photoItem.tags.values.rework_num
@@ -64,7 +65,7 @@ export function getStreamInfo (params) {
       if (filmEvaluation && filmEvaluation === 'plant') { checkPlantNum++ }
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
       // 照片版本
-      photoItem.photoVersion = photoItem.first_photo
+      photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
         ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo])
         : settlePhoto([...photoItem.other_photo_version])
     })

@@ -163,7 +163,6 @@ export default {
      */
     async getSelfQuota () {
       this.quotaInfo = await Retoucher.getSelfQuota()
-      console.log(this.quotaInfo, 1)
     },
     /**
      * @description 获取buff 信息

@@ -135,3 +135,11 @@ export function removeSureRetouchOrder (aid) {
   const saveKey = `save-retouch-id${aid}`
   localStorage.removeItem(saveKey)
 }
+
+/**
+ * @description 清楚全部数据
+ */
+export function clearAllStorage () {
+  localStorage.clear()
+  sessionStorage.clear()
+}

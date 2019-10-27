@@ -194,19 +194,18 @@ export default {
         total: 10
       },
       showFlowBoard: false,
-      activeName: 'retouch', //
-      retouchType: '',
-      retouchState: 0,
+      activeName: 'retouch', // 展示列表类型 retouch 修图队列 check 审核队列
+      retouchType: '', // 修图标准
+      retouchState: 0, // 状态
       reviewCount: '', // 审核队列数量
       retouchCount: '', // 修图队列数量
-      tableData: [],
-      searchTableData: [],
+      tableData: [], // 列表数据
+      searchTableData: [], // 加急搜索数据
       pager: {
         page: 1,
         pageSize: 10,
         total: 10
-      },
-      allRetouchClass: {}
+      }
     }
   },
   watch: {

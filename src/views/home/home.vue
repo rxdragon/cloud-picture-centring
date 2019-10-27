@@ -7,18 +7,15 @@
         <button @click="doUpgrade">立即更新</button>
       </div>
     </div>
-    <photo-box stream-num="C2019123123" downing src="10c8033841f4f1b557222102055d0301.jpg" />
-    你好！
+    你好！测试版本
   </div>
 </template>
 
 <script>
-import PhotoBox from '@/components/PhotoBox'
 const { ipcRenderer } = window.require('electron')
 
 export default {
   name: 'Home',
-  components: { PhotoBox },
   data () {
     return {
       upload: '' // 是否有版本更新

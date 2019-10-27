@@ -42,7 +42,6 @@ app.on('ready', async () => {
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
-
   }
 
   require('./background-main')
