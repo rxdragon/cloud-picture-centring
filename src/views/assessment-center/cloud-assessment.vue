@@ -66,6 +66,18 @@
         />
       </div>
     </el-scrollbar>
+    <el-dialog
+      width="300px"
+      class="spot-success"
+      center
+      :visible.sync="dialogTableVisible"
+    >
+      <div class="icon-box">
+        <i class="el-icon-success" />
+      </div>
+      <div class="content">抽取成功</div>
+      <div class="description">共：{{ spotAllNum }}张</div>
+    </el-dialog>
   </div>
 </template>
 
@@ -95,7 +107,8 @@ export default {
       photoData: [], // 照片数据
       headerClass: '', // 顶部class
       isTakePhoto: false, // 是第一次抽取的照片
-      todayInfo: {}
+      todayInfo: {},
+      dialogTableVisible: false // 抽取成功弹框
     }
   },
   computed: {
@@ -189,19 +202,17 @@ export default {
         limit: this.pager.pageSize
       }
       const data = await AssessmentCenter.getSpotCheckResult(req)
-      //  调试
-      this.isTakePhoto = true
-
+      this.pager.total = this.spotAllNum = data.total
       if (this.isTakePhoto === true) {
+        this.dialogTableVisible = true
         this.isTakePhoto = false
+        setTimeout(() => {
+          this.dialogTableVisible = false
+        }, 1500)
       }
       this.photoData = []
       this.photoData = data.list
-      this.pager.total = this.spotAllNum = data.total
-      this.$nextTick(() => {
-        this.$store.dispatch('setting/hiddenLoading')
-        this.$newMessage.success('抽取成功')
-      })
+      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 监听页面变更
@@ -294,6 +305,30 @@ export default {
   .page-box {
     margin-top: 24px;
     text-align: center;
+  }
+
+  .spot-success {
+    text-align: center;
+
+    .icon-box {
+      text-align: center;
+      color: @green;
+      font-size: 60px;
+    }
+
+    .content {
+      text-align: center;
+      color: #303133;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .el-dialog__header {
+      display: none;
+    }
   }
 
   .scroll-container {

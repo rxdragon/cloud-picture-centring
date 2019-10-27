@@ -192,8 +192,6 @@ export default {
     canUpdatePhoto () {
       const finishNumSame = this.photos.length === this.finishPhoto.length + this.cachePhoto.length
       const updatePaddingSame = this.photos.length === this.uploadPhoto.length + this.cachePhoto.length
-      console.log(finishNumSame, 'finishNumSame')
-      console.log(updatePaddingSame, 'updatePaddingSame')
       return !finishNumSame && !updatePaddingSame
     }
   },

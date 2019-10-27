@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage } from '@/utils/index.js'
+import { keyToHump, transformPercentage, getAvg } from '@/utils/index.js'
 
 /**
  * @description 获取个人今日指标
@@ -64,21 +64,23 @@ export function getRetouchQuota (params) {
     const data = keyToHump(msg)
     console.log(data)
     const avgTime = data.avgRetouchAndRebuildTime
+    const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
+    const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
     const createData = [
       {
         label: '修图单量/张数',
-        value: data.retouchStreamNum + '/' + data.retouchPhotoNum,
+        value: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
         link: '/retoucher-center/retouch-history'
       }, {
         label: '修图平均用时',
-        value: ((+avgTime.retouchTime.sum + avgTime.rebuildTime.sum) / +avgTime.retouchTime.count).toFixed(2)
+        value: (avgRetouchTime + avgRebuildTime)
       }, {
         label: '种草量/种草率',
-        value: data.plantNum + '/' + transformPercentage(data.plantRate, data.retouchPhotoNum),
+        value: data.plantNum + ' / ' + transformPercentage(data.plantRate, data.retouchPhotoNum),
         link: '/retoucher-center/retouch-history'
       }, {
         label: '拔草量/拔草率',
-        value: data.pullNum + '/' + transformPercentage(data.pullNum, data.retouchPhotoNum),
+        value: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
         link: '/retoucher-center/retouch-history'
       }, {
         label: '超时单量',

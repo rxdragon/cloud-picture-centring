@@ -39,7 +39,12 @@ export function onWillDownload (win) {
 
     // 下载任务更新
     item.on('updated', (e, state) => { // eslint-disable-line
-      win.webContents.send('download-item-updated', handleDownloadItem(item, itemIndex))
+      const receivedBytes = item.getReceivedBytes()
+      const totalBytes = item.getTotalBytes()
+      // 如果下载完成不发送事件
+      if (receivedBytes !== totalBytes) {
+        win.webContents.send('download-item-updated', handleDownloadItem(item, itemIndex))
+      }
     })
 
     // 下载任务完成

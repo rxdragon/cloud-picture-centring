@@ -93,6 +93,7 @@ export function getReviewList (params) {
   }).then(msg => {
     console.log(msg)
     msg.list.forEach(listItem => {
+      console.log(listItem)
       // 调试
       const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time) / 60
       listItem.retouchAllTime = allTime.toFixed(2) + 'min'

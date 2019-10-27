@@ -19,12 +19,18 @@ async function createWindow () {
     minHeight: 800,
     webPreferences: {
       nodeIntegration: true,
-      scrollBounce: true
+      scrollBounce: true,
+      backgroundThrottling: false
     },
     titleBarStyle: 'hiddenInset',
     preload: path.join(__dirname, './electronMain/renderer.js')
   })
 
+  // 窗口关闭前触发
+  win.on('close', () => {
+    win.webContents.send('closed-win')
+  })
+  // 窗口关闭后触发
   win.on('closed', () => {
     win = null
   })

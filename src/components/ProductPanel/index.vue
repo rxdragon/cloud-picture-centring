@@ -1,5 +1,5 @@
 <template>
-  <div class="product-panel">
+  <div v-loading="productLoading" class="product-panel">
     <transfer-extend
       :default-checked-keys="defaultCheckedKeys"
       :from-data="fromData"
@@ -29,7 +29,8 @@ export default {
   data () {
     return {
       fromData: [], // 源数据
-      title: ['可选产品', '已选产品'] // 人员选中列表
+      title: ['可选产品', '已选产品'], // 人员选中列表
+      productLoading: true
     }
   },
   created () {
@@ -55,10 +56,15 @@ export default {
     remove (fromData, toData, obj) {
       this.$emit('update:toData', toData)
     },
+    /**
+     * @description 获取全部产品
+     */
     async getAllProductPanel () {
       const list = await Product.getAllProductPanel()
+      console.log('获取全部产品')
       this.fromData = JSON.parse(JSON.stringify(list))
       this.$emit('update:isLoadingDown', true)
+      this.productLoading = false
     }
   }
 }

@@ -240,9 +240,9 @@ export default {
     },
     // 监视默认选中
     defaultCheckedKeys (val) {
-      console.log('watch')
       if (val && this.defaultTransfer) {
         this.$nextTick(() => {
+          this.from_check_keys = this.defaultCheckedKeys
           this.addToAims()
         })
       }
@@ -257,14 +257,9 @@ export default {
   mounted () {
     if (this.defaultCheckedKeys.length > 0 && this.defaultTransfer) {
       this.$nextTick(() => {
-        console.log('mounted')
         this.addToAims()
       })
     }
-  },
-  created () {
-    console.log(this.defaultCheckedKeys, 'created')
-    this.from_check_keys = this.defaultCheckedKeys
   },
   methods: {
     /**
@@ -326,6 +321,7 @@ export default {
           newSkeletonCheckedNodes.push(item)
         }
       })
+
       // 筛选到目标树不存在的骨架后在处理每个骨架节点-非末端叶子节点 - 全选节点
       newSkeletonCheckedNodes.forEach(item => {
         if (item[children__] && item[children__].length > 0) {
