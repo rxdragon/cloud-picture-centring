@@ -42,7 +42,7 @@
         <el-table-column label="订单信息" width="220">
           <template slot-scope="scope">
             <div v-if="scope.row.order" class="order-info">
-              <span>订单号：{{ scope.row.order.id }}</span>
+              <span>订单号：{{ scope.row.order.external_num }}</span>
               <span>流水号：{{ scope.row.stream_num }}</span>
               <span>拍摄产品：{{ scope.row.product.name }}</span>
               <span>照片数量：{{ scope.row.photos.length }}</span>
@@ -91,7 +91,7 @@
         <!-- 修图标准 -->
         <div class="retouch-type search-item">
           <span>修图标准</span>
-          <Retouch-kind-select v-model="retouchType" :all-optision="true" />
+          <Retouch-kind-select v-model="retouchType" all-optision />
         </div>
         <!-- 状态 -->
         <div class="retouch-state search-item">
@@ -130,7 +130,7 @@
         <el-table-column label="订单信息" width="220">
           <template slot-scope="scope">
             <div v-if="scope.row.order" class="order-info">
-              <span>订单号：{{ scope.row.order.id }}</span>
+              <span>订单号：{{ scope.row.order.external_num }}</span>
               <span>流水号：{{ scope.row.stream_num }}</span>
               <span>拍摄产品：{{ scope.row.product.name }}</span>
               <span>照片数量：{{ scope.row.photos.length }}</span>

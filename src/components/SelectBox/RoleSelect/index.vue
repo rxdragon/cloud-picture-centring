@@ -7,7 +7,7 @@
       placeholder="请选择角色组"
       v-on="$listeners"
     >
-      <el-option label="全部" :value="0" />
+      <!-- <el-option label="全部" :value="0" /> -->
       <el-option
         v-for="item in options"
         :key="item.value"

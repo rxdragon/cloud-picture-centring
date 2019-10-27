@@ -1,3 +1,4 @@
+// 创建版本，版本编号和hash值
 const fs = require('fs')
 const NodeRSA = require('node-rsa')
 

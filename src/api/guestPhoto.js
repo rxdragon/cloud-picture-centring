@@ -34,7 +34,7 @@ export function getPhotoInfo (params) {
     createData.orderNum = createData.stream.order.external_num
     createData.streamNum = createData.stream.stream_num
     createData.productName = createData.stream.product.name
-    createData.labelTag = createData.stream.tags.values.retouch_claim || {}
+    createData.labelTag = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.retouch_claim || {}
     createData.orderMark = createData.stream.order.note.orderNote
     createData.dresserMark = createData.stream.order.note.dresserNote
     createData.photographerRemark = createData.stream.note && createData.stream.note.photographer_remark || '-'

@@ -86,7 +86,7 @@
               <div v-for="(grassItem, grassIndex) in productConfig.grassData" :key="grassIndex" class="panel">
                 <div class="info-title">{{ grassIndex }} 人</div>
                 <div class="panel-contetn">
-                  <el-input :key="grassIndex" v-model.number="productConfig.grassData[grassIndex]" v-decimalOnly placeholder="0" />
+                  <el-input :key="grassIndex" v-model.number="productConfig.grassData[grassIndex]" v-decimalOnly type="number" placeholder="0" />
                 </div>
               </div>
             </div>
@@ -227,11 +227,11 @@ export default {
         sandClockValue: 1, //  是否需要沙漏
         needTemplate: 1, // 是否需要模版
         grassData: {},
-        joinGrassData: {}, // 拼接海草
+        joinGrassData: {}, // 拼接海草,不为拼接可不传或传[]
         notJointMoney: {},
-        jointMoney: {},
+        jointMoney: {}, // 不为拼接可不传或传[]
         blueNotJointMoney: {},
-        blueJointMoney: {},
+        blueJointMoney: {}, // 不为拼接可不传或传[]
         needJoint: 1, // 是否需要拼接
         productRemark: ''
       },
@@ -256,6 +256,9 @@ export default {
     if (this.editId) { this.getProductInfo() }
   },
   methods: {
+    /**
+     * @description 初始化数据
+     */
     resetData () {
       const circulation = 20
       const createObj = {}

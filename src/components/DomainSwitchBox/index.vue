@@ -32,7 +32,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-.domain-switch-box {}
-</style>

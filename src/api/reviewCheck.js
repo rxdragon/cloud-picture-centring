@@ -93,10 +93,11 @@ export function getReviewList (params) {
   }).then(msg => {
     console.log(msg)
     msg.list.forEach(listItem => {
+      // 调试
       const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time) / 60
       listItem.retouchAllTime = allTime.toFixed(2) + 'min'
       listItem.staffName = listItem.retoucher && listItem.retoucher.name || '-'
-      listItem.reviewPhoto = listItem.reviewPlantPhotoNum + ' / ' + listItem.reviewPullPhotoNum
+      listItem.reviewPhoto = listItem.reviewPlantPhotoNum && listItem.reviewPullPhotoNum ? listItem.reviewPlantPhotoNum + ' / ' + listItem.reviewPullPhotoNum : '0 / 0'
       listItem.checkPhoto = listItem.spotCheckPhotoPlantNum + ' / ' + listItem.spotCheckPhotoPullNum
     })
     return msg

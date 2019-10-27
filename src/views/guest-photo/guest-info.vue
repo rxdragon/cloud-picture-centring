@@ -57,7 +57,7 @@
             <div class="work-value content-value">
               <span>{{ workerInfo.storeName }}</span>
               <span>{{ workerInfo.photographer }}</span>
-              <span>没mock</span>
+              <span>没数据</span>
             </div>
           </div>
           <div class="panel-content">
