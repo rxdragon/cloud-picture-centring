@@ -1,4 +1,4 @@
-const { shell } = require('electron').remote
+const { shell } = require('electron')
 import fs from 'fs'
 
 export const openFile = (path) => {

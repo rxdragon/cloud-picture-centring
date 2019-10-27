@@ -22,7 +22,6 @@ async function createWindow () {
       scrollBounce: true
     },
     titleBarStyle: 'hiddenInset',
-    // icon: path.join(__static, 'icon.png'),
     preload: path.join(__dirname, './electronMain/renderer.js')
   })
 

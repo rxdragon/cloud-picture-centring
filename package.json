@@ -11,6 +11,7 @@
     "build-dev": "vue-cli-service build --mode development --dest=dist_vue",
     "lint": "vue-cli-service lint",
     "eserve": "vue-cli-service electron:serve",
+    "ebuild": "vue-cli-service electron:build",
     "new": "plop",
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "postinstall": "electron-builder install-app-deps",
