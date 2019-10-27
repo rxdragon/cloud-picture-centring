@@ -151,9 +151,7 @@ export default {
      * @description 获取流量看板数据
      */
     async getFlowInfo () {
-      this.$store.dispatch('setting/showLoading')
       this.flowInfo = await AdminManage.getFlowInfo()
-      this.$store.dispatch('setting/hiddenLoading')
     }
   }
 }

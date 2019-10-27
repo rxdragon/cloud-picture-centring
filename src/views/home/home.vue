@@ -21,10 +21,9 @@ export default {
   components: { PhotoBox },
   data () {
     return {
-      upload: ''
+      upload: '' // 是否有版本更新
     }
   },
-  created () {},
   mounted () {
     ipcRenderer.on('version:find-new', (event, info) => {
       this.upload = info.newVersion

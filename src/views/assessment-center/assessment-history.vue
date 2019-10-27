@@ -49,7 +49,7 @@
       <!-- 修图师 -->
       <div class="staff-search search-item">
         <span>修图师</span>
-        <staff-select v-model="staffId" :props="staffSearchSelect" />
+        <staff-select v-model="staffId" :props="{ multiple: false }" />
       </div>
       <!-- 审核人员 -->
       <div class="checker-search search-item">
@@ -89,10 +89,9 @@ export default {
     return {
       timeSpan: null, // 时间
       correctType: 0, // 抽片类型
-      spotType: 0,
-      staffId: '',
-      reviewerId: 0,
-      staffSearchSelect: { multiple: false },
+      spotType: 0, // 抽片类型 0 全部 1 种草 2 拔草 3 不中不把
+      staffId: '', // 修图师 id
+      reviewerId: 0, // 审核人id
       photoData: [], // 照片数据
       pager: {
         page: 1,

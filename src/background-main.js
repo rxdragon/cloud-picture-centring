@@ -63,6 +63,7 @@ async function createWindow () {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
+  console.log('all-closed')
   app.quit()
 })
 

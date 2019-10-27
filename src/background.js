@@ -1,7 +1,8 @@
 'use strict'
 
-import { app, BrowserWindow, protocol } from 'electron'
+import { app, protocol } from 'electron'
 import EventEmitter from 'events'
+import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 
 // !!! 不要修改此文件，修改此文件没有任何作用，请修改对应 starter 项目文件 !!!
 global.env = process.env.NODE_ENV || 'dev'
@@ -16,10 +17,6 @@ global.emit = new EventEmitter()
 global.isInSingleMode = global.env !== 'production'
 
 console.log(`cache dir: ${global.userDir}`)
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let win
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'cloud', privileges: { secure: true, standard: true }}])
@@ -40,11 +37,11 @@ app.on('ready', async () => {
     // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
     // If you are not using Windows 10 dark mode, you may uncomment these lines
     // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
-    // try {
-    //   await installVueDevtools()
-    // } catch (e) {
-    //   console.error('Vue Devtools failed to install:', e.toString())
-    // }
+    try {
+      await installVueDevtools()
+    } catch (e) {
+      console.error('Vue Devtools failed to install:', e.toString())
+    }
 
   }
 

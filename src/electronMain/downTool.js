@@ -10,7 +10,6 @@ let downloadItems = []
 export function onWillDownload (win) {
   session.defaultSession.on('will-download', async (event, item) => {
     const fileName = item.getFilename() // 文件名
-    const initialState = item.getState() // 下载状态
     const downloadPath = app.getPath('desktop') // 默认下载储存地址
 
     let fileNum = 0 // 文件名字

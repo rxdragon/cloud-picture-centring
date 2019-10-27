@@ -66,7 +66,7 @@ export function getSpotCheckResult (params) {
       item.completePhoto = item.photoData.other_photo_version.find(item => item.version === 'complete_photo')
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
       item.retouchStandard = item.retouch_standard
-      item.productName = item.photoData.stream.product.name
+      item.productName = item.photoData.stream && item.photoData.stream.product.name
       item.isPull = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('pull') || false
       item.isPlant = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('plant') || false
       item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason || '暂无原因'
@@ -76,7 +76,7 @@ export function getSpotCheckResult (params) {
         face: '暂无',
         pimples: false
       }
-      if (item.photoData.stream.tags) {
+      if (item.photoData.stream && item.photoData.stream.tags) {
         item.retouchRequire = item.photoData.stream.tags.values.retouch_claim
       }
     })
@@ -113,7 +113,7 @@ export function getSearchHistory (params) {
     const data = msg.data
     console.log(data)
     data.forEach(item => {
-      item.reviewerNote = item.photoData.stream.reviewer_note || '暂无审核备注'
+      item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note || '暂无审核备注'
       item.retouchNote = item.photoData.stream.note.retouch_note
       item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('rework') || false
       // 照片版本
@@ -144,7 +144,7 @@ export function getSearchHistory (params) {
         face: '暂无',
         pimples: false
       }
-      item.retouchRequire = item.photoData.stream.tags.values.retouch_claim
+      item.retouchRequire = item.photoData.stream.tags && item.photoData.stream.tags.values && item.photoData.stream.tags.values.retouch_claim
       item.streamNum = item.photoData.stream.stream_num
     })
     return {

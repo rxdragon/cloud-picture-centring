@@ -7,6 +7,7 @@
       placeholder="请选择修图标准"
       v-on="$listeners"
     >
+      <el-option v-if="allOptision" label="全部" :value="0" />
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -21,8 +22,7 @@
 export default {
   name: 'RetouchKindSelect',
   props: {
-    importData: { type: Boolean },
-    allOptision: { type: Boolean }
+    allOptision: { type: Boolean } // 是否显示全部选项
   },
   data () {
     return {
@@ -40,12 +40,6 @@ export default {
         value: 'mainto'
       }]
     }
-  },
-  created () {
-    this.allOptision && this.options.unshift({
-      label: '全部',
-      value: ''
-    })
   }
 }
 </script>

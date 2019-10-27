@@ -6,6 +6,7 @@ export function removeSession () {
   sessionStorage.removeItem('userInfo')
   sessionStorage.removeItem('xStreamIdExpireTime')
   sessionStorage.removeItem('xStreamId')
+  localStorage.clear()
 }
 
 /**
