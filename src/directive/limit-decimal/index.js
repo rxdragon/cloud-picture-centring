@@ -9,8 +9,8 @@ Vue.directive('decimalOnly', {
       if (has) {
         const regArr = reg2.exec(val)
         const trueText = regArr ? regArr[0] : ''
-        el.children[0].value = trueText
-        el.children[0].dispatchEvent(new Event('input'))
+        event.target.value = trueText
+        event.target.dispatchEvent(new Event('input'))
       }
     })
   }

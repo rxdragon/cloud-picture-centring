@@ -19,7 +19,7 @@
       </div>
       <div class="spot-check-box search-item">
         <span>抽查种拔草</span>
-        <grass-select v-model="spotCheckType" />
+        <spot-grass-select v-model="spotCheckType" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStaffRetouchList(1)">查 询</el-button>
@@ -27,7 +27,7 @@
     </div>
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="retoucherName" label="组员" />
+        <el-table-column prop="retoucherName" label="组员" width="80" />
         <el-table-column prop="stream_num" label="流水号" />
         <el-table-column prop="pass_at" label="审核通过时间" />
         <el-table-column prop="retouchAllTime" label="修图总时长" />
@@ -56,13 +56,14 @@
 
 <script>
 import GrassSelect from '@SelectBox/GrassSelect'
+import SpotGrassSelect from '@SelectBox/SpotGrassSelect'
 import CrewSelect from '@SelectBox/CrewSelect'
-
+import { joinTimeSpan } from '@/utils/timespan.js'
 import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'CrewRetouchHistory',
-  components: { GrassSelect, CrewSelect },
+  components: { GrassSelect, CrewSelect, SpotGrassSelect },
   props: {
     isSeachPage: { type: Boolean },
     searchTime: { type: [Object, Array, String], default: () => {} },
@@ -132,15 +133,16 @@ export default {
       this.pager.page = page || this.pager.page
       const reqData = {
         range: 'group',
-        startAt: this.searchTime[0],
-        endAt: this.searchTime[1],
+        startAt: joinTimeSpan(this.searchTime[0]),
+        endAt: joinTimeSpan(this.searchTime[1], 1),
         pageSize: this.pager.pageSize,
         page: this.pager.page
       }
       this.auditType && (reqData.plantPull = this.auditType)
       this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
       this.$store.dispatch('setting/showLoading')
-      const data = await RetouchLeader.getStaffRetouchList()
+      console.log(reqData)
+      const data = await RetouchLeader.getStaffRetouchList(reqData)
       this.tableData = data.list
       this.pager.total = data.total
       this.$store.dispatch('setting/hiddenLoading')

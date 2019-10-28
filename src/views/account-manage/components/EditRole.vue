@@ -57,12 +57,10 @@ export default {
         additionInfo: true
       }
       const data = await AccountManage.getRoleInfo(reqData)
-      this.$store.dispatch('setting/hiddenLoading')
       this.roleName = data.title
-      console.log(data.permissions)
       const permissions = data.permissions.flatMap(permissionItem => [permissionItem.permission_id])
       this.hasPermission = permissions
-      console.log(data)
+      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 添加权限
@@ -96,6 +94,7 @@ export default {
         permissionIds: this.hasPermission,
         title: this.roleName
       }
+      this.$store.dispatch('setting/showLoading')
       AccountManage.editRole(reqData)
         .then(() => {
           this.$newMessage({

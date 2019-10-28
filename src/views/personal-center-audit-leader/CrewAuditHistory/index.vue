@@ -23,7 +23,7 @@
       </div>
       <div class="spot-check-box search-item">
         <span>抽查种拔草</span>
-        <grass-select v-model="spotCheckType" />
+        <spot-grass-select v-model="spotCheckType" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getReviewList(1)">查 询</el-button>
@@ -66,6 +66,7 @@
 
 <script>
 import GrassSelect from '@SelectBox/GrassSelect'
+import SpotGrassSelect from '@SelectBox/SpotGrassSelect'
 import CheckGrassSelect from '@SelectBox/CheckGrassSelect'
 import CrewSelect from '@SelectBox/CrewSelect'
 
@@ -75,7 +76,7 @@ import { joinTimeSpan } from '@/utils/timespan.js'
 
 export default {
   name: 'CrewAuditHistory',
-  components: { GrassSelect, CheckGrassSelect, CrewSelect },
+  components: { GrassSelect, CheckGrassSelect, CrewSelect, SpotGrassSelect },
   props: {
     isSeachPage: { type: Boolean },
     searchTime: { type: [Object, Array, String], default: () => {} },

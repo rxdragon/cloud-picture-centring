@@ -1,5 +1,5 @@
 <template>
-  <div class="jurisdiction">
+  <div v-loading="loading" class="jurisdiction">
     <div v-for="(moduleItem, moduleIndex) in jurisdictionList" :key="moduleIndex" class="module-box">
       <div class="module-header">
         <el-checkbox
@@ -15,7 +15,7 @@
           <el-checkbox
             v-model="menuItem.setAll"
             :indeterminate="menuItem.isIndeterminate"
-            @change="checkAllPermission(menuItem, moduleItem)"
+            @change="checkMenuAllPermission(menuItem, moduleItem)"
           >
             {{ menuItem.name }}
           </el-checkbox>
@@ -53,22 +53,27 @@ export default {
   },
   data () {
     return {
-      jurisdictionList: []
+      jurisdictionList: [],
+      firstShow: true,
+      loading: true
     }
   },
   watch: {
-    hasPermission: {
-      handler: 'initializeData',
-      immediate: false
+    hasPermission (value) {
+      if (value.length && this.firstShow && this.jurisdictionList.length) { this.initializeData() }
     }
   },
-  created () {
-    this.jurisdictionList = JSON.parse(JSON.stringify(Staff.getJurisdictionList()))
-    this.initializeData()
+  async created () {
+    await this.getJurisdictionList()
   },
   methods: {
+    async getJurisdictionList () {
+      const data = await Staff.getJurisdictionList()
+      this.jurisdictionList = JSON.parse(JSON.stringify(data))
+      if (this.firstShow) { this.initializeData() }
+    },
     /**
-     * @description 权限更改
+     * @description 选中单个权限
      */
     handlePermission (menuItem, moduleItem) {
       const checkedCount = menuItem.checkPermission.length
@@ -84,31 +89,38 @@ export default {
         }
       }
       moduleItem.setAll = moduleItem.checkMenu.length === moduleItem.menu.length
-      moduleItem.isIndeterminate = menuItem.isIndeterminate !== menuItem.setAll
+      if (moduleItem.setAll) {
+        moduleItem.isIndeterminate = false
+      } else {
+        moduleItem.isIndeterminate = moduleItem.menu.some(item => item.isIndeterminate !== item.setAll)
+      }
       this.updateParent()
     },
     /**
      * @description 选中模块全部权限
      */
-    checkAllPermission (menuItem, moduleItem) {
+    checkMenuAllPermission (menuItem, moduleItem) {
       if (menuItem.setAll) {
         moduleItem.checkMenu.push(menuItem)
-        moduleItem.setAll = moduleItem.checkMenu.length === moduleItem.menu.length
       } else {
         for (const index in moduleItem.checkMenu) {
           if (menuItem.id === moduleItem.checkMenu[index].id) {
             moduleItem.checkMenu.splice(index, 1)
           }
         }
-        moduleItem.setAll = moduleItem.checkMenu.length === moduleItem.menu.length
       }
       menuItem.checkPermission = menuItem.setAll ? menuItem.permission : []
       menuItem.isIndeterminate = false
-      moduleItem.isIndeterminate = menuItem.isIndeterminate !== menuItem.setAll
+      moduleItem.setAll = moduleItem.checkMenu.length === moduleItem.menu.length
+      if (moduleItem.setAll) {
+        moduleItem.isIndeterminate = false
+      } else {
+        moduleItem.isIndeterminate = moduleItem.menu.some(item => item.isIndeterminate !== item.setAll)
+      }
       this.updateParent()
     },
     /**
-     * @description 选择全部权限
+     * @description 选择模块全部权限
      * @param moduleItem 模块
      */
     checkModulePermission (moduleItem) {
@@ -140,13 +152,13 @@ export default {
           })
         })
       })
+      this.firstShow = false
       this.$emit('change', updateData)
     },
     /**
      * @description 初始化选择权限
      */
     initializeData () {
-      console.log(this.jurisdictionList)
       this.jurisdictionList.forEach(mdouleItem => {
         mdouleItem.checkMenu = []
         mdouleItem.menu.forEach(menuItem => {
@@ -164,6 +176,7 @@ export default {
         mdouleItem.setAll = mdouleItem.checkMenu.length === mdouleItem.menu.length
         mdouleItem.isIndeterminate = Boolean(mdouleItem.checkMenu.length && !mdouleItem.setAll)
       })
+      this.loading = false
     }
   }
 }
@@ -172,6 +185,8 @@ export default {
 <style lang="less">
 .jurisdiction {
   width: calc(~'100% - 100px');
+  min-height: 100px;
+
   .module-box {
     .module-header {
       background-color: #eee;
