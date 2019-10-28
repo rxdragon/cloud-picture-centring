@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage, getAvg } from '../utils/index.js'
+import { keyToHump, transformPercentage, getAvg, timeFormat } from '../utils/index.js'
 import { SearchType } from '@/utils/enumerate.js'
 
 /**
@@ -24,16 +24,16 @@ export function getGroupReviewQuota (params) {
       value: data.reviewerReviewPhotoNum
     }, {
       label: '审核平均用时',
-      value: getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count),
+      value: timeFormat(getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count), 'text', true),
       link: '/audit-center/audit-history' + '?timeSpan=' + timeSpan
     }, {
       label: '审核种草(张) / 种草率(%)',
-      value: data.reviewPhotoPlantNum + ' / ' + transformPercentage(data.reviewPhotoPlantNum, data.reviewPhotoNum),
+      value: data.reviewPhotoPlantNum + ' / ' + transformPercentage(data.reviewPhotoPlantNum, data.reviewerReviewPhotoNum),
       link: '/audit-center/audit-history' + '?timeSpan=' + timeSpan + '&searchType=' + SearchType.CheckPlant,
       query: SearchType.CheckPlant
     }, {
       label: '审核拔草(张) / 拔草率(%)',
-      value: data.reviewPhotoPullNum + ' / ' + transformPercentage(data.reviewPhotoPullNum, data.reviewPhotoNum),
+      value: data.reviewPhotoPullNum + ' / ' + transformPercentage(data.reviewPhotoPullNum, data.reviewerReviewPhotoNum),
       link: '/audit-center/audit-history' + '?timeSpan=' + timeSpan + '&searchType=' + SearchType.CheckPull,
       query: SearchType.CheckPull
     }, {

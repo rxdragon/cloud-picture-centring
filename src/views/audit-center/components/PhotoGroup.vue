@@ -4,7 +4,7 @@
       <photo-box
         :src="photoItem.path"
         show-joint-label
-        show-recede-reason
+        :show-recede-reason="photoItem.version === 'first_photo'"
         :photo-name="photoItem.version === 'first_photo'"
         :tags="photos.tags"
         @click.native="showPriviewPhoto(photoIndex)"

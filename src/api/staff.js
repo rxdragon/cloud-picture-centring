@@ -146,7 +146,7 @@ export function getReviewer () {
     const createData = []
     msg.forEach(reviewerItem => {
       createData.push({
-        label: reviewerItem.name,
+        label: reviewerItem.nickname || reviewerItem.name || '暂无姓名',
         value: reviewerItem.id
       })
     })

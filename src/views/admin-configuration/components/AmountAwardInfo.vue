@@ -8,11 +8,11 @@
         <span>冲量标题：</span>
         <p>{{ title }}</p>
       </div>
-      <div class="info-box info-retouch-group" v-if="retoucherOrg">
+      <div v-if="retoucherOrg" class="info-box info-retouch-group">
         <span>外包机构：</span>
         <p>{{ retoucherOrg }}</p>
       </div>
-      <div class="info-box info-staff" v-if="staffList.length">
+      <div v-if="staffList.length" class="info-box info-staff">
         <span>配置伙伴：</span>
         <staff-info :staff-list="staffList" />
       </div>

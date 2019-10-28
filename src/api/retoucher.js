@@ -10,9 +10,9 @@ export function getSelfQuota () {
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
-    for (const key in data) {
-      data[key] = String(data[key])
-    }
+    console.log(data)
+    const todayIncome = Number(data.todayIncome.retouch) + Number(data.todayIncome.impulse)
+    data.todayIncome = todayIncome.toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
       data.todayFinishPhotoNumProgress = 0
     } else {

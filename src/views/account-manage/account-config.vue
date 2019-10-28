@@ -68,7 +68,7 @@ export default {
   data () {
     return {
       postValue: 0,
-      roleValue: 0,
+      roleValue: '',
       staffName: null, // 伙伴信息
       tableData: [],
       roleMap: {},

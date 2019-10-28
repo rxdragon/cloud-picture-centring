@@ -361,14 +361,6 @@ export default {
           createPhotoData.push(newPhoto)
         }
       })
-      // 判断照片是否进行修改
-      // createPhotoData.forEach((photoItem, photoIndex) => {
-      //   if (photoItem.willDelete) {
-      //     this.uploadPhoto.splice(photoIndex, 1)
-      //     createPhotoData.splice(photoIndex, 1)
-      //   }
-      // })
-
       const filterCreatePhotoData = createPhotoData.filter((photoItem, photoIndex) => {
         if (photoItem.willDelete) { this.uploadPhoto.splice(photoIndex, 1) }
         return !photoItem.willDelete

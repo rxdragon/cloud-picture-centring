@@ -130,22 +130,25 @@ export default {
      */
     async getPhotoList (page) {
       this.pager.page = page || this.pager.page
+      const type = ['streamNum', 'customerName', 'telephone']
       const reqData = {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (!this.timeSpan) {
+      if (this.orderSearchValue) {
+        const key = type[this.orderType - 1]
+        reqData[key] = this.orderSearchValue
+      }
+      if (!this.timeSpan && !this.orderSearchValue) {
         this.$newMessage.warning('请填写时间')
         return false
       }
-      reqData.startAt = joinTimeSpan(this.timeSpan[0])
-      reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
-      if (this.staffId.length) {
-        reqData.staffIds = this.staffId
+      if (this.timeSpan) {
+        reqData.startAt = joinTimeSpan(this.timeSpan[0])
+        reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.checkValue) {
-        reqData.evaluateStar = this.checkValue
-      }
+      if (this.staffId.length) { reqData.staffIds = this.staffId }
+      if (this.checkValue) { reqData.evaluateStar = this.checkValue }
       this.$store.dispatch('setting/showLoading')
       const data = await GuestPhoto.getPhotoList(reqData)
       this.photos = data.list || []

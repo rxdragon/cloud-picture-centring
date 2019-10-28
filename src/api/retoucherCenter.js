@@ -59,7 +59,7 @@ export function getStreamInfo (params) {
       photographer: msg.order.tags ? msg.order.tags.values.photographer : '-', // 摄影
       productName: msg.product && msg.product.name,
       photoNum: msg.photos.length,
-      waitTime: waitTime(msg.receipt_at),
+      waitTime: waitTime(msg.created_at),
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
       streamState: msg.state

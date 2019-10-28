@@ -6,7 +6,7 @@ import './individuation-element-ui/elementChangeUi.less' // 个性话主题
 Vue.use(Element)
 // 重制顶部量
 Vue.prototype.$newMessage = (params) => {
-  let newParams = { ...params, ...{ offset: 62 } }
+  let newParams = { ...params, ...{ offset: 98 } }
   Vue.prototype.$message(newParams)
 }
 
