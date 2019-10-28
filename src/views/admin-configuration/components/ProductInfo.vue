@@ -87,7 +87,7 @@
               <div v-for="(grassItem, grassIndex) in productConfig.grassData" :key="grassIndex" class="panel">
                 <div class="info-title">{{ grassIndex }} 人</div>
                 <div class="panel-contetn">
-                  <el-input :key="grassIndex" v-model="productConfig.grassData[grassIndex]" placeholder="0" />
+                  <input :key="grassIndex" v-model="productConfig.grassData[grassIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
                 </div>
               </div>
             </div>
@@ -101,7 +101,7 @@
               <div v-for="(notJointItem, notJointIndex) in productConfig.notJointMoney" :key="notJointIndex" class="panel">
                 <div class="info-title">{{ notJointIndex }} 人</div>
                 <div class="panel-contetn">
-                  <el-input v-model.number="productConfig.notJointMoney[notJointIndex]" placeholder="0" />
+                  <input v-model="productConfig.notJointMoney[notJointIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
                 </div>
               </div>
             </div>
@@ -118,7 +118,7 @@
                 </div>
                 <div v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney" :key="blueIndex" class="item-row">
                   <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="list-item">
-                    <el-input v-model.number="productConfig.blueNotJointMoney[blueIndex][moneyIndex]" placeholder="0" />
+                    <input v-model="productConfig.blueNotJointMoney[blueIndex][moneyIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
                   </div>
                 </div>
               </div>
@@ -139,7 +139,7 @@
               <div v-for="(grassItem, grassIndex) in productConfig.joinGrassData" :key="grassIndex" class="panel">
                 <div class="info-title">{{ grassIndex }} 人</div>
                 <div class="panel-contetn">
-                  <el-input :key="grassIndex" v-model.number="productConfig.joinGrassData[grassIndex]" placeholder="0" />
+                  <input :key="grassIndex" v-model="productConfig.joinGrassData[grassIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
                 </div>
               </div>
             </div>
@@ -153,7 +153,7 @@
               <div v-for="(jointItem, jointIndex) in productConfig.jointMoney" :key="jointIndex" class="panel">
                 <div class="info-title">{{ jointIndex }} 人</div>
                 <div class="panel-contetn">
-                  <el-input v-model.number="productConfig.jointMoney[jointIndex]" placeholder="0" />
+                  <input v-model="productConfig.jointMoney[jointIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
                 </div>
               </div>
             </div>
@@ -170,7 +170,7 @@
                 </div>
                 <div v-for="(blueItem, blueIndex) in productConfig.blueJointMoney" :key="blueIndex" class="item-row">
                   <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="list-item">
-                    <el-input v-model.number="productConfig.blueJointMoney[blueIndex][moneyIndex]" placeholder="0" />
+                    <input v-model="productConfig.blueJointMoney[blueIndex][moneyIndex]" v-decimalOnly class="num-input" placeholder="0">
                   </div>
                 </div>
               </div>

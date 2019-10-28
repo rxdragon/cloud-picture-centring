@@ -96,14 +96,18 @@ export function getStaffRetouchList (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getStaffRetouchList',
     method: 'GET',
-    data: params
+    params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time) / 60
+      const reviewPlantPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.plant_num || 0
+      const reviewPullPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.pull_num || 0
+      const spotPlantPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_plant_num || 0
+      const spotPullPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_pull_num || 0
+      const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)
       listItem.retoucherName = listItem.retoucher.name
-      listItem.retouchAllTime = allTime.toFixed(2) + 'min'
-      listItem.reviewPhoto = listItem.review_plant_photo_num + ' / ' + listItem.review_pull_photo_num
-      listItem.checkPhoto = listItem.spot_check_plant_photo_num + ' / ' + listItem.spot_check_pull_photo_num
+      listItem.retouchAllTime = timeFormat(allTime, 'text', true)
+      listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
+      listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
     })
     console.log(msg)
     return msg

@@ -44,7 +44,10 @@ axios.interceptors.response.use(
   error => {
     // 请求没有任何返回值：网络差，无服务
     if (!error.response) {
-      return Promise.reject(new Error('系统繁忙，请稍后再试！'))
+      let message = '系统繁忙，请稍后再试！'
+      let promiseMessage = errorMessage(message)
+      store.dispatch('setting/hiddenLoading')
+      return Promise.reject(message)
     }
     let data = error.response.data
     let noData = !data
@@ -56,7 +59,7 @@ axios.interceptors.response.use(
       store.dispatch('setting/hiddenLoading')
       return Promise.reject(message)
     }
-    let message = errorCode.getMsg(data.error_code)
+    let message = errorCode.getMsg(data)
     let promiseMessage = errorMessage(message)
     store.dispatch('setting/hiddenLoading')
     return Promise.reject(message)

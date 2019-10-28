@@ -1,5 +1,4 @@
 import axios from '@/plugins/axios.js'
-import jurisdictionList from '../assets/mock/per'
 
 /**
  * @description 查询伙伴
@@ -97,13 +96,15 @@ export function getStaffSelectList () {
       }
       if (staff.department_id) {
         const groudInfo = staff.department
-        const findGroud = createData.find(item => item.gid === groudInfo.id)
+        const findGroud = createData.find(item => {
+          return item.gid === staff.department_id
+        })
         if (findGroud) {
           findGroud.children = [...findGroud.children, staffInfo]
         } else {
           createData.push({
-            value: groudInfo.id,
-            label: groudInfo.name,
+            value: staff.department_id,
+            label: groudInfo && groudInfo.name || '-',
             children: [staffInfo]
           })
         }
@@ -196,5 +197,90 @@ export function getSelfStaffs () {
 }
 
 export function getJurisdictionList () {
-  return jurisdictionList
+  return axios({
+    url: '/project_cloud/staff/getPermissionList',
+    method: 'get'
+  }).then(msg => {
+    const permissions = []
+    msg.forEach(permissionItem => {
+      const nameArr = permissionItem.name.split('.')
+      const titleNameArr = permissionItem.title.split('-')
+      const moduleName = nameArr[0]
+      const moduleTitleName = titleNameArr[0]
+      const menuName = nameArr[1]
+      const menuTitleName = titleNameArr[1]
+      const permissionName = nameArr[2]
+      const permissionTitleName = titleNameArr[2]
+      const findModuleItem = permissions.find(moduleItem => moduleItem.idName === moduleName)
+      if (findModuleItem) {
+        const findMenuItem = findModuleItem.menu.find(menuItem => menuItem.idName === menuName)
+        if (findMenuItem) {
+          const newPermission = {
+            desc: permissionTitleName,
+            idName: permissionName,
+            id: permissionItem.permission_id,
+            menu_id: findMenuItem.id,
+            module_id: findModuleItem.id,
+            name: permissionName,
+            title: permissionTitleName
+          }
+          findMenuItem.permission.push(newPermission)
+        } else {
+          const newPermission = {
+            desc: permissionTitleName,
+            idName: permissionName,
+            id: permissionItem.permission_id,
+            menu_id: 0,
+            module_id: findModuleItem.id,
+            name: permissionName,
+            title: permissionTitleName
+          }
+          const menuItem = {
+            checkPermission: [],
+            idName: menuName,
+            id: findModuleItem.menu.length,
+            isIndeterminate: false,
+            isShow: false,
+            module_id: 0,
+            name: menuTitleName,
+            permission: [newPermission],
+            setAll: false
+          }
+          findModuleItem.menu.push(menuItem)
+        }
+      } else {
+        const newPermission = {
+          desc: permissionTitleName,
+          idName: permissionName,
+          id: permissionItem.permission_id,
+          menu_id: 0,
+          module_id: 0,
+          name: permissionName,
+          title: permissionTitleName
+        }
+        const newMenu = {
+          checkPermission: [],
+          idName: menuName,
+          id: 0,
+          isIndeterminate: false,
+          isShow: false,
+          module_id: 0,
+          name: menuTitleName,
+          permission: [newPermission],
+          setAll: false
+        }
+        const moduleItem = {
+          checkMenu: [],
+          idName: moduleName,
+          id: permissions.length,
+          isIndeterminate: false,
+          menu: [newMenu],
+          name: moduleTitleName,
+          setAll: false
+        }
+        permissions.push(moduleItem)
+      }
+    })
+    return permissions
+  })
 }

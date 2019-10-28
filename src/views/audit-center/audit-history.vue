@@ -18,7 +18,7 @@
       </div>
       <div class="spot-check-box search-item">
         <span>抽查种拔草</span>
-        <grass-select v-model="spotCheckType" />
+        <spot-grass-select v-model="spotCheckType" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getReviewList(1)">查 询</el-button>
@@ -30,12 +30,12 @@
         <el-table-column prop="staffName" label="组员" />
         <el-table-column prop="stream_num" label="流水号" width="200" />
         <el-table-column prop="pass_at" label="审核通过时间" width="200" />
-        <el-table-column prop="retouchAllTime" label="审核总时长" />
+        <el-table-column prop="reviewAllTime" label="审核总时长" />
         <el-table-column prop="reviewPhoto" label="审核种 / 拔草" />
         <el-table-column label="纠偏">
           <template slot-scope="scope">
-            <div>意见相同：{{ scope.row.rectify_same_photo_num }}</div>
-            <div>意见不同：{{ scope.row.rectify_different_photo_num }}</div>
+            <div>意见相同：{{ scope.row.spotSameNum }}</div>
+            <div>意见不同：{{ scope.row.spotDifferentNum }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="checkPhoto" label="抽查种 / 拔草" />
@@ -63,6 +63,7 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import GrassSelect from '@SelectBox/GrassSelect'
+import SpotGrassSelect from '@SelectBox/SpotGrassSelect'
 import CheckGrassSelect from '@SelectBox/CheckGrassSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 
@@ -72,7 +73,7 @@ import * as ReviewCheck from '@/api/reviewCheck.js'
 
 export default {
   name: 'AuditHistory',
-  components: { DatePicker, GrassSelect, CheckGrassSelect },
+  components: { DatePicker, GrassSelect, CheckGrassSelect, SpotGrassSelect },
   data () {
     return {
       timeSpan: null,

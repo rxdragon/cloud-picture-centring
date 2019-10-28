@@ -44,6 +44,9 @@ export function logout () {
     url: '/manage_auth/logout',
     method: 'GET'
   }).then(() => {
+    for (const key in window.polling) {
+      clearTimeout(window.polling[key])
+    }
     SessionTool.removeSession()
   })
 }

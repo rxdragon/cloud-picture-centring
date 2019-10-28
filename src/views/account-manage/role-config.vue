@@ -109,7 +109,6 @@ export default {
       const data = await AccountManage.getRoleList(reqData)
       this.tableData = data.list
       this.pager.total = data.total
-      console.log(data)
     },
     /**
      * @description 删除角色组

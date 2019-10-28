@@ -97,6 +97,7 @@ export const errorCode = {
   getMsg: (err) => {
     let codeNum = Number(err.error_code)
     const hexCode = `0x${codeNum.toString(16).toUpperCase()}`
+    console.log(hexCode)
     return errMap.get(hexCode) || JSON.stringify(err.error_msg)
   }
 }
