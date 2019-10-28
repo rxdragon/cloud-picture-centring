@@ -1,4 +1,5 @@
 'use strict'
+/* global __static */
 
 import { app, protocol } from 'electron'
 import EventEmitter from 'events'
@@ -14,7 +15,13 @@ global.successInit = false
 global.userDir = app.getPath('userData')
 global.emit = new EventEmitter()
 
+// 注意，此处的 staticDir 实际指向 starter 项目的 public 文件夹
+global.staticDir = __static
+
 global.isInSingleMode = global.env !== 'production'
+
+// 由 starter 管理的配置项
+global.config = () => undefined
 
 console.log(`cache dir: ${global.userDir}`)
 

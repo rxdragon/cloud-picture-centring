@@ -23,6 +23,7 @@ async function createWindow () {
       backgroundThrottling: false
     },
     titleBarStyle: 'hiddenInset',
+    icon: path.join(global.staticDir, 'icon.png'),
     preload: path.join(__dirname, './electronMain/renderer.js')
   })
 
@@ -46,14 +47,21 @@ async function createWindow () {
     if (global.initWindow) global.initWindow.close()
   })
 
+  // 当 starter 找到新的版本
   global.emit.on('version:find-new', (info) => {
     // 这里处理准备升级的逻辑
     if (win) win.webContents.send('version:find-new', info)
   })
 
+  // 当用户触发升级操作
   ipcMain.on('version:do-upgrade', () => {
     // 这里处理唤起升级的逻辑，下面一句话将会触发升级并重启
     global.emit.emit('version:do-upgrade')
+  })
+
+  // 当需要获取配置项时
+  ipcMain.on('config:get', (event, name) => {
+    event.returnValue = global.config(name)
   })
 
   if (global.isDevelopment && global.isInSingleMode) {
