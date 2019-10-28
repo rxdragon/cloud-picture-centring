@@ -166,7 +166,7 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.staffId.length) { reqData.staffId = this.staffId }
+      if (this.staffId.length) { reqData.staffIds = this.staffId }
       if (this.institutionId) { reqData.retoucherOrgIds = [this.institutionId] }
       if (this.stateType) { reqData.state = this.stateType }
 

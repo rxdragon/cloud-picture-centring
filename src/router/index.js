@@ -55,7 +55,7 @@ export const constantRoutes = [
         path: '',
         name: 'orderDetail',
         component: () => import('@/views/order-detail/index.vue'),
-        meta: { title: '订单详情', icon: 'el-icon-eleme' }
+        meta: { title: '修图详情', icon: 'el-icon-eleme' }
       }
     ]
   }, {

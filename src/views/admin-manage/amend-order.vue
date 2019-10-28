@@ -6,11 +6,11 @@
     <div class="search-box">
       <div class="caid-search search-item">
         <span>流水号</span>
-        <el-input :disabled="Boolean(id)" v-model="caid" placeholder="请输入流水号" />
+        <el-input v-model="caid" :disabled="Boolean(id)" placeholder="请输入流水号" />
       </div>
       <div class="caid-search search-item">
         <span>订单号</span>
-        <el-input type="number" :disabled="Boolean(caid)" v-model="id" placeholder="请输入流水号" />
+        <el-input v-model="id" :disabled="Boolean(caid)" placeholder="请输入流水号" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>
@@ -101,7 +101,7 @@ export default {
       }
       this.$store.dispatch('setting/showLoading')
       this.dataList = await WorkManage.getStreamInfo(req)
-      console.log(this.dataList)
+      console.log(this.dataList, 'this.dataList')
       this.$store.dispatch('setting/hiddenLoading')
     },
     /**

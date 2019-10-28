@@ -1,6 +1,6 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage, getAvg } from '@/utils/index.js'
+import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
 import { SearchType } from '@/utils/enumerate.js'
 
 /**
@@ -52,7 +52,7 @@ export function getGroupStaffQuotaInfo (params) {
       componentSwitch: true
     }, {
       label: '修图平均用时',
-      value: (avgRetouchTime + avgRebuildTime)
+      value: timeFormat((avgRetouchTime + avgRebuildTime), 'text', true)
     }, {
       label: '收益',
       value: data.income

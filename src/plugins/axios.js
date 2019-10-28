@@ -4,8 +4,9 @@ import Vue from 'vue'
 import axios from 'axios'
 import router from '@/router/index.js'
 import { Message } from 'element-ui'
+import store from '../store' // vuex
 import { errorCode } from './errorCode'
-import { readConfig } from "../utils/electronConfig";
+import { readConfig } from "../utils/electronConfig"
 
 // axios 配置
 axios.defaults.timeout = 10000
@@ -41,17 +42,39 @@ axios.interceptors.response.use(
     return res
   },
   error => {
-    let err = error.response
-    console.log(err)
-    console.log(error)
-    if (error === 'Network Error') {
-      console.log('网络错误')
+    // 请求没有任何返回值：网络差，无服务
+    if (!error.response) {
+      return Promise.reject(new Error('系统繁忙，请稍后再试！'))
     }
-    // if (err.data.error_code === 404) {
-    //   router.push('/404')
-    // }
-    return Promise.reject(error)
+    let data = error.response.data
+    let noData = !data
+    let serverError = data &&
+      (!data.error_code || (data.error_code !== 401 && data.error_code < 1000))
+    if (noData || serverError) {
+      let message =  '系统繁忙，请稍后再试：' + data.error_msg
+      let promiseMessage = errorMessage(message)
+      store.dispatch('setting/hiddenLoading')
+      return Promise.reject(message)
+    }
+    let message = errorCode.getMsg(data.error_code)
+    let promiseMessage = errorMessage(message)
+    store.dispatch('setting/hiddenLoading')
+    return Promise.reject(message)
   }
 )
+
+function errorMessage (message) {
+  return new Promise((resolve, reject) => {
+    Message({
+      type: 'error',
+      message: message,
+      duration: 1500,
+      offset: 98,
+      onClose: () => {
+        resolve()
+      }
+    })
+  })
+}
 
 export default axios
