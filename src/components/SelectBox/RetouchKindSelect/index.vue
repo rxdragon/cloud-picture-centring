@@ -4,6 +4,7 @@
       v-bind="$attrs"
       filterable
       clearable
+      :popper-append-to-body="false"
       placeholder="请选择修图标准"
       v-on="$listeners"
     >

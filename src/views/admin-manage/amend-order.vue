@@ -6,11 +6,11 @@
     <div class="search-box">
       <div class="caid-search search-item">
         <span>流水号</span>
-        <el-input v-model="caid" placeholder="请输入流水号" />
+        <el-input :disabled="Boolean(id)" v-model="caid" placeholder="请输入流水号" />
       </div>
       <div class="caid-search search-item">
         <span>订单号</span>
-        <el-input v-model="id" placeholder="请输入流水号" />
+        <el-input type="number" :disabled="Boolean(caid)" v-model="id" placeholder="请输入流水号" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>

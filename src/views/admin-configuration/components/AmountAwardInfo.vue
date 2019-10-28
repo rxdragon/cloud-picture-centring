@@ -8,7 +8,11 @@
         <span>冲量标题：</span>
         <p>{{ title }}</p>
       </div>
-      <div class="info-box info-staff">
+      <div class="info-box info-retouch-group" v-if="retoucherOrg">
+        <span>外包机构：</span>
+        <p>{{ retoucherOrg }}</p>
+      </div>
+      <div class="info-box info-staff" v-if="staffList.length">
         <span>配置伙伴：</span>
         <staff-info :staff-list="staffList" />
       </div>
@@ -44,11 +48,12 @@ export default {
   },
   data () {
     return {
-      title: '',
-      awardList: [],
-      staffList: [],
-      startTime: '',
-      endTime: ''
+      title: '', // 冲量奖标题
+      awardList: [], // 冲量配置列表
+      retoucherOrg: '', // 外包机构
+      staffList: [], // 伙伴列表
+      startTime: '', // 开始时间
+      endTime: '' // 结束时间
     }
   },
   created () {
@@ -70,6 +75,7 @@ export default {
       const data = await OperationManage.getImpulseInfo(reqData)
       this.title = data.title
       this.awardList = data.impulse_setting_item
+      this.retoucherOrg = data.retoucherOrg
       this.startTime = data.start_at
       this.endTime = data.end_at
       const staff = data.staff

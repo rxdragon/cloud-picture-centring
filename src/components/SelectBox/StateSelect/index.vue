@@ -1,6 +1,11 @@
 <template>
   <div class="state-select">
-    <el-select v-bind="$attrs" placeholder="请选择状态" v-on="$listeners">
+    <el-select
+      v-bind="$attrs"
+      placeholder="请选择状态"
+      :popper-append-to-body="false"
+      v-on="$listeners"
+    >
       <el-option
         v-for="(optionItem, optionIndex) in options"
         :key="optionIndex"

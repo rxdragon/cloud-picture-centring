@@ -211,7 +211,7 @@ export default {
         this.$newMessage.warning('请填写修图标准')
         return false
       }
-      if (!this.baseEdit && !this.productValue.product.length) {
+      if (!this.baseEdit && Object.keys(this.productValue).length && !this.productValue.product.length) {
         this.$newMessage.warning('请填写产品')
         return false
       }

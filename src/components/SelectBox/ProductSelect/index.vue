@@ -5,6 +5,7 @@
       :props="props"
       collapse-tags
       v-bind="$attrs"
+      :popper-append-to-body="false"
       placeholder="请选择伙伴"
       :show-all-levels="false"
       filterable

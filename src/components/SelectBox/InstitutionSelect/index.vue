@@ -5,6 +5,7 @@
       filterable
       v-bind="$attrs"
       clearable
+      :popper-append-to-body="false"
       placeholder="请选择机构"
       v-on="$listeners"
     >

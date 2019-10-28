@@ -1,6 +1,6 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage } from '@/utils/index.js'
+import { keyToHump, transformPercentage, getAvg } from '@/utils/index.js'
 import { SearchType } from '@/utils/enumerate.js'
 
 /**
@@ -32,7 +32,9 @@ export function getGroupStaffQuotaInfo (params) {
     data: params
   }).then(msg => {
     const data = keyToHump(msg)
-    console.log(data)
+    const avgTime = data.retouchTimeAvg
+    const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
+    const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
     const tableDataCount = [{
       label: '修图单量',
       value: data.finishStreamNum,
@@ -50,7 +52,7 @@ export function getGroupStaffQuotaInfo (params) {
       componentSwitch: true
     }, {
       label: '修图平均用时',
-      value: data.retouchTimeAvg
+      value: (avgRetouchTime + avgRebuildTime)
     }, {
       label: '收益',
       value: data.income

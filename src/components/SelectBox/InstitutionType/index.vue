@@ -1,6 +1,6 @@
 <template>
   <div class="institution-select">
-    <el-select v-bind="$attrs" placeholder="请选择机构" v-on="$listeners">
+    <el-select v-bind="$attrs" :popper-append-to-body="false" placeholder="请选择机构" v-on="$listeners">
       <el-option
         v-for="item in institutionOptions"
         :key="item.value"

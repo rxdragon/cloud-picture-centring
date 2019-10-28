@@ -1,5 +1,5 @@
 <template>
-  <section v-loading.lock="loading" element-loading-spinner="main-loading" class="app-main" :class="{'overhidden':loading}">
+  <section v-loading.lock="loading" element-loading-custom-class="main-loading" class="app-main" :class="{'overhidden':loading}">
     <transition :name="transitionName" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key" />

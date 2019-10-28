@@ -89,6 +89,9 @@ export function getImpulseInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
+    console.log(msg)
+    const retoucherOrg = msg.retoucher_org.map(item => item.name)
+    msg.retoucherOrg = retoucherOrg.join('，')
     return msg
   })
 }
@@ -365,7 +368,9 @@ export function getProductInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
-    return keyToHump(msg)
+    const data = keyToHump(msg)
+    data.simpleImages = data.simpleImages.filter(item => item !== 'null')
+    return data
   })
 }
 
