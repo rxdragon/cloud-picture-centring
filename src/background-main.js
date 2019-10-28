@@ -39,7 +39,7 @@ async function createWindow () {
   // 注册下载监听
   DownTool.onWillDownload(win)
   DownTool.downPhoto(win)
-  DownTool.onDownEvent()
+  DownTool.onDownEvent(win)
 
   // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
   win.once('ready-to-show', () => {

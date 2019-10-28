@@ -90,7 +90,7 @@ export function formatTime (time, option) {
  * @description 时间格式化
  * @param {*} params
  */
-export function timeFormat (seconds, type, showZero) {
+export function timeFormat (seconds, type, showZero = false) {
   const isShowText = type === 'text'
   // 计算
   var i = 0

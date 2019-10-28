@@ -69,7 +69,12 @@ export function onDownEvent (win) {
   })
 
   ipcMain.on('cancel-item', (e, index) => {
-    downloadItems[index].cancel()
+    try {
+      downloadItems[index].cancel()
+    } catch (error) {
+      console.log(error)
+      win.webContents.send('lose-down-item', index)
+    }
   })
 }
 

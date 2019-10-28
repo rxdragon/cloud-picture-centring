@@ -10,6 +10,9 @@
           <div class="panel-title">下载内容</div>
           <div class="panel-title">下载状态</div>
           <div class="panel-title">操作</div>
+          <div class="delete-all">
+            <el-button icon="el-icon-delete-solid" @click="clearAll" />
+          </div>
         </div>
         <transition-group name="list-complete" tag="div" mode="out-in">
           <div v-for="downItem in downList" :key="downItem.index" class="list-complete-item content-row">
@@ -66,36 +69,68 @@ export default {
       console.log(item.index, 'down')
       this.updateItem(item)
     })
+    this.$ipcRenderer.on('lose-down-item', (e, index) => {
+      console.log(index)
+      this.downList.splice(index, 1)
+    })
   },
   methods: {
+    /**
+     * @description 添加项目
+     */
     async addItem (item) {
       item.iconSrc = await getFileIcon(item.savePath)
       this.downList = [item, ...this.downList]
       SessionTool.setCacheDownloadList(this.downList)
     },
+    /**
+     * @description 更新下载项
+     */
     async updateItem (item) {
       item.iconSrc = await getFileIcon(item.savePath)
       const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
       this.$set(this.downList, findIndex, item)
       SessionTool.setCacheDownloadList(this.downList)
     },
+    /**
+     * @description 删除下载项
+     */
     deleteItem (index) {
       const findIndex = this.downList.findIndex(listItem => listItem.index === index)
       this.downList.splice(findIndex, 1)
       SessionTool.setCacheDownloadList(this.downList)
       this.$ipcRenderer.send('delete-down-item', findIndex)
     },
+    /**
+     * @description 重新下载
+     */
     resumeItem (index) {
       const findIndex = this.downList.findIndex(listItem => listItem.index === index)
       this.$ipcRenderer.send('resume-item', findIndex)
     },
+    /**
+     * @description 暂停下砸项目
+     */
     pauseItem (index) {
       const findIndex = this.downList.findIndex(listItem => listItem.index === index)
       this.$ipcRenderer.send('pause-item', findIndex)
     },
+    /**
+     * @description 取消下载项目
+     */
     cancelItem (index) {
       const findIndex = this.downList.findIndex(listItem => listItem.index === index)
       this.$ipcRenderer.send('cancel-item', findIndex)
+    },
+    /**
+     * @description 清空下载项目
+     */
+    clearAll () {
+      this.downList = this.downList.filter((listItem, listIndex) => {
+        if (listItem.state === 'completed') { this.$ipcRenderer.send('delete-down-item', listIndex) }
+        return listItem.state === 'progressing'
+      })
+      SessionTool.setCacheDownloadList(this.downList)
     }
   }
 }
@@ -110,9 +145,21 @@ export default {
   .title-row {
     display: grid;
     grid-template-columns: 2fr 2fr 1fr;
-  }
+    position: relative;
 
-  .title-row {
+    .delete-all {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+
+      button {
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
+        padding: 0;
+      }
+    }
+
     .panel-title {
       padding: 10px 21px;
       font-size:14px;
@@ -137,12 +184,13 @@ export default {
   width: 100%;
   display: inline-block;
   overflow: hidden;
+  height: 48px;
 }
 
 .list-complete-enter,
 .list-complete-leave-to {
   opacity: 0;
-  transform: translateY(-48px);
+  height: 0;
 }
 
 .list-complete-leave-active {

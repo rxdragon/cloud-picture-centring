@@ -3,6 +3,7 @@
     <el-select
       v-bind="$attrs"
       filterable
+      :popper-append-to-body="false"
       placeholder="请选择权重等级"
       v-on="$listeners"
     >

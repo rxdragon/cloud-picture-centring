@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage, getAvg } from '@/utils/index.js'
+import { keyToHump, transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
 
 /**
  * @description 获取个人今日指标
@@ -73,7 +73,7 @@ export function getRetouchQuota (params) {
         link: '/retoucher-center/retouch-history'
       }, {
         label: '修图平均用时',
-        value: (avgRetouchTime + avgRebuildTime)
+        value: timeFormat((avgRetouchTime + avgRebuildTime), 'text', true)
       }, {
         label: '种草量/种草率',
         value: data.plantNum + ' / ' + transformPercentage(data.plantRate, data.retouchPhotoNum),

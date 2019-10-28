@@ -74,6 +74,11 @@ export function getRetoucherQuota (params) {
     url: '/project_cloud/operator/getRetoucherQuota',
     method: 'POST',
     data: params
+  }).then(msg => {
+    const count = Number(msg.retouchSinglePhotoNum) + Number(msg.retouchMultiPhotoNum)
+    msg.reviewPlantRate = transformPercentage(msg.reviewPlant, count)
+    msg.reviewPullRate = transformPercentage(msg.reviewPull, count)
+    return msg
   })
 }
 

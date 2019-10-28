@@ -4,6 +4,7 @@
       :disabled="disableState"
       v-bind="$attrs"
       filterable
+      :popper-append-to-body="false"
       placeholder="请选择角色组"
       v-on="$listeners"
     >

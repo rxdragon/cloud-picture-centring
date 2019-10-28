@@ -43,11 +43,11 @@ export default {
         label: '修图数量-多人(单位：张)',
         value: '-'
       }, {
-        key: 'reviewPlant',
+        key: 'reviewPlantRate',
         label: '种草率（单位：%）',
         value: '-'
       }, {
-        key: 'reviewPull',
+        key: 'reviewPullRate',
         label: '拔草率（单位：%）',
         value: '-'
       }, {

@@ -87,6 +87,7 @@ export default {
     padding: 21px 20px;
     font-size: 14px;
     text-align: left;
+    height: 58px;
     background-color: #fff;
 
     a {

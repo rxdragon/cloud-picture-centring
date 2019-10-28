@@ -23,7 +23,7 @@
       </div>
       <div class="sample-photo search-item">
         <span>样片素材</span>
-        <div class="photo-list">
+        <div v-if="samplePhoto.length" class="photo-list">
           <photo-box
             v-for="(photoItem, photoIndex) in samplePhoto"
             :key="photoIndex"
@@ -32,6 +32,7 @@
           />
           <div v-for="i in 3" :key="'empty' + i" class="empty-box" />
         </div>
+        <div v-else class="no-photo panel-content">暂无样片</div>
       </div>
       <div v-if="isPending && +checkPass === 0" class="check-box">
         <el-button type="primary" @click="passProduct">审核通过</el-button>
@@ -86,7 +87,7 @@
               <div v-for="(grassItem, grassIndex) in productConfig.grassData" :key="grassIndex" class="panel">
                 <div class="info-title">{{ grassIndex }} 人</div>
                 <div class="panel-contetn">
-                  <el-input :key="grassIndex" v-model.number="productConfig.grassData[grassIndex]" v-decimalOnly type="number" placeholder="0" />
+                  <el-input :key="grassIndex" v-model="productConfig.grassData[grassIndex]" placeholder="0" />
                 </div>
               </div>
             </div>
@@ -227,11 +228,11 @@ export default {
         sandClockValue: 1, //  是否需要沙漏
         needTemplate: 1, // 是否需要模版
         grassData: {},
-        joinGrassData: {}, // 拼接海草,不为拼接可不传或传[]
+        joinGrassData: {}, // 拼接海草
         notJointMoney: {},
-        jointMoney: {}, // 不为拼接可不传或传[]
+        jointMoney: {}, // 拼接收益
         blueNotJointMoney: {},
-        blueJointMoney: {}, // 不为拼接可不传或传[]
+        blueJointMoney: {}, // 拼接收益
         needJoint: 1, // 是否需要拼接
         productRemark: ''
       },
@@ -243,7 +244,6 @@ export default {
     'productConfig.standard': function (val) {
       if (val === 'blue' || val === 'master') {
         this.disableChange = false
-        this.productConfig.needJoint = 1
       } else {
         this.disableChange = true
         this.productConfig.needJoint = 0
@@ -273,6 +273,7 @@ export default {
       }
       this.productConfig.grassData = JSON.parse(JSON.stringify(createObj))
       this.productConfig.joinGrassData = JSON.parse(JSON.stringify(createObj))
+      console.log(this.productConfig.joinGrassData, 'this.productConfig.joinGrassData')
       this.productConfig.notJointMoney = JSON.parse(JSON.stringify(createObj))
       this.productConfig.jointMoney = JSON.parse(JSON.stringify(createObj))
       this.productConfig.blueNotJointMoney = JSON.parse(JSON.stringify(blueNotJointMoney))
@@ -363,12 +364,12 @@ export default {
       const req = { productId: this.editId }
       this.$store.dispatch('setting/showLoading')
       const data = await OperationManage.getProductInfo(req)
-      console.log(data)
+      console.log(data, 'data')
       this.productName = data.name
       this.retouchRequire = data.retouchRequire
       this.samplePhoto = data.simpleImages
       this.photographerOrgName = data.photographerOrg.name
-      this.productConfig.joinGrassData = data.splicingSeaGrassConfig || {}
+      data.splicingSeaGrassConfig && (this.productConfig.joinGrassData = data.splicingSeaGrassConfig)
       if (!this.isPending) {
         this.productConfig.standard = data.retouchStandard
         this.productConfig.weightType = data.weightLevel
@@ -484,6 +485,14 @@ export default {
 <style lang="less">
 @import "~@/styles/variables.less";
 .product-info {
+  .module-panel {
+    .panel-content {
+      color: #606266;
+      font-size:14px;
+      line-height:14px;
+    }
+  }
+
   .info-box {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -496,7 +505,9 @@ export default {
       .info-title {
         width: 100px;
         font-size: 14px;
-        color: #303133;
+        font-size: 14px;
+        font-weight: 700;
+        color: #606266;
       }
     }
   }
@@ -511,6 +522,7 @@ export default {
 
     &>span {
       width: 100px;
+      margin: 0;
     }
 
     .photo-list {

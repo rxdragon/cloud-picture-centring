@@ -1,7 +1,7 @@
 <template>
   <div class="order-detail">
     <div class="header">
-      <h3>流水详情</h3>
+      <h3>修图详情</h3>
     </div>
     <div class="order module-panel">
       <div class="panel-title">照片信息</div>
