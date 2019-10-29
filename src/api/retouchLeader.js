@@ -29,7 +29,7 @@ export function getGroupStaffQuotaInfo (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getGroupStaffQuotaInfo',
     method: 'GET',
-    data: params
+    params
   }).then(msg => {
     const data = keyToHump(msg)
     const avgTime = data.retouchTimeAvg

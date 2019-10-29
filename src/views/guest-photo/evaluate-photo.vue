@@ -62,7 +62,7 @@ export default {
       timeSpan: '',
       type: '', // 查看类型
       staffId: [],
-      photos: [],
+      photos: [], // 照片数据
       pager: {
         page: 1,
         pageSize: 10,
