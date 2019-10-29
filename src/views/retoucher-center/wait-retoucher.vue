@@ -237,6 +237,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
     },
     /**
@@ -252,6 +253,7 @@ export default {
         throw new Error(123)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
     },
     /**
