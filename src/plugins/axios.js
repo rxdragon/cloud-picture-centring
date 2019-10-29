@@ -46,7 +46,6 @@ axios.interceptors.response.use(
     if (!error.response) {
       let message = '系统繁忙，请稍后再试！'
       let promiseMessage = errorMessage(message)
-      store.dispatch('setting/hiddenLoading')
       return Promise.reject(message)
     }
     let data = error.response.data
@@ -56,12 +55,10 @@ axios.interceptors.response.use(
     if (noData || serverError) {
       let message =  '系统繁忙，请稍后再试：' + data.error_msg
       let promiseMessage = errorMessage(message)
-      store.dispatch('setting/hiddenLoading')
       return Promise.reject(message)
     }
     let message = errorCode.getMsg(data)
     let promiseMessage = errorMessage(message)
-    store.dispatch('setting/hiddenLoading')
     return Promise.reject(message)
   }
 )

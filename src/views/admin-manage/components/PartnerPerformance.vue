@@ -98,19 +98,24 @@ export default {
      * @description 获取伙伴绩效
      */
     async getRetoucherQuota () {
-      const req = this.getParams()
-      if (!req) return false
-      this.$store.dispatch('setting/showLoading')
-      const data = await WorkManage.getRetoucherQuota(req)
-      this.listDataOne.forEach(item => {
-        item.value = data[item.key]
-      })
-      this.listDataTwo.forEach(item => {
-        item.value = data[item.key]
-        if (item.key === 'income') { item.value = '¥' + item.value }
-        if (item.key === 'storeEvaluateScoreAvg') { item.value = item.value.count + '星' }
-      })
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        const req = this.getParams()
+        if (!req) return false
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await WorkManage.getRetoucherQuota(req)
+        this.listDataOne.forEach(item => {
+          item.value = data[item.key]
+        })
+        this.listDataTwo.forEach(item => {
+          item.value = data[item.key]
+          if (item.key === 'income') { item.value = '¥' + item.value }
+          if (item.key === 'storeEvaluateScoreAvg') { item.value = item.value.count + '星' }
+        })
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

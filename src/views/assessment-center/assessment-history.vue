@@ -136,14 +136,19 @@ export default {
      * @param {*} page
      */
     async getSearchHistory (page, init) {
-      this.pager.page = page || this.pager.page
-      const req = this.getSearchParams() || init
-      if (!req) return false
-      this.$store.dispatch('setting/showLoading')
-      const data = await AssessmentCenter.getSearchHistory(req)
-      this.photoData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.pager.page = page || this.pager.page
+        const req = this.getSearchParams() || init
+        if (!req) return false
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await AssessmentCenter.getSearchHistory(req)
+        this.photoData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 监听页面变化

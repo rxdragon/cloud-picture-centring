@@ -64,19 +64,22 @@ export default {
         this.$newMessage.warning('请选择组员')
         return false
       }
-      this.$store.dispatch('setting/showLoading')
-      await OperationManage.addCard(reqData)
-        .then(() => {
-          this.$newMessage({
-            message: '添加金币配置成功',
-            type: 'success',
-            duration: 1500,
-            onClose: () => {
-              this.goBack()
-            }
-          })
+      this.$store.dispatch('setting/showLoading', this.$route.name)
+      try {
+        await OperationManage.addCard(reqData)
+        this.$newMessage({
+          message: '添加金币配置成功',
+          type: 'success',
+          duration: 1500,
+          onClose: () => {
+            this.goBack()
+          }
         })
-      this.$store.dispatch('setting/hiddenLoading')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 返回上一级

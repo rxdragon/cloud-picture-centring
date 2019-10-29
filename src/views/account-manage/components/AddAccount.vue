@@ -188,7 +188,7 @@ export default {
     addStaff () {
       const req = this.getParams()
       if (!req) return
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.addStaff(req)
         .then(res => {
           if (res) {
@@ -203,7 +203,7 @@ export default {
     updateStaff () {
       const req = this.getParams()
       if (!req) return
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.editStaff(req).then(() => {
         this.$newMessage.success('修改成功!')
         this.$emit('finished')
@@ -227,12 +227,12 @@ export default {
         return false
       }
       const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       Staff.getStaff(req)
         .then(data => {
           this.staffInfo = data
           this.resetParams()
-          this.$store.dispatch('setting/hiddenLoading')
+          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         })
     },
     /**
@@ -241,11 +241,11 @@ export default {
     getStaffInfo () {
       if (!this.jobNumber) { return false }
       const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       Staff.getStaffInfo(req)
         .then(data => {
           this.staffInfo = data
-          this.$store.dispatch('setting/hiddenLoading')
+          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         })
     },
     /**
@@ -254,12 +254,12 @@ export default {
     getStaffPermission () {
       if (!this.jobNumber) { return false }
       const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.getStaffPermission(req)
         .then(data => {
           console.log(data)
           this.hasPermission = data.base_auth.map(item => item.id)
-          this.$store.dispatch('setting/hiddenLoading')
+          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         })
     }
   }

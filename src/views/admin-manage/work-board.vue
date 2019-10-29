@@ -272,69 +272,88 @@ export default {
      * @description 获取修图流水列表
      */
     async getRetouchStreamList (page) {
-      if (page) { this.pager.page = page }
-      this.$store.dispatch('setting/showLoading')
-      const req = this.getParams()
-      const data = await AdminManage.getRetouchStreamList(req)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.reviewCount = data.reviewCount
-      this.retouchCount = data.retouchCount
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        if (page) { this.pager.page = page }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const req = this.getParams()
+        const data = await AdminManage.getRetouchStreamList(req)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.reviewCount = data.reviewCount
+        this.retouchCount = data.retouchCount
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取审核流水列表
      */
     async getReviewStreamList (page) {
-      if (page) { this.pager.page = page }
-      this.$store.dispatch('setting/showLoading')
-      const req = this.getParams()
-      const data = await AdminManage.getReviewStreamList(req)
-      this.tableData = data.list
-      this.pager.total = data.total
-      console.log(data, '获取审核流水列表')
-      this.reviewCount = data.reviewCount
-      this.retouchCount = data.retouchCount
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        if (page) { this.pager.page = page }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const req = this.getParams()
+        const data = await AdminManage.getReviewStreamList(req)
+        this.tableData = data.list
+        this.pager.total = data.total
+        console.log(data, '获取审核流水列表')
+        this.reviewCount = data.reviewCount
+        this.retouchCount = data.retouchCount
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 加急流水
      */
     async urgentStream (streamId, type) {
-      this.$store.dispatch('setting/showLoading')
-      const req = { streamId }
-      const data = await AdminManage.urgentStream(req)
-      if (data) {
-        this.$newMessage.success('操作成功!')
-        if (type === 'urgent') {
-          this.getStreamList(1)
-        } else {
-          this.getList(1)
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const req = { streamId }
+        const data = await AdminManage.urgentStream(req)
+        if (data) {
+          this.$newMessage.success('操作成功!')
+          if (type === 'urgent') {
+            this.getStreamList(1)
+          } else {
+            this.getList(1)
+          }
         }
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
     },
     /**
      * @description 加急流水查询
      */
     async getStreamList (page) {
-      if (page) { this.urgentPager.page = page }
-      const req = {}
-      if (this.urgentSearch.name) { req.customerName = this.urgentSearch.name }
-      if (this.urgentSearch.id) { req.orderNum = this.urgentSearch.id }
-      if (this.urgentSearch.caid) { req.streamNum = this.urgentSearch.caid }
-      if (!Object.keys(req).length) {
-        this.$newMessage.warning('请填写参数')
-        return false
+      try {
+        if (page) { this.urgentPager.page = page }
+        const req = {}
+        if (this.urgentSearch.name) { req.customerName = this.urgentSearch.name }
+        if (this.urgentSearch.id) { req.orderNum = this.urgentSearch.id }
+        if (this.urgentSearch.caid) { req.streamNum = this.urgentSearch.caid }
+        if (!Object.keys(req).length) {
+          this.$newMessage.warning('请填写参数')
+          return false
+        }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await AdminManage.getStreamList(req)
+        if (data.list.length === 0) {
+          this.$newMessage.warning('暂无数据')
+        }
+        this.searchTableData = data.list
+        this.urgentPager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.$store.dispatch('setting/showLoading')
-      const data = await AdminManage.getStreamList(req)
-      if (data.list.length === 0) {
-        this.$newMessage.warning('暂无数据')
-      }
-      this.searchTableData = data.list
-      this.urgentPager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
-      console.log(data)
     }
   }
 }

@@ -118,34 +118,38 @@ export default {
      * @description 获取审核指标
      */
     async getGroupReviewQuota () {
-      if (!this.timeSpan) {
-        this.$newMessage.warning('请填写时间')
-        return false
-      }
-      const reqData = {
-        range: 'group',
-        startAt: joinTimeSpan(this.timeSpan[0]),
-        endAt: joinTimeSpan(this.timeSpan[1], 1)
-      }
-      if (this.staffId.length) { reqData.staffId = this.staffId }
-      this.$store.dispatch('setting/showLoading')
-      const data = await ReviewCheck.getGroupReviewQuota(reqData)
-      data.tableDataCount.forEach(item => {
-        if (item.link) {
-          delete item.link
-          item.componentSwitch = true
+      try {
+        if (!this.timeSpan) {
+          this.$newMessage.warning('请填写时间')
+          return false
         }
-      })
-      data.tableDataRate.forEach(item => {
-        if (item.link) {
-          delete item.link
-          item.componentSwitch = true
+        const reqData = {
+          range: 'group',
+          startAt: joinTimeSpan(this.timeSpan[0]),
+          endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
-      })
-      this.tableDataCount = data.tableDataCount
-      this.tableDataRate = data.tableDataRate
-      this.$store.dispatch('setting/hiddenLoading')
-      console.log(data)
+        if (this.staffId.length) { reqData.staffId = this.staffId }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await ReviewCheck.getGroupReviewQuota(reqData)
+        data.tableDataCount.forEach(item => {
+          if (item.link) {
+            delete item.link
+            item.componentSwitch = true
+          }
+        })
+        data.tableDataRate.forEach(item => {
+          if (item.link) {
+            delete item.link
+            item.componentSwitch = true
+          }
+        })
+        this.tableDataCount = data.tableDataCount
+        this.tableDataRate = data.tableDataRate
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

@@ -126,17 +126,19 @@ export default {
      * @description 获取伙伴信息
      * @param {*} value
      */
-    getStaffListByPage (value) {
-      if (value) { this.pager.page = value }
-      const req = this.getParams()
-      this.$store.dispatch('setting/showLoading')
-      AccountManage.getStaffListByPage(req)
-        .then(data => {
-          console.log(data)
-          this.tableData = data.list
-          this.pager.total = data.total
-          this.$store.dispatch('setting/hiddenLoading')
-        })
+    async getStaffListByPage (value) {
+      try {
+        if (value) { this.pager.page = value }
+        const req = this.getParams()
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        let data = await AccountManage.getStaffListByPage(req)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 启用伙伴
@@ -144,7 +146,7 @@ export default {
      */
     enableStaff (staffId) {
       const req = { staffId }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.enableStaff(req)
         .then(res => {
           this.$newMessage.success('启用成功')
@@ -157,7 +159,7 @@ export default {
      */
     disableStaff (staffId) {
       const req = { staffId }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.disableStaff(req)
         .then(res => {
           this.$newMessage.success('禁用成功!')
@@ -165,14 +167,12 @@ export default {
         })
     },
     /**
-     * @description 获取所有角色列表 (和组件重复请求)
+     * @description 获取所有角色列表
      */
     async getAllRole () {
       const list = await Staff.getAllRole()
       const map = {}
-      list.map(item => {
-        map[item.id] = item.name
-      })
+      list.map(item => { map[item.id] = item.name })
       this.roleMap = map
     }
   }

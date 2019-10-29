@@ -30,17 +30,24 @@ export default {
   data () {
     return {
       options: [],
-      disableState: false
+      disableState: true
     }
   },
   created () {
     this.getAllRetouchClass()
   },
   methods: {
+    /**
+     * @description 获取全部修图类
+     */
     async getAllRetouchClass () {
-      const list = await Commonality.getAllRetouchClass()
-      this.options = list
-      this.options.length === 0 && (this.disableState = true)
+      try {
+        const list = await Commonality.getAllRetouchClass()
+        this.options = list
+        this.disableState = false
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   }
 }

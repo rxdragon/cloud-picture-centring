@@ -45,28 +45,35 @@ export default {
      * @description 获取绿色通道人员
      */
     async getGreenChannelInfo () {
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getGreenChannelInfo()
-      this.defaultCheckedKeys = JSON.parse(JSON.stringify(data))
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getGreenChannelInfo()
+        this.defaultCheckedKeys = JSON.parse(JSON.stringify(data))
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      }
     },
     /**
      * @description 更新绿色通道
      */
-    saveGreenChannelInfo () {
-      const reqData = {}
-      reqData.staffIds = []
-      this.toData.forEach(groupItem => {
-        groupItem.children.forEach(staffItem => {
-          reqData.staffIds.push(staffItem.id)
+    async saveGreenChannelInfo () {
+      try {
+        const reqData = {}
+        reqData.staffIds = []
+        this.toData.forEach(groupItem => {
+          groupItem.children.forEach(staffItem => {
+            reqData.staffIds.push(staffItem.id)
+          })
         })
-      })
-      this.$store.dispatch('setting/showLoading')
-      OperationManage.saveGreenChannelInfo(reqData)
-        .then(() => {
-          this.$newMessage.success('绿色通道已更新')
-          this.$store.dispatch('setting/hiddenLoading')
-        })
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await OperationManage.saveGreenChannelInfo(reqData)
+        this.$newMessage.success('绿色通道已更新')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

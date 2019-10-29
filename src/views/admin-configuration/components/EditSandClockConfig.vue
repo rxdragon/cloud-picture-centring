@@ -119,22 +119,27 @@ export default {
      * @description 获取沙漏详情
      */
     async getHourGlassInfo (id) {
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getHourGlassInfo(id)
-      console.log(data)
-      this.productValue = {
-        productClass: data.productClass,
-        product: data.productValue
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getHourGlassInfo(id)
+        console.log(data)
+        this.productValue = {
+          productClass: data.productClass,
+          product: data.productValue
+        }
+        if (Object.keys(HourGlassSettingEnum).length === data.range.length) {
+          this.checkList = ['all']
+          this.canCheck = false
+        } else {
+          this.checkList = [...data.range]
+        }
+        this.baseTime = data.base_time
+        this.addTime = data.superimposed_time
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      if (Object.keys(HourGlassSettingEnum).length === data.range.length) {
-        this.checkList = ['all']
-        this.canCheck = false
-      } else {
-        this.checkList = [...data.range]
-      }
-      this.baseTime = data.base_time
-      this.addTime = data.superimposed_time
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 添加沙漏时间
@@ -158,7 +163,7 @@ export default {
         reqData.productIds = this.productValue.product
         reqData.retouchStandard = this.productValue.productClass
       }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       OperationManage.addHourGlass(reqData)
         .then(() => {
           this.$newMessage({
@@ -190,7 +195,7 @@ export default {
         baseTime: this.baseTime,
         superimposedTime: this.addTime
       }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       OperationManage.editHourGlass(reqData)
         .then(() => {
           this.$newMessage({

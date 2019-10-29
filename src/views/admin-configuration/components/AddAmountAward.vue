@@ -134,12 +134,17 @@ export default {
      * @description 删除冲量奖励配置项
      */
     async deleteAward (id) {
-      const req = { itemId: id }
-      this.$store.dispatch('setting/showLoading')
-      await OperationManage.delImpulseSettingItem(req)
-      this.$newMessage.success('删除成功')
-      await this.getImpulseSettingItemList()
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        const req = { itemId: id }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await OperationManage.delImpulseSettingItem(req)
+        this.$newMessage.success('删除成功')
+        await this.getImpulseSettingItemList()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 新增冲量奖励配置项
@@ -154,7 +159,7 @@ export default {
       this.$refs['addAwardConfig'].validate((valid) => {
         if (valid) {
           const reqData = this.addAwardConfig
-          this.$store.dispatch('setting/showLoading')
+          this.$store.dispatch('setting/showLoading', this.$route.name)
           OperationManage.addImpulseSettingItem(reqData)
             .then(() => {
               this.$newMessage.success('添加成功')
@@ -162,7 +167,8 @@ export default {
               this.addAwardConfig.reward = ''
               this.dialogVisible = false
               this.getImpulseSettingItemList()
-              this.$store.dispatch('setting/hiddenLoading')
+            }).finally(() => {
+              this.$store.dispatch('setting/hiddenLoading', this.$route.name)
             })
         } else {
           return false
@@ -203,7 +209,7 @@ export default {
         })
       }
       if (this.institutionId) { reqData.retoucherOrgIds = this.institutionId }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       OperationManage.addImpulse(reqData)
         .then(() => {
           this.$newMessage({

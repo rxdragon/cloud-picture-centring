@@ -361,32 +361,36 @@ export default {
      * @description 获取审核详情
      */
     async getProductInfo () {
-      const req = { productId: this.editId }
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getProductInfo(req)
-      console.log(data, 'data')
-      this.productName = data.name
-      this.retouchRequire = data.retouchRequire
-      this.samplePhoto = data.simpleImages
-      this.photographerOrgName = data.photographerOrg.name
-      data.splicingSeaGrassConfig && (this.productConfig.joinGrassData = data.splicingSeaGrassConfig)
-      if (!this.isPending) {
-        this.productConfig.standard = data.retouchStandard
-        this.productConfig.weightType = data.weightLevel
-        this.productConfig.sandClockValue = +data.needHourglass
-        this.productConfig.needTemplate = +data.needTemplate
-        this.productConfig.needJoint = +data.needSplicing
-        this.productConfig.productRemark = data.note
-        this.productConfig.grassData = data.seaGrassConfig
-        if (data.retouchStandard !== 'blue') {
-          this.productConfig.notJointMoney = data.normalIncomeConfig
-          this.productConfig.jointMoney = data.splicingIncomeConfig
-        } else {
-          this.productConfig.blueNotJointMoney = data.normalIncomeConfig
-          this.productConfig.blueJointMoney = data.splicingIncomeConfig
+      try {
+        const req = { productId: this.editId }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getProductInfo(req)
+        this.productName = data.name
+        this.retouchRequire = data.retouchRequire
+        this.samplePhoto = data.simpleImages
+        this.photographerOrgName = data.photographerOrg.name
+        data.splicingSeaGrassConfig && (this.productConfig.joinGrassData = data.splicingSeaGrassConfig)
+        if (!this.isPending) {
+          this.productConfig.standard = data.retouchStandard
+          this.productConfig.weightType = data.weightLevel
+          this.productConfig.sandClockValue = +data.needHourglass
+          this.productConfig.needTemplate = +data.needTemplate
+          this.productConfig.needJoint = +data.needSplicing
+          this.productConfig.productRemark = data.note
+          this.productConfig.grassData = data.seaGrassConfig
+          if (data.retouchStandard !== 'blue') {
+            this.productConfig.notJointMoney = data.normalIncomeConfig
+            this.productConfig.jointMoney = data.splicingIncomeConfig
+          } else {
+            this.productConfig.blueNotJointMoney = data.normalIncomeConfig
+            this.productConfig.blueJointMoney = data.splicingIncomeConfig
+          }
         }
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 审核拒绝
@@ -396,7 +400,7 @@ export default {
         productId: this.editId,
         refuseReason: this.rejectValue
       }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       OperationManage.refuseProduct(reqData)
         .then(() => {
           this.$newMessage.success('审核拒绝成功')
@@ -425,7 +429,7 @@ export default {
         reqData.normalIncomeConfig = this.productConfig.blueNotJointMoney
         reqData.splicingIncomeConfig = this.productConfig.blueJointMoney
       }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       if (this.isPending) {
         OperationManage.passProduct(reqData)
           .then(() => {

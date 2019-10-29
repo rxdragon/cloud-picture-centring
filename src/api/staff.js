@@ -52,6 +52,9 @@ export function getStaffList () {
         sid: staff.id
       }
       if (staff.department_id) {
+        if (!staff.department) {
+          console.log(staff)
+        }
         const groudInfo = staff.department
         const findGroud = createData.find(item => item.gid === groudInfo.id)
         if (findGroud) {

@@ -111,45 +111,56 @@ export default {
      * @description 删除金币配置
      */
     async deleteData (cardItem) {
-      this.$store.dispatch('setting/showLoading')
-      const reqData = { staffCardId: cardItem.id }
-      await OperationManage.deleteCard(reqData)
-        .then(() => {
-          this.$newMessage.success('删除成功')
-          this.getGoldConfigList()
-        })
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const reqData = { staffCardId: cardItem.id }
+        await OperationManage.deleteCard(reqData)
+        this.$newMessage.success('删除成功')
+        this.getGoldConfigList()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 提前结束
      */
     async closeCard (cardItem) {
-      this.$store.dispatch('setting/showLoading')
-      const reqData = { staffCardId: cardItem.id }
-      await OperationManage.closeCard(reqData)
-        .then(() => {
-          this.$newMessage.success('提前结束')
-          this.getGoldConfigList()
-        })
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const reqData = { staffCardId: cardItem.id }
+        await OperationManage.closeCard(reqData)
+        this.$newMessage.success('提前结束')
+        this.getGoldConfigList()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取金币配置列表
      */
     async getGoldConfigList (page) {
-      this.$store.dispatch('setting/showLoading')
-      this.pager.page = page || this.pager.page
-      const reqData = {
-        type: 'gold_reward',
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.pager.page = page || this.pager.page
+        const reqData = {
+          type: 'gold_reward',
+          page: this.pager.page,
+          pageSize: this.pager.pageSize
+        }
+        if (this.staffId.length) { reqData.staffIds = this.staffId }
+        if (this.stateType) { reqData.state = this.stateType }
+        const data = await OperationManage.getStaffCardList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.stateType) { reqData.state = this.stateType }
-      const data = await OperationManage.getStaffCardList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
     }
   }
 }

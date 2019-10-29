@@ -136,23 +136,26 @@ export default {
      * @description 获取客片池详情
      */
     async getPhotoInfo () {
-      const reqData = {
-        photoUuid: this.uuid
+      try {
+        const reqData = { photoUuid: this.uuid }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await GuestPhoto.getPhotoInfo(reqData)
+        this.orderNum = data.orderNum
+        this.streamNum = data.streamNum
+        this.productName = data.productName
+        this.labelTag = data.labelTag
+        this.photographerRemark = data.photographerRemark
+        this.retouchMark = data.retouchMark
+        this.orderMark = data.orderMark
+        this.dresserMark = data.dresserMark
+        this.workerInfo = data.workerInfo
+        this.photoVersion = data.photoVersion
+        this.gradeInfo = { ...data.attitude }
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.$store.dispatch('setting/showLoading')
-      const data = await GuestPhoto.getPhotoInfo(reqData)
-      this.orderNum = data.orderNum
-      this.streamNum = data.streamNum
-      this.productName = data.productName
-      this.labelTag = data.labelTag
-      this.photographerRemark = data.photographerRemark
-      this.retouchMark = data.retouchMark
-      this.orderMark = data.orderMark
-      this.dresserMark = data.dresserMark
-      this.workerInfo = data.workerInfo
-      this.photoVersion = data.photoVersion
-      this.gradeInfo = { ...data.attitude }
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 监听点赞
@@ -163,26 +166,28 @@ export default {
     /**
      * @description 提交【踩/赞】
      */
-    onSubmitAttitude () {
-      console.log(this.photoVersion)
-      const findPassPhoto = this.photoVersion.find(photoItem => photoItem.version === 'complete_photo')
-      if (!findPassPhoto) {
-        this.$newMessage.warning('未获取到审核通过照片的照片')
-        return false
+    async onSubmitAttitude () {
+      try {
+        const findPassPhoto = this.photoVersion.find(photoItem => photoItem.version === 'complete_photo')
+        if (!findPassPhoto) {
+          this.$newMessage.warning('未获取到审核通过照片的照片')
+          return false
+        }
+        if (!this.attitudeValue) {
+          this.$newMessage.warning('未进行点赞操作')
+          return false
+        }
+        const reqData = {
+          photoId: findPassPhoto.photo_id,
+          attitude: this.attitudeValue
+        }
+        await GuestPhoto.submitAttitude(reqData)
+        this.$newMessage.success('提交成功')
+        this.getPhotoInfo()
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      if (!this.attitudeValue) {
-        this.$newMessage.warning('未进行点赞操作')
-        return false
-      }
-      const reqData = {
-        photoId: findPassPhoto.photo_id,
-        attitude: this.attitudeValue
-      }
-      GuestPhoto.submitAttitude(reqData)
-        .then(() => {
-          this.$newMessage.success('提交成功')
-          this.getPhotoInfo()
-        })
     }
   }
 }

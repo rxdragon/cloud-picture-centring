@@ -85,8 +85,13 @@ export default {
     }
   },
   async created () {
-    this.$store.dispatch('setting/showLoading')
-    await this.getPhotographerOrgList()
+    try {
+      this.$store.dispatch('setting/showLoading', this.$route.name)
+      await this.getPhotographerOrgList()
+    } catch (error) {
+      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      throw new Error(error)
+    }
   },
   methods: {
     /**
@@ -103,7 +108,6 @@ export default {
         photographerOrgId: item.id
       }
       const data = await Institution.getPhotographerOrgInfo(reqData)
-      console.log(data)
       this.institutionConfig.name = data.name
       this.institutionConfig.loginType = data.type === 'api' ? 1 : 2
       this.institutionConfig.account = data.account
@@ -142,7 +146,7 @@ export default {
      */
     async getPhotographerOrgList () {
       this.tableData = await Institution.getPhotographerOrgList()
-      this.$store.dispatch('setting/hiddenLoading')
+      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
     },
     /**
      * @description 启用摄影机构
@@ -154,12 +158,12 @@ export default {
         cancelButtonText: '取消',
         center: true
       }).then(() => {
-        this.$store.dispatch('setting/showLoading')
+        this.$store.dispatch('setting/showLoading', this.$route.name)
         const reqData = { photographerOrgId: item.id }
         Institution.enablePhotographerOrg(reqData)
           .then(() => {
             this.$newMessage.success('机构启用成功')
-            this.$store.dispatch('setting/hiddenLoading')
+            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
             item.state = true
           })
       }).catch(() => {})
@@ -173,12 +177,12 @@ export default {
         cancelButtonText: '取消',
         center: true
       }).then(() => {
-        this.$store.dispatch('setting/showLoading')
+        this.$store.dispatch('setting/showLoading', this.$route.name)
         const reqData = { photographerOrgId: item.id }
         Institution.disablePhotographerOrg(reqData)
           .then(() => {
             this.$newMessage.success('机构禁用成功')
-            this.$store.dispatch('setting/hiddenLoading')
+            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
             item.state = false
           })
       }).catch(() => {})
@@ -223,7 +227,7 @@ export default {
       }
       this.$refs['formEdit'].validate()
         .then(() => {
-          this.$store.dispatch('setting/showLoading')
+          this.$store.dispatch('setting/showLoading', this.$route.name)
           Institution.addPhotographerOrg(reqData)
             .then(() => {
               this.$newMessage.success('添加成功')
@@ -249,7 +253,7 @@ export default {
       }
       this.$refs['formEdit'].validate()
         .then(() => {
-          this.$store.dispatch('setting/showLoading')
+          this.$store.dispatch('setting/showLoading', this.$route.name)
           Institution.editPhotographerOrg(reqData)
             .then(() => {
               this.$newMessage.success('编辑成功')

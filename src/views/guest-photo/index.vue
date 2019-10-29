@@ -149,11 +149,16 @@ export default {
       }
       if (this.staffId.length) { reqData.staffIds = this.staffId }
       if (this.checkValue) { reqData.evaluateStar = this.checkValue }
-      this.$store.dispatch('setting/showLoading')
-      const data = await GuestPhoto.getPhotoList(reqData)
-      this.photos = data.list || []
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await GuestPhoto.getPhotoList(reqData)
+        this.photos = data.list || []
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

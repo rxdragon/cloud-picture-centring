@@ -73,12 +73,17 @@ export default {
      * @description 获取产品信息
      */
     async getRetoucherClassInfo (id) {
-      this.$store.dispatch('setting/showLoading')
-      const req = { retoucherClassId: id }
-      const data = await AccountManage.getRetoucherClassInfo(req)
-      const productIds = data.products.map(item => item.id)
-      this.defaultCheckedKeys = productIds
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const req = { retoucherClassId: id }
+        const data = await AccountManage.getRetoucherClassInfo(req)
+        const productIds = data.products.map(item => item.id)
+        this.defaultCheckedKeys = productIds
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取角色组列表
@@ -102,7 +107,7 @@ export default {
     add () {
       const req = this.getParams()
       if (!req) return false
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.addRetoucherClass(req)
         .then(() => {
           this.$newMessage.success('新增成功!')
@@ -115,7 +120,7 @@ export default {
     update () {
       const req = this.getParams()
       if (!req) return false
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.editRetoucherClass(req)
         .then(() => {
           this.$newMessage.success('修改成功!')

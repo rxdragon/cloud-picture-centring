@@ -77,24 +77,34 @@ export default {
      * @description 获取订单详情
      */
     async getStreamInfo () {
-      const req = { streamId: this.streamId }
-      this.$store.dispatch('setting/showLoading')
-      const data = await Commonality.getStreamInfo(req)
-      this.orderData = data.orderData
-      this.photos = data.photos
-      this.storeEvaluateStream = data.storeEvaluateStream
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        const req = { streamId: this.streamId }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await Commonality.getStreamInfo(req)
+        this.orderData = data.orderData
+        this.photos = data.photos
+        this.storeEvaluateStream = data.storeEvaluateStream
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取工作看板数据
      */
     async getWorkBoardStreamInfo () {
-      const req = { streamNum: this.streamId }
-      this.$store.dispatch('setting/showLoading')
-      const data = await AdminManage.getStreamInfo(req)
-      this.orderData = data.orderData
-      this.photos = data.photos
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        const req = { streamNum: this.streamId }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await AdminManage.getStreamInfo(req)
+        this.orderData = data.orderData
+        this.photos = data.photos
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

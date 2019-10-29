@@ -186,7 +186,6 @@ export default {
      */
     async getStreamQueueInfo () {
       this.queueInfo = await RetoucherCenter.getStreamQueueInfo()
-      console.log(this.queueInfo)
       clearTimeout(window.polling.getQueue)
       window.polling.getQueue = null
       if (this.queueInfo.inQueue) {
@@ -211,31 +210,39 @@ export default {
      * @description 退出队列
      */
     async exitQueue () {
-      this.$store.dispatch('setting/showLoading')
-      await RetoucherCenter.exitQueue()
-      this.$newMessage.success('退出队列成功')
-      clearTimeout(window.polling.getQueue)
-      window.polling.getQueue = null
-      await this.getStreamQueueInfo()
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await RetoucherCenter.exitQueue()
+        this.$newMessage.success('退出队列成功')
+        clearTimeout(window.polling.getQueue)
+        window.polling.getQueue = null
+        await this.getStreamQueueInfo()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 排队成功
      */
-    joinQueue () {
-      this.$store.dispatch('setting/showLoading')
-      RetoucherCenter.joinQueue()
-        .then(msg => {
-          this.$newMessage.success('进入排队成功')
-          this.$store.dispatch('setting/hiddenLoading')
-          this.getStreamQueueInfo()
-        })
+    async joinQueue () {
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await RetoucherCenter.joinQueue()
+        this.$newMessage.success('进入排队成功')
+        this.getStreamQueueInfo()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 初始化页面数据
      */
     initializeData () {
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       this.aid = ''
       Promise.all([
         this.getSelfQuota(),
@@ -243,9 +250,9 @@ export default {
         this.getRetouchStreamList(),
         this.getStreamQueueInfo()
       ]).then(() => {
-        this.$store.dispatch('setting/hiddenLoading')
-      }).catch(err => {
-        console.log(err, 'err')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      }).finally(() => {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       })
     },
     /**
@@ -267,7 +274,6 @@ export default {
       } else {
         this.haveReworkStream()
       }
-      console.log('获取是否有退单')
     },
     /**
      * @description 是否有重修订单

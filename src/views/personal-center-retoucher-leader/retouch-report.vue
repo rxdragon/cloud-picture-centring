@@ -114,11 +114,16 @@ export default {
      * @description 获取组员修图报告
      */
     async getGroupStaffQuotaInfo () {
-      this.$store.dispatch('setting/showLoading')
-      const data = await RetouchLeader.getGroupStaffQuotaInfo()
-      this.tableDataCount = data.tableDataCount
-      this.tableDataRate = data.tableDataRate
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await RetouchLeader.getGroupStaffQuotaInfo()
+        this.tableDataCount = data.tableDataCount
+        this.tableDataRate = data.tableDataRate
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

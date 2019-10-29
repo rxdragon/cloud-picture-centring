@@ -84,23 +84,26 @@ export default {
      * @param 页码 如果通过按搜索框搜索,传输1 到第一页
      */
     async getRetouchList (page) {
-      if (page) { this.pager.page = page }
-      const reqData = {
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+      try {
+        if (page) { this.pager.page = page }
+        const reqData = {
+          page: this.pager.page,
+          pageSize: this.pager.pageSize
+        }
+        if (this.timeSpan) {
+          reqData.startAt = joinTimeSpan(this.timeSpan[0])
+          reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
+        }
+        if (this.searchType) { reqData.grass = this.searchType }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await RetoucherCenter.getRetouchQuotaList(reqData)
+        this.pager.total = data.total
+        this.tableData = data.list
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      if (this.timeSpan) {
-        reqData.startAt = joinTimeSpan(this.timeSpan[0])
-        reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
-      }
-      if (this.searchType) {
-        reqData.grass = this.searchType
-      }
-      this.$store.dispatch('setting/showLoading')
-      const data = await RetoucherCenter.getRetouchQuotaList(reqData)
-      this.pager.total = data.total
-      this.tableData = data.list
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 页码改变

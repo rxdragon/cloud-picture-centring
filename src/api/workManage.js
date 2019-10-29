@@ -175,7 +175,7 @@ export function getStreamInfo (params) {
       listItem.photos.forEach(photoItem => {
         photoItem.isDelete = false
         photoItem.isJoint = Boolean(photoItem.tags.values.splice_mark)
-        const findOriginalPhoto = photoItem.photo_version.find(photoItem => photoItem.version === 'original_photo')
+        const findOriginalPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
         photoItem.path = findOriginalPhoto ? findOriginalPhoto.path : ''
         photoItem.jointClass = photoItem.tags.values.splice_mark
         photoItem.jointClassNum = photoItem.tags.values.splice_position

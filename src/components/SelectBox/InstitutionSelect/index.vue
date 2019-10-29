@@ -30,22 +30,29 @@ export default {
   data () {
     return {
       options: [],
-      disableState: false
+      disableState: true
     }
   },
   created () {
     this.getInstitutionList()
   },
   methods: {
+    /**
+     * @description 获取机构列表
+     */
     async getInstitutionList () {
-      if (this.institutionClass === 'retouch') {
-        const list = await Institution.getRetoucherOrg()
-        this.options = list
-      } else {
-        const list = await Institution.getPhotographerOrg()
-        this.options = list
+      try {
+        if (this.institutionClass === 'retouch') {
+          const list = await Institution.getRetoucherOrg()
+          this.options = list
+        } else {
+          const list = await Institution.getPhotographerOrg()
+          this.options = list
+        }
+        this.disableState = false
+      } catch (error) {
+        throw new Error(error)
       }
-      this.options.length === 0 && (this.disableState = true)
     }
   }
 }

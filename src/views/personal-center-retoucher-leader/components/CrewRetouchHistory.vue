@@ -130,22 +130,27 @@ export default {
      * @description 获取组员修图记录
      */
     async getStaffRetouchList (page) {
-      this.pager.page = page || this.pager.page
-      const reqData = {
-        range: 'group',
-        startAt: joinTimeSpan(this.searchTime[0]),
-        endAt: joinTimeSpan(this.searchTime[1], 1),
-        pageSize: this.pager.pageSize,
-        page: this.pager.page
+      try {
+        this.pager.page = page || this.pager.page
+        const reqData = {
+          range: 'group',
+          startAt: joinTimeSpan(this.searchTime[0]),
+          endAt: joinTimeSpan(this.searchTime[1], 1),
+          pageSize: this.pager.pageSize,
+          page: this.pager.page
+        }
+        this.auditType && (reqData.plantPull = this.auditType)
+        this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        console.log(reqData)
+        const data = await RetouchLeader.getStaffRetouchList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.auditType && (reqData.plantPull = this.auditType)
-      this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
-      this.$store.dispatch('setting/showLoading')
-      console.log(reqData)
-      const data = await RetouchLeader.getStaffRetouchList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
     }
   }
 }
