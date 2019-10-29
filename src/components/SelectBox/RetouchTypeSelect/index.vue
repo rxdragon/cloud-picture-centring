@@ -41,13 +41,9 @@ export default {
      * @description 获取全部修图类
      */
     async getAllRetouchClass () {
-      try {
-        const list = await Commonality.getAllRetouchClass()
-        this.options = list
-        this.disableState = false
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Commonality.getAllRetouchClass()
+      this.options = list
+      this.disableState = false
     }
   }
 }

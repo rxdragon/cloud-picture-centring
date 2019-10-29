@@ -15,7 +15,6 @@ export function getPhotoList (params) {
       const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
       listItem.src = findCompletePhoto && findCompletePhoto.path || ''
     })
-    console.log(msg)
     return msg
   })
 }
@@ -35,19 +34,19 @@ export function getPhotoInfo (params) {
     createData.streamNum = createData.stream.stream_num
     createData.productName = createData.stream.product.name
     createData.labelTag = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.retouch_claim || {}
-    createData.orderMark = createData.stream.order.note.orderNote
-    createData.dresserMark = createData.stream.order.note.dresserNote
-    createData.photographerRemark = createData.stream.note && createData.stream.note.photographer_remark || '-'
-    createData.retouchMark = createData.stream.note && createData.stream.note.retouch_note
+    createData.orderMark = createData.stream.order.note.orderNote || '-'
+    createData.dresserMark = createData.stream.order.note.dresserNote || '-'
+    createData.photographerRemark = createData.stream.note && createData.stream.note.photography_note || '-'
+    createData.retouchMark = createData.stream.note && createData.stream.note.retouch_note || '-'
     createData.workerInfo = {
       storeName: createData.stream.order.tags.values.store_name,
       photographer: createData.stream.order.tags.values.photographer,
       retoucher: createData.stream.retoucher.name,
       retouchGroup: createData.stream.retoucher.retouch_group.name,
       reviewer: createData.stream.reviewer && createData.stream.reviewer.name || '-',
-      watcherName: createData.stream.tags.values && createData.stream.tags.values.watcher_name,
+      watcherName: createData.stream.tags.values && createData.stream.tags.values.watcher_name || '-',
       storeEvaluateStar: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_star,
-      storeEvaluateReason: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_reason
+      storeEvaluateReason: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_reason || '-'
     }
     return createData
   })

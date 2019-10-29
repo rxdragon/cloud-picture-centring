@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { PhotoEnum } from '@/utils/enumerate.js'
+import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
 import store from '@/store' // vuex
 
 /**
@@ -29,11 +29,14 @@ export function handlePicPath (path, type) {
 /**
  * @description 超着照片版本
  * @param {*} photoArr
+ * @param {*} reworkTimes 重修次数
  */
-export function settlePhoto (photoArr) {
+export function settlePhoto (photoArr, reworkTimes = 0) {
+  const PhotoEnumArr = [NoReturnPhotoEnum, ReturnOnePhotoEnum, PhotoEnum]
   const createData = []
-  for (const key in PhotoEnum) {
-    const version = PhotoEnum[key]
+  const PhotoEnums = reworkTimes < 2 ? PhotoEnumArr[reworkTimes] : PhotoEnumArr[2]
+  for (const key in PhotoEnums) {
+    const version = PhotoEnums[key]
     const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
     if (findVersionPhoto) { createData.push(findVersionPhoto) }
   }

@@ -144,7 +144,6 @@ export default {
       this.photos.forEach(item => {
         item.src = this.imgDomain + item.path
       })
-      console.log(this.photos)
       this.priviewPhotoData = this.photos
       this.imgIndex = photoIndex
       this.showPreview = true

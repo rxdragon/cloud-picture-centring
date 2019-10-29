@@ -83,7 +83,6 @@ export default {
   },
   computed: {
     photoData () {
-      console.log(this.photoItem)
       return this.photoItem
     },
     // 是够重修

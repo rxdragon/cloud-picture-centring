@@ -122,7 +122,6 @@ export default {
      * @description 调整工作量
      */
     adjustWork (listItem) {
-      console.log(listItem)
       this.suggestPhotoNum = listItem.suggestPhotoNum
       this.groudId = listItem.groupId
       this.dialogVisible = true
@@ -175,7 +174,6 @@ export default {
         this.tableData = data.groups
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     }
   }

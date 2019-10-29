@@ -127,7 +127,6 @@ export default {
       const req = this.getParams()
       AccountManage.getRetoucherClassList(req)
         .then(data => {
-          console.log(data)
           this.tableData = data.list
           this.pager.total = data.total
           this.$store.dispatch('setting/hiddenLoading', this.$route.name)

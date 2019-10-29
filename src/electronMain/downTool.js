@@ -72,7 +72,6 @@ export function onDownEvent (win) {
     try {
       downloadItems[index].cancel()
     } catch (error) {
-      console.log(error)
       win.webContents.send('lose-down-item', index)
     }
   })

@@ -11,7 +11,6 @@ export function getStatistics (params) {
     url: '/project_cloud/checkPool/getStatistics',
     method: 'GET'
   }).then(msg => {
-    console.log(msg, '今日抽片指标')
     const data = msg
     data.plantPercent = transformPercentage(data.plantNum, data.evaluationNum)
     data.pullPercent = transformPercentage(data.pullNum, data.evaluationNum)
@@ -111,7 +110,6 @@ export function getSearchHistory (params) {
     params
   }).then(msg => {
     const data = msg.data
-    console.log(data)
     data.forEach(item => {
       item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note || '暂无审核备注'
       item.retouchNote = item.photoData.stream.note.retouch_note

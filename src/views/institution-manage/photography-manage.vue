@@ -90,7 +90,6 @@ export default {
       await this.getPhotographerOrgList()
     } catch (error) {
       this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-      throw new Error(error)
     }
   },
   methods: {

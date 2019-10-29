@@ -148,14 +148,25 @@ export default {
           this.initializeData()
         }
       }
+    },
+    '$route.query': {
+      handler: function (value) {
+        if (value && value.aid) {
+          this.aid = value.aid
+          this.showDetail = true
+        }
+      }
     }
   },
   created () {
     this.initializeData()
     this.hasReturn()
   },
-  activated: function () {
-    this.showDetail = false
+  activated () {
+    if (!this.$route.query.aid) {
+      this.initializeData()
+      this.showDetail = false
+    }
   },
   methods: {
     /**
@@ -176,7 +187,6 @@ export default {
     async getRetouchStreamList () {
       const reqData = { state: this.listActive }
       const data = await RetoucherCenter.getRetouchStreams(reqData)
-      console.log(data)
       this.tableData = data.data
       this.hangingListNum = data.hangingNum
       this.retouchingListNum = data.retouchingNum
@@ -201,8 +211,15 @@ export default {
           showCancelButton: false
         }).then(() => {
           SessionTool.saveSureRetouchOrder(this.queueInfo.retouchStreamId)
-          this.aid = this.queueInfo.retouchStreamId
-          this.showDetail = true
+          if (this.$route.name !== 'WaitRetoucher') {
+            this.$router.push({
+              path: '/retoucher-center',
+              query: { aid: this.queueInfo.retouchStreamId }
+            })
+          } else {
+            this.aid = this.queueInfo.retouchStreamId
+            this.showDetail = true
+          }
         }).catch(() => {})
       }
     },
@@ -220,7 +237,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -235,7 +251,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -260,17 +275,28 @@ export default {
      */
     async hasReturn () {
       const data = await Retoucher.haveReworkStream()
-      if (data) {
-        this.exitQueue()
+      if (data && !SessionTool.getReturnRetouchOrder(data)) {
         this.$confirm('您有新的重修流水，未免影响沙漏时间请及时处理。', '', {
           confirmButtonText: '现在处理',
           cancelButtonText: '稍后处理',
           type: 'warning',
           center: true
         }).then(() => {
-          this.aid = data
-          this.showDetail = true
-        }).catch(() => {})
+          SessionTool.saveReturnRetouchOrder(data)
+          if (this.$route.name !== 'WaitRetoucher') {
+            this.$router.push({
+              path: '/retoucher-center',
+              query: { aid: data }
+            })
+          } else {
+            this.aid = data
+            this.showDetail = true
+          }
+        }).catch(() => {
+          SessionTool.saveReturnRetouchOrder(data)
+        }).finally(() => {
+          this.haveReworkStream()
+        })
       } else {
         this.haveReworkStream()
       }
@@ -281,7 +307,7 @@ export default {
     haveReworkStream () {
       clearTimeout(window.polling.haveRework)
       window.polling.haveRework = null
-      window.polling.haveRework = setTimeout(async () => {
+      window.polling.haveRework = setTimeout(() => {
         this.hasReturn()
       }, 3000)
     }

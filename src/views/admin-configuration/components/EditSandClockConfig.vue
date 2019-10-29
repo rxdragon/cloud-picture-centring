@@ -122,7 +122,6 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.$route.name)
         const data = await OperationManage.getHourGlassInfo(id)
-        console.log(data)
         this.productValue = {
           productClass: data.productClass,
           product: data.productValue
@@ -138,7 +137,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**

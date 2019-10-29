@@ -31,6 +31,21 @@ export const PhotoEnum = {
   FinishPhoto: 'finish_photo' // 最终成片
 }
 
+// 没有重修返回字段
+export const NoReturnPhotoEnum = {
+  OriginalPhoto: 'original_photo', // 原片
+  CompletePhoto: 'complete_photo', // 审核成片
+  FinishPhoto: 'finish_photo' // 最终成片
+}
+
+// 没有重修返回字段
+export const ReturnOnePhotoEnum = {
+  OriginalPhoto: 'original_photo', // 原片
+  FirstPhoto: 'first_photo', // 一次成片
+  CompletePhoto: 'complete_photo', // 审核成片
+  FinishPhoto: 'finish_photo' // 最终成片
+}
+
 export const PhotoEnumName = {
   OriginalPhoto: '原片',
   FirstPhoto: '一次成片',

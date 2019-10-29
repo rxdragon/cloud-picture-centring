@@ -1,5 +1,5 @@
 <template>
-  <div class="Home">
+  <div class="home">
     <div v-if="upload" id="app">
       <div class="onUpload">
         <p>检查到版本更新</p>
@@ -7,7 +7,10 @@
         <button @click="doUpgrade">立即更新</button>
       </div>
     </div>
-    你好！测试版本
+    <div class="logo-tip">
+      <div class="logo-img iconmap-cloud-logo-big" />
+      <div class="logo-desc">欢迎来到缦图云端修图中心</div>
+    </div>
   </div>
 </template>
 
@@ -37,8 +40,31 @@ export default {
 <style src="./home.less" lang="less"></style>
 
 <style lang="less" scoped>
-.photo {
-  width: 200px;
+.home {
+  position: relative;
+  height: 100%;
+
+  .logo-tip {
+    width: min-content;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    .logo-img {
+      width: 360px;
+      height: 90px;
+    }
+
+    .logo-desc {
+      font-size:30px;
+      font-family:PingFangSC-Regular,PingFang SC;
+      font-weight:400;
+      color:rgba(48,49,51,1);
+      line-height:38px;
+      margin-top: 28px;
+    }
+  }
 }
 </style>
 

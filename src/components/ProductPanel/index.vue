@@ -60,14 +60,10 @@ export default {
      * @description 获取全部产品
      */
     async getAllProductPanel () {
-      try {
-        const list = await Product.getAllProductPanel()
-        this.fromData = JSON.parse(JSON.stringify(list))
-        this.$emit('update:isLoadingDown', true)
-        this.productLoading = false
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Product.getAllProductPanel()
+      this.fromData = JSON.parse(JSON.stringify(list))
+      this.$emit('update:isLoadingDown', true)
+      this.productLoading = false
     }
   }
 }

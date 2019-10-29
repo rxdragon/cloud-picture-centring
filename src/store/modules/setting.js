@@ -33,7 +33,6 @@ const mutations = {
 
 const actions = {
   showLoading ({ commit }, routeName) {
-    console.log(routeName, 'routeName')
     commit('SHOW_LOADING', routeName)
   },
   hiddenLoading ({ commit }, routeName) {

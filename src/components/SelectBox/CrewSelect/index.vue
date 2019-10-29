@@ -30,13 +30,9 @@ export default {
      * @description 获取组员
      */
     async getSelfStaffs () {
-      try {
-        const list = await Staff.getSelfStaffs()
-        this.options = list
-        this.disableState = false
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Staff.getSelfStaffs()
+      this.options = list
+      this.disableState = false
     }
   }
 }

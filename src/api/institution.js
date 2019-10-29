@@ -74,7 +74,6 @@ export function getPhotographerOrgList () {
       item.loginType = item.type === 'api' ? '直接通信' : '账号密码登录'
       item.viscountNum = '-'
     })
-    console.log(msg)
     return msg
   })
 }

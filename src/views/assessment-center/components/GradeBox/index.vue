@@ -184,7 +184,6 @@ export default {
       return 3
     },
     photoInfoData () {
-      console.log(this.photoInfo)
       return this.photoInfo
     }
   },

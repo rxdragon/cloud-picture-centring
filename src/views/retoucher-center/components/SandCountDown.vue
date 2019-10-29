@@ -32,7 +32,6 @@ export default {
     this.goalTime.green = this.sandGlass.green_time + nowDate
     this.goalTime.red = this.sandGlass.green_time + this.sandGlass.orange_time + nowDate
     this.countDown()
-    console.log(this.sandGlass)
   },
   methods: {
     /**

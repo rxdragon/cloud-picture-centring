@@ -16,8 +16,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.baseURL = readConfig('microApi') || process.env.VUE_APP_BASE_API
 axios.defaults.withCredentials = true
 
-console.log(axios.defaults.baseURL)
-
 // 设置请求头信息
 axios.interceptors.request.use(
   config => {

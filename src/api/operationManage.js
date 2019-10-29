@@ -89,7 +89,6 @@ export function getImpulseInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
-    console.log(msg)
     const retoucherOrg = msg.retoucher_org.map(item => item.name)
     msg.retoucherOrg = retoucherOrg.join('，')
     return msg
@@ -259,7 +258,6 @@ export function getBaseHourGlassSetting () {
     method: 'GET'
   }).then(msg => {
     msg.list.forEach(listItem => {
-      console.log(listItem)
       listItem.baseTime = listItem.base_time + 'min'
       listItem.deleteId = listItem.id
       listItem.superimposedTime = listItem.superimposed_time + 'min / 人'

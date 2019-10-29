@@ -11,13 +11,11 @@ NProgress.configure({ showSpinner: false }) // 关闭加载微调器
 const whiteList = ['/', '/login', '/auth-redirect'] // 白名单
 
 // 调试
-// let nickname
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start() // 读取进度条
   document.title = getPageTitle(to.meta.title)
   const hasXStreamId = getXStreamId() // 获取token
-  console.log(hasXStreamId, 'hasXStreamId')
 
   // 没有过期时的操作
   async function noExpire () {
@@ -48,13 +46,9 @@ router.beforeEach(async (to, from, next) => {
     const expireTime = getStreamIdExpireTime() * 1000
     const nowTime = new Date().getTime()
     const discrepancyTime = expireTime - nowTime
-    console.log(expireTime, 'expireTime')
-    console.log(nowTime, 'nowTime')
-    console.log(discrepancyTime, 'discrepancyTime')
     console.log(to.path)
     if (discrepancyTime > 0) {
       if (discrepancyTime < 60 * 60 * 1000 * 1000) { await User.userExpire() }
-      console.log('noExpire')
       noExpire()
     } else if (discrepancyTime < 0) {
       User.logout()

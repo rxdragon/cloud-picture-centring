@@ -59,13 +59,9 @@ export default {
      * @description 获取伙伴信息
      */
     async getStaffList () {
-      try {
-        const list = await Staff.getStaffList()
-        this.fromData = JSON.parse(JSON.stringify(list))
-        this.$emit('update:isLoadingDown', true)
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Staff.getStaffList()
+      this.fromData = JSON.parse(JSON.stringify(list))
+      this.$emit('update:isLoadingDown', true)
     }
   }
 }

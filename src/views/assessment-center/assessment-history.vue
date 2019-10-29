@@ -31,7 +31,7 @@
       <div class="button-box">
         <el-button type="primary" class="search-button" @click="getSearchHistory(1)">查询</el-button>
         <el-dropdown>
-          <el-button type="success">
+          <el-button disabled type="success">
             导出<i class="el-icon-arrow-down el-icon--right" />
           </el-button>
           <el-dropdown-menu slot="dropdown">
@@ -102,13 +102,10 @@ export default {
     }
   },
   created () {
-    const initReq = {
-      startAt: joinTimeSpan(moment().subtract('day', 28).locale('zh-cn').format('YYYY-MM-DD')),
-      endAt: joinTimeSpan(moment().locale('zh-cn').format('YYYY-MM-DD')),
-      page: this.pager.page,
-      pageSize: this.pager.pageSize
-    }
-    this.getSearchHistory(1, initReq)
+    const startAt = moment().subtract('day', 28).locale('zh-cn').format('YYYY-MM-DD')
+    const endAt = moment().locale('zh-cn').format('YYYY-MM-DD')
+    this.timeSpan = [startAt, endAt]
+    this.getSearchHistory(1)
   },
   methods: {
     /**
@@ -135,10 +132,10 @@ export default {
      * @description 获取历史抽片数据
      * @param {*} page
      */
-    async getSearchHistory (page, init) {
+    async getSearchHistory (page) {
       try {
         this.pager.page = page || this.pager.page
-        const req = this.getSearchParams() || init
+        const req = this.getSearchParams()
         if (!req) return false
         this.$store.dispatch('setting/showLoading', this.$route.name)
         const data = await AssessmentCenter.getSearchHistory(req)
@@ -147,7 +144,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**

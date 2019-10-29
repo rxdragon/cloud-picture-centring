@@ -59,7 +59,6 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.query)
     const { uuid } = this.$route.query
     this.uuid = uuid
     this.getAttitudePhotoInfo()
@@ -73,7 +72,6 @@ export default {
         const reqData = { photoUuid: this.uuid }
         this.$store.dispatch('setting/showLoading', this.$route.name)
         const data = await GuestPhoto.getAttitudePhotoInfo(reqData)
-        console.log(data)
         this.productName = data.productName
         this.retoucher = data.retoucher
         this.retoucherLeader = data.retoucherLeader
@@ -84,7 +82,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     }
   }

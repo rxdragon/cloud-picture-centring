@@ -38,13 +38,9 @@ export default {
      * @description 获取修图组
      */
     async getRetoucherGroup () {
-      try {
-        const list = await Staff.getRetoucherGroup()
-        this.options = list
-        this.disableState = false
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Staff.getRetoucherGroup()
+      this.options = list
+      this.disableState = false
     }
   }
 }

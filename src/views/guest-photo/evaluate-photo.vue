@@ -71,7 +71,6 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.name)
     const name = this.$route.name
     if (name === 'ExcellentPhoto') {
       this.type = 'good'
@@ -121,7 +120,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     }
   }

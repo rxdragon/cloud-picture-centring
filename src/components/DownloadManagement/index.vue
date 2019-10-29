@@ -59,18 +59,15 @@ export default {
   },
   mounted () {
     this.$ipcRenderer.on('new-download-item', (e, item) => {
-      console.log(item.index, 'new')
       this.addItem(item)
     })
     this.$ipcRenderer.on('download-item-updated', (e, item) => {
       this.updateItem(item)
     })
     this.$ipcRenderer.on('download-item-done', (e, item) => {
-      console.log(item.index, 'down')
       this.updateItem(item)
     })
     this.$ipcRenderer.on('lose-down-item', (e, index) => {
-      console.log(index)
       this.downList.splice(index, 1)
     })
   },

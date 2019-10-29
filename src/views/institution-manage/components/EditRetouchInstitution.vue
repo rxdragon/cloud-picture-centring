@@ -115,7 +115,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -127,7 +126,6 @@ export default {
           this.institutionConfig.enableProductIds = []
           this.retouchInstitutionId && (this.institutionConfig.retouchOrgId = this.retouchInstitutionId)
           this.institutionConfig.toData.forEach(configItem => {
-            console.log(configItem)
             configItem.children.forEach(productItem => {
               this.institutionConfig.enableProductIds.push(productItem.id)
             })

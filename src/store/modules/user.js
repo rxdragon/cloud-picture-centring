@@ -30,7 +30,6 @@ const mutations = {
     state.permissions = permissions
   },
   SET_USERINFO: (state, info) => {
-    console.log(info)
     state.id = info.id
     state.name = info.name
     state.nickname = info.nickname
@@ -59,7 +58,6 @@ const actions = {
   getUserInfo ({ commit, dispatch, getters }) {
     return new Promise((resolve, reject) => {
       const saveInfo = SessionTool.getUserInfo()
-      console.log(saveInfo, 'saveInfo')
       if (saveInfo) {
         commit('SET_USERINFO', saveInfo)
         store.dispatch('permission/generateRoutes', '')
@@ -71,7 +69,6 @@ const actions = {
       } else {
         UserAction.info()
           .then(info => {
-            console.log(info)
             SessionTool.setUserInfo(info)
             commit('SET_USERINFO', info)
             store.dispatch('permission/generateRoutes', '')

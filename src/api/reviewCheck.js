@@ -14,7 +14,6 @@ export function getGroupReviewQuota (params) {
     params
   }).then(msg => {
     const data = keyToHump(msg)
-    console.log(data)
     const tableDataCount = [{
       label: '审核单量',
       value: data.reviewerReviewStreamNum,

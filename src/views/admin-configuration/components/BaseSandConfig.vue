@@ -84,13 +84,11 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.$route.name)
         const data = await OperationManage.getBaseHourGlassSetting()
-        console.log(data, 1)
         this.tableData = data.list
         this.pager.total = data.total
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -106,7 +104,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     }
   }

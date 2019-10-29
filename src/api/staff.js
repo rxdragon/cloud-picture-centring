@@ -52,9 +52,6 @@ export function getStaffList () {
         sid: staff.id
       }
       if (staff.department_id) {
-        if (!staff.department) {
-          console.log(staff)
-        }
         const groudInfo = staff.department
         const findGroud = createData.find(item => item.gid === groudInfo.id)
         if (findGroud) {
@@ -186,9 +183,7 @@ export function getSelfStaffs () {
     url: '/project_cloud/common/getSelfStaffs',
     method: 'get'
   }).then(msg => {
-    // 调试
     const createData = []
-    console.log(msg)
     msg.forEach(selfStaffItem => {
       createData.push({
         label: selfStaffItem.nickname || selfStaffItem.name || '-',

@@ -109,7 +109,6 @@ export function getStaffRetouchList (params) {
       listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
       listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
     })
-    console.log(msg)
     return msg
   })
 }
