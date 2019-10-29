@@ -19,18 +19,24 @@ export default {
   data () {
     return {
       options: [],
-      disableState: false
+      disableState: true
     }
   },
   created () {
     this.getSelfStaffs()
   },
   methods: {
+    /**
+     * @description 获取组员
+     */
     async getSelfStaffs () {
-      console.log(Staff)
-      const list = await Staff.getSelfStaffs()
-      this.options = list
-      this.options.length === 0 && (this.disableState = true)
+      try {
+        const list = await Staff.getSelfStaffs()
+        this.options = list
+        this.disableState = false
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <section v-loading.lock="loading" element-loading-custom-class="main-loading" class="app-main" :class="{'overhidden':loading}">
+  <section v-loading.lock="isLoading" element-loading-custom-class="main-loading" class="app-main" :class="{'overhidden':isLoading}">
     <transition :name="transitionName" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view :key="key" />
@@ -13,6 +13,11 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'AppMain',
   computed: {
+    ...mapGetters(['loadRoutes']),
+    isLoading () {
+      console.log(this.loadRoutes, 'isLoading')
+      return this.loadRoutes.includes(this.$route.name)
+    },
     cachedViews () {
       return this.$store.state.tagsView.cachedViews
     },
@@ -21,8 +26,10 @@ export default {
     },
     transitionName () {
       return ''
-    },
-    ...mapGetters(['loading'])
+    }
+  },
+  created () {
+    console.log(this.$route.name)
   }
 }
 </script>

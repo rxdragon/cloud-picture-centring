@@ -69,18 +69,23 @@ export default {
      * @description 获取赞或踩客片详情
      */
     async getAttitudePhotoInfo () {
-      const reqData = { photoUuid: this.uuid }
-      this.$store.dispatch('setting/showLoading')
-      const data = await GuestPhoto.getAttitudePhotoInfo(reqData)
-      console.log(data)
-      this.productName = data.productName
-      this.retoucher = data.retoucher
-      this.retoucherLeader = data.retoucherLeader
-      this.retouchGroup = data.retouchGroup
-      this.photoVersion = data.photoVersion
-      this.attitudeType = data.attitude.attitude
-      this.evaluateName = data.attitude.name
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        const reqData = { photoUuid: this.uuid }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await GuestPhoto.getAttitudePhotoInfo(reqData)
+        console.log(data)
+        this.productName = data.productName
+        this.retoucher = data.retoucher
+        this.retoucherLeader = data.retoucherLeader
+        this.retouchGroup = data.retouchGroup
+        this.photoVersion = data.photoVersion
+        this.attitudeType = data.attitude.attitude
+        this.evaluateName = data.attitude.name
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

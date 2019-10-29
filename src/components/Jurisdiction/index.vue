@@ -63,14 +63,21 @@ export default {
       if (value.length && this.firstShow && this.jurisdictionList.length) { this.initializeData() }
     }
   },
-  async created () {
-    await this.getJurisdictionList()
+  created () {
+    this.getJurisdictionList()
   },
   methods: {
+    /**
+     * @description 获取权限接口
+     */
     async getJurisdictionList () {
-      const data = await Staff.getJurisdictionList()
-      this.jurisdictionList = JSON.parse(JSON.stringify(data))
-      if (this.firstShow) { this.initializeData() }
+      try {
+        const data = await Staff.getJurisdictionList()
+        this.jurisdictionList = JSON.parse(JSON.stringify(data))
+        if (this.firstShow) { this.initializeData() }
+      } catch (error) {
+        throw new Error(error)
+      }
     },
     /**
      * @description 选中单个权限

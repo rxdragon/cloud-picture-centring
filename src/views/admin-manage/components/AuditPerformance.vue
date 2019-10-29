@@ -113,21 +113,22 @@ export default {
      * @description 获取审核绩效
      */
     async getReviewQuota () {
-      const req = this.getParams()
-      if (!req) return
-      this.$store.dispatch('setting/showLoading')
-      const data = await WorkManage.getReviewQuota(req)
-      this.$store.dispatch('setting/hiddenLoading')
-      if (!data) {
-        this.$newMessage.warning('暂无数据')
-        return false
+      try {
+        const req = this.getParams()
+        if (!req) return
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await WorkManage.getReviewQuota(req)
+        if (!data) {
+          this.$newMessage.warning('暂无数据')
+          return false
+        }
+        this.listDataOne.forEach(item => { item.value = data[item.key] })
+        this.listDataTwo.forEach(item => { item.value = data[item.key] })
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.listDataOne.forEach(item => {
-        item.value = data[item.key]
-      })
-      this.listDataTwo.forEach(item => {
-        item.value = data[item.key]
-      })
     }
   }
 }

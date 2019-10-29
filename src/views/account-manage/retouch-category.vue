@@ -91,7 +91,7 @@ export default {
      */
     deleteCategory (id) {
       const req = { retoucherClassId: id }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.delRetoucherClass(req)
         .then(data => {
           if (data) {
@@ -123,14 +123,14 @@ export default {
      */
     getList (value) {
       if (value) { this.pager.page = value }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       const req = this.getParams()
       AccountManage.getRetoucherClassList(req)
         .then(data => {
           console.log(data)
           this.tableData = data.list
           this.pager.total = data.total
-          this.$store.dispatch('setting/hiddenLoading')
+          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         })
     }
   }

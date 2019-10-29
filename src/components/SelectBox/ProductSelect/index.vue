@@ -10,6 +10,7 @@
       :show-all-levels="false"
       filterable
       clearable
+      :disabled="!loadingDown"
       v-on="$listeners"
     >
       <template slot-scope="{ node, data }">
@@ -28,16 +29,25 @@ export default {
   data () {
     return {
       props: { multiple: true, emitPath: false },
-      options: []
+      options: [],
+      loadingDown: false
     }
   },
   created () {
     this.getAllProduct()
   },
   methods: {
+    /**
+     * @description 获取全部伙伴
+     */
     async getAllProduct () {
-      const list = await Product.getAllProduct()
-      this.options = list
+      try {
+        const list = await Product.getAllProduct()
+        this.options = list
+        this.loadingDown = true
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   }
 }

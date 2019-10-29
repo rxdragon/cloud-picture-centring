@@ -115,27 +115,30 @@ export default {
      * @description 删除经验配置
      */
     deleteData (cardItem) {
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       const reqData = { staffCardId: cardItem.id }
       OperationManage.deleteCard(reqData)
         .then(() => {
           this.$newMessage.success('删除成功')
           this.getExperienceConfigList()
         })
-      this.$store.dispatch('setting/hiddenLoading')
+      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
     },
     /**
      * @description 提前结束
      */
     async closeCard (cardItem) {
-      this.$store.dispatch('setting/showLoading')
-      const reqData = { staffCardId: cardItem.id }
-      await OperationManage.closeCard(reqData)
-        .then(() => {
-          this.$newMessage.success('提前结束')
-          this.getExperienceConfigList()
-        })
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const reqData = { staffCardId: cardItem.id }
+        await OperationManage.closeCard(reqData)
+        this.$newMessage.success('提前结束')
+        this.getExperienceConfigList()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取经验配置列表
@@ -149,12 +152,16 @@ export default {
       }
       if (this.staffId.length) { reqData.staffIds = this.staffId }
       if (this.stateType) { reqData.state = this.stateType }
-
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getStaffCardList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getStaffCardList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

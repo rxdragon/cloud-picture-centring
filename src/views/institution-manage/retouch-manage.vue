@@ -77,9 +77,14 @@ export default {
      * @description 获取修图机构列表
      */
     async getRetouchOrgList () {
-      this.$store.dispatch('setting/showLoading')
-      this.tableData = await Institution.getRetouchOrgList()
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.tableData = await Institution.getRetouchOrgList()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取角色组列表
@@ -94,11 +99,11 @@ export default {
         const reqData = {
           retouchOrgId: item.id
         }
-        this.$store.dispatch('setting/showLoading')
+        this.$store.dispatch('setting/showLoading', this.$route.name)
         Institution.enableRetouchOrg(reqData)
           .then(() => {
             this.$newMessage.success('修图机构启用成功')
-            this.$store.dispatch('setting/hiddenLoading')
+            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
             item.state = true
           })
       }).catch(() => {})
@@ -113,11 +118,11 @@ export default {
         center: true
       }).then(() => {
         const reqData = { retouchOrgId: item.id }
-        this.$store.dispatch('setting/showLoading')
+        this.$store.dispatch('setting/showLoading', this.$route.name)
         Institution.disableRetouchOrg(reqData)
           .then(() => {
             this.$newMessage.success('修图机构禁用成功')
-            this.$store.dispatch('setting/hiddenLoading')
+            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
             item.state = false
           })
       }).catch(() => {})

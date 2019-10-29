@@ -5,7 +5,7 @@
       v-bind="$attrs"
       filterable
       :popper-append-to-body="false"
-      placeholder="请选择修图类别"
+      placeholder="请选择审核人"
       v-on="$listeners"
     >
       <el-option label="全部" :value="0" />
@@ -27,17 +27,24 @@ export default {
   data () {
     return {
       options: [],
-      disableState: false
+      disableState: true
     }
   },
   created () {
     this.getReviewer()
   },
   methods: {
+    /**
+     * @description 获取审核后
+     */
     async getReviewer () {
-      const list = await Staff.getReviewer()
-      this.options = list
-      this.options.length === 0 && (this.disableState = true)
+      try {
+        const list = await Staff.getReviewer()
+        this.options = list
+        this.disableState = false
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   }
 }

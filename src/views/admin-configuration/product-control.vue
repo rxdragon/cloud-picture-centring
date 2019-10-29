@@ -155,34 +155,42 @@ export default {
      * @description 获取产品列表
      */
     async getProductList () {
-      this.pager.page = this.firstSearch ? 1 : this.pager.page
-      const reqData = {
-        state: this.isPending ? 'wait_review' : 'enable',
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+      try {
+        this.pager.page = this.firstSearch ? 1 : this.pager.page
+        const reqData = {
+          state: this.isPending ? 'wait_review' : 'enable',
+          page: this.pager.page,
+          pageSize: this.pager.pageSize
+        }
+        if (this.institutionType) { reqData.photographerOrgId = this.institutionType }
+        if (!this.isPending && this.productValue.length) { reqData.productId = this.productValue }
+        if (!this.isPending && this.weightType) { reqData.weightLevel = this.weightType }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getProductList(reqData)
+        this.tableData = data.item
+        this.pager.total = data.total
+        this.firstSearch = false
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      if (this.institutionType) { reqData.photographerOrgId = this.institutionType }
-      if (!this.isPending && this.productValue.length) { reqData.productId = this.productValue }
-      if (!this.isPending && this.weightType) { reqData.weightLevel = this.weightType }
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getProductList(reqData)
-      this.tableData = data.item
-      this.pager.total = data.total
-      this.firstSearch = false
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 删除产品
      * @param {*} listItem
      */
-    delProduct (listItem) {
-      const reqData = { productId: listItem.id }
-      this.$store.dispatch('setting/showLoading')
-      OperationManage.delProduct(reqData)
-        .then(() => {
-          this.$newMessage.success('删除成功')
-          this.getProductList()
-        })
+    async delProduct (listItem) {
+      try {
+        const reqData = { productId: listItem.id }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await OperationManage.delProduct(reqData)
+        this.$newMessage.success('删除成功')
+        this.getProductList()
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

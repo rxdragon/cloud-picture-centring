@@ -100,24 +100,29 @@ export default {
      * @description 获取优秀客片列表
      */
     async getAttitudePhotoList (page) {
-      if (!this.timeSpan) {
-        this.$newMessage.warning('请输入时间')
-        return false
+      try {
+        if (!this.timeSpan) {
+          this.$newMessage.warning('请输入时间')
+          return false
+        }
+        this.pager.page = page || this.pager.page
+        const reqData = {
+          attitude: this.type,
+          startAt: joinTimeSpan(this.timeSpan[0]),
+          endAt: joinTimeSpan(this.timeSpan[1], 1),
+          page: this.pager.page,
+          pageSize: this.pager.pageSize
+        }
+        if (this.staffId.length) { reqData.staffIds = this.staffId }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await GuestPhoto.getAttitudePhotoList(reqData)
+        this.pager.total = data.total
+        this.photos = data.list
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.pager.page = page || this.pager.page
-      const reqData = {
-        attitude: this.type,
-        startAt: joinTimeSpan(this.timeSpan[0]),
-        endAt: joinTimeSpan(this.timeSpan[1], 1),
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
-      }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      this.$store.dispatch('setting/showLoading')
-      const data = await GuestPhoto.getAttitudePhotoList(reqData)
-      this.pager.total = data.total
-      this.photos = data.list
-      this.$store.dispatch('setting/hiddenLoading')
     }
   }
 }

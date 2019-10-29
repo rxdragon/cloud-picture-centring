@@ -219,7 +219,7 @@ export default {
   created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
     this.timeSpan = [nowTime, nowTime]
-    this.$store.dispatch('setting/showLoading')
+    this.$store.dispatch('setting/showLoading', this.$route.name)
     Promise.all([
       this.getSelfQuota(),
       this.getRankInfo(),
@@ -227,7 +227,7 @@ export default {
       this.getLittleBeeInfo(),
       this.getProps()
     ])
-    this.$store.dispatch('setting/hiddenLoading')
+    this.$store.dispatch('setting/hiddenLoading', this.$route.name)
   },
   methods: {
     /**
@@ -278,17 +278,18 @@ export default {
     /**
      * @description 使用道具
      */
-    useProp (data) {
-      const reqData = {
-        id: data.id
+    async useProp (data) {
+      try {
+        const reqData = { id: data.id }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await Retoucher.useProp(reqData)
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.getProps()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.$store.dispatch('setting/showLoading')
-      Retoucher.useProp(reqData)
-        .then(async () => {
-          this.$store.dispatch('setting/showLoading')
-          this.getProps()
-          this.$store.dispatch('setting/hiddenLoading')
-        })
     }
   }
 }

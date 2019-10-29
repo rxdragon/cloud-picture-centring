@@ -27,17 +27,24 @@ export default {
   data () {
     return {
       options: [],
-      disableState: false
+      disableState: true
     }
   },
   created () {
     this.getRetoucherGroup()
   },
   methods: {
+    /**
+     * @description 获取修图组
+     */
     async getRetoucherGroup () {
-      const list = await Staff.getRetoucherGroup()
-      this.options = list
-      this.options.length === 0 && (this.disableState = true)
+      try {
+        const list = await Staff.getRetoucherGroup()
+        this.options = list
+        this.disableState = false
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   }
 }

@@ -62,10 +62,15 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      this.$store.dispatch('setting/showLoading')
-      if (this.instituionType) { req.retoucherOrgId = this.instituionType }
-      this.tableData = await Institution.getRetouchOrgIncome(req)
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        if (this.instituionType) { req.retoucherOrgId = this.instituionType }
+        this.tableData = await Institution.getRetouchOrgIncome(req)
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

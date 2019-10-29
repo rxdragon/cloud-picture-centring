@@ -199,16 +199,20 @@ export default {
      * @description 获取审核信息
      */
     async getReviewInfo () {
-      this.$store.dispatch('setting/showLoading')
-      this.orderData = await Reviewer.getReviewInfo()
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.orderData = await Reviewer.getReviewInfo()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取审核队列信息
      */
     async getReviewQueueInfo () {
       this.queueInfo = await Reviewer.getReviewQueueInfo()
-      console.log(this.queueInfo)
       clearTimeout(window.polling.getReviewQueue)
       window.polling.getReviewQueue = null
       if (this.queueInfo.inQueue) {
@@ -228,31 +232,39 @@ export default {
     /**
      * @description 进入排队
      */
-    joinReviewQueue () {
-      this.$store.dispatch('setting/showLoading')
-      Reviewer.joinReviewQueue()
-        .then(msg => {
-          this.$newMessage.success('进入排队成功')
-          this.$store.dispatch('setting/hiddenLoading')
-          this.getReviewQueueInfo()
-        })
+    async joinReviewQueue () {
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await Reviewer.joinReviewQueue()
+        this.$newMessage.success('进入排队成功')
+        this.getReviewQueueInfo()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 退出排队
      */
     async exitQueue () {
-      this.$store.dispatch('setting/showLoading')
-      await Reviewer.exitReviewQueue()
-      this.$newMessage.success('退出排队成功')
-      clearTimeout(window.polling.getReviewQueue)
-      window.polling.getReviewQueue = null
-      await this.getReviewQueueInfo()
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await Reviewer.exitReviewQueue()
+        this.$newMessage.success('退出排队成功')
+        clearTimeout(window.polling.getReviewQueue)
+        window.polling.getReviewQueue = null
+        await this.getReviewQueueInfo()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 审核通过
      */
-    passStream () {
+    async passStream () {
       const submitData = []
       const req = {
         streamId: this.orderData.streamId
@@ -267,18 +279,20 @@ export default {
         }
       })
       if (submitData.length) { req.photoData = submitData }
-      this.$store.dispatch('setting/showLoading')
-      Reviewer.passStream(req)
-        .then(msg => {
-          this.$newMessage.success('审核成功')
-          this.getReviewQueueInfo()
-        })
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await Reviewer.passStream(req)
+        this.$newMessage.success('审核成功')
+        this.getReviewQueueInfo()
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 审核退回
      */
-    refuseStream () {
-      console.log(this.orderData.photos)
+    async refuseStream () {
       const submitData = []
       const req = {
         streamId: this.orderData.streamId
@@ -311,12 +325,15 @@ export default {
         return this.$newMessage.warning('请填写退单理由或者审核备注')
       }
       if (this.unbundle) { req.isUntied = true }
-      this.$store.dispatch('setting/showLoading')
-      Reviewer.refuseStream(req)
-        .then(msg => {
-          this.$newMessage.success('退回成功')
-          this.getReviewQueueInfo()
-        })
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await Reviewer.refuseStream(req)
+        this.$newMessage.success('退回成功')
+        this.getReviewQueueInfo()
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

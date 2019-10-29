@@ -27,7 +27,6 @@
 
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="staffName" label="组员" />
         <el-table-column prop="stream_num" label="流水号" width="200" />
         <el-table-column prop="pass_at" label="审核通过时间" width="200" />
         <el-table-column prop="reviewAllTime" label="审核总时长" />
@@ -189,11 +188,16 @@ export default {
             break
         }
       }
-      this.$store.dispatch('setting/showLoading')
-      const data = await ReviewCheck.getReviewList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await ReviewCheck.getReviewList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

@@ -106,12 +106,17 @@ export default {
      * @package retouchOrgId 机构id
      */
     async getRetouchOrgInfo () {
-      this.$store.dispatch('setting/showLoading')
-      const data = await Institution.getRetouchOrgInfo({ 'retouchOrgId': this.retouchInstitutionId })
-      this.institutionConfig = data.institutionConfig
-      this.defaultCheckedKeys = data.defaultCheckedKeys
-      this.institutionConfig.toData = []
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await Institution.getRetouchOrgInfo({ 'retouchOrgId': this.retouchInstitutionId })
+        this.institutionConfig = data.institutionConfig
+        this.defaultCheckedKeys = data.defaultCheckedKeys
+        this.institutionConfig.toData = []
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 上传
@@ -129,24 +134,24 @@ export default {
           })
           delete this.institutionConfig.toData
           const reqData = this.institutionConfig
-          this.$store.dispatch('setting/showLoading')
+          this.$store.dispatch('setting/showLoading', this.$route.name)
           if (this.retouchInstitutionId) {
             Institution.editRetouchOrg(reqData)
               .then(() => {
                 this.$newMessage.success('修改机构成功')
-                this.$store.dispatch('setting/hiddenLoading')
+                this.$store.dispatch('setting/hiddenLoading', this.$route.name)
                 this.toBack()
               })
           } else {
             Institution.addRetouchOrg(reqData)
               .then(() => {
                 this.$newMessage.success('添加机构成功')
-                this.$store.dispatch('setting/hiddenLoading')
+                this.$store.dispatch('setting/hiddenLoading', this.$route.name)
                 this.toBack()
               })
           }
         })
-        .catch(err => console.log(err))
+        .catch(() => {})
     },
     /**
      * @description 输入验证

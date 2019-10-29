@@ -27,17 +27,24 @@ export default {
   data () {
     return {
       options: [],
-      disableState: false
+      disableState: true
     }
   },
   created () {
     this.getAllRole()
   },
   methods: {
+    /**
+     * @description 获取全部角色组
+     */
     async getAllRole () {
-      const list = await Staff.getAllRole()
-      this.options = list
-      this.options.length === 0 && (this.disableState = true)
+      try {
+        const list = await Staff.getAllRole()
+        this.options = list
+        this.disableState = false
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   }
 }

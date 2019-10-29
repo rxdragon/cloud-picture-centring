@@ -1,13 +1,20 @@
 const state = {
-  loading: false,
   imgDomain: process.env.VUE_APP_DOMAIN,
   imgUploadDomain: process.env.VUE_APP_IMG_UPLOAD_DOMAIN,
-  updateDomain: process.env.VUE_APP_UPDATE_DOMAIN
+  updateDomain: process.env.VUE_APP_UPDATE_DOMAIN,
+  loadRoutes: []
 }
 
 const mutations = {
-  SET_LOADING: (state, loading) => {
-    state.loading = loading
+  SHOW_LOADING: (state, routeName) => {
+    const loadRoutes = new Set(state.loadRoutes)
+    loadRoutes.add(routeName)
+    state.loadRoutes = [...loadRoutes]
+  },
+  HIDDEN_LOADING: (state, routeName) => {
+    const loadRoutes = new Set(state.loadRoutes)
+    loadRoutes.delete(routeName)
+    state.loadRoutes = [...loadRoutes]
   },
   /**
    * @deprecated 更改域名
@@ -25,12 +32,13 @@ const mutations = {
 }
 
 const actions = {
-  showLoading ({ commit }) {
-    commit('SET_LOADING', true)
+  showLoading ({ commit }, routeName) {
+    console.log(routeName, 'routeName')
+    commit('SHOW_LOADING', routeName)
   },
-  hiddenLoading ({ commit }) {
+  hiddenLoading ({ commit }, routeName) {
     setTimeout(() => {
-      commit('SET_LOADING', false)
+      commit('HIDDEN_LOADING', routeName)
     }, 300)
   },
   // 更换域名

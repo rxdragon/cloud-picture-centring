@@ -133,7 +133,7 @@ export default {
         this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
         return isJPG || isPNG
       }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       return true
     },
     /**
@@ -147,7 +147,7 @@ export default {
      * @description 覆盖上传
      */
     createPhotoVersion (path) {
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       const req = {
         version: 'first_photo',
         photoId: this.photos.id,
@@ -157,7 +157,7 @@ export default {
         .then(() => {
           this.$newMessage.success('覆盖成功')
           this.photos.priviewPhotoData[1].path = path
-          this.$store.dispatch('setting/hiddenLoading')
+          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         })
     },
     /**

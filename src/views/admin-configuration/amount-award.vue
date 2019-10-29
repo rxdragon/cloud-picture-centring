@@ -161,28 +161,33 @@ export default {
      * @description 获取冲量奖励列表
      */
     async getImpulseList () {
-      this.pager.page = this.firstSearch ? 1 : this.pager.page
-      const reqData = {
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
-      }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.institutionId) { reqData.retoucherOrgIds = [this.institutionId] }
-      if (this.stateType) { reqData.state = this.stateType }
+      try {
+        this.pager.page = this.firstSearch ? 1 : this.pager.page
+        const reqData = {
+          page: this.pager.page,
+          pageSize: this.pager.pageSize
+        }
+        if (this.staffId.length) { reqData.staffIds = this.staffId }
+        if (this.institutionId) { reqData.retoucherOrgIds = [this.institutionId] }
+        if (this.stateType) { reqData.state = this.stateType }
 
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getImpulseList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.firstSearch = false
-      this.$store.dispatch('setting/hiddenLoading')
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getImpulseList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.firstSearch = false
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 删除冲量奖励
      */
     deleteImpulse (listItem) {
       const reqData = { impulseId: listItem.id }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       OperationManage.deleteImpulse(reqData)
         .then(() => {
           this.$newMessage.success('删除' + listItem.title + '成功')
@@ -194,7 +199,7 @@ export default {
      */
     disableImpulse (listItem) {
       const reqData = { impulseId: listItem.id }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       OperationManage.disableImpulse(reqData)
         .then(() => {
           this.$newMessage({

@@ -251,22 +251,26 @@ export default {
      * @description 获取流水信息
      */
     async getStreamInfo () {
-      const reqData = { streamId: this.aid }
-      this.$store.dispatch('setting/showLoading')
-      const data = await RetoucherCenter.getStreamInfo(reqData)
-      this.orderData = data.orderData
-      this.hourGlass = data.hourGlass
-      if (this.isSandClockOpen) {
-        this.overTime = +this.hourGlass.over_time
-        const nowDate = Math.ceil(new Date().getTime() / 1000)
-        this.goalTime.green = this.hourGlass.green_time + nowDate
-        this.goalTime.red = this.hourGlass.green_time + this.hourGlass.orange_time + nowDate
-        this.countDown()
+      try {
+        const reqData = { streamId: this.aid }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await RetoucherCenter.getStreamInfo(reqData)
+        this.orderData = data.orderData
+        this.hourGlass = data.hourGlass
+        if (this.isSandClockOpen) {
+          this.overTime = +this.hourGlass.over_time
+          const nowDate = Math.ceil(new Date().getTime() / 1000)
+          this.goalTime.green = this.hourGlass.green_time + nowDate
+          this.goalTime.red = this.hourGlass.green_time + this.hourGlass.orange_time + nowDate
+          this.countDown()
+        }
+        this.photos = data.photos
+        this.reviewerNote = data.reviewerNote
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      console.log(this.hourGlass)
-      this.photos = data.photos
-      this.reviewerNote = data.reviewerNote
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 时间倒计时
@@ -298,7 +302,7 @@ export default {
      * @param {*} file
      */
     beforeUpload (file) {
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       const name = PhotoTool.fileNameFormat(file.name)
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
@@ -307,20 +311,20 @@ export default {
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
       if (!isJPG && !isPNG) {
         this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
-        this.$store.dispatch('setting/hiddenLoading')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         return isJPG || isPNG
       }
       if (findPhoto) {
         this.$newMessage.warning('该照片已经上传，请移除该照片' + name + '再上传。')
-        this.$store.dispatch('setting/hiddenLoading')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         return false
       }
       if (!hasSameName) {
         this.$newMessage.warning('请上传与原片文件名一致的照片。')
-        this.$store.dispatch('setting/hiddenLoading')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         return false
       }
-      this.$store.dispatch('setting/hiddenLoading')
+      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       return true
     },
     /**
@@ -404,7 +408,7 @@ export default {
         streamId: this.aid,
         photoData: uploadData
       }
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       RetoucherCenter.submitStream(reqData)
         .then(msg => {
           SessionTool.removeUpdatePhoto(this.aid)

@@ -8,6 +8,7 @@
       placeholder="请选择伙伴"
       :show-all-levels="false"
       :popper-append-to-body="false"
+      :disabled="loadingDown"
       filterable
       clearable
       v-on="$listeners"
@@ -36,7 +37,8 @@ export default {
   data () {
     return {
       deafultProps: { multiple: true, emitPath: false },
-      options: []
+      options: [],
+      loadingDown: true
     }
   },
   computed: {
@@ -48,9 +50,17 @@ export default {
     this.getStaffList()
   },
   methods: {
+    /**
+     * @description 获取伙伴列表
+     */
     async getStaffList () {
-      const list = await Staff.getStaffSelectList()
-      this.options = list
+      try {
+        const list = await Staff.getStaffSelectList()
+        this.options = list
+        this.loadingDown = false
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   }
 }

@@ -81,25 +81,33 @@ export default {
      * @description 获取基础沙漏
      */
     async getBaseHourGlassSetting () {
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getBaseHourGlassSetting()
-      console.log(data, 1)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getBaseHourGlassSetting()
+        console.log(data, 1)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 删除沙漏配置
      */
     async deleteHourGlass (listItem) {
-      this.$store.dispatch('setting/showLoading')
-      const reqData = { configId: listItem.deleteId }
-      await OperationManage.DeleteHourGlass(reqData)
-        .then(() => {
-          this.$newMessage.success('删除成功')
-          this.getBaseHourGlassSetting()
-        })
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const reqData = { configId: listItem.deleteId }
+        await OperationManage.DeleteHourGlass(reqData)
+        this.$newMessage.success('删除成功')
+        this.getBaseHourGlassSetting()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

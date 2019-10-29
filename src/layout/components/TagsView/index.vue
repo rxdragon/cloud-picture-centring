@@ -170,7 +170,7 @@ export default {
      * @description 关闭当前标签
      */
     closeSelectedTag (view) {
-      this.$store.dispatch('setting/hiddenLoading')
+      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
         if (view.path === this.$route.path) {
           this.toLastView(visitedViews, view)
@@ -181,7 +181,7 @@ export default {
      * @description 关闭其他页面
      */
     closeOthersTags () {
-      this.$store.dispatch('setting/hiddenLoading')
+      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       this.$router.push(this.selectedTag)
       this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
         this.moveToCurrentTag()
@@ -191,7 +191,7 @@ export default {
      * @description 关闭全部标签
      */
     closeAllTags (view) {
-      this.$store.dispatch('setting/hiddenLoading')
+      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
         if (this.affixTags.some(tag => tag.path === view.path)) {
           return

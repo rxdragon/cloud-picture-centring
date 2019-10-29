@@ -164,15 +164,19 @@ export default {
      * @description 获取云端工作指标
      */
     async getCloudRetoucherQuota () {
-      if (!this.timeSpan) {
-        this.$newMessage.warning('请输入时间')
-        return false
+      try {
+        if (!this.timeSpan) {
+          this.$newMessage.warning('请输入时间')
+          return false
+        }
+        const reqData = { year: this.timeSpan }
+        const data = await WorkManage.getCloudRetoucherQuota(reqData)
+        this.listData = data.listData
+        this.tableData = data.groups
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      const reqData = { year: this.timeSpan }
-      const data = await WorkManage.getCloudRetoucherQuota(reqData)
-      this.listData = data.listData
-      this.tableData = data.groups
-      console.log(data)
     }
   }
 }

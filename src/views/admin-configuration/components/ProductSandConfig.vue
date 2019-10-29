@@ -96,29 +96,37 @@ export default {
      * @description 获取沙漏列表
      */
     async getHourGlassList () {
-      this.$store.dispatch('setting/showLoading')
-      const reqData = {
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const reqData = {
+          page: this.pager.page,
+          pageSize: this.pager.pageSize
+        }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getHourGlassList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getHourGlassList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 删除沙漏
      */
     async deleteHourGlass (listItem) {
-      this.$store.dispatch('setting/showLoading')
-      const reqData = { configId: listItem.id }
-      await OperationManage.DeleteHourGlass(reqData)
-        .then(() => {
-          this.$newMessage.success('删除成功')
-          this.getHourGlassList()
-        })
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const reqData = { configId: listItem.id }
+        await OperationManage.DeleteHourGlass(reqData)
+        this.$newMessage.success('删除成功')
+        this.getHourGlassList()
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     },
     /**
      * @description 编辑沙漏

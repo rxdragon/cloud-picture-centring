@@ -111,14 +111,19 @@ export default {
      * @description 获取门店评价
      */
     async getStoreEvaluate (page) {
-      if (page) { this.pager.page = page }
-      const req = this.getParams()
-      if (!req) return
-      this.$store.dispatch('setting/showLoading')
-      const data = await WorkManage.getStoreEvaluate(req)
-      this.tableData = data.list
-      this.pager.total = data.total
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        if (page) { this.pager.page = page }
+        const req = this.getParams()
+        if (!req) return
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await WorkManage.getStoreEvaluate(req)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

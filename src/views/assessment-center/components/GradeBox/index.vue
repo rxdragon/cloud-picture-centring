@@ -222,7 +222,7 @@ export default {
     commitHistory () {
       const req = this.getCommitparams()
       if (!req) return
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       AssessmentCenter.commitHistory(req)
         .then(msg => {
           this.$emit('finsihed', true)

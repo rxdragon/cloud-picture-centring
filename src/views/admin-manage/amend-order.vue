@@ -10,7 +10,7 @@
       </div>
       <div class="caid-search search-item">
         <span>订单号</span>
-        <el-input v-model="id" :disabled="Boolean(caid)" placeholder="请输入流水号" />
+        <el-input v-model="id" :disabled="Boolean(caid)" placeholder="请输入订单号" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>
@@ -93,16 +93,20 @@ export default {
      * @description 获取照片订单信息
      */
     async getStreamInfo () {
-      const req = {}
-      if (this.id) { req.orderId = this.id }
-      if (this.caid) { req.streamNum = this.caid }
-      if (!Object.keys(req).length) {
-        return this.$newMessage.warning('请输入订单号或流水号')
+      try {
+        const req = {}
+        if (this.id) { req.orderId = this.id }
+        if (this.caid) { req.streamNum = this.caid }
+        if (!Object.keys(req).length) {
+          return this.$newMessage.warning('请输入订单号或流水号')
+        }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.dataList = await WorkManage.getStreamInfo(req)
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      this.$store.dispatch('setting/showLoading')
-      this.dataList = await WorkManage.getStreamInfo(req)
-      console.log(this.dataList, 'this.dataList')
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 删除照片
@@ -135,15 +139,18 @@ export default {
     /**
      * @description 提交修改
      */
-    modifyStream (item) {
-      const req = this.getModifyParams(item)
-      if (!req) return
-      this.$store.dispatch('setting/showLoading')
-      WorkManage.modifyStream(req)
-        .then(data => {
-          this.$newMessage.success('操作成功!')
-          this.$store.dispatch('setting/hiddenLoading')
-        })
+    async modifyStream (item) {
+      try {
+        const req = this.getModifyParams(item)
+        if (!req) return
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        await WorkManage.modifyStream(req)
+        this.$newMessage.success('操作成功!')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$newMessage.success('操作成功!')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      }
     }
   }
 }

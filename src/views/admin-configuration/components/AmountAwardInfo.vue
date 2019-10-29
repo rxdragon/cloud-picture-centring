@@ -70,29 +70,34 @@ export default {
      * @description 获取冲量奖励详情
      */
     async getImpulseInfo () {
-      const reqData = { impulseId: this.editId }
-      this.$store.dispatch('setting/showLoading')
-      const data = await OperationManage.getImpulseInfo(reqData)
-      this.title = data.title
-      this.awardList = data.impulse_setting_item
-      this.retoucherOrg = data.retoucherOrg
-      this.startTime = data.start_at
-      this.endTime = data.end_at
-      const staff = data.staff
-      this.staffList = []
-      staff.forEach(staffItem => {
-        const findGroup = this.staffList.find(item => item.lable === staffItem.retouch_group)
-        const createData = { label: staffItem.name }
-        if (findGroup) {
-          findGroup.children = [...findGroup.children, createData]
-        } else {
-          this.staffList.push({
-            label: staffItem.retouch_group.name,
-            children: [createData]
-          })
-        }
-      })
-      this.$store.dispatch('setting/hiddenLoading')
+      try {
+        const reqData = { impulseId: this.editId }
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await OperationManage.getImpulseInfo(reqData)
+        this.title = data.title
+        this.awardList = data.impulse_setting_item
+        this.retoucherOrg = data.retoucherOrg
+        this.startTime = data.start_at
+        this.endTime = data.end_at
+        const staff = data.staff
+        this.staffList = []
+        staff.forEach(staffItem => {
+          const findGroup = this.staffList.find(item => item.lable === staffItem.retouch_group)
+          const createData = { label: staffItem.name }
+          if (findGroup) {
+            findGroup.children = [...findGroup.children, createData]
+          } else {
+            this.staffList.push({
+              label: staffItem.retouch_group.name,
+              children: [createData]
+            })
+          }
+        })
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

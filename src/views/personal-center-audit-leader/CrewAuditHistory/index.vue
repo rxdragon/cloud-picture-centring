@@ -99,7 +99,6 @@ export default {
   },
   created () {
     this.searchStaff && (this.staffId = this.searchStaff)
-    console.log(this.searchType)
     switch (this.searchType) {
       case SearchType.CheckPlant:
         this.auditType = 'plant'
@@ -188,10 +187,16 @@ export default {
             break
         }
       }
-      const data = await ReviewCheck.getReviewList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
-      console.log(data)
+      try {
+        this.$store.dispatch('setting/showLoading', this.$route.name)
+        const data = await ReviewCheck.getReviewList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
+      }
     }
   }
 }

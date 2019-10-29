@@ -124,7 +124,7 @@ export default {
      * @description 初始化页面
      */
     resetPage () {
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       Promise.all([
         this.getStatistics(),
         this.getHaveCheckResult()
@@ -162,11 +162,11 @@ export default {
     async takePhoto () {
       const req = this.getTakeParams()
       if (!req) return false
-      this.$store.dispatch('setting/showLoading')
+      this.$store.dispatch('setting/showLoading', this.$route.name)
       const data = await AssessmentCenter.takePhoto(req)
       if (!data.length) {
         this.$newMessage.warning('当前暂无可被抽取的订单。')
-        this.$store.dispatch('setting/hiddenLoading')
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         return
       }
       this.uuid = data
@@ -187,7 +187,7 @@ export default {
             this.photoData = []
             this.spotAllNum = '-'
             this.pager.total = 10
-            this.$store.dispatch('setting/hiddenLoading')
+            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
           }
         })
     },
@@ -195,24 +195,29 @@ export default {
      * @description 获取抽片数据
      */
     async getSpotCheckResult (page) {
-      this.pager.page = page || this.pager.page
-      const req = {
-        uuid: this.uuid,
-        skip: (this.pager.page - 1) * this.pager.pageSize,
-        limit: this.pager.pageSize
+      try {
+        this.pager.page = page || this.pager.page
+        const req = {
+          uuid: this.uuid,
+          skip: (this.pager.page - 1) * this.pager.pageSize,
+          limit: this.pager.pageSize
+        }
+        const data = await AssessmentCenter.getSpotCheckResult(req)
+        this.pager.total = this.spotAllNum = data.total
+        if (this.isTakePhoto === true) {
+          this.dialogTableVisible = true
+          this.isTakePhoto = false
+          setTimeout(() => {
+            this.dialogTableVisible = false
+          }, 1500)
+        }
+        this.photoData = []
+        this.photoData = data.list
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(error)
       }
-      const data = await AssessmentCenter.getSpotCheckResult(req)
-      this.pager.total = this.spotAllNum = data.total
-      if (this.isTakePhoto === true) {
-        this.dialogTableVisible = true
-        this.isTakePhoto = false
-        setTimeout(() => {
-          this.dialogTableVisible = false
-        }, 1500)
-      }
-      this.photoData = []
-      this.photoData = data.list
-      this.$store.dispatch('setting/hiddenLoading')
     },
     /**
      * @description 监听页面变更
