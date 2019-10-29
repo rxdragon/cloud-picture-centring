@@ -39,7 +39,6 @@ export default {
      * @description 更改父级组件
      */
     componentChange (listItem) {
-      console.log(listItem.query)
       if (listItem.query) {
         this.$emit('update:searchType', listItem.query)
       }

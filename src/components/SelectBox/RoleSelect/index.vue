@@ -38,13 +38,9 @@ export default {
      * @description 获取全部角色组
      */
     async getAllRole () {
-      try {
-        const list = await Staff.getAllRole()
-        this.options = list
-        this.disableState = false
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Staff.getAllRole()
+      this.options = list
+      this.disableState = false
     }
   }
 }

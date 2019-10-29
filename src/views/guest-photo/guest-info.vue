@@ -104,13 +104,13 @@ export default {
       streamNum: '-',
       productName: '-',
       labelTag: {},
-      photographerRemark: '',
-      retouchMark: '',
-      orderMark: '',
-      dresserMark: '',
-      workerInfo: {},
-      photoVersion: [],
-      gradeInfo: {},
+      photographerRemark: '', // 摄影备注
+      retouchMark: '', // 修图备注
+      orderMark: '', // 订单备注
+      dresserMark: '', // 化妆备注
+      workerInfo: {}, // 工作信息
+      photoVersion: [], // 照片版本
+      gradeInfo: {}, // 打分数据
       attitudeValue: '',
       headerClass: '' // 导航栏样式
     }
@@ -154,7 +154,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -186,7 +185,6 @@ export default {
         this.getPhotoInfo()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     }
   }

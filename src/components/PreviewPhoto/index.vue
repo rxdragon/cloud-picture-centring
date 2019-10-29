@@ -132,7 +132,6 @@ export default {
       return this.imgarray
     },
     showPhoto () {
-      console.log(this.photoArray[this.photoIndex])
       return this.photoArray[this.photoIndex]
     }
   },

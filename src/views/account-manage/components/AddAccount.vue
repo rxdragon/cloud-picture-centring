@@ -216,7 +216,6 @@ export default {
       this.hasPermission = []
       this.retouchSelectType = ''
       this.roleValue = ''
-      console.log('resetParams')
     },
     /**
      * @description 查询伙伴
@@ -257,7 +256,6 @@ export default {
       this.$store.dispatch('setting/showLoading', this.$route.name)
       AccountManage.getStaffPermission(req)
         .then(data => {
-          console.log(data)
           this.hasPermission = data.base_auth.map(item => item.id)
           this.$store.dispatch('setting/hiddenLoading', this.$route.name)
         })

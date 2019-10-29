@@ -45,16 +45,12 @@ export default {
      * @param {*} code
      */
     async jumpBack (code) {
-      try {
-        const token = code.substr(1, 32)
-        await this.$store.dispatch('user/login', token)
-        this.$newMessage.success('登录成功')
-        window.removeEventListener('message', this.onMessage)
-        await this.$store.dispatch('user/getUserInfo')
-        this.$router.push('/')
-      } catch (error) {
-        throw new Error(error)
-      }
+      const token = code.substr(1, 32)
+      await this.$store.dispatch('user/login', token)
+      this.$newMessage.success('登录成功')
+      window.removeEventListener('message', this.onMessage)
+      await this.$store.dispatch('user/getUserInfo')
+      this.$router.push('/')
     }
   }
 }

@@ -81,11 +81,6 @@ export default {
     orderInfo () {
       return this.orderData
     }
-  },
-  watch: {
-    isWorkBoardInfo (value) {
-      console.log(value, 'isWorkBoardInfo')
-    }
   }
 }
 </script>

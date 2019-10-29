@@ -142,14 +142,12 @@ export default {
         this.auditType && (reqData.plantPull = this.auditType)
         this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
         this.$store.dispatch('setting/showLoading', this.$route.name)
-        console.log(reqData)
         const data = await RetouchLeader.getStaffRetouchList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     }
   }

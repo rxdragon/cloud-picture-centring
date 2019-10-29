@@ -12,7 +12,6 @@ export function getAllRetouchClass () {
     url: '/project_cloud/common/getAllRetouchClass',
     method: 'GET'
   }).then(res => {
-    console.log(res)
     const createData = []
     res.forEach(classItem => {
       createData.push({
@@ -34,23 +33,17 @@ export function getStreamInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
-    console.log(keyToHump(msg))
     const data = keyToHump(msg)
     const createData = {}
-    let reworkNum = 0
     let plantNum = 0 // 审核种草
     let pullNum = 0 // 审核拔草
     let checkPlantNum = 0
     let checkPullNum = 0
+    const reworkNum = data.tags && data.tags.values && data.tags.values.rework_num || 0
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
       const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
-      if (photoItem.tags) {
-        reworkNum = photoItem.tags.values && photoItem.tags.values.rework_num && reworkNum < photoItem.tags.values.rework_num
-          ? photoItem.tags.values.rework_num
-          : reworkNum
-      }
       if (photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('plant')) {
         photoItem.grass = 'plant'
         plantNum++
@@ -66,8 +59,8 @@ export function getStreamInfo (params) {
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
       // 照片版本
       photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
-        ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo])
-        : settlePhoto([...photoItem.other_photo_version])
+        ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum)
+        : settlePhoto([...photoItem.other_photo_version], reworkNum)
     })
     createData.orderData = {
       streamNum: data.streamNum,

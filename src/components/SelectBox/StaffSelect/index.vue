@@ -54,13 +54,9 @@ export default {
      * @description 获取伙伴列表
      */
     async getStaffList () {
-      try {
-        const list = await Staff.getStaffSelectList()
-        this.options = list
-        this.loadingDown = false
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Staff.getStaffSelectList()
+      this.options = list
+      this.loadingDown = false
     }
   }
 }

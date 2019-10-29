@@ -10,7 +10,6 @@ export function getSelfQuota () {
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
-    console.log(data)
     const todayIncome = Number(data.todayIncome.retouch) + Number(data.todayIncome.impulse)
     data.todayIncome = todayIncome.toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
@@ -62,7 +61,6 @@ export function getRetouchQuota (params) {
     params
   }).then(msg => {
     const data = keyToHump(msg)
-    console.log(data)
     const avgTime = data.avgRetouchAndRebuildTime
     const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
     const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)

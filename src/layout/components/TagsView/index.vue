@@ -155,10 +155,8 @@ export default {
      * @description 刷新页面
      */
     refreshSelectedTag (view) {
-      console.log(view)
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
         const { fullPath } = view
-        console.log(view)
         this.$nextTick(() => {
           this.$router.replace({
             path: '/redirect' + fullPath

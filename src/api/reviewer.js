@@ -10,7 +10,6 @@ export function getReviewInfo () {
     url: '/project_cloud/reviewer/getReviewInfo',
     method: 'GET'
   }).then(msg => {
-    console.log(msg, 'order')
     if (!msg) return null
     let createData = {}
     msg.photos.forEach(photoItem => {

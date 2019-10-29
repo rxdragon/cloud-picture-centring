@@ -104,7 +104,6 @@ export default {
      * @description 下载照片
      */
     downing (src) {
-      console.log(src)
       const savePath = `/${this.streamNum}`
       const data = {
         url: this.imgDomain + src,

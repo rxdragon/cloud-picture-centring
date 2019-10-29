@@ -17,7 +17,8 @@ const CheckPoolException = [
   [0xA11006001, '还存在未抽片'],
   [0xA11006002, '抽取失败'],
   [0xA11006003, '参数错误'],
-  [0xA11006004, '正在抽片中']
+  [0xA11006004, '正在抽片中'],
+  [0xA11006005, '暂无数据']
 ]
 
 const CommonException = [
@@ -97,7 +98,6 @@ export const errorCode = {
   getMsg: (err) => {
     let codeNum = Number(err.error_code)
     const hexCode = `0x${codeNum.toString(16).toUpperCase()}`
-    console.log(hexCode)
     return errMap.get(hexCode) || JSON.stringify(err.error_msg)
   }
 }

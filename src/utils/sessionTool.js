@@ -137,6 +137,38 @@ export function removeSureRetouchOrder (aid) {
 }
 
 /**
+ * @description 保存退单流水
+ */
+export function saveReturnRetouchOrder (aid) {
+  const returnArr = new Set()
+  returnArr.add(aid)
+  const data = JSON.stringify([...returnArr])
+  const saveKey = `return-retouch-id`
+  localStorage.setItem(saveKey, data)
+}
+
+/**
+ * @description 获取是否已保存退单流水
+ */
+export function getReturnRetouchOrder (aid) {
+  const saveKey = `return-retouch-id`
+  const returnArr = JSON.parse(localStorage.getItem(saveKey))
+  return returnArr ? returnArr.includes(aid) : false
+}
+
+/**
+ * @description 移除重修确定流水
+ */
+export function removeReturnRetouchOrder (aid) {
+  const saveKey = `return-retouch-id`
+  let returnArr = JSON.parse(localStorage.getItem(saveKey))
+  returnArr = new Set(returnArr)
+  returnArr.delete(aid)
+  const data = JSON.stringify([...returnArr])
+  localStorage.setItem(saveKey, data)
+}
+
+/**
  * @description 清楚全部数据
  */
 export function clearAllStorage () {

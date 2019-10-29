@@ -50,7 +50,6 @@ export function getStreamInfo (params) {
     method: 'get',
     params
   }).then(msg => {
-    console.log(msg, 'getStreamInfo')
     const createData = {}
     createData.orderData = {
       streamNum: msg.stream_num,

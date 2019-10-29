@@ -15,7 +15,6 @@ export function getCloudRetoucherQuota (params) {
   }).then(msg => {
     const createData = {}
     const data = keyToHump(msg)
-    console.log(data)
     let finishPhotoPercent = '0%'
     if (data.cloud.finishPhotoNum && data.cloud.uploadPhotoNum) {
       finishPhotoPercent = transformPercentage(data.cloud.finishPhotoNum, data.cloud.uploadPhotoNum)
@@ -132,7 +131,6 @@ export function getReviewQuota (params) {
       rectify_photo_different_grass_no_grass: formatNumAndRate(data.rectify_photo.different_grass.no_grass),
       rectify_photo_same: formatNumAndRate(data.rectify_photo.same)
     }
-    console.log(res)
     return res
   })
 }

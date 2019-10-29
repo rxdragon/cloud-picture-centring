@@ -38,13 +38,9 @@ export default {
      * @description 获取审核后
      */
     async getReviewer () {
-      try {
-        const list = await Staff.getReviewer()
-        this.options = list
-        this.disableState = false
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Staff.getReviewer()
+      this.options = list
+      this.disableState = false
     }
   }
 }

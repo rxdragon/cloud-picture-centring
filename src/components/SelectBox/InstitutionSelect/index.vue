@@ -41,18 +41,14 @@ export default {
      * @description 获取机构列表
      */
     async getInstitutionList () {
-      try {
-        if (this.institutionClass === 'retouch') {
-          const list = await Institution.getRetoucherOrg()
-          this.options = list
-        } else {
-          const list = await Institution.getPhotographerOrg()
-          this.options = list
-        }
-        this.disableState = false
-      } catch (error) {
-        throw new Error(error)
+      if (this.institutionClass === 'retouch') {
+        const list = await Institution.getRetoucherOrg()
+        this.options = list
+      } else {
+        const list = await Institution.getPhotographerOrg()
+        this.options = list
       }
+      this.disableState = false
     }
   }
 }

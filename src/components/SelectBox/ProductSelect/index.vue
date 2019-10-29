@@ -41,13 +41,9 @@ export default {
      * @description 获取全部伙伴
      */
     async getAllProduct () {
-      try {
-        const list = await Product.getAllProduct()
-        this.options = list
-        this.loadingDown = true
-      } catch (error) {
-        throw new Error(error)
-      }
+      const list = await Product.getAllProduct()
+      this.options = list
+      this.loadingDown = true
     }
   }
 }

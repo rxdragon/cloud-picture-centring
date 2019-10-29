@@ -273,7 +273,6 @@ export default {
       }
       this.productConfig.grassData = JSON.parse(JSON.stringify(createObj))
       this.productConfig.joinGrassData = JSON.parse(JSON.stringify(createObj))
-      console.log(this.productConfig.joinGrassData, 'this.productConfig.joinGrassData')
       this.productConfig.notJointMoney = JSON.parse(JSON.stringify(createObj))
       this.productConfig.jointMoney = JSON.parse(JSON.stringify(createObj))
       this.productConfig.blueNotJointMoney = JSON.parse(JSON.stringify(blueNotJointMoney))
@@ -389,7 +388,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**

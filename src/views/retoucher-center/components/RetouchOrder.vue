@@ -196,13 +196,17 @@ export default {
     }
   },
   watch: {
-    aid () {
-      this.getCachePhoto()
-      this.getStreamInfo()
+    aid (value) {
+      if (Boolean(value)) {
+        this.getCachePhoto()
+        this.getStreamInfo()
+      }
     }
   },
   created () {
-    if (!this.aid) { this.$emit('update:showDetail', false) }
+    if (!this.aid) {
+      this.$emit('update:showDetail', false) 
+    }
     this.getCachePhoto()
     this.getStreamInfo()
     this.getUpyunSign()
@@ -266,10 +270,10 @@ export default {
         }
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
+        if (this.$route.query.aid) { delete this.$route.query.aid }
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -413,6 +417,7 @@ export default {
         .then(msg => {
           SessionTool.removeUpdatePhoto(this.aid)
           SessionTool.removeSureRetouchOrder(this.aid)
+          SessionTool.removeReturnRetouchOrder(this.aid)
           this.$newMessage.success('提交审核成功。')
           this.$emit('update:showDetail', false)
         })

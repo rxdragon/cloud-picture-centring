@@ -15,7 +15,6 @@ export default {
   computed: {
     ...mapGetters(['loadRoutes']),
     isLoading () {
-      console.log(this.loadRoutes, 'isLoading')
       return this.loadRoutes.includes(this.$route.name)
     },
     cachedViews () {
@@ -27,9 +26,6 @@ export default {
     transitionName () {
       return ''
     }
-  },
-  created () {
-    console.log(this.$route.name)
   }
 }
 </script>

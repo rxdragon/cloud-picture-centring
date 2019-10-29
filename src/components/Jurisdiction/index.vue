@@ -71,13 +71,9 @@ export default {
      * @description 获取权限接口
      */
     async getJurisdictionList () {
-      try {
-        const data = await Staff.getJurisdictionList()
-        this.jurisdictionList = JSON.parse(JSON.stringify(data))
-        if (this.firstShow) { this.initializeData() }
-      } catch (error) {
-        throw new Error(error)
-      }
+      const data = await Staff.getJurisdictionList()
+      this.jurisdictionList = JSON.parse(JSON.stringify(data))
+      if (this.firstShow) { this.initializeData() }
     },
     /**
      * @description 选中单个权限

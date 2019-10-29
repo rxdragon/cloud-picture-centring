@@ -284,7 +284,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -298,13 +297,11 @@ export default {
         const data = await AdminManage.getReviewStreamList(req)
         this.tableData = data.list
         this.pager.total = data.total
-        console.log(data, '获取审核流水列表')
         this.reviewCount = data.reviewCount
         this.retouchCount = data.retouchCount
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -325,7 +322,6 @@ export default {
         }
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
@@ -352,7 +348,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     }
   }

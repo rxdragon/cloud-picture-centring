@@ -91,16 +91,13 @@ export default {
      * @param {*} row
      */
     creationAccount (row) {
-      console.log(1)
       this.editData = row
-      console.log(row)
       this.showEdit = true
     },
     /**
      * @description 获取角色组列表
      */
     finishedAccount () {
-      console.log(2)
       this.getStaffListByPage()
       this.showEdit = false
     },
@@ -131,13 +128,12 @@ export default {
         if (value) { this.pager.page = value }
         const req = this.getParams()
         this.$store.dispatch('setting/showLoading', this.$route.name)
-        let data = await AccountManage.getStaffListByPage(req)
+        const data = await AccountManage.getStaffListByPage(req)
         this.tableData = data.list
         this.pager.total = data.total
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        throw new Error(error)
       }
     },
     /**
