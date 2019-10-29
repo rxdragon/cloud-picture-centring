@@ -72,6 +72,7 @@ import DatePicker from '@/components/DatePicker'
 import InstitutionSelect from '@SelectBox/InstitutionSelect'
 import * as Util from '@/utils/validate'
 
+import { joinTimeSpan } from '@/utils/timespan.js'
 import * as OperationManage from '@/api/operationManage.js'
 export default {
   name: 'AddAmountAward',
@@ -196,8 +197,8 @@ export default {
       const reqData = {
         title: this.awardTitle,
         settingItemIds: this.checkList,
-        startAt: this.timeSpan[0],
-        endAt: this.timeSpan[1]
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
       if (this.toData.length) {
         reqData.staffIds = []

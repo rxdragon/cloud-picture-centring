@@ -42,6 +42,7 @@ import CrewRetouchHistory from './components/CrewRetouchHistory'
 import CrewSelect from '@SelectBox/CrewSelect'
 
 import { parseTime } from '@/utils/index.js'
+import { joinTimeSpan } from '@/utils/timespan.js'
 import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
@@ -115,12 +116,21 @@ export default {
      */
     async getGroupStaffQuotaInfo () {
       try {
+        if (!this.timeSpan) {
+          this.$newMessage.warning('请输入时间')
+          return false
+        }
         this.$store.dispatch('setting/showLoading', this.$route.name)
-        const data = await RetouchLeader.getGroupStaffQuotaInfo()
+        const req = {
+          startAt: joinTimeSpan(this.timeSpan[0]),
+          endAt: joinTimeSpan(this.timeSpan[1], 1)
+        }
+        const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
         this.tableDataCount = data.tableDataCount
         this.tableDataRate = data.tableDataRate
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
+        console.log(error)
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       }
     }

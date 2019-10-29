@@ -249,6 +249,7 @@ export default {
         this.$newMessage.success('进入排队成功')
         this.getStreamQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        throw new Error(123)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       }
