@@ -88,7 +88,7 @@ export default {
     // 是够重修
     rework () {
       if (this.photoData.tags && this.photoData.tags.statics) {
-        const isRework = this.photoData.tags.statics.includes('rework')
+        const isRework = this.photoData.tags.statics.includes('return_photo')
         return isRework
       } else {
         return false
