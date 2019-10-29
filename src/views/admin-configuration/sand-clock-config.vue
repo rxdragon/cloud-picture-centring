@@ -27,12 +27,17 @@
                 :is-refresh.sync="editConfig"
                 :edit-id.sync="editId"
                 :hour-glass-length="hourGlassLength"
+                @changeHourGlassGlobalState="getHourGlassGlobalState"
               />
             </div>
           </el-tab-pane>
           <el-tab-pane label="基础沙漏配置" name="baseSandConfig">
             <div class="table-box">
-              <base-sand-config :is-refresh.sync="editConfig" :hour-glass-length="hourGlassLength" />
+              <base-sand-config
+                :is-refresh.sync="editConfig"
+                :hour-glass-length="hourGlassLength"
+                @changeHourGlassGlobalState="getHourGlassGlobalState"
+              />
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -97,8 +102,8 @@ export default {
     /**
      * @description 获取全局沙漏状态
      */
-    getHourGlassGlobalState () {
-      this.sandClockValue = true
+    getHourGlassGlobalState (value) {
+      this.sandClockValue = value
     },
     /**
      * @description 监听沙漏变化
@@ -106,16 +111,24 @@ export default {
     sandChange (openSand) {
       if (openSand) {
         OperationManage.enableHourGlassGlobalState()
-          .then(() => {
-            this.$newMessage.success('开启成功')
+          .then(msg => {
+            if (msg) {
+              this.$newMessage.success('开启成功')
+            } else {
+              this.sandClockValue = false
+            }
           })
           .catch(() => {
             this.sandClockValue = false
           })
       } else {
         OperationManage.disableHourGlassGlobalState()
-          .then(() => {
-            this.$newMessage.success('关闭成功')
+          .then(msg => {
+            if (msg) {
+              this.$newMessage.success('关闭成功')
+            } else {
+              this.sandClockValue = true
+            }
           })
           .catch(() => {
             this.sandClockValue = true

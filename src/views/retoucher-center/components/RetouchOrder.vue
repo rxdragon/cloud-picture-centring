@@ -197,7 +197,7 @@ export default {
   },
   watch: {
     aid (value) {
-      if (Boolean(value)) {
+      if (value) {
         this.getCachePhoto()
         this.getStreamInfo()
       }
@@ -205,7 +205,7 @@ export default {
   },
   created () {
     if (!this.aid) {
-      this.$emit('update:showDetail', false) 
+      this.$emit('update:showDetail', false)
     }
     this.getCachePhoto()
     this.getStreamInfo()
@@ -397,6 +397,9 @@ export default {
      * @description 提交审核
      */
     submitOrder () {
+      if (!this.finishPhoto.every(item => Boolean(item.path))) {
+        return this.$newMessage.warning('请等待照片上传完成')
+      }
       const uploadPhotoData = [...this.cachePhoto, ...this.finishPhoto]
       const uploadData = uploadPhotoData
       uploadData.forEach(item => {

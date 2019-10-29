@@ -56,7 +56,6 @@ export function getSpotCheckResult (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note || '暂无备注'
       item.retouchNote = item.photoData.stream && item.photoData.stream.note.retouch_note || '-'
       item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('rework') || false
       // 照片版本
@@ -66,10 +65,17 @@ export function getSpotCheckResult (params) {
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
       item.retouchStandard = item.retouch_standard
       item.productName = item.photoData.stream && item.photoData.stream.product.name
+
       item.isPull = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('pull') || false
       item.isPlant = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('plant') || false
-      item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason || '暂无原因'
-      item.reworkReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.rework_reason || '暂无重修原因'
+
+      item.reworkReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.rework_reason
+      item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
+      item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason
+
+      // 调试
+      item.isGreen = false
+      item.showCheckInfo = item.reworkReason || item.reviewerNote || item.isPlant || item.isPull || item.isGreen
       item.retouchRequire = {
         eye: '暂无',
         face: '暂无',
@@ -83,6 +89,7 @@ export function getSpotCheckResult (params) {
       list: data,
       total: msg.extend.processInfo[0].totalCount
     }
+    console.log(createData)
     return createData
   })
 }
@@ -121,6 +128,7 @@ export function getSearchHistory (params) {
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
       item.productName = item.photoData.stream.product.name
       item.retouchName = item.photoData.stream.retoucher.name || '暂无信息'
+      item.retouchStandard = item.retouch_standard
 
       item.isPull = false
       item.isPlant = false

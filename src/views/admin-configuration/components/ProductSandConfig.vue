@@ -106,6 +106,7 @@ export default {
         const data = await OperationManage.getHourGlassList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
+        this.$emit('changeHourGlassGlobalState', data.hour_glass_global_state)
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.$route.name)

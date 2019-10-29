@@ -78,26 +78,23 @@ const TagException = [
 ]
 
 export const errText = [
-  [
-    ...ApiException,
-    ...CardException,
-    ...CheckPoolException,
-    ...CommonException,
-    ...HourGlassException,
-    ...ImpulseException,
-    ...OrderException,
-    ...ProductException,
-    ...QueueException,
-    ...StaffException,
-    ...StreamException,
-    ...TagException
-  ]
+  ...ApiException,
+  ...CardException,
+  ...CheckPoolException,
+  ...CommonException,
+  ...HourGlassException,
+  ...ImpulseException,
+  ...OrderException,
+  ...ProductException,
+  ...QueueException,
+  ...StaffException,
+  ...StreamException,
+  ...TagException
 ]
 let errMap = new Map(errText)
 export const errorCode = {
   getMsg: (err) => {
     let codeNum = Number(err.error_code)
-    const hexCode = `0x${codeNum.toString(16).toUpperCase()}`
-    return errMap.get(hexCode) || JSON.stringify(err.error_msg)
+    return errMap.get(codeNum) || JSON.stringify(err.error_msg)
   }
 }

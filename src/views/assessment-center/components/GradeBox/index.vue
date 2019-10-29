@@ -14,7 +14,7 @@
             <span>产品名称：{{ photoInfoData.productName }}</span>
           </template>
           <template v-else>
-            <span>所属门店：{{ photoInfoData.storeName }}</span>
+            <span>修图标准：{{ photoInfoData.retouchStandard | toRetouchClass }}</span>
             <span>拍摄产品：{{ photoInfoData.productName }}</span>
             <span>流水号：{{ photoInfoData.streamNum }}</span>
             <span>修图师：{{ photoInfoData.retouchName }}</span>
@@ -32,14 +32,14 @@
       </div>
     </div>
     <!-- 审核信息 -->
-    <div class="panel-info check-info">
+    <div v-if="photoInfoData.showCheckInfo" class="panel-info check-info">
       <div class="panel-title">审核信息</div>
       <div class="panel-content">
-        <div class="retouch-remark panel-row">
+        <div v-if="photoInfoData.reworkReason" class="retouch-remark panel-row">
           <div class="remark-title">重修原因：</div>
           <div class="remark-content">{{ photoInfoData.reworkReason }}</div>
         </div>
-        <div class="retouch-remark panel-row">
+        <div v-if="photoInfoData.reviewerNote" class="retouch-remark panel-row">
           <div class="remark-title">审核备注：</div>
           <div class="remark-content">{{ photoInfoData.reviewerNote }}</div>
         </div>
@@ -57,21 +57,32 @@
             <div class="remark-content">{{ photoInfoData.grassReason }}</div>
           </div>
         </div>
+        <div v-if="isGreen" class="panel-row">
+          <div class="green">绿色通道</div>
+        </div>
       </div>
     </div>
     <!-- 审核纠偏 -->
-    <div class="panel-info audit-info">
+    <div v-if="!isGreen" class="panel-info audit-info">
       <div class="panel-title">审核纠偏</div>
       <div v-if="isGrade" class="audit-content">
         <div class="radio-box">
           <div class="sameOpinion-box">
-            <el-radio v-model="sameOpinion" class="sameOpinion-item" :label="1">意见相同</el-radio>
-            <el-radio v-model="sameOpinion" :label="0">意见不同</el-radio>
+            <el-radio v-model="sameOpinion" class="sameOpinion-item" label="same">意见相同</el-radio>
+            <el-radio v-model="sameOpinion" label="different">意见不同</el-radio>
           </div>
-          <div v-if="sameOpinion === 0" class="different-opinion">
+          <div v-if="sameOpinion === 'different'" class="different-opinion">
             <el-radio v-if="checkPlantState !== 1" v-model="weedOpinion" label="plant">种草</el-radio>
             <el-radio v-if="checkPlantState !== 2" v-model="weedOpinion" label="pull">拔草</el-radio>
             <el-radio v-if="checkPlantState !== 3" v-model="weedOpinion" label="none">不种不拔</el-radio>
+          </div>
+        </div>
+        <!-- 标签 -->
+        <div v-if="flakinessEvaluate === 'pull'" class="issue-label">
+          <div class="issue-content">
+            <el-select v-model="issueLabel" placeholder="请选择问题标签（非必选）">
+              <el-option label="穿帮" value="穿帮" />
+            </el-select>
           </div>
         </div>
         <div class="correct-remark">
@@ -100,7 +111,7 @@
       </div>
     </div>
     <!-- 成片评价 -->
-    <div class="panel-info flakiness-info">
+    <div v-if="photoInfoData.isReturn || isGreen" class="panel-info flakiness-info">
       <div class="panel-title">成片评价</div>
       <template v-if="isGrade">
         <div class="radio-box">
@@ -109,6 +120,7 @@
         </div>
         <div class="issue-label">
           <div class="issue-content">
+            <!-- 标签 -->
             <el-select v-if="flakinessEvaluate === 'pull'" v-model="issueLabel" placeholder="请选择问题标签（非必选）">
               <el-option label="穿帮" value="穿帮" />
             </el-select>
@@ -168,12 +180,13 @@ export default {
   },
   data () {
     return {
-      sameOpinion: '', // 意见是否相同
+      sameOpinion: '', // 意见是否相同 same 相同 different 不同
       weedOpinion: '', // 意见不同评价
       correctRemark: '', // 纠偏评价
       flakinessEvaluate: '', // 成片评价
       issueLabel: '', // 问题标签
-      issueRemark: '' // 问题备注
+      issueRemark: '', // 问题备注
+      isGreen: false // 是否是绿色通道
     }
   },
   computed: {
@@ -187,32 +200,47 @@ export default {
       return this.photoInfo
     }
   },
-  created () {
-    // this.photoInfoData = JSON.parse(JSON.stringify(this.photoInfo))
+  watch: {
+    sameOpinion (value) {
+      if (!this.photoInfoData.isReturn && value === 'same') {
+        const glassArray = ['plant', 'pull', 'none']
+        this.flakinessEvaluate = glassArray[this.checkPlantState - 1]
+      }
+    },
+    weedOpinion (value) {
+      if (!this.photoInfoData.isReturn && this.sameOpinion === 'different') {
+        this.flakinessEvaluate = value
+      }
+    }
   },
   methods: {
     /**
      * @description 获取评价参数
      */
     getCommitparams () {
-      if (!this.weedOpinion && !this.sameOpinion) {
+      if (!this.weedOpinion && !this.sameOpinion && !this.isGreen) {
         this.$newMessage.warning('请完成纠偏选项')
+        return false
+      }
+      if (!this.flakinessEvaluate) {
+        this.$newMessage.warning('请完成纠偏评价')
         return false
       }
       const req = {
         uuid: this.photoInfoData._id,
         photoId: this.photoInfoData.photoData.id,
-        auditCorrection: +this.sameOpinion === 1 ? 'same' : 'different',
-        auditGlass: this.weedOpinion,
         filmEvaluation: this.flakinessEvaluate
       }
+
       if (this.sameOpinion) {
+        req.auditCorrection = this.sameOpinion
         const glassArray = ['plant', 'pull', 'none']
-        req.auditGlass = glassArray[this.checkPlantState - 1]
+        req.auditGlass = this.sameOpinion === 'same' ? glassArray[this.checkPlantState - 1] : this.weedOpinion
       }
       if (this.correctRemark) { req.auditNote = this.correctRemark }
       if (this.issueRemark && this.filmEvaluation === 'pull') { req.evaluationNote = this.issueRemark }
       if (this.issueLabel) { req.filmTag = this.issueLabel }
+      console.log(req)
       return req
     },
     /**
@@ -341,6 +369,20 @@ export default {
 
       .correct-remark {
         padding: 10px;
+      }
+    }
+
+    .issue-label {
+      padding: 10px;
+
+      .issue-content {
+        .el-select {
+          width: 100%;
+        }
+      }
+
+      .issue-remark {
+        margin-top: 10px;
       }
     }
 

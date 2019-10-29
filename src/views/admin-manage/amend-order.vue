@@ -95,7 +95,7 @@ export default {
     async getStreamInfo () {
       try {
         const req = {}
-        if (this.id) { req.orderId = this.id }
+        if (this.id) { req.externalNum = this.id }
         if (this.caid) { req.streamNum = this.caid }
         if (!Object.keys(req).length) {
           return this.$newMessage.warning('请输入订单号或流水号')
