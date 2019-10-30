@@ -240,7 +240,7 @@ export default {
         this.disableChange = false
       } else {
         this.disableChange = true
-        this.productConfig.needJoint = 0
+        this.productConfig.needJoint = 2
       }
     }
   },

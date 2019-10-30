@@ -41,6 +41,7 @@ axios.interceptors.response.use(
   },
   error => {
     console.dir(error)
+    const requestPath = error.response.responseURL
     if (!error.response) {
       // 请求没有任何返回值：网络差，无服务
       let message = '网络错误，请稍后再试！'

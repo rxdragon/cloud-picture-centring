@@ -115,7 +115,7 @@
     </div>
     <!-- 成片评价 -->
     <div class="panel-info flakiness-info">
-      <div class="panel-title" v-if="!isGrade || !photoInfoData.isReturn">成片评价</div>
+      <div v-if="!isGrade || !photoInfoData.isReturn" class="panel-title">成片评价</div>
       <template v-if="isGrade && (photoInfoData.isReturn || isGreen)">
         <div class="radio-box">
           <el-radio v-model="flakinessEvaluate" label="plant">种草</el-radio>
@@ -189,8 +189,7 @@ export default {
       correctRemark: '', // 纠偏评价
       flakinessEvaluate: '', // 成片评价
       issueLabel: '', // 问题标签
-      issueRemark: '', // 问题备注
-      isGreen: false // 是否是绿色通道
+      issueRemark: '' // 问题备注
     }
   },
   computed: {
