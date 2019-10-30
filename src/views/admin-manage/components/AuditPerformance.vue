@@ -37,6 +37,7 @@ export default {
   components: { DatePicker, ListTable, ReviewerSelect, RetoucherGroupSelect },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       timeSpan: null,
       reviewerValue: 0,
       retoucherGroupValue: 0,
@@ -116,17 +117,17 @@ export default {
       try {
         const req = this.getParams()
         if (!req) return
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await WorkManage.getReviewQuota(req)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         if (!data) {
           this.$newMessage.warning('暂无数据')
           return false
         }
         this.listDataOne.forEach(item => { item.value = data[item.key] })
         this.listDataTwo.forEach(item => { item.value = data[item.key] })
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

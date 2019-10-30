@@ -48,6 +48,7 @@ export default {
   components: { PhotoList },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       uuid: '',
       productName: '', // 产品名称
       retoucher: '', // 修图师
@@ -70,7 +71,7 @@ export default {
     async getAttitudePhotoInfo () {
       try {
         const reqData = { photoUuid: this.uuid }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getAttitudePhotoInfo(reqData)
         this.productName = data.productName
         this.retoucher = data.retoucher
@@ -79,9 +80,9 @@ export default {
         this.photoVersion = data.photoVersion
         this.attitudeType = data.attitude.attitude
         this.evaluateName = data.attitude.name
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

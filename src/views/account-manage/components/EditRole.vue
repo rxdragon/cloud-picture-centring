@@ -30,6 +30,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name,
       roleName: '',
       hasPermission: [],
       isNewAdd: true
@@ -51,7 +52,7 @@ export default {
      */
     async getRoleInfo () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         if (this.isNewAdd) return false
         const reqData = {
           roleId: this.roleId,
@@ -61,9 +62,9 @@ export default {
         this.roleName = data.title
         const permissions = data.permissions.flatMap(permissionItem => [permissionItem.permission_id])
         this.hasPermission = permissions
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -85,7 +86,7 @@ export default {
       }
       AccountManage.addRole(reqData)
         .then(() => {
-          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
           this.$newMessage.success('添加角色组成功')
           this.toBack()
         })
@@ -99,7 +100,7 @@ export default {
         permissionIds: this.hasPermission,
         title: this.roleName
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.editRole(reqData)
         .then(() => {
           this.$newMessage({

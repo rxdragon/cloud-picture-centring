@@ -100,6 +100,7 @@ export default {
   components: { RetouchOrder, TakeOrdersList, HangUpList },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       listActive: 'retouching', // retouching 接单中 hanging 挂起
       retouchingListNum: 0, // 接单中数量
       hangingListNum: 0, // 挂起中数量
@@ -215,13 +216,12 @@ export default {
             this.aid = this.queueInfo.retouchStreamId
             this.showDetail = true
           }
-        }).finally(() => {
-          if (this.queueInfo.inQueue) {
-            window.polling.getQueue = setTimeout(() => {
-              this.getStreamQueueInfo()
-            }, 3000)
-          }
         })
+      }
+      if (this.queueInfo.inQueue) {
+        window.polling.getQueue = setTimeout(() => {
+          this.getStreamQueueInfo()
+        }, 3000)
       }
     },
     /**
@@ -229,15 +229,22 @@ export default {
      */
     async exitQueue () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
-        await RetoucherCenter.exitQueue()
-        this.$newMessage.success('退出队列成功')
-        clearTimeout(window.polling.getQueue)
-        window.polling.getQueue = null
-        await this.getStreamQueueInfo()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$confirm('确认退出排队吗？', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '再等等',
+          type: 'warning',
+          center: true
+        }).then(async () => {
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          await RetoucherCenter.exitQueue()
+          this.$newMessage.success('退出队列成功')
+          clearTimeout(window.polling.getQueue)
+          window.polling.getQueue = null
+          await this.getStreamQueueInfo()
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        }).catch(() => {})
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -246,13 +253,13 @@ export default {
      */
     async joinQueue () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await RetoucherCenter.joinQueue()
         this.$newMessage.success('进入排队成功')
         this.getStreamQueueInfo()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -260,7 +267,7 @@ export default {
      * @description 初始化页面数据
      */
     initializeData () {
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       this.aid = ''
       Promise.all([
         this.getSelfQuota(),
@@ -268,9 +275,9 @@ export default {
         this.getRetouchStreamList(),
         this.getStreamQueueInfo()
       ]).then(() => {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }).finally(() => {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       })
     },
     /**

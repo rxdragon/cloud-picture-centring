@@ -43,8 +43,9 @@ export default {
   components: { DatePicker, InstitutionSelect },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       timeSpan: null,
-      instituionType: '',
+      instituionType: '', // 机构类型
       tableData: []
     }
   },
@@ -63,12 +64,12 @@ export default {
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         if (this.instituionType) { req.retoucherOrgId = this.instituionType }
         this.tableData = await Institution.getRetouchOrgIncome(req)
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

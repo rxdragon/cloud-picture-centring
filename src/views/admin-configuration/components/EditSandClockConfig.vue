@@ -77,8 +77,9 @@ export default {
   },
   data () {
     return {
-      baseTime: '',
-      addTime: '',
+      routeName: this.$route.name, // 路由名字
+      baseTime: '', // 基础时间
+      addTime: '', // 添加时间
       productValue: {},
       checkList: [],
       retouchStandard: '',
@@ -120,7 +121,7 @@ export default {
      */
     async getHourGlassInfo (id) {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getHourGlassInfo(id)
         this.productValue = {
           productClass: data.productClass,
@@ -134,9 +135,9 @@ export default {
         }
         this.baseTime = data.base_time
         this.addTime = data.superimposed_time
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -162,7 +163,7 @@ export default {
         reqData.productIds = this.productValue.product
         reqData.retouchStandard = this.productValue.productClass
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       OperationManage.addHourGlass(reqData)
         .then(() => {
           this.$newMessage({
@@ -194,7 +195,7 @@ export default {
         baseTime: this.baseTime,
         superimposedTime: this.addTime
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       OperationManage.editHourGlass(reqData)
         .then(() => {
           this.$newMessage({

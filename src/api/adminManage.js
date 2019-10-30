@@ -174,7 +174,7 @@ export function getStreamInfo (params) {
       photoNum: data.photos.length,
       requireLabel: data.tags && data.tags.values && data.tags.values.retouch_claim || {},
       retouchRemark: data.note.retouch_note || '暂无修图备注',
-      reviewerNote: data.reviewerNote || '暂无审核备注',
+      reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注',
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,
       retoucherName: data.retoucher && data.retoucher.name || '-',

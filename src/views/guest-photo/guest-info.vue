@@ -99,10 +99,11 @@ export default {
   components: { PhotoList },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       uuid: '',
-      orderNum: '-',
-      streamNum: '-',
-      productName: '-',
+      orderNum: '-', // 订单号
+      streamNum: '-', // 流水号
+      productName: '-', // 产品名称
       labelTag: {},
       photographerRemark: '', // 摄影备注
       retouchMark: '', // 修图备注
@@ -138,7 +139,7 @@ export default {
     async getPhotoInfo () {
       try {
         const reqData = { photoUuid: this.uuid }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoInfo(reqData)
         this.orderNum = data.orderNum
         this.streamNum = data.streamNum
@@ -151,9 +152,9 @@ export default {
         this.workerInfo = data.workerInfo
         this.photoVersion = data.photoVersion
         this.gradeInfo = { ...data.attitude }
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -185,7 +186,7 @@ export default {
         this.$newMessage.success('提交成功')
         this.getPhotoInfo()
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

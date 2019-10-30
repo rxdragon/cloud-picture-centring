@@ -95,6 +95,7 @@ export default {
   components: { OrderInfo, PhotoGroup, DomainSwitchBox },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       unbundle: false, // 退回并解绑审核人
       orderData: null, // 订单信息
       todayReviewQuota: {
@@ -200,11 +201,11 @@ export default {
      */
     async getReviewInfo () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         this.orderData = await Reviewer.getReviewInfo()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -234,13 +235,13 @@ export default {
      */
     async joinReviewQueue () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.joinReviewQueue()
         this.$newMessage.success('进入排队成功')
         this.getReviewQueueInfo()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -249,15 +250,15 @@ export default {
      */
     async exitQueue () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.exitReviewQueue()
         this.$newMessage.success('退出排队成功')
         clearTimeout(window.polling.getReviewQueue)
         window.polling.getReviewQueue = null
         await this.getReviewQueueInfo()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -280,12 +281,12 @@ export default {
       })
       if (submitData.length) { req.photoData = submitData }
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.passStream(req)
         this.$newMessage.success('审核成功')
         this.getReviewQueueInfo()
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -326,12 +327,12 @@ export default {
       }
       if (this.unbundle) { req.isUntied = true }
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.refuseStream(req)
         this.$newMessage.success('退回成功')
         this.getReviewQueueInfo()
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

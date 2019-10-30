@@ -78,6 +78,7 @@ export default {
   components: { PhotoBox },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       caid: '', // 流水号
       id: '', // 订单号
       jointSequence: '',
@@ -100,11 +101,11 @@ export default {
         if (!Object.keys(req).length) {
           return this.$newMessage.warning('请输入订单号或流水号')
         }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         this.dataList = await WorkManage.getStreamInfo(req)
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -143,13 +144,13 @@ export default {
       try {
         const req = this.getModifyParams(item)
         if (!req) return
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await WorkManage.modifyStream(req)
         this.$newMessage.success('操作成功!')
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$newMessage.success('操作成功!')
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
   }

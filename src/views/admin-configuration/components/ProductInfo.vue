@@ -66,16 +66,10 @@
           <el-form-item label="权重等级">
             <weight-select v-model="productConfig.weightType" import-data />
           </el-form-item>
-          <el-form-item label="是否需要沙漏">
-            <el-radio-group v-model="productConfig.sandClockValue">
-              <el-radio :label="1">是</el-radio>
-              <el-radio :label="0">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
           <el-form-item label="是否需要模版占位图">
             <el-radio-group v-model="productConfig.needTemplate">
               <el-radio :label="1">是</el-radio>
-              <el-radio :label="0">否</el-radio>
+              <el-radio :label="2">否</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="海草值">
@@ -127,7 +121,7 @@
           <el-form-item label="是否需要拼接">
             <el-radio-group v-model="productConfig.needJoint" :disabled="disableChange">
               <el-radio :label="1">是</el-radio>
-              <el-radio :label="0">否</el-radio>
+              <el-radio :label="2">否</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item v-if="productConfig.needJoint === 1" label="拼接海草值">
@@ -217,6 +211,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       rejectValue: '',
       productName: '', // 产品名称
       retouchRequire: '', // 修图要求
@@ -225,15 +220,14 @@ export default {
       productConfig: {
         standard: '', // 修图标准
         weightType: '', // 权重等级
-        sandClockValue: 1, //  是否需要沙漏
-        needTemplate: 1, // 是否需要模版
+        needTemplate: '', // 是否需要模版
         grassData: {},
         joinGrassData: {}, // 拼接海草
         notJointMoney: {},
         jointMoney: {}, // 拼接收益
         blueNotJointMoney: {},
         blueJointMoney: {}, // 拼接收益
-        needJoint: 1, // 是否需要拼接
+        needJoint: '', // 是否需要拼接
         productRemark: ''
       },
       disableChange: false,
@@ -362,7 +356,7 @@ export default {
     async getProductInfo () {
       try {
         const req = { productId: this.editId }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getProductInfo(req)
         this.productName = data.name
         this.retouchRequire = data.retouchRequire
@@ -372,9 +366,8 @@ export default {
         if (!this.isPending) {
           this.productConfig.standard = data.retouchStandard
           this.productConfig.weightType = data.weightLevel
-          this.productConfig.sandClockValue = +data.needHourglass
-          this.productConfig.needTemplate = +data.needTemplate
-          this.productConfig.needJoint = +data.needSplicing
+          this.productConfig.needTemplate = data.needTemplate ? 1 : 2
+          this.productConfig.needJoint = data.needSplicing ? 1 : 2
           this.productConfig.productRemark = data.note
           this.productConfig.grassData = data.seaGrassConfig
           if (data.retouchStandard !== 'blue') {
@@ -385,9 +378,9 @@ export default {
             this.productConfig.blueJointMoney = data.splicingIncomeConfig
           }
         }
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -399,7 +392,7 @@ export default {
         productId: this.editId,
         refuseReason: this.rejectValue
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       OperationManage.refuseProduct(reqData)
         .then(() => {
           this.$newMessage.success('审核拒绝成功')
@@ -415,9 +408,8 @@ export default {
         productId: this.editId,
         retouchStandard: this.productConfig.standard,
         weightLevel: this.productConfig.weightType,
-        needSplicing: Boolean(this.productConfig.needJoint),
-        needHourglass: Boolean(this.productConfig.sandClockValue),
-        needTemplate: Boolean(this.productConfig.needTemplate),
+        needSplicing: +this.productConfig.needJoint === 1,
+        needTemplate: +this.productConfig.needTemplate === 1,
         normalIncomeConfig: this.productConfig.notJointMoney,
         splicingIncomeConfig: this.productConfig.jointMoney,
         seaGrassConfig: this.productConfig.grassData,
@@ -428,7 +420,7 @@ export default {
         reqData.normalIncomeConfig = this.productConfig.blueNotJointMoney
         reqData.splicingIncomeConfig = this.productConfig.blueJointMoney
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       if (this.isPending) {
         OperationManage.passProduct(reqData)
           .then(() => {
@@ -453,6 +445,14 @@ export default {
       }
       if (!this.productConfig.weightType) {
         this.$newMessage.warning('请选中权重等级')
+        return false
+      }
+      if (!this.productConfig.needJoint) {
+        this.$newMessage.warning('请选择是否需要拼接')
+        return false
+      }
+      if (!this.productConfig.needTemplate) {
+        this.$newMessage.warning('请选择是否需要模版')
         return false
       }
       if (!objEveryNumberValue(this.productConfig.grassData)) {

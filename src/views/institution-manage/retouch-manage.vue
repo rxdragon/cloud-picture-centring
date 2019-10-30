@@ -41,9 +41,10 @@ export default {
   components: { EditRetouchInstitution },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       showEdit: false,
       tableData: [],
-      retouchInstitutionId: ''
+      retouchInstitutionId: '' // 修图机构id
     }
   },
   watch: {
@@ -78,11 +79,11 @@ export default {
      */
     async getRetouchOrgList () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         this.tableData = await Institution.getRetouchOrgList()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -99,11 +100,11 @@ export default {
         const reqData = {
           retouchOrgId: item.id
         }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         Institution.enableRetouchOrg(reqData)
           .then(() => {
             this.$newMessage.success('修图机构启用成功')
-            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+            this.$store.dispatch('setting/hiddenLoading', this.routeName)
             item.state = true
           })
       }).catch(() => {})
@@ -118,11 +119,11 @@ export default {
         center: true
       }).then(() => {
         const reqData = { retouchOrgId: item.id }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         Institution.disableRetouchOrg(reqData)
           .then(() => {
             this.$newMessage.success('修图机构禁用成功')
-            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+            this.$store.dispatch('setting/hiddenLoading', this.routeName)
             item.state = false
           })
       }).catch(() => {})

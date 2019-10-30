@@ -67,6 +67,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       tableData: [],
       pager: {
         page: 1,
@@ -97,19 +98,19 @@ export default {
      */
     async getHourGlassList () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const reqData = {
           page: this.pager.page,
           pageSize: this.pager.pageSize
         }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getHourGlassList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
         this.$emit('changeHourGlassGlobalState', data.hour_glass_global_state)
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -118,14 +119,14 @@ export default {
      */
     async deleteHourGlass (listItem) {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const reqData = { configId: listItem.id }
         await OperationManage.DeleteHourGlass(reqData)
         this.$newMessage.success('删除成功')
         this.getHourGlassList()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },

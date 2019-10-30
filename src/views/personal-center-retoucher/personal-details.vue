@@ -186,7 +186,7 @@ export default {
   filters: {
     getPoint (value) {
       if (!value) return '00'
-      const num = value.toFixed(2)
+      const num = Number(value).toFixed(2)
       const pointIndex = num.indexOf('.')
       const result = num.substring(pointIndex + 1, pointIndex + 3)
       return result
@@ -194,7 +194,8 @@ export default {
   },
   data () {
     return {
-      timeSpan: null,
+      routeName: this.$route.name, // 路由名字
+      timeSpan: null, // 时间戳
       yearValue: '2019',
       todayData: {}, // 今日指标
       gradeInfo: {},
@@ -219,7 +220,7 @@ export default {
   created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
     this.timeSpan = [nowTime, nowTime]
-    this.$store.dispatch('setting/showLoading', this.$route.name)
+    this.$store.dispatch('setting/showLoading', this.routeName)
     Promise.all([
       this.getSelfQuota(),
       this.getRankInfo(),
@@ -227,7 +228,7 @@ export default {
       this.getLittleBeeInfo(),
       this.getProps()
     ])
-    this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+    this.$store.dispatch('setting/hiddenLoading', this.routeName)
   },
   methods: {
     /**
@@ -281,13 +282,13 @@ export default {
     async useProp (data) {
       try {
         const reqData = { id: data.id }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await Retoucher.useProp(reqData)
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         this.getProps()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

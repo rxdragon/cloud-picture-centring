@@ -43,6 +43,7 @@ export default {
   components: { OrderInfo, PhotoDetail },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       streamId: '', // 流水id
       orderId: '', // 订单id
       orderData: {}, // 订单信息
@@ -79,14 +80,14 @@ export default {
     async getStreamInfo () {
       try {
         const req = { streamId: this.streamId }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Commonality.getStreamInfo(req)
         this.orderData = data.orderData
         this.photos = data.photos
         this.storeEvaluateStream = data.storeEvaluateStream
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -96,13 +97,13 @@ export default {
     async getWorkBoardStreamInfo () {
       try {
         const req = { streamNum: this.streamId }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AdminManage.getStreamInfo(req)
         this.orderData = data.orderData
         this.photos = data.photos
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

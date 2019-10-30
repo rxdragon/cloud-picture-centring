@@ -51,7 +51,8 @@ export default {
   components: { DatePicker },
   data () {
     return {
-      timeSpan: null,
+      routeName: this.$route.name, // 路由名字
+      timeSpan: null, // 时间戳
       tableDataCount: [{
         label: '审核单量',
         value: '-'
@@ -112,13 +113,13 @@ export default {
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await ReviewCheck.getGroupReviewQuota(reqData)
         this.tableDataCount = data.tableDataCount
         this.tableDataRate = data.tableDataRate
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

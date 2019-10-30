@@ -183,6 +183,7 @@ export default {
   components: { FlowBoard, RetouchKindSelect },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       urgentSearch: { // 加急搜索
         name: '',
         id: '',
@@ -274,16 +275,16 @@ export default {
     async getRetouchStreamList (page) {
       try {
         if (page) { this.pager.page = page }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const req = this.getParams()
         const data = await AdminManage.getRetouchStreamList(req)
         this.tableData = data.list
         this.pager.total = data.total
         this.reviewCount = data.reviewCount
         this.retouchCount = data.retouchCount
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -293,16 +294,16 @@ export default {
     async getReviewStreamList (page) {
       try {
         if (page) { this.pager.page = page }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const req = this.getParams()
         const data = await AdminManage.getReviewStreamList(req)
         this.tableData = data.list
         this.pager.total = data.total
         this.reviewCount = data.reviewCount
         this.retouchCount = data.retouchCount
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -311,7 +312,7 @@ export default {
      */
     async urgentStream (streamId, type) {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const req = { streamId }
         const data = await AdminManage.urgentStream(req)
         if (data) {
@@ -323,7 +324,7 @@ export default {
           }
         }
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -341,16 +342,16 @@ export default {
           this.$newMessage.warning('请填写参数')
           return false
         }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AdminManage.getStreamList(req)
         if (data.list.length === 0) {
           this.$newMessage.warning('暂无数据')
         }
         this.searchTableData = data.list
         this.urgentPager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

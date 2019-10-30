@@ -56,6 +56,7 @@ export default {
   components: { DatePicker, GrassSelect },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       searchType: 0, // 搜索标准
       tableData: [], // 列表数据
@@ -95,13 +96,13 @@ export default {
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
         if (this.searchType) { reqData.grass = this.searchType }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total
         this.tableData = data.list
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },

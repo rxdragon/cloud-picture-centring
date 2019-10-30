@@ -1,7 +1,7 @@
 <template>
   <section v-loading.lock="isLoading" element-loading-custom-class="main-loading" class="app-main" :class="{'overhidden':isLoading}">
     <transition :name="transitionName" mode="out-in">
-      <keep-alive :include="cachedViews">
+      <keep-alive :include="cachedViews" :max="10">
         <router-view :key="key" />
       </keep-alive>
     </transition>

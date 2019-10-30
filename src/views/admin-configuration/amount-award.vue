@@ -101,6 +101,7 @@ export default {
   props: {},
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       isAddConfig: false, // 是否展示添加页面详情
       showAmountInfo: false, // 展示配置详情
       firstSearch: true, // 是否第一次搜索
@@ -171,14 +172,14 @@ export default {
         if (this.institutionId) { reqData.retoucherOrgIds = [this.institutionId] }
         if (this.stateType) { reqData.state = this.stateType }
 
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getImpulseList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
         this.firstSearch = false
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -187,7 +188,7 @@ export default {
      */
     deleteImpulse (listItem) {
       const reqData = { impulseId: listItem.id }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       OperationManage.deleteImpulse(reqData)
         .then(() => {
           this.$newMessage.success('删除' + listItem.title + '成功')
@@ -199,7 +200,7 @@ export default {
      */
     disableImpulse (listItem) {
       const reqData = { impulseId: listItem.id }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       OperationManage.disableImpulse(reqData)
         .then(() => {
           this.$newMessage({

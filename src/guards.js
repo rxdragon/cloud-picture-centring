@@ -43,12 +43,17 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (hasXStreamId) {
+    // 下次的过期时间
     const expireTime = getStreamIdExpireTime() * 1000
     const nowTime = new Date().getTime()
     const discrepancyTime = expireTime - nowTime
     console.log(to.path)
     if (discrepancyTime > 0) {
-      if (discrepancyTime < 60 * 60 * 1000 * 1000) { await User.userExpire() }
+      // 过期时间小于1小时续上
+      if (discrepancyTime < 60 * 60 * 1000) {
+        console.log(discrepancyTime)
+        await User.userExpire()
+      }
       noExpire()
     } else if (discrepancyTime < 0) {
       User.logout()

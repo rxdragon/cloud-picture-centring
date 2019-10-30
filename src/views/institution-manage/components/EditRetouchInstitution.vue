@@ -55,6 +55,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       rules: {
         name: [
           { validator: (rule, value, callback) => { this.noSpecialCharacter(rule, value, callback) }, trigger: ['blur', 'change'] }
@@ -107,14 +108,14 @@ export default {
      */
     async getRetouchOrgInfo () {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Institution.getRetouchOrgInfo({ 'retouchOrgId': this.retouchInstitutionId })
         this.institutionConfig = data.institutionConfig
         this.defaultCheckedKeys = data.defaultCheckedKeys
         this.institutionConfig.toData = []
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -133,19 +134,19 @@ export default {
           })
           delete this.institutionConfig.toData
           const reqData = this.institutionConfig
-          this.$store.dispatch('setting/showLoading', this.$route.name)
+          this.$store.dispatch('setting/showLoading', this.routeName)
           if (this.retouchInstitutionId) {
             Institution.editRetouchOrg(reqData)
               .then(() => {
                 this.$newMessage.success('修改机构成功')
-                this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+                this.$store.dispatch('setting/hiddenLoading', this.routeName)
                 this.toBack()
               })
           } else {
             Institution.addRetouchOrg(reqData)
               .then(() => {
                 this.$newMessage.success('添加机构成功')
-                this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+                this.$store.dispatch('setting/hiddenLoading', this.routeName)
                 this.toBack()
               })
           }

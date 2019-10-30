@@ -51,7 +51,8 @@ export default {
   props: {},
   data () {
     return {
-      timeSpan: '',
+      routeName: this.$route.name, // 路由名字
+      timeSpan: null, // 时间戳
       isSeachPage: false,
       staffId: 0,
       searchType: '', // 搜索类型
@@ -120,7 +121,7 @@ export default {
           this.$newMessage.warning('请输入时间')
           return false
         }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const req = {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)
@@ -128,10 +129,10 @@ export default {
         const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
         this.tableDataCount = data.tableDataCount
         this.tableDataRate = data.tableDataRate
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        console.log(error)
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        throw new Error(error)
       }
     }
   }
