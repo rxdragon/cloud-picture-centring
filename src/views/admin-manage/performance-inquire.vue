@@ -49,7 +49,7 @@ export default {
   props: {},
   data () {
     return {
-      activeName: 'AuditPerformance'
+      activeName: 'PartnerPerformance'
     }
   },
   created () {},

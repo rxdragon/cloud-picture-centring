@@ -173,7 +173,7 @@ export default {
         this.listData = data.listData
         this.tableData = data.groups
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

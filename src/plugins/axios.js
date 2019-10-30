@@ -40,9 +40,10 @@ axios.interceptors.response.use(
     return res
   },
   error => {
-    // 请求没有任何返回值：网络差，无服务
+    console.dir(error)
     if (!error.response) {
-      let message = '系统繁忙，请稍后再试！'
+      // 请求没有任何返回值：网络差，无服务
+      let message = '网络错误，请稍后再试！'
       let promiseMessage = errorMessage(message)
       return Promise.reject(message)
     }

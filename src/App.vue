@@ -1,13 +1,17 @@
 <template>
   <div id="App">
     <router-view />
+    <painted-eggshell />
   </div>
 </template>
 
 <script>
+import PaintedEggshell from '@/components/PaintedEggshell'
+
 import { clearAllStorage } from '@/utils/sessionTool'
 export default {
   name: 'App',
+  components: { PaintedEggshell },
   mounted () {
     this.$ipcRenderer.on('closed-win', (e, item) => {
       clearAllStorage()

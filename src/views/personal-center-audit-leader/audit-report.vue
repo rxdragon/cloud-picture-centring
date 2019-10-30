@@ -49,7 +49,8 @@ export default {
   props: {},
   data () {
     return {
-      timeSpan: null,
+      routeName: this.$route.name, // 路由名字
+      timeSpan: null, // 时间戳
       isSeachPage: false,
       staffId: 0,
       searchType: '',
@@ -129,7 +130,7 @@ export default {
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
         if (this.staffId.length) { reqData.staffId = this.staffId }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await ReviewCheck.getGroupReviewQuota(reqData)
         data.tableDataCount.forEach(item => {
           if (item.link) {
@@ -145,9 +146,9 @@ export default {
         })
         this.tableDataCount = data.tableDataCount
         this.tableDataRate = data.tableDataRate
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

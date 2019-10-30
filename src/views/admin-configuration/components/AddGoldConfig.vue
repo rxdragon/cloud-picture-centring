@@ -36,6 +36,7 @@ export default {
   components: { StaffPanel },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       toData: [], // 伙伴信息
       defaultCheckedKeys: [], // 默认选中伙伴
       goldValue: ''// 配置信息
@@ -64,7 +65,7 @@ export default {
         this.$newMessage.warning('请选择组员')
         return false
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         await OperationManage.addCard(reqData)
         this.$newMessage({
@@ -75,9 +76,9 @@ export default {
             this.goBack()
           }
         })
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },

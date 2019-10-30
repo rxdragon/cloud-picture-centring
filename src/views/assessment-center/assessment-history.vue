@@ -13,18 +13,18 @@
         <span>纠偏类型</span>
         <el-select v-model="correctType" placeholder="纠偏类型">
           <el-option label="全部" :value="0" />
-          <el-option label="意见相同" :value="1" />
-          <el-option label="意见不同" :value="2" />
+          <el-option label="意见相同" value="same" />
+          <el-option label="意见不同" value="different" />
         </el-select>
       </div>
       <!-- 抽查类型 -->
       <div class="spot-type search-item">
         <span>抽查类型</span>
-        <el-select v-model="spotType" placeholder="纠偏类型">
+        <el-select v-model="spotType" placeholder="抽查类型">
           <el-option label="全部" :value="0" />
-          <el-option label="种草" :value="1" />
-          <el-option label="拔草" :value="2" />
-          <el-option label="不种不拔" :value="3" />
+          <el-option label="种草" value="plant" />
+          <el-option label="拔草" value="pull" />
+          <el-option label="不种不拔" value="none" />
         </el-select>
       </div>
       <!-- 查询按钮 -->
@@ -87,6 +87,7 @@ export default {
   components: { DatePicker, GradeBox, StaffSelect, ReviewerSelect },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       correctType: 0, // 抽片类型
       spotType: 0, // 抽片类型 0 全部 1 种草 2 拔草 3 不中不把
@@ -122,8 +123,8 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
+      if (this.correctType) { req.correctionType = this.correctType }
       if (this.spotType) { req.grassType = this.spotType }
-      if (this.correctionType) { req.grassType = this.correctType }
       if (this.staffId) { req.retoucherId = this.staffId }
       if (this.reviewerId) { req.reviewerId = this.reviewerId }
       return req
@@ -137,13 +138,13 @@ export default {
         this.pager.page = page || this.pager.page
         const req = this.getSearchParams()
         if (!req) return false
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AssessmentCenter.getSearchHistory(req)
         this.photoData = data.list
         this.pager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },

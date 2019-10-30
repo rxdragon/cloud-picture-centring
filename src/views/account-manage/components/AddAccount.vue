@@ -86,6 +86,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name,
       jobNumber: '', // 伙伴工号
       activeName: 'retouchCategory', // retouchCategory 修图类别 role 角色权限配置
       retouchSelectType: '', // 修图列表选项
@@ -188,7 +189,7 @@ export default {
     addStaff () {
       const req = this.getParams()
       if (!req) return
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.addStaff(req)
         .then(res => {
           if (res) {
@@ -203,7 +204,7 @@ export default {
     updateStaff () {
       const req = this.getParams()
       if (!req) return
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.editStaff(req).then(() => {
         this.$newMessage.success('修改成功!')
         this.$emit('finished')
@@ -226,12 +227,12 @@ export default {
         return false
       }
       const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       Staff.getStaff(req)
         .then(data => {
           this.staffInfo = data
           this.resetParams()
-          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
     },
     /**
@@ -240,11 +241,11 @@ export default {
     getStaffInfo () {
       if (!this.jobNumber) { return false }
       const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       Staff.getStaffInfo(req)
         .then(data => {
           this.staffInfo = data
-          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
     },
     /**
@@ -253,11 +254,11 @@ export default {
     getStaffPermission () {
       if (!this.jobNumber) { return false }
       const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.getStaffPermission(req)
         .then(data => {
           this.hasPermission = data.base_auth.map(item => item.id)
-          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
     }
   }

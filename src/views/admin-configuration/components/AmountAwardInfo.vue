@@ -48,6 +48,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       title: '', // 冲量奖标题
       awardList: [], // 冲量配置列表
       retoucherOrg: '', // 外包机构
@@ -72,7 +73,7 @@ export default {
     async getImpulseInfo () {
       try {
         const reqData = { impulseId: this.editId }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getImpulseInfo(reqData)
         this.title = data.title
         this.awardList = data.impulse_setting_item
@@ -93,9 +94,9 @@ export default {
             })
           }
         })
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

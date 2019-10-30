@@ -79,6 +79,7 @@ export default {
   props: {},
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       stateType: 0, // 卡片状态
       staffId: [], // 选中伙伴id
       isAddConfig: false, // 是够添加配置
@@ -115,28 +116,28 @@ export default {
      * @description 删除经验配置
      */
     deleteData (cardItem) {
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       const reqData = { staffCardId: cardItem.id }
       OperationManage.deleteCard(reqData)
         .then(() => {
           this.$newMessage.success('删除成功')
           this.getExperienceConfigList()
         })
-      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      this.$store.dispatch('setting/hiddenLoading', this.routeName)
     },
     /**
      * @description 提前结束
      */
     async closeCard (cardItem) {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const reqData = { staffCardId: cardItem.id }
         await OperationManage.closeCard(reqData)
         this.$newMessage.success('提前结束')
         this.getExperienceConfigList()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -153,13 +154,13 @@ export default {
       if (this.staffId.length) { reqData.staffIds = this.staffId }
       if (this.stateType) { reqData.state = this.stateType }
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getStaffCardList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

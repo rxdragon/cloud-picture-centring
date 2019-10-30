@@ -32,8 +32,9 @@ export default {
   components: { DatePicker, ListTable, StaffSelect },
   data () {
     return {
-      timeSpan: null,
-      staffId: '',
+      routeName: this.$route.name, // 路由名字
+      timeSpan: null, // 时间戳
+      staffId: '', // 伙伴id
       listDataOne: [{
         key: 'retouchSinglePhotoNum',
         label: '修图数量-单人(单位：张)',
@@ -101,7 +102,7 @@ export default {
       try {
         const req = this.getParams()
         if (!req) return false
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await WorkManage.getRetoucherQuota(req)
         this.listDataOne.forEach(item => { item.value = data[item.key] })
         this.listDataTwo.forEach(item => {
@@ -109,9 +110,9 @@ export default {
           if (item.key === 'income') { item.value = '¥' + item.value }
           if (item.key === 'storeEvaluateScoreAvg') { item.value = item.value.count + '星' }
         })
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

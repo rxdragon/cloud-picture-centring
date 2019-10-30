@@ -30,7 +30,7 @@ const adminConfiguration = {
       path: 'green-aisle',
       name: 'GreenAisle',
       component: () => import('@/views/admin-configuration/green-aisle.vue'),
-      meta: { title: '绿色免审通道', icon: '' }
+      meta: { title: '绿色免审通道', icon: '', noCache: true }
     }, {
       path: 'product-control',
       name: 'ProductControl',

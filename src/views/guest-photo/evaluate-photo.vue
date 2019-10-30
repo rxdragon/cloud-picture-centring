@@ -59,6 +59,7 @@ export default {
   components: { DatePicker, PhotoBox, StaffSelect },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       timeSpan: '',
       type: '', // 查看类型
       staffId: [],
@@ -113,13 +114,13 @@ export default {
           pageSize: this.pager.pageSize
         }
         if (this.staffId.length) { reqData.staffIds = this.staffId }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getAttitudePhotoList(reqData)
         this.pager.total = data.total
         this.photos = data.list
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

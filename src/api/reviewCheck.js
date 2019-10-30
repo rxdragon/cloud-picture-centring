@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump, transformPercentage, getAvg, timeFormat } from '../utils/index.js'
+import { revertTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate.js'
 
 /**
@@ -7,7 +8,7 @@ import { SearchType } from '@/utils/enumerate.js'
  * @param {*} params
  */
 export function getGroupReviewQuota (params) {
-  const timeSpan = [params.startAt, params.endAt]
+  const timeSpan = [revertTimeSpan(params.startAt), revertTimeSpan(params.endAt, 1)]
   return axios({
     url: '/project_cloud/reviewLeader/getGroupReviewQuota',
     method: 'GET',

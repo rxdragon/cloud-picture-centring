@@ -54,6 +54,7 @@ export default {
   components: { EditCategory, RetouchTypeSelect },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       showEdit: false, // 是否编辑
       retouchClassId: 0, // 修图类别
       pager: {
@@ -91,7 +92,7 @@ export default {
      */
     deleteCategory (id) {
       const req = { retoucherClassId: id }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.delRetoucherClass(req)
         .then(data => {
           if (data) {
@@ -123,13 +124,13 @@ export default {
      */
     getList (value) {
       if (value) { this.pager.page = value }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       const req = this.getParams()
       AccountManage.getRetoucherClassList(req)
         .then(data => {
           this.tableData = data.list
           this.pager.total = data.total
-          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
     }
   }

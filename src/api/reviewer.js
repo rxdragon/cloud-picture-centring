@@ -23,6 +23,7 @@ export function getReviewInfo () {
         path: photoItem.last_first_photo && photoItem.last_first_photo.path,
         version: 'first_photo'
       }]
+      photoItem.isTemplate = photoItem.priviewPhotoData[0].path.includes('template')
       photoItem.canGlass = true
       photoItem.isRework = false
       if (photoItem.tags && photoItem.tags.statics) {

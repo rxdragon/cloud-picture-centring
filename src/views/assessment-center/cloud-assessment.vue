@@ -53,7 +53,7 @@
         is-grade
         class="photo-data module-panel"
         :photo-info="photoItem"
-        @finsihed="getHaveCheckResult"
+        @finsihed="resetPage"
       />
       <div class="page-box">
         <el-pagination
@@ -94,6 +94,7 @@ export default {
   components: { DatePicker, InstitutionType, GradeBox },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       institutionType: 0, // 修图标准
       sampleNum: '', // 伙伴抽样量
@@ -124,7 +125,7 @@ export default {
      * @description 初始化页面
      */
     resetPage () {
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getStatistics(),
         this.getHaveCheckResult()
@@ -160,36 +161,50 @@ export default {
      * @description 抽取
      */
     async takePhoto () {
-      const req = this.getTakeParams()
-      if (!req) return false
-      this.$store.dispatch('setting/showLoading', this.$route.name)
-      const data = await AssessmentCenter.takePhoto(req)
-      if (!data.length) {
-        this.$newMessage.warning('当前暂无可被抽取的订单。')
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-        return
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const req = this.getTakeParams()
+        if (!req) return false
+        if (await this.getHaveCheckResult()) return false
+        const data = await AssessmentCenter.takePhoto(req)
+        if (!data.length) {
+          this.$newMessage.warning('当前暂无可被抽取的订单。')
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          return
+        }
+        this.uuid = data
+        this.isTakePhoto = true
+        await this.getSpotCheckResult()
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        throw new Error(error)
       }
-      this.uuid = data
-      this.isTakePhoto = true
-      await this.getSpotCheckResult()
     },
     /**
      * @description 是否有抽片
      */
-    getHaveCheckResult () {
-      AssessmentCenter.getHaveCheckResult()
-        .then(msg => {
-          if (msg) {
-            this.uuid = msg
-            this.pager.page = 1
-            this.getSpotCheckResult()
-          } else {
-            this.photoData = []
-            this.spotAllNum = '-'
-            this.pager.total = 10
-            this.$store.dispatch('setting/hiddenLoading', this.$route.name)
-          }
-        })
+    async getHaveCheckResult () {
+      try {
+        const msg = await AssessmentCenter.getHaveCheckResult()
+        if (msg) {
+          this.uuid = msg
+          this.pager.page = 1
+          this.getSpotCheckResult()
+          return true
+        } else {
+          this.photoData = []
+          this.spotAllNum = '-'
+          this.pager.total = 10
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          return false
+        }
+      } catch (error) {
+        this.photoData = []
+        this.spotAllNum = '-'
+        this.pager.total = 10
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        throw new Error(error)
+      }
     },
     /**
      * @description 获取抽片数据
@@ -213,9 +228,9 @@ export default {
         }
         this.photoData = []
         this.photoData = data.list
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },

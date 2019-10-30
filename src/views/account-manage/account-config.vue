@@ -27,9 +27,7 @@
           <el-table-column prop="id" label="工号" />
           <el-table-column prop="name" label="伙伴姓名" />
           <el-table-column prop="position_text" label="岗位" />
-          <el-table-column prop="role" label="角色组">
-            <template slot-scope="scope">{{ roleMap[scope.row.role] }}</template>
-          </el-table-column>
+          <el-table-column prop="role" label="角色组" />
           <el-table-column prop="status" label="状态" />
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -60,18 +58,17 @@
 import AddAccount from './components/AddAccount'
 import RoleSelect from '@SelectBox/RoleSelect'
 import * as AccountManage from '@/api/accountManage.js'
-import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'AccountConfig',
   components: { AddAccount, RoleSelect },
   data () {
     return {
+      routeName: this.$route.name,
       postValue: 0,
       roleValue: '',
       staffName: null, // 伙伴信息
       tableData: [],
-      roleMap: {},
       pager: {
         page: 1,
         pageSize: 10,
@@ -82,7 +79,6 @@ export default {
     }
   },
   created () {
-    this.getAllRole()
     this.getStaffListByPage()
   },
   methods: {
@@ -127,13 +123,13 @@ export default {
       try {
         if (value) { this.pager.page = value }
         const req = this.getParams()
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AccountManage.getStaffListByPage(req)
         this.tableData = data.list
         this.pager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -143,7 +139,7 @@ export default {
      */
     enableStaff (staffId) {
       const req = { staffId }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.enableStaff(req)
         .then(res => {
           this.$newMessage.success('启用成功')
@@ -156,21 +152,12 @@ export default {
      */
     disableStaff (staffId) {
       const req = { staffId }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.disableStaff(req)
         .then(res => {
           this.$newMessage.success('禁用成功!')
           this.getStaffListByPage()
         })
-    },
-    /**
-     * @description 获取所有角色列表
-     */
-    async getAllRole () {
-      const list = await Staff.getAllRole()
-      const map = {}
-      list.map(item => { map[item.id] = item.name })
-      this.roleMap = map
     }
   }
 }

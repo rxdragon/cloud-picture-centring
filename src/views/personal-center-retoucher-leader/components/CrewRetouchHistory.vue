@@ -72,8 +72,9 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       auditType: 0,
-      spotCheckType: 0,
+      spotCheckType: 0, // 抽片类型
       tableData: [],
       staffId: 0,
       pager: {
@@ -141,13 +142,13 @@ export default {
         }
         this.auditType && (reqData.plantPull = this.auditType)
         this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetouchLeader.getStaffRetouchList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

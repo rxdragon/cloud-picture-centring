@@ -93,6 +93,7 @@ export default {
       }, 500)
     }
     return {
+      routeName: this.$route.name, // 路由名字
       defaultCheckedKeys: [],
       toData: [],
       rules: {
@@ -103,10 +104,10 @@ export default {
           { validator: checkTwoDecimals, required: true, trigger: 'change' }
         ]
       },
-      awardTitle: '',
+      awardTitle: '', // 冲量奖励标题
       checkList: [],
-      awardList: [],
-      institutionId: [],
+      awardList: [], // 冲量列表
+      institutionId: [], // 机构id
       dialogVisible: false,
       addAwardConfig: {
         reachExp: '',
@@ -137,13 +138,13 @@ export default {
     async deleteAward (id) {
       try {
         const req = { itemId: id }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await OperationManage.delImpulseSettingItem(req)
         this.$newMessage.success('删除成功')
         await this.getImpulseSettingItemList()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -160,7 +161,7 @@ export default {
       this.$refs['addAwardConfig'].validate((valid) => {
         if (valid) {
           const reqData = this.addAwardConfig
-          this.$store.dispatch('setting/showLoading', this.$route.name)
+          this.$store.dispatch('setting/showLoading', this.routeName)
           OperationManage.addImpulseSettingItem(reqData)
             .then(() => {
               this.$newMessage.success('添加成功')
@@ -169,7 +170,7 @@ export default {
               this.dialogVisible = false
               this.getImpulseSettingItemList()
             }).finally(() => {
-              this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+              this.$store.dispatch('setting/hiddenLoading', this.routeName)
             })
         } else {
           return false
@@ -210,7 +211,7 @@ export default {
         })
       }
       if (this.institutionId) { reqData.retoucherOrgIds = this.institutionId }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       OperationManage.addImpulse(reqData)
         .then(() => {
           this.$newMessage({

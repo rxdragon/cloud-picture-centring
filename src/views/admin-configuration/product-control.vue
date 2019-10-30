@@ -30,7 +30,7 @@
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="name" label="产品名称" />
             <el-table-column prop="photographerOrgName" label="机构名称" />
-            <el-table-column v-if="isPending" prop="retouch_claim" label="修图要求" />
+            <el-table-column v-if="isPending" prop="retouch_require" label="修图要求" />
             <el-table-column v-if="!isPending" label="修图标准">
               <template slot-scope="scope">
                 {{ scope.row.retouch_standard | filterRetouchStandard }}
@@ -88,6 +88,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       activeName: 'checkPending', // checkPending 待审核 checked 审核通过
       institutionType: '', // 机构值
       showInfo: false, // 是否显示详情
@@ -165,14 +166,14 @@ export default {
         if (this.institutionType) { reqData.photographerOrgId = this.institutionType }
         if (!this.isPending && this.productValue.length) { reqData.productId = this.productValue }
         if (!this.isPending && this.weightType) { reqData.weightLevel = this.weightType }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getProductList(reqData)
         this.tableData = data.item
         this.pager.total = data.total
         this.firstSearch = false
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -183,12 +184,12 @@ export default {
     async delProduct (listItem) {
       try {
         const reqData = { productId: listItem.id }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         await OperationManage.delProduct(reqData)
         this.$newMessage.success('删除成功')
         this.getProductList()
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

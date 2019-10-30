@@ -1,7 +1,7 @@
 <template>
   <div class="photo">
     <div class="img-box">
-      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel[0] }}-{{ jointLabel[1] }}</div>
+      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
       <el-image :src="imgDomain + src + breviary" fit="cover" :preview-src-list="preview ? [imgDomain + src] : []">
         <!-- 错误处理 -->
         <div slot="error" class="image-slot">
@@ -28,6 +28,13 @@ import clipboard from '@/directive/clipboard/index.js'
 export default {
   name: 'PhotoBox',
   directives: { clipboard },
+  filters: {
+    filterJointLabel (jointLabel) {
+      return jointLabel[1]
+        ? `${jointLabel[0]}-${jointLabel[1]}`
+        : jointLabel[0]
+    }
+  },
   props: {
     src: { type: String, default: '' }, // 地址图片
     photoName: { type: Boolean },

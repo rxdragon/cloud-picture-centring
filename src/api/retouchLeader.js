@@ -35,6 +35,7 @@ export function getGroupStaffQuotaInfo (params) {
     const avgTime = data.retouchTimeAvg
     const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
     const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
+    const income = Number(data.income.retouch) + Number(data.income.impulse)
     const tableDataCount = [{
       label: '修图单量',
       value: data.finishStreamNum,
@@ -55,7 +56,7 @@ export function getGroupStaffQuotaInfo (params) {
       value: timeFormat((avgRetouchTime + avgRebuildTime), 'text', true)
     }, {
       label: '收益',
-      value: data.income
+      value: income.toFixed(2)
     }, {
       label: '未完成指标（天）',
       value: data.notReachStandardDays

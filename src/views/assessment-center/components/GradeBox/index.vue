@@ -57,6 +57,9 @@
             <div class="remark-content">{{ photoInfoData.grassReason }}</div>
           </div>
         </div>
+        <div v-if="!photoInfoData.isPlant && !photoInfoData.isPull && !isGreen" class="plant-info panel-row">
+          <el-tag size="medium" type="success">不种不拔</el-tag>
+        </div>
         <div v-if="isGreen" class="panel-row">
           <div class="green">绿色通道</div>
         </div>
@@ -111,9 +114,9 @@
       </div>
     </div>
     <!-- 成片评价 -->
-    <div v-if="photoInfoData.isReturn || isGreen" class="panel-info flakiness-info">
-      <div class="panel-title">成片评价</div>
-      <template v-if="isGrade">
+    <div class="panel-info flakiness-info">
+      <div class="panel-title" v-if="!isGrade || !photoInfoData.isReturn">成片评价</div>
+      <template v-if="isGrade && (photoInfoData.isReturn || isGreen)">
         <div class="radio-box">
           <el-radio v-model="flakinessEvaluate" label="plant">种草</el-radio>
           <el-radio v-model="flakinessEvaluate" label="pull">拔草</el-radio>
@@ -136,7 +139,7 @@
           </div>
         </div>
       </template>
-      <div v-else class="panel-content">
+      <div v-else-if="!isGrade" class="panel-content">
         <div class="flakiness-finish">
           <el-tag v-if="photoInfoData.commitInfo.film_evaluation === 'plant'" size="medium" type="success">种草</el-tag>
           <el-tag v-if="photoInfoData.commitInfo.film_evaluation === 'pull'" size="medium" type="danger">拔草</el-tag>
@@ -180,6 +183,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       sameOpinion: '', // 意见是否相同 same 相同 different 不同
       weedOpinion: '', // 意见不同评价
       correctRemark: '', // 纠偏评价
@@ -198,6 +202,10 @@ export default {
     },
     photoInfoData () {
       return this.photoInfo
+    },
+    // 是否是绿色通道
+    isGreen () {
+      return this.photoInfoData.isGreen
     }
   },
   watch: {
@@ -238,9 +246,8 @@ export default {
         req.auditGlass = this.sameOpinion === 'same' ? glassArray[this.checkPlantState - 1] : this.weedOpinion
       }
       if (this.correctRemark) { req.auditNote = this.correctRemark }
-      if (this.issueRemark && this.filmEvaluation === 'pull') { req.evaluationNote = this.issueRemark }
-      if (this.issueLabel) { req.filmTag = this.issueLabel }
-      console.log(req)
+      if (this.issueRemark) { req.evaluationNote = this.issueRemark }
+      if (this.issueLabel && this.flakinessEvaluate === 'pull') { req.filmTag = this.issueLabel }
       return req
     },
     /**
@@ -249,7 +256,7 @@ export default {
     commitHistory () {
       const req = this.getCommitparams()
       if (!req) return
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AssessmentCenter.commitHistory(req)
         .then(msg => {
           this.$emit('finsihed', true)

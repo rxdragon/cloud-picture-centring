@@ -12,6 +12,7 @@ export function getStatistics (params) {
     method: 'GET'
   }).then(msg => {
     const data = msg
+    data.evaluationNum = Math.floor(data.evaluationNum)
     data.plantPercent = transformPercentage(data.plantNum, data.evaluationNum)
     data.pullPercent = transformPercentage(data.pullNum, data.evaluationNum)
     return data
@@ -73,17 +74,20 @@ export function getSpotCheckResult (params) {
       item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
       item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason
 
-      // 调试
-      item.isGreen = false
-      item.showCheckInfo = item.reworkReason || item.reviewerNote || item.isPlant || item.isPull || item.isGreen
-      item.retouchRequire = {
+      item.isGreen = item.photoData.stream &&
+        item.photoData.stream.tags &&
+        item.photoData.stream.tags.statics &&
+        item.photoData.stream.tags.statics.includes('green_stream') || false
+      const retouchRequire = {
         eye: '暂无',
         face: '暂无',
         pimples: false
       }
-      if (item.photoData.stream && item.photoData.stream.tags) {
-        item.retouchRequire = item.photoData.stream.tags.values.retouch_claim
-      }
+      item.retouchRequire = item.photoData.stream &&
+        item.photoData.stream.tags &&
+        item.photoData.stream.tags.values &&
+        item.photoData.stream.tags.values.retouch_claim ||
+        retouchRequire
     })
     const createData = {
       list: data,
@@ -118,7 +122,6 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note || '暂无审核备注'
       item.retouchNote = item.photoData.stream.note.retouch_note
       item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('rework') || false
       // 照片版本
@@ -141,16 +144,26 @@ export function getSearchHistory (params) {
       if (item.photoData.stream.order.tags) {
         item.storeName = item.photoData.stream.order.tags.values.store_name
       }
+      
+      item.reworkReason = item.photoData.tags.values.rework_reason
+      item.grassReason = item.photoData.tags.values.grass_reason
+      item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
 
-      item.grassReason = item.photoData.tags.values.grass_reason || '暂无原因'
-      item.reworkReason = item.photoData.tags.values.rework_reason || '暂无重修原因'
+      item.isGreen = item.photoData.stream &&
+      item.photoData.stream.tags &&
+      item.photoData.stream.tags.statics &&
+      item.photoData.stream.tags.statics.includes('green_stream') || false
 
-      item.retouchRequire = {
+      const retouchRequire = {
         eye: '暂无',
         face: '暂无',
         pimples: false
       }
-      item.retouchRequire = item.photoData.stream.tags && item.photoData.stream.tags.values && item.photoData.stream.tags.values.retouch_claim
+      item.retouchRequire = item.photoData.stream &&
+        item.photoData.stream.tags &&
+        item.photoData.stream.tags.values &&
+        item.photoData.stream.tags.values.retouch_claim ||
+        retouchRequire
       item.streamNum = item.photoData.stream.stream_num
     })
     return {

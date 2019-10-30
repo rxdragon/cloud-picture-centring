@@ -3,7 +3,7 @@
     <!-- 重修 -->
     <div v-if="rework" class="return-data">
       <div class="panel-box danger-box">
-        <div class="content-title">重修1次</div>
+        <div class="content-title">重修{{ photoData.reworkNum }}次</div>
         <div class="panel-content">{{ photoData.tags && photoData.tags.values.rework_reason || '暂无重修理由' }}</div>
       </div>
     </div>

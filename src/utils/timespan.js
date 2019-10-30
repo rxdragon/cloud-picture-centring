@@ -13,3 +13,11 @@ export function joinTimeSpan (time, addDay) {
 
   return date.format('YYYY-MM-DD 08:00:00')
 }
+
+export function revertTimeSpan (time, subtractDay) {
+  const date = moment(time)
+  if (subtractDay) {
+    date.subtract(1, 'days')
+  }
+  return date.format('YYYY-MM-DD')
+}

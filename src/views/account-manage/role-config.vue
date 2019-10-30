@@ -54,6 +54,7 @@ export default {
   components: { EditRole },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       showEdit: false,
       roleName: '',
       pager: {
@@ -117,13 +118,13 @@ export default {
       const reqData = {
         roleId: item.role_id
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.delRole(reqData)
         .then(() => {
           this.$newMessage.success('删除成功')
           this.getRoleList()
         }).finally(() => {
-          this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
     }
   }

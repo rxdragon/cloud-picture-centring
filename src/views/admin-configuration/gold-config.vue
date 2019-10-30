@@ -75,6 +75,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       stateType: 0, // 卡片状态
       staffId: [], // 伙伴id
       isAddConfig: false, // 是够添加配置
@@ -112,14 +113,14 @@ export default {
      */
     async deleteData (cardItem) {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const reqData = { staffCardId: cardItem.id }
         await OperationManage.deleteCard(reqData)
         this.$newMessage.success('删除成功')
         this.getGoldConfigList()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -128,14 +129,14 @@ export default {
      */
     async closeCard (cardItem) {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const reqData = { staffCardId: cardItem.id }
         await OperationManage.closeCard(reqData)
         this.$newMessage.success('提前结束')
         this.getGoldConfigList()
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -144,7 +145,7 @@ export default {
      */
     async getGoldConfigList (page) {
       try {
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         this.pager.page = page || this.pager.page
         const reqData = {
           type: 'gold_reward',
@@ -156,9 +157,9 @@ export default {
         const data = await OperationManage.getStaffCardList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     }

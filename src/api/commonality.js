@@ -57,6 +57,7 @@ export function getStreamInfo (params) {
       photoItem.spotGrass = spotGrass
       if (filmEvaluation && filmEvaluation === 'plant') { checkPlantNum++ }
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
+      photoItem.reworkNum = reworkNum
       // 照片版本
       photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
         ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum)
@@ -77,7 +78,7 @@ export function getStreamInfo (params) {
       checkPullNum,
       requireLabel: data.tags.values.retouch_claim,
       retouchRemark: data.note.retouch_note || '暂无修图备注',
-      reviewerNote: data.reviewerNote || '暂无审核备注'
+      reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注'
     }
     createData.photos = data.photos
     if (data.storeEvaluateStream) {

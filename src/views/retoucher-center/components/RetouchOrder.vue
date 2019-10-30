@@ -146,6 +146,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       orderData: {
         streamId: '',
         type: '',
@@ -257,7 +258,7 @@ export default {
     async getStreamInfo () {
       try {
         const reqData = { streamId: this.aid }
-        this.$store.dispatch('setting/showLoading', this.$route.name)
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
         this.hourGlass = data.hourGlass
@@ -271,9 +272,9 @@ export default {
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
         if (this.$route.query.aid) { delete this.$route.query.aid }
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         throw new Error(error)
       }
     },
@@ -307,7 +308,7 @@ export default {
      * @param {*} file
      */
     beforeUpload (file) {
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       const name = PhotoTool.fileNameFormat(file.name)
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
@@ -316,20 +317,20 @@ export default {
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
       if (!isJPG && !isPNG) {
         this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return isJPG || isPNG
       }
       if (findPhoto) {
         this.$newMessage.warning('该照片已经上传，请移除该照片' + name + '再上传。')
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return false
       }
       if (!hasSameName) {
         this.$newMessage.warning('请上传与原片文件名一致的照片。')
-        this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return false
       }
-      this.$store.dispatch('setting/hiddenLoading', this.$route.name)
+      this.$store.dispatch('setting/hiddenLoading', this.routeName)
       return true
     },
     /**
@@ -416,7 +417,7 @@ export default {
         streamId: this.aid,
         photoData: uploadData
       }
-      this.$store.dispatch('setting/showLoading', this.$route.name)
+      this.$store.dispatch('setting/showLoading', this.routeName)
       RetoucherCenter.submitStream(reqData)
         .then(msg => {
           SessionTool.removeUpdatePhoto(this.aid)
