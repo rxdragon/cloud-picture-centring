@@ -1,6 +1,6 @@
 <template>
   <div class="painted-eggshell">
-    <canvas id="live2dcanvas" width="280" height="250" />
+    <canvas id="live2dcanvas" width="280" height="300" />
   </div>
 </template>
 
@@ -17,8 +17,8 @@ export default {
         display: {
           position: 'right',
           width: 280,
-          height: 250,
-          vOffset: 20
+          height: 300,
+          vOffset: 0
         },
         mobile: { show: true },
         log: false
