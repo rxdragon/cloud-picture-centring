@@ -1,7 +1,7 @@
 <template>
   <div id="App">
     <router-view />
-    <painted-eggshell />
+    <painted-eggshell v-if="showCat" />
   </div>
 </template>
 
@@ -12,6 +12,11 @@ import { clearAllStorage } from '@/utils/sessionTool'
 export default {
   name: 'App',
   components: { PaintedEggshell },
+  data () {
+    return {
+      showCat: false
+    }
+  },
   mounted () {
     this.$ipcRenderer.on('closed-win', (e, item) => {
       clearAllStorage()
