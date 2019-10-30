@@ -467,15 +467,15 @@ export default {
         this.$newMessage.warning('请填写蓝标非拼接收益')
         return false
       }
-      if (this.productConfig.standard !== 'blue' && this.productConfig.needJoint && !objEveryNumberValue(this.productConfig.joinGrassData)) {
+      if (this.productConfig.standard !== 'blue' && +this.productConfig.needJoint === 1 && !objEveryNumberValue(this.productConfig.joinGrassData)) {
         this.$newMessage.warning('请填写拼接海草值')
         return false
       }
-      if (this.productConfig.standard !== 'blue' && this.productConfig.needJoint && !objEveryNumberValue(this.productConfig.jointMoney)) {
+      if (this.productConfig.standard !== 'blue' && +this.productConfig.needJoint === 1 && !objEveryNumberValue(this.productConfig.jointMoney)) {
         this.$newMessage.warning('请填写拼接收益')
         return false
       }
-      if (this.productConfig.standard === 'blue' && this.productConfig.needJoint && !twoTierObjEveryNumberValue(this.productConfig.jointMoney)) {
+      if (this.productConfig.standard === 'blue' && +this.productConfig.needJoint === 1 && !twoTierObjEveryNumberValue(this.productConfig.jointMoney)) {
         this.$newMessage.warning('请填写蓝标拼接收益')
         return false
       }
