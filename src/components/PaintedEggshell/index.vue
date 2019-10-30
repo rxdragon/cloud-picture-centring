@@ -1,17 +1,34 @@
 <template>
   <div class="painted-eggshell">
-    彩蛋
+    <canvas id="live2dcanvas" width="280" height="250" />
   </div>
 </template>
 
 <script>
+import { L2Dwidget } from 'live2d-widget'
 export default {
   name: 'PaintedEggshell',
   data () {
     return {
-
+      configs: {
+        tagMode: false,
+        debug: false,
+        model: { jsonPath: 'live2dw/live2d-widget-model-tororo/assets/tororo.model.json' },
+        display: {
+          position: 'right',
+          width: 280,
+          height: 250,
+          vOffset: 20
+        },
+        mobile: { show: true },
+        log: false
+      }
     }
-  }
+  },
+  mounted () {
+    L2Dwidget.init(this.configs)
+  },
+  methods: {}
 }
 </script>
 

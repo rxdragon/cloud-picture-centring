@@ -144,7 +144,7 @@ export function getSearchHistory (params) {
       if (item.photoData.stream.order.tags) {
         item.storeName = item.photoData.stream.order.tags.values.store_name
       }
-      
+
       item.reworkReason = item.photoData.tags.values.rework_reason
       item.grassReason = item.photoData.tags.values.grass_reason
       item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
