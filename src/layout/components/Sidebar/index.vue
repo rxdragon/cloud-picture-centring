@@ -1,6 +1,6 @@
 <template>
   <div>
-    <logo />
+    <logo @click.native="activeCat" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -31,6 +31,12 @@ import Logo from './Logo'
 
 export default {
   components: { SidebarItem, Logo },
+  data () {
+    return {
+      showCatCounts: 0,
+      expireTime: 0
+    }
+  },
   computed: {
     ...mapGetters([
       'permission_routes'
@@ -45,6 +51,26 @@ export default {
     },
     variables () {
       return variables
+    }
+  },
+  methods: {
+    activeCat () {
+      console.log(new Date().getTime())
+      const time = 4 * 1000
+      if (this.showCatCounts === 0) { this.expireTime = new Date().getTime() + time }
+      this.showCatCounts++
+      console.log(this.showCatCounts)
+      if (this.showCatCounts === 7) {
+        const nowTime = new Date().getTime()
+        if (nowTime < this.expireTime) {
+          this.$store.dispatch('setting/setShowCat')
+          this.showCatCounts = 0
+          this.expireTime = 0
+        } else {
+          this.showCatCounts = 0
+          this.expireTime = 0
+        }
+      }
     }
   }
 }

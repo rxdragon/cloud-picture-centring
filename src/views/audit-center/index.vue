@@ -30,7 +30,7 @@
           <div class="label-list-title">审核总时长</div>
           <div class="label-list-title">审核单量</div>
           <div class="label-list-title">审核张数</div>
-          <div class="label-list-content">{{ todayReviewQuota.todayReviewTimes }}min</div>
+          <div class="label-list-content">{{ todayReviewQuota.todayReviewTimes }}</div>
           <div class="label-list-content">{{ todayReviewQuota.todayReviewStreamNums }}</div>
           <div class="label-list-content">{{ todayReviewQuota.todayReviewPhotoNums }}</div>
         </div>

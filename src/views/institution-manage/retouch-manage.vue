@@ -97,9 +97,7 @@ export default {
         cancelButtonText: '取消',
         center: true
       }).then(() => {
-        const reqData = {
-          retouchOrgId: item.id
-        }
+        const reqData = { retouchOrgId: item.id }
         this.$store.dispatch('setting/showLoading', this.routeName)
         Institution.enableRetouchOrg(reqData)
           .then(() => {
