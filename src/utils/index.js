@@ -92,6 +92,7 @@ export function formatTime (time, option) {
  */
 export function timeFormat (seconds, type, showZero = false) {
   const isShowText = type === 'text'
+  const isEnText = type === 'en'
   // 计算
   var i = 0
   var s = parseInt(seconds)
@@ -106,6 +107,9 @@ export function timeFormat (seconds, type, showZero = false) {
     } else {
       return v
     }
+  }
+  if (isEnText) {
+    return zero(i) + 'min' + zero(s) + 'sec'
   }
   if (isShowText) {
     return zero(i) + '分' + zero(s) + '秒'

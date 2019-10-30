@@ -2,7 +2,8 @@ const state = {
   imgDomain: process.env.VUE_APP_DOMAIN,
   imgUploadDomain: process.env.VUE_APP_IMG_UPLOAD_DOMAIN,
   updateDomain: process.env.VUE_APP_UPDATE_DOMAIN,
-  loadRoutes: []
+  loadRoutes: [],
+  showCat: false
 }
 
 const mutations = {
@@ -15,6 +16,9 @@ const mutations = {
     const loadRoutes = new Set(state.loadRoutes)
     loadRoutes.delete(routeName)
     state.loadRoutes = [...loadRoutes]
+  },
+  SET_CAT: (state) => {
+    state.showCat = !state.showCat
   },
   /**
    * @deprecated 更改域名
@@ -39,6 +43,9 @@ const actions = {
     setTimeout(() => {
       commit('HIDDEN_LOADING', routeName)
     }, 300)
+  },
+  setShowCat ({ commit }) {
+    commit('SET_CAT')
   },
   // 更换域名
   changeDomain ({ commit }, domainType) {

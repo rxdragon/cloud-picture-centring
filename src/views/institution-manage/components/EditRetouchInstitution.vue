@@ -6,26 +6,26 @@
     </div>
     <div class="config-list">
       <el-form ref="formEdit" :model="institutionConfig" :rules="rules" label-position="left" label-width="120px">
-        <el-form-item label="机构名称：" prop="name" required>
+        <el-form-item label="机构名称：" prop="name">
           <el-input v-model="institutionConfig.name" />
         </el-form-item>
-        <el-form-item label="机构代号：" prop="code" required>
+        <el-form-item label="机构代号：" prop="code">
           <el-input v-model="institutionConfig.code" maxlength="16" />
         </el-form-item>
-        <el-form-item label="机构主账号：" prop="account" required>
+        <el-form-item label="机构主账号：" prop="account">
           <el-input v-model="institutionConfig.account" maxlength="16" />
         </el-form-item>
         <el-form-item label="机构密码：">
           <el-input v-model="institutionConfig.secret" v-no-special maxlength="16" type="password" />
         </el-form-item>
-        <el-form-item label="可接产品：" prop="toData" required :show-message="false">
+        <el-form-item label="可接产品：" prop="toData" :show-message="false">
           <product-panel
             :default-checked-keys="defaultCheckedKeys"
             :is-loading-down.sync="isLoadingDown"
             :to-data.sync="institutionConfig.toData"
           />
         </el-form-item>
-        <el-form-item label="收益配置：" prop="incomeConfig" required>
+        <el-form-item label="收益配置：" prop="incomeConfig">
           <div class="list-data">
             <div v-for="(incomeItem, incomeIndex) in institutionConfig.incomeConfig" :key="incomeIndex" class="panel">
               <div class="panel-title">{{ incomeIndex + 1 }} 人</div>
@@ -179,7 +179,7 @@ export default {
       }
     },
     validateToData (rule, value, callback) {
-      if (!value.length) {
+      if (!this.institutionConfig.toData.length) {
         this.$newMessage.warning('请选择可接产品')
         callback(new Error('请选择可接产品'))
       } else {

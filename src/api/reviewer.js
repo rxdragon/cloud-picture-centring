@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump } from '@/utils/index.js'
+import { keyToHump, timeFormat } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
 
 /**
@@ -76,7 +76,7 @@ export function getTodayReviewQuota () {
     method: 'GET'
   }).then(msg => {
     const createData = keyToHump(msg)
-    createData.todayReviewTimes = (createData.todayReviewTimes / 60).toFixed(0)
+    createData.todayReviewTimes = timeFormat(createData.todayReviewTimes, 'text', true)
     return createData
   })
 }
