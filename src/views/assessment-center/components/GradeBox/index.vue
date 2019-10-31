@@ -83,9 +83,7 @@
         <!-- 标签 -->
         <div v-if="flakinessEvaluate === 'pull'" class="issue-label">
           <div class="issue-content">
-            <el-select v-model="issueLabel" placeholder="请选择问题标签（非必选）">
-              <el-option label="穿帮" value="穿帮" />
-            </el-select>
+            <issue-label-box v-model="issueLabel" multiple placeholder="请选择问题标签（非必选）" />
           </div>
         </div>
         <div class="correct-remark">
@@ -124,9 +122,7 @@
         <div class="issue-label">
           <div class="issue-content">
             <!-- 标签 -->
-            <el-select v-if="flakinessEvaluate === 'pull'" v-model="issueLabel" placeholder="请选择问题标签（非必选）">
-              <el-option label="穿帮" value="穿帮" />
-            </el-select>
+            <issue-label-box v-if="flakinessEvaluate === 'pull'" v-model="issueLabel" multiple placeholder="请选择问题标签（非必选）" />
             <!-- 备注 -->
             <div class="issue-remark">
               <el-input
@@ -148,7 +144,14 @@
           <div v-if="photoInfoData.commitInfo.film_tag" class="retouch-remark">
             <div class="remark-title">问题标签：</div>
             <div class="remark-content">
-              <el-tag size="medium" type="danger">穿帮</el-tag>
+              <el-tag
+                v-for="(tags, tagsIndex) in photoInfoData.commitInfo.film_tag"
+                :key="tagsIndex"
+                size="medium"
+                type="danger"
+              >
+                {{ tags }}
+              </el-tag>
             </div>
           </div>
           <div class="retouch-remark">
@@ -167,11 +170,12 @@
 
 <script>
 import PhotoList from '@/components/PhotoList'
+import IssueLabelBox from '@SelectBox/IssueLabelBox'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 export default {
   name: 'GradeBox',
-  components: { PhotoList },
+  components: { PhotoList, IssueLabelBox },
   props: {
     isGrade: { type: Boolean }, // 是否是打分使用
     photoInfo: {
@@ -188,7 +192,7 @@ export default {
       weedOpinion: '', // 意见不同评价
       correctRemark: '', // 纠偏评价
       flakinessEvaluate: '', // 成片评价
-      issueLabel: '', // 问题标签
+      issueLabel: [], // 问题标签
       issueRemark: '' // 问题备注
     }
   },
@@ -246,7 +250,7 @@ export default {
       }
       if (this.correctRemark) { req.auditNote = this.correctRemark }
       if (this.issueRemark) { req.evaluationNote = this.issueRemark }
-      if (this.issueLabel && this.flakinessEvaluate === 'pull') { req.filmTag = this.issueLabel }
+      if (this.issueLabel.length && this.flakinessEvaluate === 'pull') { req.filmTag = this.issueLabel }
       return req
     },
     /**
@@ -328,6 +332,10 @@ export default {
         .remark-content {
           width: 632px;
           white-space: pre-line;
+
+          .el-tag {
+            margin-right: 10px;
+          }
         }
       }
     }
