@@ -5,6 +5,7 @@ import Layout from '@/layout'
 const auditCenter = {
   path: '/audit-center',
   component: Layout,
+  name: 'AuditCenter',
   redirect: '/audit-center/index',
   alwaysShow: true,
   meta: { title: '审核中心', icon: 'iconfont iconFiled' },

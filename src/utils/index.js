@@ -150,6 +150,17 @@ export function toHump (name) {
 }
 
 /**
+ * 下划线转大驼峰
+ * @param {*} name
+ */
+export function toCapitalHump (name) {
+  name = name.charAt(0).toUpperCase() + name.slice(1)
+  return name.replace(/\_(\w)/g, function (all, letter) {
+    return letter.toUpperCase()
+  })
+}
+
+/**
  * @description 将key 转换为驼峰
  */
 export function keyToHump (object) {

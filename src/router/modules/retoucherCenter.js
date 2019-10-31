@@ -5,6 +5,7 @@ import Layout from '@/layout'
 const retoucherCenter = {
   path: '/retoucher-center',
   component: Layout,
+  name: 'RetoucherCenter',
   redirect: '/retoucher-center/wait-retoucher',
   alwaysShow: true,
   meta: { title: '修图师中心', icon: 'iconfont iconcurrent' },

@@ -5,6 +5,7 @@ import Layout from '@/layout'
 const personalCenterAudit = {
   path: '/personal-center-audit',
   component: Layout,
+  name: 'PersonalCenterAudit',
   redirect: '/personal-center-audit/index',
   alwaysShow: true,
   meta: { title: '个人中心（审核专员）', icon: 'iconfont iconFullstaffing' },

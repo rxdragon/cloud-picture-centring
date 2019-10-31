@@ -3,6 +3,7 @@ import Layout from '@/layout'
 const institutionManage = {
   path: '/institution-manage',
   component: Layout,
+  name: 'InstitutionManage',
   redirect: '/institution-manage/retouch-manage',
   meta: { title: '机构管理', icon: 'iconfont iconSubordinate' },
   children: [

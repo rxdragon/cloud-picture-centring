@@ -58,7 +58,7 @@ export function getSpotCheckResult (params) {
     const data = msg.data
     data.forEach(item => {
       item.retouchNote = item.photoData.stream && item.photoData.stream.note.retouch_note || '-'
-      item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('rework') || false
+      item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('return_photo') || false
       // 照片版本
       item.firstPhoto = item.photoData.first_photo
       item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')
@@ -124,7 +124,7 @@ export function getSearchHistory (params) {
     const data = msg.data
     data.forEach(item => {
       item.retouchNote = item.photoData.stream.note.retouch_note
-      item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('rework') || false
+      item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('return_photo') || false
       // 照片版本
       item.firstPhoto = item.photoData.first_photo
       item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')

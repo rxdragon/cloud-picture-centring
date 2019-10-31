@@ -10,8 +10,6 @@ NProgress.configure({ showSpinner: false }) // 关闭加载微调器
 
 const whiteList = ['/', '/login', '/auth-redirect'] // 白名单
 
-// 调试
-
 router.beforeEach(async (to, from, next) => {
   NProgress.start() // 读取进度条
   document.title = getPageTitle(to.meta.title)
@@ -27,6 +25,7 @@ router.beforeEach(async (to, from, next) => {
       if (nickname) {
         next()
       } else {
+        console.log(1)
         await store.dispatch('user/getUserInfo')
         next({ ...to, replace: true })
       }
@@ -47,11 +46,9 @@ router.beforeEach(async (to, from, next) => {
     const expireTime = getStreamIdExpireTime() * 1000
     const nowTime = new Date().getTime()
     const discrepancyTime = expireTime - nowTime
-    console.log(to.path)
     if (discrepancyTime > 0) {
       // 过期时间小于1小时续上
       if (discrepancyTime < 60 * 60 * 1000) {
-        console.log(discrepancyTime)
         await User.userExpire()
       }
       noExpire()

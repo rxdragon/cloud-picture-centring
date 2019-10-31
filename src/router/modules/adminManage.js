@@ -3,6 +3,7 @@ import Layout from '@/layout'
 const adminManage = {
   path: '/admin-manage',
   component: Layout,
+  name: 'AdminManage',
   redirect: '/admin-manage/work-board',
   meta: { title: '云端工作管理', icon: 'iconfont iconpiechart' },
   children: [

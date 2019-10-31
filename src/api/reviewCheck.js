@@ -18,7 +18,7 @@ export function getGroupReviewQuota (params) {
     const tableDataCount = [{
       label: '审核单量',
       value: data.reviewerReviewStreamNum,
-      link: '/audit-center/audit-history' + '?timeSpan=' + timeSpan + '&searchType=' + SearchType.CheckPlant
+      link: '/audit-center/audit-history' + '?timeSpan=' + timeSpan
     }, {
       label: '审核张数',
       value: data.reviewerReviewPhotoNum

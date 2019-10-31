@@ -1,16 +1,13 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import { toCapitalHump } from '@/utils/index.js'
 
 /**
  * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
+ * @param roles // 权限
+ * @param route // 路由
  */
 function hasPermission (roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
+  return roles.includes(route.name)
 }
 
 /**
@@ -47,17 +44,22 @@ const mutations = {
 }
 
 const actions = {
+  // 判断动态路由
   generateRoutes ({ commit }, roles) {
     return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        // 调试
-        console.log(asyncRoutes)
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-        // accessedRoutes = []
-      }
+      let accessedRoutes = []
+      const newRoles = [...roles.base_auth, ...roles.login_auth]
+      let newRolesArr = []
+      newRoles.forEach(roleItem => {
+        if (roleItem.name) {
+          const nameArr = roleItem.name.split('.')
+          const moduleName = toCapitalHump(nameArr[0])
+          const menuName = toCapitalHump(nameArr[1])
+          newRolesArr = [...newRolesArr, moduleName, menuName]
+        }
+      })
+      newRolesArr = [...new Set(newRolesArr)]
+      accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

@@ -3,6 +3,7 @@ import Layout from '@/layout'
 const assessmentCenter = {
   path: '/assessment-center',
   component: Layout,
+  name: 'AssessmentCenter',
   redirect: '/assessment-center/cloud-assessment',
   meta: { title: '评价中心', icon: 'el-icon-edit' },
   children: [
