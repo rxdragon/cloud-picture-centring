@@ -54,7 +54,7 @@
       <!-- 审核人员 -->
       <div class="checker-search search-item">
         <span>审核人员</span>
-        <reviewer-select v-model="reviewerId" />
+        <reviewer-select v-model="reviewerId" show-all />
       </div>
     </div>
     <div v-for="photoItem in photoData" :key="photoItem.businessId" class="photo-data module-panel">

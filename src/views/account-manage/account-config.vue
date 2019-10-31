@@ -27,7 +27,11 @@
           <el-table-column prop="id" label="工号" />
           <el-table-column prop="name" label="伙伴姓名" />
           <el-table-column prop="position_text" label="岗位" />
-          <el-table-column prop="role" label="角色组" />
+          <el-table-column label="角色组">
+            <template slot-scope="scope">
+              {{ scope.row.title || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column prop="status" label="状态" />
           <el-table-column label="操作">
             <template slot-scope="scope">
