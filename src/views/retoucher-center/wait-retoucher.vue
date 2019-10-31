@@ -124,7 +124,8 @@ export default {
         goldReward: 0, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
-      aid: '' // 订单id
+      aid: '', // 订单id
+      hasInitialization: false // 是否有初始化数据
     }
   },
   computed: {
@@ -160,12 +161,16 @@ export default {
     }
   },
   created () {
+    console.log('create')
+    this.hasInitialization = true
     this.initializeData()
     this.hasReturn()
   },
   activated () {
     if (!this.$route.query.aid) {
-      this.initializeData()
+      console.log('activated')
+      !this.hasInitialization && (this.initializeData())
+      this.hasInitialization = false
       this.showDetail = false
     }
   },
@@ -206,11 +211,15 @@ export default {
       clearTimeout(window.polling.getQueue)
       window.polling.getQueue = null
       if (+this.queueInfo.retouchStreamId && !SessionTool.getSureRetouchOrder(this.queueInfo.retouchStreamId)) {
+        console.log(1)
         this.$confirm('', '你有新的订单请及时处理', {
           confirmButtonText: '确定',
           center: true,
           type: 'warning',
-          showCancelButton: false
+          showCancelButton: false,
+          closeOnPressEscape: false,
+          showClose: false,
+          closeOnClickModal: false
         }).then(() => {
           SessionTool.saveSureRetouchOrder(this.queueInfo.retouchStreamId)
           if (this.$route.name !== 'WaitRetoucher') {
@@ -275,6 +284,7 @@ export default {
     initializeData () {
       this.$store.dispatch('setting/showLoading', this.routeName)
       this.aid = ''
+      console.log('initializeData')
       Promise.all([
         this.getSelfQuota(),
         this.getSelfBuffInfo(),
@@ -302,6 +312,8 @@ export default {
           confirmButtonText: '现在处理',
           cancelButtonText: '稍后处理',
           type: 'warning',
+          closeOnPressEscape: false,
+          showCancelButton: false,
           center: true
         }).then(() => {
           SessionTool.saveReturnRetouchOrder(data)

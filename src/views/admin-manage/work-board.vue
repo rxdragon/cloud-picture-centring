@@ -102,8 +102,8 @@
             <el-option v-show="activeName === 'retouch'" label="修图中" value="retouching" />
             <el-option v-show="activeName !== 'retouch'" label="待云端审核" value="wait_review" />
             <el-option v-show="activeName !== 'retouch'" label="云端审核中" value="reviewing" />
-            <el-option v-show="activeName !== 'retouch'" label="待外包审核" value="wait_review" />
-            <el-option v-show="activeName !== 'retouch'" label="外包审核中" value="reviewing" />
+            <el-option v-show="activeName !== 'retouch'" label="待外包审核" value="retoucher_org_wait_review" />
+            <el-option v-show="activeName !== 'retouch'" label="外包审核中" value="retoucher_org_reviewing" />
           </el-select>
         </div>
         <div class="button-box">

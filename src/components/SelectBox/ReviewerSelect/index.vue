@@ -8,7 +8,7 @@
       placeholder="请选择审核人"
       v-on="$listeners"
     >
-      <el-option label="全部" :value="0" />
+      <el-option v-if="showAll" label="全部" :value="0" />
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -24,6 +24,9 @@ import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'ReviewerSelect',
+  props: {
+    showAll: { type: Boolean }
+  },
   data () {
     return {
       options: [],

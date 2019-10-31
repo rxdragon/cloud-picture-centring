@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage, isObj } from '../utils'
+import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '../utils'
 
 /** 工作指标 */
 
@@ -118,21 +118,26 @@ export function getReviewQuota (params) {
     method: 'GET',
     params
   }).then(data => {
-    const formatNumAndRate = (obj) => {
-      return `${obj.num} / ${obj.rate}`
+    const formatNumAndRate = (num, allNum) => {
+      const rate = transformPercentage(num, allNum)
+      return `${num} / ${rate}`
     }
-    if (!data.length) return null
+    if (!Object.keys(data).length) return null
+    console.log(data)
+    const avgTime = getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count)
     const res = {
-      ...data,
-      review_photo_glass_plant: formatNumAndRate(data.review_photo_glass.plant),
-      review_photo_glass_pull: formatNumAndRate(data.review_photo_glass.pull),
-      spot_check_photo_glass_plant: formatNumAndRate(data.spot_check_photo_glass.plant),
-      spot_check_photo_glass_pull: formatNumAndRate(data.spot_check_photo_glass.pull),
-      rectify_photo_different: formatNumAndRate(data.rectify_photo.different),
-      rectify_photo_different_grass_plant: formatNumAndRate(data.rectify_photo.different_grass.plant),
-      rectify_photo_different_grass_pull: formatNumAndRate(data.rectify_photo.different_grass.pull),
-      rectify_photo_different_grass_no_grass: formatNumAndRate(data.rectify_photo.different_grass.no_grass),
-      rectify_photo_same: formatNumAndRate(data.rectify_photo.same)
+      review_stream_num: data.reviewStreamNum,
+      review_photo_num: data.reviewPhotoNum,
+      review_time_avg: timeFormat(avgTime, 'text', true),
+      review_photo_glass_plant: formatNumAndRate(data.reviewPhotoGlass.plant.num, data.reviewPhotoNum),
+      review_photo_glass_pull: formatNumAndRate(data.reviewPhotoGlass.pull.num, data.reviewPhotoNum),
+      spot_check_photo_glass_plant: formatNumAndRate(data.spotCheckPhotoGlass.plant.num, data.spotCheckPhotoNum),
+      spot_check_photo_glass_pull: formatNumAndRate(data.spotCheckPhotoGlass.pull.num, data.spotCheckPhotoNum),
+      rectify_photo_different: formatNumAndRate(data.rectifyPhoto.different.num, data.spotCheckPhotoNum),
+      rectify_photo_different_grass_plant: formatNumAndRate(data.rectifyPhoto.differentGrass.plant.num, data.spotCheckPhotoNum),
+      rectify_photo_different_grass_pull: formatNumAndRate(data.rectifyPhoto.differentGrass.pull.num, data.spotCheckPhotoNum),
+      rectify_photo_different_grass_no_grass: formatNumAndRate(data.rectifyPhoto.differentGrass.noGrass.num, data.spotCheckPhotoNum),
+      rectify_photo_same: formatNumAndRate(data.rectifyPhoto.same.num, data.spotCheckPhotoNum)
     }
     return res
   })

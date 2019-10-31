@@ -24,8 +24,7 @@ export function getGroupReviewQuota (params) {
       value: data.reviewerReviewPhotoNum
     }, {
       label: '审核平均用时',
-      value: timeFormat(getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count), 'text', true),
-      link: '/audit-center/audit-history' + '?timeSpan=' + timeSpan
+      value: timeFormat(getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count), 'text', true)
     }, {
       label: '审核种草(张) / 种草率(%)',
       value: data.reviewPhotoPlantNum + ' / ' + transformPercentage(data.reviewPhotoPlantNum, data.reviewerReviewPhotoNum),
