@@ -162,9 +162,9 @@ export default {
      */
     async takePhoto () {
       try {
-        this.$store.dispatch('setting/showLoading', this.routeName)
         const req = this.getTakeParams()
         if (!req) return false
+        this.$store.dispatch('setting/showLoading', this.routeName)
         if (await this.getHaveCheckResult()) return false
         const data = await AssessmentCenter.takePhoto(req)
         if (!data.length) {
@@ -177,7 +177,7 @@ export default {
         await this.getSpotCheckResult()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**
@@ -203,7 +203,7 @@ export default {
         this.spotAllNum = '-'
         this.pager.total = 10
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**
@@ -231,7 +231,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**

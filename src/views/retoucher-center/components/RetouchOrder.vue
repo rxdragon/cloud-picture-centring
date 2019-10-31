@@ -275,7 +275,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**
@@ -397,7 +397,7 @@ export default {
     /**
      * @description 提交审核
      */
-    submitOrder () {
+    async submitOrder () {
       if (!this.finishPhoto.every(item => Boolean(item.path))) {
         return this.$newMessage.warning('请等待照片上传完成')
       }
@@ -418,14 +418,17 @@ export default {
         photoData: uploadData
       }
       this.$store.dispatch('setting/showLoading', this.routeName)
-      RetoucherCenter.submitStream(reqData)
-        .then(msg => {
-          SessionTool.removeUpdatePhoto(this.aid)
-          SessionTool.removeSureRetouchOrder(this.aid)
-          SessionTool.removeReturnRetouchOrder(this.aid)
-          this.$newMessage.success('提交审核成功。')
-          this.$emit('update:showDetail', false)
-        })
+      try {
+        await RetoucherCenter.submitStream(reqData)
+        SessionTool.removeUpdatePhoto(this.aid)
+        SessionTool.removeSureRetouchOrder(this.aid)
+        SessionTool.removeReturnRetouchOrder(this.aid)
+        this.$newMessage.success('提交审核成功。')
+        this.$emit('update:showDetail', false)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        console.error(error)
+      }
     }
   }
 }

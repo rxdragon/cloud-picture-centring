@@ -362,22 +362,28 @@ export default {
      * @description 上一张图片
      */
     prePhoto () {
+      const beforePath = this.photoArray[this.photoIndex].path
       if (this.photoIndex === 0) {
         this.photoIndex = this.photoArray.length - 1
       } else {
         this.photoIndex--
       }
+      const nextPath = this.photoArray[this.photoIndex].path
+      if (beforePath === nextPath) return
       this.loading = true
     },
     /**
      * @description 下一张图片
      */
     nextPhoto () {
+      const beforePath = this.photoArray[this.photoIndex].path
       if (this.photoIndex === this.photoArray.length - 1) {
         this.photoIndex = 0
       } else {
         this.photoIndex++
       }
+      const nextPath = this.photoArray[this.photoIndex].path
+      if (beforePath === nextPath) return
       this.loading = true
     },
     /**

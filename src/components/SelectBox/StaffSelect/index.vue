@@ -64,6 +64,6 @@ export default {
 
 <style lang="less" scoped>
 .el-cascader {
-  width: 230px;
+  width: 220px;
 }
 </style>

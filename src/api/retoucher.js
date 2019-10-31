@@ -61,6 +61,7 @@ export function getRetouchQuota (params) {
     params
   }).then(msg => {
     const data = keyToHump(msg)
+    console.log(data)
     const avgTime = data.avgRetouchAndRebuildTime
     const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
     const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
@@ -74,7 +75,7 @@ export function getRetouchQuota (params) {
         value: timeFormat((avgRetouchTime + avgRebuildTime), 'text', true)
       }, {
         label: '种草量/种草率',
-        value: data.plantNum + ' / ' + transformPercentage(data.plantRate, data.retouchPhotoNum),
+        value: data.plantNum + ' / ' + transformPercentage(data.plantNum, data.retouchPhotoNum),
         link: '/retoucher-center/retouch-history'
       }, {
         label: '拔草量/拔草率',

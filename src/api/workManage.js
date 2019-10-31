@@ -74,11 +74,14 @@ export function getRetoucherQuota (params) {
     method: 'POST',
     data: params
   }).then(msg => {
+    console.log(msg)
     msg.retouchSinglePhotoNum = Number(msg.retouchSinglePhotoNum)
     msg.retouchMultiPhotoNum = Number(msg.retouchMultiPhotoNum)
+    msg.income = Number(msg.income.impulse) + Number(msg.income.retouch)
     const count = Number(msg.retoucherFinishPhotoNum)
     msg.reviewPlantRate = transformPercentage(msg.reviewPlant, count)
     msg.reviewPullRate = transformPercentage(msg.reviewPull, count)
+    msg.retouchReworkRate = transformPercentage(msg.retouchRework, msg.retoucherFinishStreamNum)
     return msg
   })
 }

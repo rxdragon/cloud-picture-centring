@@ -80,7 +80,7 @@ export default {
         })
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**

@@ -128,7 +128,7 @@ export default {
         this.listDataTwo.forEach(item => { item.value = data[item.key] })
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     }
   }
