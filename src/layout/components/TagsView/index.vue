@@ -221,7 +221,7 @@ export default {
     openMenu (tag, e) {
       const menuMinWidth = 260
       const offsetWidth = this.$el.offsetWidth // container width
-      const maxLeft = offsetWidth + menuMinWidth // left boundary
+      const maxLeft = offsetWidth + menuMinWidth - 80 // left boundary
       const left = e.clientX + 15 // 15: margin right
       if (left > maxLeft) {
         this.left = maxLeft
@@ -249,6 +249,7 @@ export default {
   width: 100%;
   min-width: @minWidth;
   background: #fff;
+
   .tags-view-wrapper {
     background: #E4E7ED;
 
