@@ -87,7 +87,7 @@ export function getAttitudePhotoList (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'original_photo')
+      const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
       listItem.src = findCompletePhoto && findCompletePhoto.path || ''
     })
     return msg
