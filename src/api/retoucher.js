@@ -42,10 +42,14 @@ export function getRankInfo () {
     method: 'GET'
   }).then(msg => {
     const createData = keyToHump(msg)
-    createData.nearly30DaysPlantRate = Math.floor(createData.nearly30DaysPlantRate * 100)
-    createData.nearly30DaysPullRate = Math.floor(createData.nearly30DaysPullRate * 100)
-    createData.needLevelUpPhotoPlantRate = Math.floor(createData.needLevelUpPhotoPlantRate * 100)
-    createData.needLevelUpPhotoPullRate = Math.floor(createData.needLevelUpPhotoPullRate * 100)
+    createData.nearly30DaysPlantRate = (createData.nearly30DaysPlantRate * 100).toFixed(2)
+    createData.nearlyPlantRate = Math.floor(createData.nearly30DaysPlantRate)
+    createData.nearly30DaysPullRate = (createData.nearly30DaysPullRate * 100).toFixed(2)
+    createData.nearlyPullRate = Math.floor(createData.nearly30DaysPullRate)
+    createData.needLevelUpPhotoPlantRate = (createData.needLevelUpPhotoPlantRate * 100).toFixed(2)
+    createData.needLevelUpPlantRate = Math.floor(createData.needLevelUpPhotoPlantRate)
+    createData.needLevelUpPhotoPullRate = (createData.needLevelUpPhotoPullRate * 100).toFixed(2)
+    createData.needLevelUpPullRate = Math.floor(createData.needLevelUpPhotoPullRate)
     console.log(createData)
     return createData
   })
