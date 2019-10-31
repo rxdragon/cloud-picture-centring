@@ -89,28 +89,28 @@
                 <span>近30日种草率</span>
                 <span class="num">{{ gradeInfo.nearly30DaysPlantRate }}%</span>
               </div>
-              <el-progress :percentage="gradeInfo.nearly30DaysPlantRate" :show-text="false" />
+              <el-progress :percentage="gradeInfo.nearlyPlantRate" :show-text="false" />
             </el-col>
             <el-col :span="12" class="pull-box">
               <div class="rote-title">
                 <span>近30日拔草率</span>
                 <span class="num">{{ gradeInfo.nearly30DaysPullRate }}%</span>
               </div>
-              <el-progress :percentage="gradeInfo.nearly30DaysPullRate" :show-text="false" />
+              <el-progress :percentage="gradeInfo.nearlyPullRate" :show-text="false" />
             </el-col>
             <el-col :span="12">
               <div class="rote-title col-two">
                 <span>种草达标率</span>
                 <span class="num">{{ gradeInfo.needLevelUpPhotoPlantRate }}%</span>
               </div>
-              <el-progress :percentage="gradeInfo.needLevelUpPhotoPlantRate" :show-text="false" />
+              <el-progress :percentage="gradeInfo.needLevelUpPlantRate" :show-text="false" />
             </el-col>
             <el-col :span="12" class="pull-box">
               <div class="rote-title col-two">
                 <span>拔草合格率</span>
                 <span class="num">{{ gradeInfo.needLevelUpPhotoPullRate }}%</span>
               </div>
-              <el-progress :percentage="gradeInfo.needLevelUpPhotoPullRate" :show-text="false" />
+              <el-progress :percentage="gradeInfo.needLevelUpPullRate" :show-text="false" />
             </el-col>
           </el-row>
         </div>

@@ -287,6 +287,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.passStream(req)
         this.$newMessage.success('审核成功')
+        this.getTodayReviewQuota()
         this.getReviewQueueInfo()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
