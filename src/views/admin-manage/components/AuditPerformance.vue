@@ -7,11 +7,11 @@
       </div>
       <div class="staff-search search-item">
         <span>审核人员</span>
-        <reviewer-select v-model="reviewerValue" />
+        <reviewer-select v-model="reviewerValue" clearable @change="onReviewerChange" />
       </div>
       <div class="outsourc-staff-search search-item">
         <span>修图组</span>
-        <retoucher-group-select v-model="retoucherGroupValue" />
+        <retoucher-group-select v-model="retoucherGroupValue" clearable @change="onRetoucherChange" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getReviewQuota">查询</el-button>
@@ -39,8 +39,8 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null,
-      reviewerValue: 0,
-      retoucherGroupValue: 0,
+      reviewerValue: '',
+      retoucherGroupValue: '',
       listDataOne: [{
         key: 'review_stream_num',
         label: '审核单量',
@@ -95,6 +95,18 @@ export default {
   },
   methods: {
     /**
+     * @description 审核人员变动
+     */
+    onReviewerChange () {
+      this.retoucherGroupValue = ''
+    },
+    /**
+     * @description 修图组变动
+     */
+    onRetoucherChange () {
+      this.reviewerValue = ''
+    },
+    /**
      * @description 获取参数
      */
     getParams () {
@@ -119,13 +131,14 @@ export default {
         if (!req) return
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await WorkManage.getReviewQuota(req)
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         if (!data) {
           this.$newMessage.warning('暂无数据')
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
           return false
         }
         this.listDataOne.forEach(item => { item.value = data[item.key] })
         this.listDataTwo.forEach(item => { item.value = data[item.key] })
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
