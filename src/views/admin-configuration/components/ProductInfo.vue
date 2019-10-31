@@ -376,8 +376,8 @@ export default {
           } else {
             for (const key in StaffLevelEnum) {
               this.$set(this.productConfig.blueNotJointMoney, key, data.normalIncomeConfig[key])
+              this.$set(this.productConfig.blueJointMoney, key, data.splicingIncomeConfig[key])
             }
-            this.productConfig.blueJointMoney = data.splicingIncomeConfig
           }
         }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
