@@ -219,11 +219,10 @@ export default {
      * @description 右击菜单
      */
     openMenu (tag, e) {
-      const menuMinWidth = 105
+      const menuMinWidth = 260
       const offsetWidth = this.$el.offsetWidth // container width
-      const maxLeft = offsetWidth - menuMinWidth // left boundary
+      const maxLeft = offsetWidth + menuMinWidth // left boundary
       const left = e.clientX + 15 // 15: margin right
-
       if (left > maxLeft) {
         this.left = maxLeft
       } else {
