@@ -151,24 +151,21 @@ export default {
         }
       }
     },
-    '$route.query': {
+    '$store.state.notification.returnStreamId': {
       handler: function (value) {
-        if (value && value.aid) {
-          this.aid = value.aid
+        if (value) {
           this.showDetail = true
         }
-      }
+      },
+      immediate: true
     }
   },
   created () {
-    console.log('create')
     this.hasInitialization = true
     this.initializeData()
-    this.hasReturn()
   },
   activated () {
-    if (!this.$route.query.aid) {
-      console.log('activated')
+    if (!this.$store.state.notification.returnStreamId) {
       !this.hasInitialization && (this.initializeData())
       this.hasInitialization = false
       this.showDetail = false
@@ -284,7 +281,6 @@ export default {
     initializeData () {
       this.$store.dispatch('setting/showLoading', this.routeName)
       this.aid = ''
-      console.log('initializeData')
       Promise.all([
         this.getSelfQuota(),
         this.getSelfBuffInfo(),
@@ -295,55 +291,6 @@ export default {
       }).finally(() => {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       })
-    },
-    /**
-     * @description 有退单
-     */
-    async hasReturn () {
-      try {
-        var data = await Retoucher.haveReworkStream()
-      } catch (error) {
-        setTimeout(() => {
-          this.hasReturn()
-        }, 3000)
-      }
-      if (data && !SessionTool.getReturnRetouchOrder(data)) {
-        this.$confirm('您有新的重修流水，未免影响沙漏时间请及时处理。', '', {
-          confirmButtonText: '现在处理',
-          cancelButtonText: '稍后处理',
-          type: 'warning',
-          closeOnPressEscape: false,
-          showCancelButton: false,
-          center: true
-        }).then(() => {
-          SessionTool.saveReturnRetouchOrder(data)
-          if (this.$route.name !== 'WaitRetoucher') {
-            this.$router.push({
-              path: '/retoucher-center',
-              query: { aid: data }
-            })
-          } else {
-            this.aid = data
-            this.showDetail = true
-          }
-        }).catch(() => {
-          SessionTool.saveReturnRetouchOrder(data)
-        }).finally(() => {
-          this.haveReworkStream()
-        })
-      } else {
-        this.haveReworkStream()
-      }
-    },
-    /**
-     * @description 是否有重修订单
-     */
-    haveReworkStream () {
-      clearTimeout(window.polling.haveRework)
-      window.polling.haveRework = null
-      window.polling.haveRework = setTimeout(() => {
-        this.hasReturn()
-      }, 3000)
     }
   }
 }

@@ -79,7 +79,6 @@ const actions = {
         SessionTool.setUserPermission(permissions)
         const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
         router.addRoutes(accessRoutes)
-        console.log(accessRoutes)
         resolve()
       } catch (error) {
         reject(error)

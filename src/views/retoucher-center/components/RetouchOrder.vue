@@ -177,7 +177,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['updateDomain']),
+    ...mapGetters(['updateDomain', 'returnStreamId']),
     scrollWrapper () {
       return this.$refs.scrollContainer.$refs.wrap
     },
@@ -205,9 +205,7 @@ export default {
     }
   },
   created () {
-    if (!this.aid) {
-      this.$emit('update:showDetail', false)
-    }
+    if (!this.aid && !this.returnStreamId) { this.$emit('update:showDetail', false) }
     this.getCachePhoto()
     this.getStreamInfo()
     this.getUpyunSign()
@@ -257,7 +255,7 @@ export default {
      */
     async getStreamInfo () {
       try {
-        const reqData = { streamId: this.aid }
+        const reqData = { streamId: this.returnStreamId || this.aid }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
@@ -271,7 +269,7 @@ export default {
         }
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
-        if (this.$route.query.aid) { delete this.$route.query.aid }
+        this.$store.commit('notification/CLEAR_RETURN_STREAM_ID')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

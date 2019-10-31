@@ -1,5 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import { toCapitalHump } from '@/utils/index.js'
+import store from '@/store'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -17,7 +18,6 @@ function hasPermission (roles, route) {
  */
 export function filterAsyncRoutes (routes, roles) {
   const res = []
-
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
@@ -59,6 +59,13 @@ const actions = {
           newRolesArr = [...newRolesArr, moduleName, menuName]
         }
       })
+
+      // 调试 激活重修订单开关
+      // if (newRolesArr.includes('')) {
+      //   store.dispatch('notification/hasReturnNotification')
+      // }
+      store.dispatch('notification/hasReturnNotification')
+
       newRolesArr = [...new Set(newRolesArr)]
       accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
       commit('SET_ROUTES', accessedRoutes)
