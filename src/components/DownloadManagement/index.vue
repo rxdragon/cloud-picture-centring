@@ -1,11 +1,11 @@
 <template>
   <div class="download-management">
     <el-popover
+      v-model="showManage"
       placement="bottom"
       width="600"
       trigger="click"
       @show="showList"
-      @hide="hiddenList"
     >
       <div class="down-list">
         <div class="title-row">
@@ -48,21 +48,14 @@ export default {
   data () {
     return {
       downList: [],
-      showMangage: false,
-      showProgressingNum: 0
+      showProgressingNum: 0,
+      showManage: false
     }
   },
   computed: {
     progressingNum () {
-      const dataLength = this.downList.length
-      if (this.showMangage) {
-        this.showProgressingNum = dataLength - this.downingList
-      }
+      this.showList()
       return this.showProgressingNum
-    },
-    downingList () {
-      const data = this.downList.filter(downItem => downItem.state !== 'progressing')
-      return data.length
     }
   },
   created () {
@@ -76,7 +69,7 @@ export default {
       this.updateItem(item)
     })
     this.$ipcRenderer.on('download-item-done', (e, item) => {
-      this.updateItem(item)
+      this.downedItem(item)
     })
     this.$ipcRenderer.on('lose-down-item', (e, index) => {
       this.downList.splice(index, 1)
@@ -86,23 +79,24 @@ export default {
     /**
      * @description 显示列表
      */
-    showList() {
-      this.showMangage = true
-    },
-    /**
-     * @description 隐藏列表
-     */
-    hiddenList() {
-      this.showMangage = false
+    showList () {
+      const dataLength = this.downList.length
+      const downingList = this.downList.filter(downItem => downItem.state !== 'progressing')
+      if (this.showManage) {
+        this.showProgressingNum = dataLength - downingList.length
+      }
     },
     /**
      * @description 添加项目
      */
     async addItem (item) {
       item.iconSrc = await getFileIcon(item.savePath)
-      this.downList = [item, ...this.downList]
-      SessionTool.setCacheDownloadList(this.downList)
-      this.showProgressingNum++
+      const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
+      if (findIndex < 0) {
+        this.downList = [item, ...this.downList]
+        SessionTool.setCacheDownloadList(this.downList)
+        this.showProgressingNum++
+      }
     },
     /**
      * @description 更新下载项
@@ -110,7 +104,18 @@ export default {
     async updateItem (item) {
       item.iconSrc = await getFileIcon(item.savePath)
       const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
-      if (findIndex < 0) return this.updateItem(item)
+      if (findIndex < 0) return
+      if (this.downList[findIndex].state === 'completed') return
+      this.$set(this.downList, findIndex, item)
+      SessionTool.setCacheDownloadList(this.downList)
+    },
+    /**
+     * @description 完成下载项
+     */
+    async downedItem (item) {
+      item.iconSrc = await getFileIcon(item.savePath)
+      const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
+      if (findIndex < 0) return this.addItem(item)
       this.$set(this.downList, findIndex, item)
       SessionTool.setCacheDownloadList(this.downList)
     },
