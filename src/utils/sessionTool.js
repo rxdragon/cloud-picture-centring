@@ -51,28 +51,6 @@ export function getUserPermission () {
 }
 
 /**
- * @description 存储用户路由
- * @param {*} permission
- */
-export function setUserRoutes (routes) {
-  const data = JSON.stringify(routes)
-  sessionStorage.setItem('userRoutes', data)
-}
-
-/**
- * @description
- * @param {*} code 获取用户路由
- */
-export function getUserRoutes () {
-  try {
-    const data = sessionStorage.getItem('userRoutes')
-    return JSON.parse(data)
-  } catch (error) {
-    return null
-  }
-}
-
-/**
  * @description 设置沙漏过期时间
  * @param {*} time
  */

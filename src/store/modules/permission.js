@@ -1,6 +1,5 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import { toCapitalHump } from '@/utils/index.js'
-import * as SessionTool from '@/utils/sessionTool.js'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -48,22 +47,19 @@ const actions = {
   // 判断动态路由
   generateRoutes ({ commit }, roles) {
     return new Promise(resolve => {
-      let accessedRoutes = SessionTool.getUserRoutes() || []
-      if (!accessedRoutes.length) {
-        const newRoles = [...roles.base_auth, ...roles.login_auth]
-        let newRolesArr = []
-        newRoles.forEach(roleItem => {
-          if (roleItem.name) {
-            const nameArr = roleItem.name.split('.')
-            const moduleName = toCapitalHump(nameArr[0])
-            const menuName = toCapitalHump(nameArr[1])
-            newRolesArr = [...newRolesArr, moduleName, menuName]
-          }
-        })
-        newRolesArr = [...new Set(newRolesArr)]
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
-        SessionTool.setUserRoutes(accessedRoutes)
-      }
+      let accessedRoutes = []
+      const newRoles = [...roles.base_auth, ...roles.login_auth]
+      let newRolesArr = []
+      newRoles.forEach(roleItem => {
+        if (roleItem.name) {
+          const nameArr = roleItem.name.split('.')
+          const moduleName = toCapitalHump(nameArr[0])
+          const menuName = toCapitalHump(nameArr[1])
+          newRolesArr = [...newRolesArr, moduleName, menuName]
+        }
+      })
+      newRolesArr = [...new Set(newRolesArr)]
+      accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
