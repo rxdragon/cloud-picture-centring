@@ -3,6 +3,7 @@ import Layout from '@/layout'
 const accountManage = {
   path: '/account-manage',
   component: Layout,
+  name: 'AccountManage',
   redirect: '/account-manage/account-config',
   meta: { title: '账号管理', icon: 'iconfont iconstaff' },
   children: [

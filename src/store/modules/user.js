@@ -41,46 +41,48 @@ const mutations = {
 const actions = {
   // 用户名登录
   login ({ commit }, key) {
-    return new Promise((resolve, reject) => {
-      UserAction.login({ token: key })
-        .then(async token => {
-          commit('SET_TOKEN', token)
-          await UserAction.userExpire()
-          SessionTool.setXStreamId(token)
-          resolve()
-        })
-        .catch(err => {
-          reject(err)
-        })
+    return new Promise(async (resolve, reject) => {
+      try {
+        const token = await UserAction.login({ token: key })
+        commit('SET_TOKEN', token)
+        await UserAction.userExpire()
+        SessionTool.setXStreamId(token)
+        resolve()
+      } catch (err) {
+        reject(err)
+      }
     })
   },
   // 获取用户信息
   getUserInfo ({ commit, dispatch, getters }) {
-    return new Promise((resolve, reject) => {
-      const saveInfo = SessionTool.getUserInfo()
-      if (saveInfo) {
-        commit('SET_USERINFO', saveInfo)
-        store.dispatch('permission/generateRoutes', '')
-          .then((data) => {
-            const accessRoutes = data
-            router.addRoutes(accessRoutes)
-            resolve(saveInfo)
-          })
-      } else {
-        UserAction.info()
-          .then(info => {
-            SessionTool.setUserInfo(info)
-            commit('SET_USERINFO', info)
-            store.dispatch('permission/generateRoutes', '')
-              .then((data) => {
-                const accessRoutes = data
-                router.addRoutes(accessRoutes)
-                resolve(info)
-              })
-          })
-          .catch(err => {
-            reject(err)
-          })
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log('getUserInfo')
+        const saveInfo = SessionTool.getUserInfo()
+        const info = saveInfo || await UserAction.info()
+        SessionTool.setUserInfo(info)
+        commit('SET_USERINFO', info)
+        await store.dispatch('user/getUserPermission', info.id)
+        resolve(info)
+      } catch (error) {
+        reject(error)
+      }
+    })
+  },
+  // 获取用户权限
+  getUserPermission ({ commit, dispatch, getters }, staffNum) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const savePermission = SessionTool.getUserPermission()
+        const req = { staffNum }
+        const permissions = savePermission || await UserAction.getStaffPermission(req)
+        SessionTool.setUserPermission(permissions)
+        const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
+        router.addRoutes(accessRoutes)
+        console.log(router)
+        resolve()
+      } catch (error) {
+        reject(error)
       }
     })
   }

@@ -24,6 +24,17 @@ export function info () {
 }
 
 /**
+ * @description 获取伙伴权限
+ */
+export function getStaffPermission (params) {
+  return axios({
+    url: '/project_cloud/staff/getStaffPermission',
+    method: 'GET',
+    params
+  })
+}
+
+/**
  * @description 判断缓存是否过期
  */
 export function userExpire () {

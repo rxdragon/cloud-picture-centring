@@ -2,10 +2,7 @@
  * @description 清除session缓存
  */
 export function removeSession () {
-  sessionStorage.removeItem('sso-token')
-  sessionStorage.removeItem('userInfo')
-  sessionStorage.removeItem('xStreamIdExpireTime')
-  sessionStorage.removeItem('xStreamId')
+  sessionStorage.clear()
   localStorage.clear()
 }
 
@@ -25,6 +22,50 @@ export function setUserInfo (info) {
 export function getUserInfo (code) {
   try {
     const data = sessionStorage.getItem('userInfo')
+    return JSON.parse(data)
+  } catch (error) {
+    return null
+  }
+}
+
+/**
+ * @description 存储用户权限
+ * @param {*} permission
+ */
+export function setUserPermission (permission) {
+  const data = JSON.stringify(permission)
+  sessionStorage.setItem('userPermission', data)
+}
+
+/**
+ * @description
+ * @param {*} code 获取用户权限
+ */
+export function getUserPermission () {
+  try {
+    const data = sessionStorage.getItem('userPermission')
+    return JSON.parse(data)
+  } catch (error) {
+    return null
+  }
+}
+
+/**
+ * @description 存储用户路由
+ * @param {*} permission
+ */
+export function setUserRoutes (routes) {
+  const data = JSON.stringify(routes)
+  sessionStorage.setItem('userRoutes', data)
+}
+
+/**
+ * @description
+ * @param {*} code 获取用户路由
+ */
+export function getUserRoutes () {
+  try {
+    const data = sessionStorage.getItem('userRoutes')
     return JSON.parse(data)
   } catch (error) {
     return null

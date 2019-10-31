@@ -5,6 +5,7 @@ import Layout from '@/layout'
 const personalCenterRetoucherLeader = {
   path: '/personal-center-retoucher-leader',
   component: Layout,
+  name: 'PersonalCenterRetoucherLeader',
   redirect: '/personal-center-retoucher-leader/work-management',
   meta: { title: '个人中心（组长）', icon: 'iconfont iconFullstaffing' },
   children: [

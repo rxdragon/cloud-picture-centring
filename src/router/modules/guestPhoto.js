@@ -3,6 +3,7 @@ import Layout from '@/layout'
 const guestPhoto = {
   path: '/guest-photo',
   component: Layout,
+  name: 'GuestPhoto',
   redirect: '/guest-photo/index',
   meta: { title: '客片池', icon: 'el-icon-picture-outline-round' },
   children: [

@@ -3,6 +3,7 @@ import Layout from '@/layout'
 const adminConfiguration = {
   path: '/admin-configuration',
   component: Layout,
+  name: 'AdminConfiguration',
   redirect: '/admin-configuration/experience-config',
   meta: { title: '云端运营配置', icon: 'iconfont iconclassification' },
   children: [
