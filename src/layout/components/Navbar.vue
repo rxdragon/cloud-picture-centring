@@ -139,8 +139,10 @@ export default {
       width: calc(~'100% - @{nav-left} - @{nav-right}');
       text-align: center;
       line-height: @navbarHeight;
-      -webkit-app-region: drag;
       height: 100%;
+      cursor: pointer;
+      -webkit-app-region: drag;
+      -webkit-user-select: none;
     }
   }
 }

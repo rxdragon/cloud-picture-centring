@@ -279,6 +279,7 @@ export default {
         background: #E4E7ED;
         padding: 0 20px;
         font-size: 12px;
+        -webkit-user-select: none;
       }
 
       &:first-of-type {

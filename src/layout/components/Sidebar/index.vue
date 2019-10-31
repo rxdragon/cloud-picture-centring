@@ -55,11 +55,9 @@ export default {
   },
   methods: {
     activeCat () {
-      console.log(new Date().getTime())
       const time = 4 * 1000
       if (this.showCatCounts === 0) { this.expireTime = new Date().getTime() + time }
       this.showCatCounts++
-      console.log(this.showCatCounts)
       if (this.showCatCounts === 7) {
         const nowTime = new Date().getTime()
         if (nowTime < this.expireTime) {
