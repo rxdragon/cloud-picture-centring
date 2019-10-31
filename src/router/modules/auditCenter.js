@@ -19,7 +19,7 @@ const auditCenter = {
       path: 'audit-history',
       name: 'AuditHistory',
       component: () => import('@/views/audit-center/audit-history.vue'),
-      meta: { title: '审核历史记录', icon: '' }
+      meta: { title: '审核历史记录', icon: '', noCache: true }
     }
   ]
 }

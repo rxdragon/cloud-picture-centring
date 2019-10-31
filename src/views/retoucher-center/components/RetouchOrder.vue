@@ -310,6 +310,11 @@ export default {
     beforeUpload (file) {
       this.$store.dispatch('setting/showLoading', this.routeName)
       const name = PhotoTool.fileNameFormat(file.name)
+      if (name.includes('.')) {
+        this.$newMessage.warning('请正确命名照片名！')
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        return false
+      }
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const allFinishPhoto = [...this.cachePhoto, ...this.finishPhoto]

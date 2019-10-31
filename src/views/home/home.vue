@@ -37,12 +37,11 @@ export default {
   }
 }
 </script>
-<style src="./home.less" lang="less"></style>
-
 <style lang="less" scoped>
+@import "~@/styles/variables.less";
 .home {
   position: relative;
-  height: 100%;
+  height: @homeHeight;
 
   .logo-tip {
     width: min-content;
