@@ -10,10 +10,34 @@ export default {
   name: 'PaintedEggshell',
   data () {
     return {
-      configs: {
+      modelObj: {
+        whiteCat: 'live2dw/live2d-widget-model-tororo/assets/tororo.model.json',
+        blackCat: 'live2dw/live2d-widget-model-hijiki/assets/hijiki.model.json',
+        dog: 'live2dw/live2d-widget-model-wanko/assets/wanko.model.json'
+      }
+    }
+  },
+  mounted () {
+    this.showModel()
+  },
+  methods: {
+    /**
+     * @description 展示模型
+     */
+    showModel () {
+      const modelArr = ['whiteCat', 'blackCat', 'dog']
+      const randomKey = new Date().getTime() % 3
+      const dir = this.modelObj[modelArr[randomKey]]
+      L2Dwidget.init(this.getOptions(dir))
+    },
+    /**
+     * @dedescription 获取参数
+     */
+    getOptions (dir) {
+      dir = dir || 'live2dw/live2d-widget-model-tororo/assets/tororo.model.json'
+      return {
         tagMode: false,
-        debug: false,
-        model: { jsonPath: 'live2dw/live2d-widget-model-tororo/assets/tororo.model.json' },
+        model: { jsonPath: dir },
         display: {
           position: 'right',
           width: 280,
@@ -24,11 +48,7 @@ export default {
         log: false
       }
     }
-  },
-  mounted () {
-    L2Dwidget.init(this.configs)
-  },
-  methods: {}
+  }
 }
 </script>
 
