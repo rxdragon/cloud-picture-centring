@@ -53,6 +53,7 @@ const actions = {
       newRoles.forEach(roleItem => {
         if (roleItem.name) {
           const nameArr = roleItem.name.split('.')
+          if (nameArr.length !== 3) return
           const moduleName = toCapitalHump(nameArr[0])
           const menuName = toCapitalHump(nameArr[1])
           newRolesArr = [...newRolesArr, moduleName, menuName]
