@@ -32,7 +32,7 @@
       </div>
     </div>
     <!-- 审核信息 -->
-    <div v-if="photoInfoData.showCheckInfo" class="panel-info check-info">
+    <div class="panel-info check-info">
       <div class="panel-title">审核信息</div>
       <div class="panel-content">
         <div v-if="photoInfoData.reworkReason" class="retouch-remark panel-row">
@@ -115,7 +115,7 @@
     </div>
     <!-- 成片评价 -->
     <div class="panel-info flakiness-info">
-      <div v-if="!isGrade || photoInfoData.isReturn" class="panel-title">成片评价</div>
+      <div v-if="!isGrade || photoInfoData.isReturn || isGreen" class="panel-title">成片评价</div>
       <template v-if="isGrade && (photoInfoData.isReturn || isGreen)">
         <div class="radio-box">
           <el-radio v-model="flakinessEvaluate" label="plant">种草</el-radio>

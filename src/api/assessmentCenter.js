@@ -78,6 +78,7 @@ export function getSpotCheckResult (params) {
         item.photoData.stream.tags &&
         item.photoData.stream.tags.statics &&
         item.photoData.stream.tags.statics.includes('green_stream') || false
+      console.log(item.isGreen)
       const retouchRequire = {
         eye: '暂无',
         face: '暂无',
