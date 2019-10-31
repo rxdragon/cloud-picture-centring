@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start() // 读取进度条
   document.title = getPageTitle(to.meta.title)
   const hasXStreamId = getXStreamId() // 获取token
-
+  console.log(to.path)
   // 没有过期时的操作
   async function noExpire () {
     if (to.path === '/login') {
@@ -25,7 +25,6 @@ router.beforeEach(async (to, from, next) => {
       if (nickname) {
         next()
       } else {
-        console.log(1)
         await store.dispatch('user/getUserInfo')
         next({ ...to, replace: true })
       }
