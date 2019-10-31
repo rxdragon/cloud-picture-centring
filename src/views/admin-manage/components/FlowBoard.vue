@@ -1,5 +1,5 @@
 <template>
-  <div v-if="flowInfo" class="flow-board" @click="closeFlow">
+  <div class="flow-board" @click="closeFlow">
     <div class="title">云端流量看板</div>
     <div class="refresh">{{ time }}s后刷新</div>
     <div class="main">
@@ -123,7 +123,54 @@ export default {
   name: 'FlowBoard',
   data () {
     return {
-      flowInfo: null,
+      flowInfo: {
+        retouchingPersonNum: 0,
+        outerRetouchingPersonNum: 0,
+        waitRetouch: {
+          streamNum: {
+            today: 0,
+            other: 0
+          },
+          photoNum: {
+            today: 0,
+            other: 0
+          },
+          photos: []
+        },
+        cloudRetouching: {
+          streamNum: {
+            retouching: 0,
+            reworking: 0
+          },
+          photoNum: {
+            retouching: 0,
+            reworking: 0
+          },
+          photos: []
+        },
+        outerRetouching: {
+          streamNum: {
+            retouching: 0,
+            reworking: 0
+          },
+          photoNum: {
+            retouching: 0,
+            reworking: 0
+          },
+          photos: []
+        },
+        review: {
+          streamNum: {
+            wait_review: 0,
+            reviewing: 0
+          },
+          photoNum: {
+            wait_review: 0,
+            reviewing: 0
+          },
+          photos: []
+        }
+      },
       time: 30,
       timer: -1
     }
@@ -142,6 +189,8 @@ export default {
   },
   beforeDestroy () {
     clearInterval(this.timer)
+    console.log(1)
+    this.timer = null
   },
   methods: {
     closeFlow () {
