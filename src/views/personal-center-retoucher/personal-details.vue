@@ -66,19 +66,19 @@
         </div>
         <div class="panel-main">
           <div class="main-content">
-            <span class="num plant-color">{{ gradeInfo.nearly30DaysPlantNum }}<i>.{{ gradeInfo.nearly30DaysPlantNum | getPoint }}</i></span>
+            <span class="num plant-color">{{ gradeInfo.nearly30DaysPlantNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPlantNum | getPoint }}</i></span>
             <span>近30日种草</span>
           </div>
           <div class="main-content">
-            <span class="num pull-color">{{ gradeInfo.nearly30DaysPullNum }}<i>.{{ gradeInfo.nearly30DaysPullNum | getPoint }}</i></span>
+            <span class="num pull-color">{{ gradeInfo.nearly30DaysPullNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPullNum | getPoint }}</i></span>
             <span>近30日拔草</span>
           </div>
           <div class="main-content">
-            <span class="num">{{ gradeInfo.exp }}<i>.{{ gradeInfo.exp | getPoint }}</i></span>
+            <span class="num">{{ gradeInfo.exp | getInteger }}<i>.{{ gradeInfo.exp | getPoint }}</i></span>
             <span>历史海草数</span>
           </div>
           <div class="main-content">
-            <span class="num">{{ gradeInfo.needLevelUpExp }}<i>.{{ gradeInfo.needLevelUpExp | getPoint }}</i></span>
+            <span class="num">{{ gradeInfo.needLevelUpExp | getInteger }}<i>.{{ gradeInfo.needLevelUpExp | getPoint }}</i></span>
             <span>达标海草数</span>
           </div>
         </div>
@@ -184,12 +184,19 @@ export default {
   name: 'PersonalDetails',
   components: { ListTable, DatePicker },
   filters: {
+    // 获取小数
     getPoint (value) {
       if (!value) return '00'
       const num = Number(value).toFixed(2)
       const pointIndex = num.indexOf('.')
       const result = num.substring(pointIndex + 1, pointIndex + 3)
       return result
+    },
+    // 获取整数
+    getInteger (value) {
+      if (!Number(value)) return '0'
+      const result = Number(value)
+      return Math.floor(result)
     }
   },
   data () {

@@ -4,6 +4,8 @@
       placement="bottom"
       width="600"
       trigger="click"
+      @show="showList"
+      @hide="hiddenList"
     >
       <div class="down-list">
         <div class="title-row">
@@ -45,12 +47,21 @@ export default {
   components: { DownListItem },
   data () {
     return {
-      downList: []
+      downList: [],
+      showMangage: false,
+      showProgressingNum: 0
     }
   },
   computed: {
     progressingNum () {
-      const data = this.downList.filter(downItem => downItem.state === 'progressing')
+      const dataLength = this.downList.length
+      if (this.showMangage) {
+        this.showProgressingNum = dataLength - this.downingList
+      }
+      return this.showProgressingNum
+    },
+    downingList () {
+      const data = this.downList.filter(downItem => downItem.state !== 'progressing')
       return data.length
     }
   },
@@ -73,12 +84,25 @@ export default {
   },
   methods: {
     /**
+     * @description 显示列表
+     */
+    showList() {
+      this.showMangage = true
+    },
+    /**
+     * @description 隐藏列表
+     */
+    hiddenList() {
+      this.showMangage = false
+    },
+    /**
      * @description 添加项目
      */
     async addItem (item) {
       item.iconSrc = await getFileIcon(item.savePath)
       this.downList = [item, ...this.downList]
       SessionTool.setCacheDownloadList(this.downList)
+      this.showProgressingNum++
     },
     /**
      * @description 更新下载项
@@ -86,6 +110,7 @@ export default {
     async updateItem (item) {
       item.iconSrc = await getFileIcon(item.savePath)
       const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
+      if (findIndex < 0) return this.updateItem(item)
       this.$set(this.downList, findIndex, item)
       SessionTool.setCacheDownloadList(this.downList)
     },

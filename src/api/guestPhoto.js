@@ -13,8 +13,8 @@ export function getPhotoList (params) {
     data: params
   }).then(msg => {
     msg.list && msg.list.forEach(listItem => {
-      const originalPhoto = listItem.other_photo_version.find(item => item.version === 'original_photo')
-      listItem.src = originalPhoto && originalPhoto.path || ''
+      const completePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
+      listItem.src = completePhoto && completePhoto.path || ''
     })
     return msg
   })

@@ -46,6 +46,7 @@ export function getRankInfo () {
     createData.nearly30DaysPullRate = Math.floor(createData.nearly30DaysPullRate * 100)
     createData.needLevelUpPhotoPlantRate = Math.floor(createData.needLevelUpPhotoPlantRate * 100)
     createData.needLevelUpPhotoPullRate = Math.floor(createData.needLevelUpPhotoPullRate * 100)
+    console.log(createData)
     return createData
   })
 }

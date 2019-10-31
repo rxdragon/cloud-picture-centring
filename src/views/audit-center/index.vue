@@ -241,6 +241,9 @@ export default {
         this.getReviewQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
+        if (error === '存在在审流水') {
+          this.getReviewInfo()
+        }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }

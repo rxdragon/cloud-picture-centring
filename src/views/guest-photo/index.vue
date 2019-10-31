@@ -183,10 +183,6 @@ export default {
       }
     }
 
-    .staff-box {
-
-    }
-
     .check-evaluate {
       &>span {
         width: 84px;
