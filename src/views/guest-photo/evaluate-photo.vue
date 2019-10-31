@@ -1,7 +1,7 @@
 <template>
   <div class="evaluate-photo">
     <div class="header">
-      <h3>{{ $route.name === 'IssuePhoto' ? '问题池' : '优秀客片' }}</h3>
+      <h3>{{ $route.name === 'IssuePhoto' ? '问题客片' : '优秀客片' }}</h3>
     </div>
     <div class="search-box">
       <div class="search-item">
