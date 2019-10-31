@@ -374,14 +374,16 @@ export default {
             this.productConfig.notJointMoney = data.normalIncomeConfig
             this.productConfig.jointMoney = data.splicingIncomeConfig
           } else {
-            this.productConfig.blueNotJointMoney = data.normalIncomeConfig
+            for (const key in StaffLevelEnum) {
+              this.$set(this.productConfig.blueNotJointMoney, key, data.normalIncomeConfig[key])
+            }
             this.productConfig.blueJointMoney = data.splicingIncomeConfig
           }
         }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**

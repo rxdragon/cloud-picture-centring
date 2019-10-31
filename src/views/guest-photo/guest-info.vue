@@ -104,7 +104,7 @@ export default {
       orderNum: '-', // 订单号
       streamNum: '-', // 流水号
       productName: '-', // 产品名称
-      labelTag: {},
+      labelTag: {}, // 标签
       photographerRemark: '', // 摄影备注
       retouchMark: '', // 修图备注
       orderMark: '', // 订单备注
@@ -155,7 +155,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**
@@ -187,7 +187,7 @@ export default {
         this.getPhotoInfo()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     }
   }

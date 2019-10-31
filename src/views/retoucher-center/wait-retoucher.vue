@@ -196,7 +196,13 @@ export default {
      * @description 获取排队信息
      */
     async getStreamQueueInfo () {
-      this.queueInfo = await RetoucherCenter.getStreamQueueInfo()
+      try {
+        this.queueInfo = await RetoucherCenter.getStreamQueueInfo()
+      } catch (error) {
+        setTimeout(() => {
+          this.getStreamQueueInfo()
+        }, 3000)
+      }
       clearTimeout(window.polling.getQueue)
       window.polling.getQueue = null
       if (+this.queueInfo.retouchStreamId && !SessionTool.getSureRetouchOrder(this.queueInfo.retouchStreamId)) {
@@ -245,7 +251,7 @@ export default {
         }).catch(() => {})
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**
@@ -260,7 +266,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     },
     /**
@@ -284,7 +290,13 @@ export default {
      * @description 有退单
      */
     async hasReturn () {
-      const data = await Retoucher.haveReworkStream()
+      try {
+        var data = await Retoucher.haveReworkStream()
+      } catch (error) {
+        setTimeout(() => {
+          this.hasReturn()
+        }, 3000)
+      }
       if (data && !SessionTool.getReturnRetouchOrder(data)) {
         this.$confirm('您有新的重修流水，未免影响沙漏时间请及时处理。', '', {
           confirmButtonText: '现在处理',

@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump } from '../utils'
+import { settlePhoto } from '../utils/photoTool.js'
 
 /**
  * @description 获取客片列表
@@ -12,8 +13,8 @@ export function getPhotoList (params) {
     data: params
   }).then(msg => {
     msg.list && msg.list.forEach(listItem => {
-      const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
-      listItem.src = findCompletePhoto && findCompletePhoto.path || ''
+      const originalPhoto = listItem.other_photo_version.find(item => item.version === 'original_photo')
+      listItem.src = originalPhoto && originalPhoto.path || ''
     })
     return msg
   })
@@ -38,6 +39,17 @@ export function getPhotoInfo (params) {
     createData.dresserMark = createData.stream.order.note.dresserNote || '-'
     createData.photographerRemark = createData.stream.note && createData.stream.note.photography_note || '-'
     createData.retouchMark = createData.stream.note && createData.stream.note.retouch_note || '-'
+    createData.isPass = Boolean(createData.stream.pass_at)
+    if (createData.isPass) {
+      const reworkNum = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.rework_num || 0
+      const isReturnPhoto = createData.tags && createData.tags.statics && createData.tags.statics.includes('return_photo')
+      createData.photoVersion = createData.lastFirstPhoto && isReturnPhoto
+        ? settlePhoto([...createData.otherPhotoVersion, createData.lastFirstPhoto], reworkNum)
+        : settlePhoto([...createData.otherPhotoVersion], reworkNum)
+    } else {
+      const originPhoto = createData.otherPhotoVersion.find(item => item.version === 'original_photo')
+      createData.photoVersion = [originPhoto]
+    }
     createData.workerInfo = {
       storeName: createData.stream.order.tags.values.store_name,
       photographer: createData.stream.order.tags.values.photographer,

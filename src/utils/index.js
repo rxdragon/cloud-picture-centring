@@ -165,6 +165,8 @@ export function keyToHump (object) {
  * @param {*} value
  */
 export function transformPercentage (a, b) {
+  a = Number(a)
+  b = Number(b)
   if (!a || !b) return '0%'
   const num = a / b * 100
   return num.toFixed(2) + '%'

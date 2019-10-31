@@ -174,7 +174,7 @@ export default {
         this.tableData = data.groups
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        throw new Error(error)
+        console.error(error)
       }
     }
   }

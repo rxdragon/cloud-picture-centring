@@ -113,6 +113,9 @@ export default {
       deep: true
     }
   },
+  activated () {
+    this.gradeType = 0
+  },
   methods: {
     /**
      * @description 点赞
