@@ -173,7 +173,8 @@ export default {
       }, // 目标沙漏时间
       overTime: 0, // 超时时间
       sandTime: 0, // 沙漏时间
-      sandClass: '' // 沙漏样式
+      sandClass: '', // 沙漏样式
+      realAid: ''
     }
   },
   computed: {
@@ -206,6 +207,7 @@ export default {
   },
   created () {
     if (!this.aid && !this.returnStreamId) { this.$emit('update:showDetail', false) }
+    this.realAid = this.returnStreamId || this.aid
     this.getCachePhoto()
     this.getStreamInfo()
     this.getUpyunSign()
@@ -228,18 +230,18 @@ export default {
      * @description 获取缓存照片
      */
     getCachePhoto () {
-      const data = SessionTool.getUpdatePhoto(this.aid)
+      const data = SessionTool.getUpdatePhoto(this.realAid)
       this.cachePhoto = data
     },
     /**
      * @description 挂起订单
      */
     hangUp () {
-      const reqData = { streamId: this.aid }
+      const reqData = { streamId: this.realAid }
       RetoucherCenter.hangStream(reqData)
         .then(msg => {
           const saveData = [...this.cachePhoto, ...this.finishPhoto]
-          SessionTool.saveUpdatePhoto(this.aid, saveData)
+          SessionTool.saveUpdatePhoto(this.realAid, saveData)
           this.$newMessage.success('流水挂起成功，不要忘记处理哦～')
           this.$emit('update:showDetail', false)
         })
@@ -255,7 +257,7 @@ export default {
      */
     async getStreamInfo () {
       try {
-        const reqData = { streamId: this.returnStreamId || this.aid }
+        const reqData = { streamId: this.realAid }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
@@ -417,15 +419,15 @@ export default {
         return this.$newMessage.warning('请检查照片上传张数后再提交审核。')
       }
       const reqData = {
-        streamId: this.aid,
+        streamId: this.realAid,
         photoData: uploadData
       }
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         await RetoucherCenter.submitStream(reqData)
-        SessionTool.removeUpdatePhoto(this.aid)
-        SessionTool.removeSureRetouchOrder(this.aid)
-        SessionTool.removeReturnRetouchOrder(this.aid)
+        SessionTool.removeUpdatePhoto(this.realAid)
+        SessionTool.removeSureRetouchOrder(this.realAid)
+        SessionTool.removeReturnRetouchOrder(this.realAid)
         this.$newMessage.success('提交审核成功。')
         this.$emit('update:showDetail', false)
       } catch (error) {

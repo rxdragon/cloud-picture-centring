@@ -29,7 +29,7 @@ const actions = {
       try {
         data = await Retoucher.haveReworkStream()
       } catch (error) {
-        store.dispatch('notification/hasReturnNotification')
+        store.dispatch('notification/pollingHasReturn')
       }
       if (data && !SessionTool.getReturnRetouchOrder(data)) {
         MessageBox.confirm('您有新的重修流水，未免影响沙漏时间请及时处理。', '', {
