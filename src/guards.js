@@ -22,7 +22,6 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done()
     } else {
       const nickname = store.getters.nickname
-      console.log(nickname, 'nickname')
       if (nickname) {
         next()
       } else {

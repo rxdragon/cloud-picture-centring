@@ -9,7 +9,7 @@
     "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
     "build-asar": "yarn build && yarn build-background && yarn pack-vue",
     "serve": "vue-cli-service serve --mode development",
-    "serve-staging": "vue-cli-service serve --mode staging",
+    "serve-staging": "vue-cli-se、rvice serve --mode staging",
     "build-dev": "vue-cli-service build --mode development --dest=dist_vue",
     "lint": "vue-cli-service lint",
     "eserve": "vue-cli-service electron:serve",
