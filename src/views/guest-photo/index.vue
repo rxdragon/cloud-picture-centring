@@ -197,7 +197,6 @@ export default {
   .search-data {
     margin-top: 0;
     display: flex;
-    padding-bottom: 0;
     justify-content: space-between;
     flex-wrap: wrap;
 
@@ -216,7 +215,7 @@ export default {
     }
 
     .no-data {
-      margin-bottom: 24px;
+      margin-bottom: 0;
     }
   }
 }
