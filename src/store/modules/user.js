@@ -2,6 +2,7 @@ import * as UserAction from '@/api/user'
 import * as SessionTool from '@/utils/sessionTool.js'
 import store from '@/store'
 import router from '@/router'
+import { resetRouter } from '@/router'
 
 const state = {
   token: '',
@@ -78,6 +79,7 @@ const actions = {
         const permissions = savePermission || await UserAction.getStaffPermission(req)
         SessionTool.setUserPermission(permissions)
         const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
+        resetRouter()
         router.addRoutes(accessRoutes)
         resolve()
       } catch (error) {

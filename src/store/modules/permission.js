@@ -59,13 +59,9 @@ const actions = {
           newRolesArr = [...newRolesArr, moduleName, menuName]
         }
       })
-
-      // 调试 激活重修订单开关
-      // if (newRolesArr.includes('')) {
-      //   store.dispatch('notification/hasReturnNotification')
-      // }
-      store.dispatch('notification/hasReturnNotification')
-
+      if (newRolesArr.includes('WaitRetoucher')) {
+        store.dispatch('notification/hasReturnNotification')
+      }
       newRolesArr = [...new Set(newRolesArr)]
       accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
       commit('SET_ROUTES', accessedRoutes)
