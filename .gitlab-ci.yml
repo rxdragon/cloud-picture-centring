@@ -68,7 +68,7 @@ deploy:
       - dist_electron
     expire_in: 1 day
   only:
-    - release*/
+    - /^release.*$/
 
 upload:
   image: registry.cn-hangzhou.aliyuncs.com/mainto_micro/service-minio-client-master
