@@ -11,7 +11,7 @@ export function getReviewInfo () {
     method: 'GET'
   }).then(msg => {
     if (!msg) return null
-    let createData = {}
+    const createData = {}
     createData.canGlass = true
     createData.isRework = false
     msg.photos.forEach(photoItem => {
@@ -33,28 +33,28 @@ export function getReviewInfo () {
         photoItem.canGlass = !photoItem.tags.statics.includes('plant') &&
           !photoItem.tags.statics.includes('pull') &&
           !photoItem.isRework
+        console.log(photoItem.canGlass)
         if (!photoItem.canGlass) { createData.canGlass = false }
       }
+      console.log(createData.canGlass)
       photoItem.glass = ''
       photoItem.grassReason = ''
       photoItem.reworkMark = false
       photoItem.reworkMarkReason = ''
     })
-    createData = {
-      streamId: msg.id,
-      streamNum: msg.stream_num,
-      type: msg.product && msg.product.retouch_standard || '-',
-      photographerName: msg.order.photographer_org && msg.order.photographer_org.name || '-',
-      photographer: msg.order.tags && msg.order.tags.values.photographer,
-      productName: msg.product && msg.product.name || '-',
-      photoNum: msg.photos.length,
-      waitTime: waitTime(msg.created_at),
-      retouchRemark: msg.note.retouch_note,
-      reviewerNote: msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注',
-      requireLabel: msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {},
-      streamState: msg.state,
-      photos: msg.photos
-    }
+    createData.streamId = msg.id
+    createData.streamNum = msg.stream_num
+    createData.type = msg.product && msg.product.retouch_standard || '-'
+    createData.photographerName = msg.order.photographer_org && msg.order.photographer_org.name || '-'
+    createData.photographer = msg.order.tags && msg.order.tags.values.photographer
+    createData.productName = msg.product && msg.product.name || '-'
+    createData.photoNum = msg.photos.length
+    createData.waitTime = waitTime(msg.created_at)
+    createData.retouchRemark = msg.note.retouch_note
+    createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
+    createData.requireLabel = msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {}
+    createData.streamState = msg.state
+    createData.photos = msg.photos
     return createData
   })
 }

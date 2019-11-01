@@ -140,6 +140,12 @@ export default {
     this.getTodayReviewQuota()
     this.getReviewQueueInfo()
   },
+  activated () {
+    if (!this.orderData) {
+      this.getTodayReviewQuota()
+      this.getReviewQueueInfo()
+    }
+  },
   methods: {
     /**
      * @description 一键下载修后成片
