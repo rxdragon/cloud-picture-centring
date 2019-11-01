@@ -3,16 +3,14 @@
     <div class="header">
       <h3>绿色免审通道</h3>
     </div>
-    <div class="module-panel">
-      <div class="staff-config search-item">
-        <span>配置伙伴</span>
-        <staff-panel
-          ref="staffPanel"
-          :default-checked-keys="defaultCheckedKeys"
-          :is-loading-down.sync="isLoadingDown"
-          :to-data.sync="toData"
-        />
-      </div>
+    <div class="module-panel staff-config">
+      <div class="panel-title">配置伙伴</div>
+      <staff-panel
+        ref="staffPanel"
+        :default-checked-keys="defaultCheckedKeys"
+        :is-loading-down.sync="isLoadingDown"
+        :to-data.sync="toData"
+      />
       <div class="button-box">
         <el-button type="primary" @click="saveGreenChannelInfo">确定</el-button>
       </div>
@@ -83,14 +81,15 @@ export default {
 
 <style lang="less">
 .green-aisle {
-  .search-item {
-    align-items: flex-start;
+  .staff-config {
+    .panel-title {
+      margin-bottom: 20px;
+    }
   }
 
   .button-box {
-    text-align: center;
-    margin: 20px;
-    width: 900px;
+    text-align: left;
+    margin: 20px 0;
   }
 }
 </style>

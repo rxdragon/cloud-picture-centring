@@ -74,8 +74,6 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
-@nav-left: 110px;
-@nav-right: 232px;
 .Navbar {
   width: 100%;
   height: 100%;
@@ -89,8 +87,6 @@ export default {
     align-items: center;
 
     .nav-left {
-      width: @nav-left;
-
       .icon-button {
         padding: 0;
         width: 24px;
@@ -103,7 +99,6 @@ export default {
     }
 
     .nav-right {
-      width: @nav-right;
       display: flex;
       align-items: center;
 
@@ -136,7 +131,6 @@ export default {
     }
 
     .nav-main {
-      width: calc(~'100% - @{nav-left} - @{nav-right}');
       text-align: center;
       line-height: @navbarHeight;
       height: 100%;

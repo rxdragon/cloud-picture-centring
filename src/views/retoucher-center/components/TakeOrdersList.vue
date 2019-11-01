@@ -1,7 +1,7 @@
 <template>
   <div class="take-orders-list">
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="streamNum" label="流水号" width="220">
+      <el-table-column prop="streamNum" label="流水号" min-width="220">
         <template slot-scope="scope">
           {{ scope.row.streamNum }}
           <el-tag v-if="scope.row.isCheckReturn" size="mini" type="danger">审核退回</el-tag>

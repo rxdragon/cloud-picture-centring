@@ -23,7 +23,7 @@
           <span>原片信息</span>
           <div class="button-box">
             <domain-switch-box />
-            <el-button type="primary" size="mini" @click="oneAllDownOrign">一键下载原片</el-button>
+            <el-button type="primary" size="small" @click="oneAllDownOrign">一键下载原片</el-button>
           </div>
         </div>
         <div class="photo-panel">
@@ -492,16 +492,6 @@ export default {
       .el-button {
         border-radius: 8px;
       }
-
-      .el-button--primary.is-plain {
-        background-color: transparent;
-
-        &:focus,
-        &:hover {
-          color: #4669FB;
-        }
-      }
-
     }
   }
 

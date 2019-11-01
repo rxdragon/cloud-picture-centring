@@ -29,10 +29,9 @@
         <p>{{ startTime }} ~ {{ endTime }}</p>
       </div>
       <div class="button-box">
-        <el-button type="info" @click="goBack">返 回</el-button>
+        <el-button type="primary" plain @click="goBack">返 回</el-button>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -120,7 +119,8 @@ export default {
   }
 
   .button-box {
-    text-align: center;
+    padding-left: 100px;
+    text-align: left;
   }
 }
 </style>

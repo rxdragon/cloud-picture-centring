@@ -11,8 +11,8 @@
             <span>沙漏当前状态：{{ sandClockValue ? '开启' : '关闭' }}</span>
             <el-switch
               v-model="sandClockValue"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
+              active-color="#4669fb"
+              inactive-color="#D4D4D9"
               @change="sandChange"
             />
           </div>

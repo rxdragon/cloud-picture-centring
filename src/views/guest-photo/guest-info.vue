@@ -222,7 +222,7 @@ export default {
     margin-bottom: 24px;
 
     .panel-title {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
   }
 

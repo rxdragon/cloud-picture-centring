@@ -20,7 +20,7 @@
       </el-form-item>
     </el-form>
     <div class="button-box">
-      <el-button type="info" @click="goBack">返回</el-button>
+      <el-button type="primary" plain @click="goBack">返回</el-button>
       <el-button type="primary" @click="saveSuggestWorkload">提交</el-button>
     </div>
   </div>

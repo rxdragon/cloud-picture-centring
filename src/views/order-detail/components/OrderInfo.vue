@@ -61,7 +61,7 @@
           <span class="title">修图备注：</span>
           <span class="content">{{ orderInfo.retouchRemark }}</span>
         </div>
-        <div class="panel-main-content">
+        <div class="panel-main-content panel-last-content">
           <span class="title">审核备注：</span>
           <span class="content">{{ orderInfo.reviewerNote }}</span>
         </div>
@@ -157,6 +157,11 @@ export default {
         .content {
           width: 632px;
         }
+      }
+
+      .panel-last-content {
+        padding-bottom: 0;
+        border: none;
       }
     }
   }

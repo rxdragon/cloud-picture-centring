@@ -53,7 +53,7 @@
         </el-popover>
       </div>
       <div class="button-box">
-        <el-button type="info" @click="goBack">返 回</el-button>
+        <el-button type="primary" plain @click="goBack">返 回</el-button>
         <el-button v-if="!editId" type="primary" @click="addHourGlass">确 认</el-button>
         <el-button v-else type="primary" @click="editHourGlass">确 认</el-button>
       </div>
@@ -246,7 +246,6 @@ export default {
 
   .search-item {
     margin-bottom: 24px;
-    width: 900px;
     align-items: flex-start;
 
     &>span {
@@ -277,8 +276,8 @@ export default {
   }
 
   .button-box {
-    text-align: center;
-    width: 880px;
+    text-align: left;
+    padding-left: 72px;
   }
 }
 </style>

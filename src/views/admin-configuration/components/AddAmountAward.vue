@@ -3,43 +3,45 @@
     <div class="header">
       <h3>新增冲量奖励</h3>
     </div>
-    <div class="award-title search-item">
-      <span>冲量标题</span>
-      <el-input v-model.trim="awardTitle" placeholder="请输入冲量标题" />
-    </div>
-    <div class="award-title search-item">
-      <span>外包机构</span>
-      <institution-select v-model="institutionId" multiple />
-    </div>
-    <div class="search-item">
-      <span>配置伙伴</span>
-      <staff-panel
-        :default-checked-keys="defaultCheckedKeys"
-        :to-data.sync="toData"
-      />
-    </div>
-    <div class="experience-box search-item">
-      <span>冲量奖励</span>
-      <div class="award-money">
-        <el-checkbox-group v-model="checkList">
-          <div v-for="(awardItem, awardIndex) in awardList" :key="awardIndex" class="check-box">
-            <el-checkbox :label="awardItem.id">
-              <span>当日海草值达到{{ awardItem.reach_exp }}</span>
-              <span>额外奖励¥{{ awardItem.reward }}</span>
-            </el-checkbox>
-            <el-button type="text" @click="deleteAward(awardItem.id)">删除</el-button>
-          </div>
-          <el-button type="primary" @click="addAwardItem">新增冲量奖励</el-button>
-        </el-checkbox-group>
+    <div class="module-panel">
+      <div class="award-title search-item">
+        <span>冲量标题</span>
+        <el-input v-model.trim="awardTitle" placeholder="请输入冲量标题" />
       </div>
-    </div>
-    <div class="search-item valid-time">
-      <span>有效日期</span>
-      <date-picker v-model="timeSpan" value-format="yyyy-MM-dd HH:mm:ss" future type="datetimerange" />
-    </div>
-    <div class="sure-button">
-      <el-button type="info" @click="goBack">返回</el-button>
-      <el-button type="primary" @click="onAddNewConfig">确认</el-button>
+      <div class="award-title search-item">
+        <span>外包机构</span>
+        <institution-select v-model="institutionId" multiple />
+      </div>
+      <div class="search-item">
+        <span>配置伙伴</span>
+        <staff-panel
+          :default-checked-keys="defaultCheckedKeys"
+          :to-data.sync="toData"
+        />
+      </div>
+      <div class="experience-box search-item">
+        <span>冲量奖励</span>
+        <div class="award-money">
+          <el-checkbox-group v-model="checkList">
+            <div v-for="(awardItem, awardIndex) in awardList" :key="awardIndex" class="check-box">
+              <el-checkbox :label="awardItem.id">
+                <span>当日海草值达到{{ awardItem.reach_exp }}</span>
+                <span>额外奖励¥{{ awardItem.reward }}</span>
+              </el-checkbox>
+              <el-button type="text" @click="deleteAward(awardItem.id)">删除</el-button>
+            </div>
+            <el-button type="primary" @click="addAwardItem">新增冲量奖励</el-button>
+          </el-checkbox-group>
+        </div>
+      </div>
+      <div class="search-item valid-time">
+        <span>有效日期</span>
+        <date-picker v-model="timeSpan" value-format="yyyy-MM-dd HH:mm:ss" future type="datetimerange" />
+      </div>
+      <div class="sure-button">
+        <el-button type="primary" plain @click="goBack">返回</el-button>
+        <el-button type="primary" @click="onAddNewConfig">确认</el-button>
+      </div>
     </div>
     <!-- 弹框 -->
     <el-dialog
@@ -260,7 +262,8 @@ export default {
 
   .sure-button {
     width: 880px;
-    text-align: center;
+    text-align: left;
+    padding-left: 82px;
   }
 
   .award-money {

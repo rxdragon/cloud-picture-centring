@@ -2,23 +2,23 @@
   <div class="edit-category">
     <div class="header">
       <h3>{{ editData ? '编辑修图类别' : '新增修图类型' }}</h3>
-      <el-button type="info" @click="toBack">返回</el-button>
+      <div class="submit-box">
+        <el-button type="primary" plain @click="toBack">返回</el-button>
+        <el-button v-if="isEdit" type="primary" @click="update">提交</el-button>
+        <el-button v-else type="primary" @click="add">提交</el-button>
+      </div>
     </div>
     <div class="category-name search-item">
       <span>修图类别名称</span>
       <el-input v-model="categoryName" v-maxLength16 placeholder="请输入修图类别名称" />
     </div>
-    <div class="product-box search-item">
-      <span>可接产品</span>
+    <div class="product-box module-panel">
+      <div class="panel-title">可接产品</div>
       <product-panel
         :default-checked-keys="defaultCheckedKeys"
         :is-loading-down.sync="isLoadingDown"
         :to-data.sync="toData"
       />
-    </div>
-    <div class="submit-box">
-      <el-button v-if="isEdit" type="primary" @click="update">提交</el-button>
-      <el-button v-else type="primary" @click="add">提交</el-button>
     </div>
   </div>
 </template>
@@ -146,10 +146,12 @@ export default {
   }
 
   .product-box {
-    align-items: flex-start;
+    .panel-title {
+      margin-bottom: 20px;
+    }
 
     .product-panel {
-      flex-basis: 800px;
+      width: 800px;
     }
   }
 
@@ -161,7 +163,6 @@ export default {
   }
 
   .submit-box {
-    margin-top: 24px;
     text-align: center;
   }
 }

@@ -71,15 +71,18 @@
       <!-- 订单列表 -->
       <div class="order-list">
         <el-tabs v-model="listActive">
-          <el-tab-pane :label="'接单中(' + retouchingListNum + ')'" name="retouching" />
-          <el-tab-pane :label="'已挂起(' + hangingListNum + ')'" name="hanging" />
+          <el-tab-pane :label="'接单中(' + retouchingListNum + ')'" name="retouching">
+            <div class="table-box" :class="{'no-border': listActive === 'retouching'}">
+              <take-orders-list :aid.sync="aid" :show-detail.sync="showDetail" :table-data="tableData" />
+            </div>
+          </el-tab-pane>
+          <el-tab-pane :label="'已挂起(' + hangingListNum + ')'" name="hanging">
+            <div class="table-box" :class="{'no-border': listActive === 'retouching'}">
+              <hang-up-list :aid.sync="aid" :show-detail.sync="showDetail" :table-data="tableData" />
+            </div>
+          </el-tab-pane>
         </el-tabs>
-        <div class="table-box" :class="{'no-border': listActive === 'retouching'}">
-          <transition name="fade-transform" mode="out-in">
-            <take-orders-list v-if="listActive === 'retouching'" :aid.sync="aid" :show-detail.sync="showDetail" :table-data="tableData" />
-            <hang-up-list v-else :aid.sync="aid" :show-detail.sync="showDetail" :table-data="tableData" />
-          </transition>
-        </div>
+
       </div>
     </div>
     <RetouchOrder v-else key="RetouchOrder" :show-detail.sync="showDetail" :aid="aid" />
@@ -446,6 +449,12 @@ export default {
     .el-progress-bar__inner {
       background: @gradualOrange;
     }
+  }
+}
+
+.order-list {
+  .el-tabs__content {
+    overflow: inherit;
   }
 }
 </style>
