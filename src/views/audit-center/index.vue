@@ -75,7 +75,6 @@
             resize="none"
           />
         </div>
-
       </div>
     </el-scrollbar>
   </div>
@@ -201,6 +200,7 @@ export default {
      */
     async getReviewInfo () {
       try {
+        this.resetData()
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.orderData = await Reviewer.getReviewInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -241,9 +241,7 @@ export default {
         this.getReviewQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        if (error === '存在在审流水') {
-          this.getReviewInfo()
-        }
+        if (error === '存在在审流水') { this.getReviewInfo() }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
@@ -287,7 +285,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.passStream(req)
         this.$newMessage.success('审核成功')
-        this.getTodayReviewQuota()
+        await this.getTodayReviewQuota()
         this.getReviewQueueInfo()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -334,11 +332,22 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.refuseStream(req)
         this.$newMessage.success('退回成功')
+        await this.getTodayReviewQuota()
         this.getReviewQueueInfo()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    /**
+     * @description 重置数据
+     */
+    async resetData () {
+      this.unbundle = false
+      this.orderData = null
+      this.reviewMark = ''
+      this.headerClass = ''
+      await this.getTodayReviewQuota()
     }
   }
 }
