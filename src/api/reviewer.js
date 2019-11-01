@@ -12,6 +12,8 @@ export function getReviewInfo () {
   }).then(msg => {
     if (!msg) return null
     let createData = {}
+    createData.canGlass = true
+    createData.isRework = false
     msg.photos.forEach(photoItem => {
       const findOrigianlPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
       photoItem.priviewPhotoData = [{
@@ -24,13 +26,14 @@ export function getReviewInfo () {
         version: 'first_photo'
       }]
       photoItem.isTemplate = photoItem.priviewPhotoData[0].path.includes('template')
-      photoItem.canGlass = true
       photoItem.isRework = false
       if (photoItem.tags && photoItem.tags.statics) {
         photoItem.isRework = photoItem.tags.statics.includes('return_photo')
+        createData.isRework = photoItem.isRework || createData.isRework
         photoItem.canGlass = !photoItem.tags.statics.includes('plant') &&
           !photoItem.tags.statics.includes('pull') &&
           !photoItem.isRework
+        if (!photoItem.canGlass) { createData.canGlass = false }
       }
       photoItem.glass = ''
       photoItem.grassReason = ''

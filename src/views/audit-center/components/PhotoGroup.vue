@@ -28,8 +28,8 @@
     </div>
     <div class="grade-box">
       <div class="button-list">
-        <el-button :disabled="!photos.canGlass" :icon="isPlant ? 'el-icon-check' : ''" type="success" size="small" :class="{'plant-class': isPlant}" :plain="!isPlant" @click="plantPhoto">种草</el-button>
-        <el-button :disabled="!photos.canGlass" :icon="isPull ? 'el-icon-check' : ''" type="danger" size="small" :plain="!isPull" @click="pullPhoto">拔草</el-button>
+        <el-button :disabled="!streamCanGlass" :icon="isPlant ? 'el-icon-check' : ''" type="success" size="small" :class="{'plant-class': isPlant}" :plain="!isPlant" @click="plantPhoto">种草</el-button>
+        <el-button :disabled="!streamCanGlass" :icon="isPull ? 'el-icon-check' : ''" type="danger" size="small" :plain="!isPull" @click="pullPhoto">拔草</el-button>
       </div>
       <div v-if="isPlant || isPull" class="reason-box">
         <el-input v-model="photos.grassReason" :placeholder="isPlant | toGlassPlaceholder" />
@@ -69,6 +69,7 @@ export default {
   props: {
     photos: { type: Object, required: true },
     upyunConfig: { type: Object, required: true },
+    streamCanGlass: { type: Boolean },
     streamNum: { type: String, default: '' } // 流水号
   },
   data () {

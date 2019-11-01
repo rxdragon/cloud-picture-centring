@@ -55,6 +55,7 @@
           v-for="(photoItem, photoIndex) in orderData.photos"
           :key="photoIndex"
           :stream-num="orderData.streamNum"
+          :stream-can-glass="orderData.canGlass"
           :upyun-config="upyunConfig"
           :photos="photoItem"
         />

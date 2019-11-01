@@ -9,7 +9,7 @@
     </div>
     <!-- 照片列表 -->
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
-      <div class="panel-title">订单照片{{ photoIndex + 1 }}</div>
+      <div class="panel-title">照片{{ photoIndex + 1 }}</div>
       <photo-detail :photo-item="photoItem" />
     </div>
     <!-- 看片师评价 -->
