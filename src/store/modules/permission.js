@@ -48,7 +48,7 @@ const actions = {
   generateRoutes ({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes = []
-      const newRoles = [...roles.base_auth, ...roles.login_auth]
+      const newRoles = roles
       let newRolesArr = []
       newRoles.forEach(roleItem => {
         if (roleItem.name) {
