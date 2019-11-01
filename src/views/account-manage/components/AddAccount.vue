@@ -257,7 +257,7 @@ export default {
       this.$store.dispatch('setting/showLoading', this.routeName)
       AccountManage.getStaffPermission(req)
         .then(data => {
-          this.hasPermission = data.base_auth.map(item => item.id)
+          this.hasPermission = data.map(item => item.id)
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
     }
