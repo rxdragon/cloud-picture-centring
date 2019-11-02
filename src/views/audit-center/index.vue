@@ -1,7 +1,7 @@
 <template>
   <div class="audit-center">
     <!-- 接单队列 -->
-    <div class="header" :class="headerClass">
+    <div class="header">
       <h3>修图审核</h3>
       <div class="header-right">
         <template v-if="!isChecking">
@@ -22,62 +22,60 @@
         </template>
       </div>
     </div>
-    <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.native="handleScroll">
-      <!-- 今日信息 -->
-      <div class="today-info module-panel">
-        <div class="panel-title">今日完成</div>
-        <div class="panel-content">
-          <div class="label-list-title">审核总时长</div>
-          <div class="label-list-title">审核单量</div>
-          <div class="label-list-title">审核张数</div>
-          <div class="label-list-content">{{ todayReviewQuota.todayReviewTimes }}</div>
-          <div class="label-list-content">{{ todayReviewQuota.todayReviewStreamNums }}</div>
-          <div class="label-list-content">{{ todayReviewQuota.todayReviewPhotoNums }}</div>
+    <!-- 今日信息 -->
+    <div class="today-info module-panel">
+      <div class="panel-title">今日完成</div>
+      <div class="panel-content">
+        <div class="label-list-title">审核总时长</div>
+        <div class="label-list-title">审核单量</div>
+        <div class="label-list-title">审核张数</div>
+        <div class="label-list-content">{{ todayReviewQuota.todayReviewTimes }}</div>
+        <div class="label-list-content">{{ todayReviewQuota.todayReviewStreamNums }}</div>
+        <div class="label-list-content">{{ todayReviewQuota.todayReviewPhotoNums }}</div>
+      </div>
+    </div>
+    <!-- 照片信息 -->
+    <order-info v-if="orderData" :order-data="orderData" />
+    <!-- 照片审核 -->
+    <div v-if="orderData" class="check-photo module-panel">
+      <div class="panel-title">
+        <span>照片审核</span>
+        <div class="button-box">
+          <domain-switch-box />
+          <el-button size="small" plain type="primary" @click="oneAllDownRetouched">一键下载修后照片</el-button>
+          <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
+          <template v-if="orderData.photos.length > 1">
+            <el-button v-if="!isAllReturnOrder" type="warning" size="small" @click="allRework">全部重修</el-button>
+            <el-button v-else type="info" size="small" @click="allCleanRework">取消重修</el-button>
+          </template>
         </div>
       </div>
-      <!-- 照片信息 -->
-      <order-info v-if="orderData" :order-data="orderData" />
-      <!-- 照片审核 -->
-      <div v-if="orderData" class="check-photo module-panel">
-        <div class="panel-title">
-          <span>照片审核</span>
-          <div class="button-box">
-            <domain-switch-box />
-            <el-button size="small" plain type="primary" @click="oneAllDownRetouched">一键下载修后照片</el-button>
-            <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
-            <template v-if="orderData.photos.length > 1">
-              <el-button v-if="!isAllReturnOrder" type="warning" size="small" @click="allRework">全部重修</el-button>
-              <el-button v-else type="info" size="small" @click="allCleanRework">取消重修</el-button>
-            </template>
-          </div>
+      <photo-group
+        v-for="(photoItem, photoIndex) in orderData.photos"
+        :key="photoIndex"
+        :stream-num="orderData.streamNum"
+        :stream-can-glass="orderData.canGlass"
+        :upyun-config="upyunConfig"
+        :photos="photoItem"
+      />
+      <!-- 本单审核备注 -->
+      <div v-if="isReturnOrder && orderData.photos.length > 1" class="review-panel">
+        <div class="panel-title review-title">
+          <span>
+            本单审核备注
+            <i>(单张重修或审核备注选其一填写)</i>
+          </span>
         </div>
-        <photo-group
-          v-for="(photoItem, photoIndex) in orderData.photos"
-          :key="photoIndex"
-          :stream-num="orderData.streamNum"
-          :stream-can-glass="orderData.canGlass"
-          :upyun-config="upyunConfig"
-          :photos="photoItem"
+        <el-input
+          v-model="reviewMark"
+          class="review-mark"
+          type="textarea"
+          :rows="4"
+          placeholder="请输入审核意见"
+          resize="none"
         />
-        <!-- 本单审核备注 -->
-        <div v-if="isReturnOrder && orderData.photos.length > 1" class="review-panel">
-          <div class="panel-title review-title">
-            <span>
-              本单审核备注
-              <i>(单张重修或审核备注选其一填写)</i>
-            </span>
-          </div>
-          <el-input
-            v-model="reviewMark"
-            class="review-mark"
-            type="textarea"
-            :rows="4"
-            placeholder="请输入审核意见"
-            resize="none"
-          />
-        </div>
       </div>
-    </el-scrollbar>
+    </div>
   </div>
 </template>
 
@@ -110,9 +108,6 @@ export default {
     }
   },
   computed: {
-    scrollWrapper () {
-      return this.$refs.scrollContainer.$refs.wrap
-    },
     // 有退回订单
     isReturnOrder () {
       const hasRework = this.orderData.photos.some(photoItem => photoItem.reworkMark)
@@ -364,17 +359,7 @@ export default {
  @import "~@/styles/variables.less";
 
 .audit-center {
-  .header-fixed {
-    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.08);
-    width: calc(~'100% + 56px');
-    margin-left: -28px;
-    padding: 0 28px 24px;
-  }
-
   .header {
-    position: relative;
-    z-index: 100;
-
     .el-button {
       border-radius: 8px;
       margin-left: 14px;
@@ -384,14 +369,6 @@ export default {
       font-size:14px;
       color: #606266;
       line-height:22px;
-    }
-  }
-
-  .scroll-container {
-    height: @orderScrollContainerHeight;
-
-    .el-scrollbar__wrap{
-      overflow-x:hidden;
     }
   }
 

@@ -65,22 +65,32 @@
           </div>
         </div>
         <div class="panel-main">
-          <div class="main-content">
-            <span class="num plant-color">{{ gradeInfo.nearly30DaysPlantNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPlantNum | getPoint }}</i></span>
-            <span>近30日种草</span>
-          </div>
-          <div class="main-content">
-            <span class="num pull-color">{{ gradeInfo.nearly30DaysPullNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPullNum | getPoint }}</i></span>
-            <span>近30日拔草</span>
-          </div>
-          <div class="main-content">
-            <span class="num">{{ gradeInfo.exp | getInteger }}<i>.{{ gradeInfo.exp | getPoint }}</i></span>
-            <span>历史海草数</span>
-          </div>
-          <div class="main-content">
-            <span class="num">{{ gradeInfo.needLevelUpExp | getInteger }}<i>.{{ gradeInfo.needLevelUpExp | getPoint }}</i></span>
-            <span>达标海草数</span>
-          </div>
+          <el-row :gutter="51">
+            <el-col :span="6">
+              <div class="main-content">
+                <span class="num plant-color">{{ gradeInfo.nearly30DaysPlantNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPlantNum | getPoint }}</i></span>
+                <span>近30日种草</span>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="main-content">
+                <span class="num pull-color">{{ gradeInfo.nearly30DaysPullNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPullNum | getPoint }}</i></span>
+                <span>近30日拔草</span>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="main-content">
+                <span class="num">{{ gradeInfo.exp | getInteger }}<i>.{{ gradeInfo.exp | getPoint }}</i></span>
+                <span>历史海草数</span>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="main-content">
+                <span class="num">{{ gradeInfo.needLevelUpExp | getInteger }}<i>.{{ gradeInfo.needLevelUpExp | getPoint }}</i></span>
+                <span>达标海草数</span>
+              </div>
+            </el-col>
+          </el-row>
         </div>
         <div class="panel-footer">
           <el-row :gutter="51">
@@ -395,8 +405,7 @@ export default {
     }
 
     .panel-main {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid #EBEEF5;
 
       .main-content {
         font-size: 12px;
@@ -406,7 +415,6 @@ export default {
         color: #909399;
         margin-top: 28px;
         padding-bottom: 18px;
-        border-bottom: 1px solid #EBEEF5;
 
         .num {
           font-size: 36px;

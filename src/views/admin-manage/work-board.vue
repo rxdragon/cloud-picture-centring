@@ -39,17 +39,25 @@
             {{ scope.row.retouchType | toRetouchClass }}
           </template>
         </el-table-column>
-        <el-table-column label="订单信息" width="220">
+        <el-table-column label="订单信息" min-width="240">
           <template slot-scope="scope">
             <div v-if="scope.row.order" class="order-info">
-              <span>订单号：{{ scope.row.order.external_num }}</span>
-              <span>流水号：{{ scope.row.stream_num }}</span>
-              <span>拍摄产品：{{ scope.row.product.name }}</span>
-              <span>照片数量：{{ scope.row.photos.length }}</span>
+              <span>
+                <span class="info-title">订单号：</span>{{ scope.row.order.external_num }}
+              </span>
+              <span>
+                <span class="info-title">流水号：</span>{{ scope.row.stream_num }}
+              </span>
+              <span>
+                <span class="info-title">拍摄产品：</span>{{ scope.row.product.name }}
+              </span>
+              <span>
+                <span class="info-title">照片数量：</span>{{ scope.row.photos.length }}
+              </span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="修图师">
+        <el-table-column label="修图师" min-width="140">
           <template slot-scope="scope">
             <div class="staff-info">
               <span>修图师：{{ scope.row.retoucherName }}</span>
@@ -62,8 +70,10 @@
         <el-table-column prop="streamState" label="当前状态" />
         <el-table-column label="操作" width="160">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
-            <el-button v-if="!scope.row.staticsUrgent" type="danger" size="mini" @click="urgentStream(scope.row.id, 'urgent')">加急</el-button>
+            <div class="operation-box">
+              <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
+              <el-button v-if="!scope.row.staticsUrgent" type="danger" size="mini" @click="urgentStream(scope.row.id, 'urgent')">加急</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -127,17 +137,25 @@
             {{ scope.row.retouchType | toRetouchClass }}
           </template>
         </el-table-column>
-        <el-table-column label="订单信息" width="220">
+        <el-table-column label="订单信息" min-width="240">
           <template slot-scope="scope">
             <div v-if="scope.row.order" class="order-info">
-              <span>订单号：{{ scope.row.order.external_num }}</span>
-              <span>流水号：{{ scope.row.stream_num }}</span>
-              <span>拍摄产品：{{ scope.row.product.name }}</span>
-              <span>照片数量：{{ scope.row.photos.length }}</span>
+              <span>
+                <span class="info-title">订单号：</span>{{ scope.row.order.external_num }}
+              </span>
+              <span>
+                <span class="info-title">流水号：</span>{{ scope.row.stream_num }}
+              </span>
+              <span>
+                <span class="info-title">拍摄产品：</span>{{ scope.row.product.name }}
+              </span>
+              <span>
+                <span class="info-title">照片数量：</span>{{ scope.row.photos.length }}
+              </span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="index" label="修图师">
+        <el-table-column prop="index" label="修图师" min-width="140">
           <template slot-scope="scope">
             <div class="staff-info">
               <span>修图师：{{ scope.row.retoucherName }}</span>
@@ -150,8 +168,10 @@
         <el-table-column prop="streamState" label="当前状态" />
         <el-table-column label="操作" width="160">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
-            <el-button v-if="!scope.row.staticsUrgent" type="danger" size="mini" @click="urgentStream(scope.row.id, 'other')">加急</el-button>
+            <div class="operation-box">
+              <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
+              <el-button v-if="!scope.row.staticsUrgent" type="danger" size="mini" @click="urgentStream(scope.row.id, 'other')">加急</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -405,6 +425,16 @@ export default {
 
     .order-info {
       display: grid;
+      text-align: left;
+
+      .info-title {
+        display: inline-block;
+        width: 70px;
+        text-align-last: justify;
+      }
+    }
+
+    .operation-box {
       text-align: left;
     }
 

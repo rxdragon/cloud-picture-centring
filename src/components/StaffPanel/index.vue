@@ -1,5 +1,5 @@
 <template>
-  <div class="staff-panel">
+  <div v-loading="isLoading" class="staff-panel">
     <transfer-extend
       :default-checked-keys="defaultCheckedKeys"
       :from-data="fromData"
@@ -29,7 +29,8 @@ export default {
   data () {
     return {
       fromData: [], // 源数据
-      title: ['未选组员', '已选组员'] // 人员选中列表
+      title: ['未选组员', '已选组员'], // 人员选中列表
+      isLoading: true
     }
   },
   created () {
@@ -59,9 +60,15 @@ export default {
      * @description 获取伙伴信息
      */
     async getStaffList () {
-      const list = await Staff.getStaffList()
-      this.fromData = JSON.parse(JSON.stringify(list))
-      this.$emit('update:isLoadingDown', true)
+      try {
+        this.isLoading = true
+        const list = await Staff.getStaffList()
+        this.fromData = JSON.parse(JSON.stringify(list))
+        this.$emit('update:isLoadingDown', true)
+        this.isLoading = false
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

@@ -2,7 +2,7 @@
   <div class="add-account">
     <div class="header">
       <h3>{{ editData ? '编辑账号' : '新增账号' }}</h3>
-      <el-button type="info" @click="toBack">返回</el-button>
+      <el-button type="primary" plain @click="toBack">返回</el-button>
     </div>
     <el-alert title="提示：请先输入伙伴工号或伙伴姓名进行相关查询后才可配置权限" type="info" show-icon />
     <div class="search-box">
@@ -304,8 +304,8 @@ export default {
     .button-box {
       margin-top: 24px;
       width: 856px;
-      padding-left: 56px;
-      text-align: center;
+      padding-left: 68px;
+      text-align: left;
     }
   }
 
@@ -331,7 +331,8 @@ export default {
   }
 
   .submit-box {
-    text-align: center;
+    padding-left: 82px;
+    text-align: left;
   }
 
   .main-content {

@@ -5,7 +5,7 @@
         审核历史记录
         <div class="search-time-panel">查询时间：{{ searchTime[0] }} ~ {{ searchTime[1] }}</div>
       </h3>
-      <el-button type="primary" @click="goBack">返回</el-button>
+      <el-button type="primary" plain @click="goBack">返回</el-button>
     </div>
     <!-- 搜索盒子 -->
     <div class="search-box">

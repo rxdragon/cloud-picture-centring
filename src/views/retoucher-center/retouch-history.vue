@@ -19,8 +19,16 @@
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%">
         <el-table-column prop="stream_num" label="流水号" width="250px" />
-        <el-table-column prop="receipt_at" label="接单时间" />
-        <el-table-column prop="pass_at" label="审核通过时间" />
+        <el-table-column label="接单时间">
+          <template slot-scope="scope">
+            {{ scope.row.receipt_at | toTimeSpan }}
+          </template>
+        </el-table-column>
+        <el-table-column label="审核通过时间">
+          <template slot-scope="scope">
+            {{ scope.row.pass_at | toTimeSpan }}
+          </template>
+        </el-table-column>
         <el-table-column prop="retouchAllTime" label="修图总时长" />
         <el-table-column prop="plantNum" label="种草" />
         <el-table-column prop="pullNum" label="拔草" />

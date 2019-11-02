@@ -26,7 +26,11 @@
     </div>
     <!-- 列表 -->
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="store_evaluate_at" label="评价时间" width="180" />
+      <el-table-column label="评价时间" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.store_evaluate_at | toTimeSpan }}
+        </template>
+      </el-table-column>
       <el-table-column prop="stream.stream_num" label="流水号" width="200" />
       <el-table-column prop="store_evaluate_star" label="门店评分" />
       <el-table-column prop="stream.retoucher.name" label="修图师" />

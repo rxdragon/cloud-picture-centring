@@ -2,18 +2,18 @@
   <div class="edit-role">
     <div class="header">
       <h3>{{ isNewAdd?'新增角色组':'编辑角色组' }}</h3>
-      <el-button type="info" @click="toBack">返回</el-button>
+      <div class="button-box">
+        <el-button type="primary" plain @click="toBack">返回</el-button>
+        <el-button type="primary" @click="onSubmit">提交</el-button>
+      </div>
     </div>
     <div class="role-name search-item">
       <span>角色组名称</span>
       <el-input v-model="roleName" v-maxLength16 placeholder="请输入角色组名称" />
     </div>
-    <div class="jurisdiction-box search-item">
-      <span>权限模块</span>
+    <div class="jurisdiction-box module-panel">
+      <div class="panel-title">权限模块</div>
       <jurisdiction v-model="hasPermission" />
-    </div>
-    <div class="submit-box">
-      <el-button type="primary" @click="onSubmit">提交</el-button>
     </div>
   </div>
 </template>
@@ -53,7 +53,10 @@ export default {
     async getRoleInfo () {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        if (this.isNewAdd) return false
+        if (this.isNewAdd) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          return false
+        }
         const reqData = {
           roleId: this.roleId,
           additionInfo: true
@@ -139,6 +142,10 @@ export default {
 
   .jurisdiction-box {
     align-items: flex-start;
+
+    .panel-title {
+      margin-bottom: 20px;
+    }
   }
 
   .search-item {

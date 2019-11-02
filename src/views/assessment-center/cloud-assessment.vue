@@ -3,69 +3,67 @@
     <div class="header" :class="headerClass">
       <h3>云学院评价中心</h3>
     </div>
-    <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.native="handleScroll">
-      <div class="search-box">
-        <div class="search-item">
-          <span>审核通过时间</span>
-          <date-picker v-model="timeSpan" value-format="yyyy-MM-dd" />
+    <div class="search-box">
+      <div class="search-item">
+        <span>审核通过时间</span>
+        <date-picker v-model="timeSpan" value-format="yyyy-MM-dd" />
+      </div>
+      <div class="search-item">
+        <span>修图标准</span>
+        <institution-type v-model="institutionType" />
+      </div>
+      <div class="sample-num search-item">
+        <span>伙伴抽样量</span>
+        <el-select v-model="sampleNum" placeholder="单次不可超过5张">
+          <el-option :label="1" :value="1" />
+          <el-option :label="2" :value="2" />
+          <el-option :label="3" :value="3" />
+          <el-option :label="4" :value="4" />
+          <el-option :label="5" :value="5" />
+        </el-select>
+      </div>
+      <div class="button-box">
+        <el-button :disabled="Boolean(photoData.length)" type="primary" @click="takePhoto">抽 取</el-button>
+      </div>
+    </div>
+    <div class="assessment-info module-panel">
+      <div class="panel-title">
+        今日完成数据
+      </div>
+      <div class="list-table">
+        <div class="list-title">
+          <span>今日已评价照片</span>
+          <span>今日抽查种草率</span>
+          <span>今日抽查拔草率</span>
+          <span>本次抽取总单量</span>
         </div>
-        <div class="search-item">
-          <span>修图标准</span>
-          <institution-type v-model="institutionType" />
-        </div>
-        <div class="sample-num search-item">
-          <span>伙伴抽样量</span>
-          <el-select v-model="sampleNum" placeholder="单次不可超过5张">
-            <el-option :label="1" :value="1" />
-            <el-option :label="2" :value="2" />
-            <el-option :label="3" :value="3" />
-            <el-option :label="4" :value="4" />
-            <el-option :label="5" :value="5" />
-          </el-select>
-        </div>
-        <div class="button-box">
-          <el-button :disabled="Boolean(photoData.length)" type="primary" @click="takePhoto">抽 取</el-button>
+        <div class="list-content">
+          <span>{{ todayInfo.evaluationNum || '-' }}</span>
+          <span>{{ todayInfo.plantPercent || '-' }}</span>
+          <span>{{ todayInfo.pullPercent || '-' }}</span>
+          <span>{{ spotAllNum }}</span>
         </div>
       </div>
-      <div class="assessment-info module-panel">
-        <div class="panel-title">
-          今日完成数据
-        </div>
-        <div class="list-table">
-          <div class="list-title">
-            <span>今日已评价照片</span>
-            <span>今日抽查种草率</span>
-            <span>今日抽查拔草率</span>
-            <span>本次抽取总单量</span>
-          </div>
-          <div class="list-content">
-            <span>{{ todayInfo.evaluationNum || '-' }}</span>
-            <span>{{ todayInfo.plantPercent || '-' }}</span>
-            <span>{{ todayInfo.pullPercent || '-' }}</span>
-            <span>{{ spotAllNum }}</span>
-          </div>
-        </div>
-      </div>
-      <!-- 订单数据 -->
-      <grade-box
-        v-for="photoItem in photoData"
-        :key="photoItem.businessId"
-        is-grade
-        class="photo-data module-panel"
-        :photo-info="photoItem"
-        @finsihed="resetPage"
+    </div>
+    <!-- 订单数据 -->
+    <grade-box
+      v-for="photoItem in photoData"
+      :key="photoItem.businessId"
+      is-grade
+      class="photo-data module-panel"
+      :photo-info="photoItem"
+      @finsihed="resetPage"
+    />
+    <div class="page-box">
+      <el-pagination
+        :hide-on-single-page="true"
+        :current-page.sync="pager.page"
+        :page-size="pager.pageSize"
+        layout="prev, pager, next"
+        :total="pager.total"
+        @current-change="handlePage"
       />
-      <div class="page-box">
-        <el-pagination
-          :hide-on-single-page="true"
-          :current-page.sync="pager.page"
-          :page-size="pager.pageSize"
-          layout="prev, pager, next"
-          :total="pager.total"
-          @current-change="handlePage"
-        />
-      </div>
-    </el-scrollbar>
+    </div>
     <el-dialog
       width="300px"
       class="spot-success"
@@ -110,11 +108,6 @@ export default {
       isTakePhoto: false, // 是第一次抽取的照片
       todayInfo: {},
       dialogTableVisible: false // 抽取成功弹框
-    }
-  },
-  computed: {
-    scrollWrapper () {
-      return this.$refs.scrollContainer.$refs.wrap
     }
   },
   created () {
@@ -254,15 +247,6 @@ export default {
  @import "~@/styles/variables.less";
 
 .cloud-assessment {
-  .header-fixed {
-    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.08);
-    width: calc(~'100% + 56px');
-    margin-left: -28px;
-    padding: 0 28px 24px;
-    z-index: 100;
-    position: relative;
-  }
-
   .search-box {
     .sample-num {
       display: flex;
@@ -348,14 +332,6 @@ export default {
 
     .el-dialog__header {
       display: none;
-    }
-  }
-
-  .scroll-container {
-    height: @orderScrollContainerHeight;
-
-    .el-scrollbar__wrap{
-      overflow-x:hidden;
     }
   }
 

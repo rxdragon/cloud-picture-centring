@@ -25,21 +25,21 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'label'
-      },
-      staffNum: 0
+      }
     }
   },
   computed: {
+    // 伙伴信息
     staffListData () {
       return this.staffList
-    }
-  },
-  watch: {
-    staffList (value) {
-      this.staffNum = 0
-      value.forEach(staffItem => {
-        this.staffNum += staffItem.children.length
+    },
+    // 生效伙伴数量
+    staffNum () {
+      let num = 0
+      this.staffListData.forEach(staffItem => {
+        num += staffItem.children.length
       })
+      return num
     }
   }
 }

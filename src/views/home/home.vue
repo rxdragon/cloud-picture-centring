@@ -8,8 +8,11 @@
       </div>
     </div>
     <div class="logo-tip">
-      <div class="logo-img iconmap-cloud-logo-big" />
-      <div class="logo-desc">欢迎来到缦图云端修图中心</div>
+      <div class="logo-img home-logo" />
+      <div class="logo-desc">
+        <span class="black">欢迎来到</span>
+        <span class="desc">缦图云端修图中心</span>
+      </div>
     </div>
   </div>
 </template>
@@ -51,17 +54,22 @@ export default {
     transform: translateX(-50%) translateY(-50%);
 
     .logo-img {
-      width: 360px;
-      height: 90px;
+      width:568px;
+      height:391px;
     }
 
     .logo-desc {
       font-size:30px;
-      font-family:PingFangSC-Regular,PingFang SC;
-      font-weight:400;
-      color:rgba(48,49,51,1);
+      font-family:PingFangSC-Semibold,PingFang SC;
+      font-weight:600;
+      color:#131923;
       line-height:38px;
-      margin-top: 28px;
+      text-align: center;
+      margin-top: 26px;
+
+      .desc {
+        color: #4669FB;
+      }
     }
   }
 }

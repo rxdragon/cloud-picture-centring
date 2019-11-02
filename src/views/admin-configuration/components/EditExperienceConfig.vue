@@ -19,7 +19,7 @@
         </el-select>
       </div>
       <div class="sure-button">
-        <el-button type="info" @click="goBack">返回</el-button>
+        <el-button type="primary" plain @click="goBack">返回</el-button>
         <el-button type="primary" @click="onSubmit">确认</el-button>
       </div>
     </div>
@@ -116,7 +116,8 @@ export default {
 
   .sure-button {
     width: 880px;
-    text-align: center;
+    text-align: left;
+    padding-left: 92px;
   }
 }
 </style>

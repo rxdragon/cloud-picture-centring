@@ -1,4 +1,5 @@
 import { timeFormat } from '@/utils/index.js'
+import { formatTime } from '@/utils/timespan.js'
 import { PhotoEnumName, RetouchStandard, HourGlassSettingEnum, StreamState } from '@/utils/enumerate.js'
 
 /**
@@ -74,3 +75,10 @@ export function toTimeFormatText (time) {
   return timeFormat(time, 'text', true)
 }
 
+/**
+ * @description 格式化时间
+ * @param {*} time
+ */
+export function toTimeSpan (time) {
+  return formatTime(time)
+}

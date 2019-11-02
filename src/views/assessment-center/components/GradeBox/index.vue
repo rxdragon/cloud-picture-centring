@@ -310,6 +310,7 @@ export default {
 
       .panel-row:nth-last-child(1) {
         border: none;
+        margin-bottom: -10px;
       }
 
       .retouch-require {

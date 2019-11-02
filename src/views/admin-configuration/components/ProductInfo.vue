@@ -2,7 +2,7 @@
   <div class="product-info">
     <div class="header">
       <h3>产品详情</h3>
-      <el-button type="info" @click="goBack">返回</el-button>
+      <el-button type="primary" plain @click="goBack">返回</el-button>
     </div>
     <div class="module-panel">
       <div class="info-box">
@@ -49,7 +49,7 @@
           />
         </div>
         <div class="reject-button">
-          <el-button type="info" @click="cancelCheck">取 消</el-button>
+          <el-button type="primary" plain @click="cancelCheck">取消</el-button>
           <el-button type="danger" @click="refuseProduct">提交</el-button>
         </div>
       </div>
@@ -181,7 +181,7 @@
         </el-form>
       </div>
       <div v-if="+checkPass !== 2" class="pass-box">
-        <el-button v-if="+checkPass === 1 && isPending" type="info" @click="cancelCheck">取消</el-button>
+        <el-button v-if="+checkPass === 1 && isPending" type="primary" plain @click="cancelCheck">取消</el-button>
         <el-button v-if="+checkPass === 1" type="primary" @click="passProductInfo">提交</el-button>
       </div>
     </div>
@@ -549,26 +549,31 @@ export default {
   }
 
   .check-box {
-    text-align: center;
+    text-align: left;
+    padding-left: 100px;
   }
 
   .reject-box {
     margin-top: 10px;
-    width: 500px;
 
     .reject-content {
       display: flex;
       align-items: flex-start;
 
+      .el-textarea {
+        width: 500px;
+      }
+
       &>span {
         width: 100px;
+        margin-right: 0;
       }
     }
 
     .reject-button {
       padding-left: 100px;
       margin-top: 10px;
-      text-align: center;
+      text-align: left;
     }
   }
 

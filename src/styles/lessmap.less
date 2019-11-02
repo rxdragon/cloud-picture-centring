@@ -1,6 +1,7 @@
 @iconMap: url(~@/assets/sprites.png);
 @sandGreen: url(~@/assets/sand_clock/sand_green.png);
 @sandRed: url(~@/assets/sand_clock/sand_red.png);
+@logo: url(~@/assets/home.png);
 @sandOrange: url(~@/assets/sand_clock/sand_orange.png);
 
 .iconmapBaseSet(@x, @y) { 
@@ -22,6 +23,12 @@
   &-photo-amount-icon           { .iconmapBaseSet(-87px, -55px); }
   &-money-icon                  { .iconmapBaseSet(-170px, -55px); }
   &-cloud-logo-big              { .iconmapBaseSet(0, -146px); }
+}
+
+.home-logo {
+  background-position: 0 0;
+  background-size: 568px;
+  background-image: @logo;
 }
 
 .sand {

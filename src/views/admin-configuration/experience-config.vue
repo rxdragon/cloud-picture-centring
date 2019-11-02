@@ -31,7 +31,11 @@
               <el-table-column label="使用状态">
                 <template slot-scope="scope">{{ scope.row.state | changeStateName }}</template>
               </el-table-column>
-              <el-table-column prop="createTime" label="创建时间" width="190" />
+              <el-table-column label="创建时间" width="190">
+                <template slot-scope="scope">
+                  {{ scope.row.createTime | toTimeSpan }}
+                </template>
+              </el-table-column>
               <el-table-column prop="createStaff" label="创建人" />
               <el-table-column label="操作" width="190">
                 <template slot-scope="scope">
@@ -116,30 +120,46 @@ export default {
      * @description 删除经验配置
      */
     deleteData (cardItem) {
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      const reqData = { staffCardId: cardItem.id }
-      OperationManage.deleteCard(reqData)
-        .then(() => {
+      this.$confirm('确认删除该经验配置吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        try {
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          const reqData = { staffCardId: cardItem.id }
+          await OperationManage.deleteCard(reqData)
           this.$newMessage.success('删除成功')
           this.getExperienceConfigList()
-        })
-      this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        } catch (error) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          console.error(error)
+        }
+      }).catch(() => {})
     },
     /**
      * @description 提前结束
      */
     async closeCard (cardItem) {
-      try {
-        this.$store.dispatch('setting/showLoading', this.routeName)
-        const reqData = { staffCardId: cardItem.id }
-        await OperationManage.closeCard(reqData)
-        this.$newMessage.success('提前结束')
-        this.getExperienceConfigList()
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
-      }
+      this.$confirm('确认提前结束吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        try {
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          const reqData = { staffCardId: cardItem.id }
+          await OperationManage.closeCard(reqData)
+          this.$newMessage.success('提前结束')
+          this.getExperienceConfigList()
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        } catch (error) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          console.error(error)
+        }
+      }).catch(() => {})
     },
     /**
      * @description 获取经验配置列表

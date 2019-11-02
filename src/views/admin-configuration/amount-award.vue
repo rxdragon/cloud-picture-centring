@@ -43,14 +43,18 @@
             </el-table-column>
             <el-table-column label="有效时间" width="200">
               <template slot-scope="scope">
-                <p>开始：{{ scope.row.start_at }}</p>
-                <p>结束：{{ scope.row.end_at }}</p>
+                <p>开始：{{ scope.row.start_at | toTimeSpan }}</p>
+                <p>结束：{{ scope.row.end_at | toTimeSpan }}</p>
               </template>
             </el-table-column>
             <el-table-column prop="state" label="使用状态">
               <template slot-scope="scope">{{ scope.row.state | changeStateName }}</template>
             </el-table-column>
-            <el-table-column prop="created_at" label="创建时间" width="180" />
+            <el-table-column label="创建时间" width="180">
+              <template slot-scope="scope">
+                {{ scope.row.created_at | toTimeSpan }}
+              </template>
+            </el-table-column>
             <el-table-column prop="createName" label="创建人" />
             <el-table-column label="操作" width="200">
               <template slot-scope="scope">
@@ -187,31 +191,45 @@ export default {
      * @description 删除冲量奖励
      */
     deleteImpulse (listItem) {
-      const reqData = { impulseId: listItem.id }
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      OperationManage.deleteImpulse(reqData)
-        .then(() => {
+      this.$confirm('确认删除该冲量奖励吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        try {
+          const reqData = { impulseId: listItem.id }
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          await OperationManage.deleteImpulse(reqData)
           this.$newMessage.success('删除' + listItem.title + '成功')
           this.getImpulseList()
-        })
+        } catch (error) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          console.log(error)
+        }
+      }).catch(() => {})
     },
     /**
      * @description 提前结束
      */
     disableImpulse (listItem) {
-      const reqData = { impulseId: listItem.id }
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      OperationManage.disableImpulse(reqData)
-        .then(() => {
-          this.$newMessage({
-            message: listItem.title + '已提前结束',
-            type: 'success',
-            duration: 1500,
-            onClose: () => {
-              this.getImpulseList()
-            }
-          })
-        })
+      this.$confirm('确认提前结束吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        try {
+          const reqData = { impulseId: listItem.id }
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          await OperationManage.disableImpulse(reqData)
+          this.$newMessage.success(listItem.title + '已提前结束')
+          this.getImpulseList()
+        } catch (error) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          console.log(error)
+        }
+      }).catch(() => {})
     }
   }
 }

@@ -1,13 +1,11 @@
 <template>
-  <el-scrollbar ref="mainScrollContainer" :vertical="false" class="main-scroll-container">
-    <section v-loading.lock="isLoading" element-loading-custom-class="main-loading" class="app-main" :class="{'overhidden':isLoading}">
-      <transition :name="transitionName" mode="out-in">
-        <keep-alive :include="cachedViews" :max="4">
-          <router-view :key="key" />
-        </keep-alive>
-      </transition>
-    </section>
-  </el-scrollbar>
+  <section v-loading.lock="isLoading" element-loading-custom-class="main-loading" class="app-main" :class="{'overhidden':isLoading}">
+    <transition :name="transitionName" mode="out-in">
+      <keep-alive :include="cachedViews" :max="4">
+        <router-view :key="key" />
+      </keep-alive>
+    </transition>
+  </section>
 </template>
 
 <script>
@@ -43,6 +41,8 @@ export default {
   padding: @appMainPadding;
   box-sizing: border-box;
   min-width: @minWidth;
+  height: @appMainHeight;
+  overflow-y: auto;
 }
 
 .fixed-header+.app-main {
@@ -56,14 +56,6 @@ export default {
 .el-popup-parent--hidden {
   .fixed-header {
     padding-right: 15px;
-  }
-}
-
-.main-scroll-container {
-  height: @mainScrollContainerHeight;
-
-  .el-scrollbar__wrap{
-    overflow-x:hidden;
   }
 }
 

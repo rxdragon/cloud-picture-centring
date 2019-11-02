@@ -18,7 +18,11 @@
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="name" label="修图类别名称" />
-            <el-table-column prop="updated_at" label="最近操作时间" />
+            <el-table-column label="最近操作时间">
+              <template slot-scope="scope">
+                {{ scope.row.updated_at | toTimeSpan }}
+              </template>
+            </el-table-column>
             <el-table-column prop="nickname" label="操作人" />
             <el-table-column label="操作人">
               <template slot-scope="scope">
@@ -87,19 +91,29 @@ export default {
       this.getList()
     },
     /**
-     * @description 获取角色组列表
+     * @description 删除修图类型
      * @param {*} id
      */
     deleteCategory (id) {
-      const req = { retoucherClassId: id }
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      AccountManage.delRetoucherClass(req)
-        .then(data => {
+      this.$confirm('确认删除该修图类型吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        const req = { retoucherClassId: id }
+        try {
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          const data = await AccountManage.delRetoucherClass(req)
           if (data) {
             this.$newMessage.success('删除成功!')
             this.getList()
           }
-        })
+        } catch (error) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          console.error(error)
+        }
+      }).catch(() => {})
     },
     /**
      * @description 获取列表参数
