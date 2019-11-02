@@ -31,7 +31,11 @@
               <el-table-column label="使用状态">
                 <template slot-scope="scope">{{ scope.row.state | changeStateName }}</template>
               </el-table-column>
-              <el-table-column prop="createTime" label="创建时间" width="190" />
+              <el-table-column label="创建时间" width="190">
+                <template slot-scope="scope">
+                  {{ scope.row.createTime | toTimeSpan }}
+                </template>
+              </el-table-column>
               <el-table-column prop="createStaff" label="创建人" />
               <el-table-column label="操作" width="190">
                 <template slot-scope="scope">

@@ -10,7 +10,11 @@
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="name" label="机构名" />
             <el-table-column prop="code" label="机构代号" />
-            <el-table-column prop="created_at" label="创建时间" />
+            <el-table-column label="创建时间">
+              <template slot-scope="scope">
+                {{ scope.row.created_at | toTimeSpan }}
+              </template>
+            </el-table-column>
             <el-table-column prop="sub_account_count" label="子账号数量" />
             <el-table-column label="当前状态">
               <template slot-scope="scope">

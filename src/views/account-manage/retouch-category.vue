@@ -18,7 +18,11 @@
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="name" label="修图类别名称" />
-            <el-table-column prop="updated_at" label="最近操作时间" />
+            <el-table-column label="最近操作时间">
+              <template slot-scope="scope">
+                {{ scope.row.updated_at | toTimeSpan }}
+              </template>
+            </el-table-column>
             <el-table-column prop="nickname" label="操作人" />
             <el-table-column label="操作人">
               <template slot-scope="scope">

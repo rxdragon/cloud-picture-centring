@@ -87,11 +87,14 @@ export default {
     }
   },
   watch: {
-    editId (value) {
-      if (value) {
-        const req = { configId: this.editId }
-        this.getHourGlassInfo(req)
-      }
+    editId: {
+      handler: function (value) {
+        if (value) {
+          const req = { configId: this.editId }
+          this.getHourGlassInfo(req)
+        }
+      },
+      immediate: true
     }
   },
   methods: {

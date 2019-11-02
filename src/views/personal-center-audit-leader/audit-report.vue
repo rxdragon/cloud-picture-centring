@@ -1,35 +1,37 @@
 <template>
   <div class="audit-report">
-    <div v-if="!isSeachPage" class="transition-box">
-      <div class="header">
-        <h3>组员审核报告</h3>
-      </div>
-      <div class="search-box">
-        <div class="search-item">
-          <span>时间</span>
-          <date-picker v-model="timeSpan" />
+    <transition name="fade-transform" mode="out-in">
+      <div v-if="!isSeachPage" class="transition-box">
+        <div class="header">
+          <h3>组员审核报告</h3>
         </div>
-        <div class="staff-box search-item">
-          <span>组员</span>
-          <crew-select v-model="staffId" />
+        <div class="search-box">
+          <div class="search-item">
+            <span>时间</span>
+            <date-picker v-model="timeSpan" />
+          </div>
+          <div class="staff-box search-item">
+            <span>组员</span>
+            <crew-select v-model="staffId" />
+          </div>
+          <div class="button-box">
+            <el-button type="primary" @click="getGroupReviewQuota">查 询</el-button>
+          </div>
         </div>
-        <div class="button-box">
-          <el-button type="primary" @click="getGroupReviewQuota">查 询</el-button>
+        <div class="tabel-content module-panel">
+          <div class="tabel-title panel-title">小组审核报告</div>
+          <list-table key="tableDataCount" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataCount" />
+          <list-table key="tableDataRate" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataRate" />
         </div>
       </div>
-      <div class="tabel-content module-panel">
-        <div class="tabel-title panel-title">小组审核报告</div>
-        <list-table key="tableDataCount" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataCount" />
-        <list-table key="tableDataRate" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataRate" />
-      </div>
-    </div>
-    <CrewAuditHistory
-      v-else
-      :search-staff="staffId"
-      :search-type.sync="searchType"
-      :is-seach-page.sync="isSeachPage"
-      :search-time="timeSpan"
-    />
+      <CrewAuditHistory
+        v-else
+        :search-staff="staffId"
+        :search-type.sync="searchType"
+        :is-seach-page.sync="isSeachPage"
+        :search-time="timeSpan"
+      />
+    </transition>
   </div>
 </template>
 

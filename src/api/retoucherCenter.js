@@ -22,7 +22,7 @@ export function getRetouchStreams (params) {
       listItem.type = listItem.product.retouch_standard
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
       listItem.waitTime = waitTime(listItem.created_at)
-      listItem.photographerUpdate = listItem.created_at
+      listItem.photographerUpdate = listItem.created_at || '-'
       listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework') || false
       if (params.state === 'hanging') {
         listItem.hangTime = waitTime(listItem.last_hang_at)

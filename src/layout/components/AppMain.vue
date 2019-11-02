@@ -61,10 +61,6 @@ export default {
 
 .main-scroll-container {
   height: @mainScrollContainerHeight;
-
-  .el-scrollbar__wrap{
-    overflow-x:hidden;
-  }
 }
 
 .overhidden {

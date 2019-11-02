@@ -21,3 +21,13 @@ export function revertTimeSpan (time, subtractDay) {
   }
   return date.format('YYYY-MM-DD')
 }
+
+/**
+ * @description 格式化时间
+ * @param {*} time 
+ */
+export function formatTime (time) {
+  if (time === '-') return '-'
+  const date = moment(time)
+  return date.format('YYYY.MM.DD hh:mm')
+}

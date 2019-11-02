@@ -43,14 +43,18 @@
             </el-table-column>
             <el-table-column label="有效时间" width="200">
               <template slot-scope="scope">
-                <p>开始：{{ scope.row.start_at }}</p>
-                <p>结束：{{ scope.row.end_at }}</p>
+                <p>开始：{{ scope.row.start_at | toTimeSpan }}</p>
+                <p>结束：{{ scope.row.end_at | toTimeSpan }}</p>
               </template>
             </el-table-column>
             <el-table-column prop="state" label="使用状态">
               <template slot-scope="scope">{{ scope.row.state | changeStateName }}</template>
             </el-table-column>
-            <el-table-column prop="created_at" label="创建时间" width="180" />
+            <el-table-column label="创建时间" width="180">
+              <template slot-scope="scope">
+                {{ scope.row.created_at | toTimeSpan }}
+              </template>
+            </el-table-column>
             <el-table-column prop="createName" label="创建人" />
             <el-table-column label="操作" width="200">
               <template slot-scope="scope">

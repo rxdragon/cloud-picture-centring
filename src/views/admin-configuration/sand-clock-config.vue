@@ -1,54 +1,57 @@
 <template>
   <div class="sand-clock-config">
-    <div v-show="!editConfig" class="sand-clock-list">
-      <!-- 沙漏头部 -->
-      <div class="header">
-        <div class="header-lef">
-          <h3>沙漏计时配置</h3>
-        </div>
-        <div class="header-right">
-          <div class="switch-box">
-            <span>沙漏当前状态：{{ sandClockValue ? '开启' : '关闭' }}</span>
-            <el-switch
-              v-model="sandClockValue"
-              active-color="#4669fb"
-              inactive-color="#D4D4D9"
-              @change="sandChange"
-            />
+    <transition name="fade-transform" mode="out-in">
+      <div v-if="!editConfig" class="sand-clock-list">
+        <!-- 沙漏头部 -->
+        <div class="header">
+          <div class="header-lef">
+            <h3>沙漏计时配置</h3>
           </div>
-          <el-button type="primary" size="mini" @click="addSandClock">配置沙漏</el-button>
+          <div class="header-right">
+            <div class="switch-box">
+              <span>沙漏当前状态：{{ sandClockValue ? '开启' : '关闭' }}</span>
+              <el-switch
+                v-model="sandClockValue"
+                active-color="#4669fb"
+                inactive-color="#D4D4D9"
+                @change="sandChange"
+              />
+            </div>
+            <el-button type="primary" size="mini" @click="addSandClock">配置沙漏</el-button>
+          </div>
+        </div>
+        <div class="order-list">
+          <el-tabs v-model="listActive">
+            <el-tab-pane label="产品沙漏配置" name="productSandConfig">
+              <div class="table-box no-border">
+                <product-sand-config
+                  :is-refresh.sync="editConfig"
+                  :edit-id.sync="editId"
+                  :hour-glass-length="hourGlassLength"
+                  @changeHourGlassGlobalState="getHourGlassGlobalState"
+                />
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="基础沙漏配置" name="baseSandConfig">
+              <div class="table-box">
+                <base-sand-config
+                  :is-refresh.sync="editConfig"
+                  :hour-glass-length="hourGlassLength"
+                  @changeHourGlassGlobalState="getHourGlassGlobalState"
+                />
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </div>
-      <div class="order-list">
-        <el-tabs v-model="listActive">
-          <el-tab-pane label="产品沙漏配置" name="productSandConfig">
-            <div class="table-box no-border">
-              <product-sand-config
-                :is-refresh.sync="editConfig"
-                :edit-id.sync="editId"
-                :hour-glass-length="hourGlassLength"
-                @changeHourGlassGlobalState="getHourGlassGlobalState"
-              />
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="基础沙漏配置" name="baseSandConfig">
-            <div class="table-box">
-              <base-sand-config
-                :is-refresh.sync="editConfig"
-                :hour-glass-length="hourGlassLength"
-                @changeHourGlassGlobalState="getHourGlassGlobalState"
-              />
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-    </div>
-    <edit-sand-clock-config
-      v-show="editConfig"
-      :edit-id="editId"
-      :base-edit="baseEdit"
-      :edit-config.sync="editConfig"
-    />
+      <edit-sand-clock-config
+        v-else
+        :edit-id="editId"
+        :base-edit="baseEdit"
+        :edit-config.sync="editConfig"
+      />
+    </transition>
+    
   </div>
 </template>
 

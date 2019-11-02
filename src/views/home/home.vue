@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="logo-tip">
-      <div class="logo-img iconmap-cloud-logo-big" />
+      <div class="logo-img home-logo" />
       <div class="logo-desc">
         <span class="black">欢迎来到</span>
         <span class="desc">缦图云端修图中心</span>
@@ -54,8 +54,8 @@ export default {
     transform: translateX(-50%) translateY(-50%);
 
     .logo-img {
-      width: 360px;
-      height: 90px;
+      width:568px;
+      height:391px;
     }
 
     .logo-desc {
@@ -64,6 +64,8 @@ export default {
       font-weight:600;
       color:#131923;
       line-height:38px;
+      text-align: center;
+      margin-top: 26px;
 
       .desc {
         color: #4669FB;
