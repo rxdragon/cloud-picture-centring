@@ -6,87 +6,85 @@
         <el-button v-if="!gradeInfo.attitude" type="primary" @click="onSubmitAttitude">照片标记提交</el-button>
       </div>
     </div>
-    <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.native="handleScroll">
-      <!-- 订单信息 -->
-      <div class="panel-box module-panel">
-        <div class="order-info">
-          <div class="panel-title">订单信息</div>
-          <div class="panel-content">
-            <div class="order-title content-title">
-              <span>订单号</span>
-              <span>流水号</span>
-              <span>产品名称</span>
-              <span>顾客姓名</span>
-            </div>
-            <div class="order-value content-value">
-              <span>{{ orderNum }}</span>
-              <span>{{ streamNum }}</span>
-              <span>{{ productName }}</span>
-              <span>没数据</span>
-            </div>
-            <div class="panel-title require-box">备注信息</div>
-            <div class="panel-main">
-              <div class="panel-main-content">
-                <span class="title">订单备注：</span>
-                <span class="content">{{ orderMark }}</span>
-              </div>
-              <div class="panel-main-content">
-                <span class="title">化妆备注：</span>
-                <span class="content">{{ dresserMark }}</span>
-              </div>
-              <div class="panel-main-content">
-                <span class="title">摄影备注：</span>
-                <span class="content">{{ photographerRemark }}</span>
-              </div>
-              <div class="panel-main-content">
-                <span class="title">修图备注：</span>
-                <span class="content">{{ retouchMark }}</span>
-              </div>
-            </div>
+    <!-- 订单信息 -->
+    <div class="panel-box module-panel">
+      <div class="order-info">
+        <div class="panel-title">订单信息</div>
+        <div class="panel-content">
+          <div class="order-title content-title">
+            <span>订单号</span>
+            <span>流水号</span>
+            <span>产品名称</span>
+            <span>顾客姓名</span>
           </div>
-        </div>
-        <!-- 工作人员 -->
-        <div class="work-staff">
-          <div class="panel-title">工作人员</div>
-          <div class="panel-content">
-            <div class="work-title content-title">
-              <span>门店</span>
-              <span>摄影师</span>
-              <span>化妆师</span>
-            </div>
-            <div class="work-value content-value">
-              <span>{{ workerInfo.storeName }}</span>
-              <span>{{ workerInfo.photographer }}</span>
-              <span>没数据</span>
-            </div>
+          <div class="order-value content-value">
+            <span>{{ orderNum }}</span>
+            <span>{{ streamNum }}</span>
+            <span>{{ productName }}</span>
+            <span>没数据</span>
           </div>
-          <div class="panel-content">
-            <div class="work-staff-title content-title">
-              <span>修图师</span>
-              <span>修图组</span>
-              <span>审核人</span>
-              <span>看片师</span>
-              <span>看片评价修图师</span>
+          <div class="panel-title require-box">备注信息</div>
+          <div class="panel-main">
+            <div class="panel-main-content">
+              <span class="title">订单备注：</span>
+              <span class="content">{{ orderMark }}</span>
             </div>
-            <div class="work-staff-value content-value">
-              <span>{{ workerInfo.retoucher || '-' }}</span>
-              <span>{{ workerInfo.retouchGroup || '-' }}</span>
-              <span>{{ workerInfo.reviewer }}</span>
-              <span>{{ workerInfo.watcherName }}</span>
-              <span class="check-evaluate">
-                <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #ff9900" class="el-icon-star-on" /></span>
-                <span>评语：{{ workerInfo.storeEvaluateReason }}</span>
-              </span>
+            <div class="panel-main-content">
+              <span class="title">化妆备注：</span>
+              <span class="content">{{ dresserMark }}</span>
+            </div>
+            <div class="panel-main-content">
+              <span class="title">摄影备注：</span>
+              <span class="content">{{ photographerRemark }}</span>
+            </div>
+            <div class="panel-main-content">
+              <span class="title">修图备注：</span>
+              <span class="content">{{ retouchMark }}</span>
             </div>
           </div>
         </div>
       </div>
-      <!-- 照片信息 -->
-      <div class="panel-box module-panel">
-        <div class="panel-title">照片信息</div>
-        <photo-list need-grade :grade-info="gradeInfo" :photo-data="photoVersion" @gradeChange="onGradeChange" />
+      <!-- 工作人员 -->
+      <div class="work-staff">
+        <div class="panel-title">工作人员</div>
+        <div class="panel-content">
+          <div class="work-title content-title">
+            <span>门店</span>
+            <span>摄影师</span>
+            <span>化妆师</span>
+          </div>
+          <div class="work-value content-value">
+            <span>{{ workerInfo.storeName }}</span>
+            <span>{{ workerInfo.photographer }}</span>
+            <span>没数据</span>
+          </div>
+        </div>
+        <div class="panel-content">
+          <div class="work-staff-title content-title">
+            <span>修图师</span>
+            <span>修图组</span>
+            <span>审核人</span>
+            <span>看片师</span>
+            <span>看片评价修图师</span>
+          </div>
+          <div class="work-staff-value content-value">
+            <span>{{ workerInfo.retoucher || '-' }}</span>
+            <span>{{ workerInfo.retouchGroup || '-' }}</span>
+            <span>{{ workerInfo.reviewer }}</span>
+            <span>{{ workerInfo.watcherName }}</span>
+            <span class="check-evaluate">
+              <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #ff9900" class="el-icon-star-on" /></span>
+              <span>评语：{{ workerInfo.storeEvaluateReason }}</span>
+            </span>
+          </div>
+        </div>
       </div>
-    </el-scrollbar>
+    </div>
+    <!-- 照片信息 -->
+    <div class="panel-box module-panel">
+      <div class="panel-title">照片信息</div>
+      <photo-list need-grade :grade-info="gradeInfo" :photo-data="photoVersion" @gradeChange="onGradeChange" />
+    </div>
   </div>
 </template>
 
@@ -114,11 +112,6 @@ export default {
       gradeInfo: {}, // 打分数据
       attitudeValue: '',
       headerClass: '' // 导航栏样式
-    }
-  },
-  computed: {
-    scrollWrapper () {
-      return this.$refs.scrollContainer.$refs.wrap
     }
   },
   activated () {
@@ -199,23 +192,6 @@ export default {
 .guest-info {
   .header {
     line-height: 40px;
-  }
-
-  .header-fixed {
-    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.08);
-    width: calc(~'100% + 56px');
-    margin-left: -28px;
-    padding: 0 28px 24px;
-    position: relative;
-    z-index: 100;
-  }
-
-  .scroll-container {
-    height: @orderScrollContainerHeight;
-
-    .el-scrollbar__wrap{
-      overflow-x:hidden;
-    }
   }
 
   .module-panel {

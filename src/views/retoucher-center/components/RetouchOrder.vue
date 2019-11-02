@@ -1,7 +1,7 @@
 <template>
   <div class="retouch-order">
     <!-- 标题 -->
-    <div class="header" :class="headerClass">
+    <div class="header">
       <div class="header-left">
         <h3>修图详情</h3>
         <div v-if="isSandClockOpen" class="sand-clock">
@@ -14,98 +14,96 @@
         <el-button type="primary" @click="submitOrder">提交审核</el-button>
       </div>
     </div>
-    <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.native="handleScroll">
-      <!-- 照片信息 -->
-      <order-info :order-data="orderData" />
-      <!-- 图片信息 -->
-      <div class="photo-module module-panel">
-        <div class="photo-panel-title panel-title">
-          <span>原片信息</span>
-          <div class="button-box">
-            <domain-switch-box />
-            <el-button type="primary" size="small" @click="oneAllDownOrign">一键下载原片</el-button>
-          </div>
-        </div>
-        <div class="photo-panel">
-          <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
-            <photo-box
-              downing
-              preview
-              :stream-num="orderData.streamNum"
-              photo-name
-              :tags="photoItem.tags"
-              show-joint-label
-              show-recede-reason
-              :src="photoItem.path"
-              :people-num="photoItem.people_num"
-            />
-          </div>
-          <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
-            <span>备注原因：</span>
-            <div class="remark-content">{{ reviewerNote }}</div>
-          </div>
+    <!-- 照片信息 -->
+    <order-info :order-data="orderData" />
+    <!-- 图片信息 -->
+    <div class="photo-module module-panel">
+      <div class="photo-panel-title panel-title">
+        <span>原片信息</span>
+        <div class="button-box">
+          <domain-switch-box />
+          <el-button type="primary" size="small" @click="oneAllDownOrign">一键下载原片</el-button>
         </div>
       </div>
-      <!-- 修图上传 -->
-      <div class="photo-module module-panel upload-module">
-        <div class="photo-panel-title panel-title">
-          <span>修图上传</span>
+      <div class="photo-panel">
+        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
+          <photo-box
+            downing
+            preview
+            :stream-num="orderData.streamNum"
+            photo-name
+            :tags="photoItem.tags"
+            show-joint-label
+            show-recede-reason
+            :src="photoItem.path"
+            :people-num="photoItem.people_num"
+          />
         </div>
-        <div class="photo-panel photo-panel-upload">
-          <div v-for="(photoItem, photoIndex) in cachePhoto" :key="photoIndex" class="photo-box">
-            <photo-box
-              photo-name
-              :src="photoItem.path"
-            />
-            <span class="delete-button" @click="deleteCachePhoto(photoIndex)">
-              <i class="el-icon-error" />
-            </span>
-          </div>
-          <div v-for="(photoItem, photoIndex) in uploadPhoto" :key="photoIndex" class="photo-box">
-            <photo-box
-              v-if="photoItem.response && photoItem.status !== 'fail'"
-              photo-name
-              :src="finishPhoto[photoIndex].path"
-            />
-            <div v-else-if="photoItem.status !== 'fail'" class="progress">
-              <el-progress
-                type="circle"
-                :percentage="photoItem.percentage | formatProgress"
-                :color="photoItem.percentage | filterPercentageColor"
-                :status="photoItem.percentage | filterPercentage"
-              />
-            </div>
-            <div v-else class="error-photo progress">
-              <i class="el-icon-warning-outline">上传失败</i>
-            </div>
-            <span class="delete-button" @click="deleteUploadPhoto(photoItem.response, photoIndex)">
-              <i class="el-icon-error" />
-            </span>
-          </div>
-          <div v-show="canUpdatePhoto" key="upload-button" class="crop-upload-box">
-            <el-upload
-              ref="uploadButton"
-              class="upload-crop-button"
-              accept="image/*"
-              :action="updateDomain + upyunConfig.bucket"
-              :show-file-list="false"
-              :before-upload="beforeUpload"
-              :on-progress="handleProgress"
-              :on-success="handleSuccess"
-              multiple
-              :file-list="uploadPhoto"
-              :data="upyunConfig"
-            >
-              <div class="avatar-upload">
-                <i class="el-icon-plus" />
-                <span>上传照片</span>
-              </div>
-            </el-upload>
-          </div>
-          <div v-for="i in 4" :key="'empty' + i" class="empty-box" />
+        <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
+          <span>备注原因：</span>
+          <div class="remark-content">{{ reviewerNote }}</div>
         </div>
       </div>
-    </el-scrollbar>
+    </div>
+    <!-- 修图上传 -->
+    <div class="photo-module module-panel upload-module">
+      <div class="photo-panel-title panel-title">
+        <span>修图上传</span>
+      </div>
+      <div class="photo-panel photo-panel-upload">
+        <div v-for="(photoItem, photoIndex) in cachePhoto" :key="photoIndex" class="photo-box">
+          <photo-box
+            photo-name
+            :src="photoItem.path"
+          />
+          <span class="delete-button" @click="deleteCachePhoto(photoIndex)">
+            <i class="el-icon-error" />
+          </span>
+        </div>
+        <div v-for="(photoItem, photoIndex) in uploadPhoto" :key="photoIndex" class="photo-box">
+          <photo-box
+            v-if="photoItem.response && photoItem.status !== 'fail'"
+            photo-name
+            :src="finishPhoto[photoIndex].path"
+          />
+          <div v-else-if="photoItem.status !== 'fail'" class="progress">
+            <el-progress
+              type="circle"
+              :percentage="photoItem.percentage | formatProgress"
+              :color="photoItem.percentage | filterPercentageColor"
+              :status="photoItem.percentage | filterPercentage"
+            />
+          </div>
+          <div v-else class="error-photo progress">
+            <i class="el-icon-warning-outline">上传失败</i>
+          </div>
+          <span class="delete-button" @click="deleteUploadPhoto(photoItem.response, photoIndex)">
+            <i class="el-icon-error" />
+          </span>
+        </div>
+        <div v-show="canUpdatePhoto" key="upload-button" class="crop-upload-box">
+          <el-upload
+            ref="uploadButton"
+            class="upload-crop-button"
+            accept="image/*"
+            :action="updateDomain + upyunConfig.bucket"
+            :show-file-list="false"
+            :before-upload="beforeUpload"
+            :on-progress="handleProgress"
+            :on-success="handleSuccess"
+            multiple
+            :file-list="uploadPhoto"
+            :data="upyunConfig"
+          >
+            <div class="avatar-upload">
+              <i class="el-icon-plus" />
+              <span>上传照片</span>
+            </div>
+          </el-upload>
+        </div>
+        <div v-for="i in 4" :key="'empty' + i" class="empty-box" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -179,9 +177,6 @@ export default {
   },
   computed: {
     ...mapGetters(['updateDomain', 'returnStreamId']),
-    scrollWrapper () {
-      return this.$refs.scrollContainer.$refs.wrap
-    },
     variables () {
       return variables
     },
@@ -442,17 +437,7 @@ export default {
 <style lang="less">
 @import '~@/styles/variables.less';
 .retouch-order {
-  .header-fixed {
-    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.08);
-    width: calc(~'100% + 56px');
-    margin-left: -28px;
-    padding: 0 28px 24px;
-  }
-
   .header {
-    position: relative;
-    z-index: 10;
-
     .header-left {
       display: flex;
       align-items: center;
@@ -492,14 +477,6 @@ export default {
       .el-button {
         border-radius: 8px;
       }
-    }
-  }
-
-  .scroll-container {
-    height: @orderScrollContainerHeight;
-
-    .el-scrollbar__wrap{
-      overflow-x:hidden;
     }
   }
 
@@ -661,5 +638,4 @@ export default {
     margin-bottom: 10px;
   }
 }
-
 </style>
