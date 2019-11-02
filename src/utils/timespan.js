@@ -24,7 +24,7 @@ export function revertTimeSpan (time, subtractDay) {
 
 /**
  * @description 格式化时间
- * @param {*} time 
+ * @param {*} time
  */
 export function formatTime (time) {
   if (time === '-') return '-'
