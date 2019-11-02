@@ -107,25 +107,38 @@ export default {
         pageSize: this.pager.pageSize
       }
       if (this.roleName) { reqData.title = this.roleName }
-      const data = await AccountManage.getRoleList(reqData)
-      this.tableData = data.list
-      this.pager.total = data.total
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const data = await AccountManage.getRoleList(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        console.log(error)
+      }
     },
     /**
      * @description 删除角色组
      */
     delRole (item) {
-      const reqData = {
-        roleId: item.role_id
-      }
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      AccountManage.delRole(reqData)
-        .then(() => {
+      this.$confirm('确认删除该角色组吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        try {
+          const reqData = { roleId: item.role_id }
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          await AccountManage.delRole(reqData)
           this.$newMessage.success('删除成功')
           this.getRoleList()
-        }).finally(() => {
+        } catch (error) {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        })
+          console.log(error)
+        }
+      }).catch(() => {})
     }
   }
 }

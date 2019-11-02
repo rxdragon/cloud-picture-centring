@@ -118,17 +118,24 @@ export default {
      * @description 删除沙漏
      */
     async deleteHourGlass (listItem) {
-      try {
-        this.$store.dispatch('setting/showLoading', this.routeName)
-        const reqData = { configId: listItem.id }
-        await OperationManage.DeleteHourGlass(reqData)
-        this.$newMessage.success('删除成功')
-        this.getHourGlassList()
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
-      }
+      this.$confirm('确认删除该沙漏配置吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        try {
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          const reqData = { configId: listItem.id }
+          await OperationManage.DeleteHourGlass(reqData)
+          this.$newMessage.success('删除成功')
+          this.getHourGlassList()
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        } catch (error) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          console.error(error)
+        }
+      }).catch(() => {})
     },
     /**
      * @description 编辑沙漏

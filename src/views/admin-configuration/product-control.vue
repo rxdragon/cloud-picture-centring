@@ -182,16 +182,23 @@ export default {
      * @param {*} listItem
      */
     async delProduct (listItem) {
-      try {
-        const reqData = { productId: listItem.id }
-        this.$store.dispatch('setting/showLoading', this.routeName)
-        await OperationManage.delProduct(reqData)
-        this.$newMessage.success('删除成功')
-        this.getProductList()
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
-      }
+      this.$confirm('确认删除该产品吗？', '', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        try {
+          const reqData = { productId: listItem.id }
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          await OperationManage.delProduct(reqData)
+          this.$newMessage.success('删除成功')
+          this.getProductList()
+        } catch (error) {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          console.error(error)
+        }
+      }).catch(() => {})
     }
   }
 }
