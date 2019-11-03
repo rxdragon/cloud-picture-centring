@@ -2,9 +2,8 @@ image: node:12
 
 stages:
   - deploy
-  - upload
 
-deploy:
+.deploy
   stage: deploy
   cache:
     key: cache
@@ -23,17 +22,53 @@ deploy:
     paths:
       - dist_electron
     expire_in: 1 day
+
+    
+deploy-master:
+  extends: .deploy
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  cache:
+    key: cache
+    paths:
+      - node_modules/
+  script:
+    - yarn
+    - yarn run build-dev
+    - yarn run build-background-dev
+    - yarn run pack-vue
+    - node print_version.js
+    - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
+  variables:
+    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
+  artifacts:
+    paths:
+      - dist_electron
+    expire_in: 1 day
   only:
     - dev
 
-upload:
-  image: registry.cn-hangzhou.aliyuncs.com/mainto_micro/service-minio-client-master
-  stage: upload
-  variables:
-    DOCKER_DRIVER: overlay2
+deploy:
+  stage: deploy
+  cache:
+    key: cache
+    paths:
+      - node_modules/
   script:
-    - mc config host add mainto $S3_HOST $S3_KEY $S3_SECRET
-    - cd ./dist_electron
-    - mc mirror --overwrite . mainto/demo/electron/
+    - yarn
+    - yarn run build-release
+    - yarn run build-background-release
+    - yarn run pack-vue
+    - node print_version.js
+    - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
+  variables:
+    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
+  artifacts:
+    paths:
+      - dist_electron
+    expire_in: 1 day
   only:
-    - dev
+    - /^release.*$/
