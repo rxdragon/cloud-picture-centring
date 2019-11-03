@@ -3,7 +3,7 @@
     <div class="title">云端流量看板</div>
     <div class="refresh">{{ time }}s后刷新</div>
     <div class="main">
-      <div class="header">
+      <div class="flow-board-header">
         <div class="panel-wrap panel-orange" @click.stop="">
           <div class="header-nav">今日取片待修 / 其他取片日待修</div>
           <div class="panel-content">订单数 {{ flowInfo.waitRetouch.streamNum.today }} / {{ flowInfo.waitRetouch.streamNum.other }}</div>
@@ -278,7 +278,7 @@ export default {
     margin: auto;
   }
 
-  .header {
+  .flow-board-header {
     display: flex;
     justify-content: center;
 
@@ -321,7 +321,7 @@ export default {
         position: absolute;
         left: 50%;
         width: 2px;
-        height: 140px;
+        height: 118px;
         bottom: 100%;
         transform: translateX(-50%);
       }

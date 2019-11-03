@@ -36,7 +36,7 @@ export default {
   methods: {
     scrollMove (e) {
       const scrollTop = e.target.scrollTop
-      if (scrollTop > 10) {
+      if (scrollTop > 0) {
         document.body.style.setProperty('--boxShadow', '0px 2px 4px 0px rgba(0,0,0,0.08)')
       } else {
         document.body.style.setProperty('--boxShadow', '')
@@ -52,12 +52,31 @@ export default {
   width: 100%;
   position: relative;
   padding: @appMainPadding;
+  margin-top: @headerHeight;
   box-sizing: border-box;
   min-width: @minWidth;
   height: @appMainHeight;
-  overflow-y: auto;
+  overflow-y: scroll;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    width: @scrollbarWidth;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 7px;
+    background-color: rgba(144,147,153,.3);
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(144,147,153,.5);
+    }
+  }
 }
 
 .fixed-header+.app-main {
