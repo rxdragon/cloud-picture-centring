@@ -78,4 +78,26 @@ export default {
   height: 34px;
   background-color: red;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cdcdcd;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-button {
+  background: #ffffff;
+  display: none;
+}
+
+::-webkit-scrollbar-corner{
+  display: none;
+}
 </style>

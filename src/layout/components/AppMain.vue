@@ -58,24 +58,6 @@ export default {
   height: @appMainHeight;
   overflow-y: scroll;
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-
-  &::-webkit-scrollbar {
-    width: @scrollbarWidth;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 7px;
-    background-color: rgba(144,147,153,.3);
-
-    &:hover {
-      background-color: rgba(144,147,153,.5);
-    }
-  }
 }
 
 .fixed-header+.app-main {
