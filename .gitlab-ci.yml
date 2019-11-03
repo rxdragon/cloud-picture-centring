@@ -2,14 +2,23 @@ image: node:12
 
 stages:
   - deploy
-  - upload
 
-deploy:
+.deploy:
   stage: deploy
   cache:
     key: cache
     paths:
       - node_modules/
+  variables:
+    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
+  artifacts:
+    paths:
+      - dist_electron
+    expire_in: 1 day
+
+    
+deploy-master:
+  extends: .deploy
   script:
     - yarn
     - yarn run build
@@ -17,23 +26,38 @@ deploy:
     - yarn run pack-vue
     - node print_version.js
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
-  variables:
-    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
-  artifacts:
-    paths:
-      - dist_electron
-    expire_in: 1 day
+    - node upload.js
+  environment:
+    name: master
+  only:
+    - master
+
+deploy-dev:
+  extends: .deploy
+  script:
+    - yarn
+    - yarn run build-dev
+    - yarn run build-background-dev
+    - yarn run pack-vue
+    - node print_version.js
+    - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
+    - node upload.js
+  environment:
+    name: staging/dev
   only:
     - dev
 
-upload:
-  image: registry.cn-hangzhou.aliyuncs.com/mainto_micro/service-minio-client-master
-  stage: upload
-  variables:
-    DOCKER_DRIVER: overlay2
+deploy-release:
+  extends: .deploy
   script:
-    - mc config host add mainto $S3_HOST $S3_KEY $S3_SECRET
-    - cd ./dist_electron
-    - mc mirror --overwrite . mainto/demo/electron/
+    - yarn
+    - yarn run build-release
+    - yarn run build-background-release
+    - yarn run pack-vue
+    - node print_version.js
+    - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
+    - node upload.js
+  environment:
+    name: staging/release
   only:
-    - dev
+    - /^release-([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/
