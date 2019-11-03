@@ -14,7 +14,7 @@ module.exports = {
   productionSourceMap: false, // 生产环境关闭source map
   integrity: false, // 内容安全策略及子资源完整性
   configureWebpack: (c) => {
-    let config = {
+    const config = {
       resolve: {
         alias: {
           '@': resolve('src'),

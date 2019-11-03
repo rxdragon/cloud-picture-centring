@@ -31,6 +31,7 @@ export default {
 
 <style lang="less" scoped>
 .wscn-http404-container{
+  -webkit-app-region: drag;
   transform: translate(-50%,-50%);
   position: absolute;
   top: 40%;

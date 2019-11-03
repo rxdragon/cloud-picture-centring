@@ -126,7 +126,7 @@ export function addRole (params) {
 }
 
 /**
- * @description 获取权限组信息
+ * @description 获取角色组信息
  * @param {*} params
  */
 export function getRoleInfo (params) {
