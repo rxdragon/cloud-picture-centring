@@ -59,6 +59,10 @@ export const constantRoutes = [
       }
     ]
   }, {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
+    hidden: true
+  }, {
     path: '*',
     component: () => import('@/views/error-page/404'),
     hidden: true

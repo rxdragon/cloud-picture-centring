@@ -83,6 +83,10 @@ const actions = {
         router.addRoutes(accessRoutes)
         resolve()
       } catch (error) {
+        router.push({
+          path: '/401'
+        })
+        console.log(error)
         reject(error)
       }
     })

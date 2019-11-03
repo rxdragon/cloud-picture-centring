@@ -23,7 +23,6 @@
         <el-tab-pane label="修图类别配置" name="retouchCategory" />
         <el-tab-pane label="角色权限配置" name="role" />
       </el-tabs>
-
       <div class="table-box main-content" :class="{'no-border': activeName === 'retouchCategory'}">
         <!-- 修图类配置 -->
         <div v-show="activeName === 'retouchCategory'" class="retouch-category-box">
@@ -48,7 +47,7 @@
         <div v-if="activeName === 'role'" class="role-box">
           <div class="role-search search-item">
             <span>角色组名称</span>
-            <role-select v-model="roleValue" />
+            <role-select v-model="roleValue" @change="roleChange" />
           </div>
           <div class="role-module search-item">
             <span>权限模块</span>
@@ -96,7 +95,9 @@ export default {
       defaultCheckedKeys: [], // 默认选中产品
       hasPermission: [], // 默认选中权限
       staffInfo: {}, // 用户信息
-      roleList: [] // 权限列表
+      roleList: [], // 权限列表
+      staffPermission: [], // 用户个人权限
+      rolePermissionArr: [] // 角色id
     }
   },
   computed: {
@@ -121,7 +122,16 @@ export default {
       this.staffInfo = { ...this.editData }
       this.roleValue = this.editData.role
       this.retouchSelectType = this.editData.retoucher_class_id
-      this.getStaffPermission()
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      Promise.all([
+        this.getRoleInfo(this.roleValue),
+        this.getStaffPermission()
+      ]).then(() => {
+        this.resetPermission()
+      }).catch(() => {
+        this.$newMessage.error('初始化权限失败')
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      })
     }
   },
   methods: {
@@ -215,6 +225,8 @@ export default {
      */
     resetParams () {
       this.hasPermission = []
+      this.rolePermissionArr = []
+      this.staffPermission = []
       this.retouchSelectType = ''
       this.roleValue = ''
     },
@@ -251,15 +263,43 @@ export default {
     /**
      * @description 获取伙伴权限
      */
-    getStaffPermission () {
+    async getStaffPermission () {
       if (!this.jobNumber) { return false }
       const req = { staffNum: this.jobNumber }
+      const data = await AccountManage.getStaffPermission(req)
+      this.staffPermission = data.map(item => item.id)
+    },
+    /**
+     * @description 获取角色组权限
+     */
+    async getRoleInfo (id) {
+      try {
+        const req = {}
+        req.roleId = id
+        req.additionInfo = false
+        const data = await AccountManage.getRoleInfo(req)
+        this.rolePermissionArr = data.permissions.map(item => item.permission_id)
+      } catch (error) {
+        console.error(error)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+    },
+    /**
+     * @description 初始化用户权限
+     */
+    resetPermission () {
+      const permissionSet = new Set([...this.staffPermission, ...this.rolePermissionArr])
+      this.hasPermission = [...permissionSet]
+      this.$store.dispatch('setting/hiddenLoading', this.routeName)
+    },
+    /**
+     * @description 角色组变化
+     */
+    async roleChange () {
       this.$store.dispatch('setting/showLoading', this.routeName)
-      AccountManage.getStaffPermission(req)
-        .then(data => {
-          this.hasPermission = data.map(item => item.id)
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        })
+      this.staffPermission = []
+      await this.getRoleInfo(this.roleValue)
+      this.resetPermission()
     }
   }
 }
