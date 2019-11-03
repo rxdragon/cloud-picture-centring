@@ -71,7 +71,6 @@ export default {
   &::-webkit-scrollbar-thumb {
     border-radius: 7px;
     background-color: rgba(144,147,153,.3);
-    cursor: pointer;
 
     &:hover {
       background-color: rgba(144,147,153,.5);
