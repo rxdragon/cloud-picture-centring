@@ -4,6 +4,11 @@ const upyun = require('upyun')
 const args = process.argv
 args.splice(0, 2)
 // 得到配置
+process.env.OPERATOR = 'dev'
+process.env.PASSWORD = 'maintodev'
+process.env.BUCKET = 'img-mainto-dev'
+process.env.ROOTPATH = 'cloud-picture-centring-release/'
+process.env.SOURCEFOLDER = 'dist_electron'
 const { OPERATOR, PASSWORD, BUCKET, ROOTPATH, SOURCEFOLDER } = process.env
 console.log(ROOTPATH)
 const sourcefolder = path.resolve(__dirname, SOURCEFOLDER)
@@ -21,8 +26,9 @@ async function uploadFileList (fileList, client) {
     try {
       // 比对文件大小进行上传
       remoteFile = await client.headFile(item.remotePath)
-      if (remoteFile && remoteFile.size === item.size && !/index.html$/.test(item.remotePath)) {
-        console.log('\x1b[33m'+localPath+'\t不需要上传\x1b[0m')
+      const isVersionJson = item.name === 'version.json'
+      if (!isVersionJson && remoteFile && remoteFile.size === item.size && !/index.html$/.test(item.remotePath)) {
+        console.log('\x1b[33m'+item.filePath+'\t不需要上传\x1b[0m')
       } else {
         file = fs.readFileSync(item.filePath)
         await client.putFile(item.remotePath, file)
@@ -48,8 +54,10 @@ function findAllFile (uploadDir, relativePath) {
         findAllFile(uploadDir + path.sep + item, relativePath + item + path.sep)
       } else {
         const localPath = uploadDir + path.sep + item
+        console.log(item)
         fileList.push({
           filePath: localPath,
+          name: item,
           remotePath: relativePath + item,
           size: fs.statSync(localPath).size
         })
