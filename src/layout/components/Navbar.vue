@@ -101,6 +101,7 @@ export default {
     .nav-right {
       display: flex;
       align-items: center;
+      -webkit-user-select: none;
 
       .download-management {
         margin-right: 20px;

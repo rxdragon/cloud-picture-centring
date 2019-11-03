@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron'
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
 import store from '@/store' // vuex
+import Vue from 'vue'
 
 /**
  * @description 截取文件名
@@ -49,6 +50,7 @@ export function settlePhoto (photoArr, reworkTimes = 0) {
  */
 export function oneAllDown (photoArr) {
   const imgDomain = store.getters.imgDomain
+  Vue.prototype.$newMessage.success(`已添加${photoArr.length}张照片`)
   photoArr.forEach(item => {
     item.url = imgDomain + item.url
     ipcRenderer.send('downPhoto', item)

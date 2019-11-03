@@ -1,8 +1,11 @@
 <template>
-  <section v-loading.lock="isLoading"
+  <section
+    v-loading.lock="isLoading"
     element-loading-custom-class="main-loading"
+    class="app-main"
+    :class="{'overhidden':isLoading}"
     @scroll="scrollMove"
-    class="app-main" :class="{'overhidden':isLoading}">
+  >
     <transition :name="transitionName" mode="out-in">
       <keep-alive :include="cachedViews" :max="4">
         <router-view :key="key" />
@@ -34,9 +37,9 @@ export default {
     scrollMove (e) {
       const scrollTop = e.target.scrollTop
       if (scrollTop > 10) {
-        document.body.style.setProperty('--boxShadow', '0px 2px 4px 0px rgba(0,0,0,0.08)');
+        document.body.style.setProperty('--boxShadow', '0px 2px 4px 0px rgba(0,0,0,0.08)')
       } else {
-        document.body.style.setProperty('--boxShadow', '');
+        document.body.style.setProperty('--boxShadow', '')
       }
     }
   }
@@ -53,6 +56,8 @@ export default {
   min-width: @minWidth;
   height: @appMainHeight;
   overflow-y: auto;
+  scroll-behavior: smooth; 
+  -webkit-overflow-scrolling: touch;
 }
 
 .fixed-header+.app-main {
