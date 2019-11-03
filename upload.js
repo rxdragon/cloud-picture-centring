@@ -4,7 +4,6 @@ const upyun = require('upyun')
 const args = process.argv
 args.splice(0, 2)
 // 得到配置
-console.log(args)
 const { OPERATOR, PASSWORD, BUCKET, ROOTPATH, SOURCEFOLDER } = process.env
 const sourcefolder = path.resolve(__dirname, SOURCEFOLDER)
 // 利用upyun包准备上传工具
