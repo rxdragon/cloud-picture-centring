@@ -5,20 +5,17 @@ const args = process.argv
 args.splice(0, 2)
 // 得到配置
 console.log(args)
-let [operator, password, bucket, rootpath, sourcefolder] = {
-  operator: process.env.EE_EE,
-
-}
-sourcefolder = path.resolve(__dirname, sourcefolder)
+const { OPERATOR, PASSWORD, BUCKET, ROOTPATH, SOURCEFOLDER } = process.env
+const sourcefolder = path.resolve(__dirname, SOURCEFOLDER)
 // 利用upyun包准备上传工具
-const service = new upyun.Service(bucket, operator, password)
+const service = new upyun.Service(BUCKET, OPERATOR, PASSWORD)
 const client = new upyun.Client(service)
 // 要上传的文件列表
-let fileList = []
+const fileList = []
 
 // 上传文件脚本
 async function uploadFileList (fileList, client) {
-  for (let item of fileList) {
+  for (const item of fileList) {
     let file = null
     let remoteFile = null
     try {
@@ -40,17 +37,17 @@ async function uploadFileList (fileList, client) {
 }
 // 读出所有的文件
 function findAllFile (uploadDir, relativePath) {
-  let dirExist = fs.existsSync(uploadDir)
+  const dirExist = fs.existsSync(uploadDir)
   if (dirExist) {
-    let res = fs.readdirSync(uploadDir)
+    const res = fs.readdirSync(uploadDir)
     if (res.length === 0) {
       return
     }
-    for (let item of res) {
+    for (const item of res) {
       if (fs.statSync(uploadDir + path.sep + item).isDirectory()) {
         findAllFile(uploadDir + path.sep + item, relativePath + item + path.sep)
       } else {
-        let localPath = uploadDir + path.sep + item
+        const localPath = uploadDir + path.sep + item
         fileList.push({
           filePath: localPath,
           remotePath: relativePath + item,
@@ -61,7 +58,7 @@ function findAllFile (uploadDir, relativePath) {
   }
 }
 
-findAllFile(sourcefolder, rootpath)
+findAllFile(sourcefolder, ROOTPATH)
 if (fileList.length === 0) {
   console.log('\x1b[31m没有要上传的资源\x1b[0m')
 } else {

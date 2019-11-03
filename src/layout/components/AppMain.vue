@@ -56,7 +56,7 @@ export default {
   min-width: @minWidth;
   height: @appMainHeight;
   overflow-y: auto;
-  scroll-behavior: smooth; 
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 

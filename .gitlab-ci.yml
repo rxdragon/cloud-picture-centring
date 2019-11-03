@@ -26,49 +26,22 @@ stages:
     
 deploy-master:
   extends: .deploy
+  environment:
+    name: master
   only:
     - master
 
-deploy:
-  stage: deploy
-  cache:
-    key: cache
-    paths:
-      - node_modules/
-  script:
-    - yarn
-    - yarn run build-dev
-    - yarn run build-background-dev
-    - yarn run pack-vue
-    - node print_version.js
-    - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
-  variables:
-    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
-  artifacts:
-    paths:
-      - dist_electron
-    expire_in: 1 day
+deploy-dev:
+  extends: .deploy
+  environment:
+    name: staging/dev
   only:
     - dev
 
-deploy:
-  stage: deploy
-  cache:
-    key: cache
-    paths:
-      - node_modules/
-  script:
-    - yarn
-    - yarn run build-release
-    - yarn run build-background-release
-    - yarn run pack-vue
-    - node print_version.js
-    - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
-  variables:
-    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
-  artifacts:
-    paths:
-      - dist_electron
-    expire_in: 1 day
+deploy-release:
+  extends: .deploy
+  environment:
+    name: staging/release
   only:
     - /^release.*$/
+
