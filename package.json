@@ -8,7 +8,7 @@
     "build": "vue-cli-service build --dest=dist_vue",
     "build-background": "webpack-cli --mode=production --config='background-main.webpack-config.js'",
     "build-background-dev": "webpack-cli --mode=development --config='background-main.webpack-config.js'",
-    "build-background-release": "webpack-cli --mode=release --config='background-main.webpack-config.js'",
+    "build-background-release": "webpack-cli --mode=development --config='background-main.webpack-config.js'",
     "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
     "eserve-release": "vue-cli-service electron:serve --mode release",
     "eserve-dev": "vue-cli-service electron:serve --mode development",
