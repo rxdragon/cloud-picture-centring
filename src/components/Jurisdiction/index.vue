@@ -60,7 +60,7 @@ export default {
   },
   watch: {
     hasPermission (value) {
-      if (value.length && this.firstShow && this.jurisdictionList.length) { this.initializeData() }
+      if (this.firstShow && this.jurisdictionList.length) { this.initializeData() }
     }
   },
   created () {

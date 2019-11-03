@@ -59,6 +59,7 @@ const actions = {
           newRolesArr = [...newRolesArr, moduleName, menuName]
         }
       })
+      // 如果有修图权限 启动轮询
       if (newRolesArr.includes('WaitRetoucher')) {
         store.dispatch('notification/hasReturnNotification')
       }

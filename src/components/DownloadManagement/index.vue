@@ -2,6 +2,7 @@
   <div class="download-management">
     <el-popover
       v-model="showManage"
+      popper-class="download-popover"
       placement="bottom"
       width="600"
       trigger="click"
@@ -16,20 +17,22 @@
             <el-button icon="el-icon-delete-solid" @click="clearAll" />
           </div>
         </div>
-        <transition-group name="list-complete" tag="div" mode="out-in">
-          <div v-for="downItem in downList" :key="downItem.index" class="list-complete-item content-row">
-            <down-list-item
-              :list-item="downItem"
-              @resumeItem="resumeItem"
-              @pauseItem="pauseItem"
-              @cancelItem="cancelItem"
-              @deleteItem="deleteItem"
-            />
-          </div>
-          <div v-show="!downList.length" key="noData" class="no-data">
-            暂无数据
-          </div>
-        </transition-group>
+        <el-scrollbar wrap-class="down-scrollbar-wrapper">
+          <transition-group name="list-complete" tag="div" mode="out-in">
+            <div v-for="downItem in downList" :key="downItem.index" class="list-complete-item content-row">
+              <down-list-item
+                :list-item="downItem"
+                @resumeItem="resumeItem"
+                @pauseItem="pauseItem"
+                @cancelItem="cancelItem"
+                @deleteItem="deleteItem"
+              />
+            </div>
+            <div v-show="!downList.length" key="noData" class="no-data list-complete-item">
+              暂无数据
+            </div>
+          </transition-group>
+        </el-scrollbar>
       </div>
       <el-badge slot="reference" :max="9" :hidden="!progressingNum" :value="progressingNum" class="item">
         <el-button class="icon-button" icon="el-icon-download" />
@@ -164,10 +167,13 @@ export default {
 </script>
 
 <style lang="less">
+.down-scrollbar-wrapper {
+  max-height: 500px;
+  overflow: hidden;
+}
+
 .down-list {
   position: relative;
-  max-height: 500px;
-  overflow: auto;
 
   .title-row {
     display: grid;
@@ -204,23 +210,5 @@ export default {
     line-height: 48px;
     color: #8E939A;
   }
-}
-
-.list-complete-item {
-  transition: all 1s;
-  width: 100%;
-  display: inline-block;
-  overflow: hidden;
-  height: 48px;
-}
-
-.list-complete-enter,
-.list-complete-leave-to {
-  opacity: 0;
-  height: 0;
-}
-
-.list-complete-leave-active {
-  position: absolute;
 }
 </style>
