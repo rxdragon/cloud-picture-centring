@@ -1,6 +1,6 @@
 <template>
   <div class="role-config">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!showEdit" class="main">
         <div class="header">
           <h3>角色组配置</h3>

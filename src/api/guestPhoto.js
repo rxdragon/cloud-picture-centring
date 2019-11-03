@@ -104,7 +104,11 @@ export function getAttitudePhotoInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
-    const createData = keyToHump(msg)
+    const createData = msg
+    const isReturnPhoto = createData.tags && createData.tags.statics && createData.tags.statics.includes('return_photo')
+    createData.photoVersion = createData.last_first_photo && isReturnPhoto
+        ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1)
+        : settlePhoto([...createData.other_photo_version], 2)
     createData.productName = createData.stream.product.name
     createData.retoucher = createData.stream.retoucher.name
     createData.retoucherLeader = createData.stream.retoucher.retoucher_leader.nickname || createData.stream.retoucher.retoucher_leader.name || '-'

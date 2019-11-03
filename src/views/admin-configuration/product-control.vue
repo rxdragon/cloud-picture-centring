@@ -1,6 +1,6 @@
 <template>
   <div class="product-control">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!showInfo" class="list-box">
         <div class="header">
           <h3>产品管理</h3>

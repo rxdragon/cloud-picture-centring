@@ -1,6 +1,6 @@
 <template>
   <div class="gold-config">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!isAddConfig" class="gold-list">
         <div class="header">
           <h3>修图师金币奖励配置</h3>
