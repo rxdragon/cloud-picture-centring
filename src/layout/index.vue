@@ -11,7 +11,7 @@
         <sidebar class="sidebar-container" />
       </el-aside>
       <!-- 内容 -->
-      <el-main>
+      <el-main class="main-box">
         <TagsView />
         <AppMain />
       </el-main>
@@ -67,7 +67,10 @@ export default {
   padding: 0 !important;
   border-radius: 20px 0 0 20px;
   background-color: #f2f6fc;
-  overflow: hidden !important;
+}
+
+.el-container .main-box {
+  overflow: inherit;
 }
 
 .container-main {
