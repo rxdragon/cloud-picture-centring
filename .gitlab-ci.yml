@@ -3,7 +3,7 @@ image: node:12
 stages:
   - deploy
 
-.deploy
+.deploy:
   stage: deploy
   cache:
     key: cache
@@ -16,6 +16,7 @@ stages:
     - yarn run pack-vue
     - node print_version.js
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
+    - node upload.js
   variables:
     ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
   artifacts:
@@ -44,4 +45,3 @@ deploy-release:
     name: staging/release
   only:
     - /^release.*$/
-
