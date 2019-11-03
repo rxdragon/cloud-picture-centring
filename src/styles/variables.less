@@ -50,11 +50,13 @@
 @tagsHeight: 36px;
 
 @sideBarWidth: 260px;
-@appMainPadding: 88px 24px 24px 24px;
-@appMainHeight: calc(~'100vh - @{navbarHeight} - @{tagsHeight}');
+@appMainPadding: 0 calc(~'24px - @{scrollbarWidth}') 24px 24px;
+@appMainHeight: calc(~'100vh - @{navbarHeight} - @{tagsHeight} - @{headerHeight}');
+@headerHeight: 88px;
 
 @navbarMainWidth: calc(~'100% - 120px');
 @navbarHeight: 42px;
+@scrollbarWidth: 10px;
 
 @minWidth: 1180px;
 
