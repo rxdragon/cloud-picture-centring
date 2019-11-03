@@ -2,9 +2,8 @@ image: node:12
 
 stages:
   - deploy
-  - upload
 
-deploy:
+.deploy
   stage: deploy
   cache:
     key: cache
@@ -23,6 +22,10 @@ deploy:
     paths:
       - dist_electron
     expire_in: 1 day
+
+    
+deploy-master:
+  extends: .deploy
   only:
     - master
 
@@ -69,15 +72,3 @@ deploy:
     expire_in: 1 day
   only:
     - /^release.*$/
-
-upload:
-  image: registry.cn-hangzhou.aliyuncs.com/mainto_micro/service-minio-client-master
-  stage: upload
-  variables:
-    DOCKER_DRIVER: overlay2
-  script:
-    - mc config host add mainto $S3_HOST $S3_KEY $S3_SECRET
-    - cd ./dist_electron
-    - mc mirror --overwrite . mainto/demo/electron/
-  only:
-    - dev
