@@ -12,17 +12,23 @@ module.exports = {
   lintOnSave: true, // eslint 错误处理，true表示对待eslint错误为warnings，warnings不会导致编译失败
   productionSourceMap: false, // 生产环境关闭source map
   integrity: false, // 内容安全策略及子资源完整性
-  configureWebpack: {
-    resolve: {
-      alias: {
-        '@': resolve('src'),
-        '@SelectBox': resolve('src/components/SelectBox')
+  configureWebpack: (c) => {
+    let config = {
+      resolve: {
+        alias: {
+          '@': resolve('src'),
+          '@SelectBox': resolve('src/components/SelectBox')
+        }
+      },
+      externals: {
+        'electron': 'require("electron")',
+        'fs': 'require("fs")'
       }
-    },
-    externals: {
-      'electron': 'require("electron")',
-      'fs': 'require("fs")'
     }
+    if (process.env.CI_COMMIT_SHA) {
+      c.plugins = c.plugins.filter(pluginItem => !JSON.stringify(pluginItem).includes('showEntries'))
+    }
+    return config
   },
   css: {
   },
