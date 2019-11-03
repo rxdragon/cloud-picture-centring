@@ -45,6 +45,7 @@ export default {
 .home {
   position: relative;
   height: @homeHeight;
+  margin-top: -88px;
 
   .logo-tip {
     width: min-content;
