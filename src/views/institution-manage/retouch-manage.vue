@@ -1,6 +1,6 @@
 <template>
   <div class="retouch-manage">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!showEdit" class="institution-list">
         <div class="header">
           <h3>修图机构管理</h3>

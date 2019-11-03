@@ -1,6 +1,6 @@
 <template>
   <div class="work-target">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!isAddShow" class="show-box">
         <div class="header">
           <h3>云端工作指标</h3>

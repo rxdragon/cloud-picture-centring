@@ -38,7 +38,7 @@ export const NoReturnPhotoEnum = {
   FinishPhoto: 'finish_photo' // 最终成片
 }
 
-// 没有重修返回字段
+// 有重修返回字段
 export const ReturnOnePhotoEnum = {
   OriginalPhoto: 'original_photo', // 原片
   FirstPhoto: 'first_photo', // 一次成片

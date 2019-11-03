@@ -82,6 +82,7 @@ export default {
         url: this.imgDomain + this.src,
         path: savePath
       }
+      this.$newMessage.success('已添加一张照片到下载')
       this.$ipcRenderer.send('downPhoto', data)
     },
     /**

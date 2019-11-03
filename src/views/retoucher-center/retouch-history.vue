@@ -1,5 +1,5 @@
 <template>
-  <div class="retouch-history">
+  <div class="retouch-history transform-fixed">
     <div class="header">
       <h3>修图历史记录</h3>
     </div>
@@ -126,7 +126,6 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
-
 .retouch-history {
   .table-box {
     margin-top: 20px;

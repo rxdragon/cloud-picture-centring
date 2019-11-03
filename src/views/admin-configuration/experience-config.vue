@@ -1,6 +1,6 @@
 <template>
   <div class="experience-config">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!isAddConfig" class="data-list">
         <div class="header">
           <h3>修图师翻倍经验配置</h3>

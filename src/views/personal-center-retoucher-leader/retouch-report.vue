@@ -1,6 +1,6 @@
 <template>
   <div class="retouch-report">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!isSeachPage" class="transition-box">
         <div class="header">
           <h3>组员修图报告</h3>

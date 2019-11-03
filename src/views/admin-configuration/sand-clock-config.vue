@@ -1,6 +1,6 @@
 <template>
   <div class="sand-clock-config">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!editConfig" class="sand-clock-list">
         <!-- 沙漏头部 -->
         <div class="header">

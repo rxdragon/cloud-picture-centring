@@ -1,6 +1,6 @@
 <template>
   <div class="audit-report">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!isSeachPage" class="transition-box">
         <div class="header">
           <h3>组员审核报告</h3>

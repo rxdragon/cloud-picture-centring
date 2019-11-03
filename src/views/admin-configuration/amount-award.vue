@@ -1,6 +1,6 @@
 <template>
   <div class="amount-award">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!isAddConfig && !showAmountInfo">
         <div class="header">
           <h3>修图师冲量奖励配置</h3>

@@ -1,6 +1,6 @@
 <template>
   <div class="WaitRetoucher">
-    <transition name="fade-transform" mode="out-in">
+    <transition name="fade" mode="out-in">
       <div v-if="!showDetail" key="list-box" class="list-box">
         <!-- 标题 -->
         <div class="header">
