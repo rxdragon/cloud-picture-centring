@@ -3,7 +3,7 @@
     <div class="header" :class="headerClass">
       <h3>客片详情</h3>
       <div class="button-box">
-        <el-button v-if="!gradeInfo.attitude" type="primary" @click="onSubmitAttitude">照片标记提交</el-button>
+        <el-button v-if="orderInfo.canAttitude" type="primary" @click="onSubmitAttitude">照片标记提交</el-button>
       </div>
     </div>
     <!-- 订单信息 -->
@@ -99,6 +99,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       uuid: '',
+      orderInfo: {},
       orderNum: '-', // 订单号
       streamNum: '-', // 流水号
       productName: '-', // 产品名称
@@ -134,6 +135,7 @@ export default {
         const reqData = { photoUuid: this.uuid }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoInfo(reqData)
+        this.orderInfo = data
         this.orderNum = data.orderNum
         this.streamNum = data.streamNum
         this.productName = data.productName
@@ -167,7 +169,7 @@ export default {
           this.$newMessage.warning('未获取到审核通过照片的照片')
           return false
         }
-        if (!this.attitudeValue) {
+        if (!this.attitudeValue && !this.orderInfo.isAttitudeBySelf) {
           this.$newMessage.warning('未进行点赞操作')
           return false
         }

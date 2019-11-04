@@ -12,8 +12,20 @@
         <span>伙伴</span>
         <staff-select v-model="staffId" />
       </div>
+      <!-- 修图标准 -->
+      <div class="search-item">
+        <span>修图标准</span>
+        <retouch-kind-select v-model="retouchStandard" />
+      </div>
       <div class="button-box">
         <el-button type="primary" @click="getAttitudePhotoList(1)">查询</el-button>
+      </div>
+    </div>
+    <div class="search-box">
+      <!-- 产品名称 -->
+      <div class="product-box search-item">
+        <span class="row-title">产品名称</span>
+        <product-select v-model="productValue" :props="{ multiple: false }" />
       </div>
     </div>
     <div class="module-panel table-box">
@@ -50,19 +62,23 @@
 import DatePicker from '@/components/DatePicker'
 import PhotoBox from '@/components/PhotoBox'
 import StaffSelect from '@SelectBox/StaffSelect'
+import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
+import ProductSelect from '@SelectBox/ProductSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 
 import * as GuestPhoto from '@/api/guestPhoto.js'
 
 export default {
   name: 'EvaluatePhoto',
-  components: { DatePicker, PhotoBox, StaffSelect },
+  components: { DatePicker, PhotoBox, StaffSelect, RetouchKindSelect, ProductSelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      timeSpan: '',
+      timeSpan: null, // 时间戳
       type: '', // 查看类型
-      staffId: [],
+      staffId: [], // 伙伴id
+      productValue: '', // 产品id
+      retouchStandard: '', // 修图类别
       photos: [], // 照片数据
       pager: {
         page: 1,
@@ -114,6 +130,8 @@ export default {
           pageSize: this.pager.pageSize
         }
         if (this.staffId.length) { reqData.staffIds = this.staffId }
+        if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
+        if (this.productValue) { reqData.productId = this.productValue }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getAttitudePhotoList(reqData)
         this.pager.total = data.total
@@ -132,6 +150,26 @@ export default {
 @import "~@/styles/variables.less";
 
 .evaluate-photo {
+  .search-box {
+    margin-bottom: 20px;
+
+    .product-box {
+      .row-title {
+        width: 84px;
+      }
+
+      .el-cascader {
+        width: 300px;
+      }
+    }
+
+    .search-item {
+      & > span {
+        text-align-last: justify;
+      }
+    }
+  }
+
   .search-data {
     margin-top: 20px;
     display: flex;

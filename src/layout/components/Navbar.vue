@@ -163,6 +163,7 @@ export default {
       text-align: center;
       line-height: @navbarHeight;
       height: 100%;
+      width: 50%;
       cursor: pointer;
       -webkit-app-region: drag;
       -webkit-user-select: none;

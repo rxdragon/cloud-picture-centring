@@ -63,7 +63,7 @@ const actions = {
         const info = saveInfo || await UserAction.info()
         SessionTool.setUserInfo(info)
         commit('SET_USERINFO', info)
-        await store.dispatch('user/getUserPermission', info.id)
+        await store.dispatch('user/getUserPermission')
         resolve(info)
       } catch (error) {
         reject(error)
@@ -71,12 +71,11 @@ const actions = {
     })
   },
   // 获取用户权限
-  getUserPermission ({ commit, dispatch, getters }, staffNum) {
+  getUserPermission ({ commit, dispatch, getters }) {
     return new Promise(async (resolve, reject) => {
       try {
         const savePermission = SessionTool.getUserPermission()
-        const req = { staffNum }
-        const permissions = savePermission || await UserAction.getStaffPermission(req)
+        const permissions = savePermission || await UserAction.getAuthority()
         SessionTool.setUserPermission(permissions)
         const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
         resetRouter()

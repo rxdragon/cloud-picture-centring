@@ -78,7 +78,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['imgDomain']),
+    ...mapGetters(['imgDomain', 'staffId']),
     photos () {
       const createdData = []
       const findList = ['original_photo', 'first_photo', 'complete_photo', 'finish_photo']
@@ -95,7 +95,8 @@ export default {
      * @param {*} params
      */
     canGrade () {
-      return Boolean(!this.gradeInfo.attitude)
+      if (!this.gradeInfo.attitude) return true
+      return this.gradeInfo.staff_id === this.staffId
     },
     goodPhoto () {
       return +this.gradeType === 1
@@ -107,14 +108,14 @@ export default {
   watch: {
     'gradeInfo.attitude': {
       handler: function (value) {
+        console.log(value)
+        if (!value) { this.gradeType = 0 }
         if (value === 'good') { this.gradeType = 1 }
         if (value === 'bad') { this.gradeType = 2 }
       },
-      deep: true
+      deep: true,
+      immediate: true
     }
-  },
-  activated () {
-    this.gradeType = 0
   },
   methods: {
     /**

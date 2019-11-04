@@ -3,6 +3,7 @@ const getters = {
   cachedViews: state => state.tagsView.cachedViews, // 缓存页面
   permission_routes: state => state.permission.routes,
   userInfo: state => state.user, // 用户信息
+  staffId: state => state.user.id, // 当前用户id
   nickname: state => state.user.nickname, // 昵称
   loadRoutes: state => state.setting.loadRoutes, // 加载路由加载表
   returnStreamId: state => state.notification.returnStreamId, // 退单id

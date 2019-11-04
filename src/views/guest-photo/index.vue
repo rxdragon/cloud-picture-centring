@@ -74,8 +74,8 @@
 import DatePicker from '@/components/DatePicker'
 import PhotoBox from '@/components/PhotoBox'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
-import StaffSelect from '@SelectBox/StaffSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
+import StaffSelect from '@SelectBox/StaffSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 
 import * as GuestPhoto from '@/api/guestPhoto'
@@ -164,6 +164,8 @@ export default {
       }
       if (this.staffId.length) { reqData.staffIds = this.staffId }
       if (this.checkValue) { reqData.evaluateStar = this.checkValue }
+      if (this.productValue) { reqData.productId = this.productValue }
+      if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
@@ -190,6 +192,10 @@ export default {
     .search-item {
       margin-bottom: 20px;
       margin-right: 24px;
+
+      & > span {
+        text-align-last: justify;
+      }
     }
 
     .row-title {

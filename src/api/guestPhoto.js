@@ -1,6 +1,7 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump } from '../utils'
 import { settlePhoto } from '../utils/photoTool.js'
+import store from '@/store' // vuex
 
 /**
  * @description 获取客片列表
@@ -31,6 +32,8 @@ export function getPhotoInfo (params) {
     params
   }).then(msg => {
     const createData = keyToHump(msg)
+    console.log(createData)
+    console.log()
     createData.orderNum = createData.stream.order.external_num
     createData.streamNum = createData.stream.stream_num
     createData.productName = createData.stream.product.name
@@ -40,6 +43,14 @@ export function getPhotoInfo (params) {
     createData.photographerRemark = createData.stream.note && createData.stream.note.photography_note || '-'
     createData.retouchMark = createData.stream.note && createData.stream.note.retouch_note || '-'
     createData.isPass = Boolean(createData.stream.pass_at)
+    // 判断能否打分
+    createData.canAttitude = false
+    if (!createData.attitude) {
+      createData.canAttitude = true
+    } else {
+      createData.isAttitudeBySelf = createData.attitude.staff_id === store.getters.userInfo.id
+      createData.canAttitude = createData.isAttitudeBySelf
+    }
     if (createData.isPass) {
       const reworkNum = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.rework_num || 0
       const isReturnPhoto = createData.tags && createData.tags.statics && createData.tags.statics.includes('return_photo')
