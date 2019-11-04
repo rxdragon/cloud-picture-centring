@@ -67,6 +67,29 @@ export default {
   padding: 0 !important;
   border-radius: 20px 0 0 20px;
   background-color: #f2f6fc;
+  width: calc(~'100vw - @{sideBarWidth}');
+  
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-button {
+    background: #ffffff;
+    display: none;
+  }
+
+  ::-webkit-scrollbar-corner{
+    display: none;
+  }
 }
 
 .el-container .main-box {
@@ -80,27 +103,5 @@ export default {
 .tap-view {
   height: 34px;
   background-color: red;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cdcdcd;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-button {
-  background: #ffffff;
-  display: none;
-}
-
-::-webkit-scrollbar-corner{
-  display: none;
 }
 </style>
