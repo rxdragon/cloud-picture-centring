@@ -12,7 +12,7 @@ module.exports = {
   assetsDir: 'static',
   filenameHashing: true, // 是否使用md5码
   lintOnSave: true, // eslint 错误处理，true表示对待eslint错误为warnings，warnings不会导致编译失败
-  productionSourceMap: false, // 生产环境关闭source map
+  productionSourceMap: true, // 生产环境是否开启source map
   integrity: false, // 内容安全策略及子资源完整性
   configureWebpack: (c) => {
     const config = {
