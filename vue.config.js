@@ -27,7 +27,7 @@ module.exports = {
       }
     }
     if (process.env.CI_COMMIT_SHA) {
-      c.plugins = c.plugins.filter(pluginItem => !Boolean(pluginItem instanceof ProgressPlugin))
+      c.plugins = c.plugins.filter(pluginItem => !(pluginItem instanceof ProgressPlugin))
     }
     return config
   },

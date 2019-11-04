@@ -51,7 +51,7 @@
           </div>
           <div class="role-module search-item">
             <span>权限模块</span>
-            <jurisdiction v-model="hasPermission" />
+            <jurisdiction v-model="hasPermission" :role-permission="rolePermissionArr" />
           </div>
           <div class="submit-box">
             <el-button v-if="!isEdit" type="primary" @click="addStaff">提交</el-button>
