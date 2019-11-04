@@ -130,6 +130,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .evaluate-photo {
   .search-data {
     margin-top: 20px;
@@ -145,14 +146,14 @@ export default {
 
       .group-name,
       .staff-name {
-        font-size:12px;
-        color:#606266;
-        line-height:17px;
+        font-size: 12px;
+        color: #606266;
+        line-height: 17px;
       }
 
       .staff-name {
         padding: 12px 6px 10px;
-        border-bottom: 1px solid #EBEEF5;
+        border-bottom: 1px solid #ebeef5;
       }
 
       .group-name {

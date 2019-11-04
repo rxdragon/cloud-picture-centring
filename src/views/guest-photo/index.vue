@@ -167,6 +167,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .guest-photo {
   .search-box {
     flex-wrap: wrap;
@@ -184,7 +185,7 @@ export default {
     }
 
     .check-evaluate {
-      &>span {
+      & > span {
         width: 84px;
       }
 

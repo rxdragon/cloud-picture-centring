@@ -356,7 +356,7 @@ export default {
 </script>
 
 <style lang="less">
- @import "~@/styles/variables.less";
+@import "~@/styles/variables.less";
 
 .audit-center {
   .header {
@@ -366,9 +366,9 @@ export default {
     }
 
     .queue-info {
-      font-size:14px;
+      font-size: 14px;
       color: #606266;
-      line-height:22px;
+      line-height: 22px;
     }
   }
 
@@ -382,22 +382,22 @@ export default {
       grid-template-columns: 1fr 1fr 1fr;
       width: 600px;
       border-radius: 4px;
-      border-bottom: 1px solid #EBEEF5;
+      border-bottom: 1px solid #ebeef5;
 
       .label-list-title {
         padding: 17px 20px;
-        font-size:14px;
-        font-weight:500;
-        color:#303133;
-        line-height:22px;
-        background-color: #FAFAFA;
+        font-size: 14px;
+        font-weight: 500;
+        color: #303133;
+        line-height: 22px;
+        background-color: #fafafa;
       }
 
       .label-list-content {
         padding: 20px 21px;
-        font-size:14px;
-        color:#606266;
-        line-height:14px;
+        font-size: 14px;
+        color: #606266;
+        line-height: 14px;
       }
     }
   }
@@ -431,13 +431,13 @@ export default {
   }
 
   .review-title {
-    &>span {
+    & > span {
       i {
         font-style: normal;
         color: @orange;
-        font-size:16px;
-        font-weight:600;
-        line-height:24px;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
       }
     }
   }

@@ -50,13 +50,14 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .list-tabel {
   display: grid;
   text-align: center;
-  border-bottom: 1px solid #F2F6FC;
+  border-bottom: 1px solid #f2f6fc;
 
   .title-header {
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,12 +69,12 @@ export default {
   }
 
   .title {
-    background-color: #FAFAFA;
-    font-size:14px;
-    font-family:PingFangSC-Medium,PingFangSC;
-    font-weight:500;
-    color:#303133;
-    line-height:22px;
+    background-color: #fafafa;
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFangSC;
+    font-weight: 500;
+    color: #303133;
+    line-height: 22px;
     padding: 17px 20px;
     text-align: left;
     height: 100%;

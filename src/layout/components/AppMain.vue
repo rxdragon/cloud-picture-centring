@@ -48,6 +48,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .app-main {
   width: 100%;
   position: relative;
@@ -61,7 +62,7 @@ export default {
   scroll-behavior: smooth;
 }
 
-.fixed-header+.app-main {
+.fixed-header + .app-main {
   padding-top: 50px;
 }
 </style>

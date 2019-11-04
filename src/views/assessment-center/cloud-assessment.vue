@@ -244,7 +244,7 @@ export default {
 </script>
 
 <style lang="less">
- @import "~@/styles/variables.less";
+@import "~@/styles/variables.less";
 
 .cloud-assessment {
   .search-box {
@@ -284,20 +284,20 @@ export default {
 
       .list-title {
         padding: 17px 20px;
-        font-size:14px;
-        font-weight:500;
-        color:#303133;
-        line-height:22px;
-        background-color: #FAFAFA;
+        font-size: 14px;
+        font-weight: 500;
+        color: #303133;
+        line-height: 22px;
+        background-color: #fafafa;
       }
 
       .list-content {
         padding: 21px 20px;
-        font-size:14px;
-        font-weight:400;
-        color:#606266;
-        line-height:14px;
-        border-bottom: 1px solid #F2F6FC;
+        font-size: 14px;
+        font-weight: 400;
+        color: #606266;
+        line-height: 14px;
+        border-bottom: 1px solid #f2f6fc;
       }
     }
   }

@@ -88,7 +88,7 @@ export default {
     width: 100%;
   }
 
-  &>span {
+  & > span {
     display: inline-block;
     width: 80px;
   }

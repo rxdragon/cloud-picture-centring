@@ -273,7 +273,7 @@ export default {
 .grade-box {
   .photo-panel {
     margin-bottom: 32px;
-    border-bottom: 1px solid #EBEEF5;
+    border-bottom: 1px solid #ebeef5;
 
     .panel-title {
       margin-bottom: 20px;
@@ -292,18 +292,18 @@ export default {
     }
 
     .panel-content {
-      background-color: #FAFAFA;
+      background-color: #fafafa;
       border-radius: 4px;
       padding: 0 20px;
 
       .panel-row {
         padding: 20px 0;
-        font-size:14px;
+        font-size: 14px;
         color: #303133;
-        line-height:22px;
-        border-bottom: 1px solid #EBEEF5;
+        line-height: 22px;
+        border-bottom: 1px solid #ebeef5;
 
-        &>span {
+        & > span {
           margin-right: 48px;
         }
       }
@@ -314,10 +314,10 @@ export default {
       }
 
       .retouch-require {
-        border-top: 1px solid #EBEEF5;
-        border-bottom: 1px solid #EBEEF5;
+        border-top: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
 
-        &>span {
+        & > span {
           margin-right: 12px;
         }
       }
@@ -343,14 +343,14 @@ export default {
   }
 
   .check-info {
-    color: #9C9C9C;
+    color: #9c9c9c;
 
     .title {
       color: #333;
     }
 
     .plant-info {
-      &>span {
+      & > span {
         font-weight: bold;
         display: inline-block;
         margin-bottom: 10px;
@@ -358,7 +358,7 @@ export default {
     }
 
     .weed-info {
-      &>span {
+      & > span {
         font-weight: bold;
         display: inline-block;
         margin-bottom: 10px;
@@ -378,7 +378,7 @@ export default {
         }
 
         .sameOpinion-item {
-          margin-right: 40px
+          margin-right: 40px;
         }
       }
 
@@ -411,9 +411,9 @@ export default {
       }
 
       .audit-remark {
-        font-size:14px;
+        font-size: 14px;
         color: #303133;
-        line-height:22px;
+        line-height: 22px;
         margin-top: 10px;
       }
     }
@@ -450,10 +450,10 @@ export default {
 
     .flakiness-remark {
       margin-top: 8px;
-      font-size:14px;
-      font-weight:400;
-      color:#303133;
-      line-height:22px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #303133;
+      line-height: 22px;
 
       .retouch-remark {
         margin-bottom: 8px;

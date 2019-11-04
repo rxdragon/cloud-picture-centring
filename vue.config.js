@@ -1,4 +1,5 @@
 const path = require('path')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 const ProgressPlugin = require('webpack').ProgressPlugin
 
 function resolve (dir) {
@@ -24,7 +25,13 @@ module.exports = {
       externals: {
         'electron': 'require("electron")',
         'fs': 'require("fs")'
-      }
+      },
+      plugins: [
+        new StyleLintPlugin({
+          configFile: '.stylelintrc',
+          files: ['./src/assets/**/*.less', './src/**/*.vue']
+        })
+      ]
     }
     if (process.env.CI_COMMIT_SHA) {
       c.plugins = c.plugins.filter(pluginItem => !(pluginItem instanceof ProgressPlugin))

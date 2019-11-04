@@ -73,7 +73,7 @@
             <span>{{ workerInfo.reviewer }}</span>
             <span>{{ workerInfo.watcherName }}</span>
             <span class="check-evaluate">
-              <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #ff9900" class="el-icon-star-on" /></span>
+              <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #f90;" class="el-icon-star-on" /></span>
               <span>评语：{{ workerInfo.storeEvaluateReason }}</span>
             </span>
           </div>
@@ -189,6 +189,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .guest-info {
   .header {
     line-height: 40px;
@@ -205,25 +206,25 @@ export default {
   .panel-box {
     .panel-content {
       .content-title {
-        &>span {
-          font-size:14px;
-          font-weight:500;
-          color:#303133;
-          line-height:22px;
+        & > span {
+          font-size: 14px;
+          font-weight: 500;
+          color: #303133;
+          line-height: 22px;
           text-align: left;
           padding: 17px 20px;
-          background-color: #FAFAFA;
+          background-color: #fafafa;
         }
       }
 
       .content-value {
-        &>span {
-          font-size:14px;
-          font-weight:400;
-          color:#606266;
-          line-height:14px;
+        & > span {
+          font-size: 14px;
+          font-weight: 400;
+          color: #606266;
+          line-height: 14px;
           padding: 20px 21px;
-          border-bottom: 1px solid #F2F6FC;
+          border-bottom: 1px solid #f2f6fc;
         }
       }
 
@@ -232,14 +233,14 @@ export default {
       }
 
       .panel-main {
-        background-color: #FAFAFA;
+        background-color: #fafafa;
         border-radius: 4px;
         padding: 20px;
         margin-top: 12px;
 
         .panel-require-concent {
           padding-bottom: 20px;
-          border-bottom: 1px solid #EBEEF5;
+          border-bottom: 1px solid #ebeef5;
 
           .el-tag {
             margin-right: 12px;
@@ -247,12 +248,12 @@ export default {
         }
 
         .panel-main-content {
-          font-size:14px;
-          font-weight:400;
-          color:#303133;
-          line-height:22px;
+          font-size: 14px;
+          font-weight: 400;
+          color: #303133;
+          line-height: 22px;
           padding: 20px 0;
-          border-top: 1px solid #EBEEF5;
+          border-top: 1px solid #ebeef5;
           display: flex;
 
           &:nth-of-type(1) {
@@ -270,7 +271,7 @@ export default {
       }
 
       .order-title,
-      .order-value{
+      .order-value {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }

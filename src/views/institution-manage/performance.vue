@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="table-box">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="instituionName" label="机构名" />
         <el-table-column prop="soloNum" label="单人（单位：张）" />
         <el-table-column prop="multiplayerNum" label="多人（单位：张）" />

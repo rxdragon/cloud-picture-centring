@@ -303,6 +303,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../../styles/variables.less';
+
 .header {
   .header-left {
     .queue-info {
@@ -428,6 +429,7 @@ export default {
 
 <style lang="less">
 @import '../../styles/variables.less';
+
 .today-info {
   .green-progress {
     box-shadow: @greenBoxShadow;

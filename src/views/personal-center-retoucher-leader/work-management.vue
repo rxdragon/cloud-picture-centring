@@ -25,7 +25,7 @@
     </div>
     <!-- 组员数据 -->
     <div class="table-box">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="name" label="组员" />
         <el-table-column prop="retoucherClass" label="修图身份" />
         <el-table-column prop="entryMonths" label="入职时长（月）" />
@@ -161,7 +161,7 @@ export default {
 
         .num {
           font-size: 44px;
-          font-family:DINAlternate-Bold,DINAlternate;
+          font-family: DINAlternate-Bold, DINAlternate;
           font-weight: bold;
           color: @blue;
         }
@@ -173,17 +173,17 @@ export default {
       margin-top: 15px;
       justify-content: space-between;
       color: #606266;
-      font-family:PingFangSC-Regular,PingFangSC;
+      font-family: PingFangSC-Regular, PingFangSC;
       font-size: 12px;
       line-height: 20px;
 
-      &>div {
+      & > div {
         &::before {
           content: '';
           display: inline-block;
           width: 8px;
           height: 8px;
-          background: #EBEEF5;
+          background: #ebeef5;
           border-radius: 50%;
           margin-right: 4px;
         }
@@ -191,7 +191,7 @@ export default {
 
       .footer-right {
         &::before {
-          background:linear-gradient(51deg,rgba(145,245,255,1) 0%,rgba(70,105,251,1) 100%);
+          background: linear-gradient(51deg, rgba(145, 245, 255, 1) 0%, rgba(70, 105, 251, 1) 100%);
         }
       }
     }

@@ -157,6 +157,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .photo-list {
   display: flex;
   flex-wrap: wrap;
@@ -171,11 +172,11 @@ export default {
       display: flex;
       justify-content: space-between;
       color: #606266;
-      font-family:PingFangSC-Regular,PingFangSC;
-      line-height:22px;
+      font-family: PingFangSC-Regular, PingFangSC;
+      line-height: 22px;
       font-size: 14px;
       padding: 12px 6px 6px;
-      border-top: 1px solid #EBEEF5;
+      border-top: 1px solid #ebeef5;
 
       .icon-box {
         display: flex;
@@ -192,11 +193,11 @@ export default {
       }
 
       .good:hover {
-        color: #FF8F00;
+        color: #ff8f00;
       }
 
       .good-photo {
-        color: #FF8F00;
+        color: #ff8f00;
       }
 
       .bad-photo {

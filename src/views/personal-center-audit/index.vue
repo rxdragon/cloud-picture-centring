@@ -129,6 +129,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .table-content {
   margin-top: 24px;
 
@@ -136,18 +137,18 @@ export default {
     display: grid;
     text-align: center;
     grid-template-columns: repeat(7, 1fr);
-    border-bottom: 1px solid #FAFAFA;
+    border-bottom: 1px solid #fafafa;
 
     .title {
-      background-color: #FAFAFA;
+      background-color: #fafafa;
       padding: 17px 20px;
-      font-size:14px;
-      font-weight:500;
-      color:#303133;
+      font-size: 14px;
+      font-weight: 500;
+      color: #303133;
       display: flex;
       align-items: center;
       height: 100%;
-      line-height:22px;
+      line-height: 22px;
       text-align: left;
     }
 

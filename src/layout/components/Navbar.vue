@@ -101,6 +101,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .Navbar {
   width: 100%;
   height: 100%;

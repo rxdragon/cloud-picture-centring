@@ -83,7 +83,7 @@ export default {
   }
 
   ::-webkit-scrollbar-button {
-    background: #ffffff;
+    background: #fff;
     display: none;
   }
 

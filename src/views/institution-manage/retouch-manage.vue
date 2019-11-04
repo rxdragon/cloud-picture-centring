@@ -7,7 +7,7 @@
           <el-button type="primary" @click="addRetouch">添加机构</el-button>
         </div>
         <div class="table-box">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="name" label="机构名" />
             <el-table-column prop="code" label="机构代号" />
             <el-table-column label="创建时间">

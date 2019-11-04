@@ -22,7 +22,7 @@
         </div>
         <el-button type="primary" @click="getStreamList(1)">查询</el-button>
       </div>
-      <el-table v-show="searchTableData.length" class="search-table-box" :data="searchTableData" style="width: 100%">
+      <el-table v-show="searchTableData.length" class="search-table-box" :data="searchTableData" style="width: 100%;">
         <el-table-column prop="index" label="位置">
           <template slot-scope="scope">
             <div class="index-box">
@@ -120,7 +120,7 @@
           <el-button type="primary" @click="getList(1)">查询</el-button>
         </div>
       </div>
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="index" label="位置">
           <template slot-scope="scope">
             <div class="index-box">
@@ -381,6 +381,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .WorkBoard {
   .search-box {
     margin: 24px 0;
@@ -408,7 +409,7 @@ export default {
       display: flex;
       align-items: center;
 
-      &>span {
+      & > span {
         display: inline-block;
         width: 20px;
         height: 20px;
