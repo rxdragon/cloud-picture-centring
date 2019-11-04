@@ -4,11 +4,6 @@ const upyun = require('upyun')
 const args = process.argv
 args.splice(0, 2)
 // 得到配置
-process.env.OPERATOR = 'dev'
-process.env.PASSWORD = 'maintodev'
-process.env.BUCKET = 'img-mainto-dev'
-process.env.ROOTPATH = 'cloud-picture-centring-release/'
-process.env.SOURCEFOLDER = 'dist_electron'
 const { OPERATOR, PASSWORD, BUCKET, ROOTPATH, SOURCEFOLDER } = process.env
 console.log(ROOTPATH)
 const sourcefolder = path.resolve(__dirname, SOURCEFOLDER)
