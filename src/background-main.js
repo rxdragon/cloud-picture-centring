@@ -4,10 +4,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 import path from 'path'
 import * as DownTool from './electronMain/downTool.js'
+import { setMenu } from './electronMain/resetMenu.js'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+// 初始化菜单
+setMenu()
 
 async function createWindow () {
   // Create the browser window.
@@ -85,9 +89,25 @@ app.on('activate', async () => {
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
     // app.commandLine.appendSwitch('ignore-gpu-blacklist')
+    let dockMenu = Menu.buildFromTemplate([
+      {
+        label: '文件', click: function () {
+            console.log('点击事件');
+        }
+      },
+      {
+        label: '编辑', submenu: [
+            {label: '保存'},
+            {label: '另存'}
+        ]
+      },
+      {label: '帮助'}
+    ])
+    Menu.setApplicationMenu(dockMenu);
     await createWindow()
   }
 })
+
 
 // Exit cleanly on request from parent process in development mode.
 if (global.isDevelopment) {

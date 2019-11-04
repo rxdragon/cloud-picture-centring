@@ -68,7 +68,7 @@ export default {
   border-radius: 20px 0 0 20px;
   background-color: #f2f6fc;
   width: calc(~'100vw - @{sideBarWidth}');
-  
+
   ::-webkit-scrollbar {
     width: 10px;
   }

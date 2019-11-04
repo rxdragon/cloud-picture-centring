@@ -1,7 +1,7 @@
 'use strict'
 /* global __static */
 
-import { app, protocol } from 'electron'
+import { app, protocol, Menu } from 'electron'
 import EventEmitter from 'events'
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 
@@ -10,7 +10,7 @@ global.env = process.env.NODE_ENV || 'dev'
 global.isDevelopment = global.env !== 'production'
 global.isTest = !!process.env.IS_TEST
 global.initWindow = null
-global.currentVersion = ''
+global.currentVersion = 'demo'
 global.successInit = false
 global.userDir = app.getPath('userData')
 global.emit = new EventEmitter()
@@ -50,7 +50,6 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-
   require('./background-main')
 })
 
