@@ -10,6 +10,7 @@ import PaintedEggshell from '@/components/PaintedEggshell'
 import { mapGetters } from 'vuex'
 import { clearAllStorage } from '@/utils/sessionTool'
 import Mousetrap from 'mousetrap'
+import { throttle } from "@/utils/throttle.js";
 export default {
   name: 'App',
   components: { PaintedEggshell },
@@ -21,7 +22,7 @@ export default {
       clearAllStorage()
     })
     // Mousetrap.bind('command+r', () => {
-    //   this.refresh()
+    //   throttle(this.refresh, 5000)()
     //   return false
     // }, 'keydown')
   },
