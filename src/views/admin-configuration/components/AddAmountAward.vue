@@ -232,6 +232,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .add-amount-award {
   .search-item {
     margin-bottom: 24px;
@@ -243,7 +244,7 @@ export default {
       width: 319px;
     }
 
-    &>span {
+    & > span {
       width: 70px;
     }
   }
@@ -286,7 +287,7 @@ export default {
   }
 
   .el-checkbox__label {
-    &>span {
+    & > span {
       display: inline-block;
       width: 173px;
     }

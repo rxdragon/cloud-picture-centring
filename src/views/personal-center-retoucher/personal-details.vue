@@ -340,7 +340,7 @@ export default {
 
         .num {
           font-size: 44px;
-          font-family: DINAlternate-Bold, DINAlternate;
+          font-family: @DINAlternate;
           font-weight: bold;
           color: @blue;
         }
@@ -352,7 +352,7 @@ export default {
       margin-top: 15px;
       justify-content: space-between;
       color: #606266;
-      font-family: PingFangSC-Regular, PingFangSC;
+      font-family: @pingFang;
       font-size: 12px;
       line-height: 20px;
 
@@ -412,7 +412,7 @@ export default {
         font-size: 12px;
         display: flex;
         flex-direction: column;
-        font-family: DINAlternate-Bold, DINAlternate;
+        font-family: @DINAlternate;
         color: #909399;
         margin-top: 28px;
         padding-bottom: 18px;
@@ -442,7 +442,7 @@ export default {
 
         .num {
           font-size: 14px;
-          font-family: DINAlternate-Bold, DINAlternate;
+          font-family: @DINAlternate;
           font-weight: bold;
           color: #303133;
           line-height: 16px;

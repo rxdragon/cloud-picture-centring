@@ -62,7 +62,7 @@ export default {
 
     .logo-desc {
       font-size: 30px;
-      font-family: PingFangSC-Semibold, PingFang SC;
+      font-family: @pingFang;
       font-weight: 600;
       color: #131923;
       line-height: 38px;

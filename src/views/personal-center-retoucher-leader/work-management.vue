@@ -161,7 +161,7 @@ export default {
 
         .num {
           font-size: 44px;
-          font-family: DINAlternate-Bold, DINAlternate;
+          font-family: @DINAlternate;
           font-weight: bold;
           color: @blue;
         }
@@ -173,7 +173,7 @@ export default {
       margin-top: 15px;
       justify-content: space-between;
       color: #606266;
-      font-family: PingFangSC-Regular, PingFangSC;
+      font-family: @pingFang;
       font-size: 12px;
       line-height: 20px;
 

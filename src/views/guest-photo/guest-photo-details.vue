@@ -91,6 +91,8 @@ export default {
 </script>
 
 <style lang="less">
+@import '../../styles/variables.less';
+
 .guest-photo-details {
   .module-panel {
     margin-bottom: 24px;
@@ -159,7 +161,7 @@ export default {
         display: flex;
         align-items: center;
         font-size: 14px;
-        font-family: PingFangSC-Regular, PingFangSC;
+        font-family: @pingFang;
         font-weight: 400;
         color: #303133;
         line-height: 22px;

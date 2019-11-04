@@ -127,7 +127,7 @@ export default {
   .groud-box {
     margin: 20px 0;
 
-    &>span {
+    & > span {
       display: inline-block;
       width: 150px;
       margin-right: 0;
@@ -138,7 +138,7 @@ export default {
     }
   }
 
-  .el-form  {
+  .el-form {
     .el-form-item__content {
       .el-input {
         width: 200px;

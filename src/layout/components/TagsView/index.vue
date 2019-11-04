@@ -244,6 +244,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .tags-view-container {
   height: @tagsHeight;
   width: 100%;
@@ -253,7 +254,7 @@ export default {
   border-top-left-radius: 20px;
 
   .tags-view-wrapper {
-    background: #E4E7ED;
+    background: #e4e7ed;
 
     .tags-view-item {
       display: inline-block;
@@ -266,7 +267,7 @@ export default {
         display: inline-block;
         width: 1px;
         height: 16px;
-        background-color: #C0C4CC;
+        background-color: #c0c4cc;
         position: absolute;
         left: 0;
         top: 10px;
@@ -278,8 +279,8 @@ export default {
         position: relative;
         cursor: pointer;
         line-height: @tagsHeight;
-        color: #45454D;
-        background: #E4E7ED;
+        color: #45454d;
+        background: #e4e7ed;
         padding: 0 20px;
         font-size: 12px;
         -webkit-user-select: none;
@@ -290,13 +291,14 @@ export default {
           padding-left: 30px;
         }
 
-         &::before {
-           background-color: transparent;
-         }
+        &::before {
+          background-color: transparent;
+        }
       }
 
       &.active {
-        background-color: #E4E7ED;
+        background-color: #e4e7ed;
+
         .tab-box {
           background-color: #f2f6fc;
           color: #45454d;
@@ -325,6 +327,7 @@ export default {
       }
     }
   }
+
   .contextmenu {
     margin: 0;
     background: #fff;
@@ -336,11 +339,13 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
+
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
+
       &:hover {
         background: #eee;
       }
@@ -361,12 +366,14 @@ export default {
       vertical-align: 2px;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
-      &:before {
+
+      &::before {
         display: inline-block;
         vertical-align: -3px;
       }
+
       &:hover {
         background-color: #b4bccc;
         color: #fff;

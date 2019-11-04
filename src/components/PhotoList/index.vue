@@ -172,7 +172,7 @@ export default {
       display: flex;
       justify-content: space-between;
       color: #606266;
-      font-family: PingFangSC-Regular, PingFangSC;
+      font-family: @pingFang;
       line-height: 22px;
       font-size: 14px;
       padding: 12px 6px 6px;

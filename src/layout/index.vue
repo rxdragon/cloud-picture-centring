@@ -54,7 +54,7 @@ export default {
 }
 
 .el-aside {
-  background-color: #D3DCE6;
+  background-color: #d3dce6;
   padding: 0 !important;
   position: relative;
   margin-bottom: 0;
@@ -87,7 +87,7 @@ export default {
     display: none;
   }
 
-  ::-webkit-scrollbar-corner{
+  ::-webkit-scrollbar-corner {
     display: none;
   }
 }

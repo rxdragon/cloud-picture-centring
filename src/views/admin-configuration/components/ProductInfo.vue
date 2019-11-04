@@ -489,12 +489,13 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .product-info {
   .module-panel {
     .panel-content {
       color: #606266;
-      font-size:14px;
-      line-height:14px;
+      font-size: 14px;
+      line-height: 14px;
     }
   }
 
@@ -510,7 +511,6 @@ export default {
       .info-title {
         width: 100px;
         font-size: 14px;
-        font-size: 14px;
         font-weight: 700;
         color: #606266;
       }
@@ -525,7 +525,7 @@ export default {
     display: flex;
     align-items: flex-start;
 
-    &>span {
+    & > span {
       width: 100px;
       margin: 0;
     }
@@ -564,7 +564,7 @@ export default {
         width: 500px;
       }
 
-      &>span {
+      & > span {
         width: 100px;
         margin-right: 0;
       }
@@ -593,17 +593,17 @@ export default {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       grid-gap: 1px;
-      background-color: #EBEEF5;
-      border: 1px solid #EBEEF5;
-      font-size:14px;
-      color:#303133;
+      background-color: #ebeef5;
+      border: 1px solid #ebeef5;
+      font-size: 14px;
+      color: #303133;
       text-align: center;
 
       .panel {
         text-align: center;
 
         .info-title {
-          background-color: #FAFAFA;
+          background-color: #fafafa;
         }
 
         .panel-contetn {
@@ -623,22 +623,22 @@ export default {
   }
 
   .blue-list-data {
-    border: 1px solid #EBEEF5;
+    border: 1px solid #ebeef5;
     display: flex;
-    border-top: 1px solid #EBEEF5;
-    font-size:14px;
-    color:#303133;
+    border-top: 1px solid #ebeef5;
+    font-size: 14px;
+    color: #303133;
     text-align: center;
 
     .list-title {
       width: 100px;
       display: flex;
       flex-direction: column;
-      background-color: #FAFAFA;
-      border-right: 1px solid #EBEEF5;
+      background-color: #fafafa;
+      border-right: 1px solid #ebeef5;
 
       .list-item {
-        border-top: 1px solid #EBEEF5;
+        border-top: 1px solid #ebeef5;
 
         &:nth-child(1) {
           border-top: none;
@@ -657,7 +657,7 @@ export default {
 
         &:nth-child(1) {
           .list-item {
-            background-color: #FAFAFA;
+            background-color: #fafafa;
           }
         }
 
@@ -667,10 +667,10 @@ export default {
           }
         }
 
-        .list-item {
+        &.list-item {
           width: 88px;
-          border-right: 1px solid #EBEEF5;
-          border-bottom: 1px solid #EBEEF5;
+          border-right: 1px solid #ebeef5;
+          border-bottom: 1px solid #ebeef5;
 
           .el-input__inner {
             border: none;

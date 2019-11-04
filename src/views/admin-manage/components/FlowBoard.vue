@@ -8,17 +8,17 @@
           <div class="header-nav">今日取片待修 / 其他取片日待修</div>
           <div class="panel-content">订单数 {{ flowInfo.waitRetouch.streamNum.today }} / {{ flowInfo.waitRetouch.streamNum.other }}</div>
           <div class="panel-content">
-            <span>照片数 {{ flowInfo.waitRetouch.photoNum.today }} / {{ flowInfo.waitRetouch.photoNum.other }}</span>
+            <span class="panel-content-title">照片数 {{ flowInfo.waitRetouch.photoNum.today }} / {{ flowInfo.waitRetouch.photoNum.other }}</span>
             <el-popover
               placement="right"
               trigger="hover"
             >
               <div class="flowInfo-panel">
-                <div class="panel-content panel-title">
+                <div class="flowInfo-panel-content panel-title">
                   <span>产品名称</span>
                   <span class="state-tpye">今日 / 其他</span>
                 </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.waitRetouch.photos" :key="photoIndex" class="panel-content">
+                <div v-for="(photoItem, photoIndex) in flowInfo.waitRetouch.photos" :key="photoIndex" class="flowInfo-panel-content">
                   <span>{{ photoItem.name }}</span>
                   <span class="state-tpye">{{ photoItem.today }} / {{ photoItem.other }}</span>
                 </div>
@@ -36,17 +36,17 @@
           <div class="header-nav">外包修图 / 重修</div>
           <div class="panel-content">订单数 {{ flowInfo.outerRetouching.streamNum.retouching }} / {{ flowInfo.outerRetouching.streamNum.reworking }}</div>
           <div class="panel-content">
-            <span>照片数 {{ flowInfo.outerRetouching.photoNum.retouching }} / {{ flowInfo.outerRetouching.photoNum.reworking }}</span>
+            <span class="panel-content-title">照片数 {{ flowInfo.outerRetouching.photoNum.retouching }} / {{ flowInfo.outerRetouching.photoNum.reworking }}</span>
             <el-popover
               placement="right"
               trigger="hover"
             >
               <div class="flowInfo-panel">
-                <div class="panel-content panel-title">
+                <div class="flowInfo-panel-content panel-title">
                   <span>产品名称</span>
                   <span class="state-tpye">修图 / 重修</span>
                 </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.outerRetouching.photos" :key="photoIndex" class="panel-content">
+                <div v-for="(photoItem, photoIndex) in flowInfo.outerRetouching.photos" :key="photoIndex" class="flowInfo-panel-content">
                   <span>{{ photoItem.name }}</span>
                   <span class="state-tpye">{{ photoItem.retouching }} / {{ photoItem.reworking }}</span>
                 </div>
@@ -62,17 +62,17 @@
           <div class="header-nav">云端修图 / 重修</div>
           <div class="panel-content">订单数 {{ flowInfo.cloudRetouching.streamNum.retouching }} / {{ flowInfo.cloudRetouching.streamNum.reworking }}</div>
           <div class="panel-content">
-            <span>照片数 {{ flowInfo.cloudRetouching.photoNum.retouching }} / {{ flowInfo.cloudRetouching.photoNum.reworking }}</span>
+            <span class="panel-content-title">照片数 {{ flowInfo.cloudRetouching.photoNum.retouching }} / {{ flowInfo.cloudRetouching.photoNum.reworking }}</span>
             <el-popover
               placement="right"
               trigger="hover"
             >
               <div class="flowInfo-panel">
-                <div class="panel-content panel-title">
+                <div class="flowInfo-panel-content panel-title">
                   <span>产品名称</span>
                   <span class="state-tpye">修图 / 重修</span>
                 </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.cloudRetouching.photos" :key="photoIndex" class="panel-content">
+                <div v-for="(photoItem, photoIndex) in flowInfo.cloudRetouching.photos" :key="photoIndex" class="flowInfo-panel-content">
                   <span>{{ photoItem.name }}</span>
                   <span class="state-tpye">{{ photoItem.retouching }} / {{ photoItem.reworking }}</span>
                 </div>
@@ -90,17 +90,17 @@
           <div class="header-nav">云端 审核中 / 待审核</div>
           <div class="panel-content">订单数 {{ flowInfo.review.streamNum.reviewing }} / {{ flowInfo.review.streamNum.wait_review }}</div>
           <div class="panel-content">
-            <span>照片数 {{ flowInfo.review.photoNum.reviewing }} / {{ flowInfo.review.photoNum.wait_review }}</span>
+            <span class="panel-content-title">照片数 {{ flowInfo.review.photoNum.reviewing }} / {{ flowInfo.review.photoNum.wait_review }}</span>
             <el-popover
               placement="right"
               trigger="hover"
             >
               <div class="flowInfo-panel">
-                <div class="panel-content panel-title">
+                <div class="flowInfo-panel-content panel-title">
                   <span>产品名称</span>
                   <span class="state-tpye">审核中 / 待审核</span>
                 </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.review.photos" :key="photoIndex" class="panel-content">
+                <div v-for="(photoItem, photoIndex) in flowInfo.review.photos" :key="photoIndex" class="flowInfo-panel-content">
                   <span>{{ photoItem.name }}</span>
                   <span class="state-tpye">{{ photoItem.reviewing }} / {{ photoItem.wait_review }}</span>
                 </div>
@@ -255,11 +255,11 @@ export default {
       font-weight: 400;
       color: #606266;
 
-      span{
+      .panel-content-title {
         margin-right: 2px;
       }
 
-      .el-button{
+      .el-button {
         border: none;
         font-size: 12px;
         margin-left: 10px;
@@ -312,7 +312,7 @@ export default {
     justify-content: space-evenly;
 
     .panel-wrap {
-      margin: 30px 0px;
+      margin: 30px 0;
       position: relative;
 
       .line-to-top {
@@ -345,6 +345,7 @@ export default {
 
     .panel-wrap {
       position: relative;
+
       .line-to-right {
         width: @linewidth;
         height: 2px;
@@ -368,27 +369,27 @@ export default {
   }
 
   .panel-orange {
-    background-color: #FACD91;
+    background-color: #facd91;
   }
 }
 
 .flowInfo-panel {
   .panel-title {
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     color: #303133;
     font-weight: 500;
 
-    &>span {
+    & > span {
       padding: 17px 20px;
     }
   }
 
-  .panel-content {
+  .flowInfo-panel-content {
     font-size: 12px;
     color: #606266;
-    border: 1px solid #F2F6FC;
+    border: 1px solid #f2f6fc;
 
-    &>span {
+    & > span {
       display: inline-block;
       width: 100px;
       padding: 20px 21px;

@@ -436,6 +436,7 @@ export default {
 
 <style lang="less">
 @import '~@/styles/variables.less';
+
 .retouch-order {
   .header {
     .header-left {
@@ -465,8 +466,8 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size:16px;
-          font-weight:500;
+          font-size: 16px;
+          font-weight: 500;
         }
       }
     }
@@ -533,12 +534,12 @@ export default {
         margin-top: 20px;
         display: flex;
         width: 100%;
-        background:rgba(250,250,250,1);
+        background: rgba(250, 250, 250, 1);
         padding: 20px;
-        border-radius:4px;
+        border-radius: 4px;
         margin-right: 24px;
 
-        &>span {
+        & > span {
           width: 70px;
           color: #303133;
           font-size: 14px;
@@ -574,7 +575,7 @@ export default {
           align-items: center;
           padding-bottom: 100%;
           height: 0;
-          background-color: #F5F7FA;
+          background-color: #f5f7fa;
           border-radius: 4px;
 
           .el-upload {
@@ -594,7 +595,7 @@ export default {
               margin-bottom: 16px;
             }
 
-            &>span {
+            & > span {
               font-size: 16px;
               font-weight: 400;
             }

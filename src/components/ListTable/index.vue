@@ -71,7 +71,7 @@ export default {
   .title {
     background-color: #fafafa;
     font-size: 14px;
-    font-family: PingFangSC-Medium, PingFangSC;
+    font-family: @pingFang;
     font-weight: 500;
     color: #303133;
     line-height: 22px;

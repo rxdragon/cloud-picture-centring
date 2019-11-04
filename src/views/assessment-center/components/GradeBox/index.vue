@@ -334,7 +334,7 @@ export default {
           width: 632px;
           white-space: pre-line;
 
-          .el-tag {
+          &.el-tag {
             margin-right: 10px;
           }
         }
@@ -350,7 +350,7 @@ export default {
     }
 
     .plant-info {
-      & > span {
+      & > .el-tag {
         font-weight: bold;
         display: inline-block;
         margin-bottom: 10px;
@@ -358,7 +358,7 @@ export default {
     }
 
     .weed-info {
-      & > span {
+      & > .el-tag {
         font-weight: bold;
         display: inline-block;
         margin-bottom: 10px;
@@ -404,10 +404,8 @@ export default {
     .audit-content-finish {
       padding: 20px;
 
-      .audit-opinion {
-        .el-tag {
-          margin-right: 21px;
-        }
+      .audit-opinion.el-tag {
+        margin-right: 21px;
       }
 
       .audit-remark {
@@ -420,7 +418,7 @@ export default {
   }
 
   .flakiness-info {
-    .radio-box {
+    &.radio-box {
       padding: 10px;
     }
 

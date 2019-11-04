@@ -1,6 +1,6 @@
 <template>
   <div class="hang-up-list">
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="流水号" width="250">
         <template slot-scope="scope">
           {{ scope.row.streamNum }}

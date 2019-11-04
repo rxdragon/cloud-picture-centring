@@ -251,7 +251,7 @@ export default {
     margin-bottom: 24px;
     align-items: flex-start;
 
-    &>span {
+    & > span {
       width: 60px;
       display: inline-block;
     }
@@ -274,7 +274,7 @@ export default {
     right: 0;
     display: inline !important;
     width: min-content !important;
-    color: #D7D7D7;
+    color: #d7d7d7;
     font-size: 20px;
   }
 

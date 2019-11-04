@@ -149,7 +149,7 @@ export default {
   }
 
   .search-item {
-    &>span {
+    & > span {
       display: inline-block;
       width: 70px;
     }

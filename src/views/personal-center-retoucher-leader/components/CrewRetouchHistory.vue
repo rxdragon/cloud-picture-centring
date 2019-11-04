@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="table-box">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="retoucherName" label="组员" width="80" />
         <el-table-column prop="stream_num" label="流水号" />
         <el-table-column prop="pass_at" label="审核通过时间" />
@@ -170,10 +170,10 @@ export default {
 
       .search-time-panel {
         margin-left: 20px;
-        font-size:14px;
-        color:#303133;
+        font-size: 14px;
+        color: #303133;
         font-weight: 400;
-        line-height:22px;
+        line-height: 22px;
       }
     }
   }

@@ -115,15 +115,15 @@ export default {
   grid-template-columns: 2fr 2fr 1fr;
 
   &:hover {
-    background-color: #F5F7FB;
+    background-color: #f5f7fb;
   }
 
   .panel-content {
     padding: 10px 21px;
-    font-size:14px;
-    font-weight:500;
-    line-height:22px;
-    color: #8E939A;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    color: #8e939a;
 
     .down-completed {
       i::before {
@@ -132,7 +132,7 @@ export default {
 
       time {
         margin-left: 10px;
-        color: #BAC0C7;
+        color: #bac0c7;
       }
     }
   }

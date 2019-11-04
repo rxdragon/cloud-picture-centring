@@ -204,7 +204,7 @@ export default {
     .el-form {
       .el-form-item {
         .el-form-item__content {
-          &>.el-input {
+          & > .el-input {
             width: 400px;
           }
 
