@@ -4,6 +4,7 @@
       <div class="module-header">
         <el-checkbox
           v-model="moduleItem.setAll"
+          :disabled="moduleItem.isRole"
           :indeterminate="moduleItem.isIndeterminate"
           @change="checkModulePermission(moduleItem)"
         >
@@ -14,6 +15,7 @@
         <div class="menu-header">
           <el-checkbox
             v-model="menuItem.setAll"
+            :disabled="menuItem.isRole"
             :indeterminate="menuItem.isIndeterminate"
             @change="checkMenuAllPermission(menuItem, moduleItem)"
           >
@@ -29,6 +31,7 @@
           <el-checkbox
             v-for="(permissionItem, permissionIndex) in menuItem.permission"
             :key="permissionIndex"
+            :disabled="permissionItem.isRole"
             :label="permissionItem"
             class="permission-name"
           >
@@ -49,7 +52,8 @@ export default {
     event: 'change'
   },
   props: {
-    hasPermission: { type: Array, default: () => [] }
+    hasPermission: { type: Array, default: () => [] }, // 含有权限
+    rolePermission: { type: Array, default: () => [] } // 角色权限
   },
   data () {
     return {
@@ -148,8 +152,8 @@ export default {
      */
     updateParent () {
       const updateData = []
-      this.jurisdictionList.forEach(mdouleItem => {
-        mdouleItem.menu.forEach(menuItem => {
+      this.jurisdictionList.forEach(moduleItem => {
+        moduleItem.menu.forEach(menuItem => {
           menuItem.checkPermission.forEach(permissionItem => {
             updateData.push(+permissionItem.id)
           })
@@ -162,22 +166,27 @@ export default {
      * @description 初始化选择权限
      */
     initializeData () {
-      this.jurisdictionList.forEach(mdouleItem => {
-        mdouleItem.checkMenu = []
-        mdouleItem.menu.forEach(menuItem => {
+      this.jurisdictionList.forEach(moduleItem => {
+        moduleItem.checkMenu = []
+        moduleItem.menu.forEach(menuItem => {
           menuItem.checkPermission = []
           menuItem.permission.forEach(permissionItem => {
             // 如果有权限 放进菜单的选择权限中
+            if (this.rolePermission.includes(+permissionItem.id)) {
+              permissionItem.isRole = true
+              menuItem.isRole = true
+              moduleItem.isRole = true
+            }
             if (this.hasPermission.includes(+permissionItem.id)) {
               menuItem.checkPermission.push(permissionItem)
             }
           })
           menuItem.setAll = menuItem.checkPermission.length === menuItem.permission.length
           menuItem.isIndeterminate = Boolean(menuItem.checkPermission.length && !menuItem.setAll)
-          if (menuItem.setAll) { mdouleItem.checkMenu.push(menuItem) }
+          if (menuItem.setAll) { moduleItem.checkMenu.push(menuItem) }
         })
-        mdouleItem.setAll = mdouleItem.checkMenu.length === mdouleItem.menu.length
-        mdouleItem.isIndeterminate = Boolean(mdouleItem.checkMenu.length && !mdouleItem.setAll)
+        moduleItem.setAll = moduleItem.checkMenu.length === moduleItem.menu.length
+        moduleItem.isIndeterminate = Boolean(moduleItem.checkMenu.length && !moduleItem.setAll)
       })
       this.loading = false
     }
@@ -220,7 +229,6 @@ export default {
 
         .permission-name {
           padding: 10px;
-          width: 12.5%;
           margin-right: 10px;
 
           .el-checkbox__input {
