@@ -5,30 +5,30 @@ const name = app.getName()
 const template = [{
   label: name,
   submenu: [{
-      label: '复制',
-      accelerator: 'CmdOrCtrl+C',
-      role: 'copy'
+    label: '复制',
+    accelerator: 'CmdOrCtrl+C',
+    role: 'copy'
   }, {
-      label: '粘贴',
-      accelerator: 'CmdOrCtrl+V',
-      role: 'paste'
+    label: '粘贴',
+    accelerator: 'CmdOrCtrl+V',
+    role: 'paste'
   }, {
-      label: '重新加载',
-      accelerator: 'CmdOrCtrl+R',
-      click: function (item, focusedWindow) {
-        if (focusedWindow) {
-          if (focusedWindow.id === 1) {
-              BrowserWindow.getAllWindows().forEach(function (win) {
-                  if (win.id > 1) {
-                      win.close()
-                  }
-              })
-          }
-          focusedWindow.reload()
+    label: '重新加载',
+    accelerator: 'CmdOrCtrl+R',
+    click: function (item, focusedWindow) {
+      if (focusedWindow) {
+        if (focusedWindow.id === 1) {
+          BrowserWindow.getAllWindows().forEach(function (win) {
+            if (win.id > 1) {
+              win.close()
+            }
+          })
         }
+        focusedWindow.reload()
       }
+    }
   }]
-},{
+}, {
   label: '关于',
   submenu: [{
     label: '版本',
@@ -46,7 +46,7 @@ const template = [{
 /**
  * @description 初始化菜单
  */
-export function setMenu() {
+export function setMenu () {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 }

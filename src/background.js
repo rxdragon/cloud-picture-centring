@@ -1,7 +1,7 @@
 'use strict'
 /* global __static */
 
-import { app, protocol, Menu } from 'electron'
+import { app, protocol } from 'electron'
 import EventEmitter from 'events'
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 

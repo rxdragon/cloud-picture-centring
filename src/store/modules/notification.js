@@ -32,7 +32,7 @@ const actions = {
         store.dispatch('notification/pollingHasReturn')
       }
       if (data && !SessionTool.getReturnRetouchOrder(data)) {
-        MessageBox.confirm('您有新的重修流水，未免影响沙漏时间请及时处理。', '', {
+        MessageBox.confirm('您有新的重修流水，为免影响沙漏时间请及时处理。', '', {
           confirmButtonText: '现在处理',
           cancelButtonText: '稍后处理',
           type: 'warning',

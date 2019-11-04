@@ -30,7 +30,7 @@
             <div v-for="(incomeItem, incomeIndex) in institutionConfig.incomeConfig" :key="incomeIndex" class="panel">
               <div class="list-title">{{ incomeIndex + 1 }} 人</div>
               <div class="panel-contetn">
-                <el-input v-model.number="institutionConfig.incomeConfig[incomeIndex]" v-numberOnly min="0" type="number" placeholder="0" />
+                <input v-model="institutionConfig.incomeConfig[incomeIndex]" v-decimalOnly class="num-input" min="0" placeholder="0">
               </div>
             </div>
           </div>
