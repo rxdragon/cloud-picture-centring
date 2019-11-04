@@ -28,7 +28,7 @@ async function uploadFileList (fileList, client) {
       remoteFile = await client.headFile(item.remotePath)
       const isVersionJson = item.name === 'version.json'
       if (!isVersionJson && remoteFile && remoteFile.size === item.size && !/index.html$/.test(item.remotePath)) {
-        console.log('\x1b[33m'+item.filePath+'\t不需要上传\x1b[0m')
+        console.log('\x1b[33m' + item.filePath + '\t不需要上传\x1b[0m')
       } else {
         file = fs.readFileSync(item.filePath)
         await client.putFile(item.remotePath, file)
