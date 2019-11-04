@@ -93,7 +93,6 @@ export default {
   },
   created () {
     this.hourGlassLength = Object.keys(HourGlassSettingEnum).length
-    this.getHourGlassGlobalState()
   },
   methods: {
     /**

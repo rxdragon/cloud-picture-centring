@@ -9,6 +9,7 @@
 import PaintedEggshell from '@/components/PaintedEggshell'
 import { mapGetters } from 'vuex'
 import { clearAllStorage } from '@/utils/sessionTool'
+import Mousetrap from 'mousetrap'
 export default {
   name: 'App',
   components: { PaintedEggshell },
@@ -19,7 +20,28 @@ export default {
     this.$ipcRenderer.on('closed-win', (e, item) => {
       clearAllStorage()
     })
-  }
+    // Mousetrap.bind('command+r', () => {
+    //   this.refresh()
+    //   return false
+    // }, 'keydown')
+  },
+  methods: {
+    /**
+     * @description 刷新
+     */
+    refresh () {
+      console.log('刷新')
+      const view = this.$route
+      this.$store.dispatch('tagsView/delCachedView', view).then(() => {
+        const { fullPath } = view
+        this.$nextTick(() => {
+          this.$router.replace({
+            path: '/redirect' + fullPath
+          })
+        })
+      })
+    }
+  },
 }
 </script>
 

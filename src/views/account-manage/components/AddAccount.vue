@@ -233,19 +233,22 @@ export default {
     /**
      * @description 查询伙伴
      */
-    getStaff () {
+    async getStaff () {
       if (!this.jobNumber) {
         this.$newMessage.warning('请输入伙伴工号')
         return false
       }
-      const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      Staff.getStaff(req)
-        .then(data => {
-          this.staffInfo = data
-          this.resetParams()
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        })
+      try {
+        const req = { staffNum: this.jobNumber }
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const data = await Staff.getStaff(req)
+        this.staffInfo = data
+        this.resetParams()
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      } catch (error) {
+        console.error(error)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 获取伙伴信息

@@ -249,6 +249,8 @@ export default {
   width: 100%;
   min-width: @minWidth;
   background: #fff;
+  overflow: hidden;
+  border-top-left-radius: 20px;
 
   .tags-view-wrapper {
     background: #E4E7ED;
