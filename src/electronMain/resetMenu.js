@@ -27,6 +27,18 @@ const template = [{
         focusedWindow.reload()
       }
     }
+  }, {
+    label: '打开调试器',
+    accelerator: 'CmdOrCtrl+I',
+    click: function (item, focusedWindow) {
+      if (focusedWindow) {
+        if (focusedWindow.webContents.isDevToolsOpened()) {
+          focusedWindow.webContents.closeDevTools()
+        } else {
+          focusedWindow.webContents.openDevTools()
+        }
+      }
+    }
   }]
 }, {
   label: '关于',
