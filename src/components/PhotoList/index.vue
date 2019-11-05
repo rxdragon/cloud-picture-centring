@@ -78,7 +78,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['imgDomain']),
+    ...mapGetters(['imgDomain', 'staffId']),
     photos () {
       const createdData = []
       const findList = ['original_photo', 'first_photo', 'complete_photo', 'finish_photo']
@@ -95,7 +95,8 @@ export default {
      * @param {*} params
      */
     canGrade () {
-      return Boolean(!this.gradeInfo.attitude)
+      if (!this.gradeInfo.attitude) return true
+      return this.gradeInfo.staff_id === this.staffId
     },
     goodPhoto () {
       return +this.gradeType === 1
@@ -107,14 +108,14 @@ export default {
   watch: {
     'gradeInfo.attitude': {
       handler: function (value) {
+        console.log(value)
+        if (!value) { this.gradeType = 0 }
         if (value === 'good') { this.gradeType = 1 }
         if (value === 'bad') { this.gradeType = 2 }
       },
-      deep: true
+      deep: true,
+      immediate: true
     }
-  },
-  activated () {
-    this.gradeType = 0
   },
   methods: {
     /**
@@ -157,6 +158,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .photo-list {
   display: flex;
   flex-wrap: wrap;
@@ -171,11 +173,11 @@ export default {
       display: flex;
       justify-content: space-between;
       color: #606266;
-      font-family:PingFangSC-Regular,PingFangSC;
-      line-height:22px;
+      font-family: @pingFang;
+      line-height: 22px;
       font-size: 14px;
       padding: 12px 6px 6px;
-      border-top: 1px solid #EBEEF5;
+      border-top: 1px solid #ebeef5;
 
       .icon-box {
         display: flex;
@@ -192,11 +194,11 @@ export default {
       }
 
       .good:hover {
-        color: #FF8F00;
+        color: #ff8f00;
       }
 
       .good-photo {
-        color: #FF8F00;
+        color: #ff8f00;
       }
 
       .bad-photo {

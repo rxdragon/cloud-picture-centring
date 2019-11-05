@@ -159,6 +159,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .amend-order {
   .search-box {
     margin-bottom: 20px;
@@ -204,14 +205,14 @@ export default {
           font-size: 12px;
 
           .el-input {
-            width: calc(~'100% - 48px')
+            width: calc(~'100% - 48px');
           }
         }
 
         .joint-type,
         .joint-sequence,
         .change-num {
-          &>span {
+          & > span {
             width: 48px;
             text-align: center;
           }

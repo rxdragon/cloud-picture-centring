@@ -93,7 +93,6 @@ export default {
   },
   created () {
     this.hourGlassLength = Object.keys(HourGlassSettingEnum).length
-    this.getHourGlassGlobalState()
   },
   methods: {
     /**
@@ -152,7 +151,7 @@ export default {
       align-items: center;
 
       .switch-box {
-        &>span {
+        & > span {
           margin-right: 20px;
         }
       }

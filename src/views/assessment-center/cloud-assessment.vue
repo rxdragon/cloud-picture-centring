@@ -2,6 +2,9 @@
   <div class="cloud-assessment">
     <div class="header" :class="headerClass">
       <h3>云学院评价中心</h3>
+      <div class="button-box">
+        <el-button v-show="allPhotoPath.length" type="primary" @click="onedownAll">一键下载</el-button>
+      </div>
     </div>
     <div class="search-box">
       <div class="search-item">
@@ -85,7 +88,9 @@ import InstitutionType from '@SelectBox/InstitutionType'
 import GradeBox from './components/GradeBox'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
-import { joinTimeSpan } from '@/utils/timespan.js'
+import * as PhotoTool from '@/utils/photoTool.js'
+import { PhotoEnumName } from '@/utils/enumerate.js'
+import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
 
 export default {
   name: 'CloudAssessment',
@@ -97,6 +102,7 @@ export default {
       institutionType: 0, // 修图标准
       sampleNum: '', // 伙伴抽样量
       spotAllNum: '-',
+      allPhotoPath: [],
       pager: {
         page: 1,
         pageSize: 10,
@@ -114,6 +120,22 @@ export default {
     this.resetPage()
   },
   methods: {
+    /**
+     * @description 一键下载
+     */
+    onedownAll () {
+      const savePath = `${getNowDate()}-云端抽片`
+      const photoArr = []
+      this.allPhotoPath.forEach(photoItem => {
+        photoArr.push({
+          url: photoItem.path,
+          photoId: photoItem.photo_id,
+          version: PhotoEnumName[photoItem.version],
+          path: savePath
+        })
+      })
+      PhotoTool.oneAllDown(photoArr)
+    },
     /**
      * @description 初始化页面
      */
@@ -219,6 +241,7 @@ export default {
             this.dialogTableVisible = false
           }, 1500)
         }
+        this.allPhotoPath = data.allPhotoPath
         this.photoData = []
         this.photoData = data.list
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -244,7 +267,7 @@ export default {
 </script>
 
 <style lang="less">
- @import "~@/styles/variables.less";
+@import "~@/styles/variables.less";
 
 .cloud-assessment {
   .search-box {
@@ -284,20 +307,20 @@ export default {
 
       .list-title {
         padding: 17px 20px;
-        font-size:14px;
-        font-weight:500;
-        color:#303133;
-        line-height:22px;
-        background-color: #FAFAFA;
+        font-size: 14px;
+        font-weight: 500;
+        color: #303133;
+        line-height: 22px;
+        background-color: #fafafa;
       }
 
       .list-content {
         padding: 21px 20px;
-        font-size:14px;
-        font-weight:400;
-        color:#606266;
-        line-height:14px;
-        border-bottom: 1px solid #F2F6FC;
+        font-size: 14px;
+        font-weight: 400;
+        color: #606266;
+        line-height: 14px;
+        border-bottom: 1px solid #f2f6fc;
       }
     }
   }

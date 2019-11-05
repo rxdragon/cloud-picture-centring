@@ -26,7 +26,7 @@
         </div>
         <!-- 表格框 -->
         <div class="table-box">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="title" label="冲量标题" />
             <el-table-column prop="award" label="冲量奖励">
               <template slot-scope="scope">
@@ -205,7 +205,7 @@ export default {
           this.getImpulseList()
         } catch (error) {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          console.log(error)
+          console.error(error)
         }
       }).catch(() => {})
     },
@@ -227,7 +227,7 @@ export default {
           this.getImpulseList()
         } catch (error) {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          console.log(error)
+          console.error(error)
         }
       }).catch(() => {})
     }
@@ -237,6 +237,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .amount-award {
   .button-box {
     text-align: right;

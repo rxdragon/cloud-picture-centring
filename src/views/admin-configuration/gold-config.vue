@@ -22,7 +22,7 @@
         </div>
         <!-- 列表数据 -->
         <div class="table-box">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="staffName" label="伙伴姓名" />
             <el-table-column prop="groupName" label="修图小组" />
             <el-table-column prop="multiple" label="金币卡" />

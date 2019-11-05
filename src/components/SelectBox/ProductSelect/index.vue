@@ -2,7 +2,7 @@
   <div class="product-select">
     <el-cascader
       :options="options"
-      :props="props"
+      :props="propsValue"
       collapse-tags
       v-bind="$attrs"
       :popper-append-to-body="false"
@@ -26,11 +26,24 @@ import * as Product from '@/api/product.js'
 
 export default {
   name: 'ProductSelect',
+  props: {
+    props: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
+  },
   data () {
     return {
-      props: { multiple: true, emitPath: false },
+      deafultProps: { multiple: true, emitPath: false },
       options: [],
       loadingDown: false
+    }
+  },
+  computed: {
+    propsValue () {
+      return Object.assign({}, this.deafultProps, this.props)
     }
   },
   created () {

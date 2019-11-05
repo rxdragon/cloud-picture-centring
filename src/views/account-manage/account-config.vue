@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="table-box">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="id" label="工号" />
             <el-table-column prop="name" label="伙伴姓名" />
             <el-table-column prop="position_text" label="岗位" />
@@ -170,6 +170,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .account-config {
   .main {
     .header {

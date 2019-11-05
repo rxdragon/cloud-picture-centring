@@ -98,7 +98,7 @@ export default {
     margin-bottom: 24px;
     align-items: flex-start;
 
-    &>span {
+    & > span {
       width: 80px;
     }
   }

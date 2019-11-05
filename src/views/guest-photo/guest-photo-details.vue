@@ -91,6 +91,8 @@ export default {
 </script>
 
 <style lang="less">
+@import '../../styles/variables.less';
+
 .guest-photo-details {
   .module-panel {
     margin-bottom: 24px;
@@ -109,41 +111,41 @@ export default {
       }
 
       .tabel-title {
-        border-bottom: 1px solid #EBEEF5;
+        border-bottom: 1px solid #ebeef5;
 
-        &>span {
-          font-size:14px;
-          font-weight:500;
-          color:#303133;
-          line-height:22px;
+        & > span {
+          font-size: 14px;
+          font-weight: 500;
+          color: #303133;
+          line-height: 22px;
           text-align: left;
           padding: 17px 20px;
-          background-color: #FAFAFA;
+          background-color: #fafafa;
         }
       }
 
       .tabel-value {
-        &>span {
-          font-size:14px;
-          font-weight:400;
-          color:#606266;
-          line-height:14px;
+        & > span {
+          font-size: 14px;
+          font-weight: 400;
+          color: #606266;
+          line-height: 14px;
           padding: 20px 21px;
-          border-bottom: 1px solid #F2F6FC;
+          border-bottom: 1px solid #f2f6fc;
         }
       }
     }
 
     .evaluate-info {
       margin-top: 20px;
-      font-size:14px;
-      font-weight:500;
-      color:#303133;
-      line-height:22px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #303133;
+      line-height: 22px;
       text-align: left;
 
       .good-photo {
-        color: #FF8F00;
+        color: #ff8f00;
       }
 
       .bad-photo {
@@ -158,11 +160,11 @@ export default {
       .panel-content {
         display: flex;
         align-items: center;
-        font-size:14px;
-        font-family:PingFangSC-Regular,PingFangSC;
-        font-weight:400;
-        color:#303133;
-        line-height:22px;
+        font-size: 14px;
+        font-family: @pingFang;
+        font-weight: 400;
+        color: #303133;
+        line-height: 22px;
       }
     }
   }

@@ -101,6 +101,7 @@ export default {
 
 <style lang="less">
 @import '../../styles/variables.less';
+
 .img-box {
   width: 100%;
   height: 0;
@@ -173,10 +174,10 @@ export default {
   }
 
   .people-num {
-    font-size:12px;
-    font-weight:400;
-    color:#606266;
-    line-height:17px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #606266;
+    line-height: 17px;
   }
 }
 
@@ -185,6 +186,6 @@ export default {
   color: @red;
   margin: 0 6px 6px;
   padding-top: 9px;
-  border-top: 1px solid #DDDFE6;
+  border-top: 1px solid #dddfe6;
 }
 </style>

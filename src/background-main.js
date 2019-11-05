@@ -4,10 +4,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 import path from 'path'
 import * as DownTool from './electronMain/downTool.js'
+import { setMenu } from './electronMain/resetMenu.js'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+// 初始化菜单
+setMenu()
 
 async function createWindow () {
   // Create the browser window.
@@ -66,7 +70,6 @@ async function createWindow () {
 
   if (global.isDevelopment && global.isInSingleMode) {
     // Load the url of the dev server if in development mode
-    console.log(process.env.WEBPACK_DEV_SERVER_URL)
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!global.isTest) win.webContents.openDevTools()
   } else {

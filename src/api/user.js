@@ -35,6 +35,16 @@ export function getStaffPermission (params) {
 }
 
 /**
+ * @description 获取个人权限
+ */
+export function getAuthority () {
+  return axios({
+    url: '/project_cloud/common/getAuthority',
+    method: 'GET'
+  })
+}
+
+/**
  * @description 判断缓存是否过期
  */
 export function userExpire () {

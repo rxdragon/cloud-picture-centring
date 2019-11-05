@@ -43,7 +43,7 @@ export default {
 
 <style lang="less" scoped>
 .institution-select {
-  &>span {
+  & > span {
     margin-right: 10px;
   }
 }

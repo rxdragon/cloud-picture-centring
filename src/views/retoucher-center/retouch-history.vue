@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="table-box">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="stream_num" label="流水号" width="250px" />
         <el-table-column label="接单时间">
           <template slot-scope="scope">
@@ -126,6 +126,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .retouch-history {
   .table-box {
     margin-top: 20px;

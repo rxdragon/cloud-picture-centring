@@ -1,7 +1,7 @@
 <template>
   <div class="product-sand-config">
     <!-- 列表数据 -->
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%;">
       <el-table-column prop="productName" label="产品名称">
         <template slot-scope="scope">
           <el-popover

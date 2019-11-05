@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="table-box">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="title" label="角色组名称" />
             <el-table-column prop="founder_name" label="操作人" />
             <el-table-column label="操作">
@@ -115,7 +115,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.log(error)
       }
     },
     /**
@@ -136,7 +135,7 @@ export default {
           this.getRoleList()
         } catch (error) {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          console.log(error)
+          console.error(error)
         }
       }).catch(() => {})
     }

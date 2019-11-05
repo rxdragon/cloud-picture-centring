@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="table-box">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="name" label="修图类别名称" />
             <el-table-column label="最近操作时间">
               <template slot-scope="scope">

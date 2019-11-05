@@ -52,7 +52,7 @@ export default {
 
   .staff-header {
     padding: 10px;
-    background-color: #F4F7F9;
+    background-color: #f4f7f9;
   }
 
   .staff-content {

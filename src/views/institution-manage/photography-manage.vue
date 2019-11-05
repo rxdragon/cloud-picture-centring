@@ -5,7 +5,7 @@
       <el-button type="primary" @click="addNewInstitution">新增摄影机构</el-button>
     </div>
     <div class="table-box">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="name" label="机构名" />
         <el-table-column prop="loginType" label="登录方式" />
         <el-table-column prop="viscountNum" label="子账号数量" />

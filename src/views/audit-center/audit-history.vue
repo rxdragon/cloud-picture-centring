@@ -26,7 +26,7 @@
     </div>
 
     <div class="table-box">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="stream_num" label="流水号" width="200" />
         <el-table-column prop="pass_at" label="审核通过时间" width="200">
           <template slot-scope="scope">
@@ -100,7 +100,6 @@ export default {
       this.timeSpan = [nowTime, nowTime]
     }
     const searchType = this.$route.query.searchType
-    console.log(searchType)
     switch (searchType) {
       case SearchType.CheckPlant:
         this.auditType = 'plant'
@@ -211,6 +210,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .audit-history {
   .search-item {
     margin-right: 16px;
@@ -222,6 +222,5 @@ export default {
       width: 120px;
     }
   }
-
 }
 </style>

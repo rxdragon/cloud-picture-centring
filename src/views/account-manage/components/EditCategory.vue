@@ -140,6 +140,7 @@ export default {
 
   .category-name {
     margin-bottom: 24px;
+
     .el-input {
       width: 220px;
     }
@@ -156,7 +157,7 @@ export default {
   }
 
   .search-item {
-    &>span {
+    & > span {
       display: inline-block;
       width: 90px;
     }
