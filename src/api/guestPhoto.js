@@ -35,6 +35,12 @@ export function getPhotoInfo (params) {
     createData.orderNum = createData.stream.order.external_num
     createData.streamNum = createData.stream.stream_num
     createData.productName = createData.stream.product.name
+    createData.customeName = createData.stream &&
+      createData.stream.order &&
+      createData.stream.order.tags &&
+      createData.stream.order.tags.values &&
+      createData.stream.order.tags.values.customer_name ||
+      '-'
     createData.labelTag = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.retouch_claim || {}
     createData.orderMark = createData.stream.order.note.orderNote || '-'
     createData.dresserMark = createData.stream.order.note.dresserNote || '-'
@@ -67,6 +73,12 @@ export function getPhotoInfo (params) {
       retoucher: createData.stream.retoucher.name,
       retouchGroup: createData.stream.retoucher.retouch_group.name,
       reviewer: createData.stream.reviewer && createData.stream.reviewer.name || '-',
+      dresser: createData.stream &&
+        createData.stream.order &&
+        createData.stream.order.tags &&
+        createData.stream.order.tags.values &&
+        createData.stream.order.tags.values.dresser ||
+        '-',
       watcherName: createData.stream.tags.values && createData.stream.tags.values.watcher_name || '-',
       storeEvaluateStar: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_star,
       storeEvaluateReason: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_reason || '-'
@@ -101,11 +113,11 @@ export function getAttitudePhotoList (params) {
       const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
       listItem.src = findCompletePhoto && findCompletePhoto.path || ''
       listItem.retoucherName = listItem.stream && listItem.stream.retoucher && listItem.stream.retoucher.name || '-'
-      listItem.retouchGroupName = listItem.stream
-        && listItem.stream.retoucher 
-        && listItem.stream.retoucher.retouch_group
-        && listItem.stream.retoucher.retouch_group.name
-        || '-'
+      listItem.retouchGroupName = listItem.stream &&
+        listItem.stream.retoucher &&
+        listItem.stream.retoucher.retouch_group &&
+        listItem.stream.retoucher.retouch_group.name ||
+        '-'
     })
     return msg
   })

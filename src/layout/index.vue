@@ -16,11 +16,14 @@
         <AppMain />
       </el-main>
     </el-container>
+    <!-- 弹出 -->
+    <anniversary v-if="showPop" :show-pop.sync="showPop" />
   </el-container>
 </template>
 
 <script>
 import { AppMain, Navbar, TagsView, Sidebar } from './components'
+import Anniversary from '@/components/CongratulationComponents/Anniversary'
 const { ipcRenderer } = window.require('electron')
 export default {
   name: 'Layout',
@@ -28,7 +31,13 @@ export default {
     AppMain,
     Navbar,
     TagsView,
-    Sidebar
+    Sidebar,
+    Anniversary
+  },
+  data () {
+    return {
+      showPop: false
+    }
   },
   mounted () {
     ipcRenderer.on('version:find-new', (event, info) => {

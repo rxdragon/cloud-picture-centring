@@ -7,7 +7,7 @@
       </div>
       <div class="staff-search search-item">
         <span>云端伙伴</span>
-        <staff-select v-model="staffId" :props="{ multiple: false }" />
+        <staff-select v-model="staffIds" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getRetoucherQuota(1)">查询</el-button>
@@ -34,7 +34,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间戳
-      staffId: '', // 伙伴id
+      staffIds: [], // 伙伴id
       listDataOne: [{
         key: 'retouchSinglePhotoNum',
         label: '修图数量-单人(单位：张)',
@@ -84,15 +84,11 @@ export default {
         this.$newMessage.warning('请填写时间')
         return false
       }
-      if (!this.staffId) {
-        this.$newMessage.warning('请选择云端伙伴')
-        return false
-      }
       const req = {
         startAt: joinTimeSpan(this.timeSpan[0]),
-        endAt: joinTimeSpan(this.timeSpan[1], 1),
-        staffId: this.staffId
+        endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
+      if (this.staffIds.length) { req.staffIds = this.staffIds }
       return req
     },
     /**

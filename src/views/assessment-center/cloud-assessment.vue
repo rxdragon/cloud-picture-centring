@@ -255,12 +255,6 @@ export default {
      */
     handlePage () {
       this.getSpotCheckResult()
-    },
-    /**
-     * @description 处理滚动
-     */
-    handleScroll (e) {
-      this.headerClass = this.scrollWrapper.scrollTop !== 0 ? 'header-fixed' : ''
     }
   }
 }

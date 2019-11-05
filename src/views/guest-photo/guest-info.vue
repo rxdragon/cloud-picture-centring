@@ -21,7 +21,7 @@
             <span>{{ orderNum }}</span>
             <span>{{ streamNum }}</span>
             <span>{{ productName }}</span>
-            <span>没数据</span>
+            <span>{{ customeName }}</span>
           </div>
           <div class="panel-title require-box">备注信息</div>
           <div class="panel-main">
@@ -54,9 +54,9 @@
             <span>化妆师</span>
           </div>
           <div class="work-value content-value">
-            <span>{{ workerInfo.storeName }}</span>
-            <span>{{ workerInfo.photographer }}</span>
-            <span>没数据</span>
+            <span>{{ workerInfo.storeName || '-' }}</span>
+            <span>{{ workerInfo.photographer || '-' }}</span>
+            <span>{{ workerInfo.dresser || '-' }}</span>
           </div>
         </div>
         <div class="panel-content">
@@ -70,8 +70,8 @@
           <div class="work-staff-value content-value">
             <span>{{ workerInfo.retoucher || '-' }}</span>
             <span>{{ workerInfo.retouchGroup || '-' }}</span>
-            <span>{{ workerInfo.reviewer }}</span>
-            <span>{{ workerInfo.watcherName }}</span>
+            <span>{{ workerInfo.reviewer || '-' }}</span>
+            <span>{{ workerInfo.watcherName || '-' }}</span>
             <span class="check-evaluate">
               <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #f90;" class="el-icon-star-on" /></span>
               <span>评语：{{ workerInfo.storeEvaluateReason }}</span>
@@ -103,6 +103,7 @@ export default {
       orderNum: '-', // 订单号
       streamNum: '-', // 流水号
       productName: '-', // 产品名称
+      customeName: '-', // 顾客姓名
       labelTag: {}, // 标签
       photographerRemark: '', // 摄影备注
       retouchMark: '', // 修图备注
@@ -133,6 +134,7 @@ export default {
         this.orderNum = data.orderNum
         this.streamNum = data.streamNum
         this.productName = data.productName
+        this.customeName = data.customeName
         this.labelTag = data.labelTag
         this.photographerRemark = data.photographerRemark
         this.retouchMark = data.retouchMark
