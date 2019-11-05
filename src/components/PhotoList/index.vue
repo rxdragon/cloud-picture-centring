@@ -96,7 +96,10 @@ export default {
      */
     canGrade () {
       if (!this.gradeInfo.attitude) return true
-      return this.gradeInfo.staff_id === this.staffId
+      const isAttitudeScore = ['good', 'bad']
+      const isAttitude = isAttitudeScore.includes(this.gradeInfo.attitude)
+      const isAttitudeBySelf = this.gradeInfo.staff_id === this.staffId
+      return isAttitudeBySelf || !isAttitude
     },
     goodPhoto () {
       return +this.gradeType === 1
@@ -112,6 +115,7 @@ export default {
         if (!value) { this.gradeType = 0 }
         if (value === 'good') { this.gradeType = 1 }
         if (value === 'bad') { this.gradeType = 2 }
+        if (value === 'none') { this.gradeType = 0 }
       },
       deep: true,
       immediate: true
@@ -199,6 +203,10 @@ export default {
 
       .good-photo {
         color: #ff8f00;
+      }
+
+      .bad:hover {
+        color: #909399;
       }
 
       .bad-photo {

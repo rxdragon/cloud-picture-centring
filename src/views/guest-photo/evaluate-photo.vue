@@ -37,8 +37,8 @@
             :src="photoItem.src"
             @click.native="goToDetails(photoItem)"
           />
-          <div class="staff-name">修图师：{{ photoItem.stream.retoucher.name }}</div>
-          <div class="group-name">修图小组：{{ photoItem.stream.retoucher.retouch_group.name }}</div>
+          <div class="staff-name">修图师：{{ photoItem.retoucherName }}</div>
+          <div class="group-name">修图小组：{{ photoItem.retouchGroupName }}</div>
         </div>
         <div v-for="i in 4" :key="'empty' + i" class="empty-box" />
       </div>

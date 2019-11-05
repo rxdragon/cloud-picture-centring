@@ -47,7 +47,9 @@ export function getPhotoInfo (params) {
       createData.canAttitude = true
     } else {
       createData.isAttitudeBySelf = createData.attitude.staff_id === store.getters.userInfo.id
-      createData.canAttitude = createData.isAttitudeBySelf
+      const isAttitudeScore = ['good', 'bad']
+      const isAttitude = isAttitudeScore.includes(createData.attitude.attitude)
+      createData.canAttitude = createData.isAttitudeBySelf || !isAttitude
     }
     if (createData.isPass) {
       const reworkNum = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.rework_num || 0
@@ -98,6 +100,12 @@ export function getAttitudePhotoList (params) {
     msg.list.forEach(listItem => {
       const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
       listItem.src = findCompletePhoto && findCompletePhoto.path || ''
+      listItem.retoucherName = listItem.stream && listItem.stream.retoucher && listItem.stream.retoucher.name || '-'
+      listItem.retouchGroupName = listItem.stream
+        && listItem.stream.retoucher 
+        && listItem.stream.retoucher.retouch_group
+        && listItem.stream.retoucher.retouch_group.name
+        || '-'
     })
     return msg
   })
