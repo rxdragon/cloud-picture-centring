@@ -115,7 +115,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.log(error)
       }
     },
     /**
@@ -136,7 +135,7 @@ export default {
           this.getRoleList()
         } catch (error) {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          console.log(error)
+          console.error(error)
         }
       }).catch(() => {})
     }

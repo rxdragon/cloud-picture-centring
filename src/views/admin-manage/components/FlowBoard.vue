@@ -189,7 +189,6 @@ export default {
   },
   beforeDestroy () {
     clearInterval(this.timer)
-    console.log(1)
     this.timer = null
   },
   methods: {

@@ -3,17 +3,15 @@ import path from 'path'
 import fs from 'fs'
 
 let newFoldName = ''
-
 let downloadItems = []
 
 // 监听将要下载事件
 export function onWillDownload (win) {
   session.defaultSession.on('will-download', async (event, item) => {
-    const fileName = item.getFilename() // 文件名
+    const saveFileName = item.getFilename() // 文件名
     const downloadPath = app.getPath('desktop') // 默认下载储存地址
-
     let fileNum = 0 // 文件名字
-    let savePath = path.join(downloadPath, newFoldName, fileName) // 保存地址
+    let savePath = path.join(downloadPath, newFoldName, saveFileName) // 保存地址
     // savePath基础信息
     const ext = path.extname(savePath)
     const name = path.basename(savePath, ext)
@@ -79,7 +77,7 @@ export function onDownEvent (win) {
 
 // 监听下载图片字段
 export function downPhoto (win) {
-  ipcMain.on('downPhoto', (e, data) => {
+  ipcMain.on('downPhoto', (event, data) => {
     newFoldName = data.path
     // 触发下载
     win.webContents.downloadURL(data.url)

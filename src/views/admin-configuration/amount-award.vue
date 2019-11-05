@@ -205,7 +205,7 @@ export default {
           this.getImpulseList()
         } catch (error) {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          console.log(error)
+          console.error(error)
         }
       }).catch(() => {})
     },
@@ -227,7 +227,7 @@ export default {
           this.getImpulseList()
         } catch (error) {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          console.log(error)
+          console.error(error)
         }
       }).catch(() => {})
     }

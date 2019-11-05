@@ -100,7 +100,6 @@ export default {
       this.timeSpan = [nowTime, nowTime]
     }
     const searchType = this.$route.query.searchType
-    console.log(searchType)
     switch (searchType) {
       case SearchType.CheckPlant:
         this.auditType = 'plant'

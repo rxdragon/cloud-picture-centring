@@ -58,7 +58,6 @@ const actions = {
   getUserInfo ({ commit, dispatch, getters }) {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('getUserInfo')
         const saveInfo = SessionTool.getUserInfo()
         const info = saveInfo || await UserAction.info()
         SessionTool.setUserInfo(info)
@@ -85,7 +84,6 @@ const actions = {
         router.push({
           path: '/401'
         })
-        console.log(error)
         reject(error)
       }
     })

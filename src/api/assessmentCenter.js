@@ -1,6 +1,8 @@
 // assessmentCenter
 import axios from '@/plugins/axios.js'
 import { transformPercentage } from '@/utils/index.js'
+import * as SessionTool from '@/utils/sessionTool.js'
+import * as PhotoTool from '@/utils/photoTool.js'
 
 /**
  * @description 获取今日抽片指标
@@ -56,6 +58,15 @@ export function getSpotCheckResult (params) {
     params
   }).then(msg => {
     const data = msg.data
+    let allPhotoPath = []
+    if (!data.length) {
+      SessionTool.removeCloudAssessmentLastPhotoId()
+      return {
+        list: [],
+        allPhotoPath,
+        total: msg.extend.processInfo[0].totalCount
+      }
+    }
     data.forEach(item => {
       item.retouchNote = item.photoData.stream && item.photoData.stream.note.retouch_note || '-'
       item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('return_photo') || false
@@ -64,6 +75,7 @@ export function getSpotCheckResult (params) {
       item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')
       item.completePhoto = item.photoData.other_photo_version.find(item => item.version === 'complete_photo')
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
+      allPhotoPath = [...allPhotoPath, ...item.photoVersion]
       item.retouchStandard = item.retouch_standard
       item.productName = item.photoData.stream && item.photoData.stream.product.name
 
@@ -73,12 +85,11 @@ export function getSpotCheckResult (params) {
       item.reworkReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.rework_reason
       item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
       item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason
-
+      // 是否是绿色通道
       item.isGreen = item.photoData.stream &&
         item.photoData.stream.tags &&
         item.photoData.stream.tags.statics &&
         item.photoData.stream.tags.statics.includes('green_stream') || false
-      console.log(item.isGreen)
       const retouchRequire = {
         eye: '暂无',
         face: '暂无',
@@ -90,11 +101,12 @@ export function getSpotCheckResult (params) {
         item.photoData.stream.tags.values.retouch_claim ||
         retouchRequire
     })
+    PhotoTool.readAllPhoto(allPhotoPath)
     const createData = {
       list: data,
+      allPhotoPath,
       total: msg.extend.processInfo[0].totalCount
     }
-    console.log(createData)
     return createData
   })
 }

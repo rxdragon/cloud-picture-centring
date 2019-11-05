@@ -32,8 +32,6 @@ export function getPhotoInfo (params) {
     params
   }).then(msg => {
     const createData = keyToHump(msg)
-    console.log(createData)
-    console.log()
     createData.orderNum = createData.stream.order.external_num
     createData.streamNum = createData.stream.stream_num
     createData.productName = createData.stream.product.name

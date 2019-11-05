@@ -74,7 +74,6 @@ export function getRetoucherQuota (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    console.log(msg)
     msg.retouchSinglePhotoNum = Number(msg.retouchSinglePhotoNum)
     msg.retouchMultiPhotoNum = Number(msg.retouchMultiPhotoNum)
     msg.income = Number(msg.income.impulse) + Number(msg.income.retouch)
@@ -123,7 +122,6 @@ export function getReviewQuota (params) {
       return `${num} / ${rate}`
     }
     if (!Object.keys(data).length) return null
-    console.log(data)
     const avgTime = getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count)
     const res = {
       review_stream_num: data.reviewStreamNum,

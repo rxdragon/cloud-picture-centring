@@ -213,7 +213,6 @@ export default {
       clearTimeout(window.polling.getQueue)
       window.polling.getQueue = null
       if (+this.queueInfo.retouchStreamId && !SessionTool.getSureRetouchOrder(this.queueInfo.retouchStreamId)) {
-        console.log(1)
         this.$confirm('', '你有新的订单请及时处理', {
           confirmButtonText: '确定',
           center: true,

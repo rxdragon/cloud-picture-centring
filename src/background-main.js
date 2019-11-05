@@ -70,7 +70,6 @@ async function createWindow () {
 
   if (global.isDevelopment && global.isInSingleMode) {
     // Load the url of the dev server if in development mode
-    console.log(process.env.WEBPACK_DEV_SERVER_URL)
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!global.isTest) win.webContents.openDevTools()
   } else {

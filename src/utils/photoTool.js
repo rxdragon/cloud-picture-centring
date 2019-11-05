@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron'
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
+import * as SessionTool from '@/utils/sessionTool.js'
 import store from '@/store' // vuex
 import Vue from 'vue'
 
@@ -10,6 +11,15 @@ import Vue from 'vue'
 export function fileNameFormat (name) {
   const indexPoint = name.lastIndexOf('.')
   return name.substring(0, indexPoint)
+}
+
+/**
+ * @description 获取文件后缀
+ * @param {*} name
+ */
+export function getFilePostfix (name) {
+  const indexPoint = name.lastIndexOf('.')
+  return name.substring(indexPoint)
 }
 
 /**
@@ -50,9 +60,38 @@ export function settlePhoto (photoArr, reworkTimes = 0) {
  */
 export function oneAllDown (photoArr) {
   const imgDomain = store.getters.imgDomain
-  Vue.prototype.$newMessage.success(`已添加${photoArr.length}张照片`)
+  Vue.prototype.$newMessage.success(`已添加${photoArr.length}张照片至下载`)
   photoArr.forEach(item => {
     item.url = imgDomain + item.url
     ipcRenderer.send('downPhoto', item)
+  })
+}
+
+export function readAllPhoto (photoArr) {
+  // 判断是否有没加载的id
+  const loadedPhotoArr = SessionTool.getCloudAssessmentPhotoId()
+  const allLoad = loadedPhotoArr && photoArr.every(photoItem => loadedPhotoArr.includes(photoItem.photo_id)) || false
+  // 没有全部加载完成 加载未加载图片
+  if (!allLoad) {
+    const notLoadedPhoto = loadedPhotoArr && photoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.photo_id)) || photoArr
+    const promises = []
+    notLoadedPhoto.forEach(item => {
+      promises.push(loadPhoto(item.path))
+    })
+    Promise.all(promises)
+      .then(() => {
+        console.log('加载完成')
+        SessionTool.setCloudAssessmentPhotoId([...photoArr])
+      })
+  }
+}
+
+export function loadPhoto (path) {
+  const imgDomain = store.getters.imgDomain
+  const image = new Image()
+  image.src = imgDomain + path
+  return new Promise((resolve, reject) => {
+    image.onload = () => { resolve() }
+    image.onerror = () => { resolve() }
   })
 }

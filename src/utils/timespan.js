@@ -31,3 +31,8 @@ export function formatTime (time) {
   const date = moment(time)
   return date.format('YYYY.MM.DD hh:mm')
 }
+
+export function getNowDate () {
+  const date = moment(new Date())
+  return date.format('YYYY-MM-DD')
+}
