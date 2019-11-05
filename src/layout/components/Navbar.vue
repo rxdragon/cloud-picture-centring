@@ -4,7 +4,13 @@
       <div class="nav-left">
         <el-button class="icon-button" icon="el-icon-arrow-left" @click="back" />
         <el-button class="icon-button" icon="el-icon-arrow-right" @click="go" />
-        <el-button class="icon-button refresh" icon="el-icon-refresh-right" @click="refresh" />
+        <el-button
+          class="icon-button refresh"
+          icon="el-icon-refresh-right"
+          @mousedown.native="realRefreshStar"
+          @mouseup.native="realRefreshEnd"
+          @click="throttleRefresh"
+        />
       </div>
       <span class="nav-main">缦图云端 修图中心</span>
       <div class="nav-right">
@@ -22,12 +28,17 @@
 import DownloadManagement from '@/components/DownloadManagement'
 
 import * as User from '@/api/user.js'
+import { throttle } from '@/utils/throttle.js'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Navbar',
   components: { DownloadManagement },
   data () {
-    return {}
+    return {
+      throttleRefresh: throttle(this.refresh, 1000),
+      starTime: null,
+      deplay: 3000
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
@@ -60,6 +71,22 @@ export default {
       })
     },
     /**
+     * @description 鼠标点击
+     */
+    realRefreshStar () {
+      this.starTime = new Date().getTime()
+    },
+    /**
+     * @description 鼠标拿起
+     */
+    realRefreshEnd () {
+      const endTime = new Date().getTime()
+      if (!this.starTime) return
+      if (endTime - this.starTime > this.deplay) {
+        window.location.reload()
+      }
+    },
+    /**
      * @description 退出登录
      */
     logout () {
@@ -74,6 +101,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .Navbar {
   width: 100%;
   height: 100%;
@@ -135,6 +163,7 @@ export default {
       text-align: center;
       line-height: @navbarHeight;
       height: 100%;
+      width: 50%;
       cursor: pointer;
       -webkit-app-region: drag;
       -webkit-user-select: none;

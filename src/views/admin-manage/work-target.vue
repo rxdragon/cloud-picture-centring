@@ -19,7 +19,7 @@
           <list-table :listdata="listData" />
         </div>
         <div class="table-box">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="groupName" label="修图组" />
             <el-table-column prop="groupLeader" label="组长" />
             <el-table-column prop="expectPhotoNum" label="预计完成（张）" />
@@ -183,6 +183,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .work-target {
   .list-table-box {
     margin-top: 20px;

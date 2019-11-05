@@ -10,7 +10,7 @@ import PaintedEggshell from '@/components/PaintedEggshell'
 import { mapGetters } from 'vuex'
 import { clearAllStorage } from '@/utils/sessionTool'
 import Mousetrap from 'mousetrap'
-import { throttle } from "@/utils/throttle.js";
+import { throttle } from '@/utils/throttle.js'
 export default {
   name: 'App',
   components: { PaintedEggshell },
@@ -21,10 +21,11 @@ export default {
     this.$ipcRenderer.on('closed-win', (e, item) => {
       clearAllStorage()
     })
-    // Mousetrap.bind('command+r', () => {
-    //   throttle(this.refresh, 5000)()
-    //   return false
-    // }, 'keydown')
+    const throttleRefresh = throttle(this.refresh, 5000)
+    Mousetrap.bind('command+r', () => {
+      throttleRefresh()
+      return false
+    }, 'keydown')
   },
   methods: {
     /**
@@ -42,7 +43,7 @@ export default {
         })
       })
     }
-  },
+  }
 }
 </script>
 
@@ -51,6 +52,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+
   --boxShadow: '';
 }
 

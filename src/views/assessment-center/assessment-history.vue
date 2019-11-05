@@ -183,7 +183,7 @@ export default {
     }
 
     .staff-search {
-      &>span {
+      & > span {
         width: 56px;
       }
 

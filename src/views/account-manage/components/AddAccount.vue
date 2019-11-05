@@ -310,6 +310,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .add-account {
   .search-box {
     margin-top: 20px;
@@ -331,12 +332,11 @@ export default {
   }
 
   .retouch-category-box {
-
     .retouch-select {
       margin: 24px 0;
     }
 
-    .product-box  {
+    .product-box {
       align-items: flex-start;
 
       .product-panel {
@@ -354,11 +354,12 @@ export default {
 
   .role-box {
     padding: 20px;
+
     .role-module,
     .role-search {
       margin-bottom: 24px;
 
-      &>span {
+      & > span {
         display: inline-block;
         width: 70px;
       }

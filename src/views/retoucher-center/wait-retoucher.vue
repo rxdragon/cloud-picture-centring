@@ -213,7 +213,6 @@ export default {
       clearTimeout(window.polling.getQueue)
       window.polling.getQueue = null
       if (+this.queueInfo.retouchStreamId && !SessionTool.getSureRetouchOrder(this.queueInfo.retouchStreamId)) {
-        console.log(1)
         this.$confirm('', '你有新的订单请及时处理', {
           confirmButtonText: '确定',
           center: true,
@@ -303,6 +302,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../../styles/variables.less';
+
 .header {
   .header-left {
     .queue-info {
@@ -428,6 +428,7 @@ export default {
 
 <style lang="less">
 @import '../../styles/variables.less';
+
 .today-info {
   .green-progress {
     box-shadow: @greenBoxShadow;

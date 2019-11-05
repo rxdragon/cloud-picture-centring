@@ -3,7 +3,7 @@
     <div class="header" :class="headerClass">
       <h3>客片详情</h3>
       <div class="button-box">
-        <el-button v-if="!gradeInfo.attitude" type="primary" @click="onSubmitAttitude">照片标记提交</el-button>
+        <el-button v-if="orderInfo.canAttitude" type="primary" @click="onSubmitAttitude">照片标记提交</el-button>
       </div>
     </div>
     <!-- 订单信息 -->
@@ -73,7 +73,7 @@
             <span>{{ workerInfo.reviewer }}</span>
             <span>{{ workerInfo.watcherName }}</span>
             <span class="check-evaluate">
-              <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #ff9900" class="el-icon-star-on" /></span>
+              <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #f90;" class="el-icon-star-on" /></span>
               <span>评语：{{ workerInfo.storeEvaluateReason }}</span>
             </span>
           </div>
@@ -99,6 +99,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       uuid: '',
+      orderInfo: {},
       orderNum: '-', // 订单号
       streamNum: '-', // 流水号
       productName: '-', // 产品名称
@@ -134,6 +135,7 @@ export default {
         const reqData = { photoUuid: this.uuid }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoInfo(reqData)
+        this.orderInfo = data
         this.orderNum = data.orderNum
         this.streamNum = data.streamNum
         this.productName = data.productName
@@ -167,7 +169,7 @@ export default {
           this.$newMessage.warning('未获取到审核通过照片的照片')
           return false
         }
-        if (!this.attitudeValue) {
+        if (!this.attitudeValue && !this.orderInfo.isAttitudeBySelf) {
           this.$newMessage.warning('未进行点赞操作')
           return false
         }
@@ -189,6 +191,7 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .guest-info {
   .header {
     line-height: 40px;
@@ -205,25 +208,25 @@ export default {
   .panel-box {
     .panel-content {
       .content-title {
-        &>span {
-          font-size:14px;
-          font-weight:500;
-          color:#303133;
-          line-height:22px;
+        & > span {
+          font-size: 14px;
+          font-weight: 500;
+          color: #303133;
+          line-height: 22px;
           text-align: left;
           padding: 17px 20px;
-          background-color: #FAFAFA;
+          background-color: #fafafa;
         }
       }
 
       .content-value {
-        &>span {
-          font-size:14px;
-          font-weight:400;
-          color:#606266;
-          line-height:14px;
+        & > span {
+          font-size: 14px;
+          font-weight: 400;
+          color: #606266;
+          line-height: 14px;
           padding: 20px 21px;
-          border-bottom: 1px solid #F2F6FC;
+          border-bottom: 1px solid #f2f6fc;
         }
       }
 
@@ -232,14 +235,14 @@ export default {
       }
 
       .panel-main {
-        background-color: #FAFAFA;
+        background-color: #fafafa;
         border-radius: 4px;
         padding: 20px;
         margin-top: 12px;
 
         .panel-require-concent {
           padding-bottom: 20px;
-          border-bottom: 1px solid #EBEEF5;
+          border-bottom: 1px solid #ebeef5;
 
           .el-tag {
             margin-right: 12px;
@@ -247,12 +250,12 @@ export default {
         }
 
         .panel-main-content {
-          font-size:14px;
-          font-weight:400;
-          color:#303133;
-          line-height:22px;
+          font-size: 14px;
+          font-weight: 400;
+          color: #303133;
+          line-height: 22px;
           padding: 20px 0;
-          border-top: 1px solid #EBEEF5;
+          border-top: 1px solid #ebeef5;
           display: flex;
 
           &:nth-of-type(1) {
@@ -270,7 +273,7 @@ export default {
       }
 
       .order-title,
-      .order-value{
+      .order-value {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
       }

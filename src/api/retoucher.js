@@ -50,7 +50,6 @@ export function getRankInfo () {
     createData.needLevelUpPlantRate = Math.floor(createData.needLevelUpPhotoPlantRate)
     createData.needLevelUpPhotoPullRate = (createData.needLevelUpPhotoPullRate * 100).toFixed(2)
     createData.needLevelUpPullRate = Math.floor(createData.needLevelUpPhotoPullRate)
-    console.log(createData)
     return createData
   })
 }
@@ -66,7 +65,6 @@ export function getRetouchQuota (params) {
     params
   }).then(msg => {
     const data = keyToHump(msg)
-    console.log(data)
     const avgTime = data.avgRetouchAndRebuildTime
     const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
     const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)

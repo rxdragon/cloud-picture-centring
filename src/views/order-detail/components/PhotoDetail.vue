@@ -101,6 +101,7 @@ export default {
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
 @panelTitleWidth: 185px;
+
 .photo-detail {
   .panel-box {
     display: flex;
@@ -108,15 +109,14 @@ export default {
     border-radius: 4px;
     border: 1px solid #eee;
     padding: 0;
-    font-size:14px;
-    font-weight:400;
-    color:#606266;
-    line-height:22px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #606266;
+    line-height: 22px;
     box-shadow: none;
 
     .content-title {
       width: @panelTitleWidth;
-      padding: 10px 0;
       text-align: center;
       display: flex;
       flex-direction: column;

@@ -195,11 +195,11 @@ export default {
 
     .panel-title {
       padding: 10px 21px;
-      font-size:14px;
-      font-weight:500;
-      color:#BBC1C8;
-      line-height:22px;
-      background-color: #F5F7FB;
+      font-size: 14px;
+      font-weight: 500;
+      color: #bbc1c8;
+      line-height: 22px;
+      background-color: #f5f7fb;
     }
   }
 
@@ -208,7 +208,7 @@ export default {
     height: 48px;
     padding: 0;
     line-height: 48px;
-    color: #8E939A;
+    color: #8e939a;
   }
 }
 </style>

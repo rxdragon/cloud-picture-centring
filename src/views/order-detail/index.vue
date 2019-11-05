@@ -112,7 +112,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
- @import "~@/styles/variables.less";
+@import "~@/styles/variables.less";
 
 .order-detail {
   .panel-title {
@@ -129,22 +129,22 @@ export default {
 
   .check-evaluate {
     .tabel-panel {
-      background-color: #FAFAFA;
+      background-color: #fafafa;
       border-radius: 4px;
       padding: 26px 20px;
 
       .panel-content {
         text-align: left;
         padding-bottom: 24px;
-        border-bottom: 1px solid #EBEEF5;
+        border-bottom: 1px solid #ebeef5;
       }
 
       .require-box {
         margin-top: 16px;
-        font-size:14px;
-        font-weight:400;
-        color:#303133;
-        line-height:22px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #303133;
+        line-height: 22px;
         display: flex;
 
         .require-title {
@@ -168,6 +168,6 @@ export default {
 }
 
 .el-rate__icon {
-  font-size:30px;
+  font-size: 30px;
 }
 </style>

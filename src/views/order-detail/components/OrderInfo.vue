@@ -105,36 +105,36 @@ export default {
   .content-title {
     padding: 17px 20px;
     width: 100%;
-    background-color: #FAFAFA;
-    font-size:14px;
-    font-weight:500;
-    color:#303133;
-    line-height:22px;
+    background-color: #fafafa;
+    font-size: 14px;
+    font-weight: 500;
+    color: #303133;
+    line-height: 22px;
     text-align: left;
   }
 
   .panel-content {
     padding: 21px 20px;
     width: 100%;
-    font-size:14px;
-    font-weight:400;
-    color:#606266;
-    line-height:14px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #606266;
+    line-height: 14px;
     text-align: left;
-    border-bottom: 1px solid #F2F6FC;
+    border-bottom: 1px solid #f2f6fc;
     margin-bottom: 24px;
   }
 
   .panel-require {
     .panel-main {
-      background-color: #FAFAFA;
+      background-color: #fafafa;
       border-radius: 4px;
       padding: 20px;
       margin-top: 12px;
 
       .panel-require-concent {
         padding-bottom: 20px;
-        border-bottom: 1px solid #EBEEF5;
+        border-bottom: 1px solid #ebeef5;
 
         .el-tag {
           margin-right: 12px;
@@ -142,12 +142,12 @@ export default {
       }
 
       .panel-main-content {
-        font-size:14px;
-        font-weight:400;
-        color:#303133;
-        line-height:22px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #303133;
+        line-height: 22px;
         padding: 20px 0;
-        border-bottom: 1px solid #EBEEF5;
+        border-bottom: 1px solid #ebeef5;
         display: flex;
 
         .title {

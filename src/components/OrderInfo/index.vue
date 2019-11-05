@@ -78,7 +78,7 @@ export default {
 
 .order-info {
   .table-info {
-    border-radius:4px;
+    border-radius: 4px;
     overflow: hidden;
     margin-top: 10px;
   }
@@ -87,7 +87,7 @@ export default {
     display: grid;
     grid-template-columns: 4fr 2fr 2fr 2fr 2fr 2fr 2fr;
 
-    &>div {
+    & > div {
       background-color: #fafafa;
       font-size: 14px;
       color: #303133;
@@ -98,10 +98,10 @@ export default {
   }
 
   .table-panel-concent {
-    border-bottom: 1px solid #FAFAFA;
+    border-bottom: 1px solid #fafafa;
     margin-bottom: 40px;
 
-    &>div {
+    & > div {
       background-color: #fff;
     }
   }
@@ -113,7 +113,7 @@ export default {
   .panel-require-concent {
     margin-top: 12px;
     padding: 20px;
-    background-color: #FAFAFA;
+    background-color: #fafafa;
     border-radius: 4px;
     overflow: hidden;
     padding-bottom: 0;
@@ -129,9 +129,9 @@ export default {
     .require-remark {
       display: flex;
       padding: 20px 0;
-      border-top: 1px solid #DDDFE6;
+      border-top: 1px solid #dddfe6;
 
-      &>span {
+      & > span {
         width: 70px;
         color: #303133;
         font-size: 14px;

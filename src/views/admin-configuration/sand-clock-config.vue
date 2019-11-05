@@ -151,7 +151,7 @@ export default {
       align-items: center;
 
       .switch-box {
-        &>span {
+        & > span {
           margin-right: 20px;
         }
       }

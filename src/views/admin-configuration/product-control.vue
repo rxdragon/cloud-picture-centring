@@ -27,7 +27,7 @@
               <el-button type="primary" @click="getProductList">查 询</el-button>
             </div>
           </div>
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="name" label="产品名称" />
             <el-table-column prop="photographerOrgName" label="机构名称" />
             <el-table-column v-if="isPending" prop="retouch_require" label="修图要求" />

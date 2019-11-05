@@ -315,6 +315,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../../styles/variables.less';
+
 .personal-details {
   .today-box {
     display: flex;
@@ -339,7 +340,7 @@ export default {
 
         .num {
           font-size: 44px;
-          font-family:DINAlternate-Bold,DINAlternate;
+          font-family: @DINAlternate;
           font-weight: bold;
           color: @blue;
         }
@@ -351,17 +352,17 @@ export default {
       margin-top: 15px;
       justify-content: space-between;
       color: #606266;
-      font-family:PingFangSC-Regular,PingFangSC;
+      font-family: @pingFang;
       font-size: 12px;
       line-height: 20px;
 
-      &>div {
+      & > div {
         &::before {
           content: '';
           display: inline-block;
           width: 8px;
           height: 8px;
-          background: #EBEEF5;
+          background: #ebeef5;
           border-radius: 50%;
           margin-right: 4px;
         }
@@ -369,7 +370,7 @@ export default {
 
       .footer-right {
         &::before {
-          background:linear-gradient(51deg,rgba(145,245,255,1) 0%,rgba(70,105,251,1) 100%);
+          background: linear-gradient(51deg, rgba(145, 245, 255, 1) 0%, rgba(70, 105, 251, 1) 100%);
         }
       }
     }
@@ -394,7 +395,7 @@ export default {
         }
       }
 
-      &>span {
+      & > span {
         display: flex;
         align-items: center;
 
@@ -405,13 +406,13 @@ export default {
     }
 
     .panel-main {
-      border-bottom: 1px solid #EBEEF5;
+      border-bottom: 1px solid #ebeef5;
 
       .main-content {
         font-size: 12px;
         display: flex;
         flex-direction: column;
-        font-family: DINAlternate-Bold,DINAlternate;
+        font-family: @DINAlternate;
         color: #909399;
         margin-top: 28px;
         padding-bottom: 18px;
@@ -440,11 +441,11 @@ export default {
         justify-content: space-between;
 
         .num {
-          font-size:14px;
-          font-family:DINAlternate-Bold,DINAlternate;
-          font-weight:bold;
-          color:#303133;
-          line-height:16px;
+          font-size: 14px;
+          font-family: @DINAlternate;
+          font-weight: bold;
+          color: #303133;
+          line-height: 16px;
         }
       }
 
@@ -510,7 +511,7 @@ export default {
     .prop-box {
       width: 313px;
       height: 68px;
-      border: 1px solid #D8DCE6;
+      border: 1px solid #d8dce6;
       border-radius: 4px;
       padding: 17px 16px;
       display: flex;
@@ -521,17 +522,17 @@ export default {
 
       .prop-content {
         .content-title {
-          font-size:14px;
-          font-weight:500;
-          color:#303133;
-          line-height:20px;
+          font-size: 14px;
+          font-weight: 500;
+          color: #303133;
+          line-height: 20px;
         }
 
         .content-describe {
-          font-size:12px;
-          font-weight:400;
-          color:#909399;
-          line-height:20px;
+          font-size: 12px;
+          font-weight: 400;
+          color: #909399;
+          line-height: 20px;
         }
       }
     }

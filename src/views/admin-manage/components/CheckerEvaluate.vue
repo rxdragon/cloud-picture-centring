@@ -25,7 +25,7 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="评价时间" width="180">
         <template slot-scope="scope">
           {{ scope.row.store_evaluate_at | toTimeSpan }}
@@ -136,6 +136,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .checker-evaluate {
   .search-box {
     margin-bottom: 24px;

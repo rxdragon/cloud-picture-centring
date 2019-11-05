@@ -188,6 +188,33 @@ export function removeReturnRetouchOrder (aid) {
 }
 
 /**
+ * @description 设置云端抽片最后一张照片地址
+ */
+export function setCloudAssessmentPhotoId (photoArr) {
+  const saveKey = `cloud-assessment-last-photoId`
+  let data = photoArr.map(item => item.photo_id)
+  data = JSON.stringify(data)
+  localStorage.setItem(saveKey, data)
+}
+
+/**
+ * @description 获取云端抽片最后一张照片地址
+ */
+export function getCloudAssessmentPhotoId () {
+  const saveKey = `cloud-assessment-last-photoId`
+  const data = localStorage.getItem(saveKey)
+  return JSON.parse(data)
+}
+
+/**
+ * @description 获取云端抽片最后一张照片地址
+ */
+export function removeCloudAssessmentPhotoId () {
+  const saveKey = `cloud-assessment-last-photoId`
+  localStorage.removeItem(saveKey)
+}
+
+/**
  * @description 清楚全部数据
  */
 export function clearAllStorage () {

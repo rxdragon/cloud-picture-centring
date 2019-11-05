@@ -610,7 +610,7 @@ export default {
       margin-right: 0 !important;
 
       input {
-        border-color: #DCDFE6 !important;
+        border-color: #dcdfe6 !important;
       }
     }
   }
@@ -643,7 +643,7 @@ export default {
     font-size: 16px !important;
     background-color: #f5f7fa;
     width: 100%;
-    margin: 0px !important;
+    margin: 0 !important;
     padding-left: 10px;
 
     .el-checkbox {

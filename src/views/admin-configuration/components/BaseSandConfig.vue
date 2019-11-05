@@ -1,7 +1,7 @@
 <template>
   <div class="base-sand-config">
     <!-- 列表数据 -->
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="修图标准">
         <template slot-scope="scope">
           {{ scope.row.retouchStandard | toRetouchClass }}

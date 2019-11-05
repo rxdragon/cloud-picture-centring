@@ -118,6 +118,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .time-statistics {
   .table-panel {
     margin-top: 24px;
@@ -145,17 +146,17 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: #DAEDF7;
+        background-color: #daedf7;
         padding: 5px 0;
         font-size: 15px;
 
-        &>span {
-          color: #387EBB;
+        & > span {
+          color: #387ebb;
           font-weight: bold;
         }
 
         .describe {
-          color: #AAAAAA;
+          color: #aaa;
           font-weight: 400;
           font-size: 14px;
         }
@@ -169,7 +170,7 @@ export default {
         grid-column-gap: 2px;
         background-color: #eee;
 
-        &>span {
+        & > span {
           padding: 10px;
           background-color: #fff;
         }

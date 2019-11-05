@@ -33,10 +33,8 @@ export function getReviewInfo () {
         photoItem.canGlass = !photoItem.tags.statics.includes('plant') &&
           !photoItem.tags.statics.includes('pull') &&
           !photoItem.isRework
-        console.log(photoItem.canGlass)
         if (!photoItem.canGlass) { createData.canGlass = false }
       }
-      console.log(createData.canGlass)
       photoItem.glass = ''
       photoItem.grassReason = ''
       photoItem.reworkMark = false

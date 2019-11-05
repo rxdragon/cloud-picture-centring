@@ -9,7 +9,7 @@
         <date-picker v-model="timeSpan" />
       </div>
       <div class="staff-box search-item">
-        <span>伙伴</span>
+        <span class="row-title">伙伴</span>
         <staff-select v-model="staffId" />
       </div>
       <!-- 订单信息 -->
@@ -21,9 +21,6 @@
             <el-option label="手机号" :value="3" />
           </el-select>
         </el-input>
-      </div>
-      <div class="button-box search-item">
-        <el-button type="primary" @click="getPhotoList(1)">查询</el-button>
       </div>
     </div>
     <div class="search-box">
@@ -38,6 +35,19 @@
             :value="item.value"
           />
         </el-select>
+      </div>
+      <!-- 产品名称 -->
+      <div class="product-box search-item">
+        <span class="row-title">产品名称</span>
+        <product-select v-model="productValue" :props="{ multiple: false }" />
+      </div>
+      <!-- 修图标准 -->
+      <div class="search-item">
+        <span>修图标准</span>
+        <retouch-kind-select v-model="retouchStandard" />
+      </div>
+      <div class="button-box search-item">
+        <el-button type="primary" @click="getPhotoList(1)">查询</el-button>
       </div>
     </div>
     <div class="search-data table-box">
@@ -63,6 +73,8 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import PhotoBox from '@/components/PhotoBox'
+import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
+import ProductSelect from '@SelectBox/ProductSelect'
 import StaffSelect from '@SelectBox/StaffSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 
@@ -70,16 +82,18 @@ import * as GuestPhoto from '@/api/guestPhoto'
 
 export default {
   name: 'GuestPhoto',
-  components: { DatePicker, PhotoBox, StaffSelect },
+  components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      timeSpan: null,
-      orderType: 1,
-      orderSearchValue: '',
-      checkValue: 0,
+      timeSpan: null, // 查询时间
+      orderType: 1, // 查询类型 1 云端流水号 2 顾客姓名 3 手机号
+      orderSearchValue: '', // 订单信息
+      checkValue: 0, // 看片评价星数
       staffId: [], // 伙伴id
-      photos: [],
+      productValue: '', // 产品id
+      retouchStandard: '', // 修图标准
+      photos: [], // 照片列表
       pager: {
         page: 1,
         pageSize: 12,
@@ -150,6 +164,8 @@ export default {
       }
       if (this.staffId.length) { reqData.staffIds = this.staffId }
       if (this.checkValue) { reqData.evaluateStar = this.checkValue }
+      if (this.productValue) { reqData.productId = this.productValue }
+      if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
@@ -167,6 +183,7 @@ export default {
 
 <style lang="less">
 @import "~@/styles/variables.less";
+
 .guest-photo {
   .search-box {
     flex-wrap: wrap;
@@ -175,6 +192,20 @@ export default {
     .search-item {
       margin-bottom: 20px;
       margin-right: 24px;
+
+      & > span {
+        text-align-last: justify;
+      }
+    }
+
+    .row-title {
+      width: 56px;
+    }
+
+    .product-box {
+      .el-cascader {
+        width: 220px !important;
+      }
     }
 
     .order-search {
@@ -184,7 +215,7 @@ export default {
     }
 
     .check-evaluate {
-      &>span {
+      & > span {
         width: 84px;
       }
 

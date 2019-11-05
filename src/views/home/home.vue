@@ -42,6 +42,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "~@/styles/variables.less";
+
 .home {
   position: relative;
   height: @homeHeight;
@@ -55,21 +56,21 @@ export default {
     transform: translateX(-50%) translateY(-50%);
 
     .logo-img {
-      width:568px;
-      height:391px;
+      width: 568px;
+      height: 391px;
     }
 
     .logo-desc {
-      font-size:30px;
-      font-family:PingFangSC-Semibold,PingFang SC;
-      font-weight:600;
-      color:#131923;
-      line-height:38px;
+      font-size: 30px;
+      font-family: @pingFang;
+      font-weight: 600;
+      color: #131923;
+      line-height: 38px;
       text-align: center;
       margin-top: 26px;
 
       .desc {
-        color: #4669FB;
+        color: #4669fb;
       }
     }
   }

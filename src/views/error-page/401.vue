@@ -53,7 +53,7 @@ export default {
     .pan-back-btn {
       background: #008489;
       color: #fff;
-      border: none!important;
+      border: none !important;
     }
 
     .pan-gif {
@@ -75,12 +75,15 @@ export default {
 
     .list-unstyled {
       font-size: 14px;
+
       li {
         padding-bottom: 5px;
       }
+
       a {
         color: #008489;
         text-decoration: none;
+
         &:hover {
           text-decoration: underline;
         }

@@ -108,12 +108,12 @@ export default {
   .info-box {
     display: flex;
     margin-bottom: 20px;
-    font-size:14px;
-    font-weight:400;
-    color:rgba(48,49,51,1);
-    line-height:22px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(48, 49, 51, 1);
+    line-height: 22px;
 
-    &>span {
+    & > span {
       width: 100px;
     }
   }
