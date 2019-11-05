@@ -122,12 +122,6 @@ export default {
   },
   methods: {
     /**
-     * @description 处理滚动
-     */
-    handleScroll (e) {
-      this.headerClass = this.scrollWrapper.scrollTop !== 0 ? 'header-fixed' : ''
-    },
-    /**
      * @description 获取客片池详情
      */
     async getPhotoInfo () {
@@ -175,7 +169,7 @@ export default {
         }
         const reqData = {
           photoId: findPassPhoto.photo_id,
-          attitude: this.attitudeValue
+          attitude: this.attitudeValue || 'none'
         }
         await GuestPhoto.submitAttitude(reqData)
         this.$newMessage.success('提交成功')
