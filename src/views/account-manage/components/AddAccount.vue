@@ -110,7 +110,7 @@ export default {
   watch: {
     isLoadingDown (value) {
       if (value && this.isEdit) {
-        const productIds = this.editData.staff_product.map(item => item.id)
+        const productIds = this.editData.can_receive_product.map(item => item.id)
         this.defaultCheckedKeys = productIds
       }
     }

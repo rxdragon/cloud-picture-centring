@@ -116,10 +116,16 @@ export default {
       headerClass: '' // 导航栏样式
     }
   },
-  activated () {
-    const { uuid } = this.$route.query
-    this.uuid = uuid
-    this.getPhotoInfo()
+  watch: {
+    '$route.query.uuid': {
+      handler: function (value) {
+        if (this.routeName === this.$route.name) {
+          this.uuid = value
+          this.getPhotoInfo()
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
     /**
