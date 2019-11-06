@@ -21,8 +21,8 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const nickname = store.getters.nickname
-      if (nickname) {
+      const name = store.getters.name
+      if (name) {
         next()
       } else {
         await store.dispatch('user/getUserInfo')

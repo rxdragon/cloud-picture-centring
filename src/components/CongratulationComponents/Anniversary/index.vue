@@ -18,6 +18,7 @@
 
 <script>
 import anime from 'animejs'
+import * as Notification from '@/api/notification.js'
 export default {
   name: 'Anniversary',
   data () {
@@ -34,6 +35,7 @@ export default {
      */
     closePopUp () {
       this.show = false
+      Notification.incrCacheCount()
     },
     beforeEnter (el) {
       el.style.transform = 'scale(0)'
@@ -66,7 +68,7 @@ export default {
         targets: '.anniversary .shadow',
         opacity: 0,
         complete: () => {
-          this.$emit('update:showPop', false)
+          this.$store.dispatch('notification/setAnniversaryHidden')
         }
       }, '-=200')
     }

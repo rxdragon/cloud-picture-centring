@@ -16,7 +16,7 @@
       <div class="nav-right">
         <download-management />
         <el-avatar :src="userInfo.avatarImg" />
-        <div class="user-name">{{ userInfo.nickname }}</div>
+        <div class="user-name">{{ userInfo.nickname || userInfo.name }}</div>
         <div class="label">{{ userInfo.departmentName }}</div>
         <el-button class="icon-button" icon="iconfont iconlogin-out" @click="logout" />
       </div>
