@@ -21,7 +21,7 @@
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num green-color">
-                    <count-to show-point :end-value="quotaInfo.todayExp"></count-to>
+                    <count-to show-point :end-value="quotaInfo.todayExp" />
                   </span>
                   <span class="goal-num">/ 35</span>
                 </div>
@@ -42,7 +42,7 @@
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num purple-color">
-                    <count-to :end-value="quotaInfo.todayFinishPhotoNum"></count-to>
+                    <count-to :end-value="quotaInfo.todayFinishPhotoNum" />
                   </span>
                 </div>
                 <div class="prop-icon-box">
@@ -62,7 +62,7 @@
                 <div class="num money-num">
                   <span class="symbol money-color">¥</span>
                   <span class="actual-num money-color">
-                    <count-to show-point :end-value="quotaInfo.todayIncome"></count-to>
+                    <count-to show-point :end-value="quotaInfo.todayIncome" />
                   </span>
                 </div>
                 <div class="prop-icon-box">
