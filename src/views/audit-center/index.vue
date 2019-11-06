@@ -180,12 +180,6 @@ export default {
       this.upyunConfig = JSON.parse(JSON.stringify(data))
     },
     /**
-     * @description 处理滚动
-     */
-    handleScroll (e) {
-      this.headerClass = this.scrollWrapper.scrollTop !== 0 ? 'header-fixed' : ''
-    },
-    /**
      * @description 全部重修
      */
     allRework () {

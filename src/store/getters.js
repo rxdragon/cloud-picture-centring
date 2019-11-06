@@ -5,12 +5,14 @@ const getters = {
   userInfo: state => state.user, // 用户信息
   staffId: state => state.user.id, // 当前用户id
   nickname: state => state.user.nickname, // 昵称
+  name: state => state.user.name, // 真名
   loadRoutes: state => state.setting.loadRoutes, // 加载路由加载表
-  returnStreamId: state => state.notification.returnStreamId, // 退单id
   showCat: state => state.setting.showCat, // 是否显示猫
   imgUploadDomain: state => state.setting.imgUploadDomain, // 上传后的照片域名
   imgDomain: state => state.setting.imgDomain, // 上传后的照片域名
-  updateDomain: state => state.setting.updateDomain // 上传后的照片域名
+  updateDomain: state => state.setting.updateDomain, // 上传后的照片域名
+  returnStreamId: state => state.notification.returnStreamId, // 退单id
+  showAnniversary: state => state.notification.showAnniversary // 显示弹框
 }
 
 export default getters

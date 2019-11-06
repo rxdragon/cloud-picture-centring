@@ -39,6 +39,14 @@ async function createWindow () {
   win.on('closed', () => {
     win = null
   })
+  // 进入全屏状态
+  win.on('enter-full-screen', () => {
+    win.webContents.send('enter-full')
+  })
+  // 退出全屏状态
+  win.on('leave-full-screen', () => {
+    win.webContents.send('leave-full')
+  })
 
   // 注册下载监听
   DownTool.onWillDownload(win)

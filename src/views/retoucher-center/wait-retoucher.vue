@@ -20,7 +20,9 @@
               <div class="title">今日海草值</div>
               <div class="data-info">
                 <div class="num">
-                  <span class="actual-num green-color">{{ quotaInfo.todayExp }} </span>
+                  <span class="actual-num green-color">
+                    <count-to show-point :end-value="quotaInfo.todayExp" />
+                  </span>
                   <span class="goal-num">/ 35</span>
                 </div>
                 <div class="prop-icon-box">
@@ -39,7 +41,9 @@
               <div class="title">今日已修张数</div>
               <div class="data-info">
                 <div class="num">
-                  <span class="actual-num purple-color">{{ quotaInfo.todayFinishPhotoNum }} </span>
+                  <span class="actual-num purple-color">
+                    <count-to :end-value="quotaInfo.todayFinishPhotoNum" />
+                  </span>
                 </div>
                 <div class="prop-icon-box">
                   <div v-if="buffInfo.greenChannelStatus" class="prop-icon iconmap-green-aisle-icon" />
@@ -57,7 +61,9 @@
               <div class="data-info">
                 <div class="num money-num">
                   <span class="symbol money-color">¥</span>
-                  <span class="actual-num money-color">{{ quotaInfo.todayIncome }}</span>
+                  <span class="actual-num money-color">
+                    <count-to show-point :end-value="quotaInfo.todayIncome" />
+                  </span>
                 </div>
                 <div class="prop-icon-box">
                   <div v-if="buffInfo.goldReward" class="prop-icon iconmap-gold-icon" />
@@ -95,6 +101,7 @@
 import RetouchOrder from './components/RetouchOrder'
 import TakeOrdersList from './components/TakeOrdersList'
 import HangUpList from './components/HangUpList'
+import CountTo from '@/components/CountTo'
 
 import * as SessionTool from '@/utils/sessionTool'
 import * as Retoucher from '@/api/retoucher.js'
@@ -102,7 +109,7 @@ import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default {
   name: 'WaitRetoucher',
-  components: { RetouchOrder, TakeOrdersList, HangUpList },
+  components: { RetouchOrder, TakeOrdersList, HangUpList, CountTo },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -377,6 +384,7 @@ export default {
           .symbol {
             font-size: 20px;
             margin-right: 2px;
+            vertical-align: 1px;
           }
         }
 

@@ -65,6 +65,9 @@ const actions = {
         await store.dispatch('user/getUserPermission')
         resolve(info)
       } catch (error) {
+        router.push({
+          path: '/401'
+        })
         reject(error)
       }
     })

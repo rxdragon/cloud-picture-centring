@@ -16,7 +16,7 @@
       <div class="nav-right">
         <download-management />
         <el-avatar :src="userInfo.avatarImg" />
-        <div class="user-name">{{ userInfo.nickname }}</div>
+        <div class="user-name">{{ userInfo.nickname || userInfo.name }}</div>
         <div class="label">{{ userInfo.departmentName }}</div>
         <el-button class="icon-button" icon="iconfont iconlogin-out" @click="logout" />
       </div>
@@ -42,6 +42,14 @@ export default {
   },
   computed: {
     ...mapGetters(['userInfo'])
+  },
+  mounted () {
+    this.$ipcRenderer.on('enter-full', (e, item) => {
+      document.body.style.setProperty('--navbarMainLeft', '30px')
+    })
+    this.$ipcRenderer.on('leave-full', (e, item) => {
+      document.body.style.setProperty('--navbarMainLeft', '120px')
+    })
   },
   methods: {
     /**
@@ -107,12 +115,13 @@ export default {
   height: 100%;
 
   .navbar-main {
-    margin-left: 120px;
+    margin-left: var(--navbarMainLeft);
     height: 100%;
-    width: @navbarMainWidth;
+    width: calc(100% - var(--navbarMainLeft));
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.3s;
 
     .nav-left {
       .icon-button {

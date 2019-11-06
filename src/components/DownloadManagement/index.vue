@@ -22,6 +22,7 @@
             <div v-for="downItem in downList" :key="downItem.index" class="list-complete-item content-row">
               <down-list-item
                 :list-item="downItem"
+                :style="removeStyle"
                 @resumeItem="resumeItem"
                 @pauseItem="pauseItem"
                 @cancelItem="cancelItem"
@@ -52,7 +53,8 @@ export default {
     return {
       downList: [],
       showProgressingNum: 0,
-      showManage: false
+      showManage: false,
+      removeStyle: '' // 移除时样式
     }
   },
   computed: {
@@ -129,7 +131,9 @@ export default {
       const findIndex = this.downList.findIndex(listItem => listItem.index === index)
       this.downList.splice(findIndex, 1)
       SessionTool.setCacheDownloadList(this.downList)
+      this.removeStyle = 'transition: all 0.3s;'
       this.$ipcRenderer.send('delete-down-item', findIndex)
+      this.removeStyle = ''
     },
     /**
      * @description 重新下载

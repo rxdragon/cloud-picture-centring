@@ -12,6 +12,7 @@ export function getSelfQuota () {
     const data = keyToHump(msg)
     const todayIncome = Number(data.todayIncome.retouch) + Number(data.todayIncome.impulse)
     data.todayIncome = todayIncome.toFixed(2)
+    data.todayExp = Number(data.todayExp).toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
       data.todayFinishPhotoNumProgress = 0
     } else {

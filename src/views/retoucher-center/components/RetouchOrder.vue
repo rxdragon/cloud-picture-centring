@@ -116,6 +116,7 @@ import variables from '@/styles/variables.less'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as Commonality from '@/api/commonality'
+import * as LogStream from '@/api/logStream'
 import * as PhotoTool from '@/utils/photoTool'
 import * as SessionTool from '@/utils/sessionTool'
 
@@ -157,7 +158,7 @@ export default {
         requireLabel: {},
         streamState: ''
       },
-      hourGlass: null,
+      hourGlass: null, // 沙漏时间
       photos: [],
       reviewerNote: '',
       headerClass: '',
@@ -242,12 +243,6 @@ export default {
         })
     },
     /**
-     * @description 处理滚动
-     */
-    handleScroll (e) {
-      this.headerClass = this.scrollWrapper.scrollTop !== 0 ? 'header-fixed' : ''
-    },
-    /**
      * @description 获取流水信息
      */
     async getStreamInfo () {
@@ -267,6 +262,7 @@ export default {
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
         this.$store.commit('notification/CLEAR_RETURN_STREAM_ID')
+        LogStream.retoucherSee(+this.realAid)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -353,7 +349,9 @@ export default {
         // 上传后的照片名字
         const filePath = fileItem.response ? PhotoTool.handlePicPath(fileItem.response.url) : ''
         const findOrginPhoto = this.photos.find(photoItem => photoItem.path.includes(uploadedName))
-        const findFinishPhoto = file.name === filePath
+        // 重修判断处理点
+        const beforeUploadFileName = findOrginPhoto.isReturnPhoto ? findOrginPhoto.returnPhotoPath : file.name
+        const isNoRetouch = beforeUploadFileName === filePath
         if (this.finishPhoto[fileIndex] && this.finishPhoto[fileIndex].path) {
           createPhotoData.push(this.finishPhoto[fileIndex])
         } else {
@@ -363,7 +361,7 @@ export default {
             orginPhotoName: uploadedName,
             willDelete: false
           }
-          if (findFinishPhoto) {
+          if (isNoRetouch) {
             this.$newMessage.warning('请修改照片后再进行上传。')
             this.uploadPhoto[fileIndex].willDelete = true
             newPhoto.willDelete = true

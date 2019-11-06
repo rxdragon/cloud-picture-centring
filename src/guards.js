@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title' // 获取页面title
 
 NProgress.configure({ showSpinner: false }) // 关闭加载微调器
 
-const whiteList = ['/', '/login', '/auth-redirect'] // 白名单
+const whiteList = ['/', '/login', '/auth-redirect', '/401', '/404'] // 白名单
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start() // 读取进度条
@@ -21,8 +21,9 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const nickname = store.getters.nickname
-      if (nickname) {
+      if (whiteList.includes(to.path)) { next() }
+      const name = store.getters.name
+      if (name) {
         next()
       } else {
         await store.dispatch('user/getUserInfo')

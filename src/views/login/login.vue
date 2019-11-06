@@ -10,8 +10,7 @@ export default {
   props: {},
   data () {
     return {
-      sso_url: 'https://sso.local.hzmantu.com/login/1012',
-      loginUrl: 'manage_auth/login/sso?token='
+      sso_url: process.env.VUE_APP_LOGIN_API
     }
   },
   async created () {
@@ -49,8 +48,14 @@ export default {
       await this.$store.dispatch('user/login', token)
       this.$newMessage.success('登录成功')
       window.removeEventListener('message', this.onMessage)
-      await this.$store.dispatch('user/getUserInfo')
-      this.$router.push('/')
+      const info = await this.$store.dispatch('user/getUserInfo')
+      if (!info.name) {
+        this.$router.push({
+          path: '/401'
+        })
+      } else {
+        this.$router.push('/')
+      }
     }
   }
 }
