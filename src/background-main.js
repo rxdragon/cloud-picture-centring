@@ -39,13 +39,12 @@ async function createWindow () {
   win.on('closed', () => {
     win = null
   })
-  // 全屏状态
+  // 进入全屏状态
   win.on('enter-full-screen', () => {
-    console.log(1)
     win.webContents.send('enter-full')
   })
+  // 退出全屏状态
   win.on('leave-full-screen', () => {
-    console.log(2)
     win.webContents.send('leave-full')
   })
 

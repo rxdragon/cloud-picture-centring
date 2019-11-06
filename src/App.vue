@@ -48,6 +48,10 @@ export default {
 </script>
 
 <style lang="less">
+html {
+  background-color: #f2f6fc;
+}
+
 body {
   margin: 0;
   padding: 0;

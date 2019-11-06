@@ -121,6 +121,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.3s;
 
     .nav-left {
       .icon-button {

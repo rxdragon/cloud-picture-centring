@@ -44,8 +44,8 @@ const actions = {
       commit('HIDDEN_LOADING', routeName)
     }, 300)
   },
-  setShowCat ({ commit }) {
-    commit('SET_CAT')
+  setShowCat ({ commit }, data) {
+    commit('SET_CAT', data)
   },
   // 更换域名
   changeDomain ({ commit }, domainType) {
