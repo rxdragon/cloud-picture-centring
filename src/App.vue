@@ -9,8 +9,8 @@
 import PaintedEggshell from '@/components/PaintedEggshell'
 import { mapGetters } from 'vuex'
 import { clearAllStorage } from '@/utils/sessionTool'
-import Mousetrap from 'mousetrap'
 import { throttle } from '@/utils/throttle.js'
+import Mousetrap from 'mousetrap'
 export default {
   name: 'App',
   components: { PaintedEggshell },
@@ -54,6 +54,7 @@ body {
   overflow: hidden;
 
   --boxShadow: '';
+  --navbarMainLeft: 120px;
 }
 
 #App {

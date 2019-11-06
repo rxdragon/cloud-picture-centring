@@ -1,6 +1,6 @@
 <template>
   <div>
-    <logo @click.native="activeCat" />
+    <logo @click.native="activeExperiment" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -28,19 +28,18 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.less'
 import Logo from './Logo'
+import { experimentRoutes, asyncRoutes } from '@/router/index.js'
 
 export default {
   components: { SidebarItem, Logo },
   data () {
     return {
-      showCatCounts: 0,
+      experimentCounts: 0,
       expireTime: 0
     }
   },
   computed: {
-    ...mapGetters([
-      'permission_routes'
-    ]),
+    ...mapGetters(['permission_routes']),
     activeMenu () {
       const route = this.$route
       const { meta, path } = route
@@ -54,18 +53,21 @@ export default {
     }
   },
   methods: {
-    activeCat () {
+    activeExperiment () {
       const time = 4 * 1000
-      if (this.showCatCounts === 0) { this.expireTime = new Date().getTime() + time }
-      this.showCatCounts++
-      if (this.showCatCounts === 7) {
+      if (this.experimentCounts === 0) { this.expireTime = new Date().getTime() + time }
+      this.experimentCounts++
+      if (this.experimentCounts === 7) {
         const nowTime = new Date().getTime()
         if (nowTime < this.expireTime) {
-          this.$store.dispatch('setting/setShowCat')
-          this.showCatCounts = 0
+          const hasExperiment = this.permission_routes.find(item => item.path.includes('experiment-view'))
+          if (hasExperiment) return
+          this.$store.commit('permission/SET_ROUTES', [...asyncRoutes, ...experimentRoutes])
+          this.$router.addRoutes(experimentRoutes)
+          this.experimentCounts = 0
           this.expireTime = 0
         } else {
-          this.showCatCounts = 0
+          this.experimentCounts = 0
           this.expireTime = 0
         }
       }

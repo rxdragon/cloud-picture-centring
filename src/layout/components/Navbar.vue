@@ -43,6 +43,14 @@ export default {
   computed: {
     ...mapGetters(['userInfo'])
   },
+  mounted () {
+    this.$ipcRenderer.on('enter-full', (e, item) => {
+      document.body.style.setProperty('--navbarMainLeft', '30px')
+    })
+    this.$ipcRenderer.on('leave-full', (e, item) => {
+      document.body.style.setProperty('--navbarMainLeft', '120px')
+    })
+  },
   methods: {
     /**
      * @description 返回
@@ -107,9 +115,9 @@ export default {
   height: 100%;
 
   .navbar-main {
-    margin-left: 120px;
+    margin-left: var(--navbarMainLeft);
     height: 100%;
-    width: @navbarMainWidth;
+    width: calc(100% - var(--navbarMainLeft));
     display: flex;
     justify-content: space-between;
     align-items: center;

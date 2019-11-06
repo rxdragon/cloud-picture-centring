@@ -69,7 +69,11 @@ export function getStreamInfo (params) {
     })
     if (msg.tags && msg.tags.statics && msg.tags.statics.includes('rework')) {
       createData.photos = msg.photos.filter(photoItem => {
-        return photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
+        const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
+        photoItem.isReturnPhoto = isReturnPhoto
+        const findReturnPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_photo')
+        photoItem.returnPhotoPath = isReturnPhoto && photoTool.handlePicPath(findReturnPhoto.path)
+        return isReturnPhoto
       })
     } else {
       createData.photos = msg.photos

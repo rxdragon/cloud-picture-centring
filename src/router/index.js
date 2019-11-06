@@ -18,6 +18,19 @@ import personalCenterRetoucher from './modules/personalCenterRetoucher.js' // �
 import personalCenterRetoucherLeader from './modules/personalCenterRetoucherLeader.js' // 个人中心（组长）
 import retoucherCenter from './modules/retoucherCenter.js' // 修图师中心
 
+// 实验路由
+export const experimentRoutes = [{
+  path: '/experiment-view',
+  component: Layout,
+  redirect: '/experiment-view/index',
+  children: [{
+    path: '/index',
+    name: 'ExperimentView',
+    component: () => import('@/views/experiment-view/index.vue'),
+    meta: { title: '扩展功能', icon: 'el-icon-setting' }
+  }]
+}]
+
 // 基础权限路由
 export const constantRoutes = [
   {

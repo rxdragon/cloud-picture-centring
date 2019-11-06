@@ -17,8 +17,8 @@ const mutations = {
     loadRoutes.delete(routeName)
     state.loadRoutes = [...loadRoutes]
   },
-  SET_CAT: (state) => {
-    state.showCat = !state.showCat
+  SET_CAT: (state, data) => {
+    state.showCat = data
   },
   /**
    * @deprecated 更改域名
