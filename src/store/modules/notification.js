@@ -1,6 +1,7 @@
 import * as Retoucher from '@/api/retoucher.js'
-import * as SessionTool from '@/utils/sessionTool.js'
 import * as Notification from '@/api/notification.js'
+import * as LogStream from '@/api/logStream'
+import * as SessionTool from '@/utils/sessionTool.js'
 import { MessageBox } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
@@ -54,6 +55,7 @@ const actions = {
         }).catch(() => {
           SessionTool.saveReturnRetouchOrder(data)
         }).finally(() => {
+          LogStream.retoucherRebuildOk(+data)
           store.dispatch('notification/pollingHasReturn')
         })
       } else {

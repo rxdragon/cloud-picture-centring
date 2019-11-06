@@ -10,8 +10,7 @@ export default {
   props: {},
   data () {
     return {
-      sso_url: 'https://sso.local.hzmantu.com/login/1012',
-      loginUrl: 'manage_auth/login/sso?token='
+      sso_url: process.env.VUE_APP_LOGIN_API
     }
   },
   async created () {

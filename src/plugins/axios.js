@@ -14,7 +14,14 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.baseURL = readConfig('microApi') || process.env.VUE_APP_BASE_API
 axios.defaults.withCredentials = true
 
-const pollingArr = ['haveReworkStream', 'getStreamQueueInfo', 'getHaveCheckResult']
+const whiteRequest = [
+  'haveReworkStream',
+  'getStreamQueueInfo',
+  'getHaveCheckResult',
+  'logStream',
+  'getCacheCount',
+  'incrCacheCount'
+]
 
 // 设置请求头信息
 axios.interceptors.request.use(
@@ -43,7 +50,7 @@ axios.interceptors.response.use(
     console.dir(error)
     const requestPathArr = error.config.url.split('/')
     const requestPath = requestPathArr[requestPathArr.length - 1]
-    if (pollingArr.includes(requestPath)) {
+    if (whiteRequest.includes(requestPath)) {
       let message = '请求错误'
       return Promise.reject(message)
     }
