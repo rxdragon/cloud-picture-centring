@@ -31,12 +31,7 @@ const actions = {
   // 查询订单
   hasReturnNotification ({ commit }) {
     return new Promise(async (resolve, reject) => {
-      let data
-      try {
-        data = await Retoucher.haveReworkStream()
-      } catch (error) {
-        store.dispatch('notification/pollingHasReturn')
-      }
+      const data = await Retoucher.haveReworkStream()
       if (data && !SessionTool.getReturnRetouchOrder(data)) {
         MessageBox.confirm('您有新的重修流水，为免影响沙漏时间请及时处理。', '', {
           confirmButtonText: '现在处理',
