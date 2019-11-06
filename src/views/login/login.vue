@@ -49,8 +49,14 @@ export default {
       await this.$store.dispatch('user/login', token)
       this.$newMessage.success('登录成功')
       window.removeEventListener('message', this.onMessage)
-      await this.$store.dispatch('user/getUserInfo')
-      this.$router.push('/')
+      const info = await this.$store.dispatch('user/getUserInfo')
+      if (!info.name) {
+        this.$router.push({
+          path: '/401'
+        })
+      } else {
+        this.$router.push('/')
+      }
     }
   }
 }

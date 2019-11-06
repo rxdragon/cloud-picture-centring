@@ -3,6 +3,7 @@
 @sandRed: url(~@/assets/sand_clock/sand_red.png);
 @logo: url(~@/assets/home.png);
 @sandOrange: url(~@/assets/sand_clock/sand_orange.png);
+@anniversary: url(~@/assets/congratulation_images/anniversary.png);
 
 .iconmapBaseSet(@x, @y) { 
   display: block;
@@ -13,6 +14,7 @@
   background-position: @x @y;
   background-size: 660px 260px;
 }
+
 .iconmap {
   &-cloud-logo-small            { .iconmapBaseSet(-219px, 0); }
   &-experience-icon             { .iconmapBaseSet(-10px, -5px); }
@@ -51,6 +53,11 @@
   }
 }
 
+.anniversary-img {
+  background-position: 0 0;
+  background-size: 860px 633px;
+  background-image: @anniversary;
+}
 
 @keyframes gauntlet {
   0% {

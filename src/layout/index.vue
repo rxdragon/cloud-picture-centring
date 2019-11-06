@@ -16,11 +16,15 @@
         <AppMain />
       </el-main>
     </el-container>
+    <!-- 弹出 -->
+    <anniversary v-if="showAnniversary" />
   </el-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { AppMain, Navbar, TagsView, Sidebar } from './components'
+import Anniversary from '@/components/CongratulationComponents/Anniversary'
 const { ipcRenderer } = window.require('electron')
 export default {
   name: 'Layout',
@@ -28,7 +32,11 @@ export default {
     AppMain,
     Navbar,
     TagsView,
-    Sidebar
+    Sidebar,
+    Anniversary
+  },
+  computed: {
+    ...mapGetters(['showAnniversary'])
   },
   mounted () {
     ipcRenderer.on('version:find-new', (event, info) => {
@@ -40,6 +48,15 @@ export default {
         ipcRenderer.send('version:do-upgrade')
       }).catch(() => {})
     })
+    this.getAnniversary()
+  },
+  methods: {
+    /**
+     * @description 获取周年庆信息
+     */
+    async getAnniversary () {
+      await this.$store.dispatch('notification/getAnniversary')
+    }
   }
 }
 </script>
