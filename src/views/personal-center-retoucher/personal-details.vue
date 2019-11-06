@@ -15,7 +15,9 @@
             type="circle"
           />
           <div class="progress-num">
-            <span class="num">{{ todayData.todayFinishPhotoNumProgress || 0 }}%</span>
+            <span class="num">
+              <count-to :end-value="todayData.todayFinishPhotoNumProgress || 0" />%
+            </span>
             <span>完成率</span>
           </div>
         </div>
@@ -68,25 +70,37 @@
           <el-row :gutter="51">
             <el-col :span="6">
               <div class="main-content">
-                <span class="num plant-color">{{ gradeInfo.nearly30DaysPlantNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPlantNum | getPoint }}</i></span>
+                <span class="num plant-color">
+                  <count-to :end-value="gradeInfo.nearly30DaysPlantNum | getInteger" />
+                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysPlantNum | getPoint" /></i>
+                </span>
                 <span>近30日种草</span>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="main-content">
-                <span class="num pull-color">{{ gradeInfo.nearly30DaysPullNum | getInteger }}<i>.{{ gradeInfo.nearly30DaysPullNum | getPoint }}</i></span>
+                <span class="num pull-color">
+                  <count-to :end-value="gradeInfo.nearly30DaysPullNum | getInteger" />
+                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysPullNum | getPoint" /></i>
+                </span>
                 <span>近30日拔草</span>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="main-content">
-                <span class="num">{{ gradeInfo.exp | getInteger }}<i>.{{ gradeInfo.exp | getPoint }}</i></span>
+                <span class="num">
+                  <count-to :end-value="gradeInfo.exp | getInteger" />
+                  <i>.<count-to decimals :end-value="gradeInfo.exp | getPoint" /></i>
+                </span>
                 <span>历史海草数</span>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="main-content">
-                <span class="num">{{ gradeInfo.needLevelUpExp | getInteger }}<i>.{{ gradeInfo.needLevelUpExp | getPoint }}</i></span>
+                <span class="num">
+                  <count-to :end-value="gradeInfo.needLevelUpExp | getInteger" />
+                  <i>.<count-to decimals :end-value="gradeInfo.needLevelUpExp | getPoint" /></i>
+                </span>
                 <span>达标海草数</span>
               </div>
             </el-col>
@@ -185,6 +199,7 @@
 <script>
 import ListTable from '@/components/ListTable'
 import DatePicker from '@/components/DatePicker'
+import CountTo from '@/components/CountTo'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { parseTime } from '@/utils/index.js'
@@ -192,7 +207,7 @@ import * as Retoucher from '@/api/retoucher.js'
 
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, DatePicker },
+  components: { ListTable, DatePicker, CountTo },
   filters: {
     // 获取小数
     getPoint (value) {
@@ -253,6 +268,7 @@ export default {
      */
     async getSelfQuota () {
       this.todayData = await Retoucher.getSelfQuota()
+      console.log(this.todayData)
     },
     /**
      * @description 获取个人等级

@@ -116,6 +116,7 @@ import variables from '@/styles/variables.less'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as Commonality from '@/api/commonality'
+import * as LogStream from '@/api/logStream'
 import * as PhotoTool from '@/utils/photoTool'
 import * as SessionTool from '@/utils/sessionTool'
 
@@ -157,7 +158,7 @@ export default {
         requireLabel: {},
         streamState: ''
       },
-      hourGlass: null,
+      hourGlass: null, // 沙漏时间
       photos: [],
       reviewerNote: '',
       headerClass: '',
@@ -261,6 +262,7 @@ export default {
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
         this.$store.commit('notification/CLEAR_RETURN_STREAM_ID')
+        LogStream.retoucherSee(+data.id)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

@@ -121,7 +121,7 @@ export function getRetouchOrgInfo (params) {
       secret: '',
       incomeConfig: data.incomeConfig
     }
-    createData.defaultCheckedKeys = data.products.map(productItem => productItem.id)
+    createData.defaultCheckedKeys = data.canReceiveProduct.map(productItem => productItem.id)
     return createData
   })
 }

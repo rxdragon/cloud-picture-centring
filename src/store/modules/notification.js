@@ -1,6 +1,7 @@
 import * as Retoucher from '@/api/retoucher.js'
-import * as SessionTool from '@/utils/sessionTool.js'
 import * as Notification from '@/api/notification.js'
+import * as LogStream from '@/api/logStream'
+import * as SessionTool from '@/utils/sessionTool.js'
 import { MessageBox } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
@@ -30,12 +31,7 @@ const actions = {
   // 查询订单
   hasReturnNotification ({ commit }) {
     return new Promise(async (resolve, reject) => {
-      let data
-      try {
-        data = await Retoucher.haveReworkStream()
-      } catch (error) {
-        store.dispatch('notification/pollingHasReturn')
-      }
+      const data = await Retoucher.haveReworkStream()
       if (data && !SessionTool.getReturnRetouchOrder(data)) {
         MessageBox.confirm('您有新的重修流水，为免影响沙漏时间请及时处理。', '', {
           confirmButtonText: '现在处理',
@@ -54,6 +50,7 @@ const actions = {
         }).catch(() => {
           SessionTool.saveReturnRetouchOrder(data)
         }).finally(() => {
+          LogStream.retoucherRebuildOk(+data)
           store.dispatch('notification/pollingHasReturn')
         })
       } else {
