@@ -24,8 +24,8 @@
       <div class="sample-photo search-item">
         <span>样片素材</span>
         <div v-if="samplePhoto.length" class="photo-list">
-          <div class="photo-box" v-for="(photoItem, photoIndex) in samplePhoto" :key="photoIndex">
-            <photo-box downing :src="photoItem"/>
+          <div v-for="(photoItem, photoIndex) in samplePhoto" :key="photoIndex" class="photo-box">
+            <photo-box downing :src="photoItem" />
           </div>
           <div v-for="i in 3" :key="'empty' + i" class="empty-box" />
         </div>

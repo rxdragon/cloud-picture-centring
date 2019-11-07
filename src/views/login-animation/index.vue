@@ -1,6 +1,6 @@
 <template>
   <div class="login-animation">
-    <div id="bm"></div>
+    <div id="bm" />
   </div>
 </template>
 
