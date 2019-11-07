@@ -24,12 +24,9 @@
       <div class="sample-photo search-item">
         <span>样片素材</span>
         <div v-if="samplePhoto.length" class="photo-list">
-          <photo-box
-            v-for="(photoItem, photoIndex) in samplePhoto"
-            :key="photoIndex"
-            downing
-            :src="photoItem"
-          />
+          <div class="photo-box" v-for="(photoItem, photoIndex) in samplePhoto" :key="photoIndex">
+            <photo-box downing :src="photoItem"/>
+          </div>
           <div v-for="i in 3" :key="'empty' + i" class="empty-box" />
         </div>
         <div v-else class="no-photo panel-content">暂无样片</div>
@@ -108,10 +105,10 @@
               </div>
               <div class="list-content">
                 <div class="item-row">
-                  <div v-for="item in 20" :key="item" class="list-item">{{ item }}人</div>
+                  <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
                 </div>
                 <div v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney" :key="blueIndex" class="item-row">
-                  <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="list-item">
+                  <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
                     <input v-model="productConfig.blueNotJointMoney[blueIndex][moneyIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
                   </div>
                 </div>
@@ -160,10 +157,10 @@
               </div>
               <div class="list-content">
                 <div class="item-row">
-                  <div v-for="item in 20" :key="item" class="list-item">{{ item }}人</div>
+                  <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
                 </div>
                 <div v-for="(blueItem, blueIndex) in productConfig.blueJointMoney" :key="blueIndex" class="item-row">
-                  <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="list-item">
+                  <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
                     <input v-model="productConfig.blueJointMoney[blueIndex][moneyIndex]" v-decimalOnly class="num-input" placeholder="0">
                   </div>
                 </div>
@@ -534,16 +531,13 @@ export default {
       width: calc(~'100% - 100px');
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+      align-items: flex-start;
+      margin-right: -24px;
 
-      .photo {
-        width: 30%;
-        box-shadow: @boxShadow;
-        margin-bottom: 3%;
-      }
-
-      .empty-box {
-        width: 30%;
+      .photo-box {
+        width: 253px;
+        margin-bottom: 24px;
+        margin-right: 24px;
       }
     }
   }
@@ -667,7 +661,7 @@ export default {
           }
         }
 
-        &.list-item {
+        .content-list-item {
           width: 88px;
           border-right: 1px solid #ebeef5;
           border-bottom: 1px solid #ebeef5;

@@ -115,7 +115,7 @@
     <div class="panel-info flakiness-info">
       <div v-if="!isGrade || photoInfoData.isReturn || isGreen" class="panel-title">成片评价</div>
       <template v-if="isGrade && (photoInfoData.isReturn || isGreen)">
-        <div class="radio-box">
+        <div class="flakiness-radio-box">
           <el-radio v-model="flakinessEvaluate" label="plant">种草</el-radio>
           <el-radio v-model="flakinessEvaluate" label="pull">拔草</el-radio>
         </div>
@@ -149,6 +149,7 @@
                 :key="tagsIndex"
                 size="medium"
                 type="danger"
+                class="content-el-tag"
               >
                 {{ tags }}
               </el-tag>
@@ -334,7 +335,7 @@ export default {
           width: 632px;
           white-space: pre-line;
 
-          &.el-tag {
+          .content-el-tag {
             margin-right: 10px;
           }
         }
@@ -418,7 +419,7 @@ export default {
   }
 
   .flakiness-info {
-    &.radio-box {
+    .flakiness-radio-box {
       padding: 10px;
     }
 
