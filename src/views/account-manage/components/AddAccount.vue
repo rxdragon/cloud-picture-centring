@@ -109,17 +109,16 @@ export default {
   },
   watch: {
     isLoadingDown (value) {
-      if (value && this.isEdit) {
-        const productIds = this.editData.can_receive_product.map(item => item.id)
+      if (value && Object.keys(this.staffInfo).length) {
+        const productIds = this.staffInfo.can_receive_product.map(item => item.id)
         this.defaultCheckedKeys = productIds
       }
     }
   },
-  created () {
+  async created () {
     if (this.isEdit) {
       this.jobNumber = this.editData.id
-      this.getStaffInfo()
-      this.staffInfo = { ...this.editData }
+      await this.getStaffInfo()
       this.roleValue = this.editData.role
       this.retouchSelectType = this.editData.retoucher_class_id
       this.$store.dispatch('setting/showLoading', this.routeName)
@@ -253,15 +252,18 @@ export default {
     /**
      * @description 获取伙伴信息
      */
-    getStaffInfo () {
+    async getStaffInfo () {
       if (!this.jobNumber) { return false }
       const req = { staffNum: this.jobNumber }
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      Staff.getStaffInfo(req)
-        .then(data => {
-          this.staffInfo = data
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        })
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const data = await Staff.getStaffInfo(req)
+        this.staffInfo = data
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      } catch (error) {
+        console.error(error)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 获取伙伴权限
