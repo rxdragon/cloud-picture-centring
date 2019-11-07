@@ -46,7 +46,6 @@ export default {
     async jumpBack (code) {
       const token = code.substr(1, 32)
       await this.$store.dispatch('user/login', token)
-      this.$newMessage.success('登录成功')
       window.removeEventListener('message', this.onMessage)
       const info = await this.$store.dispatch('user/getUserInfo')
       if (!info.name) {
@@ -54,7 +53,7 @@ export default {
           path: '/401'
         })
       } else {
-        this.$router.push('/')
+        this.$router.push('/login-animation')
       }
     }
   }
