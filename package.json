@@ -29,6 +29,7 @@
     "driver.js": "^0.9.8",
     "element-ui": "^2.4.5",
     "live2d-widget": "^3.1.4",
+    "lottie-web": "^5.5.9",
     "moment": "^2.24.0",
     "mousetrap": "^1.6.3",
     "node-rsa": "^1.0.6",
