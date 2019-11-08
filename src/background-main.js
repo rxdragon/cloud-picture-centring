@@ -23,6 +23,7 @@ async function createWindow () {
     minHeight: 800,
     webPreferences: {
       nodeIntegration: true,
+      nodeIntegrationInSubFrames: false,
       scrollBounce: true,
       backgroundThrottling: false
     },
