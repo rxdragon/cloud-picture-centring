@@ -171,7 +171,6 @@ export function getProps () {
       cardItem.className = descObj[cardType].className
       cardItem.multipleText = descObj[cardType].multipleText
     })
-    console.log(createData)
     return createData
   })
 }
