@@ -27,7 +27,7 @@ export function revertTimeSpan (time, subtractDay) {
  * @param {*} time
  */
 export function formatTime (time) {
-  if (time === '-') return '-'
+  if (time === '-' || !time) return '-'
   const date = moment(time)
   return date.format('YYYY.MM.DD hh:mm')
 }
