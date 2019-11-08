@@ -48,7 +48,7 @@ const template = [{
       dialog.showMessageBoxSync({
         type: 'info',
         title: '版本号',
-        icon: path.join(global.staticDir, 'icon@128.png'),
+        icon: path.join(global.staticDir, 'icon.png'),
         message: global.currentVersion
       })
     }

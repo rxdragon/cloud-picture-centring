@@ -10,7 +10,6 @@ global.env = process.env.NODE_ENV || 'dev'
 global.isDevelopment = global.env !== 'production'
 global.isTest = !!process.env.IS_TEST
 global.initWindow = null
-global.currentVersion = 'demo'
 global.successInit = false
 global.userDir = app.getPath('userData')
 global.emit = new EventEmitter()

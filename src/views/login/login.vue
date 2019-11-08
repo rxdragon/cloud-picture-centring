@@ -67,7 +67,7 @@ export default {
     getLoginSsoUrl () {
       const query = JSON.stringify({
         title: '缦图云端',
-        redirect: `${window.location.origin}${window.location.pathname}login.html#/?token=`
+        redirect: `${window.location.origin}/login.html#/?token=`
       })
       this.ssoUrl = process.env.VUE_APP_LOGIN_API + Base64.encode(query)
     },
