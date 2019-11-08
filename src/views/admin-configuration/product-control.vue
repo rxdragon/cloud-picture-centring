@@ -124,13 +124,16 @@ export default {
           this.getProductList()
         }
       }
+    },
+    '$route.query': {
+      handler: function (query) {
+        const { isCheckPass, photographerOrgId } = this.$route.query
+        if (isCheckPass) { this.activeName = 'checked' }
+        if (photographerOrgId) { this.institutionType = +photographerOrgId }
+        this.getProductList()
+      },
+      immediate: true
     }
-  },
-  created () {
-    const { isCheckPass, photographerOrgId } = this.$route.query
-    if (isCheckPass) { this.activeName = 'checked' }
-    if (photographerOrgId) { this.institutionType = +photographerOrgId }
-    this.getProductList()
   },
   methods: {
     /**

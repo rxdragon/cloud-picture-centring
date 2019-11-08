@@ -136,16 +136,43 @@ export function getProps () {
     method: 'GET'
   }).then(msg => {
     const data = msg.filter(item => item.state === 'unused')
-    data.forEach(cardItem => {
-      if (cardItem.card.type === 'exp') {
-        cardItem.className = 'iconmap-experience-icon'
-        cardItem.multipleText = '倍经验翻倍'
-      } else {
-        cardItem.className = 'iconmap-gold-icon'
-        cardItem.multipleText = '倍收益奖励'
+    const descObj = {
+      'exp': {
+        className: 'iconmap-experience-icon',
+        multipleText: '倍经验翻倍'
+      },
+      'gold_reward': {
+        className: 'iconmap-gold-icon',
+        multipleText: '倍收益奖励'
       }
+    }
+    const createData = {}
+    data.forEach(cardItem => {
+      const cardType = cardItem.card.type
+      const cardMultiple = cardItem.card.multiple
+      const key = cardType + cardMultiple
+      if (createData[key]) {
+        createData[key].count++
+        const itemEndTime = new Date(cardItem.end_at).getTime()
+        if (itemEndTime < createData[key].endAt) {
+          createData[key].endAt = itemEndTime
+          createData[key].id = cardItem.id
+        }
+      } else {
+        createData[key] = {
+          id: cardItem.id,
+          endAt: new Date(cardItem.end_at).getTime(),
+          className: descObj[cardType].className,
+          multiple: cardItem.card.multiple,
+          multipleText: descObj[cardType].multipleText,
+          count: 1
+        }
+      }
+      cardItem.className = descObj[cardType].className
+      cardItem.multipleText = descObj[cardType].multipleText
     })
-    return data
+    console.log(createData)
+    return createData
   })
 }
 
