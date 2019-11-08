@@ -48,10 +48,6 @@ export const constantRoutes = [
     component: () => import('@/views/login/login.vue'),
     hidden: true
   }, {
-    path: '/login-animation',
-    component: () => import('@/views/login-animation/index.vue'),
-    hidden: true
-  }, {
     path: '/',
     component: Layout,
     redirect: '/home',
