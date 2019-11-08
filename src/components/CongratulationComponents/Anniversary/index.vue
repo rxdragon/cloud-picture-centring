@@ -41,7 +41,6 @@ export default {
       el.style.transform = 'scale(0)'
     },
     enter (el) {
-      console.log('enter')
       const timeline = anime.timeline()
       timeline.add({
         targets: '.anniversary .shadow',

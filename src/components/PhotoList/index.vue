@@ -111,7 +111,6 @@ export default {
   watch: {
     'gradeInfo.attitude': {
       handler: function (value) {
-        console.log(value)
         if (!value) { this.gradeType = 0 }
         if (value === 'good') { this.gradeType = 1 }
         if (value === 'bad') { this.gradeType = 2 }

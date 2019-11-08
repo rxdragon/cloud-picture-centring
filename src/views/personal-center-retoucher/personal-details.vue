@@ -274,7 +274,6 @@ export default {
      */
     async getSelfQuota () {
       this.todayData = await Retoucher.getSelfQuota()
-      console.log(this.todayData)
     },
     /**
      * @description 获取个人等级

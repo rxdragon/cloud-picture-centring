@@ -14,7 +14,7 @@ const template = [{
     role: 'paste'
   }, {
     label: '重新加载',
-    accelerator: 'CmdOrCtrl+R',
+    accelerator: '',
     click: function (item, focusedWindow) {
       if (focusedWindow) {
         if (focusedWindow.id === 1) {

@@ -33,11 +33,9 @@ export default {
     onMessage (e) {
       if (typeof e.data === 'object' && 'type' in e.data && 'msg' in e.data) {
         if (e.data.type === 'dd-token') {
-          console.log('获取到token')
           this.tokenLogin(e.data.msg)
         }
         if (e.data.type === 'animation-finish') {
-          console.log('动画完成')
           this.animationFinish = true
           this.judgeJump()
         }

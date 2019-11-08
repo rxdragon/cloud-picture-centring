@@ -34,7 +34,6 @@ export default {
      * @description 刷新
      */
     refresh () {
-      console.log('刷新')
       const view = this.$route
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
         const { fullPath } = view

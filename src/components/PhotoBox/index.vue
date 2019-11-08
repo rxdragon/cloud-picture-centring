@@ -9,7 +9,7 @@
           <span>加载失败...</span>
         </div>
       </el-image>
-      <span v-if="photoName" v-clipboard:copy="src" v-clipboard:success="clipboardSuccess" class="photo-name" @click.stop="">{{ src }}</span>
+      <span v-if="photoName" class="photo-name" @click.stop="">{{ src }}</span>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">下载照片</el-button>
@@ -24,10 +24,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import clipboard from '@/directive/clipboard/index.js'
 export default {
   name: 'PhotoBox',
-  directives: { clipboard },
   filters: {
     filterJointLabel (jointLabel) {
       return jointLabel[1]
@@ -84,16 +82,6 @@ export default {
       }
       this.$newMessage.success('已添加一张照片到下载')
       this.$ipcRenderer.send('downPhoto', data)
-    },
-    /**
-     * @description 拷贝成功
-     */
-    clipboardSuccess () {
-      this.$newMessage({
-        message: '拷贝成功',
-        type: 'success',
-        duration: 1500
-      })
     }
   }
 }

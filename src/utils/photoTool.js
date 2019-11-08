@@ -80,7 +80,6 @@ export function readAllPhoto (photoArr) {
     })
     Promise.all(promises)
       .then(() => {
-        console.log('加载完成')
         SessionTool.setCloudAssessmentPhotoId([...photoArr])
       })
   }
