@@ -1,6 +1,8 @@
 <template>
   <div id="App">
-    <router-view />
+    <transition name="app-transform" mode="out-in">
+      <router-view />
+    </transition>
     <painted-eggshell v-if="showCat" />
   </div>
 </template>

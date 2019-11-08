@@ -1,9 +1,25 @@
 
 // global transition css
+/* 主页跳转动画 */
+.app-transform-leave-active,
+.app-transform-enter-active {
+  transition: all 0.28s;
+}
+
+.app-transform-enter {
+  opacity: 0;
+  transform: translateY(-30px) !important;
+}
+
+.app-transform-leave-to {
+  opacity: 0;
+  transform: translateY(30px) !important;
+}
+
 /* fade */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.28s;
+  transition: opacity 0.28s ease;
 }
 
 .fade-enter,

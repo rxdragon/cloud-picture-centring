@@ -113,7 +113,7 @@
                 <span>近30日种草率</span>
                 <span class="num">{{ gradeInfo.nearly30DaysPlantRate }}%</span>
               </div>
-              <el-progress :percentage="gradeInfo.nearlyPlantRate" :show-text="false" />
+              <el-progress class="" :percentage="gradeInfo.nearlyPlantRate" :show-text="false" />
             </el-col>
             <el-col :span="12" class="pull-box">
               <div class="rote-title">
@@ -179,18 +179,20 @@
     <div class="module-panel prop-panel">
       <div class="panel-title">我的道具</div>
       <div class="panel-main">
-        <div v-for="(propItem, propIndex) in propData" :key="propIndex" class="prop-box">
-          <div class="prop-left">
-            <div class="prop-icon" :class="propItem.className" />
+        <el-badge v-for="(propItem, propIndex) in propData" :key="propIndex" :value="propItem.count" class="prop-badge">
+          <div class="prop-box">
+            <div class="prop-left">
+              <div class="prop-icon" :class="propItem.className" />
+            </div>
+            <div class="prop-content">
+              <div class="content-title">{{ propItem.multiple + propItem.multipleText }}</div>
+              <div class="content-describe">24小时内仅可用1次</div>
+            </div>
+            <div class="prop-right">
+              <el-button type="primary" size="mini" @click="useProp(propItem)">使用</el-button>
+            </div>
           </div>
-          <div class="prop-content">
-            <div class="content-title">{{ propItem.card.multiple + propItem.multipleText }}</div>
-            <div class="content-describe">24小时内仅可用1次</div>
-          </div>
-          <div class="prop-right">
-            <el-button type="primary" size="mini" @click="useProp(propItem)">使用</el-button>
-          </div>
-        </div>
+        </el-badge>
       </div>
     </div>
   </div>
@@ -259,8 +261,12 @@ export default {
       this.getRetouchQuota(),
       this.getLittleBeeInfo(),
       this.getProps()
-    ])
-    this.$store.dispatch('setting/hiddenLoading', this.routeName)
+    ]).then(() => {
+      this.$store.dispatch('setting/hiddenLoading', this.routeName)
+    }).catch(error => {
+      console.error(error)
+      this.$store.dispatch('setting/hiddenLoading', this.routeName)
+    })
   },
   methods: {
     /**
@@ -329,7 +335,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import '../../styles/variables.less';
 
 .personal-details {
@@ -568,6 +574,14 @@ export default {
 .panel-main {
   .el-progress__text {
     display: none;
+  }
+}
+
+.prop-badge {
+  color: red;
+
+  .el-badge__content.is-fixed {
+    right: 34px;
   }
 }
 </style>
