@@ -112,7 +112,6 @@ import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
 import DomainSwitchBox from '@/components/DomainSwitchBox'
 import variables from '@/styles/variables.less'
-
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as Commonality from '@/api/commonality'
@@ -298,33 +297,54 @@ export default {
      * @description 上传前回调
      * @param {*} file
      */
-    beforeUpload (file) {
+    async beforeUpload (file) {
       this.$store.dispatch('setting/showLoading', this.routeName)
       const name = PhotoTool.fileNameFormat(file.name)
+      // 是否正确命名
       if (name.includes('.')) {
         this.$newMessage.warning('请正确命名照片名！')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return false
+        return Promise.reject()
       }
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const allFinishPhoto = [...this.cachePhoto, ...this.finishPhoto]
       const hasSameName = this.photos.some(item => item.path.includes(name))
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
+      // 判断是否是图片
       if (!isJPG && !isPNG) {
         this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return isJPG || isPNG
       }
-      if (findPhoto) {
-        this.$newMessage.warning('该照片已经上传，请移除该照片' + name + '再上传。')
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return false
-      }
+      // 判断是否与原片名字相同
       if (!hasSameName) {
         this.$newMessage.warning('请上传与原片文件名一致的照片。')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return false
+        return Promise.reject()
+      }
+      // 判断图片是否修改
+      const findOrginPhoto = this.photos.find(item => item.path.includes(name))
+      // 最后一次提交文件名
+      const beforeUploadFileName = findOrginPhoto.isReturnPhoto ? PhotoTool.fileNameFormat(findOrginPhoto.returnPhotoPath) : PhotoTool.fileNameFormat(file.name)
+      let uploadPhotoMd5 = ''
+      try {
+        uploadPhotoMd5 = await PhotoTool.getImgBufferPhoto(file)
+        if (beforeUploadFileName === uploadPhotoMd5) {
+          this.$newMessage.warning('请修改照片后再进行上传。')
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          return Promise.reject()
+        }
+      } catch (error) {
+        this.$newMessage.error('读取本地图片失败')
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        return Promise.reject()
+      }
+      // 判断是否已经上传
+      if (findPhoto) {
+        this.$newMessage.warning('该照片已经上传，请移除该照片' + name + '再上传。')
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        return Promise.reject()
       }
       this.$store.dispatch('setting/hiddenLoading', this.routeName)
       return true
@@ -349,31 +369,18 @@ export default {
         // 上传后的照片名字
         const filePath = fileItem.response ? PhotoTool.handlePicPath(fileItem.response.url) : ''
         const findOrginPhoto = this.photos.find(photoItem => photoItem.path.includes(uploadedName))
-        // 重修判断处理点
-        const beforeUploadFileName = findOrginPhoto.isReturnPhoto ? findOrginPhoto.returnPhotoPath : file.name
-        const isNoRetouch = beforeUploadFileName === filePath
         if (this.finishPhoto[fileIndex] && this.finishPhoto[fileIndex].path) {
           createPhotoData.push(this.finishPhoto[fileIndex])
         } else {
           const newPhoto = {
             id: findOrginPhoto.id,
             path: filePath,
-            orginPhotoName: uploadedName,
-            willDelete: false
-          }
-          if (isNoRetouch) {
-            this.$newMessage.warning('请修改照片后再进行上传。')
-            this.uploadPhoto[fileIndex].willDelete = true
-            newPhoto.willDelete = true
+            orginPhotoName: uploadedName
           }
           createPhotoData.push(newPhoto)
         }
       })
-      const filterCreatePhotoData = createPhotoData.filter((photoItem, photoIndex) => {
-        if (photoItem.willDelete) { this.uploadPhoto.splice(photoIndex, 1) }
-        return !photoItem.willDelete
-      })
-      this.finishPhoto = JSON.parse(JSON.stringify(filterCreatePhotoData))
+      this.finishPhoto = JSON.parse(JSON.stringify(createPhotoData))
     },
     /**
      * @description 移除文件
@@ -403,7 +410,6 @@ export default {
       const uploadData = uploadPhotoData
       uploadData.forEach(item => {
         delete item.orginPhotoName
-        delete item.willDelete
       })
       if (uploadData.length > this.photos.length) {
         return this.$newMessage.warning('上传照片数量超过限制，请重新上传。')
@@ -587,6 +593,7 @@ export default {
             flex-direction: column;
             color: #606266;
             transition: all 0.3;
+            -webkit-user-select: none;
 
             .el-icon-plus {
               font-size: 28px;
