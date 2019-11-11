@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron'
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
 import * as SessionTool from '@/utils/sessionTool.js'
+import md5 from 'md5'
 import store from '@/store' // vuex
 import Vue from 'vue'
 
@@ -10,7 +11,8 @@ import Vue from 'vue'
  */
 export function fileNameFormat (name) {
   const indexPoint = name.lastIndexOf('.')
-  return name.substring(0, indexPoint)
+  const returnName = name
+  return returnName.substring(0, indexPoint)
 }
 
 /**
@@ -67,6 +69,10 @@ export function oneAllDown (photoArr) {
   })
 }
 
+/**
+ * @description 是否预加载完成图片
+ * @param {*} photoArr
+ */
 export function readAllPhoto (photoArr) {
   // 判断是否有没加载的id
   const loadedPhotoArr = SessionTool.getCloudAssessmentPhotoId()
@@ -85,6 +91,10 @@ export function readAllPhoto (photoArr) {
   }
 }
 
+/**
+ * @description 预加载图片
+ * @param {*} path
+ */
 export function loadPhoto (path) {
   const imgDomain = store.getters.imgDomain
   const image = new Image()
@@ -92,5 +102,23 @@ export function loadPhoto (path) {
   return new Promise((resolve, reject) => {
     image.onload = () => { resolve() }
     image.onerror = () => { resolve() }
+  })
+}
+
+/**
+ * @description 获取图片md5值
+ * @param {*} file
+ */
+export function getImgBufferPhoto (file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = function (evt) {
+      const imgBuffer = Buffer.from(evt.target.result)
+      resolve(md5(imgBuffer))
+    }
+    reader.onerror = function (error) {
+      reject(error)
+    }
+    reader.readAsArrayBuffer(file)
   })
 }

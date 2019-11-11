@@ -31,6 +31,7 @@
     "js-base64": "^2.5.1",
     "live2d-widget": "^3.1.4",
     "lottie-web": "^5.5.9",
+    "md5": "^2.2.1",
     "moment": "^2.24.0",
     "mousetrap": "^1.6.3",
     "node-rsa": "^1.0.6",
