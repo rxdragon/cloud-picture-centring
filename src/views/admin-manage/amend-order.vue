@@ -6,11 +6,11 @@
     <div class="search-box">
       <div class="caid-search search-item">
         <span>流水号</span>
-        <el-input v-model="caid" :disabled="Boolean(id)" placeholder="请输入流水号" />
+        <el-input v-model="caid" :disabled="Boolean(id)" placeholder="请输入流水号" @keyup.native.enter="getStreamInfo" clearable />
       </div>
       <div class="caid-search search-item">
         <span>订单号</span>
-        <el-input v-model="id" :disabled="Boolean(caid)" placeholder="请输入订单号" />
+        <el-input v-model="id" :disabled="Boolean(caid)" placeholder="请输入订单号" @keyup.native.enter="getStreamInfo" clearable />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>
@@ -39,7 +39,7 @@
             <photo-box :src="photoItem.path" />
             <div class="change-num">
               <span>人数：</span>
-              <el-input v-model="photoItem.people_num" size="mini" type="number" placeholder="请输入人数" />
+              <input class="fake-el-input" v-model="photoItem.people_num" v-numberOnly min="1" size="mini" placeholder="请输入人数">
             </div>
             <!-- 拼接信息 -->
             <div v-if="photoItem.isJoint" class="joint-box">

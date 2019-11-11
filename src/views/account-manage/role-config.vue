@@ -9,7 +9,7 @@
         <div class="search-box">
           <div class="role-box search-item">
             <span>角色组名称</span>
-            <el-input v-model.trim="roleName" />
+            <el-input v-model.trim="roleName" @keyup.native.enter="getRoleList(1)" />
           </div>
           <div class="button-box">
             <el-button type="primary" @click="getRoleList(1)">查 询</el-button>
