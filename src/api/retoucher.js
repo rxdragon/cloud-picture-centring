@@ -30,7 +30,18 @@ export function getSelfBuffInfo () {
     url: '/project_cloud/retoucher/getSelfBuffInfo',
     method: 'GET'
   }).then(msg => {
-    return keyToHump(msg)
+    const data = keyToHump(msg)
+    data.impulse = data.impulse.state === 'using' ? data.impulse : {}
+    if (Object.keys(data.impulse).length) {
+      data.impulseStatus = true
+      data.impulseInfo = data.impulse.impulse_setting_item.map(item => {
+        return {
+          reachExp: item.reach_exp,
+          reward: item.reward
+        }
+      })
+    }
+    return data
   })
 }
 

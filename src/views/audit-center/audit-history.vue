@@ -80,8 +80,8 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      timeSpan: null,
-      auditType: 0,
+      timeSpan: null, // 时间戳
+      auditType: 0, // 抽片类型
       spotCheckType: 0,
       correcType: 0,
       tableData: [],
@@ -124,6 +124,9 @@ export default {
         break
       case SearchType.RectifyNone:
         this.correcType = SearchType.RectifyNone
+        break
+      case SearchType.RectifyDifferent:
+        this.correcType = SearchType.RectifyDifferent
         break
       default:
         break
