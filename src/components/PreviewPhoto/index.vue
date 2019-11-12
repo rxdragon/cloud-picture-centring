@@ -128,9 +128,6 @@ export default {
     }
   },
   computed: {
-    photoArray () {
-      return this.imgarray
-    },
     showPhoto () {
       return this.photoArray[this.photoIndex]
     }
@@ -140,8 +137,11 @@ export default {
      * @description 展示图片数组
      * @param {*} val
      */
-    imgarray: function (val) {
-      this.photoArray = [...val]
+    imgarray: {
+      handler: function (val) {
+        this.photoArray = [...val]
+      },
+      immediate: true
     }
   },
   mounted () {
@@ -166,6 +166,7 @@ export default {
           this.judgeHasZoom(e)
           break
         case 18:
+        case 83:
           this.closeShowPhoto()
           break
         case 65:
@@ -207,7 +208,7 @@ export default {
           element: '#closeImg',
           popover: {
             title: '关闭预览框',
-            description: '按右下角的ctrl或者option键可以快速关闭弹框',
+            description: '按右下角的ctrl或者option键或者s可以快速关闭预览',
             position: 'left'
           }
         },
