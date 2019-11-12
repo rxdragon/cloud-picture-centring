@@ -37,7 +37,7 @@
                     placement="bottom"
                     trigger="hover"
                   >
-                    <div class="impulse-info" v-for="(infoItem, infoIndex) in buffInfo.impulseInfo" :key="infoIndex">
+                    <div v-for="(infoItem, infoIndex) in buffInfo.impulseInfo" :key="infoIndex" class="impulse-info">
                       {{ `当前海草值达到${infoItem.reachExp} 奖励${infoItem.reward}` }}
                     </div>
                     <div v-show="buffInfo.impulseStatus" slot="reference" class="prop-icon iconmap-impulse-icon" />
@@ -215,7 +215,6 @@ export default {
      */
     async getSelfBuffInfo () {
       this.buffInfo = await Retoucher.getSelfBuffInfo()
-      console.log(this.buffInfo)
     },
     /**
      * @description 获取流水列表数据
