@@ -30,19 +30,6 @@
       <!-- 查询按钮 -->
       <div class="button-box">
         <el-button type="primary" class="search-button" @click="getSearchHistory(1)">查询</el-button>
-        <el-dropdown>
-          <el-button disabled type="success">
-            导出<i class="el-icon-arrow-down el-icon--right" />
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>成片评价-审核人明细</el-dropdown-item>
-            <el-dropdown-item>成片评价-小组明细</el-dropdown-item>
-            <el-dropdown-item>成片评价-修图师明细</el-dropdown-item>
-            <el-dropdown-item>纠偏-审核人明细</el-dropdown-item>
-            <el-dropdown-item>纠偏-小组明细</el-dropdown-item>
-            <el-dropdown-item>评价质量报告明细</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
       </div>
     </div>
     <div class="search-box">
@@ -60,6 +47,7 @@
     <div v-for="photoItem in photoData" :key="photoItem.businessId" class="photo-data module-panel">
       <GradeBox :photo-info="photoItem" />
     </div>
+    <div v-if="!photoData.length" class="module-panel no-data">暂无数据</div>
     <div class="page-box">
       <el-pagination
         :hide-on-single-page="true"
@@ -204,6 +192,10 @@ export default {
   .page-box {
     margin-top: 24px;
     text-align: center;
+  }
+
+  .no-data {
+    padding: 40px 24px;
   }
 
   .el-pagination .btn-next,

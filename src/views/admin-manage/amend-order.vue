@@ -65,6 +65,9 @@
         <el-button type="primary" @click="modifyStream(item)">提交修改</el-button>
       </div>
     </div>
+    <div v-if="!dataList.length" class="module-panel no-data">
+      暂无数据
+    </div>
   </div>
 </template>
 
@@ -272,6 +275,10 @@ export default {
     .submit-box {
       text-align: center;
     }
+  }
+
+  .no-data {
+    padding: 40px 24px;
   }
 }
 
