@@ -26,8 +26,22 @@
                   <span class="goal-num">/ 35</span>
                 </div>
                 <div class="prop-icon-box">
-                  <div v-if="buffInfo.expCard" class="prop-icon iconmap-experience-icon" />
-                  <div v-if="buffInfo.impulseStatus" class="prop-icon iconmap-impulse-icon" />
+                  <el-popover
+                    placement="bottom"
+                    trigger="hover"
+                    :content="`经验奖励：${buffInfo.expCard}倍`"
+                  >
+                    <div v-show="buffInfo.expCard" slot="reference" class="prop-icon iconmap-experience-icon" />
+                  </el-popover>
+                  <el-popover
+                    placement="bottom"
+                    trigger="hover"
+                  >
+                    <div class="impulse-info" v-for="(infoItem, infoIndex) in buffInfo.impulseInfo" :key="infoIndex">
+                      {{ `当前海草值达到${infoItem.reachExp} 奖励${infoItem.reward}` }}
+                    </div>
+                    <div v-show="buffInfo.impulseStatus" slot="reference" class="prop-icon iconmap-impulse-icon" />
+                  </el-popover>
                 </div>
               </div>
             </div>
@@ -66,7 +80,13 @@
                   </span>
                 </div>
                 <div class="prop-icon-box">
-                  <div v-if="buffInfo.goldReward" class="prop-icon iconmap-gold-icon" />
+                  <el-popover
+                    placement="bottom"
+                    trigger="hover"
+                    :content="`金币奖励：${buffInfo.goldReward}倍`"
+                  >
+                    <div v-show="buffInfo.goldReward" slot="reference" class="prop-icon iconmap-gold-icon" />
+                  </el-popover>
                 </div>
               </div>
             </div>
@@ -89,7 +109,6 @@
               </div>
             </el-tab-pane>
           </el-tabs>
-
         </div>
       </div>
       <RetouchOrder v-else key="RetouchOrder" :show-detail.sync="showDetail" :aid="aid" />
@@ -133,6 +152,7 @@ export default {
       buffInfo: { // buff 信息
         expCard: 0, // 经验卡
         impulseStatus: false, // 冲量奖
+        impulseInfo: [], // 冲量信息
         goldReward: 0, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
@@ -195,6 +215,7 @@ export default {
      */
     async getSelfBuffInfo () {
       this.buffInfo = await Retoucher.getSelfBuffInfo()
+      console.log(this.buffInfo)
     },
     /**
      * @description 获取流水列表数据
