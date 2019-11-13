@@ -1,9 +1,10 @@
 <template>
   <div class="domain-switch-box">
-    <el-radio-group v-model="domainValue" size="small" @change="onDomainChange">
-      <el-radio-button :label="1">又拍云</el-radio-button>
-      <el-radio-button :label="2">阿里云</el-radio-button>
-    </el-radio-group>
+    <div class="radio-group">
+      <div class="radio-button" data-label="1" :class="{'is-active': domainValue === 1}" @click="changeYun">又拍云</div>
+      <div class="radio-button" data-label="2" :class="{'is-active': domainValue === 2}" @click="changeYun">阿里云</div>
+      <div class="back-button" :class="{'al-active': domainValue === 2}" />
+    </div>
   </div>
 </template>
 
@@ -26,9 +27,62 @@ export default {
     /**
      * @description 监听域名变换
      */
-    onDomainChange (domainType) {
-      this.$store.dispatch('setting/changeDomain', domainType)
+    changeYun (e) {
+      const domainLabel = e.target.dataset.label
+      if (this.domainValue === Number(domainLabel)) return
+      this.domainValue = Number(domainLabel)
+      this.$store.dispatch('setting/changeDomain', this.domainValue)
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+@switchBule: #4669fb;
+
+.domain-switch-box {
+  .radio-group {
+    width: 132px;
+    background-color: @switchBule;
+    padding: 2px;
+    border-radius: 4px;
+    position: relative;
+
+    .back-button,
+    .radio-button {
+      width: 64px;
+      line-height: 28px;
+      display: inline-block;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 500;
+      color: #7d96fc;
+      -webkit-appearance: none;
+      -webkit-user-select: none;
+      position: relative;
+      z-index: 2;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+      &.is-active {
+        color: @switchBule;
+      }
+    }
+
+    .back-button {
+      background-color: #fff;
+      height: 28px;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      border-radius: 4px;
+      z-index: 1;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+      &.al-active {
+        left: 66px;
+      }
+    }
+  }
+}
+</style>
