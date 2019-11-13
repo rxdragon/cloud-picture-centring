@@ -40,12 +40,14 @@
         <div class="content-title">摄影师</div>
         <div class="content-title">当前状态</div>
         <div class="content-title">修图师</div>
+        <div v-if="orderInfo.reviewerName" class="content-title">审核人</div>
       </div>
       <div class="table-panel panel-grade">
         <div class="panel-content">{{ orderInfo.retouchStandard | toRetouchClass }}</div>
         <div class="panel-content">{{ orderInfo.photographer }}</div>
         <div class="panel-content">{{ orderInfo.streamState | toStreamState }}</div>
         <div class="panel-content">{{ orderInfo.retoucherName }}</div>
+        <div v-if="orderInfo.reviewerName" class="panel-content">{{ orderInfo.reviewerName }}</div>
       </div>
     </template>
     <!--修图要求 -->

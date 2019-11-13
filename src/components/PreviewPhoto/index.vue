@@ -16,6 +16,7 @@
           @load="loadingPhoto"
           @click="zoom"
         >
+        <div id="_magnifier_layer"></div>
       </div>
       <button
         v-if="photoArray.length !== 1"
@@ -43,6 +44,7 @@
               @mousemove="handMove"
               @mouseover="handOver"
             >
+            <div class="_magnifier_zoom"></div>
           </div>
         </div>
         <div class="contant">
@@ -150,19 +152,24 @@ export default {
      */
     document.onkeydown = e => {
       const key = window.event.keyCode
+      console.log(key)
       switch (key) {
+        case 49:
+        case 50:
+        case 51:
+        case 52:
+        case 53:
+          this.scaleNum = (key - 49) * 25
+          this.judgeHasZoom(e)
+          break
         case 187:
         case 69:
-          if (this.scaleNum < 100) {
-            this.scaleNum++
-          }
-          this.judgeHasZoom()
+          if (this.scaleNum < 100) { this.scaleNum++ }
+          this.judgeHasZoom(e)
           break
         case 189:
         case 81:
-          if (this.scaleNum > 0) {
-            this.scaleNum--
-          }
+          if (this.scaleNum > 0) { this.scaleNum-- }
           this.judgeHasZoom(e)
           break
         case 18:
@@ -171,15 +178,11 @@ export default {
           break
         case 65:
         case 37:
-          if (this.photoArray.length > 1) {
-            this.prePhoto()
-          }
+          if (this.photoArray.length > 1) { this.prePhoto() }
           break
         case 39:
         case 68:
-          if (this.photoArray.length > 1) {
-            this.nextPhoto()
-          }
+          if (this.photoArray.length > 1) { this.nextPhoto() }
           break
         case 16:
           this.isShow = !this.isShow
@@ -224,7 +227,7 @@ export default {
           element: '.contant',
           popover: {
             title: '放大镜放大效果，默认200%',
-            description: '可以通过键盘 +(E)，-(Q) 控制放大倍数',
+            description: '可以通过键盘 +(E)，-(Q) 控制放大倍数, 数字键1，2，3，4，5对应放大倍数',
             position: 'left'
           }
         },
@@ -286,71 +289,54 @@ export default {
      * @description 鼠标移出
      */
     handOut (e) {
-      this.imgLayer.remove()
-      this.mouseMask.remove()
+      this.imgLayer.removeAttribute('style')
+      this.mouseMask.removeAttribute('style')
     },
     /**
      * @description 鼠标移进
      */
     handOver (e) {
-      if (!document.getElementById('_magnifier_layer')) {
-        // 获取大图尺寸
-        this.imgObj = this.$el.getElementsByTagName('img')[1]
-        this.imgBigObj = this.$el.getElementsByTagName('img')[0]
-        this.imgRect = this.imgObj.getBoundingClientRect()
-        this.imgBigRect = this.imgBigObj.getBoundingClientRect()
-        // 马克图宽度计算系数
-        this.propConfigs.maskWidth =
-          (this.imgRect.width / (this.scaleNum * 4 + 100)) * 100
-        this.propConfigs.maskHeight =
-          this.propConfigs.maskWidth *
-          (this.imgRect.height / this.imgRect.width)
-        // 背景图放大系数
-        this.propConfigs.scale =
-          (this.imgRect.width / this.propConfigs.maskWidth) * 100
-        // 获取大图信息
-        this.bigImg = new Image()
-        this.bigImg.src = this.showPhoto.src
-        this.bigImg.height =
-          (this.bigImg.height * this.propConfigs.scale) / 100
-        this.bigImg.width = (this.bigImg.width * this.propConfigs.scale) / 100
-        // 创建鼠标选择区域
-        this.mouseMask = document.createElement('div')
-        this.mouseMask.className = '_magnifier_zoom'
-        this.mouseMask.style.background = this.propConfigs.maskColor
-        this.mouseMask.style.height = this.propConfigs.maskHeight + 'px'
-        this.mouseMask.style.width = this.propConfigs.maskWidth + 'px'
-        this.mouseMask.style.opacity = this.propConfigs.maskOpacity
-        this.imgObj.parentNode.appendChild(this.mouseMask)
-        // 创建预览框
-        const imgLayer = document.createElement('div')
-        const orginImg = document.getElementById('orginImg')
-        this.propConfigs.width = orginImg.width
-        this.propConfigs.height = orginImg.height
-        this.imgLayer = imgLayer
-        const _layerHeight = this.propConfigs.height
-        const _layerWidth = this.propConfigs.width
-        imgLayer.id = '_magnifier_layer'
-        imgLayer.style.width = _layerWidth + 'px'
-        imgLayer.style.height = _layerHeight + 'px'
-        imgLayer.style.backgroundImage = `url('${this.showPhoto.src}')`
-        imgLayer.style.backgroundRepeat = 'no-repeat'
-        imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
-        document.getElementsByClassName('orginPhoto')[0].appendChild(imgLayer)
-      } else {
-        this.propConfigs.maskWidth =
-          (this.imgRect.width / (this.scaleNum * 4 + 100)) * 100
-        this.propConfigs.maskHeight =
-          this.propConfigs.maskWidth *
-          (this.imgRect.height / this.imgRect.width)
-        this.propConfigs.scale =
-          (this.imgRect.width / this.propConfigs.maskWidth) * 100
-        this.mouseMask.style.height = this.propConfigs.maskHeight + 'px'
-        this.mouseMask.style.width = this.propConfigs.maskWidth + 'px'
-        this.imgLayer.style.backgroundImage = `url('${this.showPhoto.src}')`
-        this.imgLayer.style.backgroundRepeat = 'no-repeat'
-        this.imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
-      }
+      // 获取大图尺寸
+      this.imgObj = this.$el.getElementsByTagName('img')[1]
+      this.imgBigObj = this.$el.getElementsByTagName('img')[0]
+      this.imgRect = this.imgObj.getBoundingClientRect()
+      this.imgBigRect = this.imgBigObj.getBoundingClientRect()
+      // 马克图宽度计算系数
+      this.propConfigs.maskWidth =
+        (this.imgRect.width / (this.scaleNum * 4 + 100)) * 100
+      this.propConfigs.maskHeight =
+        this.propConfigs.maskWidth *
+        (this.imgRect.height / this.imgRect.width)
+      // 背景图放大系数
+      this.propConfigs.scale =
+        (this.imgRect.width / this.propConfigs.maskWidth) * 100
+      // 获取大图信息
+      this.bigImg = new Image()
+      this.bigImg.src = this.showPhoto.src
+      this.bigImg.height =
+        (this.bigImg.height * this.propConfigs.scale) / 100
+      this.bigImg.width = (this.bigImg.width * this.propConfigs.scale) / 100
+      // 创建鼠标选择区域
+      this.mouseMask = document.querySelector('._magnifier_zoom')
+      this.mouseMask.style.background = this.propConfigs.maskColor
+      this.mouseMask.style.height = this.propConfigs.maskHeight + 'px'
+      this.mouseMask.style.width = this.propConfigs.maskWidth + 'px'
+      this.mouseMask.style.opacity = this.propConfigs.maskOpacity
+      this.imgObj.parentNode.appendChild(this.mouseMask)
+      // 创建预览框
+      const imgLayer = document.getElementById('_magnifier_layer')
+      const orginImg = document.getElementById('orginImg')
+      this.propConfigs.width = orginImg.width
+      this.propConfigs.height = orginImg.height
+      this.imgLayer = imgLayer
+      const _layerHeight = this.propConfigs.height
+      const _layerWidth = this.propConfigs.width
+      imgLayer.style.width = _layerWidth + 'px'
+      imgLayer.style.height = _layerHeight + 'px'
+      imgLayer.style.backgroundImage = `url('${this.showPhoto.src}')`
+      imgLayer.style.backgroundRepeat = 'no-repeat'
+      imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
+      document.getElementsByClassName('orginPhoto')[0].appendChild(imgLayer)
     },
     /**
      * @description 滑块滑动改变值
@@ -426,13 +412,19 @@ export default {
      * @description 判断是否处于放大中
      */
     judgeHasZoom (e) {
-      const hasZoom = document.getElementById('_magnifier_layer')
-      hasZoom && this.handOver(e)
+      const isOverIn = Boolean(this.imgLayer.style.width)
+      if (isOverIn) { this.handOver(e) }
     }
   }
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   @import url('./index.less');
+</style>
+
+<style lang="less">
+#driver-highlighted-element-stage {
+  opacity: 0.3;
+}
 </style>
