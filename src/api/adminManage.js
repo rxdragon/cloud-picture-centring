@@ -178,6 +178,7 @@ export function getStreamInfo (params) {
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,
       retoucherName: data.retoucher && data.retoucher.name || '-',
+      reviewerName: data.reviewer && data.reviewer.name || '',
       photographer: data.order.tags && data.order.tags.values.photographer || '-'
     }
     createData.photos = data.photos

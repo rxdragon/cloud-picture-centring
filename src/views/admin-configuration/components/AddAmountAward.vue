@@ -6,7 +6,7 @@
     <div class="module-panel">
       <div class="award-title search-item">
         <span>冲量标题</span>
-        <el-input v-model.trim="awardTitle" placeholder="请输入冲量标题" />
+        <el-input v-model.trim="awardTitle" maxlength="16" placeholder="请输入冲量标题" />
       </div>
       <div class="award-title search-item">
         <span>外包机构</span>
