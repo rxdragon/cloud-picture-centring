@@ -16,7 +16,7 @@
           @load="loadingPhoto"
           @click="zoom"
         >
-        <div id="_magnifier_layer"></div>
+        <div id="_magnifier_layer" />
       </div>
       <button
         v-if="photoArray.length !== 1"
@@ -44,7 +44,7 @@
               @mousemove="handMove"
               @mouseover="handOver"
             >
-            <div class="_magnifier_zoom"></div>
+            <div class="_magnifier_zoom" />
           </div>
         </div>
         <div class="contant">

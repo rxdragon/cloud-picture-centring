@@ -158,6 +158,7 @@ export default {
 
       a {
         color: @blue;
+        text-decoration: underline;
       }
     }
   }
