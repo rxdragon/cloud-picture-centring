@@ -10,7 +10,7 @@ export function getSelfQuota () {
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
-    const todayIncome = Number(data.todayIncome.retouch) + Number(data.todayIncome.impulse)
+    const todayIncome = Number(data.todayIncome.retouch) + Number(data.todayIncome.impulse) + Number(data.todayIncome.reward)
     data.todayIncome = todayIncome.toFixed(2)
     data.todayExp = Number(data.todayExp).toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
@@ -31,16 +31,27 @@ export function getSelfBuffInfo () {
     method: 'GET'
   }).then(msg => {
     const data = keyToHump(msg)
+    data.impulseInfo = []
     data.impulse = data.impulse.state === 'using' ? data.impulse : {}
     if (Object.keys(data.impulse).length) {
-      data.impulseStatus = true
-      data.impulseInfo = data.impulse.impulse_setting_item.map(item => {
+      const creatImpulse = data.impulse.impulse_setting_item.map(item => {
         return {
           reachExp: item.reach_exp,
           reward: item.reward
         }
       })
+      data.impulseInfo = [...data.impulseInfo, ...creatImpulse]
     }
+    if (data.extraImpulse && Object.keys(data.extraImpulse).length) {
+      const createExtraImpulseInfo = data.extraImpulse.items.map(item => {
+        return {
+          reachExp: item.exp,
+          reward: item.reward
+        }
+      })
+      data.impulseInfo = [...data.impulseInfo, ...createExtraImpulseInfo]
+    }
+    data.impulseStatus = Boolean(data.impulseInfo.length)
     return data
   })
 }
