@@ -201,8 +201,8 @@ export default {
       const reqData = {
         title: this.awardTitle,
         settingItemIds: this.checkList,
-        startAt: joinTimeSpan(this.timeSpan[0]),
-        endAt: joinTimeSpan(this.timeSpan[1], 1)
+        startAt: this.timeSpan[0],
+        endAt: this.timeSpan[1]
       }
       if (this.toData.length) {
         reqData.staffIds = []
