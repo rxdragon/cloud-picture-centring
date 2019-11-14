@@ -170,18 +170,18 @@ export default {
             reqData.rectify = 'same'
             break
           case SearchType.RectifyDifferent:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             break
           case SearchType.RectifyPlant:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             reqData.rectifyGrass = 'plant'
             break
           case SearchType.RectifyPull:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             reqData.rectifyGrass = 'pull'
             break
           case SearchType.RectifyNone:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             reqData.rectifyGrass = 'none'
             break
           default:
