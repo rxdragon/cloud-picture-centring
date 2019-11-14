@@ -152,7 +152,6 @@ export default {
      */
     document.onkeydown = e => {
       const key = window.event.keyCode
-      console.log(key)
       switch (key) {
         case 49:
         case 50:

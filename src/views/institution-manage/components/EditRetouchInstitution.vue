@@ -132,8 +132,8 @@ export default {
               this.institutionConfig.enableProductIds.push(productItem.id)
             })
           })
-          delete this.institutionConfig.toData
-          const reqData = this.institutionConfig
+          const reqData = JSON.parse(JSON.stringify(this.institutionConfig))
+          delete reqData.toData
           this.$store.dispatch('setting/showLoading', this.routeName)
           if (this.retouchInstitutionId) {
             Institution.editRetouchOrg(reqData)
@@ -142,12 +142,18 @@ export default {
                 this.$store.dispatch('setting/hiddenLoading', this.routeName)
                 this.toBack()
               })
+              .catch(() => {
+                this.$store.dispatch('setting/hiddenLoading', this.routeName)
+              })
           } else {
             Institution.addRetouchOrg(reqData)
               .then(() => {
                 this.$newMessage.success('添加机构成功')
                 this.$store.dispatch('setting/hiddenLoading', this.routeName)
                 this.toBack()
+              })
+              .catch(() => {
+                this.$store.dispatch('setting/hiddenLoading', this.routeName)
               })
           }
         })
@@ -178,6 +184,9 @@ export default {
         callback()
       }
     },
+    /**
+     * @description 验证数据
+     */
     validateToData (rule, value, callback) {
       if (!this.institutionConfig.toData.length) {
         this.$newMessage.warning('请选择可接产品')

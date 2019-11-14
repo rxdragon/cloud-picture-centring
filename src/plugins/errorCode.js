@@ -37,6 +37,12 @@ const OrderException = [
   [0xA11009001, '订单存在已处理流水']
 ]
 
+const OrgException = [
+  [0xA11014001, '已存在机构账号'],
+  [0xA11014002, '已存在机构名'],
+  [0xA11014003, '已存在机构代号']
+]
+
 const ProductException = [
   [0xA11002001, '产品状态异常'],
   [0xA11002002, '海草收益数目不对'],
@@ -85,6 +91,7 @@ export const errText = [
   ...HourGlassException,
   ...ImpulseException,
   ...OrderException,
+  ...OrgException,
   ...ProductException,
   ...QueueException,
   ...StaffException,
