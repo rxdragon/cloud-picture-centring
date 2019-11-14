@@ -1,8 +1,8 @@
 <template>
   <div class="domain-switch-box">
-    <div class="radio-group">
-      <div class="radio-button" data-label="1" :class="{'is-active': domainValue === 1}" @click="changeYun">又拍云</div>
-      <div class="radio-button" data-label="2" :class="{'is-active': domainValue === 2}" @click="changeYun">阿里云</div>
+    <div class="radio-group" @click="changeYun">
+      <div class="radio-button" :class="{'is-active': domainValue === 1}">又拍云</div>
+      <div class="radio-button" :class="{'is-active': domainValue === 2}">阿里云</div>
       <div class="back-button" :class="{'al-active': domainValue === 2}" />
     </div>
   </div>
@@ -28,10 +28,9 @@ export default {
      * @description 监听域名变换
      */
     changeYun (e) {
-      const domainLabel = e.target.dataset.label
-      if (this.domainValue === Number(domainLabel)) return
-      this.domainValue = Number(domainLabel)
-      this.$store.dispatch('setting/changeDomain', this.domainValue)
+      const value = this.domainValue === 1 ? 2 : 1
+      this.domainValue = value
+      this.$store.dispatch('setting/changeDomain', value)
     }
   }
 }

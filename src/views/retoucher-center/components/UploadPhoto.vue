@@ -97,6 +97,7 @@ export default {
   },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       cachePhoto: [], // 缓存照片
       uploadPhoto: [], // 正在上传照片
       upyunConfig: {} // 又拍云配置
@@ -115,9 +116,6 @@ export default {
       return !finishNumSame && !updatePaddingSame
     }
   },
-  created () {
-    this.getUpyunSign()
-  },
   watch: {
     realAid: {
       handler () {
@@ -125,6 +123,9 @@ export default {
       },
       immediate: true
     }
+  },
+  created () {
+    this.getUpyunSign()
   },
   methods: {
     /**
@@ -296,7 +297,7 @@ export default {
       top: -14px;
       display: none;
       opacity: 0;
-      transition: all 0.3s;
+      transition: all 10s;
 
       .el-icon-error {
         font-size: 28px;
@@ -366,6 +367,9 @@ export default {
         flex-direction: column;
         color: #606266;
         transition: all 0.3;
+        width: 253px;
+        height: 253px;
+        justify-content: center;
         -webkit-user-select: none;
 
         .el-icon-plus {

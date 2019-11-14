@@ -128,6 +128,7 @@ export default {
       }
       this.editInstitutionId = ''
       this.dialogTableVisible = false
+      this.$refs['formEdit'].resetFields()
     },
     /**
      * @description 查看产品

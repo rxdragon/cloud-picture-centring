@@ -51,8 +51,8 @@
         <span>修图上传</span>
       </div>
       <upload-photo
-        class="photo-panel"
         ref="uploadPhoto"
+        class="photo-panel"
         :photos="photos"
         :finish-photo="finishPhoto"
         :real-aid="realAid"
