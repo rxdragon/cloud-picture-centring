@@ -70,7 +70,7 @@ export default {
   width: calc(~'100vw - @{sideBarWidth}');
 
   ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
 
   ::-webkit-scrollbar-thumb {

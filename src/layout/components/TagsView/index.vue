@@ -253,6 +253,10 @@ export default {
   overflow: hidden;
   border-top-left-radius: 20px;
 
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+
   .tags-view-wrapper {
     background: #e4e7ed;
 
