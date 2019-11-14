@@ -89,3 +89,19 @@
 .list-complete-leave-active {
   position: relative;
 }
+
+// 逐渐显示
+.list-photo-item {
+  display: inline-block;
+  transition: all 0.5s;
+  vertical-align: bottom;
+}
+
+.list-photo-enter, .list-photo-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.list-photo-leave-active {
+  position: absolute !important;
+}

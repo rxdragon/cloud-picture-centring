@@ -125,6 +125,9 @@ export default {
       case SearchType.RectifyNone:
         this.correcType = SearchType.RectifyNone
         break
+      case SearchType.RectifyDifferent:
+        this.correcType = SearchType.RectifyDifferent
+        break
       default:
         break
     }
@@ -157,7 +160,7 @@ export default {
       this.pager.page = page || this.pager.page
       const reqData = {
         range: 'group',
-        startTime: joinTimeSpan(this.searchTime[0]),
+        startAt: joinTimeSpan(this.searchTime[0]),
         endAt: joinTimeSpan(this.searchTime[1]),
         pageSize: this.pager.pageSize,
         page: this.pager.page
@@ -170,18 +173,18 @@ export default {
             reqData.rectify = 'same'
             break
           case SearchType.RectifyDifferent:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             break
           case SearchType.RectifyPlant:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             reqData.rectifyGrass = 'plant'
             break
           case SearchType.RectifyPull:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             reqData.rectifyGrass = 'pull'
             break
           case SearchType.RectifyNone:
-            reqData.rectify = 'diffrent'
+            reqData.rectify = 'different'
             reqData.rectifyGrass = 'none'
             break
           default:

@@ -234,6 +234,9 @@ export default {
               this.hiddenDialog()
               this.getPhotographerOrgList()
             })
+            .catch(() => {
+              this.$store.dispatch('setting/hiddenLoading', this.routeName)
+            })
         })
         .catch(() => {})
     },
@@ -259,6 +262,9 @@ export default {
               this.$newMessage.success('编辑成功')
               this.hiddenDialog()
               this.getPhotographerOrgList()
+            })
+            .catch(() => {
+              this.$store.dispatch('setting/hiddenLoading', this.routeName)
             })
         })
         .catch(() => {})
