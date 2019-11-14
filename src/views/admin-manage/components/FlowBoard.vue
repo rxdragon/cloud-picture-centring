@@ -373,10 +373,38 @@ export default {
 }
 
 .flowInfo-panel {
+  max-height: 500px;
+  overflow-y: overlay;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-button {
+    background: #fff;
+    display: none;
+  }
+
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+
   .panel-title {
     background-color: #fafafa;
     color: #303133;
     font-weight: 500;
+    position: sticky;
+    top: 0;
 
     & > span {
       padding: 17px 20px;
