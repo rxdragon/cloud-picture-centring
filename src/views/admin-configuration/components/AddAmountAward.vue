@@ -73,8 +73,6 @@ import StaffPanel from '@/components/StaffPanel'
 import DatePicker from '@/components/DatePicker'
 import InstitutionSelect from '@SelectBox/InstitutionSelect'
 import * as Util from '@/utils/validate'
-
-import { joinTimeSpan } from '@/utils/timespan.js'
 import * as OperationManage from '@/api/operationManage.js'
 export default {
   name: 'AddAmountAward',
