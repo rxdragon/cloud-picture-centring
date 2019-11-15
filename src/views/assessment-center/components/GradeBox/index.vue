@@ -194,7 +194,7 @@ export default {
       correctRemark: '', // 纠偏评价
       flakinessEvaluate: '', // 成片评价
       issueLabel: [], // 问题标签
-      issueRemark: '' // 问题备注
+      issueRemark: '' // 成片备注
     }
   },
   computed: {
@@ -251,6 +251,9 @@ export default {
       }
       if (this.correctRemark) { req.auditNote = this.correctRemark }
       if (this.issueRemark) { req.evaluationNote = this.issueRemark }
+      if (!this.photoInfoData.isReturn && !this.photoInfoData.isGreen) {
+        req.evaluationNote = this.correctRemark || this.issueRemark
+      }
       if (this.issueLabel.length && this.flakinessEvaluate === 'pull') { req.filmTag = this.issueLabel }
       return req
     },

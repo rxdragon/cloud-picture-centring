@@ -50,7 +50,7 @@
         <template slot-scope="scope">
           <div class="operation-box">
             <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
-            <el-button v-if="!scope.row.staticsUrgent" type="danger" size="mini" @click="urgentStream(scope.row.id, 'other')">加急</el-button>
+            <el-button v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing'" type="danger" size="mini" @click="urgentStream(scope.row.id, 'other')">加急</el-button>
           </div>
         </template>
       </el-table-column>
@@ -82,11 +82,7 @@ export default {
         const data = await AdminManage.urgentStream(req)
         if (data) {
           this.$newMessage.success('操作成功!')
-          if (type === 'urgent') {
-            this.getStreamList(1)
-          } else {
-            this.getList(1)
-          }
+          this.$emit('urgentSuccess', type)
         }
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
