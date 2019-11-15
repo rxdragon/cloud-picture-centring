@@ -22,61 +22,12 @@
         </div>
         <el-button type="primary" @click="getStreamList(1)">查询</el-button>
       </div>
-      <el-table v-show="searchTableData.length" class="search-table-box" :data="searchTableData" style="width: 100%;">
-        <el-table-column prop="index" label="位置" min-width="100px">
-          <template slot-scope="scope">
-            <div class="index-box">
-              <span>{{ scope.row.queue_index || '-' }}</span>
-              <div class="icon-box">
-                <el-tag v-if="scope.row.staticsUrgent" type="danger" size="mini">急</el-tag>
-                <el-tag v-if="scope.row.isReturn" type="danger" size="mini">审核退回</el-tag>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="修图标准">
-          <template slot-scope="scope">
-            {{ scope.row.retouchType | toRetouchClass }}
-          </template>
-        </el-table-column>
-        <el-table-column label="订单信息" min-width="240">
-          <template slot-scope="scope">
-            <div v-if="scope.row.order" class="order-info">
-              <span>
-                <span class="info-title">订单号：</span>{{ scope.row.order.external_num }}
-              </span>
-              <span>
-                <span class="info-title">流水号：</span>{{ scope.row.stream_num }}
-              </span>
-              <span>
-                <span class="info-title">拍摄产品：</span>{{ scope.row.product.name }}
-              </span>
-              <span>
-                <span class="info-title">照片数量：</span>{{ scope.row.photos.length }}
-              </span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="修图师" min-width="140">
-          <template slot-scope="scope">
-            <div class="staff-info">
-              <span>修图师：{{ scope.row.retoucherName }}</span>
-              <span>组长 ：{{ scope.row.retouchLeader }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="reviewerName" label="审核人" />
-        <el-table-column prop="waitTime" label="等待时间" />
-        <el-table-column prop="streamState" label="当前状态" />
-        <el-table-column label="操作" width="160">
-          <template slot-scope="scope">
-            <div class="operation-box">
-              <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
-              <el-button v-if="!scope.row.staticsUrgent" type="danger" size="mini" @click="urgentStream(scope.row.id, 'urgent')">加急</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+      <work-board-table
+        v-show="searchTableData.length"
+        key="urgentTable"
+        show-checker
+        :table-data="searchTableData"
+      />
       <div class="page-box">
         <el-pagination
           :hide-on-single-page="true"
@@ -91,11 +42,13 @@
     </div>
     <!-- 更换标签 -->
     <el-tabs v-model="activeName" class="tabs-box">
-      <el-tab-pane :label="`修图队列（${retouchCount}）`" name="retouch" />
-      <el-tab-pane :label="`审核队列（${reviewCount}）`" name="check" />
+      <el-tab-pane :label="`修图队列（${retouchCount}）`" name="wait_retouch" />
+      <el-tab-pane :label="`修图中（${retouchCount}）`" name="retouching" />
+      <el-tab-pane :label="`审核队列（${reviewCount}）`" name="wait_review" />
+      <el-tab-pane :label="`审核中（${reviewCount}）`" name="reviewing" />
     </el-tabs>
     <!-- 列表数据 -->
-    <div class="table-box" :class="{'no-border': activeName === 'retouch'}">
+    <div class="table-box" :class="{'no-border': activeName === 'wait_retouch'}">
       <!-- 搜索框 -->
       <div class="search-button search-box">
         <!-- 修图标准 -->
@@ -103,78 +56,15 @@
           <span>修图标准</span>
           <Retouch-kind-select v-model="retouchType" all-optision />
         </div>
-        <!-- 状态 -->
-        <div class="retouch-state search-item">
-          <span>{{ activeName === 'retouch' ? '修图状态' : '审核状态' }}</span>
-          <el-select v-model="retouchState" placeholder="请选择">
-            <el-option label="全部" :value="0" />
-            <el-option v-show="activeName === 'retouch'" label="待修图" value="wait_retouch" />
-            <el-option v-show="activeName === 'retouch'" label="修图中" value="retouching" />
-            <el-option v-show="activeName !== 'retouch'" label="待云端审核" value="wait_review" />
-            <el-option v-show="activeName !== 'retouch'" label="云端审核中" value="reviewing" />
-            <el-option v-show="activeName !== 'retouch'" label="待外包审核" value="retoucher_org_wait_review" />
-            <el-option v-show="activeName !== 'retouch'" label="外包审核中" value="retoucher_org_reviewing" />
-          </el-select>
-        </div>
         <div class="button-box">
           <el-button type="primary" @click="getList(1)">查询</el-button>
         </div>
       </div>
-      <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="index" label="位置" min-width="100px">
-          <template slot-scope="scope">
-            <div class="index-box">
-              <span>{{ scope.row.queue_index || '-' }}</span>
-              <div class="icon-box">
-                <el-tag v-if="scope.row.staticsUrgent" type="danger" size="mini">急</el-tag>
-                <el-tag v-if="scope.row.isReturn" type="danger" size="mini">审核退回</el-tag>
-              </div>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="修图标准">
-          <template slot-scope="scope">
-            {{ scope.row.retouchType | toRetouchClass }}
-          </template>
-        </el-table-column>
-        <el-table-column label="订单信息" min-width="240">
-          <template slot-scope="scope">
-            <div v-if="scope.row.order" class="order-info">
-              <span>
-                <span class="info-title">订单号：</span>{{ scope.row.order.external_num }}
-              </span>
-              <span>
-                <span class="info-title">流水号：</span>{{ scope.row.stream_num }}
-              </span>
-              <span>
-                <span class="info-title">拍摄产品：</span>{{ scope.row.product.name }}
-              </span>
-              <span>
-                <span class="info-title">照片数量：</span>{{ scope.row.photos.length }}
-              </span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="index" label="修图师" min-width="140">
-          <template slot-scope="scope">
-            <div class="staff-info">
-              <span>修图师：{{ scope.row.retoucherName }}</span>
-              <span>组长：{{ scope.row.retouchLeader }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="activeName === 'check'" prop="reviewerName" label="审核人" />
-        <el-table-column prop="waitTime" label="等待时间" />
-        <el-table-column prop="streamState" label="当前状态" />
-        <el-table-column label="操作" width="160">
-          <template slot-scope="scope">
-            <div class="operation-box">
-              <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
-              <el-button v-if="!scope.row.staticsUrgent" type="danger" size="mini" @click="urgentStream(scope.row.id, 'other')">加急</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+      <work-board-table
+        key="boardTable"
+        :show-checker="searchType === 'check'"
+        :table-data="tableData"
+      />
       <!-- 页码 -->
       <div class="page-box">
         <el-pagination
@@ -194,13 +84,13 @@
 
 <script>
 import FlowBoard from './components/FlowBoard'
+import WorkBoardTable from './components/WorkBoardTable'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
-
 import * as AdminManage from '@/api/adminManage'
 
 export default {
   name: 'WorkBoard',
-  components: { FlowBoard, RetouchKindSelect },
+  components: { FlowBoard, RetouchKindSelect, WorkBoardTable },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -209,24 +99,30 @@ export default {
         id: '',
         caid: ''
       },
-      urgentPager: {
-        page: 1,
-        pageSize: 10,
-        total: 10
-      },
-      showFlowBoard: false,
-      activeName: 'retouch', // 展示列表类型 retouch 修图队列 check 审核队列
+      showFlowBoard: false, // 是否显示流量看板
+      activeName: 'wait_retouch', // wait_retouch 修图队列 retouching 修图中 wait_review 审核队列 reviewing 审核中
       retouchType: '', // 修图标准
       retouchState: 0, // 状态
       reviewCount: '', // 审核队列数量
       retouchCount: '', // 修图队列数量
       tableData: [], // 列表数据
       searchTableData: [], // 加急搜索数据
+      urgentPager: {
+        page: 1,
+        pageSize: 10,
+        total: 10
+      },
       pager: {
         page: 1,
         pageSize: 10,
         total: 10
       }
+    }
+  },
+  computed: {
+    searchType () {
+      const retouch = ['wait_retouch', 'retouching']
+      return retouch.includes(this.activeName) ? 'retouch' : 'check'
     }
   },
   watch: {
@@ -253,15 +149,6 @@ export default {
       this.getStreamList()
     },
     /**
-     * @description 跳转
-     */
-    linkto (workBoardStreamNum) {
-      this.$router.push({
-        path: '/order-detail',
-        query: { workBoardStreamNum }
-      })
-    },
-    /**
      * @description 展示流量看板
      */
     showFlow () {
@@ -273,17 +160,17 @@ export default {
     getParams () {
       const req = {
         page: this.pager.page,
-        pageSize: this.pager.pageSize
+        pageSize: this.pager.pageSize,
+        streamState: this.activeName
       }
       if (this.retouchType) { req.retoucherStandard = this.retouchType }
-      if (this.retouchState) { req.streamState = this.retouchState }
       return req
     },
     /**
      * @description 获取列表数据
      */
     getList (page) {
-      if (this.activeName === 'retouch') {
+      if (this.searchType === 'retouch') {
         this.getRetouchStreamList(page)
       } else {
         this.getReviewStreamList(page)
@@ -322,27 +209,6 @@ export default {
         this.reviewCount = data.reviewCount
         this.retouchCount = data.retouchCount
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
-      }
-    },
-    /**
-     * @description 加急流水
-     */
-    async urgentStream (streamId, type) {
-      try {
-        this.$store.dispatch('setting/showLoading', this.routeName)
-        const req = { streamId }
-        const data = await AdminManage.urgentStream(req)
-        if (data) {
-          this.$newMessage.success('操作成功!')
-          if (type === 'urgent') {
-            this.getStreamList(1)
-          } else {
-            this.getList(1)
-          }
-        }
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
@@ -396,52 +262,12 @@ export default {
     margin-top: 24px;
   }
 
-  .search-table-box,
   .table-box {
     margin-top: 0;
 
     .search-box {
       margin-top: 0;
       margin-bottom: 24px;
-    }
-
-    .index-box {
-      display: flex;
-      align-items: center;
-
-      & > span {
-        display: inline-block;
-        height: 20px;
-        margin-right: 10px;
-      }
-
-      .icon-box {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: space-around;
-        height: 45px;
-      }
-    }
-
-    .order-info {
-      display: grid;
-      text-align: left;
-
-      .info-title {
-        display: inline-block;
-        width: 70px;
-        text-align-last: justify;
-      }
-    }
-
-    .operation-box {
-      text-align: left;
-    }
-
-    .staff-info {
-      display: grid;
-      text-align: left;
     }
   }
 }
