@@ -4,7 +4,14 @@
     <div v-for="(listItem, listIndex) in listdata" :key="listIndex" class="list-box">
       <div class="title">{{ listItem.label }}</div>
       <div class="content">
-        <el-link v-if="listItem.componentSwitch" type="primary" @click="componentChange(listItem)">{{ listItem.value }}</el-link>
+        <el-link
+          v-if="listItem.componentSwitch"
+          type="primary"
+          class="el-router-link"
+          @click="componentChange(listItem)"
+        >
+          {{ listItem.value }}
+        </el-link>
         <template v-else-if="!listItem.link">{{ listItem.value }}</template>
         <router-link v-else :to="listItem.link">{{ listItem.value }}</router-link>
       </div>
@@ -89,6 +96,10 @@ export default {
     text-align: left;
     height: 58px;
     background-color: #fff;
+
+    .el-router-link {
+      text-decoration: underline;
+    }
 
     a {
       color: @blue;
