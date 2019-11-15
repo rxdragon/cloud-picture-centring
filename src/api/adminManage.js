@@ -102,12 +102,24 @@ export function getRetouchStreamList (params) {
 }
 
 /**
+ * @description 获取修图队列数量
+ */
+export function queueStreamListCount () {
+  return axios({
+    url: '/project_cloud/operator/queueStreamListCount',
+    method: 'GET'
+  }).then(msg => {
+    return msg
+  })
+}
+
+/**
  * @description 获取审核流水列表
  * @param {*} params
  */
-export function getReviewStreamList (params) {
+export function getQueueStreamList (params) {
   return axios({
-    url: '/project_cloud/operator/getReviewStreamList',
+    url: '/project_cloud/operator/getQueueStreamList',
     method: 'GET',
     params
   }).then(msg => {

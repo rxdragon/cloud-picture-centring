@@ -10,15 +10,30 @@
       <div class="search-box">
         <div class="search-item">
           <span>顾客姓名</span>
-          <el-input v-model="urgentSearch.name" :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.id)" placeholder="请输入顾客姓名" />
+          <el-input
+            v-model="urgentSearch.name"
+            clearable
+            :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.id)"
+            placeholder="请输入顾客姓名"
+          />
         </div>
         <div class="search-item">
           <span>订单号</span>
-          <el-input v-model="urgentSearch.id" :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.name)" placeholder="请输入订单号" />
+          <el-input
+            v-model="urgentSearch.id"
+            clearable
+            :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.name)"
+            placeholder="请输入订单号"
+          />
         </div>
         <div class="search-item">
           <span>流水号</span>
-          <el-input v-model="urgentSearch.caid" :disabled="Boolean(urgentSearch.id) || Boolean(urgentSearch.name)" placeholder="请输入流水号" />
+          <el-input
+            v-model="urgentSearch.caid"
+            clearable
+            :disabled="Boolean(urgentSearch.id) || Boolean(urgentSearch.name)"
+            placeholder="请输入流水号"
+          />
         </div>
         <el-button type="primary" @click="getStreamList(1)">查询</el-button>
       </div>
@@ -43,13 +58,13 @@
     </div>
     <!-- 更换标签 -->
     <el-tabs v-model="activeName" class="tabs-box">
-      <el-tab-pane :label="`修图队列（${retouchCount}）`" name="wait_retouch" />
+      <el-tab-pane :label="`修图队列（${retouchQueueCount}）`" name="retouch" />
       <el-tab-pane :label="`修图中（${retouchCount}）`" name="retouching" />
-      <el-tab-pane :label="`审核队列（${reviewCount}）`" name="wait_review" />
+      <el-tab-pane :label="`审核队列（${reviewQueueCount}）`" name="review" />
       <el-tab-pane :label="`审核中（${reviewCount}）`" name="reviewing" />
     </el-tabs>
     <!-- 列表数据 -->
-    <div class="table-box" :class="{'no-border': activeName === 'wait_retouch'}">
+    <div class="table-box" :class="{'no-border': activeName === 'retouch'}">
       <!-- 搜索框 -->
       <div class="search-button search-box">
         <!-- 修图标准 -->
@@ -102,11 +117,13 @@ export default {
         caid: ''
       },
       showFlowBoard: false, // 是否显示流量看板
-      activeName: 'wait_retouch', // wait_retouch 修图队列 retouching 修图中 wait_review 审核队列 reviewing 审核中
+      activeName: 'retouch', // retouch 修图队列 retouching 修图中 review 审核队列 reviewing 审核中
       retouchType: '', // 修图标准
       retouchState: 0, // 状态
-      reviewCount: '', // 审核队列数量
-      retouchCount: '', // 修图队列数量
+      reviewCount: 0, // 审核中数量
+      retouchCount: 0, // 修图中数量
+      retouchQueueCount: 0, // 修图队列数量
+      reviewQueueCount: 0, // 审核队列数量
       tableData: [], // 列表数据
       searchTableData: [], // 加急搜索数据
       urgentPager: {
@@ -123,7 +140,7 @@ export default {
   },
   computed: {
     searchType () {
-      const retouch = ['wait_retouch', 'retouching']
+      const retouch = ['retouch', 'retouching']
       return retouch.includes(this.activeName) ? 'retouch' : 'check'
     }
   },
@@ -156,6 +173,9 @@ export default {
     showFlow () {
       this.showFlowBoard = true
     },
+    /**
+     * @description 监听到加急
+     */
     onUrgent (type) {
       if (type === 'urgent') {
         this.getStreamList(1)
@@ -179,14 +199,21 @@ export default {
      * @description 获取列表数据
      */
     getList (page) {
-      if (this.searchType === 'retouch') {
+      if (this.activeName === 'retouching' || this.activeName === 'reviewing') {
         this.getRetouchStreamList(page)
       } else {
-        this.getReviewStreamList(page)
+        this.getQueueStreamList(page)
       }
     },
+    async getQueueStreamListCount () {
+      const data = await AdminManage.queueStreamListCount()
+      this.retouchCount = data.retouchCount
+      this.retouchQueueCount = data.retouchQueueCount
+      this.reviewCount = data.reviewCount
+      this.reviewQueueCount = data.reviewQueueCount
+    },
     /**
-     * @description 获取修图流水列表
+     * @description 获取修图或审核中流水列表
      */
     async getRetouchStreamList (page) {
       try {
@@ -196,8 +223,7 @@ export default {
         const data = await AdminManage.getRetouchStreamList(req)
         this.tableData = data.list
         this.pager.total = data.total
-        this.reviewCount = data.reviewCount
-        this.retouchCount = data.retouchCount
+        await this.getQueueStreamListCount()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -205,18 +231,17 @@ export default {
       }
     },
     /**
-     * @description 获取审核流水列表
+     * @description 获取待修图或待审核的流水
      */
-    async getReviewStreamList (page) {
+    async getQueueStreamList (page) {
       try {
         if (page) { this.pager.page = page }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = this.getParams()
-        const data = await AdminManage.getReviewStreamList(req)
+        const data = await AdminManage.getQueueStreamList(req)
         this.tableData = data.list
         this.pager.total = data.total
-        this.reviewCount = data.reviewCount
-        this.retouchCount = data.retouchCount
+        await this.getQueueStreamListCount()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
