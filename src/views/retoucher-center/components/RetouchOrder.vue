@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="photo-panel">
-        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
+        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box" :class="{ 'over-success': photoItem.isCover }">
           <photo-box
             downing
             preview
@@ -111,7 +111,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['returnStreamId']),
+    ...mapGetters(['returnStreamId', 'showOverTag']),
     // 是否开启沙漏
     isSandClockOpen () {
       if (!this.hourGlass) return this.hourGlass
@@ -215,6 +215,13 @@ export default {
      * @description 上传完成
      */
     uploadDown (finishPhoto) {
+      // 实验功能
+      if (this.showOverTag) {
+        finishPhoto.forEach(photoItem => {
+          const findOrignPhoto = this.photos.find(item => item.id === photoItem.id)
+          findOrignPhoto && (findOrignPhoto.isCover = true)
+        })
+      }
       this.finishPhoto = JSON.parse(JSON.stringify(finishPhoto))
     },
     /**
@@ -330,6 +337,7 @@ export default {
         width: 253px;
         margin-bottom: 24px;
         margin-right: 24px;
+        transition: all 0.3s;
 
         .handle-box {
           display: flex;
@@ -347,6 +355,34 @@ export default {
 
         .error-photo {
           color: @red;
+        }
+      }
+
+      .over-success {
+        border: 1px solid @green;
+        font-family: @elementIcons !important;
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+          content: "\e6da";
+          display: block;
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          color: #fff;
+        }
+
+        &::before {
+          content: "";
+          display: block;
+          width: 40px;
+          height: 40px;
+          background-color: @green;
+          position: absolute;
+          transform: rotate(45deg);
+          right: -20px;
+          bottom: -20px;
         }
       }
 

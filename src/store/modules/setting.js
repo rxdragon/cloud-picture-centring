@@ -3,7 +3,8 @@ const state = {
   imgUploadDomain: process.env.VUE_APP_IMG_UPLOAD_DOMAIN,
   updateDomain: process.env.VUE_APP_UPDATE_DOMAIN,
   loadRoutes: [],
-  showCat: false
+  showCat: false,
+  showOverTag: false
 }
 
 const mutations = {
@@ -32,6 +33,9 @@ const mutations = {
       state.imgDomain = state.imgDomain.replace('.cdn.', '.cdn2.')
       state.imgUploadDomain = state.imgUploadDomain.replace('.cdn.', '.cdn2.')
     }
+  },
+  SET_OVER_TAG: (state, data) => {
+    state.showOverTag = data
   }
 }
 
@@ -46,6 +50,9 @@ const actions = {
   },
   setShowCat ({ commit }, data) {
     commit('SET_CAT', data)
+  },
+  setShowOverTag ({ commit }, data) {
+    commit('SET_OVER_TAG', data)
   },
   // 更换域名
   changeDomain ({ commit }, domainType) {
