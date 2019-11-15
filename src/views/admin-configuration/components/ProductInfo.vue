@@ -387,6 +387,10 @@ export default {
      * @description 审核拒绝
      */
     refuseProduct () {
+      if (!this.rejectValue) {
+        this.$newMessage.warning('请填写拒绝理由')
+        return
+      }
       const reqData = {
         productId: this.editId,
         refuseReason: this.rejectValue
