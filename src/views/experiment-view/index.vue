@@ -8,6 +8,9 @@
         <el-form-item label="是否显示宠物">
           <el-switch :value="showCat" @change="setCatShow" />
         </el-form-item>
+        <el-form-item label="是否对已上传的照片打标记">
+          <el-switch :value="showOverTag" @change="setShowOverTag" />
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -22,12 +25,16 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'showCat'
+      'showCat',
+      'showOverTag'
     ])
   },
   methods: {
     setCatShow (value) {
       this.$store.dispatch('setting/setShowCat', value)
+    },
+    setShowOverTag (value) {
+      this.$store.dispatch('setting/setShowOverTag', value)
     }
   }
 }

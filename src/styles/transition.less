@@ -1,4 +1,4 @@
-
+@import './variables.less';
 // global transition css
 /* 主页跳转动画 */
 .app-transform-leave-active,
@@ -104,4 +104,16 @@
 
 .list-photo-leave-active {
   position: absolute !important;
+}
+
+@keyframes blink {
+  0% {
+    border: 2px solid transparent;
+  }
+  50% {
+    border: 2px solid @red;
+  }
+  100% {
+    border: 2px solid transparent;
+  }
 }

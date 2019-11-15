@@ -1,7 +1,12 @@
 <template>
   <div class="upload-photo">
     <transition-group name="list-photo" class="list-photo" tag="div">
-      <div v-for="(photoItem, photoIndex) in cachePhoto" :key="'cache' + photoItem.path" class="photo-box list-photo-item">
+      <div
+        v-for="(photoItem, photoIndex) in cachePhoto"
+        :key="'cache' + photoItem.path"
+        class="photo-box list-photo-item"
+        :class="photoItem.isRepetition ? 'is-repetition' : ''"
+      >
         <photo-box
           photo-name
           :src="photoItem.path"
@@ -10,7 +15,12 @@
           <i class="el-icon-error" />
         </span>
       </div>
-      <div v-for="(photoItem, photoIndex) in uploadPhoto" :key="'upload' + photoItem.name" class="photo-box list-photo-item">
+      <div
+        v-for="(photoItem, photoIndex) in uploadPhoto"
+        :key="'upload' + photoItem.name"
+        :class="{ 'is-repetition': photoItem.response && finishPhoto[photoIndex].isRepetition }"
+        class="photo-box list-photo-item"
+      >
         <photo-box
           v-if="photoItem.response && photoItem.status !== 'fail'"
           photo-name
@@ -104,7 +114,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['updateDomain']),
+    ...mapGetters(['updateDomain', 'showOverTag']),
     // 样式变量
     variables () {
       return variables
@@ -117,7 +127,7 @@ export default {
     }
   },
   watch: {
-    realAid: {
+    photos: {
       handler () {
         this.getCachePhoto()
       },
@@ -139,6 +149,13 @@ export default {
      */
     getCachePhoto () {
       const data = SessionTool.getUpdatePhoto(this.realAid)
+      // 实验功能
+      if (this.showOverTag) {
+        data.forEach(photoItem => {
+          const findOrignPhoto = this.photos.find(item => item.id === photoItem.id)
+          findOrignPhoto && (findOrignPhoto.isCover = true)
+        })
+      }
       this.cachePhoto = data
     },
     /**
@@ -190,7 +207,8 @@ export default {
       }
       // 判断是否已经上传
       if (findPhoto) {
-        this.$newMessage.warning('该照片已经上传，请移除该照片' + name + '再上传。')
+        this.$newMessage.warning('该照片已经上传，请移除该照片' + findPhoto.path + '再上传。')
+        this.signRepetitionPhoto(findPhoto)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
@@ -252,6 +270,18 @@ export default {
     saveUpdatePhoto () {
       const saveData = [...this.cachePhoto, ...this.finishPhoto]
       SessionTool.saveUpdatePhoto(this.realAid, saveData)
+    },
+    /**
+     * @description 标记重复上传照片
+     */
+    signRepetitionPhoto (findPhoto) {
+      // 实验功能
+      if (this.showOverTag) {
+        this.$set(findPhoto, 'isRepetition', true)
+        setTimeout(() => {
+          this.$delete(findPhoto, 'isRepetition')
+        }, 2000)
+      }
     }
   }
 }
@@ -308,6 +338,12 @@ export default {
       display: block;
       opacity: 1;
     }
+  }
+
+  .is-repetition {
+    opacity: 1;
+    border: 2px solid @red;
+    animation: blink 0.8s ease-in-out  infinite alternate;
   }
 
   .recede-remark {

@@ -66,6 +66,7 @@ export function getStreamInfo (params) {
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && photoTool.handlePicPath(findOriginalPhoto.path)
+      photoItem.isCover = false
     })
     if (msg.tags && msg.tags.statics && msg.tags.statics.includes('rework')) {
       createData.photos = msg.photos.filter(photoItem => {
