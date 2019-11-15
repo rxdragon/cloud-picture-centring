@@ -27,6 +27,7 @@
         key="urgentTable"
         show-checker
         :table-data="searchTableData"
+        @urgentSuccess="onUrgent"
       />
       <div class="page-box">
         <el-pagination
@@ -64,6 +65,7 @@
         key="boardTable"
         :show-checker="searchType === 'check'"
         :table-data="tableData"
+        @urgentSuccess="onUrgent"
       />
       <!-- 页码 -->
       <div class="page-box">
@@ -153,6 +155,13 @@ export default {
      */
     showFlow () {
       this.showFlowBoard = true
+    },
+    onUrgent (type) {
+      if (type === 'urgent') {
+        this.getStreamList(1)
+      } else {
+        this.getList(1)
+      }
     },
     /**
      * @description 获取请求参数
