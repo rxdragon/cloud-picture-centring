@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump, transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
+import { revertTimeSpan } from '@/utils/timespan.js'
 
 /**
  * @description 获取个人今日指标
@@ -82,6 +83,7 @@ export function getRankInfo () {
  * @param {*} params
  */
 export function getRetouchQuota (params) {
+  const timeSpan = [revertTimeSpan(params.startAt), revertTimeSpan(params.endAt, 1)]
   return axios({
     url: '/project_cloud/retoucher/getRetouchQuota',
     method: 'GET',
@@ -95,22 +97,22 @@ export function getRetouchQuota (params) {
       {
         label: '修图单量/张数',
         value: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
-        link: '/retoucher-center/retouch-history'
+        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan
       }, {
         label: '修图平均用时',
         value: timeFormat((avgRetouchTime + avgRebuildTime), 'text', true)
       }, {
         label: '种草量/种草率',
         value: data.plantNum + ' / ' + transformPercentage(data.plantNum, data.retouchPhotoNum),
-        link: '/retoucher-center/retouch-history'
+        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan
       }, {
         label: '拔草量/拔草率',
         value: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
-        link: '/retoucher-center/retouch-history'
+        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan
       }, {
         label: '超时单量',
         value: data.overNum,
-        link: '/retoucher-center/retouch-history'
+        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan
       }, {
         label: '修图获得收益',
         value: data.retouchIncome

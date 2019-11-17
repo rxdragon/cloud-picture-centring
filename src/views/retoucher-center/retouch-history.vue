@@ -80,8 +80,17 @@ export default {
       }
     }
   },
-  created () {
-    this.getRetouchList()
+  watch: {
+    '$route.query': {
+      handler (query) {
+        const { retouchHistoryTimeSpan } = query
+        if (retouchHistoryTimeSpan) {
+          this.timeSpan = this.$route.query.retouchHistoryTimeSpan.split(',')
+        }
+        this.getRetouchList()
+      },
+      immediate: true
+    }
   },
   methods: {
     /**
@@ -114,6 +123,7 @@ export default {
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total
         this.tableData = data.list
+        delete this.$route.query.retouchHistoryTimeSpan
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

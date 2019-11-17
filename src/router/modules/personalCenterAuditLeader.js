@@ -13,8 +13,8 @@ const personalCenterAuditLeader = {
       component: () => import('@/views/personal-center-audit-leader/audit-report.vue'),
       meta: { title: '组员审核报告', icon: '' }
     }, {
-      path: 'audit-survey',
-      name: 'AuditSurvey',
+      path: 'audit-leader-audit-survey',
+      name: 'AuditLeaderAuditSurvey',
       component: () => import('@/views/personal-center-audit/index.vue'),
       meta: { title: '个人审核概况', icon: '' }
     }

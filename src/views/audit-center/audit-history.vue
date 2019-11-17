@@ -133,12 +133,6 @@ export default {
           default:
             break
         }
-        // 清除query数据
-        if (Object.keys(this.$route.query).length && (timeSpan || searchType)) {
-          this.$router.replace({
-            path: '/audit-center/audit-history'
-          })
-        }
         this.getReviewList()
       },
       immediate: true
@@ -207,6 +201,8 @@ export default {
         const data = await ReviewCheck.getReviewList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
+        delete this.$route.query.searchType
+        delete this.$route.query.timeSpan
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

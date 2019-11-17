@@ -9,7 +9,7 @@ const guestPhoto = {
   children: [
     {
       path: 'index',
-      name: 'GuestPhoto',
+      name: 'GuestPhotoCenter',
       component: () => import('@/views/guest-photo/index.vue'),
       meta: { title: '客片池', icon: '' }
     }, {

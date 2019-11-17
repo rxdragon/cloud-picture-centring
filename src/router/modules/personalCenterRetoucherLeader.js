@@ -15,8 +15,8 @@ const personalCenterRetoucherLeader = {
       component: () => import('@/views/personal-center-retoucher-leader/retouch-report.vue'),
       meta: { title: '组员修图报告', icon: '' }
     }, {
-      path: 'audit-survey',
-      name: 'AuditSurvey',
+      path: 'leader-audit-survey',
+      name: 'LeaderAuditSurvey',
       component: () => import('@/views/personal-center-audit/index.vue'),
       meta: { title: '个人审核概况', icon: '' }
     }

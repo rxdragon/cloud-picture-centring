@@ -156,6 +156,9 @@ export default {
         query: { streamId }
       })
     },
+    /**
+     * @description 获取审核历史记录
+     */
     async getReviewList (page) {
       this.pager.page = page || this.pager.page
       const reqData = {
@@ -167,6 +170,7 @@ export default {
       }
       this.auditType && (reqData.plantOrPull = this.auditType)
       this.spotCheckType && (reqData.spotCheckPlantOrPull = this.spotCheckType)
+      this.staffId && (reqData.staffId = this.staffId)
       if (this.correcType) {
         switch (this.correcType) {
           case SearchType.RectifySame:

@@ -12,7 +12,7 @@ const personalCenterAudit = {
   children: [
     {
       path: 'index',
-      name: 'AuditHistory',
+      name: 'AuditSurvey',
       component: () => import('@/views/personal-center-audit/index.vue'),
       meta: { title: '个人审核概况', icon: '' }
     }
