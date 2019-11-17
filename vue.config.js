@@ -24,7 +24,8 @@ module.exports = {
       },
       externals: {
         'electron': 'require("electron")',
-        'fs': 'require("fs")'
+        'fs': 'require("fs")',
+        'original-fs': 'require("original-fs")'
       },
       plugins: [
         new StyleLintPlugin({
