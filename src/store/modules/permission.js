@@ -3,7 +3,6 @@ import { toCapitalHump } from '@/utils/index.js'
 import store from '@/store'
 
 /**
- * Use meta.role to determine if the current user has permission
  * @param roles // 权限
  * @param route // 路由
  */

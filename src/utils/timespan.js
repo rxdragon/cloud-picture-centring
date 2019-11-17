@@ -29,7 +29,7 @@ export function revertTimeSpan (time, subtractDay) {
 export function formatTime (time) {
   if (time === '-' || !time) return '-'
   const date = moment(time)
-  return date.format('YYYY.MM.DD hh:mm')
+  return date.format('YYYY.MM.DD HH:mm')
 }
 
 export function getNowDate () {

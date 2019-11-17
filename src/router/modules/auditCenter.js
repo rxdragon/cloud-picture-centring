@@ -12,7 +12,7 @@ const auditCenter = {
   children: [
     {
       path: 'index',
-      name: 'AuditCenter',
+      name: 'AuditReview',
       component: () => import('@/views/audit-center/index.vue'),
       meta: { title: '修图审核', icon: '' }
     },
