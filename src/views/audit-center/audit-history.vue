@@ -92,51 +92,57 @@ export default {
       }
     }
   },
-  created () {
-    if (this.$route.query.timeSpan) {
-      this.timeSpan = this.$route.query.timeSpan.split(',')
-    } else {
-      const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
-      this.timeSpan = [nowTime, nowTime]
+  watch: {
+    '$route.query': {
+      handler (query) {
+        const { timeSpan, searchType } = query
+        if (timeSpan) {
+          this.timeSpan = this.$route.query.timeSpan.split(',')
+        } else if (!this.timeSpan) {
+          const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
+          this.timeSpan = [nowTime, nowTime]
+        }
+        switch (searchType) {
+          case SearchType.CheckPlant:
+            this.auditType = 'plant'
+            break
+          case SearchType.CheckPull:
+            this.auditType = 'pull'
+            break
+          case SearchType.SpotPlant:
+            this.spotCheckType = 'spotPlant'
+            break
+          case SearchType.SpotPull:
+            this.spotCheckType = 'spotPull'
+            break
+          case SearchType.RectifySame:
+            this.correcType = SearchType.RectifySame
+            break
+          case SearchType.RectifyPlant:
+            this.correcType = SearchType.RectifyPlant
+            break
+          case SearchType.RectifyPull:
+            this.correcType = SearchType.RectifyPull
+            break
+          case SearchType.RectifyNone:
+            this.correcType = SearchType.RectifyNone
+            break
+          case SearchType.RectifyDifferent:
+            this.correcType = SearchType.RectifyDifferent
+            break
+          default:
+            break
+        }
+        // 清除query数据
+        if (Object.keys(this.$route.query).length) {
+          this.$router.replace({
+            path: '/audit-center/audit-history'
+          })
+        }
+        this.getReviewList()
+      },
+      immediate: true
     }
-    const searchType = this.$route.query.searchType
-    switch (searchType) {
-      case SearchType.CheckPlant:
-        this.auditType = 'plant'
-        break
-      case SearchType.CheckPull:
-        this.auditType = 'pull'
-        break
-      case SearchType.SpotPlant:
-        this.spotCheckType = 'spotPlant'
-        break
-      case SearchType.SpotPull:
-        this.spotCheckType = 'spotPull'
-        break
-      case SearchType.RectifySame:
-        this.correcType = SearchType.RectifySame
-        break
-      case SearchType.RectifyPlant:
-        this.correcType = SearchType.RectifyPlant
-        break
-      case SearchType.RectifyPull:
-        this.correcType = SearchType.RectifyPull
-        break
-      case SearchType.RectifyNone:
-        this.correcType = SearchType.RectifyNone
-        break
-      case SearchType.RectifyDifferent:
-        this.correcType = SearchType.RectifyDifferent
-        break
-      default:
-        break
-    }
-    if (Object.keys(this.$route.query).length) {
-      this.$router.replace({
-        path: '/audit-center/audit-history'
-      })
-    }
-    this.getReviewList()
   },
   methods: {
     /**
