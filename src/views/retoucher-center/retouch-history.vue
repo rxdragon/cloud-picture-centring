@@ -60,6 +60,7 @@
 import DatePicker from '@/components/DatePicker'
 import GrassSelect from '@SelectBox/GrassSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
+import { SearchType } from '@/utils/enumerate'
 
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
@@ -83,9 +84,21 @@ export default {
   watch: {
     '$route.query': {
       handler (query) {
-        const { retouchHistoryTimeSpan } = query
+        const { retouchHistoryTimeSpan, retouchHistorySearchType } = query
         if (retouchHistoryTimeSpan) {
           this.timeSpan = this.$route.query.retouchHistoryTimeSpan.split(',')
+        }
+        if (retouchHistorySearchType) {
+          switch (retouchHistorySearchType) {
+            case SearchType.CheckPlant:
+              this.searchType = 'plant'
+              break
+            case SearchType.CheckPull:
+              this.searchType = 'pull'
+              break
+            default:
+              break
+          }
         }
         this.getRetouchList()
       },
@@ -124,6 +137,7 @@ export default {
         this.pager.total = data.total
         this.tableData = data.list
         delete this.$route.query.retouchHistoryTimeSpan
+        delete this.$route.query.retouchHistorySearchType
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
