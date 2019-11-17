@@ -9,6 +9,7 @@ const getters = {
   loadRoutes: state => state.setting.loadRoutes, // 加载路由加载表
   showCat: state => state.setting.showCat, // 是否显示猫
   showOverTag: state => state.setting.showOverTag, // 是否已上传照片进行标记
+  autoUpload: state => state.setting.autoUpload, // 是否开启自动上传
   imgUploadDomain: state => state.setting.imgUploadDomain, // 上传后的照片域名
   imgDomain: state => state.setting.imgDomain, // 上传后的照片域名
   updateDomain: state => state.setting.updateDomain, // 上传后的照片域名

@@ -50,7 +50,7 @@
         <template slot-scope="scope">
           <div class="operation-box">
             <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
-            <el-button v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing'" type="danger" size="mini" @click="urgentStream(scope.row.id, 'other')">加急</el-button>
+            <el-button v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing'" type="danger" size="mini" @click="urgentStream(scope.row.id)">加急</el-button>
           </div>
         </template>
       </el-table-column>
@@ -64,7 +64,8 @@ export default {
   name: 'WorkBoardTable',
   props: {
     tableData: { type: Array, required: true }, // 列表数据
-    showChecker: { type: Boolean } // 是够显示审核人
+    showChecker: { type: Boolean }, // 是够显示审核人
+    urgentSearch: { type: Boolean } // 是否是加急查询
   },
   data () {
     return {
@@ -75,13 +76,14 @@ export default {
     /**
      * @description 加急流水
      */
-    async urgentStream (streamId, type) {
+    async urgentStream (streamId) {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = { streamId }
         const data = await AdminManage.urgentStream(req)
         if (data) {
           this.$newMessage.success('操作成功!')
+          const type = this.urgentSearch ? 'urgent' : 'other'
           this.$emit('urgentSuccess', type)
         }
       } catch (error) {

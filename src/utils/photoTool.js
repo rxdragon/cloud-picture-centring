@@ -1,9 +1,9 @@
 import { ipcRenderer } from 'electron'
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
-import * as SessionTool from '@/utils/sessionTool.js'
 import md5 from 'md5'
 import store from '@/store' // vuex
 import Vue from 'vue'
+import * as SessionTool from '@/utils/sessionTool.js'
 
 /**
  * @description 截取文件名
