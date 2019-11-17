@@ -56,6 +56,7 @@
         :photos="photos"
         :finish-photo="finishPhoto"
         :real-aid="realAid"
+        :stream-num="orderData.streamNum"
         @change="uploadDown"
       />
     </div>
@@ -85,6 +86,7 @@ export default {
       routeName: this.$route.name, // 路由名字
       headerClass: '', // 固定header所用class
       orderData: {
+        streamNum: '',
         streamId: '',
         type: '',
         photographerName: '',

@@ -8,6 +8,10 @@
         <span>时间</span>
         <date-picker v-model="timeSpan" />
       </div>
+      <div class="stream-search search-item">
+        <span>流水号</span>
+        <el-input v-model="streamNum" clearable placeholder="请输入流水号" />
+      </div>
       <div class="search-type search-item">
         <span>种拔草</span>
         <grass-select v-model="searchType" />
@@ -66,6 +70,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
+      streamNum: '', // 流水号
       searchType: 0, // 搜索标准
       tableData: [], // 列表数据
       pager: {
@@ -104,6 +109,7 @@ export default {
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
         if (this.searchType) { reqData.grass = this.searchType }
+        if (this.streamNum) { reqData.streamNum = this.streamNum }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total
@@ -130,6 +136,12 @@ export default {
 .retouch-history {
   .table-box {
     margin-top: 20px;
+  }
+
+  .stream-search {
+    span {
+      width: 60px;
+    }
   }
 }
 </style>

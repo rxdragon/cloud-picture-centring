@@ -46,16 +46,16 @@
           ref="uploadButton"
           class="upload-crop-button"
           accept="image/*"
+          multiple
           :action="updateDomain + upyunConfig.bucket"
           :show-file-list="false"
           :before-upload="beforeUpload"
           :on-progress="handleProgress"
           :on-success="handleSuccess"
-          multiple
           :file-list="uploadPhoto"
           :data="upyunConfig"
         >
-          <div class="avatar-upload">
+          <div class="avatar-upload" @click="getFiles">
             <i class="el-icon-plus" />
             <span>上传照片</span>
           </div>
@@ -73,6 +73,7 @@ import PhotoBox from '@/components/PhotoBox'
 import * as Commonality from '@/api/commonality'
 import * as SessionTool from '@/utils/sessionTool'
 import * as PhotoTool from '@/utils/photoTool'
+import * as AutoUpload from '@/utils/autoUpload'
 
 export default {
   name: 'UploadPhoto',
@@ -103,6 +104,7 @@ export default {
   props: {
     photos: { type: Array, default: () => [] },
     realAid: { type: [String, Number], required: true },
+    streamNum: { type: String, default: '' },
     finishPhoto: { type: Array, required: true } // 最后提交成片
   },
   data () {
@@ -114,7 +116,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['updateDomain', 'showOverTag']),
+    ...mapGetters(['updateDomain', 'showOverTag', 'autoUpload']),
     // 样式变量
     variables () {
       return variables
@@ -138,6 +140,17 @@ export default {
     this.getUpyunSign()
   },
   methods: {
+    /**
+     * @description 获取文件自动上传
+     */
+    async getFiles (event) {
+      // 扩展功能
+      if (!this.autoUpload || !this.streamNum) return
+      event.stopPropagation()
+      const readFileArray = await AutoUpload.getFiles(this.streamNum)
+      const upInput = this.$refs['uploadButton'].$children[0]
+      upInput.uploadFiles(readFileArray)
+    },
     /**
      * @description 获取又拍云
      */
@@ -180,7 +193,7 @@ export default {
       if (!isJPG && !isPNG) {
         this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return isJPG || isPNG
+        return Promise.reject()
       }
       // 判断是否与原片名字相同
       if (!hasSameName) {

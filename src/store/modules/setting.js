@@ -4,7 +4,8 @@ const state = {
   updateDomain: process.env.VUE_APP_UPDATE_DOMAIN,
   loadRoutes: [],
   showCat: false,
-  showOverTag: false
+  showOverTag: false,
+  autoUpload: false
 }
 
 const mutations = {
@@ -36,6 +37,10 @@ const mutations = {
   },
   SET_OVER_TAG: (state, data) => {
     state.showOverTag = data
+  },
+  // 是否开启自动上传
+  SET_AUTO_UPLOAD: (state, data) => {
+    state.autoUpload = data
   }
 }
 
@@ -53,6 +58,9 @@ const actions = {
   },
   setShowOverTag ({ commit }, data) {
     commit('SET_OVER_TAG', data)
+  },
+  setAutoUpload ({ commit }, data) {
+    commit('SET_AUTO_UPLOAD', data)
   },
   // 更换域名
   changeDomain ({ commit }, domainType) {
