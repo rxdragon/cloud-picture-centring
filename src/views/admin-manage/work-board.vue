@@ -41,6 +41,7 @@
         v-show="searchTableData.length"
         key="urgentTable"
         show-checker
+        urgent-search
         :table-data="searchTableData"
         @urgentSuccess="onUrgent"
       />

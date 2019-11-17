@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import router from '@/router/index.js'
+import { newMessage } from '@/utils/message.js'
 import { Message } from 'element-ui'
 import store from '../store' // vuex
 import { errorCode } from './errorCode'
