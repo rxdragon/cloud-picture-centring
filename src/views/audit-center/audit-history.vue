@@ -134,7 +134,7 @@ export default {
             break
         }
         // 清除query数据
-        if (Object.keys(this.$route.query).length) {
+        if (Object.keys(this.$route.query).length && (timeSpan || searchType)) {
           this.$router.replace({
             path: '/audit-center/audit-history'
           })
