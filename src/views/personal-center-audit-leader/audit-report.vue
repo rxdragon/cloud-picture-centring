@@ -131,7 +131,7 @@ export default {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.staffId.length) { reqData.staffId = this.staffId }
+        if (this.staffId) { reqData.staffId = this.staffId }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await ReviewCheck.getGroupReviewQuota(reqData)
         data.tableDataCount.forEach(item => {
