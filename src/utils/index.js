@@ -216,5 +216,6 @@ export function isObj (obj) {
  */
 export function getAvg (a, b) {
   if (!Number(a) || !Number(b)) return 0
-  return Math.fround((Number(a) / Number(b)).toFixed(2))
+  const avg = (Number(a) / Number(b)).toFixed(2)
+  return parseFloat(avg)
 }
