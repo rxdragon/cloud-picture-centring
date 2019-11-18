@@ -38,8 +38,8 @@
         <el-table-column prop="reviewPhoto" label="审核种 / 拔草" />
         <el-table-column label="纠偏">
           <template slot-scope="scope">
-            <div>意见相同：{{ scope.row.rectify_same_photo_num }}</div>
-            <div>意见不同：{{ scope.row.rectify_different_photo_num }}</div>
+            <div>意见相同：{{ scope.row.spotSameNum }}</div>
+            <div>意见不同：{{ scope.row.spotDifferentNum }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="checkPhoto" label="抽查种 / 拔草" />
