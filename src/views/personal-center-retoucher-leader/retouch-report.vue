@@ -128,6 +128,7 @@ export default {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
+        if (this.staffId) { req.staffId = this.staffId }
         const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
         this.tableDataCount = data.tableDataCount
         this.tableDataRate = data.tableDataRate
