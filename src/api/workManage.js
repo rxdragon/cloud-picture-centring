@@ -81,6 +81,8 @@ export function getRetoucherQuota (params) {
     msg.reviewPlantRate = transformPercentage(msg.reviewPlant, count)
     msg.reviewPullRate = transformPercentage(msg.reviewPull, count)
     msg.retouchReworkRate = transformPercentage(msg.retouchRework, msg.retoucherFinishStreamNum)
+    console.log(getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count))
+    msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) + '星'
     return msg
   })
 }

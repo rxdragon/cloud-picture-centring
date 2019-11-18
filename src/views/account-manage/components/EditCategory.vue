@@ -87,10 +87,17 @@ export default {
       }
     },
     /**
-     * @description 获取角色组列表
+     * @description 获取添加修图类别参数
      */
     getParams () {
-      if (!this.categoryName) return false
+      if (!this.categoryName) {
+        this.$newMessage.warning('请填写角色组名称')
+        return false
+      }
+      if (!this.toData.length) {
+        this.$newMessage.warning('请选着可接产品')
+        return false
+      }
       const req = {
         name: this.categoryName,
         productIds: []
@@ -103,7 +110,7 @@ export default {
       return req
     },
     /**
-     * @description 获取角色组列表
+     * @description 添加修图类别
      */
     add () {
       const req = this.getParams()
@@ -116,7 +123,7 @@ export default {
         })
     },
     /**
-     * @description 获取角色组列表
+     * @description 编辑修图类别
      */
     update () {
       const req = this.getParams()

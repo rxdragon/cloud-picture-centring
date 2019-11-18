@@ -104,7 +104,6 @@ export default {
         this.listDataTwo.forEach(item => {
           item.value = data[item.key]
           if (item.key === 'income') { item.value = '¥' + (item.value).toFixed(2) }
-          if (item.key === 'storeEvaluateScoreAvg') { item.value = item.value.count + '星' }
         })
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
