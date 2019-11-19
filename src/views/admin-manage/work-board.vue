@@ -99,7 +99,6 @@
     <el-drawer
       :show-close="false"
       append-to-body
-      destroy-on-close
       :visible.sync="showFlowBoard"
       custom-class="flow-drawer"
       size="50%"
@@ -293,41 +292,41 @@ export default {
 @import "~@/styles/variables.less";
 
 .WorkBoard {
+  .search-box {
+    margin: 24px 0;
+    width: 100%;
+
+    .el-input {
+      width: 220px;
+    }
+  }
+
+  .tabs-box {
+    margin-top: 24px;
+  }
+
+  .table-box {
+    margin-top: 0;
+
     .search-box {
-        margin: 24px 0;
-        width: 100%;
-
-        .el-input {
-            width: 220px;
-        }
+      margin-top: 0;
+      margin-bottom: 24px;
     }
-
-    .tabs-box {
-        margin-top: 24px;
-    }
-
-    .table-box {
-        margin-top: 0;
-
-        .search-box {
-            margin-top: 0;
-            margin-bottom: 24px;
-        }
-    }
+  }
 }
 
 .el-drawer__header {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 body > .el-dialog__wrapper {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .flow-drawer,
 .v-modal {
-    top: @navbarHeight !important;
-    height: @drawerHeight !important;
+  top: @navbarHeight !important;
+  height: @drawerHeight !important;
 }
 </style>

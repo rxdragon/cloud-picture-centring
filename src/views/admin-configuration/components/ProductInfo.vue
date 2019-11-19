@@ -591,8 +591,8 @@ export default {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       grid-gap: 1px;
-      background-color: #ebeef5;
-      border: 1px solid #ebeef5;
+      background-color: @borderColor;
+      border: 1px solid @borderColor;
       font-size: 14px;
       color: #303133;
       text-align: center;
@@ -621,9 +621,9 @@ export default {
   }
 
   .blue-list-data {
-    border: 1px solid #ebeef5;
+    border: 1px solid @borderColor;
     display: flex;
-    border-top: 1px solid #ebeef5;
+    border-top: 1px solid @borderColor;
     font-size: 14px;
     color: #303133;
     text-align: center;
@@ -633,10 +633,10 @@ export default {
       display: flex;
       flex-direction: column;
       background-color: #fafafa;
-      border-right: 1px solid #ebeef5;
+      border-right: 1px solid @borderColor;
 
       .list-item {
-        border-top: 1px solid #ebeef5;
+        border-top: 1px solid @borderColor;
 
         &:nth-child(1) {
           border-top: none;
@@ -667,8 +667,8 @@ export default {
 
         .content-list-item {
           width: 88px;
-          border-right: 1px solid #ebeef5;
-          border-bottom: 1px solid #ebeef5;
+          border-right: 1px solid @borderColor;
+          border-bottom: 1px solid @borderColor;
 
           .el-input__inner {
             border: none;

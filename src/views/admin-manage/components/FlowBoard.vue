@@ -25,17 +25,17 @@
               <el-popover
                 popper-class="table-popover"
                 placement="bottom"
-                width="200"
-                trigger="click"
+                width="300"
+                trigger="hover"
               >
                 <table class="popover-table">
                   <tr class="popover-table-header">
                     <th>产品名称</th>
                     <th>今日/其他</th>
                   </tr>
-                  <tr>
-                    <th>缦图凭借</th>
-                    <th>5/0</th>
+                  <tr v-for="(productItem, productIndex) in flowInfo.waitRetouch.photos" :key="productIndex">
+                    <th>{{ productItem.name }}</th>
+                    <th>{{ productItem.today + '/' + productItem.other }}</th>
                   </tr>
                 </table>
                 <span slot="reference" class="data-desc">详情</span>
@@ -79,7 +79,24 @@
           <div class="data-title">全部修片照片数</div>
           <div class="data-content">
             <count-to :end-value="allRetouchingPhotoNum" />
-            <span class="data-desc">详情</span>
+            <el-popover
+              popper-class="table-popover"
+              placement="bottom"
+              width="300"
+              trigger="hover"
+            >
+              <table border="0" cellspacing="0" class="popover-table">
+                <tr class="popover-table-header">
+                  <th>产品名称</th>
+                  <th>修图/重修</th>
+                </tr>
+                <tr v-for="(productItem, productIndex) in flowInfo.cloudRetouching.photos" :key="productIndex">
+                  <th>{{ productItem.name }}</th>
+                  <th>{{ productItem.retouching + '/' + productItem.reworking }}</th>
+                </tr>
+              </table>
+              <span slot="reference" class="data-desc">详情</span>
+            </el-popover>
           </div>
         </div>
         <div class="data-table">
@@ -121,7 +138,24 @@
           <div class="data-title">全部审核照片数</div>
           <div class="data-content">
             <count-to :end-value="flowInfo.review.photoNum.wait_review + flowInfo.review.photoNum.reviewing" />
-            <span class="data-desc">详情</span>
+            <el-popover
+              popper-class="table-popover"
+              placement="bottom"
+              width="300"
+              trigger="hover"
+            >
+              <table class="popover-table">
+                <tr class="popover-table-header">
+                  <th>产品名称</th>
+                  <th>审核中/待审核</th>
+                </tr>
+                <tr v-for="(productItem, productIndex) in flowInfo.review.photos" :key="productIndex">
+                  <th>{{ productItem.name }}</th>
+                  <th>{{ productItem.reviewing + '/' + productItem.wait_review }}</th>
+                </tr>
+              </table>
+              <span slot="reference" class="data-desc">详情</span>
+            </el-popover>
           </div>
         </div>
         <div class="data-table">
@@ -225,16 +259,10 @@ export default {
     this.getFlowInfo()
   },
   mounted () {
-    this.timer = setInterval(() => {
-      this.time--
-      if (this.time === 0) {
-        this.time = 30
-        this.getFlowInfo()
-      }
-    }, 1000)
+    this.pollFlowInfo()
   },
   beforeDestroy () {
-    clearInterval(this.timer)
+    clearTimeout(this.timer)
     this.timer = null
   },
   methods: {
@@ -243,6 +271,21 @@ export default {
      */
     async getFlowInfo () {
       this.flowInfo = await AdminManage.getFlowInfo()
+    },
+    /**
+     * @description 轮询监听
+     */
+    pollFlowInfo () {
+      clearTimeout(this.timer)
+      this.timer = null
+      this.timer = setTimeout(() => {
+        this.time--
+        if (this.time === 0) {
+          this.time = 30
+          this.getFlowInfo()
+        }
+        this.pollFlowInfo()
+      }, 1000)
     },
     /**
      * @description 关闭抽屉
@@ -264,178 +307,225 @@ export default {
 <style lang="less">
 @import "~@/styles/variables.less";
 
-.flow-board {
-    padding: 0 24px;
-    background-color: #f2f6fc;
-    height: @drawerHeight;
+.table-popover {
+  .popover-table {
+    width: 100%;
+    display: block;
+    max-height: 400px;
     overflow: overlay;
+    border-collapse: collapse;
 
     &::-webkit-scrollbar {
-        width: 8px;
+      width: 5px;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: #cdcdcd;
-        border-radius: 10px;
+      background: #cdcdcd;
+      border-radius: 10px;
     }
 
     &::-webkit-scrollbar-track {
-        background: transparent;
+      background: transparent;
     }
 
     &::-webkit-scrollbar-button {
-        background: #fff;
-        display: none;
+      background: #fff;
+      display: none;
     }
 
     &::-webkit-scrollbar-corner {
-        display: none;
+      display: none;
     }
 
-    .flow-header {
-        font-size: 20px;
-        font-weight: 600;
+    tr {
+      border-bottom: 1px solid #f2f6fc;
+    }
+
+    th {
+      padding: 21px 20px;
+      width: 50%;
+      font-size: 14px;
+      font-weight: 400;
+      color: #606266;
+      line-height: 14px;
+    }
+
+    .popover-table-header {
+      background-color: #fafafa;
+      display: block;
+      position: sticky;
+      top: 0;
+      border: none;
+
+      & > th {
+        padding: 17px 20px;
+        font-size: 14px;
+        font-weight: 500;
         color: #303133;
-        line-height: 24px;
-        padding: 24px;
-        margin: 0 -24px;
-        background-color: #f2f6fc;
-        position: sticky;
-        top: 0;
-        z-index: 20;
-
-        .count-down {
-            color: #606266;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 22px;
-            margin-left: 12px;
-        }
-
-        .close-button {
-            float: right;
-            cursor: pointer;
-        }
-
-        &.header-fix {
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .08);
-        }
+        line-height: 22px;
+      }
     }
-
-    .flow-body {
-        .wait-retouch {
-            .panel-left {
-                width: calc(~"100% - 256px");
-                display: inline-block;
-                border-right: 1px solid #ebeef5;
-                vertical-align: bottom;
-            }
-
-            .panel-right {
-                width: 256px;
-                display: inline-block;
-            }
-        }
-
-        .module-panel {
-            border-radius: 8px;
-            margin-bottom: 24px;
-
-            .panel-title {
-                padding-left: 10px;
-                margin-bottom: 16px;
-            }
-        }
-
-        .panel-data-box {
-            width: 183px;
-            padding: 12px 10px;
-            display: inline-block;
-
-            .data-title {
-                font-size: 12px;
-                font-weight: 400;
-                color: #909399;
-                line-height: 17px;
-                padding-bottom: 8px;
-            }
-
-            .data-content {
-                font-size: 24px;
-                font-weight: 600;
-                color: #4669fb;
-                line-height: 28px;
-
-                .data-desc {
-                    font-size: 12px;
-                    font-weight: 400;
-                    line-height: 17px;
-                    margin-left: 6px;
-                    cursor: pointer;
-                    text-decoration: underline;
-                }
-            }
-        }
-
-        .data-table {
-            border-top: 1px solid #ebeef5;
-            padding-top: 16px;
-            margin: 0 10px;
-
-            table {
-                font-size: 12px;
-                font-weight: 600;
-                color: #303133;
-                line-height: 20px;
-
-                th {
-                    min-width: 30px;
-                    border-right: 1px solid #ebeef5;
-                    text-align: left;
-                    padding: 0 24px 12px;
-
-                    &:nth-of-type(1) {
-                        border: none;
-                        padding: 0 0 12px;
-                    }
-
-                    &:nth-last-of-type(1) {
-                        border: none;
-                    }
-                }
-
-                tr {
-                    margin-bottom: 12px;
-
-                    &:nth-last-of-type(1) {
-                        th {
-                            padding-bottom: 0;
-                        }
-                    }
-                }
-
-                .table-title {
-                    font-size: 12px;
-                    font-weight: 400;
-                    color: #909399;
-                    line-height: 17px;
-                }
-            }
-        }
-    }
+  }
 }
 
-.table-popover {
-    .popover-table {
-        width: 100%;
+.flow-board {
+  padding: 0 24px;
+  background-color: #f2f6fc;
+  height: @drawerHeight;
+  overflow: overlay;
 
-        .popover-table-header {
-            background-color: #fafafa;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
 
-            & > th {
-                padding: 17px 20px;
-            }
-        }
+  &::-webkit-scrollbar-thumb {
+    background: #cdcdcd;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-button {
+    background: #fff;
+    display: none;
+  }
+
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+
+  .flow-header {
+    font-size: 20px;
+    font-weight: 600;
+    color: #303133;
+    line-height: 24px;
+    padding: 24px;
+    margin: 0 -24px;
+    background-color: #f2f6fc;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+
+    .count-down {
+      color: #606266;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      margin-left: 12px;
     }
+
+    .close-button {
+      float: right;
+      cursor: pointer;
+    }
+
+    &.header-fix {
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .flow-body {
+    .wait-retouch {
+      .panel-left {
+        width: calc(~"100% - 256px");
+        display: inline-block;
+        border-right: 1px solid @borderColor;
+        vertical-align: bottom;
+      }
+
+      .panel-right {
+        width: 256px;
+        display: inline-block;
+      }
+    }
+
+    .module-panel {
+      border-radius: 8px;
+      margin-bottom: 24px;
+
+      .panel-title {
+        padding-left: 10px;
+        margin-bottom: 16px;
+      }
+    }
+
+    .panel-data-box {
+      width: 183px;
+      padding: 12px 10px;
+      display: inline-block;
+
+      .data-title {
+        font-size: 12px;
+        font-weight: 400;
+        color: #909399;
+        line-height: 17px;
+        padding-bottom: 8px;
+      }
+
+      .data-content {
+        font-size: 24px;
+        font-weight: 600;
+        color: @blue;
+        line-height: 28px;
+
+        .data-desc {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 17px;
+          margin-left: 6px;
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .data-table {
+      border-top: 1px solid @borderColor;
+      padding-top: 16px;
+      margin: 0 10px;
+
+      table {
+        font-size: 12px;
+        font-weight: 600;
+        color: #303133;
+        line-height: 20px;
+
+        th {
+          min-width: 30px;
+          border-right: 1px solid @borderColor;
+          text-align: left;
+          padding: 0 24px 12px;
+
+          &:nth-of-type(1) {
+            border: none;
+            padding: 0 0 12px;
+          }
+
+          &:nth-last-of-type(1) {
+            border: none;
+          }
+        }
+
+        tr {
+          margin-bottom: 12px;
+
+          &:nth-last-of-type(1) {
+            th {
+              padding-bottom: 0;
+            }
+          }
+        }
+
+        .table-title {
+          font-size: 12px;
+          font-weight: 400;
+          color: #909399;
+          line-height: 17px;
+        }
+      }
+    }
+  }
 }
 </style>

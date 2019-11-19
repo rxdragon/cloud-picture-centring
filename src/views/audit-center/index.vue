@@ -376,7 +376,7 @@ export default {
       grid-template-columns: 1fr 1fr 1fr;
       width: 600px;
       border-radius: 4px;
-      border-bottom: 1px solid #ebeef5;
+      border-bottom: 1px solid @borderColor;
 
       .label-list-title {
         padding: 17px 20px;

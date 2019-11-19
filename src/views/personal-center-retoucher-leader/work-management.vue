@@ -183,7 +183,7 @@ export default {
           display: inline-block;
           width: 8px;
           height: 8px;
-          background: #ebeef5;
+          background: @borderColor;
           border-radius: 50%;
           margin-right: 4px;
         }

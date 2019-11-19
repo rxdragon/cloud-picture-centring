@@ -37,12 +37,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@switchBule: #4669fb;
+@import "~@/styles/variables.less";
 
 .domain-switch-box {
   .radio-group {
     width: 132px;
-    background-color: @switchBule;
+    background-color: @blue;
     padding: 2px;
     border-radius: 4px;
     position: relative;
@@ -64,7 +64,7 @@ export default {
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 
       &.is-active {
-        color: @switchBule;
+        color: @blue;
       }
     }
 

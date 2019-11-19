@@ -274,10 +274,12 @@ export default {
 </script>
 
 <style lang="less">
+@import "~@/styles/variables.less";
+
 .grade-box {
   .photo-panel {
     margin-bottom: 32px;
-    border-bottom: 1px solid #ebeef5;
+    border-bottom: 1px solid @borderColor;
 
     .panel-title {
       margin-bottom: 20px;
@@ -305,7 +307,7 @@ export default {
         font-size: 14px;
         color: #303133;
         line-height: 22px;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid @borderColor;
 
         & > span {
           margin-right: 48px;
@@ -318,8 +320,8 @@ export default {
       }
 
       .retouch-require {
-        border-top: 1px solid #ebeef5;
-        border-bottom: 1px solid #ebeef5;
+        border-top: 1px solid @borderColor;
+        border-bottom: 1px solid @borderColor;
 
         & > span {
           margin-right: 12px;

@@ -78,71 +78,73 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "~@/styles/variables.less";
+
 .people-ring {
+  position: relative;
+
+  .ve-ring {
+    margin: auto;
     position: relative;
+    z-index: 11;
+  }
 
-    .ve-ring {
-        margin: auto;
-        position: relative;
-        z-index: 11;
+  .people-num {
+    position: absolute;
+    margin: auto;
+    z-index: 1;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    margin-top: -12.5px;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 28px;
+    font-weight: 600;
+    color: @blue;
+    line-height: 40px;
+
+    .people-sum {
+      small {
+        font-size: 12px;
+      }
     }
 
-    .people-num {
-        position: absolute;
-        margin: auto;
-        z-index: 1;
-        text-align: center;
-        top: 50%;
-        left: 50%;
-        margin-top: -12.5px;
-        transform: translateX(-50%) translateY(-50%);
-        font-size: 28px;
-        font-weight: 600;
-        color: #4669fb;
-        line-height: 40px;
-
-        .people-sum {
-            small {
-                font-size: 12px;
-            }
-        }
-
-        .people-desc {
-            font-size: 12px;
-            font-weight: 400;
-            color: #45454d;
-            line-height: 17px;
-        }
+    .people-desc {
+      font-size: 12px;
+      font-weight: 400;
+      color: #45454d;
+      line-height: 17px;
     }
+  }
 
-    .legend {
-        display: flex;
-        height: 23px;
+  .legend {
+    display: flex;
+    height: 23px;
 
-        .legend-item {
-            width: 50%;
-            font-size: 12px;
-            font-weight: 400;
-            color: #606266;
-            line-height: 20px;
-            text-align: center;
+    .legend-item {
+      width: 50%;
+      font-size: 12px;
+      font-weight: 400;
+      color: #606266;
+      line-height: 20px;
+      text-align: center;
 
-            .point-color {
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                margin-right: 4px;
-            }
+      .point-color {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+      }
 
-            .in-retoucher {
-                background-color: #4669fb;
-            }
+      .in-retoucher {
+        background-color: @blue;
+      }
 
-            .out-retoucher {
-                background-color: #56bcff;
-            }
-        }
+      .out-retoucher {
+        background-color: #56bcff;
+      }
     }
+  }
 }
 </style>

@@ -136,7 +136,7 @@ export default {
 
       .panel-require-concent {
         padding-bottom: 20px;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid @borderColor;
 
         .el-tag {
           margin-right: 12px;
@@ -149,7 +149,7 @@ export default {
         color: #303133;
         line-height: 22px;
         padding: 20px 0;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid @borderColor;
         display: flex;
 
         .title {

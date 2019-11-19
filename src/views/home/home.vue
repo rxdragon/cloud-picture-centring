@@ -70,7 +70,7 @@ export default {
       margin-top: 26px;
 
       .desc {
-        color: #4669fb;
+        color: @blue;
       }
     }
   }
