@@ -111,7 +111,7 @@ export default {
       }
 
       .tabel-title {
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid @borderColor;
 
         & > span {
           font-size: 14px;

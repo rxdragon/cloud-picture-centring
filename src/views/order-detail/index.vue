@@ -136,7 +136,7 @@ export default {
       .panel-content {
         text-align: left;
         padding-bottom: 24px;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid @borderColor;
       }
 
       .require-box {
