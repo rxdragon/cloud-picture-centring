@@ -76,9 +76,9 @@
           </div>
         </div>
         <div class="panel-data-box">
-          <div class="data-title">全部修片照片数</div>
+          <div class="data-title">云端修片照片数</div>
           <div class="data-content">
-            <count-to :end-value="allRetouchingPhotoNum" />
+            <count-to :end-value="flowInfo.cloudRetouching.photoNum.retouching" />
             <el-popover
               popper-class="table-popover"
               placement="bottom"
@@ -91,6 +91,30 @@
                   <th>修图/重修</th>
                 </tr>
                 <tr v-for="(productItem, productIndex) in flowInfo.cloudRetouching.photos" :key="productIndex">
+                  <th>{{ productItem.name }}</th>
+                  <th>{{ productItem.retouching + '/' + productItem.reworking }}</th>
+                </tr>
+              </table>
+              <span slot="reference" class="data-desc">详情</span>
+            </el-popover>
+          </div>
+        </div>
+        <div class="panel-data-box">
+          <div class="data-title">外包修片照片数</div>
+          <div class="data-content">
+            <count-to :end-value="flowInfo.outerRetouching.photoNum.retouching" />
+            <el-popover
+              popper-class="table-popover"
+              placement="bottom"
+              width="300"
+              trigger="hover"
+            >
+              <table border="0" cellspacing="0" class="popover-table">
+                <tr class="popover-table-header">
+                  <th>产品名称</th>
+                  <th>修图/重修</th>
+                </tr>
+                <tr v-for="(productItem, productIndex) in flowInfo.outerRetouching.photos" :key="productIndex">
                   <th>{{ productItem.name }}</th>
                   <th>{{ productItem.retouching + '/' + productItem.reworking }}</th>
                 </tr>
@@ -248,10 +272,6 @@ export default {
   computed: {
     allRetouchingOrderNum () {
       const sum = this.flowInfo.cloudRetouching.streamNum.retouching + this.flowInfo.outerRetouching.streamNum.retouching
-      return sum
-    },
-    allRetouchingPhotoNum () {
-      const sum = this.flowInfo.cloudRetouching.photoNum.retouching + this.flowInfo.outerRetouching.photoNum.retouching
       return sum
     }
   },
