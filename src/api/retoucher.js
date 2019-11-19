@@ -94,6 +94,7 @@ export function getRetouchQuota (params) {
     const avgTime = data.avgRetouchAndRebuildTime
     const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
     const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
+    const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
     const createData = [
       {
         label: '修图单量/张数',
@@ -119,7 +120,7 @@ export function getRetouchQuota (params) {
         value: data.retouchIncome
       }, {
         label: '奖励收益',
-        value: data.rewardIncome
+        value: rewardIncome.toFixed(2)
       }, {
         label: '获得海草',
         value: data.exp
