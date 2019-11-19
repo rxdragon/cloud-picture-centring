@@ -164,7 +164,7 @@ export default {
       const reqData = {
         range: 'group',
         startAt: joinTimeSpan(this.searchTime[0]),
-        endAt: joinTimeSpan(this.searchTime[1]),
+        endAt: joinTimeSpan(this.searchTime[1], 1),
         pageSize: this.pager.pageSize,
         page: this.pager.page
       }

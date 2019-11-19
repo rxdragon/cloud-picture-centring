@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router' // 路由
 import store from './store' // vuex
 import './plugins/element.js' // ui布局
+import './plugins/charts.js' // charts框架
 import './plugins/icon-font/iconfont.css' // ui布局
 import './styles/font.less' // 全局样式
 import './styles/index.less' // 字体

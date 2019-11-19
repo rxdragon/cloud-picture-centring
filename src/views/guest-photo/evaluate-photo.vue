@@ -191,7 +191,7 @@ export default {
 
       .staff-name {
         padding: 12px 6px 10px;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid @borderColor;
       }
 
       .group-name {

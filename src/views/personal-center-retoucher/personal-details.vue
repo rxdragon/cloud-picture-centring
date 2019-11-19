@@ -383,7 +383,7 @@ export default {
           display: inline-block;
           width: 8px;
           height: 8px;
-          background: #ebeef5;
+          background: @borderColor;
           border-radius: 50%;
           margin-right: 4px;
         }
@@ -427,7 +427,7 @@ export default {
     }
 
     .panel-main {
-      border-bottom: 1px solid #ebeef5;
+      border-bottom: 1px solid @borderColor;
 
       .main-content {
         font-size: 12px;

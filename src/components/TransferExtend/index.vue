@@ -569,6 +569,8 @@ export default {
 </script>
 
 <style lang="less">
+@import "~@/styles/variables.less";
+
 .transfer {
   position: relative;
   overflow: hidden;
@@ -590,7 +592,7 @@ export default {
   .transfer-right {
     position: absolute;
     top: 0;
-    border: 1px solid #ebeef5;
+    border: 1px solid @borderColor;
     width: 40%;
     height: 100%;
     box-sizing: border-box;
@@ -636,7 +638,7 @@ export default {
   }
 
   .transfer-title {
-    border-bottom: 1px solid #ebeef5;
+    border-bottom: 1px solid @borderColor;
     height: 40px;
     line-height: 40px;
     color: #333;

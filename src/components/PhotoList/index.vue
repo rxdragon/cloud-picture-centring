@@ -180,7 +180,7 @@ export default {
       line-height: 22px;
       font-size: 14px;
       padding: 12px 6px 6px;
-      border-top: 1px solid #ebeef5;
+      border-top: 1px solid @borderColor;
 
       .icon-box {
         display: flex;

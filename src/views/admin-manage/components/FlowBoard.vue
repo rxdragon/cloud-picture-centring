@@ -1,115 +1,205 @@
 <template>
-  <div class="flow-board" @click="closeFlow">
-    <div class="title">云端流量看板</div>
-    <div class="refresh">{{ time }}s后刷新</div>
-    <div class="main">
-      <div class="flow-board-header">
-        <div class="panel-wrap panel-orange" @click.stop="">
-          <div class="header-nav">今日取片待修 / 其他取片日待修</div>
-          <div class="panel-content">订单数 {{ flowInfo.waitRetouch.streamNum.today }} / {{ flowInfo.waitRetouch.streamNum.other }}</div>
-          <div class="panel-content">
-            <span class="panel-content-title">照片数 {{ flowInfo.waitRetouch.photoNum.today }} / {{ flowInfo.waitRetouch.photoNum.other }}</span>
-            <el-popover
-              placement="right"
-              trigger="hover"
-            >
-              <div class="flowInfo-panel">
-                <div class="flowInfo-panel-content panel-title">
-                  <span>产品名称</span>
-                  <span class="state-tpye">今日 / 其他</span>
-                </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.waitRetouch.photos" :key="photoIndex" class="flowInfo-panel-content">
-                  <span>{{ photoItem.name }}</span>
-                  <span class="state-tpye">{{ photoItem.today }} / {{ photoItem.other }}</span>
-                </div>
-              </div>
-              <el-button slot="reference" size="mini" class="detail" type="text">详情</el-button>
-            </el-popover>
+  <div class="flow-board" @scroll="scrollMove">
+    <div class="flow-header" :class="headerFix">
+      云端流量看板
+      <span class="count-down">{{ time }}s后刷新</span>
+      <div class="close-button" @click="closeFlow">
+        <i class="el-icon-close" />
+      </div>
+    </div>
+    <div class="flow-body">
+      <!-- 待修数据 -->
+      <div class="module-panel wait-retouch">
+        <div class="panel-left">
+          <div class="panel-title">待修数据</div>
+          <div class="panel-data-box">
+            <div class="data-title">全部待修订单数</div>
+            <div class="data-content">
+              <count-to :end-value="flowInfo.waitRetouch.streamNum.today + flowInfo.waitRetouch.streamNum.other" />
+            </div>
           </div>
-          <div class="panel-footer">正在修图{{ flowInfo.retouchingPersonNum + flowInfo.outerRetouchingPersonNum }}人</div>
-          <div class="line-to-right" />
-          <div class="line-to-left" />
+          <div class="panel-data-box">
+            <div class="data-title">全部待修照片数</div>
+            <div class="data-content">
+              <count-to :end-value="flowInfo.waitRetouch.photoNum.today + flowInfo.waitRetouch.photoNum.other" />
+              <el-popover
+                popper-class="table-popover"
+                placement="bottom"
+                width="300"
+                trigger="hover"
+              >
+                <table class="popover-table">
+                  <tr class="popover-table-header">
+                    <th>产品名称</th>
+                    <th>今日/其他</th>
+                  </tr>
+                  <tr v-for="(productItem, productIndex) in flowInfo.waitRetouch.photos" :key="productIndex">
+                    <th>{{ productItem.name }}</th>
+                    <th>{{ productItem.today + '/' + productItem.other }}</th>
+                  </tr>
+                </table>
+                <span slot="reference" class="data-desc">详情</span>
+              </el-popover>
+            </div>
+          </div>
+          <div class="data-table">
+            <table>
+              <tr>
+                <th />
+                <th class="table-title">今日</th>
+                <th class="table-title">其它日</th>
+              </tr>
+              <tr>
+                <th class="table-title">订单数</th>
+                <th>{{ flowInfo.waitRetouch.streamNum.today }}</th>
+                <th>{{ flowInfo.waitRetouch.streamNum.other }}</th>
+              </tr>
+              <tr>
+                <th class="table-title">照片数</th>
+                <th>{{ flowInfo.waitRetouch.photoNum.today }}</th>
+                <th>{{ flowInfo.waitRetouch.photoNum.other }}</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="panel-right">
+          <people-ring :retouch-num="flowInfo.retouchingPersonNum" :outer-retouch-num="flowInfo.outerRetouchingPersonNum" />
         </div>
       </div>
-      <div class="middle">
-        <div class="panel-wrap panel-orange" @click.stop="">
-          <div class="header-nav">外包修图 / 重修</div>
-          <div class="panel-content">订单数 {{ flowInfo.outerRetouching.streamNum.retouching }} / {{ flowInfo.outerRetouching.streamNum.reworking }}</div>
-          <div class="panel-content">
-            <span class="panel-content-title">照片数 {{ flowInfo.outerRetouching.photoNum.retouching }} / {{ flowInfo.outerRetouching.photoNum.reworking }}</span>
-            <el-popover
-              placement="right"
-              trigger="hover"
-            >
-              <div class="flowInfo-panel">
-                <div class="flowInfo-panel-content panel-title">
-                  <span>产品名称</span>
-                  <span class="state-tpye">修图 / 重修</span>
-                </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.outerRetouching.photos" :key="photoIndex" class="flowInfo-panel-content">
-                  <span>{{ photoItem.name }}</span>
-                  <span class="state-tpye">{{ photoItem.retouching }} / {{ photoItem.reworking }}</span>
-                </div>
-              </div>
-              <el-button slot="reference" size="mini" class="detail" type="text">详情</el-button>
-            </el-popover>
+      <!-- 正在修片数据 -->
+      <div class="module-panel">
+        <div class="panel-title">正在修片数据</div>
+        <div class="panel-data-box">
+          <div class="data-title">全部修片订单数</div>
+          <div class="data-content">
+            <count-to :end-value="allRetouchingOrderNum" />
           </div>
-          <div class="panel-footer">正在修图{{ flowInfo.outerRetouchingPersonNum }}人</div>
-          <div class="line-to-top" />
-          <div class="line-to-bottom" />
         </div>
-        <div class="panel-wrap panel-orange" @click.stop="">
-          <div class="header-nav">云端修图 / 重修</div>
-          <div class="panel-content">订单数 {{ flowInfo.cloudRetouching.streamNum.retouching }} / {{ flowInfo.cloudRetouching.streamNum.reworking }}</div>
-          <div class="panel-content">
-            <span class="panel-content-title">照片数 {{ flowInfo.cloudRetouching.photoNum.retouching }} / {{ flowInfo.cloudRetouching.photoNum.reworking }}</span>
+        <div class="panel-data-box">
+          <div class="data-title">云端修片照片数</div>
+          <div class="data-content">
+            <count-to :end-value="flowInfo.cloudRetouching.photoNum.retouching" />
             <el-popover
-              placement="right"
+              popper-class="table-popover"
+              placement="bottom"
+              width="300"
               trigger="hover"
             >
-              <div class="flowInfo-panel">
-                <div class="flowInfo-panel-content panel-title">
-                  <span>产品名称</span>
-                  <span class="state-tpye">修图 / 重修</span>
-                </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.cloudRetouching.photos" :key="photoIndex" class="flowInfo-panel-content">
-                  <span>{{ photoItem.name }}</span>
-                  <span class="state-tpye">{{ photoItem.retouching }} / {{ photoItem.reworking }}</span>
-                </div>
-              </div>
-              <el-button slot="reference" size="mini" class="detail" type="text">详情</el-button>
+              <table border="0" cellspacing="0" class="popover-table">
+                <tr class="popover-table-header">
+                  <th>产品名称</th>
+                  <th>修图/重修</th>
+                </tr>
+                <tr v-for="(productItem, productIndex) in flowInfo.cloudRetouching.photos" :key="productIndex">
+                  <th>{{ productItem.name }}</th>
+                  <th>{{ productItem.retouching + '/' + productItem.reworking }}</th>
+                </tr>
+              </table>
+              <span slot="reference" class="data-desc">详情</span>
             </el-popover>
           </div>
-          <div class="panel-footer">正在修图{{ flowInfo.retouchingPersonNum }}人</div>
-          <div class="line-to-top" />
-          <div class="line-to-bottom" />
+        </div>
+        <div class="panel-data-box">
+          <div class="data-title">外包修片照片数</div>
+          <div class="data-content">
+            <count-to :end-value="flowInfo.outerRetouching.photoNum.retouching" />
+            <el-popover
+              popper-class="table-popover"
+              placement="bottom"
+              width="300"
+              trigger="hover"
+            >
+              <table border="0" cellspacing="0" class="popover-table">
+                <tr class="popover-table-header">
+                  <th>产品名称</th>
+                  <th>修图/重修</th>
+                </tr>
+                <tr v-for="(productItem, productIndex) in flowInfo.outerRetouching.photos" :key="productIndex">
+                  <th>{{ productItem.name }}</th>
+                  <th>{{ productItem.retouching + '/' + productItem.reworking }}</th>
+                </tr>
+              </table>
+              <span slot="reference" class="data-desc">详情</span>
+            </el-popover>
+          </div>
+        </div>
+        <div class="data-table">
+          <table>
+            <tr>
+              <th />
+              <th class="table-title">云端修图</th>
+              <th class="table-title">云端重修</th>
+              <th class="table-title">外包修图</th>
+              <th class="table-title">外包重修</th>
+            </tr>
+            <tr>
+              <th class="table-title">订单数</th>
+              <th>{{ flowInfo.cloudRetouching.streamNum.retouching }}</th>
+              <th>{{ flowInfo.cloudRetouching.streamNum.reworking }}</th>
+              <th>{{ flowInfo.outerRetouching.streamNum.retouching }}</th>
+              <th>{{ flowInfo.outerRetouching.streamNum.reworking }}</th>
+            </tr>
+            <tr>
+              <th class="table-title">照片数</th>
+              <th>{{ flowInfo.cloudRetouching.photoNum.retouching }}</th>
+              <th>{{ flowInfo.cloudRetouching.photoNum.reworking }}</th>
+              <th>{{ flowInfo.outerRetouching.photoNum.retouching }}</th>
+              <th>{{ flowInfo.outerRetouching.photoNum.reworking }}</th>
+            </tr>
+          </table>
         </div>
       </div>
-      <div class="footer">
-        <div class="panel-wrap panel-orange" @click.stop="">
-          <div class="header-nav">云端 审核中 / 待审核</div>
-          <div class="panel-content">订单数 {{ flowInfo.review.streamNum.reviewing }} / {{ flowInfo.review.streamNum.wait_review }}</div>
-          <div class="panel-content">
-            <span class="panel-content-title">照片数 {{ flowInfo.review.photoNum.reviewing }} / {{ flowInfo.review.photoNum.wait_review }}</span>
+      <!-- 云端审核数据 -->
+      <div class="module-panel">
+        <div class="panel-title">云端审核数据</div>
+        <div class="panel-data-box">
+          <div class="data-title">全部审核订单数</div>
+          <div class="data-content">
+            <count-to :end-value="flowInfo.review.streamNum.wait_review + flowInfo.review.streamNum.reviewing" />
+          </div>
+        </div>
+        <div class="panel-data-box">
+          <div class="data-title">全部审核照片数</div>
+          <div class="data-content">
+            <count-to :end-value="flowInfo.review.photoNum.wait_review + flowInfo.review.photoNum.reviewing" />
             <el-popover
-              placement="right"
+              popper-class="table-popover"
+              placement="bottom"
+              width="300"
               trigger="hover"
             >
-              <div class="flowInfo-panel">
-                <div class="flowInfo-panel-content panel-title">
-                  <span>产品名称</span>
-                  <span class="state-tpye">审核中 / 待审核</span>
-                </div>
-                <div v-for="(photoItem, photoIndex) in flowInfo.review.photos" :key="photoIndex" class="flowInfo-panel-content">
-                  <span>{{ photoItem.name }}</span>
-                  <span class="state-tpye">{{ photoItem.reviewing }} / {{ photoItem.wait_review }}</span>
-                </div>
-              </div>
-              <el-button slot="reference" size="mini" class="detail" type="text">详情</el-button>
+              <table class="popover-table">
+                <tr class="popover-table-header">
+                  <th>产品名称</th>
+                  <th>审核中/待审核</th>
+                </tr>
+                <tr v-for="(productItem, productIndex) in flowInfo.review.photos" :key="productIndex">
+                  <th>{{ productItem.name }}</th>
+                  <th>{{ productItem.reviewing + '/' + productItem.wait_review }}</th>
+                </tr>
+              </table>
+              <span slot="reference" class="data-desc">详情</span>
             </el-popover>
           </div>
-          <div class="line-to-right" />
-          <div class="line-to-left" />
+        </div>
+        <div class="data-table">
+          <table>
+            <tr>
+              <th />
+              <th class="table-title">审核中</th>
+              <th class="table-title">待审核</th>
+            </tr>
+            <tr>
+              <th class="table-title">订单数</th>
+              <th>{{ flowInfo.review.streamNum.reviewing }}</th>
+              <th>{{ flowInfo.review.streamNum.wait_review }}</th>
+            </tr>
+            <tr>
+              <th class="table-title">照片数</th>
+              <th>{{ flowInfo.review.photoNum.reviewing }}</th>
+              <th>{{ flowInfo.review.photoNum.wait_review }}</th>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
@@ -118,9 +208,12 @@
 
 <script>
 import * as AdminManage from '@/api/adminManage.js'
+import PeopleRing from './PeopleRing.vue'
+import CountTo from '@/components/CountTo'
 
 export default {
   name: 'FlowBoard',
+  components: { PeopleRing, CountTo },
   data () {
     return {
       flowInfo: {
@@ -172,213 +265,137 @@ export default {
         }
       },
       time: 30,
-      timer: -1
+      timer: null,
+      headerFix: ''
+    }
+  },
+  computed: {
+    allRetouchingOrderNum () {
+      const sum = this.flowInfo.cloudRetouching.streamNum.retouching + this.flowInfo.outerRetouching.streamNum.retouching
+      return sum
     }
   },
   created () {
     this.getFlowInfo()
   },
   mounted () {
-    this.timer = setInterval(() => {
-      this.time--
-      if (this.time === 0) {
-        this.time = 30
-        this.getFlowInfo()
-      }
-    }, 1000)
+    this.pollFlowInfo()
   },
   beforeDestroy () {
-    clearInterval(this.timer)
+    clearTimeout(this.timer)
     this.timer = null
   },
   methods: {
-    closeFlow () {
-      this.$emit('update:showFlowBoard', false)
-    },
     /**
      * @description 获取流量看板数据
      */
     async getFlowInfo () {
       this.flowInfo = await AdminManage.getFlowInfo()
+    },
+    /**
+     * @description 轮询监听
+     */
+    pollFlowInfo () {
+      clearTimeout(this.timer)
+      this.timer = null
+      this.timer = setTimeout(() => {
+        this.time--
+        if (this.time === 0) {
+          this.time = 30
+          this.getFlowInfo()
+        }
+        this.pollFlowInfo()
+      }, 1000)
+    },
+    /**
+     * @description 关闭抽屉
+     */
+    closeFlow () {
+      this.$emit('update:visible', false)
+    },
+    /**
+     * @description 监听滚动条滚动
+     */
+    scrollMove (e) {
+      const scrollTop = e.target.scrollTop
+      this.headerFix = scrollTop > 0 ? 'header-fix' : ''
     }
   }
 }
 </script>
 
 <style lang="less">
-@linewidth: 97px;
-@lineColor: #F59A23;
+@import "~@/styles/variables.less";
 
-.flow-board {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-
-  .title {
-    color: #fff;
-    text-align: center;
-    margin: 100px 0 50px;
+.table-popover {
+  .popover-table {
     width: 100%;
-  }
+    display: block;
+    max-height: 400px;
+    overflow: overlay;
+    border-collapse: collapse;
 
-  .refresh {
-    color: #fff;
-    position: absolute;
-    right: 200px;
-    top: 100px;
-  }
-
-  .panel-wrap {
-    width: 210px;
-    border-radius: 5px;
-
-    .header-nav {
-      font-size: 14px;
-      padding: 10px 0;
-      box-sizing: border-box;
-      color: #303133;
-      font-weight: 500;
-      text-align: center;
+    &::-webkit-scrollbar {
+      width: 5px;
     }
 
-    .panel-content {
-      text-align: center;
-      padding: 10px;
-      background-color: #fff;
-      margin-top: 5px;
+    &::-webkit-scrollbar-thumb {
+      background: #cdcdcd;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+      background: #fff;
+      display: none;
+    }
+
+    &::-webkit-scrollbar-corner {
+      display: none;
+    }
+
+    tr {
+      border-bottom: 1px solid #f2f6fc;
+    }
+
+    th {
+      padding: 21px 20px;
+      width: 50%;
       font-size: 14px;
       font-weight: 400;
       color: #606266;
-
-      .panel-content-title {
-        margin-right: 2px;
-      }
-
-      .el-button {
-        border: none;
-        font-size: 12px;
-        margin-left: 10px;
-      }
+      line-height: 14px;
     }
 
-    .panel-footer {
-      text-align: center;
-      padding: 10px;
-      font-size: 14px;
-    }
-  }
+    .popover-table-header {
+      background-color: #fafafa;
+      display: block;
+      position: sticky;
+      top: 0;
+      border: none;
 
-  .main {
-    width: 1000px;
-    margin: auto;
-  }
-
-  .flow-board-header {
-    display: flex;
-    justify-content: center;
-
-    .panel-wrap {
-      position: relative;
-
-      .line-to-right {
-        width: @linewidth;
-        height: 2px;
-        display: inline-block;
-        background-color: @lineColor;
-        position: absolute;
-        top: 50%;
-        left: 100%;
-      }
-
-      .line-to-left {
-        width: @linewidth;
-        height: 2px;
-        display: inline-block;
-        background-color: @lineColor;
-        position: absolute;
-        top: 50%;
-        right: 100%;
+      & > th {
+        padding: 17px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #303133;
+        line-height: 22px;
       }
     }
-  }
-
-  .middle {
-    display: flex;
-    justify-content: space-evenly;
-
-    .panel-wrap {
-      margin: 30px 0;
-      position: relative;
-
-      .line-to-top {
-        background-color: @lineColor;
-        display: inline-block;
-        position: absolute;
-        left: 50%;
-        width: 2px;
-        height: 118px;
-        bottom: 100%;
-        transform: translateX(-50%);
-      }
-
-      .line-to-bottom {
-        background-color: @lineColor;
-        display: inline-block;
-        position: absolute;
-        left: 50%;
-        width: 2px;
-        height: 100px;
-        top: 100%;
-        transform: translateX(-50%);
-      }
-    }
-  }
-
-  .footer {
-    display: flex;
-    justify-content: center;
-
-    .panel-wrap {
-      position: relative;
-
-      .line-to-right {
-        width: @linewidth;
-        height: 2px;
-        display: inline-block;
-        background-color: @lineColor;
-        position: absolute;
-        top: 50%;
-        left: 100%;
-      }
-
-      .line-to-left {
-        width: @linewidth;
-        height: 2px;
-        display: inline-block;
-        background-color: @lineColor;
-        position: absolute;
-        top: 50%;
-        right: 100%;
-      }
-    }
-  }
-
-  .panel-orange {
-    background-color: #facd91;
   }
 }
 
-.flowInfo-panel {
-  max-height: 500px;
-  overflow-y: overlay;
-  overflow-x: hidden;
+.flow-board {
+  padding: 0 24px;
+  background-color: #f2f6fc;
+  height: @drawerHeight;
+  overflow: overlay;
 
   &::-webkit-scrollbar {
-    width: 5px;
+    width: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -399,31 +416,135 @@ export default {
     display: none;
   }
 
-  .panel-title {
-    background-color: #fafafa;
+  .flow-header {
+    font-size: 20px;
+    font-weight: 600;
     color: #303133;
-    font-weight: 500;
+    line-height: 24px;
+    padding: 24px;
+    margin: 0 -24px;
+    background-color: #f2f6fc;
     position: sticky;
     top: 0;
+    z-index: 20;
 
-    & > span {
-      padding: 17px 20px;
+    .count-down {
+      color: #606266;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      margin-left: 12px;
+    }
+
+    .close-button {
+      float: right;
+      cursor: pointer;
+    }
+
+    &.header-fix {
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
     }
   }
 
-  .flowInfo-panel-content {
-    font-size: 12px;
-    color: #606266;
-    border: 1px solid #f2f6fc;
+  .flow-body {
+    .wait-retouch {
+      .panel-left {
+        width: calc(~"100% - 256px");
+        display: inline-block;
+        border-right: 1px solid @borderColor;
+        vertical-align: bottom;
+      }
 
-    & > span {
-      display: inline-block;
-      width: 100px;
-      padding: 20px 21px;
+      .panel-right {
+        width: 256px;
+        display: inline-block;
+      }
     }
 
-    .state-tpye {
-      width: 150px;
+    .module-panel {
+      border-radius: 8px;
+      margin-bottom: 24px;
+
+      .panel-title {
+        padding-left: 10px;
+        margin-bottom: 16px;
+      }
+    }
+
+    .panel-data-box {
+      width: 183px;
+      padding: 12px 10px;
+      display: inline-block;
+
+      .data-title {
+        font-size: 12px;
+        font-weight: 400;
+        color: #909399;
+        line-height: 17px;
+        padding-bottom: 8px;
+      }
+
+      .data-content {
+        font-size: 24px;
+        font-weight: 600;
+        color: @blue;
+        line-height: 28px;
+
+        .data-desc {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 17px;
+          margin-left: 6px;
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .data-table {
+      border-top: 1px solid @borderColor;
+      padding-top: 16px;
+      margin: 0 10px;
+
+      table {
+        font-size: 12px;
+        font-weight: 600;
+        color: #303133;
+        line-height: 20px;
+
+        th {
+          min-width: 30px;
+          border-right: 1px solid @borderColor;
+          text-align: left;
+          padding: 0 24px 12px;
+
+          &:nth-of-type(1) {
+            border: none;
+            padding: 0 0 12px;
+          }
+
+          &:nth-last-of-type(1) {
+            border: none;
+          }
+        }
+
+        tr {
+          margin-bottom: 12px;
+
+          &:nth-last-of-type(1) {
+            th {
+              padding-bottom: 0;
+            }
+          }
+        }
+
+        .table-title {
+          font-size: 12px;
+          font-weight: 400;
+          color: #909399;
+          line-height: 17px;
+        }
+      }
     }
   }
 }
