@@ -496,7 +496,6 @@ export default {
     .panel-content {
       color: #606266;
       font-size: 14px;
-      line-height: 14px;
     }
   }
 
