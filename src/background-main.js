@@ -25,7 +25,7 @@ async function createWindow () {
       nodeIntegration: true,
       nodeIntegrationInSubFrames: false,
       scrollBounce: true,
-      backgroundThrottling: false
+      backgroundThrottling: true
     },
     titleBarStyle: 'hiddenInset',
     icon: path.join(global.staticDir, 'icon.png'),

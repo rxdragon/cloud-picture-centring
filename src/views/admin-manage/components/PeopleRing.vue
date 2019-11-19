@@ -42,8 +42,8 @@ export default {
       chartData: {
         columns: ['title', 'num'],
         rows: [
-          { title: '0人', num: 0 }, // 外包
-          { title: '0人', num: 0 } // 内部
+          { title: '云端修图师', num: 0 }, // 外包
+          { title: '外包修图师', num: 0 } // 内部
         ]
       },
       chartSettings: {
@@ -51,6 +51,11 @@ export default {
           color: (p) => {
             const colorList = ['#56BCFF', '#4669FB']
             return colorList[p.dataIndex]
+          }
+        },
+        label: {
+          formatter: (p) => {
+            return p.data.value + '人'
           }
         }
       },
@@ -66,9 +71,7 @@ export default {
   watch: {
     retouchNum: {
       handler () {
-        this.chartData.rows[0].title = this.outerRetouchNum + '人'
         this.chartData.rows[0].num = this.outerRetouchNum
-        this.chartData.rows[1].title = this.retouchNum + '人'
         this.chartData.rows[1].num = this.retouchNum
       },
       immediate: true
