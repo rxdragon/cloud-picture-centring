@@ -27,7 +27,7 @@
           <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="id" label="工号" />
             <el-table-column prop="name" label="伙伴姓名" />
-            <el-table-column prop="position_text" label="岗位" />
+            <el-table-column prop="positionText" label="岗位" />
             <el-table-column label="角色组">
               <template slot-scope="scope">
                 {{ scope.row.title || '-' }}

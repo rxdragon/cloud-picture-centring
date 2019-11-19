@@ -12,6 +12,7 @@ export function getStaffListByPage (params) {
   }).then(msg => {
     msg.list.map(item => {
       item.name = item.name || '-'
+      item.positionText = item.position_text || '-'
       item.status = item.account_available ? '可用' : '不可用'
     })
     return msg

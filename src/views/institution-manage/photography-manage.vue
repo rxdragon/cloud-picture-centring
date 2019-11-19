@@ -25,7 +25,7 @@
       </el-table>
     </div>
     <!-- 弹出框 -->
-    <el-dialog title="新增摄影机构" width="500px" :before-close="hiddenDialog" :visible.sync="dialogTableVisible">
+    <el-dialog :title="editInstitutionId ? '编辑摄影机构' : '新增摄影机构'" width="500px" :before-close="hiddenDialog" :visible.sync="dialogTableVisible">
       <el-form ref="formEdit" :model="institutionConfig" :rules="rules" label-position="left" label-width="108px">
         <el-form-item label="机构名：" required prop="name">
           <el-input v-model="institutionConfig.name" maxlength="32" placeholder="请填写摄影机构名称" />
@@ -43,7 +43,7 @@
           <el-input v-model="institutionConfig.secret" maxlength="16" type="password" placeholder="未有特殊密码要求可不用填写" />
         </el-form-item>
         <el-form-item v-if="institutionConfig.loginType === 2" prop="code" required label="机构代号：">
-          <el-input v-model="institutionConfig.code" maxlength="16" placeholder="请填写摄影机构代号" />
+          <el-input :disabled="Boolean(editInstitutionId)" v-model="institutionConfig.code" maxlength="16" placeholder="请填写摄影机构代号" />
         </el-form-item>
         <el-form-item>
           <el-button type="info" @click="hiddenDialog">取消</el-button>
@@ -252,7 +252,6 @@ export default {
       }
       if (this.institutionConfig.loginType === 2) {
         reqData.account = this.institutionConfig.account
-        reqData.code = this.institutionConfig.code
         if (this.institutionConfig.secret) { reqData.secret = this.institutionConfig.secret }
       }
       this.$refs['formEdit'].validate()
