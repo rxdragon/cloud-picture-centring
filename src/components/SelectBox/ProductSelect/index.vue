@@ -62,8 +62,14 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.el-cascader {
-  width: 310px;
+<style lang="less">
+.product-select {
+  .el-cascader {
+    width: 310px;
+
+    .el-cascader__tags input {
+      font-size: 14px;
+    }
+  }
 }
 </style>
