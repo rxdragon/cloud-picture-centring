@@ -43,7 +43,7 @@
           <el-input v-model="institutionConfig.secret" maxlength="16" type="password" placeholder="未有特殊密码要求可不用填写" />
         </el-form-item>
         <el-form-item v-if="institutionConfig.loginType === 2" prop="code" required label="机构代号：">
-          <el-input :disabled="Boolean(editInstitutionId)" v-model="institutionConfig.code" maxlength="16" placeholder="请填写摄影机构代号" />
+          <el-input v-model="institutionConfig.code" :disabled="Boolean(editInstitutionId)" maxlength="16" placeholder="请填写摄影机构代号" />
         </el-form-item>
         <el-form-item>
           <el-button type="info" @click="hiddenDialog">取消</el-button>
