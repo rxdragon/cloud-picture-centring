@@ -1,6 +1,6 @@
 {
   "name": "cloud-picture-centring",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "build-release": "vue-cli-service build --mode release --dest=dist_vue",
