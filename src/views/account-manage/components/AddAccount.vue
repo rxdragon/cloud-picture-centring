@@ -110,8 +110,10 @@ export default {
   watch: {
     isLoadingDown (value) {
       if (value && Object.keys(this.staffInfo).length) {
-        const productIds = this.staffInfo.can_receive_product.map(item => item.id)
-        this.defaultCheckedKeys = productIds
+        if (this.staffInfo.can_receive_product) {
+          const productIds = this.staffInfo.can_receive_product.map(item => item.id)
+          this.defaultCheckedKeys = productIds
+        }
       }
     }
   },
