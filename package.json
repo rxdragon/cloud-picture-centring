@@ -1,0 +1,92 @@
+{
+  "name": "cloud-picture-centring",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "build-release": "vue-cli-service build --mode release --dest=dist_vue",
+    "build-dev": "vue-cli-service build --mode development --dest=dist_vue",
+    "build": "vue-cli-service build --dest=dist_vue",
+    "build-background": "webpack-cli --mode=production --config='background-main.webpack-config.js'",
+    "build-background-dev": "webpack-cli --mode=development --config='background-main.webpack-config.js'",
+    "build-background-release": "webpack-cli --mode=development --config='background-main.webpack-config.js'",
+    "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
+    "eserve-release": "vue-cli-service electron:serve --mode release",
+    "eserve-dev": "vue-cli-service electron:serve --mode development",
+    "new": "plop",
+    "lint": "vue-cli-service lint",
+    "stylelint": "stylelint 'src/**/*.vue' --config '.stylelintrc' --fix",
+    "serve": "vue-cli-service serve --mode development",
+    "ebuild": "vue-cli-service electron:build",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
+  },
+  "main": "background.js",
+  "dependencies": {
+    "animejs": "^3.1.0",
+    "asar": "^2.0.1",
+    "clipboard": "^2.0.4",
+    "driver.js": "^0.9.8",
+    "echarts": "^4.5.0",
+    "element-ui": "^2.4.5",
+    "js-base64": "^2.5.1",
+    "live2d-widget": "^3.1.4",
+    "lottie-web": "^5.5.9",
+    "md5": "^2.2.1",
+    "mime": "^2.4.4",
+    "moment": "^2.24.0",
+    "mousetrap": "^1.6.3",
+    "node-rsa": "^1.0.6",
+    "nprogress": "^0.2.0",
+    "stylelint": "^11.1.1",
+    "stylelint-config-standard": "^18.3.0",
+    "stylelint-webpack-plugin": "^1.0.3",
+    "upyun": "^3.3.11",
+    "v-charts": "^1.19.0",
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.3",
+    "vuex": "^3.0.1",
+    "webpack-cli": "^3.3.9"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.11.0",
+    "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "axios": "^0.18.0",
+    "babel-eslint": "^10.0.1",
+    "electron": "^6.0.0",
+    "electron-icon-builder": "^1.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "vue-cli-plugin-axios": "^0.0.4",
+    "vue-cli-plugin-electron-builder": "^1.4.0",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/standard"
+    ],
+    "rules": "./.eslintrc.js",
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
