@@ -30,8 +30,8 @@
       </div>
       <div class="panel-require-concent">
         <div class="require-label">
-          <el-tag v-if="orderData.requireLabel.eye !== 'not_required'" size="medium">眼睛增大幅度：{{ orderData.requireLabel.eye | toLabelName }}</el-tag>
-          <el-tag v-if="orderData.requireLabel.face !== 'not_required'" size="medium">瘦脸幅度：{{ orderData.requireLabel.face | toLabelName }}</el-tag>
+          <el-tag size="medium">眼睛增大幅度：{{ orderData.requireLabel.eye | toLabelName }}</el-tag>
+          <el-tag size="medium">瘦脸幅度：{{ orderData.requireLabel.face | toLabelName }}</el-tag>
           <el-tag v-if="orderData.requireLabel.pimples" size="medium">祛痣</el-tag>
         </div>
         <div class="require-remark">
