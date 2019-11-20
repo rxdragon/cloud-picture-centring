@@ -62,8 +62,14 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.el-cascader {
-  width: 220px;
+<style lang="less">
+.staff-select {
+  .el-cascader {
+    width: 220px;
+
+    .el-cascader__tags input {
+      font-size: 14px;
+    }
+  }
 }
 </style>
