@@ -147,8 +147,16 @@ export default {
       // 扩展功能
       if (!this.autoUpload || !this.streamNum) return
       event.stopPropagation()
-      const readFileArray = await AutoUpload.getFiles(this.streamNum)
-      const upInput = this.$refs['uploadButton'].$children[0]
+      let upInput
+      let readFileArray
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        readFileArray = await AutoUpload.getFiles(this.streamNum)
+        upInput = this.$refs['uploadButton'].$children[0]
+      } catch (error) {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        console.error(error)
+      }
       upInput.uploadFiles(readFileArray)
     },
     /**
@@ -270,11 +278,14 @@ export default {
       if (isPending) { this.$refs.uploadButton.abort(this.uploadPhoto[index]) }
       this.uploadPhoto.splice(index, 1)
       this.finishPhoto.splice(index, 1)
+      this.$emit('change', this.finishPhoto)
     },
     /**
      * @description 删除缓存数据
      */
     deleteCachePhoto (index) {
+      const findOrignPhoto = this.photos.find(item => item.id === this.cachePhoto[index].id)
+      findOrignPhoto && (findOrignPhoto.isCover = false)
       this.cachePhoto.splice(index, 1)
     },
     /**
