@@ -171,7 +171,10 @@ export default {
         moduleItem.menu.forEach(menuItem => {
           menuItem.checkPermission = []
           menuItem.permission.forEach(permissionItem => {
-            // 如果有权限 放进菜单的选择权限中
+            // 如果有权限 放进菜单的选择权限中 初始化角色
+            permissionItem.isRole = false
+            menuItem.isRole = false
+            moduleItem.isRole = false
             if (this.rolePermission.includes(+permissionItem.id)) {
               permissionItem.isRole = true
               menuItem.isRole = true
