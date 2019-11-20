@@ -46,6 +46,8 @@ export function toLabelName (value) {
       return '中'
     case 'small':
       return '小'
+    case 'not_required':
+      return '不要求'
     default:
       return '异常'
   }

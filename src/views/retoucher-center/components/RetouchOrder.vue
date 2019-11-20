@@ -219,6 +219,7 @@ export default {
     uploadDown (finishPhoto) {
       // 实验功能
       if (this.showOverTag) {
+        this.photos.forEach(item => { item.isCover = false })
         finishPhoto.forEach(photoItem => {
           const findOrignPhoto = this.photos.find(item => item.id === photoItem.id)
           findOrignPhoto && (findOrignPhoto.isCover = true)
