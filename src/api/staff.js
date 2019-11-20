@@ -1,4 +1,5 @@
 import axios from '@/plugins/axios.js'
+import * as SessionTool from '@/utils/sessionTool.js'
 
 /**
  * @description 查询伙伴
@@ -31,11 +32,7 @@ export function getStaffInfo (params) {
  */
 export function getStaffList () {
   const params = { needGroup: true }
-  return axios({
-    url: '/project_cloud/common/getStaffList',
-    method: 'GET',
-    params
-  }).then(msg => {
+  function handleData (msg) {
     const createData = [{
       id: -1,
       gid: -1,
@@ -71,7 +68,20 @@ export function getStaffList () {
     })
     if (!createData[0].children.length) { createData.shift(1) }
     return createData
-  })
+  }
+  const data = SessionTool.getStaffList()
+  if (data) {
+    return handleData(data)
+  } else {
+    return axios({
+      url: '/project_cloud/common/getStaffList',
+      method: 'GET',
+      params
+    }).then(msg => {
+      SessionTool.saveStaffList(msg)
+      return handleData(msg)
+    })
+  }
 }
 
 /**
@@ -79,11 +89,7 @@ export function getStaffList () {
  */
 export function getStaffSelectList () {
   const params = { needGroup: true }
-  return axios({
-    url: '/project_cloud/common/getStaffList',
-    method: 'get',
-    params
-  }).then(msg => {
+  function handleData (msg) {
     const createData = [{
       label: '未分组',
       value: 0,
@@ -112,7 +118,20 @@ export function getStaffSelectList () {
     })
     if (!createData[0].children.length) { createData.shift(1) }
     return createData
-  })
+  }
+  const data = SessionTool.getStaffList()
+  if (data) {
+    return handleData(data)
+  } else {
+    return axios({
+      url: '/project_cloud/common/getStaffList',
+      method: 'get',
+      params
+    }).then(msg => {
+      SessionTool.saveStaffList(msg)
+      return handleData(msg)
+    })
+  }
 }
 
 /**
