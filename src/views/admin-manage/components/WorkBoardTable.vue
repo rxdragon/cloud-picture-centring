@@ -50,7 +50,11 @@
         <template slot-scope="scope">
           <div class="operation-box">
             <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
-            <el-button v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing'" type="danger" size="mini" @click="urgentStream(scope.row.id)">加急</el-button>
+            <el-button
+              v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing' && scope.row.state !== 'finish' "
+              type="danger" size="mini" @click="urgentStream(scope.row.id)">
+              加急
+            </el-button>
           </div>
         </template>
       </el-table-column>
