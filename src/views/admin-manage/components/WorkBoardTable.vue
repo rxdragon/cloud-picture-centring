@@ -52,7 +52,10 @@
             <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
             <el-button
               v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing' && scope.row.state !== 'finish' "
-              type="danger" size="mini" @click="urgentStream(scope.row.id)">
+              type="danger"
+              size="mini"
+              @click="urgentStream(scope.row.id)"
+            >
               加急
             </el-button>
           </div>
