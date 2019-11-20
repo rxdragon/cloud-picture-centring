@@ -105,7 +105,7 @@ export function getStaffRetouchList (params) {
       const spotPlantPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_plant_num || 0
       const spotPullPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_pull_num || 0
       const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)
-      listItem.retoucherName = listItem.retoucher.name
+      listItem.retoucherName = listItem.retoucher.name || '-'
       listItem.retouchAllTime = timeFormat(allTime, 'text', true)
       listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
       listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
