@@ -60,7 +60,7 @@ export function getSpotCheckResult (params) {
     const data = msg.data
     let allPhotoPath = []
     if (!data.length) {
-      SessionTool.removeCloudAssessmentLastPhotoId()
+      SessionTool.removeCloudAssessmentPhotoId()
       return {
         list: [],
         allPhotoPath,
