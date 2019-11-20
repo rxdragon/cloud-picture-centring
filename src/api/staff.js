@@ -96,9 +96,7 @@ export function getStaffSelectList () {
       }
       if (staff.department_id) {
         const groudInfo = staff.department
-        const findGroud = createData.find(item => {
-          return item.gid === staff.department_id
-        })
+        const findGroud = createData.find(item => item.value === staff.department_id)
         if (findGroud) {
           findGroud.children = [...findGroud.children, staffInfo]
         } else {
