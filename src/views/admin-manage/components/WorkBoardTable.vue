@@ -49,7 +49,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="scope">
           <div class="operation-box">
-            <el-button type="primary" size="mini" @click="linkto(scope.row.stream_num)">详情</el-button>
+            <el-button type="primary" size="mini" @click="linkto(scope.row)">详情</el-button>
             <el-button
               v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing' && scope.row.state !== 'finish' "
               type="danger"
@@ -101,11 +101,20 @@ export default {
     /**
      * @description 跳转
      */
-    linkto (workBoardStreamNum) {
-      this.$router.push({
-        path: '/order-detail',
-        query: { workBoardStreamNum }
-      })
+    linkto (item) {
+      const streamId = item.id
+      const workBoardStreamNum = item.stream_num
+      if (item.state === 'finish') {
+        this.$router.push({
+          path: '/order-detail',
+          query: { streamId }
+        })
+      } else {
+        this.$router.push({
+          path: '/order-detail',
+          query: { workBoardStreamNum }
+        })
+      }
     }
   }
 }

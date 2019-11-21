@@ -189,7 +189,7 @@ export function getStreamInfo (params) {
       reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注',
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,
-      retoucherName: data.retoucher && data.retoucher.name || '-',
+      retoucherName: data.retoucher && data.retoucher.name || data.retoucher.real_name || '-',
       reviewerName: data.reviewer && data.reviewer.name || '',
       photographer: data.order.tags && data.order.tags.values.photographer || '-'
     }

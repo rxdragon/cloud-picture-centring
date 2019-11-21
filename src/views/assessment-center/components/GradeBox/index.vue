@@ -218,6 +218,9 @@ export default {
         const glassArray = ['plant', 'pull', 'none']
         this.flakinessEvaluate = glassArray[this.checkPlantState - 1]
       }
+      if (!this.photoInfoData.isReturn && value === 'different') {
+        this.flakinessEvaluate = this.weedOpinion
+      }
     },
     weedOpinion (value) {
       if (!this.photoInfoData.isReturn && this.sameOpinion === 'different') {
