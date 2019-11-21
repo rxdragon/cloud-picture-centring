@@ -13,14 +13,14 @@ const guestPhoto = {
       component: () => import('@/views/guest-photo/index.vue'),
       meta: { title: '客片池', icon: '' }
     }, {
-      path: 'excellent-photo',
-      name: 'ExcellentPhoto',
-      component: () => import('@/views/guest-photo/evaluate-photo.vue'),
+      path: 'good-guest',
+      name: 'GoodGuest',
+      component: () => import('@/views/guest-photo/good-guest.vue'),
       meta: { title: '优秀客片', icon: '' }
     }, {
-      path: 'issue-photo',
-      name: 'IssuePhoto',
-      component: () => import('@/views/guest-photo/evaluate-photo.vue'),
+      path: 'bad-guest',
+      name: 'BadGuest',
+      component: () => import('@/views/guest-photo/bad-guest.vue'),
       meta: { title: '问题客片', icon: '' }
     }, {
       path: '/guest-info',

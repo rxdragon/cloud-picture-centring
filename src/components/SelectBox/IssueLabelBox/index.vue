@@ -3,7 +3,7 @@
     <el-select
       v-bind="$attrs"
       :popper-append-to-body="false"
-      placeholder="请选择中拔草"
+      placeholder="请选择种拔草原因"
       v-on="$listeners"
     >
       <el-option

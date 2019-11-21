@@ -13,10 +13,13 @@ export function getPhotoList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.list && msg.list.forEach(listItem => {
-      const completePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
-      listItem.src = completePhoto && completePhoto.path || ''
-    })
+    if (msg.list) {
+      msg.list.forEach(listItem => {
+        const completePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
+        listItem.src = completePhoto && completePhoto.path || ''
+      })
+      msg.list = msg.list.filter(listItem => Boolean(listItem.src))
+    }
     return msg
   })
 }
@@ -109,16 +112,19 @@ export function getAttitudePhotoList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.list.forEach(listItem => {
-      const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
-      listItem.src = findCompletePhoto && findCompletePhoto.path || ''
-      listItem.retoucherName = listItem.stream && listItem.stream.retoucher && listItem.stream.retoucher.name || '-'
-      listItem.retouchGroupName = listItem.stream &&
-        listItem.stream.retoucher &&
-        listItem.stream.retoucher.retouch_group &&
-        listItem.stream.retoucher.retouch_group.name ||
-        '-'
-    })
+    if (msg.list) {
+      msg.list.forEach(listItem => {
+        const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
+        listItem.src = findCompletePhoto && findCompletePhoto.path || ''
+        listItem.retoucherName = listItem.stream && listItem.stream.retoucher && listItem.stream.retoucher.name || '-'
+        listItem.retouchGroupName = listItem.stream &&
+          listItem.stream.retoucher &&
+          listItem.stream.retoucher.retouch_group &&
+          listItem.stream.retoucher.retouch_group.name ||
+          '-'
+      })
+      msg.list = msg.list.filter(listItem => Boolean(listItem.src))
+    }
     return msg
   })
 }

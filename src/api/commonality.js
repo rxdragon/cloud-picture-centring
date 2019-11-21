@@ -59,10 +59,15 @@ export function getStreamInfo (params) {
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
       photoItem.reworkNum = reworkNum
       // 照片版本
-      photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
-        ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum)
-        : settlePhoto([...photoItem.other_photo_version], reworkNum)
+      if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
+        photoItem.photoVersion = ''
+      } else {
+        photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
+          ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum)
+          : settlePhoto([...photoItem.other_photo_version], reworkNum)
+      }
     })
+    data.photos = data.photos.filter(photoItem => Boolean(photoItem.photoVersion))
     createData.orderData = {
       streamNum: data.streamNum,
       photographerOrg: data.order ? data.order.photographer_org.name : '-',

@@ -59,10 +59,16 @@ export default {
       attitudeType: ''// 赞or踩
     }
   },
-  created () {
-    const { uuid } = this.$route.query
-    this.uuid = uuid
-    this.getAttitudePhotoInfo()
+  watch: {
+    '$route.query.uuid': {
+      handler (value) {
+        if (this.$route.name === this.routeName) {
+          this.uuid = value
+          this.getAttitudePhotoInfo()
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
     /**

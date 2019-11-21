@@ -89,9 +89,9 @@ export default {
   },
   created () {
     const name = this.$route.name
-    if (name === 'ExcellentPhoto') {
+    if (name === 'GoodGuest') {
       this.type = 'good'
-    } else if (name === 'IssuePhoto') {
+    } else if (name === 'BadGuest') {
       this.type = 'bad'
     } else {
       this.$router.replace('/404')

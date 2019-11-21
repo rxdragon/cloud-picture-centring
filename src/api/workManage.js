@@ -163,6 +163,13 @@ export function getStoreEvaluate (params) {
     url: '/project_cloud/operator/getStoreEvaluate',
     method: 'POST',
     data: params
+  }).then(msg => {
+    console.log(msg)
+    msg.list.forEach(listItem => {
+      listItem.retoucherName = listItem.stream.retoucher && listItem.stream.retoucher.name || '-'
+      listItem.retouchGroupName = listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name || '-'
+    })
+    return msg
   })
 }
 
