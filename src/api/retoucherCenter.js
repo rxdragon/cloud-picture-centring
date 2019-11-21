@@ -51,13 +51,14 @@ export function getStreamInfo (params) {
     params
   }).then(msg => {
     const createData = {}
+    const notTemplePhoto = msg.photos.filter(item => item.type !== 'template')
     createData.orderData = {
       streamNum: msg.stream_num,
       type: msg.product && msg.product.retouch_standard,
       photographerName: msg.order.photographer_org ? msg.order.photographer_org.name : '-',
       photographer: msg.order.tags ? msg.order.tags.values.photographer : '-', // 摄影
       productName: msg.product && msg.product.name,
-      photoNum: msg.photos.length,
+      photoNum: notTemplePhoto.length,
       waitTime: waitTime(msg.created_at),
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
