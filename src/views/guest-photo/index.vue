@@ -153,6 +153,10 @@ export default {
       if (this.orderSearchValue) {
         const key = type[this.orderType - 1]
         reqData[key] = this.orderSearchValue
+        if (key !== 'streamNum' && !this.timeSpan) {
+          this.$newMessage.warning('请填写时间')
+          return false
+        }
       }
       if (!this.timeSpan && !this.orderSearchValue) {
         this.$newMessage.warning('请填写时间')
