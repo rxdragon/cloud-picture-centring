@@ -28,7 +28,7 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.less'
 import Logo from './Logo'
-import { experimentRoutes, asyncRoutes } from '@/router/index.js'
+import { experimentRoutes } from '@/router/index.js'
 
 export default {
   components: { SidebarItem, Logo },
@@ -39,7 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['permission_routes']),
+    ...mapGetters(['permission_routes', 'personage_routers']),
     activeMenu () {
       const route = this.$route
       const { meta, path } = route
@@ -62,7 +62,7 @@ export default {
         if (nowTime < this.expireTime) {
           const hasExperiment = this.permission_routes.find(item => item.path.includes('experiment-view'))
           if (hasExperiment) return
-          this.$store.commit('permission/SET_ROUTES', [...asyncRoutes, ...experimentRoutes])
+          this.$store.commit('permission/SET_ROUTES', [...this.personage_routers, ...experimentRoutes])
           this.$router.addRoutes(experimentRoutes)
           this.experimentCounts = 0
           this.expireTime = 0

@@ -42,7 +42,6 @@
         <span>照片审核</span>
         <div class="button-box">
           <domain-switch-box />
-          <el-button size="small" plain type="primary" @click="oneAllDownRetouched">一键下载修后照片</el-button>
           <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
           <template v-if="orderData.photos.length > 1">
             <el-button v-if="!isAllReturnOrder" type="warning" size="small" @click="allRework">全部重修</el-button>
@@ -143,21 +142,6 @@ export default {
   },
   methods: {
     /**
-     * @description 一键下载修后成片
-     */
-    oneAllDownRetouched () {
-      const savePath = `/${this.orderData.streamNum}`
-      const photoArr = []
-      this.orderData.photos.forEach(photoItem => {
-        const findOriginal = photoItem.priviewPhotoData.find(versionItem => versionItem.version === 'first_photo')
-        photoArr.push({
-          url: findOriginal.path,
-          path: savePath
-        })
-      })
-      PhotoTool.oneAllDown(photoArr)
-    },
-    /**
      * @description 一键下载原片
      */
     oneAllDownOrign () {
@@ -165,8 +149,14 @@ export default {
       const photoArr = []
       this.orderData.photos.forEach(photoItem => {
         const findOriginal = photoItem.priviewPhotoData.find(versionItem => versionItem.version === 'original_photo')
+        const findFirst = photoItem.priviewPhotoData.find(versionItem => versionItem.version === 'first_photo')
         photoArr.push({
           url: findOriginal.path,
+          path: savePath
+        })
+        photoArr.push({
+          url: findFirst.path,
+          originalPhoto: findOriginal.path,
           path: savePath
         })
       })

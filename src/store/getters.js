@@ -2,6 +2,7 @@ const getters = {
   visitedViews: state => state.tagsView.visitedViews, // 访问页面
   cachedViews: state => state.tagsView.cachedViews, // 缓存页面
   permission_routes: state => state.permission.routes,
+  personage_routers: state => state.permission.personageRouters, // 个人有的路由
   userInfo: state => state.user, // 用户信息
   staffId: state => state.user.id, // 当前用户id
   nickname: state => state.user.nickname, // 昵称
