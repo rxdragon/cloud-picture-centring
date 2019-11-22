@@ -77,6 +77,7 @@ export default {
     downingPhoto () {
       const savePath = `/${this.streamNum}`
       const data = {
+        downName: this.src,
         url: this.imgDomain + this.src,
         path: savePath
       }
