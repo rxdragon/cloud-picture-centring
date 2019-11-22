@@ -10,7 +10,7 @@ const catchName = []
 // 监听将要下载事件
 export function onWillDownload (win) {
   session.defaultSession.on('will-download', async (event, item) => {
-    let saveFileName = item.getFilename() // 文件名
+    const saveFileName = item.getFilename() // 文件名
     const downloadPath = app.getPath('desktop') // 默认下载储存地址
     let fileNum = 0 // 文件名字
     let savePath = path.join(downloadPath, newFoldName, saveFileName) // 保存地址
@@ -48,19 +48,30 @@ export function onWillDownload (win) {
 
     // 下载任务完成
     item.on('done', (e, state) => { // eslint-disable-line
-      changeSaveName(item)
-      win.webContents.send('download-item-done', handleDownloadItem(item, itemIndex))
+      const newFilePath = changeSaveName(item)
+      win.webContents.send('download-item-done', handleDownloadItem(item, itemIndex, newFilePath))
     })
   })
 }
 
+export function getFileNameTool (src) {
+  const fileExt = path.extname(src)
+  const fileName = path.basename(src, fileExt)
+  return fileName
+}
+
+/**
+ * @description 更改文件名字
+ * @param {*} item
+ */
 export function changeSaveName (item) {
   const oldFilePath = item.getSavePath()
   const oldFileExt = path.extname(oldFilePath)
   const oldFileName = path.basename(oldFilePath, oldFileExt)
   const findSavePhotoItem = catchName.find(item => {
     if (item.downName) {
-      return item.downName.includes(oldFileName)
+      const downNameSrc = getFileNameTool(item.downName)
+      return oldFileName.includes(downNameSrc)
     }
     return false
   })
@@ -68,7 +79,8 @@ export function changeSaveName (item) {
     let fileNum = 0
     const willDeleteIndex = catchName.findIndex(item => {
       if (item.downName) {
-        return item.downName.includes(oldFileName)
+        const downNameSrc = getFileNameTool(item.downName)
+        return oldFileName.includes(downNameSrc)
       }
       return false
     })
@@ -85,7 +97,9 @@ export function changeSaveName (item) {
       if (err) { console.log(err) }
     })
     willDeleteIndex && catchName.splice(willDeleteIndex, 1)
+    return newFilePath
   }
+  return ''
 }
 
 // 监听下载图片字段
@@ -129,10 +143,10 @@ export function downPhoto (win) {
   })
 }
 
-function handleDownloadItem (downloadItem, index) {
+function handleDownloadItem (downloadItem, index, newFilePath) {
   return {
     index,
-    savePath: downloadItem.getSavePath(), // 保存路径
+    savePath: newFilePath || downloadItem.getSavePath(), // 保存路径
     isPaused: downloadItem.isPaused(), // 是否暂停
     canResume: downloadItem.canResume(), // 是否可以下载
     downURL: downloadItem.getURL(), // 下载地址
