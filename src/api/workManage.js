@@ -125,8 +125,8 @@ export function getReviewQuota (params) {
     if (!Object.keys(data).length) return null
     const avgTime = getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count)
     const res = {
-      review_stream_num: data.reviewStreamNum,
-      review_photo_num: data.reviewPhotoNum,
+      review_stream_num: parseInt(data.reviewStreamNum),
+      review_photo_num: parseInt(data.reviewPhotoNum),
       review_time_avg: timeFormat(avgTime, 'text', true),
       review_photo_glass_plant: formatNumAndRate(data.reviewPhotoGlass.plant.num, data.reviewPhotoNum),
       review_photo_glass_pull: formatNumAndRate(data.reviewPhotoGlass.pull.num, data.reviewPhotoNum),

@@ -32,13 +32,17 @@ export function filterAsyncRoutes (routes, roles) {
 
 const state = {
   routes: [],
-  addRoutes: []
+  addRoutes: [],
+  personageRouters: []
 }
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
+  },
+  SET_PERSONAGE_ROUTES: (state, routes) => {
+    state.personageRouters = routes
   }
 }
 
@@ -64,6 +68,7 @@ const actions = {
       }
       newRolesArr = [...new Set(newRolesArr)]
       accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
+      commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

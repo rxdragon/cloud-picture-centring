@@ -81,7 +81,7 @@ import { joinTimeSpan } from '@/utils/timespan.js'
 import * as GuestPhoto from '@/api/guestPhoto'
 
 export default {
-  name: 'GuestPhoto',
+  name: 'GuestPhotoCenter',
   components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect },
   data () {
     return {

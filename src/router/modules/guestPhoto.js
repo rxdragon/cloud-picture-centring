@@ -4,13 +4,13 @@ const guestPhoto = {
   path: '/guest-photo',
   component: Layout,
   name: 'GuestPhoto',
-  redirect: '/guest-photo/index',
+  redirect: '/guest-photo/guest-photo-center',
   meta: { title: '客片池', icon: 'el-icon-picture-outline-round' },
   children: [
     {
-      path: 'index',
+      path: 'guest-photo-center',
       name: 'GuestPhotoCenter',
-      component: () => import('@/views/guest-photo/index.vue'),
+      component: () => import('@/views/guest-photo/guest-photo-center.vue'),
       meta: { title: '客片池', icon: '' }
     }, {
       path: 'good-guest',

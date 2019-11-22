@@ -64,6 +64,7 @@ export function oneAllDown (photoArr) {
   const imgDomain = store.getters.imgDomain
   Vue.prototype.$newMessage.success(`已添加${photoArr.length}张照片至下载`)
   photoArr.forEach(item => {
+    item.downName = item.url
     item.url = imgDomain + item.url
     ipcRenderer.send('downPhoto', item)
   })

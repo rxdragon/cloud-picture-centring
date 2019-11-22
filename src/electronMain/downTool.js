@@ -5,10 +5,12 @@ import fs from 'fs'
 let newFoldName = ''
 let downloadItems = []
 
+const catchName = []
+
 // 监听将要下载事件
 export function onWillDownload (win) {
   session.defaultSession.on('will-download', async (event, item) => {
-    const saveFileName = item.getFilename() // 文件名
+    let saveFileName = item.getFilename() // 文件名
     const downloadPath = app.getPath('desktop') // 默认下载储存地址
     let fileNum = 0 // 文件名字
     let savePath = path.join(downloadPath, newFoldName, saveFileName) // 保存地址
@@ -16,7 +18,6 @@ export function onWillDownload (win) {
     const ext = path.extname(savePath)
     const name = path.basename(savePath, ext)
     const dir = path.dirname(savePath)
-
     // 文件名自增逻辑
     while (fs.existsSync(savePath)) {
       fileNum += 1
@@ -26,7 +27,7 @@ export function onWillDownload (win) {
         name: `${name}(${fileNum})`
       })
     }
-
+    savePath = savePath.replace(ext, '.cf')
     // 设置下载目录，阻止系统dialog的出现
     item.setSavePath(savePath)
 
@@ -47,9 +48,34 @@ export function onWillDownload (win) {
 
     // 下载任务完成
     item.on('done', (e, state) => { // eslint-disable-line
+      changeSaveName(item)
       win.webContents.send('download-item-done', handleDownloadItem(item, itemIndex))
     })
   })
+}
+
+export function changeSaveName (item) {
+  const oldFilePath = item.getSavePath()
+  const oldFileExt = path.extname(oldFilePath)
+  const oldFileName = path.basename(oldFilePath, oldFileExt)
+  const findSavePhotoItem = catchName.find(item => item.downName.includes(oldFileName))
+  if (findSavePhotoItem) {
+    let fileNum = 0
+    const willDeleteIndex = catchName.findIndex(item => item.downName.includes(oldFileName))
+    const newFileName = findSavePhotoItem.savePath
+    const oldDirPath = path.dirname(oldFilePath)
+    const newFileExt = path.extname(newFileName)
+    const newFileNameNoExt = path.basename(newFileName, newFileExt)
+    let newFilePath = path.join(oldDirPath, newFileName)
+    while (fs.existsSync(newFilePath)) {
+      fileNum += 1
+      newFilePath = path.join(oldDirPath, `${newFileNameNoExt}(${fileNum})${newFileExt}`)
+    }
+    fs.rename(oldFilePath, newFilePath, (err) => {
+      if (err) { console.log(err) }
+    })
+    catchName.splice(willDeleteIndex, 1)
+  }
 }
 
 // 监听下载图片字段
@@ -79,6 +105,15 @@ export function onDownEvent (win) {
 export function downPhoto (win) {
   ipcMain.on('downPhoto', (event, data) => {
     newFoldName = data.path
+    if (data.originalPhoto) {
+      const photoExt = path.extname(data.originalPhoto)
+      const photoName = path.basename(data.originalPhoto, photoExt)
+      data.originalPhoto = photoName + '_ps' + photoExt
+    }
+    catchName.push({
+      savePath: data.originalPhoto || data.downName,
+      downName: data.downName
+    })
     // 触发下载
     win.webContents.downloadURL(data.url)
   })
