@@ -58,10 +58,20 @@ export function changeSaveName (item) {
   const oldFilePath = item.getSavePath()
   const oldFileExt = path.extname(oldFilePath)
   const oldFileName = path.basename(oldFilePath, oldFileExt)
-  const findSavePhotoItem = catchName.find(item => item.downName.includes(oldFileName))
+  const findSavePhotoItem = catchName.find(item => {
+    if (item.downName) {
+      return item.downName.includes(oldFileName)
+    }
+    return false
+  })
   if (findSavePhotoItem) {
     let fileNum = 0
-    const willDeleteIndex = catchName.findIndex(item => item.downName.includes(oldFileName))
+    const willDeleteIndex = catchName.findIndex(item => {
+      if (item.downName) {
+        return item.downName.includes(oldFileName)
+      }
+      return false
+    })
     const newFileName = findSavePhotoItem.savePath
     const oldDirPath = path.dirname(oldFilePath)
     const newFileExt = path.extname(newFileName)
@@ -74,7 +84,7 @@ export function changeSaveName (item) {
     fs.rename(oldFilePath, newFilePath, (err) => {
       if (err) { console.log(err) }
     })
-    catchName.splice(willDeleteIndex, 1)
+    willDeleteIndex && catchName.splice(willDeleteIndex, 1)
   }
 }
 

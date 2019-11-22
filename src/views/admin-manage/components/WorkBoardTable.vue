@@ -21,16 +21,16 @@
         <template slot-scope="scope">
           <div v-if="scope.row.order" class="order-info">
             <span>
-              <span class="info-title">订单号：</span>{{ scope.row.order.external_num }}
+              <span class="info-title">订单号：</span>{{ scope.row.order && scope.row.order.external_num || '-' }}
             </span>
             <span>
-              <span class="info-title">流水号：</span>{{ scope.row.stream_num }}
+              <span class="info-title">流水号：</span>{{ scope.row.stream_num || '-' }}
             </span>
             <span>
-              <span class="info-title">拍摄产品：</span>{{ scope.row.product.name }}
+              <span class="info-title">拍摄产品：</span>{{ scope.row.product && scope.row.product.name || '-' }}
             </span>
             <span>
-              <span class="info-title">照片数量：</span>{{ scope.row.photos.length }}
+              <span class="info-title">照片数量：</span>{{ scope.row.photoNum }}
             </span>
           </div>
         </template>
