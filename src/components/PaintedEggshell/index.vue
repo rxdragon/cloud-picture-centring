@@ -1,19 +1,21 @@
 <template>
   <div class="painted-eggshell">
-    <canvas id="live2dcanvas" width="280" height="300" />
+    <div class="live2d-widget">
+      <canvas id="live2dcanvas" width="280" height="300" />
+    </div>
   </div>
 </template>
 
 <script>
-import { L2Dwidget } from 'live2d-widget'
+const L2Dwidget = require('live2d-widget').L2Dwidget
 export default {
   name: 'PaintedEggshell',
   data () {
     return {
       modelObj: {
-        whiteCat: 'live2dw/live2d-widget-model-tororo/assets/tororo.model.json',
-        blackCat: 'live2dw/live2d-widget-model-hijiki/assets/hijiki.model.json',
-        dog: 'live2dw/live2d-widget-model-wanko/assets/wanko.model.json'
+        whiteCat: './live2d_models/tororo/tororo.model.json',
+        blackCat: './live2d_models/hijiki/hijiki.model.json',
+        dog: './live2d_models/wanko/wanko.model.json'
       }
     }
   },
@@ -28,24 +30,28 @@ export default {
       const modelArr = ['whiteCat', 'blackCat', 'dog']
       const randomKey = new Date().getTime() % 3
       const dir = this.modelObj[modelArr[randomKey]]
-      L2Dwidget.init(this.getOptions(dir))
+      if (Object.keys(L2Dwidget.config).length) {
+        L2Dwidget.config.model.jsonPath = dir
+        L2Dwidget.init()
+      } else {
+        L2Dwidget.init(this.getOptions(dir))
+      }
     },
     /**
      * @dedescription 获取参数
      */
     getOptions (dir) {
-      dir = dir || 'live2dw/live2d-widget-model-tororo/assets/tororo.model.json'
       return {
-        tagMode: false,
+        tagMode: true,
         model: { jsonPath: dir },
         display: {
           position: 'right',
           width: 280,
-          height: 300,
-          vOffset: 0
+          height: 300
         },
+        dialog: { enable: true },
         mobile: { show: true },
-        log: false
+        log: true
       }
     }
   }
