@@ -34,7 +34,7 @@
         <el-table-column prop="staffName" label="组员" />
         <el-table-column prop="stream_num" label="流水号" />
         <el-table-column prop="pass_at" label="审核通过时间" />
-        <el-table-column prop="retouchAllTime" label="修图总时长" />
+        <el-table-column prop="reviewAllTime" label="审核总时长" />
         <el-table-column prop="reviewPhoto" label="审核种 / 拔草" />
         <el-table-column label="纠偏">
           <template slot-scope="scope">
