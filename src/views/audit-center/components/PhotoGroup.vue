@@ -28,8 +28,8 @@
     </div>
     <div class="grade-box">
       <div class="button-list">
-        <el-button :disabled="!streamCanGlass" :icon="isPlant ? 'el-icon-check' : ''" type="success" size="small" :class="{'plant-class': isPlant}" :plain="!isPlant" @click="plantPhoto">种草</el-button>
-        <el-button :disabled="!streamCanGlass" :icon="isPull ? 'el-icon-check' : ''" type="danger" size="small" :plain="!isPull" @click="pullPhoto">拔草</el-button>
+        <el-button :disabled="!streamCanGlass || +photos.people_num === 0" :icon="isPlant ? 'el-icon-check' : ''" type="success" size="small" :class="{'plant-class': isPlant}" :plain="!isPlant" @click="plantPhoto">种草</el-button>
+        <el-button :disabled="!streamCanGlass || +photos.people_num === 0" :icon="isPull ? 'el-icon-check' : ''" type="danger" size="small" :plain="!isPull" @click="pullPhoto">拔草</el-button>
       </div>
       <div v-if="isPlant || isPull" class="reason-box">
         <el-input v-model="photos.grassReason" :placeholder="isPlant | toGlassPlaceholder" />
@@ -236,6 +236,11 @@ export default {
       .el-button--success.is-plain:focus,
       .el-button--success.is-plain:hover {
         background-color: @panGreen;
+      }
+
+      .el-button--success.is-plain.is-disabled:focus,
+      .el-button--success.is-plain.is-disabled:hover {
+        background-color: #ebf8f2;
       }
 
       .plant-class {

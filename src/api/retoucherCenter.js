@@ -2,7 +2,7 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
-import * as photoTool from '@/utils/photoTool.js'
+import * as PhotoTool from '@/utils/photoTool.js'
 
 /**
  * @description 流水列表[待修，挂起]
@@ -51,14 +51,13 @@ export function getStreamInfo (params) {
     params
   }).then(msg => {
     const createData = {}
-    const notTemplePhoto = msg.photos.filter(item => item.type !== 'template')
     createData.orderData = {
       streamNum: msg.stream_num,
       type: msg.product && msg.product.retouch_standard,
       photographerName: msg.order.photographer_org ? msg.order.photographer_org.name : '-',
       photographer: msg.order.tags ? msg.order.tags.values.photographer : '-', // 摄影
       productName: msg.product && msg.product.name,
-      photoNum: notTemplePhoto.length,
+      photoNum: msg.photos.filter(item => +item.people_num > 0).length,
       waitTime: waitTime(msg.created_at),
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
@@ -66,7 +65,7 @@ export function getStreamInfo (params) {
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
-      photoItem.path = findOriginalPhoto && photoTool.handlePicPath(findOriginalPhoto.path)
+      photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
       photoItem.isCover = false
     })
     if (msg.tags && msg.tags.statics && msg.tags.statics.includes('rework')) {
@@ -74,7 +73,7 @@ export function getStreamInfo (params) {
         const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
         photoItem.isReturnPhoto = isReturnPhoto
         const findReturnPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_photo')
-        photoItem.returnPhotoPath = isReturnPhoto && photoTool.handlePicPath(findReturnPhoto.path)
+        photoItem.returnPhotoPath = isReturnPhoto && PhotoTool.handlePicPath(findReturnPhoto.path)
         return isReturnPhoto
       })
     } else {
@@ -170,6 +169,8 @@ export function getRetouchQuotaList (params) {
         if (photoItem.tags && photoItem.tags.statics) return photoItem.tags.statics.includes('pull')
         return
       })
+      listItem.exp = Number(listItem.exp) === 0 ? '-' : parseFloat(listItem.exp)
+      listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
       listItem.plantNum = findPlantPhoto.length
       listItem.pullNum = findPullPhoto.length
     })

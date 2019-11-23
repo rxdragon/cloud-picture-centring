@@ -73,9 +73,9 @@ export function getPhotoInfo (params) {
     createData.workerInfo = {
       storeName: createData.stream.order.tags.values.store_name,
       photographer: createData.stream.order.tags.values.photographer,
-      retoucher: createData.stream.retoucher.name,
+      retoucher: createData.stream.retoucher && createData.stream.retoucher.name || createData.stream.retoucher.real_name || '-',
       retouchGroup: createData.stream.retoucher.retouch_group.name,
-      reviewer: createData.stream.reviewer && createData.stream.reviewer.name || '-',
+      reviewer: createData.stream.reviewer && createData.stream.reviewer.name || createData.stream.reviewer.real_name || '-',
       dresser: createData.stream &&
         createData.stream.order &&
         createData.stream.order.tags &&
@@ -116,7 +116,10 @@ export function getAttitudePhotoList (params) {
       msg.list.forEach(listItem => {
         const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
         listItem.src = findCompletePhoto && findCompletePhoto.path || ''
-        listItem.retoucherName = listItem.stream && listItem.stream.retoucher && listItem.stream.retoucher.name || '-'
+        listItem.retoucherName = listItem.stream &&
+          listItem.stream.retoucher &&
+          listItem.stream.retoucher.name &&
+          listItem.stream.retoucher.real_name || '-'
         listItem.retouchGroupName = listItem.stream &&
           listItem.stream.retoucher &&
           listItem.stream.retoucher.retouch_group &&
@@ -145,9 +148,9 @@ export function getAttitudePhotoInfo (params) {
       ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1)
       : settlePhoto([...createData.other_photo_version], 2)
     createData.productName = createData.stream.product.name
-    createData.retoucher = createData.stream.retoucher.name
+    createData.retoucher = createData.stream.retoucher && createData.stream.retoucher.name || createData.stream.retoucher.real_name || '-'
     createData.retoucherLeader = createData.stream.retoucher.retoucher_leader.nickname || createData.stream.retoucher.retoucher_leader.name || '-'
-    createData.retouchGroup = createData.stream.retoucher.retouch_group.name
+    createData.retouchGroup = createData.stream.retoucher && createData.stream.retoucher.retouch_group && createData.stream.retoucher.retouch_group.name
     return createData
   })
 }

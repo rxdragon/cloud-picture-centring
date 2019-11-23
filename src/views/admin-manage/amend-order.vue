@@ -34,8 +34,8 @@
         </div>
       </div>
       <div class="photo-list">
-        <div v-for="(photoItem, photoIndex) in item.photos" :key="photoIndex" class="photo-box">
-          <template v-if="!photoItem.isDelete">
+        <div v-for="(photoItem, photoIndex) in item.photos" :key="photoIndex" :style="photoItem.isDelete && 'display: none;'">
+          <div v-if="!photoItem.isDelete" class="photo-box">
             <photo-box :src="photoItem.path" />
             <div class="change-num">
               <span>人数：</span>
@@ -57,7 +57,7 @@
             <span class="delete-button" @click="deletePhoto(item, photoItem)">
               <i class="el-icon-error" />
             </span>
-          </template>
+          </div>
         </div>
         <div class="empty-box" />
       </div>

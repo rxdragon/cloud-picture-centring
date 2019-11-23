@@ -387,8 +387,13 @@ export default {
       if (pointIndex > 0) {
         url = this.showPhoto.src.substring(0, pointIndex)
       }
-      // 针对又拍云下载 转为流格式
-      window.location = url + '?_upd=true'
+      const data = {
+        downName: this.showPhoto.path,
+        url,
+        path: ''
+      }
+      this.$newMessage.success('已添加一张照片到下载')
+      this.$ipcRenderer.send('downPhoto', data)
     },
     /**
      * @description 放大

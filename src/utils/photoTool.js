@@ -123,3 +123,30 @@ export function getImgBufferPhoto (file) {
     reader.readAsArrayBuffer(file)
   })
 }
+
+/**
+ * @description 获取人数列表
+ * @param {*} photos
+ */
+export function getPhotoPeopleTabel (photos) {
+  const createData = []
+  photos.forEach(photoItem => {
+    const findSamePeople = createData.find(item => item.peopleLabel === photoItem.people_num)
+    if (findSamePeople) {
+      findSamePeople.photoNum++
+    } else {
+      createData.push({
+        peopleLabel: photoItem.people_num,
+        photoNum: 1
+      })
+    }
+  })
+  createData.sort((a, b) => a.peopleLabel - b.peopleLabel)
+  if (createData[0].peopleLabel === 0) {
+    createData[0].peopleLabel = '不计收入'
+    const moveData = createData.shift()
+    createData.push(moveData)
+  }
+  return createData
+}
+

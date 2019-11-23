@@ -191,7 +191,8 @@ export function getProps () {
           className: descObj[cardType].className,
           multiple: cardItem.card.multiple,
           multipleText: descObj[cardType].multipleText,
-          count: 1
+          count: 1,
+          showProp: false
         }
       }
       cardItem.className = descObj[cardType].className

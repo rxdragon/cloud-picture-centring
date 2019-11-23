@@ -72,7 +72,7 @@ export function getStreamInfo (params) {
       streamNum: data.streamNum,
       photographerOrg: data.order ? data.order.photographer_org.name : '-',
       productName: data.product.name,
-      photoNum: data.photos.length,
+      photoNum: data.photos.filter(item => +item.people_num > 0).length,
       reworkNum,
       plantNum,
       pullNum,

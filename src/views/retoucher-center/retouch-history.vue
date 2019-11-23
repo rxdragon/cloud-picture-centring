@@ -23,12 +23,12 @@
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="stream_num" label="流水号" width="250px" />
-        <el-table-column label="接单时间">
+        <el-table-column label="接单时间" width="150px">
           <template slot-scope="scope">
             {{ scope.row.receipt_at | toTimeSpan }}
           </template>
         </el-table-column>
-        <el-table-column label="审核通过时间">
+        <el-table-column label="审核通过时间" width="150px">
           <template slot-scope="scope">
             {{ scope.row.pass_at | toTimeSpan }}
           </template>
@@ -36,6 +36,26 @@
         <el-table-column prop="retouchAllTime" label="修图总时长" />
         <el-table-column prop="plantNum" label="种草" />
         <el-table-column prop="pullNum" label="拔草" />
+        <el-table-column prop="exp" label="海草值">
+          <template slot-scope="scope">
+            <el-popover
+              placement="right"
+              width="240"
+              popper-class="people-table"
+              trigger="click"
+            >
+              <el-table :key="scope.row.stream_num + 'photo'" :data="scope.row.peopleTable" style="width: 100%;">
+                <el-table-column label="人数">
+                  <template slot-scope="peopleData">
+                    {{ Number(peopleData.row.peopleLabel) ? `${peopleData.row.peopleLabel}人` : peopleData.row.peopleLabel }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="photoNum" label="数量" />
+              </el-table>
+              <span slot="reference">{{ scope.row.exp }}</span>
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="linkto(scope.row.id)">详情</el-button>
@@ -165,6 +185,44 @@ export default {
   .stream-search {
     span {
       width: 60px;
+    }
+  }
+}
+</style>
+
+<style lang="less">
+.people-table {
+  .el-table {
+    max-height: 400px;
+    overflow: overlay;
+    position: relative;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #cdcdcd;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+      background: #fff;
+      display: none;
+    }
+
+    &::-webkit-scrollbar-corner {
+      display: none;
+    }
+
+    .el-table__header-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 99;
     }
   }
 }
