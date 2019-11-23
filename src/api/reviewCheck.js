@@ -99,7 +99,7 @@ export function getReviewList (params) {
       const spotDifferentNum = listItem.tags && listItem.tags.values && listItem.tags.values.rectify_different_photo_num || 0
       const allTime = (listItem.review_time + listItem.review_return_rebuild_time)
       listItem.reviewAllTime = timeFormat(allTime, 'text', true)
-      listItem.staffName = listItem.retoucher && listItem.retoucher.name || '-'
+      listItem.staffName = listItem.reviewers && listItem.reviewers.name || listItem.reviewers.real_name || '-'
       listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
       listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
       listItem.spotSameNum = spotSameNum

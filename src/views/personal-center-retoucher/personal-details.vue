@@ -179,20 +179,34 @@
     <div class="module-panel prop-panel">
       <div class="panel-title">我的道具</div>
       <div class="panel-main">
-        <el-badge v-for="(propItem, propIndex) in propData" :key="propIndex" :value="propItem.count" class="prop-badge">
-          <div class="prop-box">
-            <div class="prop-left">
-              <div class="prop-icon" :class="propItem.className" />
+        <template v-if="Object.keys(propData).length">
+          <el-badge v-for="(propItem, propIndex) in propData" :key="propIndex" :value="propItem.count" class="prop-badge">
+            <div class="prop-box">
+              <div class="prop-left">
+                <div class="prop-icon" :class="propItem.className" />
+              </div>
+              <div class="prop-content">
+                <div class="content-title">{{ propItem.multiple + propItem.multipleText }}</div>
+                <div class="content-describe">24小时内仅可用1次</div>
+              </div>
+              <div class="prop-right">
+                <el-popover
+                  v-model="propItem.showProp"
+                  placement="top"
+                  width="160"
+                >
+                  <p>确认使用道具卡吗？</p>
+                  <div style="text-align: right; margin: 10px;">
+                    <el-button size="mini" type="text" @click="propItem.showProp = false">取消</el-button>
+                    <el-button type="primary" size="mini" @click="useProp(propItem)">确定</el-button>
+                  </div>
+                  <el-button slot="reference" type="primary" size="mini" @click="showPropSureBox(propItem)">使用</el-button>
+                </el-popover>
+              </div>
             </div>
-            <div class="prop-content">
-              <div class="content-title">{{ propItem.multiple + propItem.multipleText }}</div>
-              <div class="content-describe">24小时内仅可用1次</div>
-            </div>
-            <div class="prop-right">
-              <el-button type="primary" size="mini" @click="useProp(propItem)">使用</el-button>
-            </div>
-          </div>
-        </el-badge>
+          </el-badge>
+        </template>
+        <no-data v-else />
       </div>
     </div>
   </div>
@@ -202,6 +216,7 @@
 import ListTable from '@/components/ListTable'
 import DatePicker from '@/components/DatePicker'
 import CountTo from '@/components/CountTo'
+import NoData from '@/components/NoData'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { parseTime } from '@/utils/index.js'
@@ -209,7 +224,7 @@ import * as Retoucher from '@/api/retoucher.js'
 
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, DatePicker, CountTo },
+  components: { ListTable, DatePicker, CountTo, NoData },
   filters: {
     // 获取小数
     getPoint (value) {
@@ -269,6 +284,11 @@ export default {
     })
   },
   methods: {
+    showPropSureBox (propItem) {
+      const data = JSON.parse(JSON.stringify(propItem))
+      data.showProp = true
+      propItem = data
+    },
     /**
      * @description 获取个人指标
      */

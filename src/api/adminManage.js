@@ -52,7 +52,6 @@ export function getStreamList (params) {
       if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.nickname) {
         retouchLeader = item.retoucher.retoucher_leader.nickname
       }
-      const notTemplatePhoto = item.photos.filter(item => item.type === 'normal')
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
@@ -62,7 +61,7 @@ export function getStreamList (params) {
         reviewerName: item.reviewer && item.reviewer.name || item.reviewer.real_name || '-',
         waitTime: waitTime(item.created_at),
         streamState: streamState[item.state] || item.state,
-        photoNum: notTemplatePhoto.length
+        photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
     })
     return msg
@@ -88,7 +87,6 @@ export function getRetouchStreamList (params) {
       if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.nickname) {
         retouchLeader = item.retoucher.retoucher_leader.nickname
       }
-      const notTemplatePhoto = item.photos.filter(item => item.type === 'normal')
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
@@ -98,7 +96,7 @@ export function getRetouchStreamList (params) {
         reviewerName: item.reviewer && item.reviewer.name || item.reviewer.real_name || '-',
         waitTime: waitTime(item.created_at),
         streamState: streamState[item.state] || item.state,
-        photoNum: notTemplatePhoto.length
+        photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
     })
     return msg
@@ -118,7 +116,7 @@ export function queueStreamListCount () {
 }
 
 /**
- * @description 获取审核流水列表
+ * @description 获取修图或审核中流水列表
  * @param {*} params
  */
 export function getQueueStreamList (params) {
@@ -139,12 +137,13 @@ export function getQueueStreamList (params) {
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.retoucher && item.retoucher.name || '-',
+        retoucherName: item.retoucher && item.retoucher.name || item.retoucher.real_name || '-',
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
-        reviewerName: item.reviewer && item.reviewer.name || '-',
+        reviewerName: item.reviewer && item.reviewer.name || item.reviewer.real_name || '-',
         waitTime: waitTime(item.created_at),
-        streamState: streamState[item.state] || item.state
+        streamState: streamState[item.state] || item.state,
+        photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
     })
     return msg

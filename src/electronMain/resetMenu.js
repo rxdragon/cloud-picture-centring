@@ -13,6 +13,10 @@ const template = [{
     accelerator: 'CmdOrCtrl+V',
     role: 'paste'
   }, {
+    label: '全选',
+    accelerator: 'CmdOrCtrl+A',
+    role: 'selectAll'
+  }, {
     label: '重新加载',
     accelerator: '',
     click: function (item, focusedWindow) {
