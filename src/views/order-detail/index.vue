@@ -25,7 +25,7 @@
         </div>
         <div class="require-box">
           <span class="require-title">修图评语：</span>
-          <span class="require-content">{{ storeEvaluateStream.store_evaluate_reason }}</span>
+          <span class="require-content">{{ storeEvaluateStream.store_evaluate_reason || '暂无评语' }}</span>
         </div>
       </div>
     </div>

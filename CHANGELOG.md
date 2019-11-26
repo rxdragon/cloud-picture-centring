@@ -201,3 +201,9 @@
  格式化代码 | [32834e8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/32834e8)
  账号列表没有花名显示真名 | [57d3912](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/57d3912)
 
+
+### chore
+|范围|描述|commitId|
+--|--|--
+ 增加commit验证 | [d804efc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d804efc)
+
