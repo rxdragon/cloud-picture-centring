@@ -12,7 +12,10 @@
           @click="throttleRefresh"
         />
       </div>
-      <span class="nav-main">缦图云端 修图中心</span>
+      <span class="nav-main">
+        缦图云端 修图中心
+        <span v-if="isDev" class="test-title">测试</span>
+      </span>
       <div class="nav-right">
         <download-management />
         <el-avatar :src="userInfo.avatarImg" />
@@ -37,11 +40,15 @@ export default {
     return {
       throttleRefresh: throttle(this.refresh, 1000),
       starTime: null,
-      deplay: 3000
+      deplay: 3000,
+      isDev: false
     }
   },
   computed: {
     ...mapGetters(['userInfo'])
+  },
+  created () {
+    this.isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
   },
   mounted () {
     this.$ipcRenderer.on('enter-full', (e, item) => {
@@ -176,6 +183,12 @@ export default {
       cursor: pointer;
       -webkit-app-region: drag;
       -webkit-user-select: none;
+
+      .test-title {
+        color: red;
+        font-size: 40px;
+        vertical-align: middle;
+      }
     }
   }
 }

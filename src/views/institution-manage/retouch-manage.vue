@@ -15,7 +15,7 @@
                 {{ scope.row.created_at | toTimeSpan }}
               </template>
             </el-table-column>
-            <el-table-column prop="sub_account_count" label="子账号数量" />
+            <el-table-column prop="subAccountCount" label="子账号数量" />
             <el-table-column label="当前状态">
               <template slot-scope="scope">
                 {{ scope.row.state ? '启用' : '禁用' }}

@@ -47,6 +47,9 @@ export function getRetouchOrgList () {
     url: '/project_cloud/operator/getRetouchOrgList',
     method: 'GET'
   }).then(msg => {
+    msg.forEach(listItem => {
+      listItem.subAccountCount = listItem.sub_account_count || '-'
+    })
     return msg
   })
 }
