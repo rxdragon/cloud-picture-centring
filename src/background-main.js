@@ -49,9 +49,9 @@ async function createWindow () {
     win.webContents.send('leave-full')
   })
 
-  win.webContents.on("new-window", (event, url) => {
+  win.webContents.on('new-window', (event, url) => {
     event.preventDefault()
-  });
+  })
 
   // 注册下载监听
   DownTool.onWillDownload(win)

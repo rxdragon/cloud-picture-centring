@@ -5,7 +5,7 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="false"
-        :background-color="variables.menuBg"
+        :background-color="isDev ? variables.devMenuBg : variables.menuBg"
         :text-color="variables.menuText"
         :unique-opened="false"
         :active-text-color="variables.menuActiveText"
@@ -35,7 +35,8 @@ export default {
   data () {
     return {
       experimentCounts: 0,
-      expireTime: 0
+      expireTime: 0,
+      isDev: false
     }
   },
   computed: {
@@ -51,6 +52,9 @@ export default {
     variables () {
       return variables
     }
+  },
+  created () {
+    this.isDev = process.env.NODE_ENV !== 'production'
   },
   methods: {
     activeExperiment () {

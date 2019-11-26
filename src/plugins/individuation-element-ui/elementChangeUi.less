@@ -2,12 +2,12 @@
 
 .el-button {
   &--primary {
-    background: linear-gradient(90deg, rgba(79, 136, 255, 1) 0%, rgba(70, 105, 251, 1) 100%);
+    background: @gradualBlue;
     transition: all 0.3s;
 
     &:focus,
     &:hover {
-      background: linear-gradient(90deg, rgba(79, 136, 255, 1) 100%, rgba(70, 105, 251, 1) 0%);
+      background: @gradualBlueHover;
     }
 
     &.is-plain {

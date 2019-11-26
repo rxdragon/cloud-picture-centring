@@ -9,6 +9,7 @@
         <div class="institution">机构</div>
         <div class="institution">摄影师</div>
         <div class="type">修图标准</div>
+        <div v-if="orderData.isRework" class="retoucher">修图师</div>
         <div class="product">拍摄产品</div>
         <div class="wait-time">顾客等待时间</div>
         <div class="photo-count">照片数量</div>
@@ -21,6 +22,7 @@
         <div class="institution">{{ orderData.photographerName }}</div>
         <div class="institution">{{ orderData.photographer }}</div>
         <div class="type">{{ orderData.type | toRetouchClass }}</div>
+        <div v-if="orderData.isRework" class="retoucher">{{ orderData.retoucherName }}</div>
         <div class="product">{{ orderData.productName }}</div>
         <div class="wait-time">{{ orderData.waitTime }}</div>
         <div class="photo-count">{{ orderData.photoNum }}</div>
