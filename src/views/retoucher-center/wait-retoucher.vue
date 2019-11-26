@@ -353,6 +353,7 @@ export default {
 .experience-box {
   display: flex;
   justify-content: space-between;
+  -webkit-user-select: none;
 
   .today-info {
     width: 32%;
