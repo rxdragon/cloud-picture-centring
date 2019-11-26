@@ -49,6 +49,10 @@ async function createWindow () {
     win.webContents.send('leave-full')
   })
 
+  win.webContents.on("new-window", (event, url) => {
+    event.preventDefault()
+  });
+
   // 注册下载监听
   DownTool.onWillDownload(win)
   DownTool.downPhoto(win)
@@ -88,7 +92,6 @@ async function createWindow () {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  console.log('all-closed')
   app.quit()
 })
 
