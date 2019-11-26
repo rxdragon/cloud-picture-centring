@@ -14,7 +14,7 @@
       </div>
       <span class="nav-main">
         缦图云端 修图中心
-        <span v-if="isDev" class="test-title">测试</span>
+        <span v-if="$isDev" class="test-title">测试</span>
       </span>
       <div class="nav-right">
         <download-management />
@@ -40,15 +40,11 @@ export default {
     return {
       throttleRefresh: throttle(this.refresh, 1000),
       starTime: null,
-      deplay: 3000,
-      isDev: false
+      deplay: 3000
     }
   },
   computed: {
     ...mapGetters(['userInfo'])
-  },
-  created () {
-    this.isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
   },
   mounted () {
     this.$ipcRenderer.on('enter-full', (e, item) => {

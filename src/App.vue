@@ -21,7 +21,7 @@ export default {
     ...mapGetters(['showCat'])
   },
   created () {
-    if (process.env.NODE_ENV !== 'production') {
+    if (this.$isDev) {
       document.body.style.setProperty('--subMenuBg', variables.devSubMenuBg)
       document.body.style.setProperty('--menuBg', variables.devMenuBg)
     }
