@@ -22,6 +22,7 @@ Object.keys(filters).forEach(key => {
 
 window.polling = {}
 Vue.prototype.$ipcRenderer = ipcRenderer
+Vue.prototype.$isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
 
 Vue.config.productionTip = false
 

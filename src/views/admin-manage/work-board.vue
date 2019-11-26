@@ -303,6 +303,7 @@ export default {
 
   .tabs-box {
     margin-top: 24px;
+    -webkit-user-select: none;
   }
 
   .table-box {

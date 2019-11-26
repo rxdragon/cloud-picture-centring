@@ -53,6 +53,7 @@ export function getReviewInfo () {
     createData.requireLabel = msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {}
     createData.streamState = msg.state
     createData.photos = msg.photos
+    createData.retoucherName = msg.retoucher && (msg.retoucher.name || msg.retoucher.real_name) || '-'
     return createData
   })
 }

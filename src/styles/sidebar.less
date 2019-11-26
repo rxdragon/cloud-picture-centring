@@ -1,8 +1,7 @@
 #App {
-
   .main-container {
     min-height: 100%;
-    transition: margin-left .28s;
+    transition: margin-left 0.28s;
     margin-left: @sideBarWidth;
     position: relative;
   }
@@ -11,10 +10,10 @@
     -webkit-user-select: none;
     transition: width 0.28s;
     width: @sideBarWidth !important;
-    background-color: @menuBg;
+    background-color: var(--menuBg);
     position: absolute;
     height: 100%;
-    font-size: 0px;
+    font-size: 0;
     top: 0;
     bottom: 0;
     left: 0;
@@ -30,7 +29,7 @@
     }
 
     .el-scrollbar__bar.is-vertical {
-      right: 0px;
+      right: 0;
     }
 
     .el-scrollbar {
@@ -72,7 +71,7 @@
     }
 
     .is-active.submenu-title-noDropdown,
-    .is-active>.el-submenu__title {
+    .is-active > .el-submenu__title {
       color: @subMenuActiveText !important;
       background: @subMenuActiveBg !important;
       position: relative;
@@ -90,10 +89,10 @@
       }
     }
 
-    & .nest-menu .el-submenu>.el-submenu__title,
+    & .nest-menu .el-submenu > .el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: @sideBarWidth !important;
-      background-color: @subMenuBg !important;
+      background-color: var(--subMenuBg) !important;
 
       span {
         position: relative;

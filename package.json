@@ -3,23 +3,25 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "build-release": "vue-cli-service build --mode release --dest=dist_vue",
-    "build-dev": "vue-cli-service build --mode development --dest=dist_vue",
+    "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build --dest=dist_vue",
+    "lint": "vue-cli-service lint",
     "build-background": "webpack-cli --mode=production --config='background-main.webpack-config.js'",
     "build-background-dev": "webpack-cli --mode=development --config='background-main.webpack-config.js'",
     "build-background-release": "webpack-cli --mode=development --config='background-main.webpack-config.js'",
-    "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
-    "eserve-release": "vue-cli-service electron:serve --mode release",
-    "eserve-dev": "vue-cli-service electron:serve --mode development",
-    "new": "plop",
-    "lint": "vue-cli-service lint",
-    "stylelint": "stylelint 'src/**/*.vue' --config '.stylelintrc' --fix",
-    "serve": "vue-cli-service serve --mode development",
+    "build-dev": "vue-cli-service build --mode development --dest=dist_vue",
+    "build-release": "vue-cli-service build --mode release --dest=dist_vue",
     "ebuild": "vue-cli-service electron:build",
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
+    "eserve-dev": "vue-cli-service electron:serve --mode development",
+    "eserve-release": "vue-cli-service electron:serve --mode release",
+    "new": "plop",
+    "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "stylelint": "stylelint 'src/**/*.vue' --config '.stylelintrc' --fix",
+    "cz": "yarn log && git add . && git cz",
+    "log": "conventional-changelog --config ./node_modules/vue-cli-plugin-commitlint/lib/log -i CHANGELOG.md -s -r 0"
   },
   "main": "background.js",
   "dependencies": {
@@ -55,13 +57,18 @@
     "@vue/eslint-config-standard": "^4.0.0",
     "axios": "^0.18.0",
     "babel-eslint": "^10.0.1",
+    "commitizen": "^4.0.3",
+    "commitlint": "^8.2.0",
+    "conventional-changelog-cli": "^2.0.28",
     "electron": "^6.0.0",
     "electron-icon-builder": "^1.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "husky": "^3.0.9",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "vue-cli-plugin-axios": "^0.0.4",
+    "vue-cli-plugin-commitlint": "^1.0.7",
     "vue-cli-plugin-electron-builder": "^1.4.0",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-template-compiler": "^2.6.10"
@@ -88,5 +95,15 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/vue-cli-plugin-commitlint/lib/cz"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
 }

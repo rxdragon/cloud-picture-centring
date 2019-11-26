@@ -55,10 +55,10 @@ export function getStreamList (params) {
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.retoucher && item.retoucher.name || item.retoucher.real_name || '-',
+        retoucherName: item.retoucher && (item.retoucher.name || item.retoucher.real_name) || '-',
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
-        reviewerName: item.reviewer && item.reviewer.name || item.reviewer.real_name || '-',
+        reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
         waitTime: waitTime(item.created_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
@@ -90,10 +90,10 @@ export function getRetouchStreamList (params) {
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.retoucher && item.retoucher.name || item.retoucher.real_name || '-',
+        retoucherName: item.retoucher && (item.retoucher.name || item.retoucher.real_name) || '-',
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
-        reviewerName: item.reviewer && item.reviewer.name || item.reviewer.real_name || '-',
+        reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
         waitTime: waitTime(item.created_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
@@ -137,10 +137,10 @@ export function getQueueStreamList (params) {
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.retoucher && item.retoucher.name || item.retoucher.real_name || '-',
+        retoucherName: item.retoucher && (item.retoucher.name || item.retoucher.real_name) || '-',
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
-        reviewerName: item.reviewer && item.reviewer.name || item.reviewer.real_name || '-',
+        reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
         waitTime: waitTime(item.created_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
@@ -192,7 +192,7 @@ export function getStreamInfo (params) {
       reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注',
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,
-      retoucherName: data.retoucher && data.retoucher.name || data.retoucher.real_name || '-',
+      retoucherName: data.retoucher && (data.retoucher.name || data.retoucher.real_name) || '-',
       reviewerName: data.reviewer && data.reviewer.name || '',
       photographer: data.order.tags && data.order.tags.values.photographer || '-'
     }

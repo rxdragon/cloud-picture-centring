@@ -12,7 +12,9 @@
     </el-tabs>
     <div class="table-box" :class="{'no-border': activeName === 'PartnerPerformance'}">
       <transition name="fade-transform" mode="out-in">
-        <component :is="activeName" />
+        <keep-alive>
+          <component :is="activeName" />
+        </keep-alive>
       </transition>
     </div>
   </div>

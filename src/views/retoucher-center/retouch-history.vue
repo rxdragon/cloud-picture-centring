@@ -42,7 +42,7 @@
               placement="right"
               width="240"
               popper-class="people-table"
-              trigger="click"
+              trigger="hover"
             >
               <el-table :key="scope.row.stream_num + 'photo'" :data="scope.row.peopleTable" style="width: 100%;">
                 <el-table-column label="人数">
