@@ -37,7 +37,7 @@ export function getPhotoInfo (params) {
     const createData = keyToHump(msg)
     createData.orderNum = createData.stream.order.external_num
     createData.streamNum = createData.stream.stream_num
-    createData.productName = createData.stream.product.name
+    createData.productName = createData.stream.product && createData.stream.product.name || '-'
     createData.customeName = createData.stream &&
       createData.stream.order &&
       createData.stream.order.tags &&
@@ -73,9 +73,9 @@ export function getPhotoInfo (params) {
     createData.workerInfo = {
       storeName: createData.stream.order.tags.values.store_name,
       photographer: createData.stream.order.tags.values.photographer,
-      retoucher: createData.stream.retoucher && createData.stream.retoucher.name || createData.stream.retoucher.real_name || '-',
-      retouchGroup: createData.stream.retoucher.retouch_group.name,
-      reviewer: createData.stream.reviewer && createData.stream.reviewer.name || createData.stream.reviewer.real_name || '-',
+      retoucher: createData.stream.retoucher && (createData.stream.retoucher.name || createData.stream.retoucher.real_name) || '-',
+      retouchGroup: createData.stream.retoucher && createData.stream.retoucher.retouch_group && createData.stream.retoucher.retouch_group.name || '-',
+      reviewer: createData.stream.reviewer && (createData.stream.reviewer.name || createData.stream.reviewer.real_name) || '-',
       dresser: createData.stream &&
         createData.stream.order &&
         createData.stream.order.tags &&
@@ -118,8 +118,7 @@ export function getAttitudePhotoList (params) {
         listItem.src = findCompletePhoto && findCompletePhoto.path || ''
         listItem.retoucherName = listItem.stream &&
           listItem.stream.retoucher &&
-          listItem.stream.retoucher.name &&
-          listItem.stream.retoucher.real_name || '-'
+          (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
         listItem.retouchGroupName = listItem.stream &&
           listItem.stream.retoucher &&
           listItem.stream.retoucher.retouch_group &&
@@ -148,7 +147,7 @@ export function getAttitudePhotoInfo (params) {
       ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1)
       : settlePhoto([...createData.other_photo_version], 2)
     createData.productName = createData.stream.product.name
-    createData.retoucher = createData.stream.retoucher && createData.stream.retoucher.name || createData.stream.retoucher.real_name || '-'
+    createData.retoucher = createData.stream.retoucher && (createData.stream.retoucher.name || createData.stream.retoucher.real_name) || '-'
     createData.retoucherLeader = createData.stream.retoucher.retoucher_leader.nickname || createData.stream.retoucher.retoucher_leader.name || '-'
     createData.retouchGroup = createData.stream.retoucher && createData.stream.retoucher.retouch_group && createData.stream.retoucher.retouch_group.name
     return createData

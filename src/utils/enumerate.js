@@ -18,7 +18,7 @@ export function StreamState () {
     review_return_retouch: '审核退回修图中',
     wait_review: '等待审核',
     reviewing: '审核中',
-    finish: '已经完成'
+    finish: '审核完成'
   }
 }
 

@@ -81,6 +81,7 @@ export function getRetoucherQuota (params) {
     msg.reviewPlantRate = transformPercentage(msg.reviewPlant, count)
     msg.reviewPullRate = transformPercentage(msg.reviewPull, count)
     msg.retouchReworkRate = transformPercentage(msg.retouchRework, msg.retoucherFinishStreamNum)
+    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum)
     msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) + '星'
     return msg
   })
@@ -165,7 +166,7 @@ export function getStoreEvaluate (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.retoucherName = listItem.stream.retoucher && listItem.stream.retoucher.name || listItem.stream.retoucher.real_name || '-'
+      listItem.retoucherName = listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
       listItem.retouchGroupName = listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name || '-'
     })
     return msg

@@ -13,11 +13,18 @@ import { mapGetters } from 'vuex'
 import { clearAllStorage } from '@/utils/sessionTool'
 import { throttle } from '@/utils/throttle.js'
 import Mousetrap from 'mousetrap'
+import variables from '@/styles/variables.less'
 export default {
   name: 'App',
   components: { PaintedEggshell },
   computed: {
     ...mapGetters(['showCat'])
+  },
+  created () {
+    if (this.$isDev) {
+      document.body.style.setProperty('--subMenuBg', variables.devSubMenuBg)
+      document.body.style.setProperty('--menuBg', variables.devMenuBg)
+    }
   },
   mounted () {
     this.$ipcRenderer.on('closed-win', (e, item) => {
@@ -49,6 +56,8 @@ export default {
 </script>
 
 <style lang="less">
+@import "~@/styles/variables.less";
+
 html {
   background-color: #f2f6fc;
 }
@@ -58,6 +67,8 @@ body {
   padding: 0;
   overflow: hidden;
 
+  --menuBg: @menuBg;
+  --subMenuBg: @subMenuBg;
   --boxShadow: '';
   --navbarMainLeft: 120px;
 }

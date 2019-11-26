@@ -143,7 +143,7 @@ export function getSearchHistory (params) {
       item.completePhoto = item.photoData.other_photo_version.find(item => item.version === 'complete_photo')
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
       item.productName = item.photoData.stream.product && item.photoData.stream.product.name || '-'
-      item.retouchName = item.photoData.stream.retoucher && item.photoData.stream.retoucher.name && item.photoData.stream.retoucher.real_name || '暂无信息'
+      item.retouchName = item.photoData.stream.retoucher && (item.photoData.stream.retoucher.name || item.photoData.stream.retoucher.real_name) || '暂无信息'
       item.retouchStandard = item.retouch_standard
 
       item.isPull = false

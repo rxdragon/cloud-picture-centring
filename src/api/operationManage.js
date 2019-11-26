@@ -14,7 +14,7 @@ export function getStaffCardList (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.staffName = listItem.staff && listItem.staff.name || listItem.staff.real_name || '-'
+      listItem.staffName = listItem.staff && (listItem.staff.name || listItem.staff.real_name) || '-'
       listItem.groupName = listItem.staff ? listItem.staff.retouch_group.name : '-'
       listItem.multiple = listItem.card.multiple
       listItem.createTime = listItem.card.created_at

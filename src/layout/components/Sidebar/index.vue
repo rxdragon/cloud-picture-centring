@@ -5,7 +5,7 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="false"
-        :background-color="variables.menuBg"
+        :background-color="$isDev ? variables.devMenuBg : variables.menuBg"
         :text-color="variables.menuText"
         :unique-opened="false"
         :active-text-color="variables.menuActiveText"
