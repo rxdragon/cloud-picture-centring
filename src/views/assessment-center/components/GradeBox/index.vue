@@ -99,11 +99,11 @@
       </div>
       <div v-else class="audit-content-finish panel-content">
         <div class="audit-opinion">
-          <el-tag v-if="photoInfoData.commitInfo.audit_correction === 'same'" size="medium">意见相同</el-tag>
-          <el-tag v-if="photoInfoData.commitInfo.audit_correction === 'different'" size="medium">意见不同</el-tag>
-          <el-tag v-if="photoInfoData.commitInfo.audit_glass === 'none'" size="medium">不种不拔</el-tag>
-          <el-tag v-if="photoInfoData.commitInfo.audit_glass === 'plant'" size="medium" type="success">种草</el-tag>
-          <el-tag v-if="photoInfoData.commitInfo.audit_glass === 'pull'" size="medium" type="danger">拔草</el-tag>
+          <el-tag v-if="photoInfoData.commitInfo.audit_correction === 'same'" class="audit-tag" size="medium">意见相同</el-tag>
+          <el-tag v-if="photoInfoData.commitInfo.audit_correction === 'different'" class="audit-tag" size="medium">意见不同</el-tag>
+          <el-tag v-if="photoInfoData.commitInfo.audit_glass === 'none'" class="audit-tag" size="medium">不种不拔</el-tag>
+          <el-tag v-if="photoInfoData.commitInfo.audit_glass === 'plant'" class="audit-tag" size="medium" type="success">种草</el-tag>
+          <el-tag v-if="photoInfoData.commitInfo.audit_glass === 'pull'" class="audit-tag" size="medium" type="danger">拔草</el-tag>
         </div>
         <div class="audit-remark retouch-remark">
           <div class="remark-title">纠偏备注：</div>
@@ -140,6 +140,7 @@
         <div class="flakiness-finish">
           <el-tag v-if="photoInfoData.commitInfo.film_evaluation === 'plant'" size="medium" type="success">种草</el-tag>
           <el-tag v-if="photoInfoData.commitInfo.film_evaluation === 'pull'" size="medium" type="danger">拔草</el-tag>
+          <el-tag v-if="photoInfoData.commitInfo.film_evaluation === 'none'" size="medium">不种不拔</el-tag>
         </div>
         <div class="flakiness-remark">
           <div v-if="photoInfoData.commitInfo.film_tag" class="retouch-remark">
@@ -418,8 +419,10 @@ export default {
     .audit-content-finish {
       padding: 20px;
 
-      .audit-opinion.el-tag {
-        margin-right: 21px;
+      .audit-opinion {
+        .audit-tag {
+          margin-right: 21px;
+        }
       }
 
       .audit-remark {
