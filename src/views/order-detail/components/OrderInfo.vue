@@ -4,12 +4,14 @@
       <div class="content-title">流水号</div>
       <div class="content-title">所属机构</div>
       <div class="content-title">拍摄产品</div>
+      <div class="content-title">摄影师</div>
       <div class="content-title">照片数量</div>
     </div>
     <div class="table-panel panel-order">
       <div class="panel-content">{{ orderInfo.streamNum }}</div>
       <div class="panel-content">{{ orderInfo.photographerOrg }}</div>
       <div class="panel-content">{{ orderInfo.productName }}</div>
+      <div class="panel-content">{{ orderInfo.photographerName }}</div>
       <div class="panel-content">{{ orderInfo.photoNum }}</div>
     </div>
     <template v-if="!isWorkBoardInfo">
@@ -97,7 +99,7 @@ export default {
   }
 
   .panel-order {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .panel-grade {

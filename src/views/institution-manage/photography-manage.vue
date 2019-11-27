@@ -173,7 +173,7 @@ export default {
      * @description 禁用摄影机构
      */
     disablePhotographerOrg (item) {
-      this.$confirm('是否启用该摄影机构？', '提示', {
+      this.$confirm('是否禁用该摄影机构？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         center: true

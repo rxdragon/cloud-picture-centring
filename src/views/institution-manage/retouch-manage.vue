@@ -92,7 +92,7 @@ export default {
       }
     },
     /**
-     * @description 获取角色组列表
+     * @description 启用机构
      * @param {*} item
      */
     enableRetouchOrg (item) {
@@ -115,7 +115,7 @@ export default {
      * @description 禁用机构
      */
     disableRetouchOrg (item) {
-      this.$confirm('是否启用该修图机构？', '提示', {
+      this.$confirm('是否禁用该修图机构？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         center: true
