@@ -156,6 +156,7 @@
 ### 🐛 Bug 修复
 |范围|描述|commitId|
 --|--|--
+ 云学院历史记录增加 成片评价标签 | [cdf4ab6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cdf4ab6)
  优化审核历史记录问题 | [2e8607d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2e8607d)
  传递组员id | [08f8212](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08f8212)
  修复bug | [5b8516c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5b8516c)
