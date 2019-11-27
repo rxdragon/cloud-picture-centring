@@ -81,7 +81,7 @@
           </div>
         </div>
         <!-- 标签 -->
-        <div v-if="flakinessEvaluate === 'pull'" class="issue-label">
+        <div v-if="flakinessEvaluate === 'pull' && !photoInfoData.isReturn" class="issue-label">
           <div class="issue-content">
             <issue-label-box v-model="issueLabel" multiple placeholder="请选择问题标签（非必选）" />
           </div>
@@ -118,6 +118,7 @@
         <div class="flakiness-radio-box">
           <el-radio v-model="flakinessEvaluate" label="plant">种草</el-radio>
           <el-radio v-model="flakinessEvaluate" label="pull">拔草</el-radio>
+          <el-radio v-model="flakinessEvaluate" label="none">通过</el-radio>
         </div>
         <div class="issue-label">
           <div class="issue-content">
@@ -237,8 +238,12 @@ export default {
         this.$newMessage.warning('请完成纠偏选项')
         return false
       }
+      if (!this.weedOpinion && this.sameOpinion === 'different') {
+        this.$newMessage.warning('请完成纠偏选项')
+        return false
+      }
       if (!this.flakinessEvaluate) {
-        this.$newMessage.warning('请完成纠偏评价')
+        this.$newMessage.warning('请完成成片评价')
         return false
       }
       const req = {
