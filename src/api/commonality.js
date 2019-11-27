@@ -71,8 +71,9 @@ export function getStreamInfo (params) {
     createData.orderData = {
       streamNum: data.streamNum,
       photographerOrg: data.order ? data.order.photographer_org.name : '-',
-      productName: data.product.name,
+      productName: data.product && data.product.name || '-',
       photoNum: data.photos.filter(item => +item.people_num > 0).length,
+      photographerName: data.order && data.order.tags && data.order.tags.values && data.order.tags.values.photographer || '-',
       reworkNum,
       plantNum,
       pullNum,

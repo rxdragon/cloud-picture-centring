@@ -4,7 +4,7 @@
       照片信息
     </div>
     <div class="table-info">
-      <div class="table-panel">
+      <div class="table-panel" :class="{'table-panel-rework': orderData.isRework}">
         <div class="caid">流水号</div>
         <div class="institution">机构</div>
         <div class="institution">摄影师</div>
@@ -14,7 +14,7 @@
         <div class="wait-time">顾客等待时间</div>
         <div class="photo-count">照片数量</div>
       </div>
-      <div class="table-panel table-panel-concent">
+      <div class="table-panel table-panel-concent" :class="{'table-panel-rework': orderData.isRework}">
         <div class="caid">
           {{ orderData.streamNum }}
           <el-tag v-if="orderData.streamState === 'review_return_retouch'" type="danger" size="small">审核退回</el-tag>
@@ -97,6 +97,10 @@ export default {
       padding: 17px 20px;
       box-sizing: border-box;
     }
+  }
+
+  .table-panel-rework {
+    grid-template-columns: 4fr 2fr 2fr 2fr 2fr 2fr 3fr 2fr;
   }
 
   .table-panel-concent {
