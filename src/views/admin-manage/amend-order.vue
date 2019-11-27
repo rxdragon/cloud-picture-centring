@@ -6,11 +6,11 @@
     <div class="search-box">
       <div class="caid-search search-item">
         <span>流水号</span>
-        <el-input v-model="caid" :disabled="Boolean(id)" placeholder="请输入流水号" clearable @keyup.native.enter="getStreamInfo" />
+        <el-input v-model.trim="caid" :disabled="Boolean(id)" placeholder="请输入流水号" clearable @keyup.native.enter="getStreamInfo" />
       </div>
       <div class="caid-search search-item">
         <span>订单号</span>
-        <el-input v-model="id" :disabled="Boolean(caid)" placeholder="请输入订单号" clearable @keyup.native.enter="getStreamInfo" />
+        <el-input v-model.trim="id" :disabled="Boolean(caid)" placeholder="请输入订单号" clearable @keyup.native.enter="getStreamInfo" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>

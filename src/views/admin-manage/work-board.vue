@@ -11,28 +11,31 @@
         <div class="search-item">
           <span>顾客姓名</span>
           <el-input
-            v-model="urgentSearch.name"
+            v-model.trim="urgentSearch.name"
             clearable
             :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.id)"
             placeholder="请输入顾客姓名"
+            @keyup.native.enter="getStreamList(1)"
           />
         </div>
         <div class="search-item">
           <span>订单号</span>
           <el-input
-            v-model="urgentSearch.id"
+            v-model.trim="urgentSearch.id"
             clearable
             :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.name)"
             placeholder="请输入订单号"
+            @keyup.native.enter="getStreamList(1)"
           />
         </div>
         <div class="search-item">
           <span>流水号</span>
           <el-input
-            v-model="urgentSearch.caid"
+            v-model.trim="urgentSearch.caid"
             clearable
             :disabled="Boolean(urgentSearch.id) || Boolean(urgentSearch.name)"
             placeholder="请输入流水号"
+            @keyup.native.enter="getStreamList(1)"
           />
         </div>
         <el-button type="primary" @click="getStreamList(1)">查询</el-button>
