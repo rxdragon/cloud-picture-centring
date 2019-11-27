@@ -243,6 +243,12 @@ export default {
       if (uploadData.length < this.photos.length) {
         return this.$newMessage.warning('请检查照片上传张数后再提交审核。')
       }
+      if (!uploadData.length) {
+        return this.$newMessage.warning('请检查照片上传张数后再提交审核。')
+      }
+      if (!this.photos.some(item => item.id === uploadData[0].id)) {
+        return this.$newMessage.warning('找不到流水号对应的id，请刷新页面重新上传')
+      }
       const reqData = {
         streamId: this.realAid,
         photoData: uploadData

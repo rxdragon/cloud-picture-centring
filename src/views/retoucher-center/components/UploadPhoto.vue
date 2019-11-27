@@ -131,6 +131,9 @@ export default {
   watch: {
     photos: {
       handler () {
+        this.cachePhoto = []
+        this.uploadPhoto = []
+        this.$emit('change', [])
         this.getCachePhoto()
       },
       immediate: true
