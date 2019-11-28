@@ -192,7 +192,7 @@ export function removeReturnRetouchOrder (aid) {
  */
 export function setCloudAssessmentPhotoId (photoArr) {
   const saveKey = `cloud-assessment-last-photoId`
-  let data = photoArr.map(item => item.photo_id)
+  let data = photoArr.map(item => item.id)
   data = JSON.stringify(data)
   localStorage.setItem(saveKey, data)
 }

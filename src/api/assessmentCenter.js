@@ -64,7 +64,8 @@ export function getSpotCheckResult (params) {
       return {
         list: [],
         allPhotoPath,
-        total: msg.extend.processInfo[0].totalCount
+        total: msg.extend.processInfo[0].totalCount,
+        pageTotal: msg.total || null
       }
     }
     data.forEach(item => {
@@ -77,7 +78,7 @@ export function getSpotCheckResult (params) {
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
       allPhotoPath = [...allPhotoPath, ...item.photoVersion]
       item.retouchStandard = item.retouch_standard
-      item.productName = item.photoData.stream && item.photoData.stream.product.name
+      item.productName = item.photoData.stream && item.photoData.stream.product && item.photoData.stream.product.name
 
       item.isPull = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('pull') || false
       item.isPlant = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('plant') || false
@@ -105,7 +106,8 @@ export function getSpotCheckResult (params) {
     const createData = {
       list: data,
       allPhotoPath,
-      total: msg.extend.processInfo[0].totalCount
+      total: msg.extend.processInfo[0].totalCount,
+      pageTotal: msg.total || null
     }
     return createData
   })
@@ -142,8 +144,8 @@ export function getSearchHistory (params) {
       item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')
       item.completePhoto = item.photoData.other_photo_version.find(item => item.version === 'complete_photo')
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
-      item.productName = item.photoData.stream.product && item.photoData.stream.product.name || '-'
-      item.retouchName = item.photoData.stream.retoucher && (item.photoData.stream.retoucher.name || item.photoData.stream.retoucher.real_name) || '暂无信息'
+      item.productName = item.photoData.stream && item.photoData.stream.product && item.photoData.stream.product.name || '-'
+      item.retouchName = item.photoData.stream && item.photoData.stream.retoucher && (item.photoData.stream.retoucher.name || item.photoData.stream.retoucher.real_name) || '暂无信息'
       item.retouchStandard = item.retouch_standard
 
       item.isPull = false

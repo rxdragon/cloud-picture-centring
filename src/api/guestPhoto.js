@@ -71,8 +71,14 @@ export function getPhotoInfo (params) {
       createData.photoVersion = [originPhoto]
     }
     createData.workerInfo = {
-      storeName: createData.stream.order.tags.values.store_name,
-      photographer: createData.stream.order.tags.values.photographer,
+      storeName: createData.stream.order &&
+        createData.stream.order.tags &&
+        createData.stream.order.tags.values &&
+        createData.stream.order.tags.values.store_name || '-',
+      photographer: createData.stream.order &&
+        createData.stream.order.tags &&
+        createData.stream.order.tags.values &&
+        createData.stream.order.tags.values.photographer || '-',
       retoucher: createData.stream.retoucher && (createData.stream.retoucher.name || createData.stream.retoucher.real_name) || '-',
       retouchGroup: createData.stream.retoucher && createData.stream.retoucher.retouch_group && createData.stream.retoucher.retouch_group.name || '-',
       reviewer: createData.stream.reviewer && (createData.stream.reviewer.name || createData.stream.reviewer.real_name) || '-',
