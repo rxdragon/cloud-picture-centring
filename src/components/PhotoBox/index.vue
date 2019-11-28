@@ -24,6 +24,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import DownIpc from '@electronMain/ipc/DownIpc'
 export default {
   name: 'PhotoBox',
   filters: {
@@ -75,14 +76,15 @@ export default {
      * @description 下载成功
      */
     downingPhoto () {
-      const savePath = `/${this.streamNum}`
+      const savePath = '123123测试'
       const data = {
-        downName: this.src,
+        rename: 'dadasd.jpg',
         url: this.imgDomain + this.src,
         path: savePath
       }
-      this.$newMessage.success('已添加一张照片到下载')
-      this.$ipcRenderer.send('downPhoto', data)
+      // this.$newMessage.success('已添加一张照片到下载')
+      // this.$ipcRenderer.send('downPhoto', data)
+      DownIpc.addDownloadFile(data)
     }
   }
 }
