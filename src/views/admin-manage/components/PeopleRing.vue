@@ -42,8 +42,8 @@ export default {
       chartData: {
         columns: ['title', 'num'],
         rows: [
-          { title: '云端修图师', num: 0 }, // 外包
-          { title: '外包修图师', num: 0 } // 内部
+          { title: '外包修图师', num: 0 }, // 外包
+          { title: '云端修图师', num: 0 } // 内部
         ]
       },
       chartSettings: {
