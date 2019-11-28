@@ -75,19 +75,22 @@ export function oneAllDown (photoArr) {
  * @param {*} photoArr
  */
 export function readAllPhoto (photoArr) {
+  const cachePhotoArr = JSON.parse(JSON.stringify(photoArr))
+  const cacheCount = 10
   // 判断是否有没加载的id
+  cachePhotoArr.length = cacheCount > cachePhotoArr.length ? cachePhotoArr.length : cacheCount
   const loadedPhotoArr = SessionTool.getCloudAssessmentPhotoId()
-  const allLoad = loadedPhotoArr && photoArr.every(photoItem => loadedPhotoArr.includes(photoItem.photo_id)) || false
+  const allLoad = loadedPhotoArr && cachePhotoArr.every(photoItem => loadedPhotoArr.includes(photoItem.id)) || false
   // 没有全部加载完成 加载未加载图片
   if (!allLoad) {
-    const notLoadedPhoto = loadedPhotoArr && photoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.photo_id)) || photoArr
+    const notLoadedPhoto = loadedPhotoArr && cachePhotoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.id)) || cachePhotoArr
     const promises = []
     notLoadedPhoto.forEach(item => {
       promises.push(loadPhoto(item.path))
     })
     Promise.all(promises)
       .then(() => {
-        SessionTool.setCloudAssessmentPhotoId([...photoArr])
+        SessionTool.setCloudAssessmentPhotoId([...cachePhotoArr])
       })
   }
 }

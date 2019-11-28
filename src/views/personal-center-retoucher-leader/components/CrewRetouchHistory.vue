@@ -142,6 +142,7 @@ export default {
         }
         this.auditType && (reqData.plantPull = this.auditType)
         this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
+        this.staffId && (reqData.staffId = this.staffId)
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetouchLeader.getStaffRetouchList(reqData)
         this.tableData = data.list
