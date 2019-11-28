@@ -36,6 +36,7 @@ export function getGroupStaffQuotaInfo (params) {
     const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
     const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
     const income = Number(data.income.retouch) + Number(data.income.impulse)
+    data.spotCheckNonePhotoNum = data.spotCheckPhotoNum - data.spotCheckPlantPhotoNum - data.spotCheckPullPhotoNum
     const tableDataCount = [{
       label: '修图单量',
       value: data.finishStreamNum,
@@ -81,6 +82,11 @@ export function getGroupStaffQuotaInfo (params) {
       value: data.spotCheckPullPhotoNum + ' / ' + transformPercentage(data.spotCheckPullPhotoNum, data.spotCheckPhotoNum),
       componentSwitch: true,
       query: SearchType.SpotPull
+    }, {
+      label: '抽查通过 / 直接通过率',
+      value: data.spotCheckNonePhotoNum + ' / ' + transformPercentage(data.spotCheckNonePhotoNum, data.spotCheckPhotoNum),
+      componentSwitch: true,
+      query: SearchType.SpotNone
     }]
     return {
       tableDataCount,

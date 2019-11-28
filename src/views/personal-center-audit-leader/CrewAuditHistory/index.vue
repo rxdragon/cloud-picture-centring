@@ -108,10 +108,13 @@ export default {
         this.auditType = 'pull'
         break
       case SearchType.SpotPlant:
-        this.spotCheckType = 'spotPlant'
+        this.spotCheckType = this.searchType
         break
       case SearchType.SpotPull:
-        this.spotCheckType = 'spotPull'
+        this.spotCheckType = this.searchType
+        break
+      case SearchType.SpotNone:
+        this.spotCheckType = this.searchType
         break
       case SearchType.RectifySame:
         this.correcType = SearchType.RectifySame
