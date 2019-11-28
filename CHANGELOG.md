@@ -1,4 +1,4 @@
-# 2.0.0 (2019-11-27)
+# 2.0.0 (2019-11-28)
 
 |范围|描述|commitId|
 --|--|--
@@ -165,6 +165,7 @@
  修复数据显示错误 | [3cffd7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3cffd7c)
  修复页面跳转问题 | [c50267b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c50267b)
  工作看板跳转问题 | [9f49cb5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9f49cb5)
+ 更改文案 | [33d9e6c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/33d9e6c)
  照片张数 过滤模版照片 | [f0c4fb9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f0c4fb9)
  细节调整 | [01f846c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01f846c)
  重置数据变化 | [29ba78a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/29ba78a)
