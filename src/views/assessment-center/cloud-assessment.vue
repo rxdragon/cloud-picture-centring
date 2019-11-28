@@ -234,7 +234,7 @@ export default {
         }
         const data = await AssessmentCenter.getSpotCheckResult(req)
         this.spotAllNum = data.total
-        this.pager.total = data.pageTotal
+        this.pager.total = data.pageTotal || this.pager.total
         if (this.isTakePhoto === true) {
           this.dialogTableVisible = true
           this.isTakePhoto = false

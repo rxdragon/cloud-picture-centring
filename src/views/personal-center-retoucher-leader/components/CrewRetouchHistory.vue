@@ -59,6 +59,7 @@ import GrassSelect from '@SelectBox/GrassSelect'
 import SpotGrassSelect from '@SelectBox/SpotGrassSelect'
 import CrewSelect from '@SelectBox/CrewSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
+import { SearchType } from '@/utils/enumerate'
 import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
@@ -87,17 +88,20 @@ export default {
   created () {
     this.searchStaff && (this.staffId = this.searchStaff)
     switch (this.searchType) {
-      case 'checkPlant':
+      case SearchType.CheckPlant:
         this.auditType = 'plant'
         break
-      case 'checkPull':
+      case SearchType.CheckPull:
         this.auditType = 'pull'
         break
-      case 'spotPlant':
-        this.spotCheckType = 'spotPlant'
+      case SearchType.SpotPlant:
+        this.spotCheckType = this.searchType
         break
-      case 'spotPull':
-        this.spotCheckType = 'spotPull'
+      case SearchType.SpotPull:
+        this.spotCheckType = this.searchType
+        break
+      case SearchType.SpotNone:
+        this.spotCheckType = this.searchType
         break
       default:
         break

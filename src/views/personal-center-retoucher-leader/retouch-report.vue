@@ -99,6 +99,10 @@ export default {
         label: '抽查拔草 / 拔草率',
         value: '- / -',
         componentSwitch: false
+      }, {
+        label: '抽查通过 / 直接通过率',
+        value: '- / -',
+        componentSwitch: false
       }]
     }
   },
