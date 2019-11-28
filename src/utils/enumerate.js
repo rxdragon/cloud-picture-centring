@@ -65,9 +65,10 @@ export const SearchType = {
   CheckPull: 'checkPull', // 审核拔草
   SpotPlant: 'spotPlant', // 抽查种草
   SpotPull: 'spotPull', // 抽查拔草
+  SpotNone: 'none', // 抽查不种不拔
   RectifyPlant: 'rectifyPlant', // 意见不同纠偏种草
   RectifyPull: 'rectifyPull', // 意见不同纠偏拔草
-  RectifyNone: 'rectifyNone', // 不中不把
+  RectifyNone: 'rectifyNone', // 不中不拔
   RectifySame: 'rectifySame', // 意见相同
   RectifyDifferent: 'rectifyDifferent' // 意见不同
 }

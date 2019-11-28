@@ -167,9 +167,11 @@
  工作看板跳转问题 | [9f49cb5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9f49cb5)
  文案变更 | [0bb4a70](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0bb4a70)
  更改文案 | [33d9e6c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/33d9e6c)
+ 更新云端抽片分页问题 | [6d042a0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6d042a0)
  照片张数 过滤模版照片 | [f0c4fb9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f0c4fb9)
  细节调整 | [01f846c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01f846c)
  重置数据变化 | [29ba78a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/29ba78a)
+ 页码修复 | [f7880c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f7880c1)
 
 
 ### 🚀 性能优化

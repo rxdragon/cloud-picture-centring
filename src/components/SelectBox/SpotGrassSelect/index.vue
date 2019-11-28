@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { SearchType } from '@/utils/enumerate'
 export default {
   name: 'SpotGrassSelect',
   data () {
@@ -21,10 +22,13 @@ export default {
         value: 0
       }, {
         label: '种草',
-        value: 'spotPlant'
+        value: SearchType.SpotPlant
       }, {
         label: '拔草',
-        value: 'spotPull'
+        value: SearchType.SpotPull
+      }, {
+        label: '不种不拔',
+        value: SearchType.SpotNone
       }]
     }
   }
@@ -33,6 +37,6 @@ export default {
 
 <style lang="less" scoped>
 .el-select {
-  width: 100px;
+  width: 105px;
 }
 </style>
