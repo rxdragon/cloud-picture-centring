@@ -34,7 +34,7 @@
                 :style="removeStyle"
               />
             </div>
-            <div v-show="!Object.keys(downList).length" key="noData" class="no-data list-complete-item">
+            <div v-show="noData" key="noData" class="no-data list-complete-item">
               暂无数据
             </div>
           </transition-group>
@@ -70,7 +70,8 @@ export default {
   computed: {
     ...mapGetters(['saveFolder', 'downloadList']),
     noData () {
-      return Object.keys(this.downList).length + Object.keys(this.downloadList).length
+      const listLength = Object.keys(this.downList).length + Object.keys(this.downloadList).length
+      return Boolean(listLength)
     }
   },
   mounted () {

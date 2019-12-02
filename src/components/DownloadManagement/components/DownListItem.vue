@@ -76,7 +76,8 @@ export default {
   },
   props: {
     listItem: { type: Object, required: true },
-    uuid: { type: String, required: true }
+    uuid: { type: String, required: true },
+    finished: { type: Boolean }
   },
   data () {
     return {
