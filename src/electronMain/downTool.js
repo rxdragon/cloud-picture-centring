@@ -33,7 +33,6 @@ function initDownloadManager (win, ipcMain) {
       }
     })
     DownloadManager.download(downloadConfig, (error, finished, errors) => {
-      console.log(uuid, 'cb')
       if (error) {
         win.webContents.send('download-manage:error', { uuid, errors })
         return

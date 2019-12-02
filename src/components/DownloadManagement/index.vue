@@ -110,7 +110,7 @@ export default {
      */
     clearAll () {
       DownIpc.clearAll()
-      this.$store.dispatch('downloadlist    /clearAllDownList')
+      this.$store.dispatch('downloadlist/clearAllDownList')
     }
   }
 }

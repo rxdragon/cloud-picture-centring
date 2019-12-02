@@ -22,7 +22,6 @@ const actions = {
   addDownloadItem: ({ commit, state }, { downloadItem }) => {
     return new Promise(resolve => {
       commit('ADD_DOWNLOAD_LIST', { downloadItem })
-      console.log(downloadItem)
       resolve(state.downloadList)
     })
   },

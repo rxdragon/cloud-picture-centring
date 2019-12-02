@@ -59,7 +59,6 @@ function _registerListener (win, opts = {}) {
 
       // 如果下载终端
       if (item.getState() === 'interrupted') {
-        console.log('初始化下载中断状态')
         item.resume()
       }
 
@@ -127,7 +126,6 @@ const download = (options, callback) => {
   const request = net.request(options.url)
   const filename = (options.uuid + '.download') || decodeURIComponent(path.basename(options.url))
   const url = decodeURIComponent(options.url)
-  console.log(options.uuid, 'download')
   const folder = options.downloadFolder || downloadFolder
   const filePath = path.join(folder, options.path.toString(), filename.split(/[?#]/)[0])
   if (options.headers) {
@@ -169,16 +167,11 @@ const download = (options, callback) => {
 
     if (fs.existsSync(filePath)) {
       const stats = fs.statSync(filePath)
-
       const fileOffset = stats.size
-
       const serverFileSize = parseInt(response.headers['content-length'])
-
-      console.log(filename + ' exists, verifying file size: (' + fileOffset + ' / ' + serverFileSize + ' downloaded)')
 
       // 判断本地文件和服务器文件大小
       if (fileOffset < serverFileSize) {
-        console.log('文件将要重新下载')
         options = {
           path: filePath,
           urlChain: [options.url],
