@@ -7,3 +7,5 @@ node_modules
 #Electron-builder output
 /dist_electron
 /dist_vue
+
+.output

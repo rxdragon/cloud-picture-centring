@@ -1,10 +1,7 @@
 import DownloadManager from './DownloadManager'
-
-const { app } = require('electron')
-
-DownloadManager.register({
-  downloadFolder: app.getPath('desktop')
-})
+// 下载器 注册保存地址
+const downloadFolder = ''
+DownloadManager.register({ downloadFolder })
 
 /**
  * 初始化下载管理器
@@ -13,48 +10,44 @@ DownloadManager.register({
  * @param ipcMain
  */
 function initDownloadManager (win, ipcMain) {
-  /**
-     * 仅保存正在下载的信息
-     *
-     * @type {{}}
-     */
+  // 仅保存正在下载的信息
   const downingInfo = {}
 
   /**
-     * 接收到下载命令
-     *
-     * @param event
-     * @param uuid
-     * @param downloadConfig
-     */
+   * @description 接收到下载命令
+   * @param event
+   * @param uuid
+   * @param downloadConfig
+   */
   function onNeedDownload (event, { uuid, downloadConfig }) {
     downloadConfig = Object.assign(downloadConfig, {
-      onProgress: (progress, item) => {
+      onProgress: (progress, downInfo, item) => {
         if (!(uuid in downingInfo)) downingInfo[uuid] = item
         win.webContents.send('download-manage:process', {
           uuid,
           progress,
-          canResume: item.canResume(),
-          savePath: item.getSavePath() // 保存路径
+          downInfo,
+          status: item.getState(), // 状态
+          canResume: item.canResume()
         })
       }
     })
-
-    DownloadManager.download(downloadConfig, function (error, finished, errors) {
-      if (uuid in downingInfo) delete downingInfo[uuid]
-
+    DownloadManager.download(downloadConfig, (error, finished, errors) => {
+      console.log(uuid, 'cb')
       if (error) {
         win.webContents.send('download-manage:error', { uuid, errors })
         return
       }
-
-      win.webContents.send('download-manage:success', { uuid })
+      if (uuid in downingInfo) {
+        delete downingInfo[uuid]
+        win.webContents.send('download-manage:success', { uuid })
+      }
     })
+    event.returnValue = 'success'
   }
 
   /**
-   * 接收到暂停命令
-   *
+   * @description 接收到暂停命令
    * @param event
    * @param uuid
    */
@@ -65,16 +58,15 @@ function initDownloadManager (win, ipcMain) {
       event.returnValue = 'fail'
       return
     }
-
     if (!downloadItem.isPaused()) downloadItem.pause()
+    event.returnValue = 'success'
   }
 
   /**
-     * 接收到恢复命令
-     *
-     * @param event
-     * @param uuid
-     */
+   * @description 接收到恢复命令
+   * @param event
+   * @param uuid
+   */
   function onNeedResume (event, { uuid }) {
     const downloadItem = downingInfo[uuid]
 
@@ -82,16 +74,32 @@ function initDownloadManager (win, ipcMain) {
       event.returnValue = 'fail'
       return
     }
-
     if (downloadItem.isPaused()) downloadItem.resume()
+    event.returnValue = 'success'
   }
 
   /**
-     * 接收到取消命令
-     *
-     * @param event
-     * @param uuid
-     */
+   * @description 接收到恢复命令
+   * @param event
+   * @param uuid
+   */
+  function onNeedDelete (event, { uuid }) {
+    try {
+      const downloadItem = downingInfo[uuid]
+      if (downloadItem) {
+        delete downingInfo[uuid]
+      }
+      event.returnValue = 'success'
+    } catch (error) {
+      event.returnValue = 'fail'
+    }
+  }
+
+  /**
+   * @description 接收到取消命令
+   * @param event
+   * @param uuid
+   */
   function onNeedCancel (event, { uuid }) {
     const downloadItem = downingInfo[uuid]
 
@@ -101,13 +109,16 @@ function initDownloadManager (win, ipcMain) {
     }
 
     downloadItem.cancel()
-    delete downloadItem[uuid]
+    delete downingInfo[uuid]
+    event.returnValue = 'success'
   }
 
   ipcMain.on('download-manage:downloadFile', onNeedDownload)
   ipcMain.on('download-manage:pause', onNeedPause)
   ipcMain.on('download-manage:resume', onNeedResume)
+  ipcMain.on('download-manage:delete', onNeedDelete)
   ipcMain.on('download-manage:cancel', onNeedCancel)
 }
 
 export default initDownloadManager
+

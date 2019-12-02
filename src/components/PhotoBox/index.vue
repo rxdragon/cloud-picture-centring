@@ -76,14 +76,12 @@ export default {
      * @description 下载成功
      */
     downingPhoto () {
-      const savePath = '123123测试'
+      const savePath = `/${this.streamNum}`
       const data = {
-        rename: 'dadasd.jpg',
         url: this.imgDomain + this.src,
         path: savePath
       }
-      // this.$newMessage.success('已添加一张照片到下载')
-      // this.$ipcRenderer.send('downPhoto', data)
+      this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)
     }
   }

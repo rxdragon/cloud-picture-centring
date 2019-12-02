@@ -5,17 +5,19 @@ const { BrowserWindow, net, session } = electron
 const fs = require('fs')
 
 const app = electron.app
-let downloadFolder = app.getPath('downloads')
+let downloadFolder = ''
 let lastWindowCreated
 
 const queue = []
 
+// 查看是否在队列中
 const _popQueueItem = (url) => {
   const queueItem = queue.find(item => item.url === url)
   queue.splice(queue.indexOf(queueItem), 1)
   return queueItem
 }
 
+// 转换数据大小格式
 const _bytesToSize = (bytes, decimals) => {
   if (bytes === 0) return '0 Bytes'
   var k = 1000
@@ -25,6 +27,7 @@ const _bytesToSize = (bytes, decimals) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
+// 格式化时间
 const _convertTime = (input, separator) => {
   var pad = function (input) { return input < 10 ? '0' + input : input }
   return [
@@ -34,21 +37,19 @@ const _convertTime = (input, separator) => {
   ].join(typeof separator !== 'undefined' ? separator : ':')
 }
 
+// 注册监听事件
 function _registerListener (win, opts = {}) {
   lastWindowCreated = win
-  downloadFolder = opts.downloadFolder || downloadFolder
+  downloadFolder = opts.downloadFolder || downloadFolder // 下载路径
 
   const listener = (e, item) => {
     const itemUrl = decodeURIComponent(item.getURLChain()[0] || item.getURL())
-    let itemFilename = decodeURIComponent(item.getFilename())
-    const itemFileExt = path.extname(itemFilename)
     const queueItem = _popQueueItem(itemUrl)
     const ReceivedBytesArr = []
-    
+
     if (queueItem) {
       const folder = queueItem.downloadFolder || downloadFolder
-      if (Boolean(queueItem.rename)) { itemFilename = queueItem.rename }
-      itemFilename = itemFilename.replace(itemFileExt, '.cf')
+      const itemFilename = queueItem.filename
       const filePath = path.join(folder, queueItem.path, itemFilename)
       const totalBytes = item.getTotalBytes()
       let speedValue = 0
@@ -56,8 +57,9 @@ function _registerListener (win, opts = {}) {
       let PreviousReceivedBytes
       item.setSavePath(filePath)
 
-      // Resuming an interrupted download
+      // 如果下载终端
       if (item.getState() === 'interrupted') {
+        console.log('初始化下载中断状态')
         item.resume()
       }
 
@@ -80,8 +82,18 @@ function _registerListener (win, opts = {}) {
           downloaded: _bytesToSize(receivedBytes)
         }
 
+        const downInfo = {
+          savePath: item.getSavePath(), // 保存路径
+          downURL: item.getURL(), // 下载地址
+          mimeType: item.getMimeType(), // MIME 类型
+          hasUserGesture: item.hasUserGesture(), // 是否具有用户手势
+          filename: item.getFilename(), // 下载文件名
+          contentDisposition: item.getContentDisposition(), // 响应头中的Content-Disposition字段
+          startTime: item.getStartTime() // 开始下载时间
+        }
+
         if (typeof queueItem.onProgress === 'function') {
-          queueItem.onProgress(progress, item)
+          queueItem.onProgress(progress, downInfo, item)
         }
       })
 
@@ -91,9 +103,9 @@ function _registerListener (win, opts = {}) {
         if (!win.isDestroyed()) {
           win.setProgressBar(-1)
         }
-
+        // 如果下载中断
         if (state === 'interrupted') {
-          const message = `The download of ${item.getFilename()} was interrupted`
+          const message = `该文件${item.getFilename()} 下载中断`
           finishedDownloadCallback(new Error(message), { url: item.getURL(), filePath })
         } else if (state === 'completed') {
           if (process.platform === 'darwin') {
@@ -108,25 +120,16 @@ function _registerListener (win, opts = {}) {
   win.webContents.session.on('will-download', listener)
 }
 
-const register = (opts = {}) => {
-  app.on('browser-window-created', (e, win) => {
-    _registerListener(win, opts)
-  })
-}
-
+// 单文件下载
 const download = (options, callback) => {
   const win = BrowserWindow.getFocusedWindow() || lastWindowCreated
   options = Object.assign({}, { path: '' }, options)
-
   const request = net.request(options.url)
-
-  const filename = options.filename || decodeURIComponent(path.basename(options.url))
+  const filename = (options.uuid + '.download') || decodeURIComponent(path.basename(options.url))
   const url = decodeURIComponent(options.url)
-
-
+  console.log(options.uuid, 'download')
   const folder = options.downloadFolder || downloadFolder
   const filePath = path.join(folder, options.path.toString(), filename.split(/[?#]/)[0])
-
   if (options.headers) {
     options.headers.forEach((h) => { request.setHeader(h.name, h.value) })
 
@@ -141,30 +144,27 @@ const download = (options, callback) => {
       callback({ cancel: false, requestHeaders: details.requestHeaders })
     })
   }
-
   if (typeof options.onLogin === 'function') {
     request.on('login', options.onLogin)
   }
-
   request.on('error', function (error) {
     const finishedDownloadCallback = callback || function () { }
-
     const message = `The request for ${filename} was interrupted: ${error}`
-
     finishedDownloadCallback(new Error(message), { url: options.url, filePath: filePath })
   })
 
   request.on('response', function (response) {
+    // 下载终止
     request.abort()
-
+    // 添加队列
     queue.push({
-      url: url,
-      filename: filename,
+      url: url, // 下载地址
+      filename: filename, // 文件名字
       rename: options.rename, // 是否重命名
       downloadFolder: options.downloadFolder,
-      path: options.path.toString(),
-      callback: callback,
-      onProgress: options.onProgress
+      path: options.path.toString(), // 储存地址
+      callback: callback, // 回调函数
+      onProgress: options.onProgress // 监听下载
     })
 
     if (fs.existsSync(filePath)) {
@@ -176,10 +176,9 @@ const download = (options, callback) => {
 
       console.log(filename + ' exists, verifying file size: (' + fileOffset + ' / ' + serverFileSize + ' downloaded)')
 
-      // Check if size on disk is lower than server
+      // 判断本地文件和服务器文件大小
       if (fileOffset < serverFileSize) {
-        console.log('File needs re-downloaded as it was not completed')
-
+        console.log('文件将要重新下载')
         options = {
           path: filePath,
           urlChain: [options.url],
@@ -187,23 +186,21 @@ const download = (options, callback) => {
           length: serverFileSize,
           lastModified: response.headers['last-modified']
         }
-
         win.webContents.session.createInterruptedDownload(options)
       } else {
-        console.log(filename + ' verified, no download needed')
-
+        console.log(filename + '本地文件大于等于服务器文件，不需要下载')
         const finishedDownloadCallback = callback || function () {}
-
         finishedDownloadCallback(null, { url, filePath })
       }
     } else {
-      console.log(filename + ' does not exist, download it now')
+      console.log(filename + '本地未下载，开始下载')
       win.webContents.downloadURL(options.url)
     }
   })
   request.end()
 }
 
+// 批量下载
 const bulkDownload = (options, callback) => {
   options = Object.assign({}, { urls: [], path: '' }, options)
 
@@ -234,6 +231,13 @@ const bulkDownload = (options, callback) => {
         }
       }
     })
+  })
+}
+
+// 注册
+const register = (opts = {}) => {
+  app.on('browser-window-created', (e, win) => {
+    _registerListener(win, opts)
   })
 }
 

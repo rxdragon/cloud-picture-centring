@@ -82,10 +82,10 @@
 import OrderInfo from '@/components/OrderInfo'
 import PhotoGroup from './components/PhotoGroup'
 import DomainSwitchBox from '@/components/DomainSwitchBox'
-
+import DownIpc from '@electronMain/ipc/DownIpc'
+import { renameFirstPhoto } from '@/utils/photoTool'
 import * as Commonality from '@/api/commonality'
 import * as Reviewer from '@/api/reviewer.js'
-import * as PhotoTool from '@/utils/photoTool'
 
 export default {
   name: 'AuditCenter',
@@ -156,11 +156,11 @@ export default {
         })
         photoArr.push({
           url: findFirst.path,
-          originalPhoto: findOriginal.path,
+          rename: renameFirstPhoto(findOriginal.path),
           path: savePath
         })
       })
-      PhotoTool.oneAllDown(photoArr)
+      DownIpc.addDownloadFiles(photoArr)
     },
     /**
      * @description 获取又拍云

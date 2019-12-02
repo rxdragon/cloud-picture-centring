@@ -86,9 +86,8 @@
 import DatePicker from '@/components/DatePicker'
 import InstitutionType from '@SelectBox/InstitutionType'
 import GradeBox from './components/GradeBox'
-
+import DownIpc from '@electronMain/ipc/DownIpc'
 import * as AssessmentCenter from '@/api/assessmentCenter'
-import * as PhotoTool from '@/utils/photoTool.js'
 import { PhotoEnumName } from '@/utils/enumerate.js'
 import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
 
@@ -134,7 +133,7 @@ export default {
           path: savePath
         })
       })
-      PhotoTool.oneAllDown(photoArr)
+      DownIpc.addDownloadFiles(photoArr)
     },
     /**
      * @description 初始化页面

@@ -53,7 +53,7 @@
 <script>
 import PhotoBox from '@/components/PhotoBox'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
-
+import DownIpc from '@electronMain/ipc/DownIpc'
 import { mapGetters } from 'vuex'
 import * as Commonality from '@/api/commonality'
 import * as PhotoTool from '@/utils/photoTool'
@@ -113,7 +113,7 @@ export default {
         path: savePath
       }
       this.$newMessage.success('已添加一张照片到下载')
-      this.$ipcRenderer.send('downPhoto', data)
+      DownIpc.addDownloadFile(data)
     },
     /**
      * @description 展示预览
