@@ -41,12 +41,12 @@
       <div class="panel-title">
         <span>照片审核</span>
         <div class="button-box">
-          <domain-switch-box />
-          <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
           <template v-if="orderData.photos.length > 1">
             <el-button v-if="!isAllReturnOrder" type="warning" size="small" @click="allRework">全部重修</el-button>
             <el-button v-else type="info" size="small" @click="allCleanRework">取消重修</el-button>
           </template>
+          <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
+          <domain-switch-box />
         </div>
       </div>
       <photo-group
@@ -400,7 +400,7 @@ export default {
         align-items: center;
 
         .domain-switch-box {
-          margin-right: 12px;
+          margin-left: 12px;
         }
       }
     }
