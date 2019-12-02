@@ -126,7 +126,7 @@ function resume (uuid) {
   onListChange()
 }
 
-// 删除完成项
+// 删除完成或者未开始项
 function deleteItem (uuid) {
   if (downloadList[uuid].status !== 'completed') {
     const result = ipcRenderer.sendSync('download-manage:delete', { uuid })
@@ -136,6 +136,16 @@ function deleteItem (uuid) {
   if (findDeleteIndex >= 0) waitDownloadList.splice(findDeleteIndex, 1)
   delete downloadList[uuid]
   onListChange()
+}
+
+// 将完成项目转移到 列表
+function transferToVuexList (uuid) {
+  const saveData = {
+    uuid,
+    downloadItem: downloadList[uuid]
+  }
+  store.dispatch('downloadlist/addDownloadItem', saveData)
+    .then(() => deleteItem(uuid))
 }
 
 // 清空所有数据
@@ -227,6 +237,7 @@ export function changeSaveName (item) {
     item.savePath = newFilePath
     item.iconSrc = await getFileIcon(newFilePath)
     onListChange()
+    transferToVuexList(item.config.uuid)
   })
 }
 

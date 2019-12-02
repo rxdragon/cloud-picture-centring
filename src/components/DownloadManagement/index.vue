@@ -27,6 +27,13 @@
                 :style="removeStyle"
               />
             </div>
+            <div v-for="(downItem, uuid) in downloadList" :key="downItem.config.uuid + '-finish'" class="list-complete-item content-row">
+              <down-list-item
+                :uuid="uuid"
+                :list-item="downItem"
+                :style="removeStyle"
+              />
+            </div>
             <div v-show="!Object.keys(downList).length" key="noData" class="no-data list-complete-item">
               暂无数据
             </div>
@@ -61,7 +68,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['saveFolder'])
+    ...mapGetters(['saveFolder', 'downloadList']),
+    noData () {
+      return Object.keys(this.downList).length + Object.keys(this.downloadList).length
+    }
   },
   mounted () {
     DownIpc.registerOnListChange(() => {
