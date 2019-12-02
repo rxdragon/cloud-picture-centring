@@ -27,14 +27,15 @@
                 :style="removeStyle"
               />
             </div>
-            <div v-for="(downItem, uuid) in downloadList" :key="downItem.config.uuid + '-finish'" class="list-complete-item content-row">
+            <div v-for="downItem in downloadList" :key="downItem.config.uuid + '-finish'" class="list-complete-item content-row">
               <down-list-item
-                :uuid="uuid"
+                :uuid="downItem.config.uuid"
                 :list-item="downItem"
                 :style="removeStyle"
+                finished
               />
             </div>
-            <div v-show="noData" key="noData" class="no-data list-complete-item">
+            <div v-show="!noData" key="noData" class="no-data list-complete-item">
               暂无数据
             </div>
           </transition-group>
@@ -62,7 +63,6 @@ export default {
   data () {
     return {
       downList: DownIpc.getDownloadList(),
-      showProgressingNum: 0,
       showManage: false,
       removeStyle: '' // 移除时样式
     }
@@ -70,13 +70,16 @@ export default {
   computed: {
     ...mapGetters(['saveFolder', 'downloadList']),
     noData () {
-      const listLength = Object.keys(this.downList).length + Object.keys(this.downloadList).length
+      const listLength = Object.keys(this.downList).length + this.downloadList.length
       return Boolean(listLength)
+    },
+    showProgressingNum () {
+      return Object.keys(this.downList).length
     }
   },
   mounted () {
     DownIpc.registerOnListChange(() => {
-      this.showProgressingNum = Object.keys(this.downList).length
+      this.$forceUpdate()
     })
   },
   methods: {
@@ -95,11 +98,11 @@ export default {
     /**
      * @description 显示列表
      */
-    showList () {
-      const downListArr = Object.values(this.downList)
-      const downingList = downListArr.filter(item => item.status === 'progressing')
-      if (this.showManage) {
-        this.showProgressingNum = downingList.length
+    async showList () {
+      for (const uuid in this.downList) {
+        if (this.downList[uuid].status === 'completed') {
+          await DownIpc.transferToVuexList(uuid)
+        }
       }
     },
     /**
@@ -107,6 +110,7 @@ export default {
      */
     clearAll () {
       DownIpc.clearAll()
+      this.$store.dispatch('downloadlist    /clearAllDownList')
     }
   }
 }

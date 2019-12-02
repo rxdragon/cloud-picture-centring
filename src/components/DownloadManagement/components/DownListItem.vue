@@ -95,7 +95,12 @@ export default {
   methods: {
     // 删除下载文件
     deleteDownItem () {
-      DownIpc.deleteItem(this.uuid)
+      if (this.finished) {
+        const uuid = this.uuid
+        this.$store.dispatch('downloadlist/delDownloadItem', { uuid })
+      } else {
+        DownIpc.deleteItem(this.uuid)
+      }
     },
     // 重新下载
     resumeDownItem () {

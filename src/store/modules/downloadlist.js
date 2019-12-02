@@ -1,23 +1,27 @@
-import Vue from 'vue'
-
 const state = {
-  downloadList: {}
+  downloadList: []
 }
 
 const mutations = {
-  ADD_DOWNLOAD_LIST: (state, { uuid, downloadItem }) => {
-    Vue.prototype.$set(state.downloadList, uuid, downloadItem)
+  ADD_DOWNLOAD_LIST: (state, { downloadItem }) => {
+    state.downloadList.unshift(downloadItem)
   },
   DEL_DOWNLOAD_LIST: (state, { uuid }) => {
-    delete state.downloadList[uuid]
+    const findDeleteIndex = state.downloadList.findIndex(item => item.config.uuid === uuid)
+    if (findDeleteIndex >= 0) {
+      state.downloadList.splice(findDeleteIndex, 1)
+    }
+  },
+  CLEAR_ALL_LIST: (state) => {
+    state.downloadList = []
   }
 }
 
 const actions = {
   // 增加列表
-  addDownloadItem: ({ commit, state }, { uuid, downloadItem }) => {
+  addDownloadItem: ({ commit, state }, { downloadItem }) => {
     return new Promise(resolve => {
-      commit('ADD_DOWNLOAD_LIST', { uuid, downloadItem })
+      commit('ADD_DOWNLOAD_LIST', { downloadItem })
       console.log(downloadItem)
       resolve(state.downloadList)
     })
@@ -26,6 +30,12 @@ const actions = {
   delDownloadItem: ({ commit, state }, { uuid }) => {
     return new Promise(resolve => {
       commit('DEL_DOWNLOAD_LIST', { uuid })
+      resolve(state.downloadList)
+    })
+  },
+  clearAllDownList: ({ commit, state }) => {
+    return new Promise(resolve => {
+      commit('CLEAR_ALL_LIST')
       resolve(state.downloadList)
     })
   }

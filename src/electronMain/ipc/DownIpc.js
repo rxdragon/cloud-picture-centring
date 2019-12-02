@@ -49,7 +49,6 @@ function limitDownCount (uuid) {
   if (uuid) {
     const findDeleteIndex = downingLoadList.findIndex(item => item.config.uuid === uuid)
     if (findDeleteIndex >= 0) { downingLoadList.splice(findDeleteIndex, 1) }
-    console.log('delete')
   }
   if (downingLoadList.length < maxCount) {
     let takeCount = maxCount - downingLoadList.length
@@ -134,18 +133,14 @@ function deleteItem (uuid) {
   }
   const findDeleteIndex = waitDownloadList.findIndex(item => item.config.uuid === uuid)
   if (findDeleteIndex >= 0) waitDownloadList.splice(findDeleteIndex, 1)
-  delete downloadList[uuid]
+  Vue.prototype.$delete(downloadList, uuid)
   onListChange()
 }
 
 // 将完成项目转移到 列表
-function transferToVuexList (uuid) {
-  const saveData = {
-    uuid,
-    downloadItem: downloadList[uuid]
-  }
-  store.dispatch('downloadlist/addDownloadItem', saveData)
-    .then(() => deleteItem(uuid))
+async function transferToVuexList (uuid) {
+  await store.dispatch('downloadlist/addDownloadItem', { downloadItem: downloadList[uuid] })
+  deleteItem(uuid)
 }
 
 // 清空所有数据
@@ -178,11 +173,11 @@ function cancel (uuid) {
  */
 async function onDownloadProcess (event, { uuid, progress, downInfo, status, canResume }) {
   if (uuid in downloadList) {
-    const iconSrc = await getFileIcon(downloadList[uuid].savePath)
     Vue.prototype.$set(downloadList[uuid], 'canResume', canResume)
     Vue.prototype.$set(downloadList[uuid], 'process', progress)
     Vue.prototype.$set(downloadList[uuid], 'status', status)
     Vue.prototype.$set(downloadList[uuid], 'downInfo', downInfo)
+    const iconSrc = await getFileIcon(downloadList[uuid].savePath)
     Vue.prototype.$set(downloadList[uuid], 'iconSrc', iconSrc)
     onListChange()
   }
@@ -210,7 +205,7 @@ function onDownloadError (event, { uuid, errors }) {
  */
 function onDownloadSuccess (event, { uuid }) {
   if (uuid in downloadList) {
-    downloadList[uuid].status = 'completed'
+    Vue.prototype.$set(downloadList[uuid], 'status', 'completed')
     limitDownCount(uuid)
     changeSaveName(downloadList[uuid])
   }
@@ -237,7 +232,6 @@ export function changeSaveName (item) {
     item.savePath = newFilePath
     item.iconSrc = await getFileIcon(newFilePath)
     onListChange()
-    transferToVuexList(item.config.uuid)
   })
 }
 
@@ -254,5 +248,6 @@ export default {
   deleteItem,
   clearAll,
   cancel,
-  registerOnListChange
+  registerOnListChange,
+  transferToVuexList
 }

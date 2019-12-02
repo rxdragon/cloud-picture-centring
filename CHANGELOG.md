@@ -144,6 +144,7 @@
  增加显示ci | [8e2e4bb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8e2e4bb)
  审核退回增加修片师显示 | [04cc9ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/04cc9ad)
  新增缓存队列 | [26e1ed6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/26e1ed6)
+ 更改列表问题 | [79a1242](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79a1242)
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
  重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
 
