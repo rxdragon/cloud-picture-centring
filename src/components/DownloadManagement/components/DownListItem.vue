@@ -110,7 +110,6 @@ export default {
     },
     // 打开下载文件
     downOpenFileFolder () {
-      console.log(this.listItem.savePath)
       this.hasFile = openFileFolder(this.listItem.savePath)
     }
   }

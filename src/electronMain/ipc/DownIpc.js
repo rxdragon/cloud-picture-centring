@@ -5,10 +5,14 @@ import { getFileIcon } from '@/utils/getFileIcon.js'
 const path = require('path')
 const fs = require('fs')
 const { ipcRenderer } = require('electron')
-console.log(require('electron'))
-const waitDownloadList = []
-const downingLoadList = []
 
+const waitDownloadList = [] // 等待下载队列
+const downingLoadList = [] // 正在下载队列
+const downloadList = {} // 队列信息
+
+let onListChange = () => {}
+
+// 获取文件名
 function getFileNameTool (src) {
   const fileExt = path.extname(src)
   const fileName = path.basename(src, fileExt)
@@ -18,9 +22,7 @@ function getFileNameTool (src) {
   }
 }
 
-const downloadList = {} // 队列信息
-let onListChange = () => {}
-
+// 获取队列
 function getDownloadList () {
   return downloadList
 }
@@ -96,6 +98,7 @@ function addDownloadFile (fileDownloadConfig) {
   onListChange()
 }
 
+// 批量下载
 function addDownloadFiles (files) {
   const imgDomain = store.getters.imgDomain
   Vue.prototype.$newMessage.success(`已添加${files.length}张照片至下载`)
@@ -154,7 +157,15 @@ function cancel (uuid) {
   onListChange()
 }
 
-// 监听下载
+/**
+ * @description 监听下载
+ * @param {Object} 事件
+ * @param {String} uuid
+ * @param {String} progress 进度信息
+ * @param {String} downInfo 下载信息
+ * @param {String} status 错误信息
+ * @param {String} canResume 是否可以回复下载
+ */
 async function onDownloadProcess (event, { uuid, progress, downInfo, status, canResume }) {
   if (uuid in downloadList) {
     const iconSrc = await getFileIcon(downloadList[uuid].savePath)
@@ -167,9 +178,13 @@ async function onDownloadProcess (event, { uuid, progress, downInfo, status, can
   }
 }
 
-// 监听下载出错
+/**
+ * @description 监听下载出错
+ * @param {Object} 事件
+ * @param {String} uuid
+ * @param {String} errors 错误信息
+ */
 function onDownloadError (event, { uuid, errors }) {
-  console.log('onDownloadError', uuid, errors)
   if (uuid in downloadList) {
     downloadList[uuid].status = 'interrupted'
     limitDownCount(uuid)
@@ -178,7 +193,11 @@ function onDownloadError (event, { uuid, errors }) {
   }
 }
 
-// 监听下载成功
+/**
+ * @description 监听下载成功
+ * @param {Object} 下载事件
+ * @param {String} uuid
+ */
 function onDownloadSuccess (event, { uuid }) {
   if (uuid in downloadList) {
     downloadList[uuid].status = 'completed'
