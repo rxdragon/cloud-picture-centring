@@ -86,11 +86,17 @@ export function getGroupStaffQuotaInfo (params) {
     }, {
       label: '抽查拔草 / 拔草率',
       value: data.spotCheckPullPhotoNum + ' / ' + transformPercentage(data.spotCheckPullPhotoNum, data.spotCheckPhotoNum),
-      link: '/assessment-center/assessment-history' + '?searchTimeSpan=' + timeSpan + '&searchType=' + SearchType.SpotPull
+      link: '/assessment-center/assessment-history' +
+        '?searchTimeSpan=' + timeSpan +
+        '&searchType=' + SearchType.SpotPull +
+        '&sendStaff=' + sendStaff
     }, {
       label: '抽查通过 / 直接通过率',
       value: data.spotCheckNonePhotoNum + ' / ' + transformPercentage(data.spotCheckNonePhotoNum, data.spotCheckPhotoNum),
-      link: '/assessment-center/assessment-history' + '?searchTimeSpan=' + timeSpan + '&searchType=' + SearchType.SpotNone
+      link: '/assessment-center/assessment-history' +
+        '?searchTimeSpan=' + timeSpan +
+        '&searchType=' + SearchType.SpotNone +
+        '&sendStaff=' + sendStaff
     }]
     return {
       tableDataCount,

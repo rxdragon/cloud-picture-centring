@@ -151,6 +151,7 @@
 ### 🎨 代码样式
 |范围|描述|commitId|
 --|--|--
+ 优化样式 | [230c5bf](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/230c5bf)
  优化退单轮询，更改全部重修格式 | [512c24d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/512c24d)
  修改切换域名组件 | [5f1e92f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5f1e92f)
  更改样式 | [a021d75](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a021d75)
