@@ -1,5 +1,5 @@
 <template>
-  <div class="audit-history">
+  <div class="audit-history page-class">
     <div class="header">
       <h3>审核历史记录</h3>
     </div>

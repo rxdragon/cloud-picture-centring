@@ -1,5 +1,5 @@
 <template>
-  <div class="gold-config">
+  <div class="gold-config page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!isAddConfig" class="gold-list">
         <div class="header">

@@ -34,6 +34,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 监听页面
+     */
     scrollMove (e) {
       const scrollTop = e.target.scrollTop
       if (scrollTop > 0) {

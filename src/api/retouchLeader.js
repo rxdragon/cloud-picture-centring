@@ -28,6 +28,8 @@ export function getTodayQuota () {
  */
 export function getGroupStaffQuotaInfo (params) {
   const timeSpan = [revertTimeSpan(params.startAt), revertTimeSpan(params.endAt, 1)]
+  const sendStaff = params.sendStaff
+  delete params.sendStaff
   return axios({
     url: '/project_cloud/retouchLeader/getGroupStaffQuotaInfo',
     method: 'GET',
@@ -77,7 +79,10 @@ export function getGroupStaffQuotaInfo (params) {
     }, {
       label: '抽查种草 / 种草率',
       value: data.spotCheckPlantPhotoNum + ' / ' + transformPercentage(data.spotCheckPlantPhotoNum, data.spotCheckPhotoNum),
-      link: '/assessment-center/assessment-history' + '?searchTimeSpan=' + timeSpan + '&searchType=' + SearchType.SpotPlant
+      link: '/assessment-center/assessment-history' +
+        '?searchTimeSpan=' + timeSpan +
+        '&searchType=' + SearchType.SpotPlant +
+        '&sendStaff=' + sendStaff
     }, {
       label: '抽查拔草 / 拔草率',
       value: data.spotCheckPullPhotoNum + ' / ' + transformPercentage(data.spotCheckPullPhotoNum, data.spotCheckPhotoNum),

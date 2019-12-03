@@ -1,8 +1,11 @@
 <template>
-  <div class="audit-center">
+  <div class="audit-center" @scroll="scrollMove">
     <!-- 接单队列 -->
     <div class="header">
-      <h3>修图审核</h3>
+      <h3>
+        修图审核
+        <span class="header-desc">退回重修中流水：{{ todayReviewQuota.reviewReturnRetouchStreamNums }}</span>
+      </h3>
       <div class="header-right">
         <template v-if="!isChecking">
           <span v-if="state !== 2" class="queue-info queue-length">审核排队中的流水：{{ queueInfo.reviewQueueStreamNums }}</span>
@@ -37,14 +40,14 @@
     <!-- 照片信息 -->
     <order-info v-if="orderData" :order-data="orderData" />
     <!-- 照片审核 -->
-    <div v-if="orderData" class="check-photo module-panel">
+    <div v-if="orderData" ref="orderData" class="check-photo module-panel">
       <div class="panel-title">
         <span>照片审核</span>
         <div class="button-box">
-          <template v-if="orderData.photos.length > 1">
+          <div v-if="orderData.photos.length > 1" class="return-box">
             <el-button v-if="!isAllReturnOrder" type="warning" size="small" @click="allRework">全部重修</el-button>
             <el-button v-else type="info" size="small" @click="allCleanRework">取消重修</el-button>
-          </template>
+          </div>
           <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
           <domain-switch-box />
         </div>
@@ -74,6 +77,10 @@
           resize="none"
         />
       </div>
+      <template v-if="showFixReturnBox">
+        <el-button v-if="!isAllReturnOrder" class="fix-return-button" type="warning" size="small" @click="allRework">全部重修</el-button>
+        <el-button v-else class="fix-return-button fix-return-button-cancel" type="info" size="small" @click="allCleanRework">取消重修</el-button>
+      </template>
     </div>
   </div>
 </template>
@@ -93,12 +100,14 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
+      scrollTop: 0, // 滚动高度
       unbundle: false, // 退回并解绑审核人
       orderData: null, // 订单信息
       todayReviewQuota: {
         todayReviewTimes: '-',
         todayReviewStreamNums: '-',
-        todayReviewPhotoNums: '-'
+        todayReviewPhotoNums: '-',
+        reviewReturnRetouchStreamNums: '-'
       },
       queueInfo: {}, // 排队信息
       reviewMark: '', // 审核备注
@@ -127,6 +136,18 @@ export default {
       if (this.queueInfo.inQueue) return 2
       if (this.retouchingListNum) return 3
       return 1
+    },
+    showFixReturnBox () {
+      let showReturnHeight
+      if (this.$refs['orderData']) {
+        showReturnHeight = this.$refs['orderData'].offsetTop + 24 + 32
+      } else {
+        showReturnHeight = 999
+      }
+      if (this.scrollTop >= showReturnHeight && this.orderData.photos.length > 1) {
+        return true
+      }
+      return false
     }
   },
   created () {
@@ -141,6 +162,14 @@ export default {
     }
   },
   methods: {
+    scrollMove (e) {
+      const scrollTop = this.scrollTop = e.target.scrollTop
+      if (scrollTop > 0) {
+        document.body.style.setProperty('--boxShadow', '0px 2px 4px 0px rgba(0,0,0,0.08)')
+      } else {
+        document.body.style.setProperty('--boxShadow', '')
+      }
+    },
     /**
      * @description 一键下载原片
      */
@@ -189,6 +218,11 @@ export default {
         this.resetData()
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.orderData = await Reviewer.getReviewInfo()
+
+        setTimeout(() => {
+          console.dir(this.$refs['returnBox'])
+        }, 2000)
+
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -343,12 +377,21 @@ export default {
 @import "~@/styles/variables.less";
 
 .audit-center {
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  height: @appMainHeight;
+  overflow-y: overlay;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
   .header {
     .el-button {
       border-radius: 8px;
       margin-left: 14px;
     }
 
+    .header-desc,
     .queue-info {
       font-size: 14px;
       color: #606266;
@@ -399,10 +442,29 @@ export default {
         display: flex;
         align-items: center;
 
+        .return-box {
+          margin-right: 12px;
+        }
+
         .domain-switch-box {
           margin-left: 12px;
         }
       }
+    }
+
+    .fix-return-button {
+      position: fixed;
+      bottom: 255px;
+      right: 42px;
+      width: 60px;
+      height: 60px;
+      padding: 0;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px 0 rgba(245, 166, 35, 0.5);
+    }
+
+    .fix-return-button-cancel {
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
     }
   }
 

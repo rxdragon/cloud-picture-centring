@@ -1,6 +1,6 @@
 <template>
   <div class="photo-grop">
-    <div v-for="(photoItem, photoIndex) in photos.priviewPhotoData" :key="photoIndex" class="photo-box">
+    <div v-for="(photoItem, photoIndex) in photos.priviewPhotoData" :key="photoIndex" class="photo-box" :class="{'rework-photo': (photoItem.version === 'original_photo' && photos.isRework)}">
       <photo-box
         :src="photoItem.path"
         show-joint-label
@@ -219,6 +219,28 @@ export default {
           color: @orange;
         }
       }
+    }
+  }
+
+  .rework-photo {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '退单';
+      top: 5px;
+      left: -15px;
+      position: absolute;
+      background-color: @red;
+      z-index: 99;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      width: 60px;
+      text-align: center;
+      transform-origin: center;
+      transform: rotate(-45deg);
     }
   }
 

@@ -132,7 +132,7 @@ export function commitHistory (params) {
 export function getSearchHistory (params) {
   return axios({
     url: '/project_cloud/checkPool/getSearchHistory',
-    method: 'GET',
+    method: 'POST',
     params
   }).then(msg => {
     const data = msg.data

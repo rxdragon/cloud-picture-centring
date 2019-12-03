@@ -1,5 +1,5 @@
 <template>
-  <div class="green-aisle">
+  <div class="green-aisle page-class">
     <div class="header">
       <h3>绿色免审通道</h3>
     </div>
