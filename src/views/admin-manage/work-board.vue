@@ -1,5 +1,5 @@
 <template>
-  <div class="WorkBoard">
+  <div class="WorkBoard page-class">
     <div class="header">
       <h3>云端工作看板</h3>
       <el-button type="primary" @click="showFlow">流量看板</el-button>

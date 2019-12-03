@@ -1,5 +1,5 @@
 <template>
-  <div class="audit-survey">
+  <div class="audit-survey page-class">
     <div class="header">
       <h3>个人审核概况</h3>
     </div>

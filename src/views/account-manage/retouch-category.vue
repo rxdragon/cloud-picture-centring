@@ -1,5 +1,5 @@
 <template>
-  <div class="retouch-category">
+  <div class="retouch-category page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!showEdit" class="main">
         <div class="header">

@@ -1,5 +1,5 @@
 <template>
-  <div class="amount-award">
+  <div class="amount-award page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!isAddConfig && !showAmountInfo">
         <div class="header">

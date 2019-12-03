@@ -1,5 +1,5 @@
 <template>
-  <div class="audit-report">
+  <div class="audit-report page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!isSeachPage" class="transition-box">
         <div class="header">

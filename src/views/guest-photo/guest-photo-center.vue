@@ -1,5 +1,5 @@
 <template>
-  <div class="guest-photo">
+  <div class="guest-photo page-class">
     <div class="header">
       <h3>客片池</h3>
     </div>

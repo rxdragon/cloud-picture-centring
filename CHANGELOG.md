@@ -1,9 +1,10 @@
-# 2.0.0 (2019-12-02)
+# 2.0.0 (2019-12-03)
 
 |范围|描述|commitId|
 --|--|--
- 监听滚轮事件 | [c089a26](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c089a26)
- 修复下载问题 | [28c54c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/28c54c1)
+ 增加一件下载提示 | [e89ebe1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e89ebe1)
+ 合并 | [16928b7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/16928b7)
+ 更改线上登录地址 | [3bae8f2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3bae8f2)
  更改版本 | [403c986](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/403c986)
  123 | [0863e8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0863e8f)
  更改浏览看板 | [5b1a3a8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5b1a3a8)
@@ -66,8 +67,8 @@
  ci | [adf0fab](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/adf0fab)
  ci 配置 | [bea3653](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bea3653)
  ci 配置 | [1fced90](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1fced90)
- 增加一件下载提示 | [e89ebe1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e89ebe1)
- 更改线上登录地址 | [3bae8f2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3bae8f2)
+ 修复下载问题 | [28c54c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/28c54c1)
+ 监听滚轮事件 | [c089a26](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c089a26)
  格式化代码 | [07d2f0c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/07d2f0c)
  全局 header 顶部固定 | [4a86671](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4a86671)
  删除以及提前结束的地方 增加二次确认框 | [9cf91a7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9cf91a7)
@@ -143,13 +144,18 @@
  增加不种不把查询 | [4f53e0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f53e0b)
  增加显示ci | [8e2e4bb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8e2e4bb)
  审核退回增加修片师显示 | [04cc9ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/04cc9ad)
+ 更改成片种草显示逻辑 | [579efe7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/579efe7)
+ 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
 
 
 ### 🎨 代码样式
 |范围|描述|commitId|
 --|--|--
+ 优化样式 | [230c5bf](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/230c5bf)
+ 优化退单轮询，更改全部重修格式 | [512c24d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/512c24d)
  修改切换域名组件 | [5f1e92f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5f1e92f)
  更改样式 | [a021d75](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a021d75)
+ 格式化代码 | [e2ab9b0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2ab9b0)
  滚动条样式优化，流量看板样式优化 | [6c61941](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c61941)
  默认值处理 | [0aa4c73](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0aa4c73)
 

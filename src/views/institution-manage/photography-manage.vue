@@ -1,5 +1,5 @@
 <template>
-  <div class="photography-manage">
+  <div class="photography-manage page-class">
     <div class="header">
       <h3>摄影机构管理</h3>
       <el-button type="primary" @click="addNewInstitution">新增摄影机构</el-button>
