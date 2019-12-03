@@ -232,7 +232,7 @@ export default {
       left: -15px;
       position: absolute;
       background-color: @red;
-      z-index: 99;
+      z-index: 101;
       color: #fff;
       font-size: 14px;
       font-weight: 500;
