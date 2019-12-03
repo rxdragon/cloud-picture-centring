@@ -140,14 +140,12 @@ export default {
     showFixReturnBox () {
       let showReturnHeight
       if (this.$refs['orderData']) {
-        showReturnHeight = this.$refs['orderData'].offsetTop + 24 + 32
+        const returnButtonTopHeight = 24 + 32
+        showReturnHeight = this.$refs['orderData'].offsetTop + returnButtonTopHeight
       } else {
         showReturnHeight = 999
       }
-      if (this.scrollTop >= showReturnHeight && this.orderData.photos.length > 1) {
-        return true
-      }
-      return false
+      return this.scrollTop >= showReturnHeight && this.orderData.photos.length > 1
     }
   },
   created () {
@@ -165,7 +163,7 @@ export default {
     scrollMove (e) {
       const scrollTop = this.scrollTop = e.target.scrollTop
       if (scrollTop > 0) {
-        document.body.style.setProperty('--boxShadow', '0px 2px 4px 0px rgba(0,0,0,0.08)')
+        document.body.style.setProperty('--boxShadow', '0 2px 4px 0 rgba(0, 0, 0, 0.08)')
       } else {
         document.body.style.setProperty('--boxShadow', '')
       }
@@ -218,11 +216,6 @@ export default {
         this.resetData()
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.orderData = await Reviewer.getReviewInfo()
-
-        setTimeout(() => {
-          console.dir(this.$refs['returnBox'])
-        }, 2000)
-
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
