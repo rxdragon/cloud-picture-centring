@@ -1,6 +1,7 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
 import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
+import { revertTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate.js'
 
 /**
@@ -26,6 +27,9 @@ export function getTodayQuota () {
  * @param {*} params
  */
 export function getGroupStaffQuotaInfo (params) {
+  const timeSpan = [revertTimeSpan(params.startAt), revertTimeSpan(params.endAt, 1)]
+  const sendStaff = params.sendStaff
+  delete params.sendStaff
   return axios({
     url: '/project_cloud/retouchLeader/getGroupStaffQuotaInfo',
     method: 'GET',
@@ -75,18 +79,18 @@ export function getGroupStaffQuotaInfo (params) {
     }, {
       label: '抽查种草 / 种草率',
       value: data.spotCheckPlantPhotoNum + ' / ' + transformPercentage(data.spotCheckPlantPhotoNum, data.spotCheckPhotoNum),
-      componentSwitch: true,
-      query: SearchType.SpotPlant
+      link: '/assessment-center/assessment-history' +
+        '?searchTimeSpan=' + timeSpan +
+        '&searchType=' + SearchType.SpotPlant +
+        '&sendStaff=' + sendStaff
     }, {
       label: '抽查拔草 / 拔草率',
       value: data.spotCheckPullPhotoNum + ' / ' + transformPercentage(data.spotCheckPullPhotoNum, data.spotCheckPhotoNum),
-      componentSwitch: true,
-      query: SearchType.SpotPull
+      link: '/assessment-center/assessment-history' + '?searchTimeSpan=' + timeSpan + '&searchType=' + SearchType.SpotPull
     }, {
       label: '抽查通过 / 直接通过率',
       value: data.spotCheckNonePhotoNum + ' / ' + transformPercentage(data.spotCheckNonePhotoNum, data.spotCheckPhotoNum),
-      componentSwitch: true,
-      query: SearchType.SpotNone
+      link: '/assessment-center/assessment-history' + '?searchTimeSpan=' + timeSpan + '&searchType=' + SearchType.SpotNone
     }]
     return {
       tableDataCount,

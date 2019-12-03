@@ -1,5 +1,5 @@
 <template>
-  <div class="sand-clock-config">
+  <div class="sand-clock-config page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!editConfig" class="sand-clock-list">
         <!-- 沙漏头部 -->

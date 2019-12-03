@@ -1,5 +1,5 @@
 <template>
-  <div class="cloud-assessment">
+  <div class="cloud-assessment page-class">
     <div class="header" :class="headerClass">
       <h3>云学院评价中心</h3>
       <div class="button-box">

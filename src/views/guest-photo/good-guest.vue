@@ -1,5 +1,5 @@
 <template>
-  <div class="good-guest">
+  <div class="good-guest page-class">
     <EvaluatePhoto />
   </div>
 </template>

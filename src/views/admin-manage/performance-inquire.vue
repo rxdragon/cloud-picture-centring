@@ -1,5 +1,5 @@
 <template>
-  <div class="performance-inquire">
+  <div class="performance-inquire page-class">
     <div class="header">
       <h3>{{ activeName | filterActiveName }}</h3>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="assessment-history">
+  <div class="assessment-history page-class">
     <div class="header">
       <h3>评价历史记录</h3>
     </div>
@@ -36,7 +36,7 @@
       <!-- 修图师 -->
       <div class="staff-search search-item">
         <span>修图师</span>
-        <staff-select v-model="staffId" :props="{ multiple: false }" />
+        <staff-select v-model="staffIds" :props="{ multiple: true }" />
       </div>
       <!-- 审核人员 -->
       <div class="checker-search search-item">
@@ -66,6 +66,7 @@ import DatePicker from '@/components/DatePicker'
 import GradeBox from './components/GradeBox'
 import StaffSelect from '@SelectBox/StaffSelect'
 import ReviewerSelect from '@SelectBox/ReviewerSelect'
+import { SearchType } from '@/utils/enumerate'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import moment from 'moment'
@@ -78,8 +79,8 @@ export default {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       correctType: 0, // 抽片类型
-      spotType: 0, // 抽片类型 0 全部 1 种草 2 拔草 3 不中不把
-      staffId: '', // 修图师 id
+      spotType: 0, // 抽片类型 0 全部 plant 种草 pull 拔草 none 抽查不种不拔
+      staffIds: '', // 修图师 id
       reviewerId: 0, // 审核人id
       photoData: [], // 照片数据
       pager: {
@@ -87,16 +88,49 @@ export default {
         pageSize: 10,
         total: 10
       },
-      uuid: ''
+      uuid: '',
+      cacheTimeSpan: [],
+      cacheSearchType: '',
+      cacheSendStaff: ''
     }
   },
   created () {
     const startAt = moment().subtract('day', 28).locale('zh-cn').format('YYYY-MM-DD')
     const endAt = moment().locale('zh-cn').format('YYYY-MM-DD')
     this.timeSpan = [startAt, endAt]
-    this.getSearchHistory(1)
+    this.initial()
+  },
+  activated () {
+    this.initial()
   },
   methods: {
+    /**
+     * @description 初始化
+     */
+    initial () {
+      const { searchTimeSpan, searchType, sendStaff } = this.$route.query
+      const routerTimeSpan = searchTimeSpan && searchTimeSpan.split(',') || []
+      const sameTimeSpan = (routerTimeSpan[0] === this.cacheTimeSpan[0] && routerTimeSpan[1] === this.cacheTimeSpan[1])
+      const sameSearchType = searchType === this.cacheSearchType
+      const sameSendStaff = sendStaff === this.cacheSendStaff
+      if (sameTimeSpan && sameSearchType && sameSendStaff) return false
+      if (searchTimeSpan) { this.timeSpan = searchTimeSpan.split(',') }
+      if (sendStaff) { this.staffIds = sendStaff.split(',') }
+      switch (searchType) {
+        case SearchType.SpotPlant:
+          this.spotType = 'plant'
+          break
+        case SearchType.SpotPull:
+          this.spotType = 'pull'
+          break
+        case SearchType.SpotNone:
+          this.spotType = 'none'
+          break
+        default:
+          break
+      }
+      this.getSearchHistory(1)
+    },
     /**
      * @description 获取搜索数据
      */
@@ -113,8 +147,13 @@ export default {
       }
       if (this.correctType) { req.correctionType = this.correctType }
       if (this.spotType) { req.grassType = this.spotType }
-      if (this.staffId) { req.retoucherId = this.staffId }
+      if (this.staffIds) {
+        req.retoucherIds = this.staffIds
+        this.cacheSendStaff = this.staffIds.join(',')
+      }
       if (this.reviewerId) { req.reviewerId = this.reviewerId }
+      this.cacheTimeSpan = this.timeSpan
+      this.cacheSearchType = this.spotType
       return req
     },
     /**

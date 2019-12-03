@@ -1,5 +1,5 @@
 <template>
-  <div class="amend-order">
+  <div class="amend-order page-class">
     <div class="header">
       <h3>修改照片产品</h3>
     </div>

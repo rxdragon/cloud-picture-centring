@@ -1,5 +1,5 @@
 <template>
-  <div class="role-config">
+  <div class="role-config page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!showEdit" class="main">
         <div class="header">

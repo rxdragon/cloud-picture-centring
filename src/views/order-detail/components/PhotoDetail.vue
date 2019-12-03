@@ -27,11 +27,11 @@
     </div>
     <!-- 抽查 -->
     <div class="spot-data">
-      <div v-if="photoData.spotGrass === 'plant'" class="panel-box plant-box">
+      <div v-if="photoData.filmEvaluation === 'plant'" class="panel-box plant-box">
         <div class="content-title">抽查种草</div>
         <div class="panel-content">{{ photoData.tags && photoData.tags.values.evaluation_note || '暂无抽查理由' }}</div>
       </div>
-      <div v-if="photoData.spotGrass === 'pull'" class="panel-box danger-box">
+      <div v-if="photoData.filmEvaluation === 'pull'" class="panel-box danger-box">
         <div class="content-title">抽查拔草</div>
         <div class="panel-content">{{ photoData.tags && photoData.tags.values.evaluation_note || '暂无抽查理由' }}</div>
       </div>

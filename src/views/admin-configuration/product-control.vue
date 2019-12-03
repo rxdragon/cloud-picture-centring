@@ -1,5 +1,5 @@
 <template>
-  <div class="product-control">
+  <div class="product-control page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!showInfo" class="list-box">
         <div class="header">

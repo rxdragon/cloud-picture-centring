@@ -1,5 +1,5 @@
 <template>
-  <div class="retouch-report">
+  <div class="retouch-report page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!isSeachPage" class="transition-box">
         <div class="header">
@@ -46,6 +46,7 @@ import CrewSelect from '@SelectBox/CrewSelect'
 import { parseTime } from '@/utils/index.js'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as RetouchLeader from '@/api/retouchLeader.js'
+import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'RetouchReport',
@@ -57,6 +58,7 @@ export default {
       timeSpan: null, // 时间戳
       isSeachPage: false,
       staffId: 0,
+      allStaffs: [],
       searchType: '', // 搜索类型
       tableDataCount: [{
         label: '修图单量',
@@ -106,12 +108,20 @@ export default {
       }]
     }
   },
-  created () {
+  async created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
     this.timeSpan = [nowTime, nowTime]
+    await this.getSelfStaffs()
     this.getGroupStaffQuotaInfo()
   },
   methods: {
+    /**
+     * @description 获取组员
+     */
+    async getSelfStaffs () {
+      const list = await Staff.getSelfStaffs()
+      this.allStaffs = list.map(item => item.value)
+    },
     /**
      * @description 获取详情
      */
@@ -132,7 +142,12 @@ export default {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.staffId) { req.staffId = this.staffId }
+        if (this.staffId) {
+          req.staffId = this.staffId
+          req.sendStaff = [this.staffId]
+        } else {
+          req.sendStaff = this.allStaffs
+        }
         const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
         this.tableDataCount = data.tableDataCount
         this.tableDataRate = data.tableDataRate

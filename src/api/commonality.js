@@ -55,6 +55,7 @@ export function getStreamInfo (params) {
       const filmEvaluation = photoItem.tags && photoItem.tags.values && photoItem.tags.values.film_evaluation || ''
       const spotGrass = photoItem.tags && photoItem.tags.values && photoItem.tags.values.audit_glass || ''
       photoItem.spotGrass = spotGrass
+      photoItem.filmEvaluation = filmEvaluation
       if (filmEvaluation && filmEvaluation === 'plant') { checkPlantNum++ }
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
       photoItem.reworkNum = reworkNum
