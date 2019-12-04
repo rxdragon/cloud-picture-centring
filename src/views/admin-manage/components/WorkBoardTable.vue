@@ -37,7 +37,11 @@
       </el-table-column>
       <el-table-column prop="index" label="修图师" min-width="140">
         <template slot-scope="scope">
-          <div class="staff-info">
+          <div v-if="scope.row.retoucherOrgName" class="staff-info">
+            <span>修图师：{{ scope.row.retoucherOrgRetouchName }}</span>
+            <span>机构名称：{{ scope.row.retoucherOrgName }}</span>
+          </div>
+          <div v-else class="staff-info">
             <span>修图师：{{ scope.row.retoucherName }}</span>
             <span>组长：{{ scope.row.retouchLeader }}</span>
           </div>
