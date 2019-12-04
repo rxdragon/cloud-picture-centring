@@ -117,3 +117,19 @@
     border: 2px solid transparent;
   }
 }
+
+/* 从右到左进入 */
+.box-right-leave-active,
+.box-right-enter-active {
+  transition: all 0.28s;
+}
+
+.box-right-enter {
+  opacity: 0;
+  transform: translateX(102px) !important;
+}
+
+.box-right-leave-to {
+  opacity: 0;
+  transform: translateX(102px) !important;
+}

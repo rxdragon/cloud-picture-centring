@@ -71,7 +71,7 @@ import UploadPhoto from './UploadPhoto.vue'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
-import * as PhotoTool from '@/utils/photoTool'
+import DownIpc from '@electronMain/ipc/DownIpc'
 import * as SessionTool from '@/utils/sessionTool'
 
 export default {
@@ -151,7 +151,7 @@ export default {
           path: savePath
         }
       })
-      PhotoTool.oneAllDown(photoArr)
+      DownIpc.addDownloadFiles(photoArr)
     },
     /**
      * @description 挂起订单

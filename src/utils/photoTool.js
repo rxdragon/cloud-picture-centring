@@ -1,8 +1,6 @@
-import { ipcRenderer } from 'electron'
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
 import md5 from 'md5'
 import store from '@/store' // vuex
-import Vue from 'vue'
 import * as SessionTool from '@/utils/sessionTool.js'
 
 /**
@@ -54,20 +52,6 @@ export function settlePhoto (photoArr, reworkTimes = 0) {
     if (findVersionPhoto) { createData.push(findVersionPhoto) }
   }
   return createData
-}
-
-/**
- * @description 一键下载
- * @param {*} photoArr
- */
-export function oneAllDown (photoArr) {
-  const imgDomain = store.getters.imgDomain
-  Vue.prototype.$newMessage.success(`已添加${photoArr.length}张照片至下载`)
-  photoArr.forEach(item => {
-    item.downName = item.url
-    item.url = imgDomain + item.url
-    ipcRenderer.send('downPhoto', item)
-  })
 }
 
 /**
@@ -153,3 +137,12 @@ export function getPhotoPeopleTabel (photos) {
   return createData
 }
 
+/**
+ * @description 重命名
+ * @param {*} name
+ */
+export function renameFirstPhoto (filePath) {
+  const ext = getFilePostfix(filePath)
+  const name = fileNameFormat(filePath)
+  return `${name}_ps${ext}`
+}

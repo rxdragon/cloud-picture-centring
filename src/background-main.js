@@ -3,7 +3,9 @@
 // 下方代码回被 webpack 处理为正确的 require
 const { app, BrowserWindow, ipcMain } = require('electron')
 import path from 'path'
-import * as DownTool from './electronMain/downTool.js'
+import initDownloadManager from './electronMain/downTool'
+import initDialog from './electronMain/dialog'
+import initExecIncident from './electronMain/execNode'
 import { setMenu } from './electronMain/resetMenu.js'
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -54,9 +56,10 @@ async function createWindow () {
   })
 
   // 注册下载监听
-  DownTool.onWillDownload(win)
-  DownTool.downPhoto(win)
-  DownTool.onDownEvent(win)
+  initDownloadManager(win, ipcMain)
+  // 注册文件弹框事件
+  initDialog(win, ipcMain)
+  initExecIncident(win, ipcMain)
 
   // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
   win.once('ready-to-show', () => {

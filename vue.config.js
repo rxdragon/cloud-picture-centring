@@ -19,7 +19,8 @@ module.exports = {
       resolve: {
         alias: {
           '@': resolve('src'),
-          '@SelectBox': resolve('src/components/SelectBox')
+          '@SelectBox': resolve('src/components/SelectBox'),
+          '@electronMain': resolve('src/electronMain')
         }
       },
       externals: {
