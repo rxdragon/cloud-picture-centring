@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-details">
+  <div class="personal-details page-class">
     <div class="header">
       <h3>个人修图概况</h3>
     </div>

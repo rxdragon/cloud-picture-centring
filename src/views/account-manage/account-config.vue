@@ -1,5 +1,5 @@
 <template>
-  <div class="account-config">
+  <div class="account-config page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!showEdit" class="main">
         <div class="header">

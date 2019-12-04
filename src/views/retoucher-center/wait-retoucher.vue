@@ -1,5 +1,5 @@
 <template>
-  <div class="WaitRetoucher">
+  <div class="WaitRetoucher page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!showDetail" key="list-box" class="list-box">
         <!-- 标题 -->

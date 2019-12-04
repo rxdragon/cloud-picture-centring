@@ -1,5 +1,5 @@
 <template>
-  <div class="retouch-manage">
+  <div class="retouch-manage page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!showEdit" class="institution-list">
         <div class="header">

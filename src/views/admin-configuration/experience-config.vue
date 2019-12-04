@@ -1,5 +1,5 @@
 <template>
-  <div class="experience-config">
+  <div class="experience-config page-class">
     <transition name="fade" mode="out-in">
       <div v-if="!isAddConfig" class="data-list">
         <div class="header">

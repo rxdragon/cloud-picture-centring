@@ -1,5 +1,5 @@
 <template>
-  <div class="retouch-history transform-fixed">
+  <div class="retouch-history transform-fixed page-class">
     <div class="header">
       <h3>修图历史记录</h3>
     </div>
