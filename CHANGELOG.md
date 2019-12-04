@@ -177,6 +177,7 @@
  传递组员id | [08f8212](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08f8212)
  修复bug | [5b8516c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5b8516c)
  修复id查询失败 | [540520c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/540520c)
+ 修复传参错误 | [724cd64](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/724cd64)
  修复冲量时间时间问题 | [fca083d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fca083d)
  修复数据显示错误 | [3cffd7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3cffd7c)
  修复页面跳转问题 | [c50267b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c50267b)
