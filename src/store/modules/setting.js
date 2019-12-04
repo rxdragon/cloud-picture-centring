@@ -5,7 +5,8 @@ const state = {
   loadRoutes: [],
   showCat: false,
   showOverTag: false,
-  autoUpload: false
+  autoUpload: false,
+  savePath: ''
 }
 
 const mutations = {
@@ -41,6 +42,9 @@ const mutations = {
   // 是否开启自动上传
   SET_AUTO_UPLOAD: (state, data) => {
     state.autoUpload = data
+  },
+  SET_SAVE_PATH: (state, data) => {
+    state.savePath = data
   }
 }
 
@@ -65,6 +69,9 @@ const actions = {
   // 更换域名
   changeDomain ({ commit }, domainType) {
     commit('SET_DOMAIN', domainType)
+  },
+  setSavePath ({ commit }, path) {
+    commit('SET_SAVE_PATH', path)
   }
 }
 

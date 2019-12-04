@@ -133,7 +133,7 @@ export function getSearchHistory (params) {
   return axios({
     url: '/project_cloud/checkPool/getSearchHistory',
     method: 'POST',
-    params
+    data: params
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
