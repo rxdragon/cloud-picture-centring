@@ -1,5 +1,5 @@
 <template>
-  <div class="audit-center" @scroll="scrollMove">
+  <div class="audit-center">
     <!-- 接单队列 -->
     <div class="header">
       <h3>
@@ -40,11 +40,11 @@
     <!-- 照片信息 -->
     <order-info v-if="orderData" :order-data="orderData" />
     <!-- 照片审核 -->
-    <div v-if="orderData" ref="orderData" class="check-photo module-panel">
+    <div v-if="orderData" class="check-photo module-panel">
       <div class="panel-title">
         <span>照片审核</span>
         <div class="button-box">
-          <div v-if="orderData.photos.length > 1" class="return-box">
+          <div v-if="orderData.photos.length > 1" ref="returnBox" class="return-box">
             <el-button v-if="!isAllReturnOrder" type="warning" size="small" @click="allRework">全部重修</el-button>
             <el-button v-else type="info" size="small" @click="allCleanRework">取消重修</el-button>
           </div>
@@ -77,10 +77,12 @@
           resize="none"
         />
       </div>
-      <template v-if="showFixReturnBox">
-        <el-button v-if="!isAllReturnOrder" class="fix-return-button" type="warning" size="small" @click="allRework">全部重修</el-button>
-        <el-button v-else class="fix-return-button fix-return-button-cancel" type="info" size="small" @click="allCleanRework">取消重修</el-button>
-      </template>
+      <transition name="box-right">
+        <template v-if="showFixReturnBox">
+          <el-button v-if="!isAllReturnOrder" class="fix-return-button" type="warning" size="small" @click="allRework">全部重修</el-button>
+          <el-button v-else class="fix-return-button fix-return-button-cancel" type="info" size="small" @click="allCleanRework">取消重修</el-button>
+        </template>
+      </transition>
     </div>
   </div>
 </template>
@@ -112,7 +114,9 @@ export default {
       queueInfo: {}, // 排队信息
       reviewMark: '', // 审核备注
       headerClass: '',
-      upyunConfig: {}
+      upyunConfig: {},
+      observer: null,
+      showFixReturnBox: false
     }
   },
   computed: {
@@ -136,16 +140,6 @@ export default {
       if (this.queueInfo.inQueue) return 2
       if (this.retouchingListNum) return 3
       return 1
-    },
-    showFixReturnBox () {
-      let showReturnHeight
-      if (this.$refs['orderData']) {
-        const returnButtonTopHeight = 24 + 32
-        showReturnHeight = this.$refs['orderData'].offsetTop + returnButtonTopHeight
-      } else {
-        showReturnHeight = 999
-      }
-      return this.scrollTop >= showReturnHeight && this.orderData.photos.length > 1
     }
   },
   created () {
@@ -160,14 +154,6 @@ export default {
     }
   },
   methods: {
-    scrollMove (e) {
-      const scrollTop = this.scrollTop = e.target.scrollTop
-      if (scrollTop > 0) {
-        document.body.style.setProperty('--boxShadow', '0 2px 4px 0 rgba(0, 0, 0, 0.08)')
-      } else {
-        document.body.style.setProperty('--boxShadow', '')
-      }
-    },
     /**
      * @description 一键下载原片
      */
@@ -216,11 +202,27 @@ export default {
         this.resetData()
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.orderData = await Reviewer.getReviewInfo()
+        this.$nextTick(this.createdJudgePadding)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    /**
+     * @description 判断目标元素
+     */
+    createdJudgePadding () {
+      if (!this.$refs['returnBox']) return false
+      const callback = (e) => {
+        const isIntersecting = e[0].isIntersecting // 是否重叠
+        const isTopRoot = e[0].boundingClientRect.y <= e[0].rootBounds.y // 是否高于目标元素
+        this.showFixReturnBox = Boolean(!isIntersecting && isTopRoot)
+      }
+      const rootDom = document.querySelector('.app-main')
+      const option = { root: rootDom }
+      this.observer = new IntersectionObserver(callback, option)
+      this.observer.observe(this.$refs['returnBox'])
     },
     /**
      * @description 获取审核队列信息
@@ -370,14 +372,6 @@ export default {
 @import "~@/styles/variables.less";
 
 .audit-center {
-  width: 100%;
-  position: relative;
-  box-sizing: border-box;
-  height: @appMainHeight;
-  overflow-y: overlay;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-
   .header {
     .el-button {
       border-radius: 8px;
