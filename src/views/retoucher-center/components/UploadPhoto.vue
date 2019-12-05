@@ -219,6 +219,7 @@ export default {
       let uploadPhotoMd5 = ''
       try {
         uploadPhotoMd5 = await PhotoTool.getImgBufferPhoto(file)
+        file.selfMd5 = uploadPhotoMd5
         if (beforeUploadFileName === uploadPhotoMd5) {
           this.$newMessage.warning('请修改照片后再进行上传。')
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -254,6 +255,15 @@ export default {
     handleSuccess (response, file, fileList) {
       this.uploadPhoto = fileList
       const createPhotoData = []
+      // 校验数据
+      if (file.response && file.response.url) {
+        if (!file.response.url.includes(file.raw.selfMd5)) {
+          const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
+          willDeleteIndex >= 0 && (fileList.splice(willDeleteIndex, 1))
+          this.$newMessage.error('上传文件校验错误')
+          return false
+        }
+      }
       fileList.forEach((fileItem, fileIndex) => {
         const uploadedName = PhotoTool.fileNameFormat(file.name)
         // 上传后的照片名字
