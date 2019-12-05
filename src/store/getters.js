@@ -11,11 +11,13 @@ const getters = {
   showCat: state => state.setting.showCat, // 是否显示猫
   showOverTag: state => state.setting.showOverTag, // 是否已上传照片进行标记
   autoUpload: state => state.setting.autoUpload, // 是否开启自动上传
+  saveFolder: state => state.setting.savePath, // 保存路径
   imgUploadDomain: state => state.setting.imgUploadDomain, // 上传后的照片域名
   imgDomain: state => state.setting.imgDomain, // 上传后的照片域名
   updateDomain: state => state.setting.updateDomain, // 上传后的照片域名
   returnStreamId: state => state.notification.returnStreamId, // 退单id
-  showAnniversary: state => state.notification.showAnniversary // 显示弹框
+  showAnniversary: state => state.notification.showAnniversary, // 显示弹框
+  downloadList: state => state.downloadlist.downloadList // 下载完成列表
 }
 
 export default getters

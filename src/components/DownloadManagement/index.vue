@@ -19,23 +19,33 @@
         </div>
         <el-scrollbar wrap-class="down-scrollbar-wrapper">
           <transition-group name="list-complete" tag="div" mode="out-in">
-            <div v-for="downItem in downList" :key="downItem.index" class="list-complete-item content-row">
+            <div v-for="(downItem, uuid) in downList" :key="downItem.config.uuid" class="list-complete-item content-row">
               <down-list-item
+                :key="uuid"
+                :uuid="uuid"
                 :list-item="downItem"
                 :style="removeStyle"
-                @resumeItem="resumeItem"
-                @pauseItem="pauseItem"
-                @cancelItem="cancelItem"
-                @deleteItem="deleteItem"
               />
             </div>
-            <div v-show="!downList.length" key="noData" class="no-data list-complete-item">
+            <div v-for="downItem in downloadList" :key="downItem.config.uuid + '-finish'" class="list-complete-item content-row">
+              <down-list-item
+                :uuid="downItem.config.uuid"
+                :list-item="downItem"
+                :style="removeStyle"
+                finished
+              />
+            </div>
+            <div v-show="!noData" key="noData" class="no-data list-complete-item">
               暂无数据
             </div>
           </transition-group>
         </el-scrollbar>
+        <div class="save-path">
+          <span>{{ saveFolder }}</span>
+          <i class="el-icon-setting" @click="changeSavePath" />
+        </div>
       </div>
-      <el-badge slot="reference" :max="9" :hidden="!progressingNum" :value="progressingNum" class="item">
+      <el-badge slot="reference" :max="9" :hidden="!showProgressingNum" :value="showProgressingNum" class="item">
         <el-button class="icon-button" icon="el-icon-download" />
       </el-badge>
     </el-popover>
@@ -43,134 +53,72 @@
 </template>
 
 <script>
-import * as SessionTool from '@/utils/sessionTool.js'
 import DownListItem from './components/DownListItem'
-import { getFileIcon } from '@/utils/getFileIcon.js'
+import DownIpc from '@electronMain/ipc/DownIpc'
+import * as Setting from '@/indexDB/getSetting.js'
+import { mapGetters } from 'vuex'
 export default {
   name: 'DownloadManagement',
   components: { DownListItem },
   data () {
     return {
-      downList: [],
-      showProgressingNum: 0,
+      downList: DownIpc.getDownloadList(),
       showManage: false,
       removeStyle: '' // 移除时样式
     }
   },
   computed: {
-    progressingNum () {
-      this.showList()
-      return this.showProgressingNum
+    ...mapGetters(['saveFolder', 'downloadList']),
+    noData () {
+      const listLength = Object.keys(this.downList).length + this.downloadList.length
+      return Boolean(listLength)
+    },
+    showProgressingNum () {
+      return Object.keys(this.downList).length
     }
   },
-  created () {
-    this.downList = SessionTool.getCacheDownloadList()
-  },
   mounted () {
-    this.$ipcRenderer.on('new-download-item', (e, item) => {
-      this.addItem(item)
-    })
-    this.$ipcRenderer.on('download-item-updated', (e, item) => {
-      this.updateItem(item)
-    })
-    this.$ipcRenderer.on('download-item-done', (e, item) => {
-      this.downedItem(item)
-    })
-    this.$ipcRenderer.on('lose-down-item', (e, index) => {
-      this.downList.splice(index, 1)
+    DownIpc.registerOnListChange(() => {
+      this.$forceUpdate()
     })
   },
   methods: {
     /**
+     * @description 更改保存路径
+     */
+    changeSavePath () {
+      const savePath = this.$ipcRenderer.sendSync('change-savePath')[0]
+      if (savePath) {
+        this.$store.dispatch('setting/setSavePath', savePath)
+          .then(() => {
+            Setting.updateSavePath(savePath)
+          })
+      }
+    },
+    /**
      * @description 显示列表
      */
-    showList () {
-      const dataLength = this.downList.length
-      const downingList = this.downList.filter(downItem => downItem.state !== 'progressing')
-      if (this.showManage) {
-        this.showProgressingNum = dataLength - downingList.length
+    async showList () {
+      for (const uuid in this.downList) {
+        if (this.downList[uuid].status === 'completed') {
+          await DownIpc.transferToVuexList(uuid)
+        }
       }
     },
     /**
-     * @description 添加项目
-     */
-    async addItem (item) {
-      item.iconSrc = await getFileIcon(item.savePath)
-      const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
-      if (findIndex < 0) {
-        this.downList = [item, ...this.downList]
-        SessionTool.setCacheDownloadList(this.downList)
-        this.showProgressingNum++
-      }
-    },
-    /**
-     * @description 更新下载项
-     */
-    async updateItem (item) {
-      item.iconSrc = await getFileIcon(item.savePath)
-      const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
-      if (findIndex < 0) return
-      if (this.downList[findIndex].state === 'completed') return
-      this.$set(this.downList, findIndex, item)
-      SessionTool.setCacheDownloadList(this.downList)
-    },
-    /**
-     * @description 完成下载项
-     */
-    async downedItem (item) {
-      item.iconSrc = await getFileIcon(item.savePath)
-      const findIndex = this.downList.findIndex(listItem => listItem.index === item.index)
-      if (findIndex < 0) return this.addItem(item)
-      this.$set(this.downList, findIndex, item)
-      SessionTool.setCacheDownloadList(this.downList)
-    },
-    /**
-     * @description 删除下载项
-     */
-    deleteItem (index) {
-      const findIndex = this.downList.findIndex(listItem => listItem.index === index)
-      this.downList.splice(findIndex, 1)
-      SessionTool.setCacheDownloadList(this.downList)
-      this.removeStyle = 'transition: all 0.3s;'
-      this.$ipcRenderer.send('delete-down-item', findIndex)
-      this.removeStyle = ''
-    },
-    /**
-     * @description 重新下载
-     */
-    resumeItem (index) {
-      const findIndex = this.downList.findIndex(listItem => listItem.index === index)
-      this.$ipcRenderer.send('resume-item', findIndex)
-    },
-    /**
-     * @description 暂停下砸项目
-     */
-    pauseItem (index) {
-      const findIndex = this.downList.findIndex(listItem => listItem.index === index)
-      this.$ipcRenderer.send('pause-item', findIndex)
-    },
-    /**
-     * @description 取消下载项目
-     */
-    cancelItem (index) {
-      const findIndex = this.downList.findIndex(listItem => listItem.index === index)
-      this.$ipcRenderer.send('cancel-item', findIndex)
-    },
-    /**
-     * @description 清空下载项目
+     * @description 清空已完成数据
      */
     clearAll () {
-      this.downList = this.downList.filter((listItem, listIndex) => {
-        if (listItem.state === 'completed') { this.$ipcRenderer.send('delete-down-item', listIndex) }
-        return listItem.state === 'progressing'
-      })
-      SessionTool.setCacheDownloadList(this.downList)
+      DownIpc.clearAll()
+      this.$store.dispatch('downloadlist/clearAllDownList')
     }
   }
 }
 </script>
 
 <style lang="less">
+@import "~@/styles/variables.less";
+
 .down-scrollbar-wrapper {
   max-height: 500px;
   overflow: hidden;
@@ -213,6 +161,27 @@ export default {
     padding: 0;
     line-height: 48px;
     color: #8e939a;
+  }
+
+  .save-path {
+    border-top: 1px solid @borderColor;
+    padding: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & > span {
+      color: @blue;
+      font-size: 12px;
+    }
+
+    .el-icon-setting {
+      cursor: pointer;
+
+      &:hover {
+        color: @blue;
+      }
+    }
   }
 }
 </style>

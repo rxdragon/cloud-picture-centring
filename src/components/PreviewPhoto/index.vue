@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import DownIpc from '@electronMain/ipc/DownIpc'
 import Driver from 'driver.js' // 引导框
 import 'driver.js/dist/driver.min.css'
 export default {
@@ -388,12 +389,11 @@ export default {
         url = this.showPhoto.src.substring(0, pointIndex)
       }
       const data = {
-        downName: this.showPhoto.path,
         url,
         path: ''
       }
       this.$newMessage.success('已添加一张照片到下载')
-      this.$ipcRenderer.send('downPhoto', data)
+      DownIpc.addDownloadFile(data)
     },
     /**
      * @description 放大

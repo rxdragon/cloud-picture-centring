@@ -11,10 +11,12 @@ import './styles/variables.less' // 全局样式
 import * as filters from './filters' // 全局过滤器
 import '@/directive'
 import './guards' // 路由守护
+import './indexDB/index.js'
 import { ipcRenderer } from 'electron'
 import lottie from 'lottie-web'
 
 window.bodymovin = lottie
+
 // 注入全局过滤器
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

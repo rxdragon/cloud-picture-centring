@@ -4,19 +4,21 @@
       <div class="file-icon">
         <img :src="listItem.iconSrc" alt="">
       </div>
-      <span class="file-name">{{ listItem.filename }}</span>
+      <span class="file-name">{{ listItem.fileName }}</span>
     </div>
     <div v-if="hasFile" class="panel-content">
       <div v-if="state === 'completed'" class="down-completed">
         <i class="el-icon-download">{{ state | toState }}</i>
-        <time>{{ listItem.startTime | toTime }}</time>
       </div>
       <div v-if="state === 'interrupted'" class="down-interrupted">
         <i class="el-icon-warning-outline">下载中断</i>
       </div>
       <div v-if="state === 'progressing'" class="down-progressing">
-        <el-progress :show-text="false" :text-inside="true" :stroke-width="8" :percentage="(listItem.receivedBytes / listItem.totalBytes) | toPercentageNum" />
-        <div class="description">{{ listItem.receivedBytes | toMB }} / {{ listItem.totalBytes | toMB }}</div>
+        <el-progress :show-text="false" :text-inside="true" :stroke-width="8" :percentage="listItem.process.progress | toPercentageNum" />
+        <div class="description">{{ listItem.process.speed }}</div>
+      </div>
+      <div v-if="state === 'waitdown'" class="down-completed">
+        <i class="el-icon-warning-outline">等待下载</i>
       </div>
       <div v-if="state === 'cancelled'" class="down-cancelled">
         <i class="el-icon-download">下载取消</i>
@@ -29,15 +31,15 @@
     </div>
     <div class="panel-content handle-button">
       <!-- 暂停 -->
-      <el-button v-if="state === 'progressing' && !listItem.isPaused" size="mini" class="icon-button" icon="el-icon-video-pause" @click="pauseItem(listItem.index)" />
+      <el-button v-if="state === 'progressing' && !listItem.isUserPause" size="mini" class="icon-button" icon="el-icon-video-pause" @click="pauseItem" />
       <!-- 回复 -->
-      <el-button v-if="canResume" size="mini" class="icon-button" icon="el-icon-video-play" @click="resumeDownItem(listItem.index)" />
+      <el-button v-if="canResume" size="mini" class="icon-button" icon="el-icon-video-play" @click="resumeDownItem" />
       <!-- 查看本地文件 -->
       <el-button v-if="state === 'completed' && hasFile" size="mini" class="icon-button" icon="el-icon-search" @click="downOpenFileFolder" />
       <!-- 取消 -->
-      <el-button v-if="state === 'progressing'" size="mini" class="icon-button" icon="el-icon-delete" @click="cancelItem(listItem.index)" />
+      <el-button v-if="state === 'progressing'" size="mini" class="icon-button" icon="el-icon-delete" @click="cancelItem" />
       <!-- 删除记录 -->
-      <el-button v-if="state !== 'progressing'" size="mini" class="icon-button" icon="el-icon-delete" @click="deleteDownItem(listItem.index)" />
+      <el-button v-if="state !== 'progressing'" size="mini" class="icon-button" icon="el-icon-delete" @click="deleteDownItem" />
     </div>
   </div>
 </template>
@@ -45,6 +47,7 @@
 <script>
 import { parseTime } from '@/utils/index.js'
 import { openFileFolder } from '@/utils/openFile.js'
+import DownIpc from '@electronMain/ipc/DownIpc'
 
 export default {
   name: 'DownListItem',
@@ -64,7 +67,7 @@ export default {
     },
     toPercentageNum (value) {
       if (!value) return 0
-      return Math.floor(value * 100)
+      return parseInt(value)
     },
     toMB (value) {
       const data = value / 1024 / 1024
@@ -72,7 +75,9 @@ export default {
     }
   },
   props: {
-    listItem: { type: Object, required: true }
+    listItem: { type: Object, required: true },
+    uuid: { type: String, required: true },
+    finished: { type: Boolean }
   },
   data () {
     return {
@@ -81,25 +86,35 @@ export default {
   },
   computed: {
     state () {
-      return this.listItem.state
+      return this.listItem.status
     },
     canResume () {
       return this.listItem.canResume
     }
   },
   methods: {
-    deleteDownItem (index) {
-      this.$emit('deleteItem', index)
+    // 删除下载文件
+    deleteDownItem () {
+      if (this.finished) {
+        const uuid = this.uuid
+        this.$store.dispatch('downloadlist/delDownloadItem', { uuid })
+      } else {
+        DownIpc.deleteItem(this.uuid)
+      }
     },
-    resumeDownItem (index) {
-      this.$emit('resumeItem', index)
+    // 重新下载
+    resumeDownItem () {
+      DownIpc.resume(this.uuid)
     },
-    pauseItem (index) {
-      this.$emit('pauseItem', index)
+    // 暂停下载文件
+    pauseItem () {
+      DownIpc.pause(this.uuid)
     },
-    cancelItem (index) {
-      this.$emit('cancelItem', index)
+    // 取消下载
+    cancelItem () {
+      DownIpc.cancel(this.uuid)
     },
+    // 打开下载文件
     downOpenFileFolder () {
       this.hasFile = openFileFolder(this.listItem.savePath)
     }

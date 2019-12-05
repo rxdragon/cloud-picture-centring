@@ -1,6 +1,7 @@
 build/*.js
-src/assets
 public
+src/assets
 src/plugins
+src/electronMain/DownloadManager.js
 dist
 dist_vue
