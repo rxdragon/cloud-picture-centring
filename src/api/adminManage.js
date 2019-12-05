@@ -52,6 +52,10 @@ export function getStreamList (params) {
       if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.nickname) {
         retouchLeader = item.retoucher.retoucher_leader.nickname
       }
+      if (item.retoucher_org) {
+        item.retoucherOrgName = item.retoucher_org && item.retoucher_org.name || null
+        item.retoucherOrgRetouchName = item.tags && item.tags.values && item.tags.values.retoucher_name || '-'
+      }
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
