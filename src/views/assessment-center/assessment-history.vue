@@ -148,7 +148,7 @@ export default {
       if (this.correctType) { req.correctionType = this.correctType }
       if (this.spotType) { req.grassType = this.spotType }
       if (this.staffIds) {
-        req.retoucherIds = this.staffIds
+        req.retoucherIds = this.staffIds.map(item => Number(item))
         this.cacheSendStaff = this.staffIds.join(',')
       }
       if (this.reviewerId) { req.reviewerId = this.reviewerId }
