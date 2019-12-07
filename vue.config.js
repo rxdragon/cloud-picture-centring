@@ -26,7 +26,6 @@ module.exports = {
       externals: {
         'electron': 'require("electron")',
         'fs': 'require("fs")',
-        'path': 'require("path")',
         'original-fs': 'require("original-fs")'
       },
       plugins: [
