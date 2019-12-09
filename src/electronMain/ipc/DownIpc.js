@@ -2,7 +2,7 @@ import uuidv4 from 'uuid/v4'
 import Vue from 'vue'
 import store from '@/store'
 import { getFileIcon } from '@/utils/getFileIcon.js'
-const path = require('path')
+import * as mPath from '@/utils/selfPath.js'
 const fs = require('fs')
 const { ipcRenderer } = require('electron')
 
@@ -14,8 +14,8 @@ let onListChange = () => {}
 
 // 获取文件名
 function getFileNameTool (src) {
-  const fileExt = path.extname(src)
-  const fileName = path.basename(src, fileExt)
+  const fileExt = mPath.getExtName(src)
+  const fileName = mPath.getBaseName(src, fileExt)
   return {
     name: fileName,
     ext: fileExt
@@ -30,11 +30,11 @@ function getDownloadList () {
 // 自增文件名字
 function incrementFileName (savePath) {
   let fileNum = 0
-  const dir = path.dirname(savePath)
+  const dir = mPath.getDirname(savePath)
   const { name, ext } = getFileNameTool(savePath)
   while (fs.existsSync(savePath)) {
     fileNum += 1
-    savePath = path.format({
+    savePath = mPath.getFormat({
       dir,
       ext,
       name: `${name}(${fileNum})`
@@ -74,7 +74,7 @@ function addDownloadFile (fileDownloadConfig) {
   const { name, ext } = getFileNameTool(fileDownloadConfig.url)
   const uuid = uuidv4()
   const folderPath = store.getters.saveFolder
-  fileDownloadConfig.path = path.join(folderPath, fileDownloadConfig.path)
+  fileDownloadConfig.path = mPath.joinPath(folderPath, fileDownloadConfig.path)
   // TODO 已存在文件名不进行下载
   fileDownloadConfig.uuid = uuid
   const createData = {
@@ -86,7 +86,7 @@ function addDownloadFile (fileDownloadConfig) {
     rename: fileDownloadConfig.rename || '',
     process: {},
     downInfo: {},
-    savePath: path.join(fileDownloadConfig.path, (uuid + '.download')),
+    savePath: mPath.joinPath(fileDownloadConfig.path, (uuid + '.download')),
     config: fileDownloadConfig,
     iconSrc: ''
   }
@@ -222,10 +222,10 @@ function registerOnListChange (cb) {
  */
 export function changeSaveName (item) {
   const oldFilePath = item.downInfo.savePath
-  const oldDir = path.dirname(oldFilePath)
+  const oldDir = mPath.getDirname(oldFilePath)
   let newFileName = item.orginName + item.ext
   if (item.rename) { newFileName = item.rename }
-  let newFilePath = path.join(oldDir, newFileName)
+  let newFilePath = mPath.joinPath(oldDir, newFileName)
   newFilePath = incrementFileName(newFilePath)
   fs.rename(oldFilePath, newFilePath, async (err) => {
     if (err) { console.error(err) }

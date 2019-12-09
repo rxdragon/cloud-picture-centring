@@ -23,7 +23,7 @@
       >
         <photo-box
           v-if="photoItem.response && photoItem.status !== 'fail'"
-          photo-name
+          photo-name preview
           :src="finishPhoto[photoIndex].path"
         />
         <div v-else-if="photoItem.status !== 'fail'" class="progress">
