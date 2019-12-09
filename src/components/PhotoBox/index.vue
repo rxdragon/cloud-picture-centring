@@ -76,7 +76,7 @@ export default {
      * @description 下载成功
      */
     downingPhoto () {
-      const savePath = `/${this.streamNum}`
+      const savePath = `${this.streamNum}`
       const data = {
         url: this.imgDomain + this.src,
         path: savePath
