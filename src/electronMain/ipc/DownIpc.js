@@ -230,7 +230,7 @@ export function changeSaveName (item) {
   let newFileName = item.orginName + item.ext
   if (item.rename) { newFileName = item.rename }
   let newFilePath = mPath.joinPath(oldDir, newFileName)
-  console.log(newFilePath,'newFilePath')
+  console.log(newFilePath, 'newFilePath')
   newFilePath = incrementFileName(newFilePath)
   fs.rename(oldFilePath, newFilePath, async (err) => {
     if (err) { console.error(err) }

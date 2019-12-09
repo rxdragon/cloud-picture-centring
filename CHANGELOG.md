@@ -178,6 +178,7 @@
 |范围|描述|commitId|
 --|--|--
  云学院历史记录增加 成片评价标签 | [cdf4ab6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cdf4ab6)
+ 代码错误 | [37a5ddc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/37a5ddc)
  优化审核历史记录问题 | [2e8607d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2e8607d)
  传递组员id | [08f8212](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08f8212)
  修复bug | [5b8516c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5b8516c)
@@ -194,12 +195,12 @@
  更改文案 | [33d9e6c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/33d9e6c)
  更新云端抽片分页问题 | [6d042a0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6d042a0)
  校验上传后的照片md5值和上传前的md5对比 | [687dd06](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/687dd06)
+ 显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
  照片张数 过滤模版照片 | [f0c4fb9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f0c4fb9)
  细节调整 | [01f846c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01f846c)
  调试代码 | [417142c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/417142c)
  重置数据变化 | [29ba78a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/29ba78a)
  页码修复 | [f7880c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f7880c1)
- 显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
 
 
 ### 🚀 性能优化
