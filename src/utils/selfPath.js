@@ -163,20 +163,21 @@ const substr = 'ab'.substr(-1) === 'b'
 
 function normalize (path) {
   const trailingSlash = substr(path, -1) === '/'
-
+  const isAbsolutePath = isAbsolute(path)
   // Normalize the path
   path = normalizeArray(filter(path.split('/'), function (p) {
     return !!p
-  }), !isAbsolute).join('/')
+  }), !isAbsolutePath).join('/')
 
-  if (!path && !isAbsolute) {
+  if (!path && !isAbsolutePath) {
     path = '.'
   }
   if (path && trailingSlash) {
     path += '/'
   }
-
-  return (isAbsolute ? '/' : '') + path
+  console.log(isAbsolutePath, 'isAbsolute')
+  console.log(path, 'path')
+  return (isAbsolutePath ? '/' : '') + path
 }
 
 function filter (xs, f) {
