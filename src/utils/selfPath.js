@@ -30,6 +30,7 @@ function posix (path) {
 }
 
 function win32 (path) {
+  console.log(path, 'win32path')
   assertPath(path)
   var len = path.length
   if (len === 0) { return '.' }
