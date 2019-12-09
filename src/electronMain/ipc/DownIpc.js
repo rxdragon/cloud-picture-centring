@@ -224,7 +224,7 @@ function registerOnListChange (cb) {
  */
 export function changeSaveName (item) {
   const oldFilePath = item.downInfo.savePath
-  console.log(oldFilePath 'oldFilePath')
+  console.log(oldFilePath, 'oldFilePath')
   const oldDir = mPath.getDirname(oldFilePath)
   console.log(oldDir, 'oldDir')
   let newFileName = item.orginName + item.ext
