@@ -74,9 +74,7 @@ function addDownloadFile (fileDownloadConfig) {
   const { name, ext } = getFileNameTool(fileDownloadConfig.url)
   const uuid = uuidv4()
   const folderPath = store.getters.saveFolder
-  console.log(folderPath, 'folderPath')
   fileDownloadConfig.path = mPath.joinPath(folderPath, fileDownloadConfig.path)
-  console.log(fileDownloadConfig.path, 'fileDownloadConfig.path')
   // TODO 已存在文件名不进行下载
   fileDownloadConfig.uuid = uuid
   const createData = {
@@ -224,13 +222,10 @@ function registerOnListChange (cb) {
  */
 export function changeSaveName (item) {
   const oldFilePath = item.downInfo.savePath
-  console.log(oldFilePath, 'oldFilePath')
   const oldDir = mPath.getDirname(oldFilePath)
-  console.log(oldDir, 'oldDir')
   let newFileName = item.orginName + item.ext
   if (item.rename) { newFileName = item.rename }
   let newFilePath = mPath.joinPath(oldDir, newFileName)
-  console.log(newFilePath, 'newFilePath')
   newFilePath = incrementFileName(newFilePath)
   fs.rename(oldFilePath, newFilePath, async (err) => {
     if (err) { console.error(err) }

@@ -30,7 +30,6 @@ function posix (path) {
 }
 
 function win32 (path) {
-  console.log(path, 'win32path')
   assertPath(path)
   var len = path.length
   if (len === 0) { return '.' }
@@ -272,8 +271,6 @@ function normalize (path) {
   if (path && trailingSlash) {
     path += '/'
   }
-  console.log(isAbsolutePath, 'isAbsolute')
-  console.log(path, 'path')
   return (isAbsolutePath ? '/' : '') + path
 }
 
