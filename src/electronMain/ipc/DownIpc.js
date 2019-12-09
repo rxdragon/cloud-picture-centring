@@ -74,7 +74,9 @@ function addDownloadFile (fileDownloadConfig) {
   const { name, ext } = getFileNameTool(fileDownloadConfig.url)
   const uuid = uuidv4()
   const folderPath = store.getters.saveFolder
+  console.log(folderPath, 'folderPath')
   fileDownloadConfig.path = mPath.joinPath(folderPath, fileDownloadConfig.path)
+  console.log(fileDownloadConfig.path, 'fileDownloadConfig.path')
   // TODO 已存在文件名不进行下载
   fileDownloadConfig.uuid = uuid
   const createData = {
