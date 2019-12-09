@@ -127,8 +127,7 @@ function win32 (path) {
  * @param {*} path
  */
 export function getDirname (path) {
-  console.log(process.platform, 'process.platform')
-  return process.platform === 'win32' ? win32(path) : posix(path)
+  return process.platform === 'darwin' ? posix(path) : win32(path)
 }
 
 /**
