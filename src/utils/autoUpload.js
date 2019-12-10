@@ -9,14 +9,13 @@ import { newMessage } from '@/utils/message.js'
  * @description 获取文件
  * @param {*} streamNum
  */
-export function getFiles (streamNum) {
+export function getFiles (streamNum, needUploadPhotos) {
   return new Promise(async (resolve, reject) => {
     try {
       const downloadPath = store.getters.saveFolder // 保存地址
       const readfilePath = mPath.joinPath(downloadPath, streamNum) // 文件地址
-      const files = await filterFiles(readfilePath)
       const readFileArray = []
-      files.forEach(async fileNameItem => {
+      needUploadPhotos.forEach(async fileNameItem => {
         const filePath = mPath.joinPath(readfilePath, fileNameItem)
         const fileBuffer = await originalFs.readFileSync(filePath)
         const newFile = new window.File([fileBuffer], fileNameItem, { type: getFileMime(fileNameItem) })

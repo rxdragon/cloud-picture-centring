@@ -156,10 +156,24 @@ export default {
       let readFileArray
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        readFileArray = await AutoUpload.getFiles(this.streamNum)
+        const needUploadPhotos = []
+        const finishPhotoArr = Object.values(this.finishPhoto)
+        const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
+        this.photos.forEach(photoItem => {
+          if (!allFinishPhoto.find(finishItem => finishItem.id === photoItem.id)) {
+            needUploadPhotos.push(photoItem.path)
+          }
+        })
+        console.log(needUploadPhotos)
+        readFileArray = await AutoUpload.getFiles(this.streamNum, needUploadPhotos)
+        if (!readFileArray.length) {
+          this.$newMessage.warning('找不到相关图片')
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          return false
+        }
         upInput = this.$refs['uploadButton'].$children[0]
       } catch (error) {
-        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
       upInput.uploadFiles(readFileArray)
@@ -189,6 +203,10 @@ export default {
      * @param {*} file
      */
     async beforeUpload (file) {
+      if (!this.uploadPhoto.every(item => item.response)) {
+        this.$newMessage.warning('请等待照片上传完成')
+        return Promise.reject()
+      }
       this.$store.dispatch('setting/showLoading', this.routeName)
       const name = PhotoTool.fileNameFormat(file.name)
       // 是否正确命名
