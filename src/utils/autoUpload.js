@@ -1,8 +1,9 @@
-import path from 'path'
 import mime from 'mime'
+import store from '@/store'
+import md5 from 'md5'
 import * as originalFs from 'original-fs'
+import * as mPath from '@/utils/selfPath.js'
 import { newMessage } from '@/utils/message.js'
-const { app } = require('electron').remote
 
 /**
  * @description 获取文件
@@ -11,12 +12,12 @@ const { app } = require('electron').remote
 export function getFiles (streamNum) {
   return new Promise(async (resolve, reject) => {
     try {
-      const downloadPath = app.getPath('desktop') // 桌面地址
-      const readfilePath = path.join(downloadPath, streamNum) // 文件地址
+      const downloadPath = store.getters.saveFolder // 保存地址
+      const readfilePath = mPath.joinPath(downloadPath, streamNum) // 文件地址
       const files = await filterFiles(readfilePath)
       const readFileArray = []
       files.forEach(async fileNameItem => {
-        const filePath = path.join(readfilePath, fileNameItem)
+        const filePath = mPath.joinPath(readfilePath, fileNameItem)
         const fileBuffer = await originalFs.readFileSync(filePath)
         const newFile = new window.File([fileBuffer], fileNameItem, { type: getFileMime(fileNameItem) })
         readFileArray.push(newFile)
@@ -26,7 +27,7 @@ export function getFiles (streamNum) {
       if (error.message.includes('no such file or directory')) {
         newMessage.error('找不到路径')
       }
-      console.dir(error)
+      console.error(error)
     }
   })
 }
@@ -43,12 +44,28 @@ export async function filterFiles (readfilePath) {
 }
 
 /**
+ * @description 根据路径获取md5
+ * @param {*} path
+ */
+export async function reasonPathGetMd5 (path) {
+  try {
+    const imgBuffer = await originalFs.readFileSync(path)
+    return md5(imgBuffer)
+  } catch (error) {
+    if (error.message.includes('no such file or directory')) {
+      newMessage.error('找不到路径')
+    }
+    throw new Error(error)
+  }
+}
+
+/**
  * @description 读取文件类型
  * @param {*} fileName
  */
 export function getFileMime (fileName) {
   let type
-  const ext = path.extname(fileName)
+  const ext = mPath.getExtName(fileName)
   if (ext.length > 2) { type = mime.getType(ext.substring(1)) }
   return type
 }

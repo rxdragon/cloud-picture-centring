@@ -2,8 +2,7 @@
   <div class="photo">
     <div class="img-box">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-image :src="imgDomain + src + breviary" fit="cover" :preview-src-list="preview ? [imgDomain + src] : []">
-        <!-- 错误处理 -->
+      <el-image :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
@@ -40,6 +39,7 @@ export default {
     peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
     downing: { type: Boolean }, // 是够开启下载功能
     preview: { type: Boolean }, // 是否开启单张预览功能
+    previewBreviary: { type: Boolean }, // 开启单张缩略预览功能
     showRecedeReason: { type: Boolean }, // 是否显示退单理由
     showJointLabel: { type: Boolean }, // 是否显示拼接照信息
     tags: { type: Object, default: () => {
@@ -68,6 +68,20 @@ export default {
         return this.tags.values.rework_reason
       } else {
         return ''
+      }
+    },
+    // 压缩图片地址
+    imageSrc () {
+      return this.imgDomain + this.src + this.breviary
+    },
+    // 展示图片
+    getPreviewPhoto () {
+      if (this.preview) {
+        return [this.imgDomain + this.src]
+      } else if (this.previewBreviary) {
+        return [this.imgDomain + this.src + this.breviary]
+      } else {
+        return []
       }
     }
   },

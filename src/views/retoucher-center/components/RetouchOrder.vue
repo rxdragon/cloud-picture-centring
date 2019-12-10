@@ -100,7 +100,7 @@ export default {
       },
       photos: [], // 照片数组
       reviewerNote: '', // 审核备注
-      finishPhoto: [], // 最后提交成片
+      finishPhoto: {}, // 最后提交成片
       hourGlass: null, // 沙漏时间
       goalTime: {
         green: 0,
@@ -220,22 +220,22 @@ export default {
       // 实验功能
       if (this.showOverTag) {
         this.photos.forEach(item => { item.isCover = false })
-        finishPhoto.forEach(photoItem => {
-          const findOrignPhoto = this.photos.find(item => item.id === photoItem.id)
+        for (const uid in finishPhoto) {
+          const findOrignPhoto = this.photos.find(item => item.id === finishPhoto[uid].id)
           findOrignPhoto && (findOrignPhoto.isCover = true)
-        })
+        }
       }
-      this.finishPhoto = JSON.parse(JSON.stringify(finishPhoto))
     },
     /**
      * @description 提交审核
      */
     async submitOrder () {
-      if (!this.finishPhoto.every(item => Boolean(item.path))) {
+      const finishPhotoArr = Object.values(this.finishPhoto)
+      if (!finishPhotoArr.every(item => Boolean(item.path))) {
         return this.$newMessage.warning('请等待照片上传完成')
       }
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
-      const uploadData = [...cachePhoto, ...this.finishPhoto]
+      const uploadData = [...cachePhoto, ...finishPhotoArr]
       uploadData.forEach(item => { delete item.orginPhotoName })
       if (uploadData.length > this.photos.length) {
         return this.$newMessage.warning('上传照片数量超过限制，请重新上传。')

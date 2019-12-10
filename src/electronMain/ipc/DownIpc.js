@@ -1,10 +1,10 @@
 import uuidv4 from 'uuid/v4'
 import Vue from 'vue'
 import store from '@/store'
-import { getFileIcon } from '@/utils/getFileIcon.js'
 import * as mPath from '@/utils/selfPath.js'
-const fs = require('fs')
+import { getFileIcon } from '@/utils/getFileIcon.js'
 const { ipcRenderer } = require('electron')
+const fs = require('fs')
 
 const waitDownloadList = [] // 等待下载队列
 const downingLoadList = [] // 正在下载队列
