@@ -257,7 +257,7 @@ export default {
     async handleSuccess (response, file, fileList) {
       this.uploadPhoto = fileList
       // 校验数据
-      if (file.response && file.response.url) {
+      if (this.autoUpload && file.response && file.response.url) {
         const path = mPath.joinPath(this.saveFolder, this.streamNum, file.name)
         const selfMd5 = await AutoUpload.reasonPathGetMd5(path)
         if (!file.response.url.includes(selfMd5)) {
