@@ -9,6 +9,7 @@
       >
         <photo-box
           photo-name
+          preview-breviary
           :src="photoItem.path"
         />
         <span class="delete-button" @click="deleteCachePhoto(photoIndex)">
@@ -17,31 +18,34 @@
       </div>
       <div
         v-for="(photoItem, photoIndex) in uploadPhoto"
-        :key="'upload' + photoItem.name"
-        :class="{ 'is-repetition': photoItem.response && finishPhoto[photoIndex].isRepetition }"
+        :key="photoItem.uid"
+        :class="{ 'is-repetition': photoItem.response && finishPhoto[photoItem.uid] && finishPhoto[photoItem.uid].isRepetition }"
         class="photo-box list-photo-item"
       >
-        <photo-box
-          v-if="photoItem.response && photoItem.status !== 'fail'"
-          photo-name preview
-          :src="finishPhoto[photoIndex].path"
-        />
-        <div v-else-if="photoItem.status !== 'fail'" class="progress">
-          <el-progress
-            type="circle"
-            :percentage="photoItem.percentage | formatProgress"
-            :color="photoItem.percentage | filterPercentageColor"
-            :status="photoItem.percentage | filterPercentage"
+        <transition name="el-zoom-in-center" mode="out-in">
+          <photo-box
+            v-if="photoItem.status === 'success' && finishPhoto[photoItem.uid]"
+            photo-name
+            preview-breviary
+            :src="finishPhoto[photoItem.uid].path"
           />
-        </div>
-        <div v-else class="error-photo progress">
-          <i class="el-icon-warning-outline">上传失败</i>
-        </div>
-        <span class="delete-button" @click="deleteUploadPhoto(photoItem.response, photoIndex)">
+          <div v-else-if="photoItem.status !== 'fail'" class="progress">
+            <el-progress
+              type="circle"
+              :percentage="photoItem.percentage | formatProgress"
+              :color="photoItem.percentage | filterPercentageColor"
+              :status="photoItem.percentage | filterPercentage"
+            />
+          </div>
+          <div v-else class="error-photo progress">
+            <i class="el-icon-warning-outline">上传失败</i>
+          </div>
+        </transition>
+        <span class="delete-button" @click="deleteUploadPhoto(photoItem, photoIndex)">
           <i class="el-icon-error" />
         </span>
       </div>
-      <div v-if="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
+      <div v-show="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
         <el-upload
           ref="uploadButton"
           class="upload-crop-button"
@@ -70,6 +74,7 @@
 import { mapGetters } from 'vuex'
 import variables from '@/styles/variables.less'
 import PhotoBox from '@/components/PhotoBox'
+import * as mPath from '@/utils/selfPath.js'
 import * as Commonality from '@/api/commonality'
 import * as SessionTool from '@/utils/sessionTool'
 import * as PhotoTool from '@/utils/photoTool'
@@ -85,10 +90,7 @@ export default {
     },
     // 进度到100 改变状态
     filterPercentage (value) {
-      if (value === 100) {
-        return 'success'
-      }
-      return null
+      return value === 100 ? 'success' : null
     },
     // 设置进度颜色
     filterPercentageColor (value) {
@@ -105,7 +107,7 @@ export default {
     photos: { type: Array, default: () => [] },
     realAid: { type: [String, Number], required: true },
     streamNum: { type: String, default: '' },
-    finishPhoto: { type: Array, required: true } // 最后提交成片
+    finishPhoto: { type: Object, required: true } // 最后提交成片
   },
   data () {
     return {
@@ -116,14 +118,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['updateDomain', 'showOverTag', 'autoUpload']),
+    ...mapGetters(['updateDomain', 'showOverTag', 'autoUpload', 'saveFolder']),
     // 样式变量
     variables () {
       return variables
     },
     // 是否能添加照片
     canUpdatePhoto () {
-      const finishNumSame = this.photos.length === this.finishPhoto.length + this.cachePhoto.length
+      const finishNumSame = this.photos.length === Object.values(this.finishPhoto).length + this.cachePhoto.length
       const updatePaddingSame = this.photos.length === this.uploadPhoto.length + this.cachePhoto.length
       return !finishNumSame && !updatePaddingSame
     }
@@ -133,7 +135,7 @@ export default {
       handler () {
         this.cachePhoto = []
         this.uploadPhoto = []
-        this.$emit('change', [])
+        this.$emit('change', {})
         this.getCachePhoto()
       },
       immediate: true
@@ -154,10 +156,23 @@ export default {
       let readFileArray
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        readFileArray = await AutoUpload.getFiles(this.streamNum)
+        const needUploadPhotos = []
+        const finishPhotoArr = Object.values(this.finishPhoto)
+        const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
+        this.photos.forEach(photoItem => {
+          if (!allFinishPhoto.find(finishItem => finishItem.id === photoItem.id)) {
+            needUploadPhotos.push(photoItem.path)
+          }
+        })
+        readFileArray = await AutoUpload.getFiles(this.streamNum, needUploadPhotos)
+        if (!readFileArray.length) {
+          this.$newMessage.warning('找不到相关图片')
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          return false
+        }
         upInput = this.$refs['uploadButton'].$children[0]
       } catch (error) {
-        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
       upInput.uploadFiles(readFileArray)
@@ -187,6 +202,10 @@ export default {
      * @param {*} file
      */
     async beforeUpload (file) {
+      if (!this.uploadPhoto.every(item => item.response)) {
+        this.$newMessage.warning('请等待照片上传完成')
+        return Promise.reject()
+      }
       this.$store.dispatch('setting/showLoading', this.routeName)
       const name = PhotoTool.fileNameFormat(file.name)
       // 是否正确命名
@@ -197,7 +216,8 @@ export default {
       }
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
-      const allFinishPhoto = [...this.cachePhoto, ...this.finishPhoto]
+      const finishPhotoArr = Object.values(this.finishPhoto)
+      const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
       const hasSameName = this.photos.some(item => item.path.includes(name))
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
       // 判断是否是图片
@@ -219,7 +239,6 @@ export default {
       let uploadPhotoMd5 = ''
       try {
         uploadPhotoMd5 = await PhotoTool.getImgBufferPhoto(file)
-        file.selfMd5 = uploadPhotoMd5
         if (beforeUploadFileName === uploadPhotoMd5) {
           this.$newMessage.warning('请修改照片后再进行上传。')
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -252,45 +271,44 @@ export default {
      * @param {*} file 上传成功单文件
      * @param {*} fileList 上传全部文件
      */
-    handleSuccess (response, file, fileList) {
+    async handleSuccess (response, file, fileList) {
       this.uploadPhoto = fileList
-      const createPhotoData = []
       // 校验数据
-      if (file.response && file.response.url) {
-        if (!file.response.url.includes(file.raw.selfMd5)) {
+      if (this.autoUpload && file.response && file.response.url) {
+        const path = mPath.joinPath(this.saveFolder, this.streamNum, file.name)
+        const selfMd5 = await AutoUpload.reasonPathGetMd5(path)
+        if (!file.response.url.includes(selfMd5)) {
           const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
           willDeleteIndex >= 0 && (fileList.splice(willDeleteIndex, 1))
           this.$newMessage.error('上传文件校验错误')
           return false
         }
       }
-      fileList.forEach((fileItem, fileIndex) => {
-        const uploadedName = PhotoTool.fileNameFormat(file.name)
-        // 上传后的照片名字
-        const filePath = fileItem.response ? PhotoTool.handlePicPath(fileItem.response.url) : ''
-        const findOrginPhoto = this.photos.find(photoItem => photoItem.path.includes(uploadedName))
-        if (this.finishPhoto[fileIndex] && this.finishPhoto[fileIndex].path) {
-          createPhotoData.push(this.finishPhoto[fileIndex])
-        } else {
-          const newPhoto = {
-            id: findOrginPhoto.id,
-            path: filePath,
-            orginPhotoName: uploadedName
-          }
-          createPhotoData.push(newPhoto)
+      const uid = file.uid
+      const uploadedName = PhotoTool.fileNameFormat(file.name)
+      // 上传后的照片名字
+      const filePath = file.response ? PhotoTool.handlePicPath(file.response.url) : ''
+      const findOrginPhoto = this.photos.find(photoItem => photoItem.path.includes(uploadedName))
+      if (!this.finishPhoto[uid]) {
+        const newPhoto = {
+          id: findOrginPhoto.id,
+          path: filePath,
+          orginPhotoName: uploadedName
         }
-      })
-      const finishPhoto = JSON.parse(JSON.stringify(createPhotoData))
-      this.$emit('change', finishPhoto)
+        this.$set(this.finishPhoto, uid, newPhoto)
+      }
+      if (filePath && !this.finishPhoto[uid].path) { this.$set(this.finishPhoto[uid], 'path', filePath) }
+      this.$emit('change', this.finishPhoto)
     },
     /**
      * @description 移除文件
      */
-    deleteUploadPhoto (response, index) {
-      const isPending = !response
+    deleteUploadPhoto (photoItem, index) {
+      const isPending = !photoItem.response
       if (isPending) { this.$refs.uploadButton.abort(this.uploadPhoto[index]) }
       this.uploadPhoto.splice(index, 1)
-      this.finishPhoto.splice(index, 1)
+      const uid = photoItem.uid
+      this.$delete(this.finishPhoto, uid)
       this.$emit('change', this.finishPhoto)
     },
     /**
@@ -305,7 +323,8 @@ export default {
      * @description 保持上传图片
      */
     saveUpdatePhoto () {
-      const saveData = [...this.cachePhoto, ...this.finishPhoto]
+      const finishPhotoArr = Object.values(this.finishPhoto)
+      const saveData = [...this.cachePhoto, ...finishPhotoArr]
       SessionTool.saveUpdatePhoto(this.realAid, saveData)
     },
     /**
