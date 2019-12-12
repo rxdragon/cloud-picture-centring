@@ -57,6 +57,9 @@ export default {
       rules
     }
   },
+  created () {
+    this.getSupervisorOnDuty()
+  },
   methods: {
     /**
      * @description 提交修改接口
@@ -85,6 +88,7 @@ export default {
           try {
             this.$store.dispatch('setting/showLoading', this.routeName)
             await SupervisorOnDuty.setSupervisorOnDuty(req)
+            this.$newMessage.success('修改成功')
             this.$store.dispatch('setting/hiddenLoading', this.routeName)
           } catch (error) {
             this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -102,8 +106,9 @@ export default {
     getSupervisorOnDuty () {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = SupervisorOnDuty.getSupervisorOnDuty
-        for (const key in this.submitData) { this.$set(this.submitData, key, data[key]) }
+        const data = SupervisorOnDuty.getSupervisorOnDuty()
+        console.log(data)
+        // for (const key in this.submitData) { this.$set(this.submitData, key, data[key]) }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
