@@ -58,14 +58,14 @@
                 操作<i class="el-icon-arrow-down el-icon--right" />
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item class="primary-color" @click="linkto(scope.row)">流水详情</el-dropdown-item>
+                <el-dropdown-item class="primary-color" @click.native="linkto(scope.row)">流水详情</el-dropdown-item>
                 <el-dropdown-item
                   v-if="!scope.row.staticsUrgent &&
                     scope.row.state !== 'reviewing' &&
                     scope.row.state !== 'finish' &&
                     showUrgentStream"
                   class="danger-color"
-                  @click="urgentStream(scope.row.id)"
+                  @click.native="urgentStream(scope.row.id)"
                 >
                   流水加急
                 </el-dropdown-item>
@@ -121,6 +121,7 @@ export default {
      * @description 跳转
      */
     linkto (item) {
+      console.log(item)
       const streamId = item.id
       const workBoardStreamNum = item.stream_num
       if (item.state === 'finish') {

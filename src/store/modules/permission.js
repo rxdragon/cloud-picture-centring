@@ -20,9 +20,7 @@ export function filterAsyncRoutes (routes, roles) {
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
-      if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
-      }
+      if (tmp.children) { tmp.children = filterAsyncRoutes(tmp.children, roles) }
       res.push(tmp)
     }
   })
@@ -44,7 +42,8 @@ const state = {
   showRetouchStreamList: false, // 是否显示修图队列
   showReviewStreamList: false, // 是否显示审核队列
   showStreamList: false, // 是否显示浏览加急查询
-  showUrgentStream: false // 是否显示加急按钮
+  showUrgentStream: false, // 是否显示加急按钮
+  isRetoucher: false // 是否是修片师
 }
 
 const mutations = {
@@ -54,6 +53,7 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+    console.log(roles)
     state.showPartnerPerformance = roles.includes('AdminManage.performanceInquire.retoucherQuota')
     state.showAuditPerformance = roles.includes('AdminManage.performanceInquire.reviewQuota')
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
@@ -66,6 +66,7 @@ const mutations = {
     state.showReviewStreamList = roles.includes('AdminManage.workBoard.reviewStreamList')
     state.showStreamList = roles.includes('AdminManage.workBoard.streamList')
     state.showUrgentStream = roles.includes('AdminManage.workBoard.urgentStream')
+    state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
     state.personageRouters = routes

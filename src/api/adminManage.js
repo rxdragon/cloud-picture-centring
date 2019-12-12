@@ -198,7 +198,7 @@ export function getStreamInfo (params) {
       streamState: data.state,
       retoucherName: data.retoucher && (data.retoucher.name || data.retoucher.real_name) || '-',
       reviewerName: data.reviewer && data.reviewer.name || '',
-      photographer: data.order.tags && data.order.tags.values.photographer || '-'
+      photographerName: data.order.tags && data.order.tags.values.photographer || '-'
     }
     createData.photos = data.photos
     return createData

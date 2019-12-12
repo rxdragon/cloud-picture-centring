@@ -18,7 +18,9 @@
       </span>
       <div class="nav-right">
         <download-management />
+        <!-- 修图师在线功能 -->
         <el-popover
+          v-if="isRetoucher"
           placement="bottom-start"
           width="200"
           popper-class="change-popover"
@@ -44,7 +46,9 @@
           </div>
           <el-avatar slot="reference" class="online-point" :class="isOnline ? 'online' : 'offline'" :src="userInfo.avatarImg" />
         </el-popover>
-        <div class="online-state" :class="{ 'online': isOnline }">{{ isOnline ? '[在线]' : '[离线]' }}</div>
+        <div v-if="isRetoucher" class="online-state" :class="{ 'online': isOnline }">{{ isOnline ? '[在线]' : '[离线]' }}</div>
+        <!-- 非修图师 -->
+        <el-avatar v-if="!isRetoucher" slot="reference" :src="userInfo.avatarImg" />
         <div class="user-name">{{ userInfo.nickname || userInfo.name }}</div>
         <div class="label">{{ userInfo.departmentName }}</div>
         <el-button class="icon-button" icon="iconfont iconlogin-out" @click="logout" />
@@ -70,7 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'lineState']),
+    ...mapGetters(['userInfo', 'lineState', 'isRetoucher']),
     isOnline () {
       return this.lineState === 'online'
     }
@@ -181,10 +185,6 @@ export default {
       align-items: center;
       -webkit-user-select: none;
 
-      .change-popover {
-        outline: none;
-      }
-
       .download-management {
         margin-right: 20px;
       }
@@ -195,6 +195,7 @@ export default {
         border: 1px solid #fff;
         margin-right: 6px;
         cursor: pointer;
+        outline: none;
       }
 
       .online-point {

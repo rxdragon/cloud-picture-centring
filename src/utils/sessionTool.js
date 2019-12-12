@@ -239,3 +239,22 @@ export function getStaffList () {
   const data = localStorage.getItem(saveKey)
   return data ? JSON.parse(data) : null
 }
+
+/**
+ * @description 获取主管列表
+ */
+export function getExecutiveList () {
+  const saveKey = `executive`
+  const data = localStorage.getItem(saveKey)
+  return data ? JSON.parse(data) : null
+}
+
+/**
+ * @description 保存主管列表
+ * @param {*} params
+ */
+export function setExecutiveList (executiveList) {
+  const saveKey = `executive`
+  const data = JSON.stringify(executiveList)
+  localStorage.setItem(saveKey, data)
+}

@@ -178,7 +178,8 @@ export function getRetouchQuotaList (params) {
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
       listItem.plantNum = findPlantPhoto.length
       listItem.pullNum = findPullPhoto.length
-      // 门店满意度
+      // TODO 门店满意度
+      listItem.retoucherNpsAvg = '-'
     })
     createData.list = msg.list
     return createData
