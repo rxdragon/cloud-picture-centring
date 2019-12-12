@@ -1,10 +1,14 @@
 <template>
   <div class="take-orders-list">
     <el-table :data="tableData" style="width: 100%;">
-      <el-table-column prop="streamNum" label="流水号" min-width="220">
+      <el-table-column prop="streamNum" label="流水号" min-width="150">
         <template slot-scope="scope">
-          {{ scope.row.streamNum }}
-          <el-tag v-if="scope.row.isCheckReturn" size="mini" type="danger">审核退回</el-tag>
+          <div class="stream-state" :class="{'wrap': scope.row.isCheckReturn && scope.row.isStoreReturn}">
+            <div class="stream-num">{{ scope.row.streamNum }}</div>
+            <el-tag v-if="scope.row.isCheckReturn" size="mini" type="danger">审核退回</el-tag>
+            <!-- TODO 门店退回 -->
+            <el-tag v-if="scope.row.isStoreReturn" size="mini" type="danger">门店退回</el-tag>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="productName" label="拍摄产品" />
@@ -49,3 +53,23 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.take-orders-list {
+  .stream-state {
+    .el-tag:nth-last-of-type(1) {
+      margin-left: 12px;
+    }
+
+    .stream-num {
+      display: inline-block;
+    }
+
+    &.wrap {
+      .stream-num {
+        display: block;
+      }
+    }
+  }
+}
+</style>

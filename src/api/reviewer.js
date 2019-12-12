@@ -13,7 +13,6 @@ export function getReviewInfo () {
     if (!msg) return null
     const createData = {}
     createData.canGlass = true
-    createData.isRework = false
     msg.photos.forEach(photoItem => {
       const findOrigianlPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
       photoItem.priviewPhotoData = [{
@@ -29,7 +28,6 @@ export function getReviewInfo () {
       photoItem.isRework = false
       if (photoItem.tags && photoItem.tags.statics) {
         photoItem.isRework = photoItem.tags.statics.includes('return_photo')
-        createData.isRework = photoItem.isRework || createData.isRework
         photoItem.canGlass = !photoItem.tags.statics.includes('plant') &&
           !photoItem.tags.statics.includes('pull') &&
           !photoItem.isRework
@@ -52,6 +50,9 @@ export function getReviewInfo () {
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     createData.requireLabel = msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {}
     createData.streamState = msg.state
+    createData.isCheckReturn = msg.state === 'review_return_retouch'
+    // TODO 门店退回
+    createData.isStoreReturn = true
     createData.photos = msg.photos
     createData.retoucherName = msg.retoucher && (msg.retoucher.name || msg.retoucher.real_name) || '-'
     return createData

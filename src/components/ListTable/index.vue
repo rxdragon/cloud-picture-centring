@@ -23,7 +23,7 @@
 export default {
   name: 'ListTable',
   props: {
-    listdata: { type: Array, default: () => [] }, // 列表数据
+    listdata: { type: [Array, Object], default: () => [] }, // 列表数据
     width: { type: String, default: '' }, // 宽
     isSeachPage: { type: Boolean }, // 是否传递伏组件指
     header: { // 左侧标题头部
@@ -34,10 +34,11 @@ export default {
   computed: {
     gridStyle () {
       let styleString = ''
-      styleString = `grid-template-columns: repeat(${this.listdata.length}, 1fr);`
-      if (this.width) {
-        styleString += `width: ${this.width}`
-      }
+      const length = (this.listdata instanceof Array)
+        ? this.listdata.length
+        : Object.keys(this.listdata).length
+      styleString = `grid-template-columns: repeat(${length}, 1fr);`
+      if (this.width) { styleString += `width: ${this.width}` }
       return styleString
     }
   },

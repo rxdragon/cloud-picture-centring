@@ -11,7 +11,8 @@ const state = {
   nickname: '',
   permissions: [],
   departmentName: '-',
-  avatarImg: ''
+  avatarImg: '',
+  lineState: 'offline'
 }
 
 const mutations = {
@@ -36,6 +37,9 @@ const mutations = {
     state.nickname = info.nickname
     state.departmentName = info.department.name
     state.avatarImg = info.avatar
+  },
+  SET_LINE_STATE: (state, condition) => {
+    state.lineState = condition
   }
 }
 
@@ -90,6 +94,10 @@ const actions = {
         reject(error)
       }
     })
+  },
+  // 设置在线状态
+  setUserlineState ({ commit }, state) {
+    commit('SET_LINE_STATE', state)
   }
 }
 

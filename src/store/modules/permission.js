@@ -33,13 +33,39 @@ export function filterAsyncRoutes (routes, roles) {
 const state = {
   routes: [],
   addRoutes: [],
-  personageRouters: []
+  personageRouters: [],
+  roles: [],
+  showPartnerPerformance: false, // 是否显示伙伴绩效
+  showOverallPerformance: false, // 是否显示总体绩效
+  showAuditPerformance: false, // 是否显示审核绩效
+  showTimeStatistics: false, // 是否显示用时统计
+  showCheckerEvaluate: false, // 是否显示看片评价
+  showFlowInfo: false, // 是否显示浏览看板
+  showRetouchStreamList: false, // 是否显示修图队列
+  showReviewStreamList: false, // 是否显示审核队列
+  showStreamList: false, // 是否显示浏览加急查询
+  showUrgentStream: false // 是否显示加急按钮
 }
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
+    state.showPartnerPerformance = roles.includes('AdminManage.performanceInquire.retoucherQuota')
+    state.showAuditPerformance = roles.includes('AdminManage.performanceInquire.reviewQuota')
+    state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
+    // TODO 判断是否显示显示总体叫
+    // state.showOverallPerformance = roles.includes('retoucherQuota')
+    // TODO 判断是否显示用时统计
+    // state.showTimeStatistics = false
+    state.showFlowInfo = roles.includes('AdminManage.workBoard.flowInfo')
+    state.showRetouchStreamList = roles.includes('AdminManage.workBoard.retouchStreamList')
+    state.showReviewStreamList = roles.includes('AdminManage.workBoard.reviewStreamList')
+    state.showStreamList = roles.includes('AdminManage.workBoard.streamList')
+    state.showUrgentStream = roles.includes('AdminManage.workBoard.urgentStream')
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
     state.personageRouters = routes
@@ -53,21 +79,27 @@ const actions = {
       let accessedRoutes = []
       const newRoles = roles
       let newRolesArr = []
+      const newPermissionArr = []
       newRoles.forEach(roleItem => {
         if (roleItem.name) {
           const nameArr = roleItem.name.split('.')
+          // 全部权限列表
+          newPermissionArr.push(toCapitalHump(roleItem.name))
           if (nameArr.length !== 3) return
           const moduleName = toCapitalHump(nameArr[0])
           const menuName = toCapitalHump(nameArr[1])
           newRolesArr = [...newRolesArr, moduleName, menuName]
         }
       })
+      commit('SET_ROLES', newPermissionArr)
       // 如果有修图权限 启动轮询
       if (newRolesArr.includes('WaitRetoucher')) {
         store.dispatch('notification/hasReturnNotification')
       }
       newRolesArr = [...new Set(newRolesArr)]
-      accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
+      // 调试
+      // accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
+      accessedRoutes = asyncRoutes
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

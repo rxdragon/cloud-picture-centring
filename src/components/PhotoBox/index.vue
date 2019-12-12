@@ -15,8 +15,14 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
+    <div v-if="showRecedeReason" class="recede-reason">
+      门店退回原因： <span class="reason-content">aaksndkasndkasnddasdasmdkmska</span>
+    </div>
+    <div v-if="showRecedeReason" class="recede-reason">
+      门店退回备注： <span class="reason-content">门店退回备注：门店退回备注：门店退回备注：门店退回备注：门店退回备注：</span>
+    </div>
     <div v-if="recedeReason" class="recede-reason">
-      重修原因： {{ recedeReason }}
+      审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
     </div>
   </div>
 </template>
@@ -189,6 +195,12 @@ export default {
   color: @red;
   margin: 0 6px 6px;
   padding-top: 9px;
-  border-top: 1px solid #dddfe6;
+  border-top: 1px solid #ebeef5;
+  line-height: 20px;
+
+  .reason-content {
+    color: #606266;
+    word-break: break-all;
+  }
 }
 </style>

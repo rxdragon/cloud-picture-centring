@@ -53,15 +53,25 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="scope">
           <div class="operation-box">
-            <el-button type="primary" size="mini" @click="linkto(scope.row)">详情</el-button>
-            <el-button
-              v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing' && scope.row.state !== 'finish' "
-              type="danger"
-              size="mini"
-              @click="urgentStream(scope.row.id)"
-            >
-              加急
-            </el-button>
+            <el-dropdown placement="bottom" :show-timeout="100" trigger="hover">
+              <el-button size="mini" type="primary">
+                操作<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item class="primary-color" @click="linkto(scope.row)">流水详情</el-dropdown-item>
+                <el-dropdown-item
+                  v-if="!scope.row.staticsUrgent &&
+                    scope.row.state !== 'reviewing' &&
+                    scope.row.state !== 'finish' &&
+                    showUrgentStream"
+                  class="danger-color"
+                  @click="urgentStream(scope.row.id)"
+                >
+                  流水加急
+                </el-dropdown-item>
+                <el-dropdown-item class="warning-color">直接审核</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </template>
       </el-table-column>
@@ -71,6 +81,8 @@
 
 <script>
 import * as AdminManage from '@/api/adminManage'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'WorkBoardTable',
   props: {
@@ -82,6 +94,9 @@ export default {
     return {
       routeName: this.$route.name // 路由名字
     }
+  },
+  computed: {
+    ...mapGetters(['showUrgentStream'])
   },
   methods: {
     /**
@@ -165,6 +180,32 @@ export default {
   .staff-info {
     display: grid;
     text-align: left;
+  }
+}
+</style>
+
+<style lang="less">
+@import '~@/styles/variables.less';
+
+.primary-color {
+  color: @blue;
+}
+
+.danger-color {
+  color: @red;
+
+  &:hover {
+    background-color: @bgRed !important;
+    color: #ff1b5b !important;
+  }
+}
+
+.warning-color {
+  color: #f7a741;
+
+  &:hover {
+    background-color: @bgOrange !important;
+    color: @orange !important;
   }
 }
 </style>

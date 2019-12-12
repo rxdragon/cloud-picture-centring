@@ -6,7 +6,7 @@ import * as PhotoTool from '@/utils/photoTool.js'
 
 /**
  * @description 流水列表[待修，挂起]
- * @param {*} params [state]
+ * @param {*} params [state] [待修，挂起]
  */
 export function getRetouchStreams (params) {
   return axios({
@@ -24,6 +24,8 @@ export function getRetouchStreams (params) {
       listItem.waitTime = waitTime(listItem.created_at)
       listItem.photographerUpdate = listItem.created_at || '-'
       listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework') || false
+      // TODO
+      listItem.isStoreReturn = true
       if (params.state === 'hanging') {
         listItem.hangTime = waitTime(listItem.last_hang_at)
       } else {
@@ -61,7 +63,10 @@ export function getStreamInfo (params) {
       waitTime: waitTime(msg.created_at),
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
-      streamState: msg.state
+      streamState: msg.state,
+      isCheckReturn: msg.state === 'review_return_retouch',
+      // TODO 判断是否门店退回
+      isStoreReturn: true
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
@@ -173,6 +178,7 @@ export function getRetouchQuotaList (params) {
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
       listItem.plantNum = findPlantPhoto.length
       listItem.pullNum = findPullPhoto.length
+      // 门店满意度
     })
     createData.list = msg.list
     return createData

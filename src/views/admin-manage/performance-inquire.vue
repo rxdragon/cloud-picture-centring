@@ -4,11 +4,11 @@
       <h3>{{ activeName | filterActiveName }}</h3>
     </div>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="伙伴绩效" name="PartnerPerformance" />
-      <!-- <el-tab-pane label="总体绩效" name="OverallPerformance" /> -->
-      <el-tab-pane label="审核绩效" name="AuditPerformance" />
-      <!-- <el-tab-pane label="用时统计" name="TimeStatistics" /> -->
-      <el-tab-pane label="看片评价" name="CheckerEvaluate" />
+      <el-tab-pane v-if="showPartnerPerformance" label="伙伴绩效" name="PartnerPerformance" />
+      <el-tab-pane v-if="showOverallPerformance" label="总体绩效" name="OverallPerformance" />
+      <el-tab-pane v-if="showAuditPerformance" label="审核绩效" name="AuditPerformance" />
+      <el-tab-pane v-if="showTimeStatistics" label="用时统计" name="TimeStatistics" />
+      <el-tab-pane v-if="showCheckerEvaluate" label="看片评价" name="CheckerEvaluate" />
     </el-tabs>
     <div class="table-box" :class="{'no-border': activeName === 'PartnerPerformance'}">
       <transition name="fade-transform" mode="out-in">
@@ -26,6 +26,7 @@ import OverallPerformance from './components/OverallPerformance' // 总体绩效
 import AuditPerformance from './components/AuditPerformance' // 审核绩效
 import TimeStatistics from './components/TimeStatistics' // 用时统计
 import CheckerEvaluate from './components/CheckerEvaluate' // 看片评价
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PerformanceInquire',
@@ -53,6 +54,15 @@ export default {
     return {
       activeName: 'PartnerPerformance'
     }
+  },
+  computed: {
+    ...mapGetters([
+      'showPartnerPerformance',
+      'showOverallPerformance',
+      'showAuditPerformance',
+      'showTimeStatistics',
+      'showCheckerEvaluate'
+    ])
   },
   created () {},
   mounted () {},

@@ -193,6 +193,7 @@ export default {
   display: flex;
   padding: 20px 0;
   flex-wrap: wrap;
+  align-items: flex-start;
 
   .photo-box {
     width: @photoBox;

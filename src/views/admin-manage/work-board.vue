@@ -2,11 +2,11 @@
   <div class="WorkBoard page-class">
     <div class="header">
       <h3>云端工作看板</h3>
-      <el-button type="primary" @click="showFlow">流量看板</el-button>
+      <el-button v-if="showFlowInfo" type="primary" @click="showFlow">流量看板</el-button>
     </div>
-    <!-- 加急操作 -->
-    <div class="module-panel">
-      <div class="panel-title">加急操作</div>
+    <!-- 流水管理 -->
+    <div v-if="showStreamList" class="module-panel">
+      <div class="panel-title">流水管理</div>
       <div class="search-box">
         <div class="search-item">
           <span>顾客姓名</span>
@@ -62,13 +62,13 @@
     </div>
     <!-- 更换标签 -->
     <el-tabs v-model="activeName" class="tabs-box">
-      <el-tab-pane :label="`修图队列（${retouchQueueCount}）`" name="retouch" />
-      <el-tab-pane :label="`修图中（${retouchCount}）`" name="retouching" />
-      <el-tab-pane :label="`审核队列（${reviewQueueCount}）`" name="review" />
-      <el-tab-pane :label="`审核中（${reviewCount}）`" name="reviewing" />
+      <el-tab-pane v-if="showRetouchStreamList" :label="`修图队列（${retouchQueueCount}）`" name="retouch" />
+      <el-tab-pane v-if="showRetouchStreamList" :label="`修图中（${retouchCount}）`" name="retouching" />
+      <el-tab-pane v-if="showReviewStreamList" :label="`审核队列（${reviewQueueCount}）`" name="review" />
+      <el-tab-pane v-if="showReviewStreamList" :label="`审核中（${reviewCount}）`" name="reviewing" />
     </el-tabs>
     <!-- 列表数据 -->
-    <div class="table-box" :class="{'no-border': activeName === 'retouch'}">
+    <div v-if="showRetouchStreamList || showReviewStreamList" class="table-box" :class="{'no-border': activeName === 'retouch'}">
       <!-- 搜索框 -->
       <div class="search-button search-box">
         <!-- 修图标准 -->
@@ -116,6 +116,7 @@ import FlowBoard from './components/FlowBoard'
 import WorkBoardTable from './components/WorkBoardTable'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
 import * as AdminManage from '@/api/adminManage'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'WorkBoard',
@@ -151,6 +152,12 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'showFlowInfo',
+      'showRetouchStreamList',
+      'showReviewStreamList',
+      'showStreamList'
+    ]),
     searchType () {
       const retouch = ['retouch', 'retouching']
       return retouch.includes(this.activeName) ? 'retouch' : 'check'
@@ -211,6 +218,8 @@ export default {
      * @description 获取列表数据
      */
     getList (page) {
+      // 权限判断
+      if (!this.showRetouchStreamList && !this.showReviewStreamList) return
       if (this.activeName === 'retouching' || this.activeName === 'reviewing') {
         this.getRetouchStreamList(page)
       } else {
