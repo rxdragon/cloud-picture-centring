@@ -10,8 +10,13 @@ export function getSupervisorOnDuty () {
     method: 'GET'
   }).then(msg => {
     // TODO 处理今日数据
-    console.log(msg)
-    return msg
+    const createData = {}
+    msg.forEach(item => {
+      const supervisorInfo = item.supervisor_info.map(infoItem => `${infoItem.id},${infoItem.name}`)
+      createData[item.day_of_week] = supervisorInfo
+    })
+    console.log(createData)
+    return createData
   })
 }
 

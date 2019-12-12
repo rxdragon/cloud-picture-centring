@@ -41,7 +41,7 @@ export default {
     const enumWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     const rules = {}
     enumWeek.forEach(key => {
-      rules[key] = [{ type: 'array', message: '请选择值班主管', required: true, trigger: 'change' }]
+      rules[key] = [{ type: 'array', message: '请选择值班主管', required: true, trigger: 'blur' }]
     })
     return {
       routeName: this.$route.name, // 路由名字
@@ -66,7 +66,6 @@ export default {
      */
     onSubmit () {
       this.$refs['form'].validate(async valid => {
-        console.log(valid, 'valid')
         if (valid) {
           const supervisorOnDutyData = []
           for (const key in this.submitData) {
@@ -83,7 +82,6 @@ export default {
               supervisorInfo
             })
           }
-          console.log(supervisorOnDutyData)
           const req = { supervisorOnDutyData }
           try {
             this.$store.dispatch('setting/showLoading', this.routeName)
@@ -103,12 +101,13 @@ export default {
     /**
      * @description 获取值班数据列表
      */
-    getSupervisorOnDuty () {
+    async getSupervisorOnDuty () {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = SupervisorOnDuty.getSupervisorOnDuty()
-        console.log(data)
-        // for (const key in this.submitData) { this.$set(this.submitData, key, data[key]) }
+        const data = await SupervisorOnDuty.getSupervisorOnDuty()
+        for (const key in this.submitData) {
+          this.$set(this.submitData, key, data[key])
+        }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
