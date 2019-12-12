@@ -45,7 +45,7 @@
           <i class="el-icon-error" />
         </span>
       </div>
-      <div v-if="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
+      <div v-show="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
         <el-upload
           ref="uploadButton"
           class="upload-crop-button"
@@ -164,7 +164,6 @@ export default {
             needUploadPhotos.push(photoItem.path)
           }
         })
-        console.log(needUploadPhotos)
         readFileArray = await AutoUpload.getFiles(this.streamNum, needUploadPhotos)
         if (!readFileArray.length) {
           this.$newMessage.warning('找不到相关图片')
