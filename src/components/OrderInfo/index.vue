@@ -4,25 +4,29 @@
       照片信息
     </div>
     <div class="table-info">
-      <div class="table-panel" :class="{'table-panel-rework': orderData.isRework}">
+      <div class="table-panel" :class="{'table-panel-rework': isRework}">
         <div class="caid">流水号</div>
         <div class="institution">机构</div>
         <div class="institution">摄影师</div>
         <div class="type">修图标准</div>
-        <div v-if="orderData.isRework" class="retoucher">修图师</div>
+        <div v-if="isRework" class="retoucher">修图师</div>
         <div class="product">拍摄产品</div>
         <div class="wait-time">顾客等待时间</div>
         <div class="photo-count">照片数量</div>
       </div>
-      <div class="table-panel table-panel-concent" :class="{'table-panel-rework': orderData.isRework}">
+      <div class="table-panel table-panel-concent" :class="{'table-panel-rework': isRework}">
         <div class="caid">
-          {{ orderData.streamNum }}
-          <el-tag v-if="orderData.streamState === 'review_return_retouch'" type="danger" size="small">审核退回</el-tag>
+          <div class="stream-state" :class="{'wrap': isRework}">
+            <div class="stream-num">{{ orderData.streamNum }}</div>
+            <el-tag v-if="orderData.isCheckReturn" size="mini" type="danger">审核退回</el-tag>
+            <!-- TODO 门店退回 -->
+            <el-tag v-if="orderData.isStoreReturn" size="mini" type="danger">门店退回</el-tag>
+          </div>
         </div>
         <div class="institution">{{ orderData.photographerName }}</div>
         <div class="institution">{{ orderData.photographer }}</div>
         <div class="type">{{ orderData.type | toRetouchClass }}</div>
-        <div v-if="orderData.isRework" class="retoucher">{{ orderData.retoucherName }}</div>
+        <div v-if="isRework" class="retoucher">{{ orderData.retoucherName }}</div>
         <div class="product">{{ orderData.productName }}</div>
         <div class="wait-time">{{ orderData.waitTime }}</div>
         <div class="photo-count">{{ orderData.photoNum }}</div>
@@ -70,6 +74,11 @@ export default {
   data () {
     return {}
   },
+  computed: {
+    isRework () {
+      return this.orderData.isCheckReturn || this.orderData.isStoreReturn
+    }
+  },
   mounted () {},
   methods: {}
 }
@@ -83,37 +92,6 @@ export default {
     border-radius: 4px;
     overflow: hidden;
     margin-top: 10px;
-  }
-
-  .table-panel {
-    display: grid;
-    grid-template-columns: 4fr 2fr 2fr 2fr 2fr 2fr 2fr;
-
-    & > div {
-      background-color: #fafafa;
-      font-size: 14px;
-      color: #303133;
-      text-align: left;
-      padding: 17px 20px;
-      box-sizing: border-box;
-    }
-  }
-
-  .table-panel-rework {
-    grid-template-columns: 4fr 2fr 2fr 2fr 2fr 2fr 3fr 2fr;
-  }
-
-  .table-panel-concent {
-    border-bottom: 1px solid #fafafa;
-    margin-bottom: 40px;
-
-    & > div {
-      background-color: #fff;
-    }
-  }
-
-  .panel-require {
-    padding: 10px 0;
   }
 
   .panel-require-concent {
@@ -150,6 +128,63 @@ export default {
         white-space: pre-wrap;
       }
     }
+  }
+
+  .table-panel {
+    display: grid;
+    grid-template-columns: 4fr 2fr 2fr 2fr 2fr 2fr 2fr;
+
+    .stream-state {
+      .el-tag:nth-last-of-type(1) {
+        margin-left: 12px;
+      }
+
+      .stream-num {
+        display: inline-block;
+      }
+
+      &.wrap {
+        .stream-num {
+          display: block;
+        }
+      }
+    }
+
+    & > div {
+      background-color: #fafafa;
+      font-size: 14px;
+      color: #303133;
+      text-align: left;
+      padding: 17px 20px;
+      box-sizing: border-box;
+    }
+  }
+
+  .table-panel-rework {
+    grid-template-columns: 4fr 2fr 2fr 2fr 2fr 2fr 3fr 2fr;
+
+    .stream-state {
+      .el-tag:nth-last-of-type(1) {
+        margin-left: 0;
+      }
+
+      .el-tag:nth-last-of-type(2) {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  .table-panel-concent {
+    border-bottom: 1px solid #fafafa;
+    margin-bottom: 40px;
+
+    & > div {
+      background-color: #fff;
+    }
+  }
+
+  .panel-require {
+    padding: 10px 0;
   }
 
   .panel-remark-concent {
