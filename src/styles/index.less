@@ -276,6 +276,27 @@ aside {
   background-color: #fff;
   margin-top: 24px;
 
+  .panel-title {
+    color: #303133;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    padding-left: 14px;
+    position: relative;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 2px;
+      height: 16px;
+      background-color: @blue;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
   .page-box {
     text-align: right;
 

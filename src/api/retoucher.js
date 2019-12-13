@@ -227,3 +227,31 @@ export function haveReworkStream () {
     return null
   })
 }
+
+/**
+ * @description 上线功能
+ * @param {*} params
+ */
+export function changeOnline () {
+  return axios({
+    url: '/project_cloud/retoucher/online',
+    method: 'PUT'
+  })
+}
+
+/**
+ * @description 下线功能
+ */
+export function changeOffline () {
+  return axios({
+    url: '/project_cloud/retoucher/offline',
+    method: 'PUT'
+  })
+}
+
+export function getOnlineState () {
+  return axios({
+    url: '/project_cloud/retoucher/getOnlineState',
+    method: 'GET'
+  })
+}

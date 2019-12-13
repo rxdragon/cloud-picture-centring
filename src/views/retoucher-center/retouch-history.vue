@@ -56,7 +56,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="retoucherNpsAvg" label="门店满意度" />
+        <el-table-column prop="retoucherNpsAvg" label="顾客满意度" />
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="linkto(scope.row.id)">详情</el-button>

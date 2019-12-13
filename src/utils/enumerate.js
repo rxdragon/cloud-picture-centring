@@ -18,8 +18,21 @@ export function StreamState () {
     review_return_retouch: '审核退回修图中',
     wait_review: '等待审核',
     reviewing: '审核中',
-    finish: '审核完成'
+    finish: '审核完成',
+    store_return_retouch: '门店退回',
+    hanging: '挂起中'
   }
+}
+
+export const StreamStateEnum = {
+  WaitRetouch: 'wait_retouch',
+  Retouching: 'retouching',
+  ReviewReturnRetouch: 'review_return_retouch',
+  WaitReview: 'wait_review',
+  Reviewing: 'reviewing',
+  Finish: 'finish',
+  StoreReturnRetouch: 'store_return_retouch',
+  Hanging: 'hanging'
 }
 
 // 照片状态

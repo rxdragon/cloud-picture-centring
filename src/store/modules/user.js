@@ -1,4 +1,5 @@
 import * as UserAction from '@/api/user'
+import * as Retoucher from '@/api/retoucher'
 import * as SessionTool from '@/utils/sessionTool.js'
 import store from '@/store'
 import router from '@/router'
@@ -98,6 +99,19 @@ const actions = {
   // 设置在线状态
   setUserlineState ({ commit }, state) {
     commit('SET_LINE_STATE', state)
+  },
+  // 获取在线状态
+  getRetoucherLineState ({ commit }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const state = await Retoucher.getOnlineState()
+        commit('SET_LINE_STATE', state)
+        resolve()
+      } catch (error) {
+        commit('SET_LINE_STATE', 'offline')
+        reject(error)
+      }
+    })
   }
 }
 

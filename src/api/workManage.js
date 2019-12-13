@@ -84,8 +84,8 @@ export function getRetoucherQuota (params) {
     msg.retoucherEvaluatedPlantRate = `${msg.retoucherEvaluatedPlantNum || 0} / ${transformPercentage(msg.retoucherEvaluatedPlantNum, evaluatedCount)}` // 抽查种草率
     msg.retoucherEvaluatedPullRate = `${msg.retoucherEvaluatedPullNum || 0} / ${transformPercentage(msg.retoucherEvaluatedPullNum, evaluatedCount)}` // 抽查拔草率
     msg.retoucherEvaluatedNoPlantNoPullRate = `${msg.retoucherEvaluatedNoPlantNoPullNum || 0} / ${transformPercentage(msg.retoucherEvaluatedNoPlantNoPullNum, evaluatedCount)}` // 直接通过率
-    const retoucherNpsCount = Number(msg.retoucherNpsCount) // nps总量
-    msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore, retoucherNpsCount) // 顾客满意度
+    const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
+    msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.score, retoucherNpsCount) // 顾客满意度
     msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) + '星' // 门店评分
     msg.retouchReworkRate = transformPercentage(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum) // 超时单量
@@ -179,6 +179,7 @@ export function getStoreEvaluate (params) {
     msg.list.forEach(listItem => {
       listItem.retoucherName = listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
       listItem.retouchGroupName = listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name || '-'
+      listItem.retoucherNpsAvg = listItem.stream.tags && listItem.stream.tags.values && listItem.stream.tags.values.retoucher_score || '-'
     })
     return msg
   })

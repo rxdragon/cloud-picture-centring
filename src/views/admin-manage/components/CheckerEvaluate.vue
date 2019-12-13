@@ -35,7 +35,7 @@
       <el-table-column prop="retoucherName" label="修图师" />
       <el-table-column prop="retouchGroupName" label="修图小组" />
       <el-table-column prop="store_evaluate_star" label="门店评分" />
-      <el-table-column prop="store_evaluate_star" label="顾客满意度" />
+      <el-table-column prop="retoucherNpsAvg" label="顾客满意度" />
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="linkto(scope.row.stream_id)">详情</el-button>

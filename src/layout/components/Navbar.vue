@@ -30,14 +30,14 @@
             <ul>
               <li class="online-li" @click="setOnline">
                 <div class="change-point" />
-                <span class="change-text" :class="{'active': isOnline}">在线</span>
+                <span class="change-text" :class="{'active': isOnline, 'disabled-li': loading}">在线</span>
                 <transition name="el-zoom-in-top">
                   <i v-show="isOnline" class="li-check el-icon-check" />
                 </transition>
               </li>
               <li class="offline-li" @click="setOffline">
                 <div class="change-point" />
-                <span class="change-text" :class="{'active': !isOnline}">离线</span>
+                <span class="change-text" :class="{'active': !isOnline, 'disabled-li': loading}">离线</span>
                 <transition name="el-zoom-in-top">
                   <i v-show="!isOnline" class="li-check el-icon-check" />
                 </transition>
@@ -61,6 +61,7 @@
 import DownloadManagement from '@/components/DownloadManagement'
 
 import * as User from '@/api/user.js'
+import * as Retoucher from '@/api/retoucher.js'
 import { throttle } from '@/utils/throttle.js'
 import { mapGetters } from 'vuex'
 export default {
@@ -70,7 +71,8 @@ export default {
     return {
       throttleRefresh: throttle(this.refresh, 1000),
       starTime: null,
-      deplay: 3000
+      deplay: 3000,
+      loading: false
     }
   },
   computed: {
@@ -134,10 +136,36 @@ export default {
      * @description 上线
      */
     setOnline () {
-      this.$store.dispatch('user/setUserlineState', 'online')
+      if (this.loading || this.isOnline) return
+      this.loading = true
+      Retoucher.changeOnline()
+        .then(() => {
+          this.$store.dispatch('user/setUserlineState', 'online')
+        })
+        .catch(err => {
+          this.$newMessage.error('上线失败')
+          console.error(err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
+    /**
+     * @description 下线
+     */
     setOffline () {
-      this.$store.dispatch('user/setUserlineState', 'offline')
+      if (this.loading || !this.isOnline) return
+      this.loading = true
+      Retoucher.changeOffline()
+        .then(() => {
+          this.$store.dispatch('user/setUserlineState', 'offline')
+        })
+        .catch(err => {
+          console.error(err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     /**
      * @description 退出登录
@@ -328,6 +356,11 @@ export default {
 
         &.active {
           color: @blue;
+        }
+
+        &.disabled-li {
+          color: #c1c0c0 !important;
+          cursor: progress;
         }
       }
 

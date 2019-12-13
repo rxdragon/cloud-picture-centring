@@ -96,6 +96,7 @@ const actions = {
       // 如果有修图权限 启动轮询
       if (newRolesArr.includes('WaitRetoucher')) {
         store.dispatch('notification/hasReturnNotification')
+        store.dispatch('user/getRetoucherLineState')
       }
       newRolesArr = [...new Set(newRolesArr)]
       // 调试

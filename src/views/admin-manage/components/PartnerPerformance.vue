@@ -14,127 +14,60 @@
       </div>
     </div>
     <div class="table-panel">
-      <list-table :listdata="listDataOne" />
-      <list-table :listdata="listDataTwo" />
-      <list-table :listdata="listDataThree" />
-      <list-table :listdata="listDataFour" />
+      <div class="retouch-order-statistics">
+        <div class="panel-title">
+          修图单量问题统计
+        </div>
+        <retouch-order-chart />
+      </div>
+      <div class="performance-statistics">
+        <div class="panel-title">
+          种拔草统计
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import DatePicker from '@/components/DatePicker'
-import ListTable from '@/components/ListTable'
 import StaffSelect from '@SelectBox/StaffSelect'
-import { joinTimeSpan } from '@/utils/timespan.js'
+import RetouchOrderChart from './chart-components/RetouchOrderChart'
+// TODO
+// import { joinTimeSpan } from '@/utils/timespan.js'
 import * as WorkManage from '@/api/workManage'
 
 export default {
   name: 'PartnerPerformance',
-  components: { DatePicker, ListTable, StaffSelect },
+  components: { DatePicker, StaffSelect, RetouchOrderChart },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间戳
-      staffIds: [], // 伙伴id
-      listDataOne: {
-        retouchSinglePhotoNum: {
-          label: '修图数量-单人(单位：张)',
-          value: '-'
-        },
-        retouchMultiPhotoNum: {
-          label: '修图数量-多人(单位：张)',
-          value: '-'
-        },
-        retoucherFinishStreamNum: {
-          label: '修图单量（单位：单）',
-          value: '-'
-        },
-        reviewPlantRate: {
-          label: '审核种草数 / 种草率',
-          value: '- / -'
-        },
-        reviewPullRate: {
-          label: '审核拔草数 / 拔草率',
-          value: '- / -'
-        }
-      },
-      listDataTwo: {
-        retoucherEvaluatedPlantRate: {
-          label: '抽查种草数 / 种草率',
-          value: '- / -'
-        },
-        retoucherEvaluatedPullRate: {
-          label: '抽查拔草数 / 拔草率',
-          value: '- / -'
-        },
-        retoucherEvaluatedNoPlantNoPullRate: {
-          label: '抽查通过数 / 通过率',
-          value: '- / -'
-        },
-        storeEvaluateScoreAvg: {
-          label: '门店评分（平均值）',
-          value: '-'
-        },
-        retoucherNpsAvg: {
-          label: '顾客满意度（平均值）',
-          value: '-'
-        }
-      },
-      listDataThree: {
-        exp: {
-          label: '海草值',
-          value: '-'
-        },
-        income: {
-          label: '收益',
-          value: '-'
-        },
-        overTimeStreamNum: {
-          label: '超时单量',
-          value: '-'
-        },
-        storeReturnStreamNum: {
-          label: '门店退单',
-          value: '-'
-        }
-      },
-      listDataFour: {
-        storeReturnPhotoNum: {
-          label: '门店退单照片 单位：张',
-          value: '-'
-        },
-        storeReturnStreamNumForQuality: {
-          label: '门店退单（非质量问题）',
-          value: '-'
-        },
-        storeReturnPhotoNumForQuality: {
-          label: '门店退单照片（非质量问题）单位：张',
-          value: '-'
-        },
-        storeReturnStreamNumForNotQuality: {
-          label: '门店退单（质量问题）',
-          value: '-'
-        },
-        storeReturnPhotoNumForNotQuality: {
-          label: '门店退单照片（非质量问题）单位：张',
-          value: '-'
-        }
-      }
+      staffIds: [] // 伙伴id
     }
+  },
+  created () {
+    // 调试
+    this.getRetoucherQuota()
   },
   methods: {
     /**
      * @description 获取参数
      */
     getParams () {
-      if (!this.timeSpan) {
-        this.$newMessage.warning('请填写时间')
-        return false
-      }
+      // if (!this.timeSpan) {
+      //   this.$newMessage.warning('请填写时间')
+      //   return false
+      // }
+      // const req = {
+      //   startAt: joinTimeSpan(this.timeSpan[0]),
+      //   endAt: joinTimeSpan(this.timeSpan[1], 1)
+      // }
+      // 调试
       const req = {
-        startAt: joinTimeSpan(this.timeSpan[0]),
-        endAt: joinTimeSpan(this.timeSpan[1], 1)
+        startAt: '2019-12-01 08:00:00',
+        endAt: '2019-12-08 08:00:00'
       }
       if (this.staffIds.length) { req.staffIds = this.staffIds }
       return req
@@ -148,11 +81,7 @@ export default {
         if (!req) return false
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await WorkManage.getRetoucherQuota(req)
-        for (const key in this.listDataOne) { this.listDataOne[key].value = data[key] }
-        for (const key in this.listDataTwo) {
-          this.listDataTwo[key].value = data[key]
-          if (key === 'income') { this.listDataTwo[key].value = '¥' + (this.listDataTwo[key].value).toFixed(2) }
-        }
+        console.log(data)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -186,7 +115,20 @@ export default {
   }
 
   .table-panel {
-    margin-top: 24px;
+    margin-top: 32px;
+    border-top: 1px solid #e8e8e8;
+    padding: 32px 0;
+    display: flex;
+    justify-content: space-between;
+
+    .retouch-order-statistics {
+      width: calc(~'50% - 11px');
+      border-right: 1px solid #ebeef5;
+    }
+
+    .performance-statistics {
+      width: calc(~'50% - 11px');
+    }
   }
 }
 </style>
