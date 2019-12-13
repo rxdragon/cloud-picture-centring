@@ -4,6 +4,7 @@
       :data="chartData"
       :extend="extend"
       :settings="chartSettings"
+      height="278px"
     />
   </div>
 </template>
@@ -11,11 +12,17 @@
 <script>
 export default {
   name: 'RetouchOrderChart',
+  props: {
+    chartDatas: { type: Object, default: () => {
+      return null
+    } }
+  },
   data () {
     this.extend = {
       legend: {
         data: ['单量', '张数'],
-        right: '0',
+        right: '27',
+        top: '0',
         selectedMode: 'single',
         selected: {
           '单量': false,
@@ -23,12 +30,14 @@ export default {
         },
         icon: 'circle'
       },
+      grid: { x: 0, x2: 27, y: 50, y2: 0 },
       series: {
         label: {
           show: true,
           position: 'top',
           color: '#4669FB'
         },
+        barWidth: 20,
         barCategoryGap: '80%',
         itemStyle: {
           barBorderRadius: [6, 6, 0, 0],
@@ -82,15 +91,38 @@ export default {
     return {
       chartData: {
         columns: ['name', 'orderCount', 'photoCount'],
-        rows: [
-          { 'name': '总单量', orderCount: 1393, photoCount: 12312 },
-          { 'name': '超时单量', orderCount: 3530, photoCount: 12312 },
-          { 'name': '门店退单', orderCount: 2923, photoCount: 12312 },
-          { 'name': '非质量问题门店退单', orderCount: 1723, photoCount: 12312 },
-          { 'name': '质量问题门店退单', orderCount: 3792, photoCount: 12312 }
-        ]
+        rows: []
       }
     }
+  },
+  created () {
+    this.chartData.rows = [
+      {
+        name: '总单量',
+        orderCount: this.chartDatas.retoucherFinishStreamNum,
+        photoCount: this.chartDatas.retoucherFinishPhotoNum
+      },
+      {
+        name: '超时单量',
+        orderCount: this.chartDatas.overTimeStreamNum,
+        photoCount: 0
+      },
+      {
+        name: '门店退单',
+        orderCount: this.chartDatas.storeReturnStreamNum,
+        photoCount: this.chartDatas.storeReturnPhotoNum
+      },
+      {
+        name: '非质量问题门店退单',
+        orderCount: this.chartDatas.storeReturnStreamNumForQuality,
+        photoCount: this.chartDatas.storeReturnPhotoNumForQuality
+      },
+      {
+        name: '质量问题门店退单',
+        orderCount: this.chartDatas.storeReturnStreamNumForNotQuality,
+        photoCount: this.chartDatas.storeReturnPhotoNumForNotQuality
+      }
+    ]
   }
 }
 </script>

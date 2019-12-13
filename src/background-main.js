@@ -22,7 +22,7 @@ async function createWindow () {
     height: 800,
     show: false,
     minWidth: 1440,
-    minHeight: 800,
+    minHeight: 900,
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInSubFrames: false,
