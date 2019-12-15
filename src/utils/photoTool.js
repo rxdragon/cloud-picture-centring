@@ -2,6 +2,7 @@ import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumer
 import md5 from 'md5'
 import store from '@/store' // vuex
 import * as SessionTool from '@/utils/sessionTool.js'
+const fileType = require('file-type')
 
 /**
  * @description 截取文件名
@@ -46,6 +47,7 @@ export function settlePhoto (photoArr, reworkTimes = 0) {
   const PhotoEnumArr = [NoReturnPhotoEnum, ReturnOnePhotoEnum, PhotoEnum]
   const createData = []
   const PhotoEnums = reworkTimes < 2 ? PhotoEnumArr[reworkTimes] : PhotoEnumArr[2]
+  // TODO 合并门店退回版本信息
   for (const key in PhotoEnums) {
     const version = PhotoEnums[key]
     const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
@@ -102,7 +104,9 @@ export function getImgBufferPhoto (file) {
     const reader = new FileReader()
     reader.onload = function (evt) {
       const imgBuffer = Buffer.from(evt.target.result)
-      resolve(md5(imgBuffer))
+      const uploadPhotoMd5 = md5(imgBuffer)
+      const type = fileType(imgBuffer).mime
+      resolve({ uploadPhotoMd5, type })
     }
     reader.onerror = function (error) {
       reject(error)

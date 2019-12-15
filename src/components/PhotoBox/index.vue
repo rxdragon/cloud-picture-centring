@@ -15,11 +15,11 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
-    <div v-if="showRecedeReason" class="recede-reason">
-      门店退回原因： <span class="reason-content">aaksndkasndkasnddasdasmdkmska</span>
+    <div v-if="storeReworkReason" class="recede-reason">
+      门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
     </div>
-    <div v-if="showRecedeReason" class="recede-reason">
-      门店退回备注： <span class="reason-content">门店退回备注：门店退回备注：门店退回备注：门店退回备注：门店退回备注：</span>
+    <div v-if="storeReworkNote" class="recede-reason">
+      门店退回备注： <span class="reason-content">{{ storeReworkNote }}</span>
     </div>
     <div v-if="recedeReason" class="recede-reason">
       审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
@@ -72,6 +72,20 @@ export default {
     recedeReason () {
       if (this.showRecedeReason && this.tags && this.tags.values && this.tags.values.rework_reason) {
         return this.tags.values.rework_reason
+      } else {
+        return ''
+      }
+    },
+    storeReworkReason () {
+      if (this.showRecedeReason && this.tags && this.tags.values && this.tags.values.store_rework_reason) {
+        return this.tags.values.store_rework_reason
+      } else {
+        return ''
+      }
+    },
+    storeReworkNote () {
+      if (this.showRecedeReason && this.tags && this.tags.values && this.tags.values.store_rework_note) {
+        return this.tags.values.store_rework_note
       } else {
         return ''
       }

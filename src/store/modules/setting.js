@@ -5,7 +5,7 @@ const state = {
   loadRoutes: [],
   showCat: false,
   showOverTag: false,
-  autoUpload: false,
+  autoUpload: true,
   savePath: ''
 }
 

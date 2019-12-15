@@ -1,9 +1,11 @@
 import mime from 'mime'
 import store from '@/store'
 import md5 from 'md5'
+import Vue from 'vue'
 import * as originalFs from 'original-fs'
 import * as mPath from '@/utils/selfPath.js'
 import { newMessage } from '@/utils/message.js'
+const fileType = require('file-type')
 
 /**
  * @description 获取文件
@@ -15,18 +17,24 @@ export function getFiles (streamNum, needUploadPhotos) {
       const downloadPath = store.getters.saveFolder // 保存地址
       const readfilePath = mPath.joinPath(downloadPath, streamNum) // 文件地址
       const readFileArray = []
-      needUploadPhotos.forEach(async fileNameItem => {
+      for (const fileNameItem of needUploadPhotos) {
         const filePath = mPath.joinPath(readfilePath, fileNameItem)
         const fileBuffer = await originalFs.readFileSync(filePath)
-        const newFile = new window.File([fileBuffer], fileNameItem, { type: getFileMime(fileNameItem) })
+        const { mime, ext } = fileType(fileBuffer)
+        const fileExt = mPath.getExtName(fileNameItem)
+        if (fileExt !== `.${ext}`) {
+          Vue.prototype.$newMessage.error(`${fileNameItem}格式为${ext}`)
+          reject('格式错误')
+        }
+        const newFile = new window.File([fileBuffer], fileNameItem, { type: mime })
         readFileArray.push(newFile)
-      })
+      }
       resolve(readFileArray)
     } catch (error) {
       if (error.message.includes('no such file or directory')) {
         newMessage.error('找不到路径')
       }
-      console.error(error)
+      reject(error)
     }
   })
 }
