@@ -60,16 +60,19 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item class="primary-color" @click.native="linkto(scope.row)">流水详情</el-dropdown-item>
                 <el-dropdown-item
-                  v-if="!scope.row.staticsUrgent &&
-                    scope.row.state !== 'reviewing' &&
-                    scope.row.state !== 'finish' &&
-                    showUrgentStream"
+                  v-if="canUrgent(scope.row)"
                   class="danger-color"
                   @click.native="urgentStream(scope.row.id)"
                 >
                   流水加急
                 </el-dropdown-item>
-                <el-dropdown-item class="warning-color">直接审核</el-dropdown-item>
+                <el-dropdown-item
+                  v-if="canManualReview(scope.row)"
+                  class="warning-color"
+                  @click.native="manualReview(scope.row.id)"
+                >
+                  直接审核
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -81,6 +84,7 @@
 
 <script>
 import * as AdminManage from '@/api/adminManage'
+import { StreamStateEnum } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -92,13 +96,29 @@ export default {
   },
   data () {
     return {
-      routeName: this.$route.name // 路由名字
+      routeName: this.$route.name, // 路由名字
+      StreamStateEnum
     }
   },
   computed: {
     ...mapGetters(['showUrgentStream'])
   },
   methods: {
+    /**
+     * @description 是够可以加急
+     */
+    canUrgent (item) {
+      const urgentState = ['reviewing', 'finish']
+      return this.showUrgentStream && !item.staticsUrgent && !urgentState.includes(item.state)
+    },
+    /**
+     * @description 是否可以直接审核
+     */
+    canManualReview (item) {
+      const manualReviewState = ['wait_review']
+      // TODO 直接审核的权限
+      return manualReviewState.includes(item.state)
+    },
     /**
      * @description 加急流水
      */
@@ -121,7 +141,6 @@ export default {
      * @description 跳转
      */
     linkto (item) {
-      console.log(item)
       const streamId = item.id
       const workBoardStreamNum = item.stream_num
       if (item.state === 'finish') {
@@ -135,6 +154,23 @@ export default {
           query: { workBoardStreamNum }
         })
       }
+    },
+    /**
+     * @description 直接审核
+     */
+    manualReview (streamId) {
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      const req = { streamId }
+      AdminManage.manualReview(req)
+        .then(() => {
+          this.$router.push({ path: '/audit-center' })
+        })
+        .catch(err => {
+          console.error(err)
+        })
+        .finally(() => {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        })
     }
   }
 }

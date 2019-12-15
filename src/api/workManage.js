@@ -78,22 +78,22 @@ export function getRetoucherQuota (params) {
     msg.retouchMultiPhotoNum = Number(msg.retouchMultiPhotoNum) // 多人修图张数
     msg.income = Number(msg.income.impulse) + Number(msg.income.retouch) + Number(msg.income.reward)// 收益
     const reviewCount = Number(msg.retoucherFinishPhotoNum) // 修图张数
-    msg.reviewPlantRate = `${msg.reviewPlant} / ${transformPercentage(msg.reviewPlant, reviewCount)}` // 审核种草数量
-    msg.reviewPullRate = `${msg.reviewPull} / ${transformPercentage(msg.reviewPull, reviewCount)}` // 审核拔草数量
+    msg.reviewPlantRate = getAvg(msg.reviewPlant, reviewCount) // 审核种草数量
+    msg.reviewPullRate = getAvg(msg.reviewPull, reviewCount) // 审核拔草数量
     const evaluatedCount = Number(msg.retoucherEvaluatedNum) // 抽查总数
-    msg.retoucherEvaluatedPlantRate = `${msg.retoucherEvaluatedPlantNum || 0} / ${transformPercentage(msg.retoucherEvaluatedPlantNum, evaluatedCount)}` // 抽查种草率
-    msg.retoucherEvaluatedPullRate = `${msg.retoucherEvaluatedPullNum || 0} / ${transformPercentage(msg.retoucherEvaluatedPullNum, evaluatedCount)}` // 抽查拔草率
-    msg.retoucherEvaluatedNoPlantNoPullRate = `${msg.retoucherEvaluatedNoPlantNoPullNum || 0} / ${transformPercentage(msg.retoucherEvaluatedNoPlantNoPullNum, evaluatedCount)}` // 直接通过率
+    msg.retoucherEvaluatedPlantRate = getAvg(msg.retoucherEvaluatedPlantNum, evaluatedCount) // 抽查种草率
+    msg.retoucherEvaluatedPullRate = getAvg(msg.retoucherEvaluatedPullNum, evaluatedCount) // 抽查拔草率
+    msg.retoucherEvaluatedNoPlantNoPullRate = getAvg(msg.retoucherEvaluatedNoPlantNoPullNum, evaluatedCount) // 直接通过率
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
     msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.score, retoucherNpsCount) // 顾客满意度
     msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) + '星' // 门店评分
-    msg.retouchReworkRate = transformPercentage(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
-    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum) // 超时单量
-    msg.storeReturnStreamNum = parseInt(msg.storeReturnStreamNum) // 门店退单
-    msg.storeReturnStreamNumForQuality = parseInt(msg.storeReturnStreamNumForQuality) // 门店退单（非质量问题）
-    msg.storeReturnPhotoNumForQuality = parseInt(msg.storeReturnPhotoNumForQuality) // 门店退单（非质量问题）张数
-    msg.storeReturnStreamNumForNotQuality = parseInt(msg.storeReturnStreamNumForNotQuality) // 门店退单（质量问题）
-    msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality) // 门店退单（质量问题）张数
+    msg.retouchReworkRate = getAvg(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
+    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
+    msg.storeReturnStreamNum = parseInt(msg.storeReturnStreamNum || 0) // 门店退单
+    msg.storeReturnStreamNumForQuality = parseInt(msg.storeReturnStreamNumForQuality || 0) // 门店退单（非质量问题）
+    msg.storeReturnPhotoNumForQuality = parseInt(msg.storeReturnPhotoNumForQuality || 0) // 门店退单（非质量问题）张数
+    msg.storeReturnStreamNumForNotQuality = parseInt(msg.storeReturnStreamNumForNotQuality || 0) // 门店退单（质量问题）
+    msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
     return msg
   })
 }

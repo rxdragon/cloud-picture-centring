@@ -223,8 +223,18 @@ export function haveReworkStream () {
     url: '/project_cloud/retoucher/haveReworkStream',
     method: 'GET'
   }).then(msg => {
-    if (msg.length) return msg[0]
-    return null
+    if (!Object.values(msg).length) return []
+    const returnType = ['review_return_retouch', 'store_return_retouch']
+    let createData = []
+    returnType.forEach(type => {
+      if (msg[type]) {
+        const data = msg[type].map(returnMsg => {
+          return { streamId: returnMsg, type }
+        })
+        createData = [...createData, ...data]
+      }
+    })
+    return createData
   })
 }
 

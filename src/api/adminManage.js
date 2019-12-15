@@ -204,3 +204,15 @@ export function getStreamInfo (params) {
     return createData
   })
 }
+
+/**
+ * @description 直接审核
+ * @param {*} params
+ */
+export function manualReview (params) {
+  return axios({
+    url: '/project_cloud/operator/manualReview',
+    method: 'POST',
+    data: params
+  })
+}

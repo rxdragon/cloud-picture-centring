@@ -41,8 +41,8 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import RetouchOrderChart from './chart-components/RetouchOrderChart'
 import PerformanceChart from './chart-components/PerformanceChart'
 import CountTo from '@/components/CountTo'
-// TODO
-// import { joinTimeSpan } from '@/utils/timespan.js'
+import moment from 'moment'
+import { joinTimeSpan } from '@/utils/timespan.js'
 import * as WorkManage from '@/api/workManage'
 
 export default {
@@ -85,7 +85,8 @@ export default {
     }
   },
   created () {
-    // 调试
+    const nowAt = moment().locale('zh-cn').format('YYYY-MM-DD')
+    this.timeSpan = [nowAt, nowAt]
     this.getRetoucherQuota()
   },
   methods: {
@@ -93,18 +94,13 @@ export default {
      * @description 获取参数
      */
     getParams () {
-      // if (!this.timeSpan) {
-      //   this.$newMessage.warning('请填写时间')
-      //   return false
-      // }
-      // const req = {
-      //   startAt: joinTimeSpan(this.timeSpan[0]),
-      //   endAt: joinTimeSpan(this.timeSpan[1], 1)
-      // }
-      // 调试
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请填写时间')
+        return false
+      }
       const req = {
-        startAt: '2019-12-01 08:00:00',
-        endAt: '2019-12-08 08:00:00'
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
       if (this.staffIds.length) { req.staffIds = this.staffIds }
       return req
@@ -118,7 +114,11 @@ export default {
         if (!req) return false
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await WorkManage.getRetoucherQuota(req)
-        console.log(data)
+        for (const key in data) {
+          if (this.otherData[key]) { this.otherData[key].value = data[key] }
+          if (this.orderStatisticsData[key]) { this.orderStatisticsData[key].value = data[key] }
+          if (this.performanceData[key]) { this.performanceData[key].value = data[key] }
+        }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

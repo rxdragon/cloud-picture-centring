@@ -66,10 +66,9 @@ import DatePicker from '@/components/DatePicker'
 import GradeBox from './components/GradeBox'
 import StaffSelect from '@SelectBox/StaffSelect'
 import ReviewerSelect from '@SelectBox/ReviewerSelect'
-import { SearchType } from '@/utils/enumerate'
-
-import * as AssessmentCenter from '@/api/assessmentCenter'
 import moment from 'moment'
+import * as AssessmentCenter from '@/api/assessmentCenter'
+import { SearchType } from '@/utils/enumerate'
 import { joinTimeSpan } from '@/utils/timespan.js'
 export default {
   name: 'AssessmentHistory',

@@ -88,7 +88,6 @@ export default {
         const data = await Commonality.getStreamInfo(req)
         this.orderData = data.orderData
         this.photos = data.photos
-        console.log(data.storeEvaluateStream)
         this.storeEvaluateStream = data.storeEvaluateStream
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
@@ -104,7 +103,6 @@ export default {
         const req = { streamNum: this.streamId }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AdminManage.getStreamInfo(req)
-        console.log(data)
         this.orderData = data.orderData
         this.photos = data.photos
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

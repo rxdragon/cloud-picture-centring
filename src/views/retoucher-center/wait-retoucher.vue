@@ -283,7 +283,7 @@ export default {
       const nowTime = new Date().getTime()
       // TODO 更改轮询时间
       const checkInterval = 30 * 1000
-      const confirmationCheckInterval = 30 * 1000
+      const confirmationCheckInterval = 5 * 1000
       if (!this.nextCheckOnlineTime) {
         this.nextCheckOnlineTime = nowTime + checkInterval
         window.polling.getQueue = setTimeout(() => {
@@ -294,7 +294,6 @@ export default {
           clearTimeout(window.polling.getQueue)
           window.polling.getQueue = null
           window.polling.checkOnline = setTimeout(() => {
-            console.log(1231232)
             Retoucher.changeOffline()
               .then(() => {
                 this.$store.dispatch('user/setUserlineState', 'offline')
@@ -372,6 +371,7 @@ export default {
     initializeData () {
       this.$store.dispatch('setting/showLoading', this.routeName)
       this.aid = ''
+      this.nextCheckOnlineTime = null
       Promise.all([
         this.getSelfQuota(),
         this.getSelfBuffInfo(),

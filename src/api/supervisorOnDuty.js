@@ -15,7 +15,6 @@ export function getSupervisorOnDuty () {
       const supervisorInfo = item.supervisor_info.map(infoItem => `${infoItem.id},${infoItem.name}`)
       createData[item.day_of_week] = supervisorInfo
     })
-    console.log(createData)
     return createData
   })
 }
