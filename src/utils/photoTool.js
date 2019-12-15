@@ -1,4 +1,4 @@
-import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
+import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } from '@/utils/enumerate.js'
 import md5 from 'md5'
 import store from '@/store' // vuex
 import * as SessionTool from '@/utils/sessionTool.js'
@@ -43,13 +43,17 @@ export function handlePicPath (path, type) {
  * @param {*} photoArr
  * @param {*} reworkTimes 重修次数
  */
-export function settlePhoto (photoArr, reworkTimes = 0) {
+export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
   const PhotoEnumArr = [NoReturnPhotoEnum, ReturnOnePhotoEnum, PhotoEnum]
   const createData = []
-  const PhotoEnums = reworkTimes < 2 ? PhotoEnumArr[reworkTimes] : PhotoEnumArr[2]
-  // TODO 合并门店退回版本信息
-  for (const key in PhotoEnums) {
-    const version = PhotoEnums[key]
+  const PhotoEnums = reworkTimes < 2 ? [...PhotoEnumArr[reworkTimes]] : [...PhotoEnumArr[2]]
+  if (storeReturn) {
+    const findCompeteIndex = PhotoEnums.findIndex(item => item === 'complete_photo')
+    if (findCompeteIndex) {
+      PhotoEnums.splice(findCompeteIndex + 1, 0, ...StoreReturnPhoto)
+    }
+  }
+  for (const version of PhotoEnums) {
     const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
     if (findVersionPhoto) { createData.push(findVersionPhoto) }
   }

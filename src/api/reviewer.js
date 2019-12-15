@@ -29,6 +29,7 @@ export function getReviewInfo () {
       photoItem.isRework = false
       if (photoItem.tags && photoItem.tags.statics) {
         photoItem.isRework = photoItem.tags.statics.includes('return_photo')
+        photoItem.isStoreRework = photoItem.tags.statics.includes('store_rework')
         photoItem.canGlass = !photoItem.tags.statics.includes('plant') &&
           !photoItem.tags.statics.includes('pull') &&
           !photoItem.isRework

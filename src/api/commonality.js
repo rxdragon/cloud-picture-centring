@@ -44,6 +44,7 @@ export function getStreamInfo (params) {
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
       const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
+      const isStoreReturn = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('store_rework')
       if (photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('plant')) {
         photoItem.grass = 'plant'
         plantNum++
@@ -65,8 +66,8 @@ export function getStreamInfo (params) {
         photoItem.photoVersion = ''
       } else {
         photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
-          ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum)
-          : settlePhoto([...photoItem.other_photo_version], reworkNum)
+          ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum, isStoreReturn)
+          : settlePhoto([...photoItem.other_photo_version], reworkNum, isStoreReturn)
       }
     })
     data.photos = data.photos.filter(photoItem => Boolean(photoItem.photoVersion))
