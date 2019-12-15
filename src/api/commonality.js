@@ -61,6 +61,7 @@ export function getStreamInfo (params) {
       photoItem.reworkNum = reworkNum
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
+        // 过滤看片师新增照片
         photoItem.photoVersion = ''
       } else {
         photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
@@ -87,11 +88,14 @@ export function getStreamInfo (params) {
       retouchRemark: data.note.retouch_note || '暂无修图备注',
       reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注'
     }
+
     createData.photos = data.photos
     if (data.storeEvaluateStream) {
       data.storeEvaluateStream.store_evaluate_star = data.storeEvaluateStream.store_evaluate_star > 5 ? 5 : data.storeEvaluateStream.store_evaluate_star
     }
     createData.storeEvaluateStream = data.storeEvaluateStream
+    // TODO nps评分
+    createData.retoucherNpsAvg = '超满意（10分）'
     return createData
   })
 }

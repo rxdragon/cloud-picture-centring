@@ -18,7 +18,9 @@
       </span>
       <div class="nav-right">
         <download-management />
+        <!-- 修图师在线功能 -->
         <el-popover
+          v-if="isRetoucher"
           placement="bottom-start"
           width="200"
           popper-class="change-popover"
@@ -28,14 +30,14 @@
             <ul>
               <li class="online-li" @click="setOnline">
                 <div class="change-point" />
-                <span class="change-text" :class="{'active': isOnline}">在线</span>
+                <span class="change-text" :class="{'active': isOnline, 'disabled-li': loading}">在线</span>
                 <transition name="el-zoom-in-top">
                   <i v-show="isOnline" class="li-check el-icon-check" />
                 </transition>
               </li>
               <li class="offline-li" @click="setOffline">
                 <div class="change-point" />
-                <span class="change-text" :class="{'active': !isOnline}">离线</span>
+                <span class="change-text" :class="{'active': !isOnline, 'disabled-li': loading}">离线</span>
                 <transition name="el-zoom-in-top">
                   <i v-show="!isOnline" class="li-check el-icon-check" />
                 </transition>
@@ -44,7 +46,9 @@
           </div>
           <el-avatar slot="reference" class="online-point" :class="isOnline ? 'online' : 'offline'" :src="userInfo.avatarImg" />
         </el-popover>
-        <div class="online-state" :class="{ 'online': isOnline }">{{ isOnline ? '[在线]' : '[离线]' }}</div>
+        <div v-if="isRetoucher" class="online-state" :class="{ 'online': isOnline }">{{ isOnline ? '[在线]' : '[离线]' }}</div>
+        <!-- 非修图师 -->
+        <el-avatar v-if="!isRetoucher" slot="reference" :src="userInfo.avatarImg" />
         <div class="user-name">{{ userInfo.nickname || userInfo.name }}</div>
         <div class="label">{{ userInfo.departmentName }}</div>
         <el-button class="icon-button" icon="iconfont iconlogin-out" @click="logout" />
@@ -57,6 +61,7 @@
 import DownloadManagement from '@/components/DownloadManagement'
 
 import * as User from '@/api/user.js'
+import * as Retoucher from '@/api/retoucher.js'
 import { throttle } from '@/utils/throttle.js'
 import { mapGetters } from 'vuex'
 export default {
@@ -66,11 +71,12 @@ export default {
     return {
       throttleRefresh: throttle(this.refresh, 1000),
       starTime: null,
-      deplay: 3000
+      deplay: 3000,
+      loading: false
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'lineState']),
+    ...mapGetters(['userInfo', 'lineState', 'isRetoucher']),
     isOnline () {
       return this.lineState === 'online'
     }
@@ -130,10 +136,36 @@ export default {
      * @description 上线
      */
     setOnline () {
-      this.$store.dispatch('user/setUserlineState', 'online')
+      if (this.loading || this.isOnline) return
+      this.loading = true
+      Retoucher.changeOnline()
+        .then(() => {
+          this.$store.dispatch('user/setUserlineState', 'online')
+        })
+        .catch(err => {
+          this.$newMessage.error('上线失败')
+          console.error(err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
+    /**
+     * @description 下线
+     */
     setOffline () {
-      this.$store.dispatch('user/setUserlineState', 'offline')
+      if (this.loading || !this.isOnline) return
+      this.loading = true
+      Retoucher.changeOffline()
+        .then(() => {
+          this.$store.dispatch('user/setUserlineState', 'offline')
+        })
+        .catch(err => {
+          console.error(err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     /**
      * @description 退出登录
@@ -181,10 +213,6 @@ export default {
       align-items: center;
       -webkit-user-select: none;
 
-      .change-popover {
-        outline: none;
-      }
-
       .download-management {
         margin-right: 20px;
       }
@@ -195,6 +223,7 @@ export default {
         border: 1px solid #fff;
         margin-right: 6px;
         cursor: pointer;
+        outline: none;
       }
 
       .online-point {
@@ -327,6 +356,11 @@ export default {
 
         &.active {
           color: @blue;
+        }
+
+        &.disabled-li {
+          color: #c1c0c0 !important;
+          cursor: progress;
         }
       }
 

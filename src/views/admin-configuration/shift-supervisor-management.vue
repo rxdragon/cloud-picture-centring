@@ -4,16 +4,9 @@
       <h3>值班主管配置</h3>
     </div>
     <div class="module-panel">
-      <el-form ref="form" :model="submitData" label-width="80px">
-        <el-form-item v-for="i in 7" :key="i + 'asd'" label="周一">
-          <el-select v-model="submitData.value" multiple placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+      <el-form ref="form" :model="submitData" :rules="rules" label-width="50px" label-position="right">
+        <el-form-item v-for="(item, key) in submitData" :key="key" :label="key | filterWeek" :prop="key">
+          <supervisor-on-duty-select v-model="submitData[key]" clearable multiple />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">提交配置</el-button>
@@ -24,33 +17,102 @@
 </template>
 
 <script>
+import SupervisorOnDutySelect from '@SelectBox/SupervisorOnDutySelect'
+import * as SupervisorOnDuty from '@/api/supervisorOnDuty'
+
 export default {
   name: 'ShiftSupervisorManagement',
-  data () {
-    return {
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      submitData: {
-        value: []
+  components: { SupervisorOnDutySelect },
+  filters: {
+    filterWeek (week) {
+      const weekName = {
+        monday: '周一',
+        tuesday: '周二',
+        wednesday: '周三',
+        thursday: '周四',
+        friday: '周五',
+        saturday: '周六',
+        sunday: '周日'
       }
+      return weekName[week]
     }
   },
+  data () {
+    const enumWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    const rules = {}
+    enumWeek.forEach(key => {
+      rules[key] = [{ type: 'array', message: '请选择值班主管', required: true, trigger: 'blur' }]
+    })
+    return {
+      routeName: this.$route.name, // 路由名字
+      submitData: {
+        monday: [],
+        tuesday: [],
+        wednesday: [],
+        thursday: [],
+        friday: [],
+        saturday: [],
+        sunday: []
+      },
+      rules
+    }
+  },
+  created () {
+    this.getSupervisorOnDuty()
+  },
   methods: {
+    /**
+     * @description 提交修改接口
+     */
     onSubmit () {
+      this.$refs['form'].validate(async valid => {
+        if (valid) {
+          const supervisorOnDutyData = []
+          for (const key in this.submitData) {
+            const weekItem = this.submitData[key]
+            const supervisorInfo = weekItem.map(item => {
+              const itemArr = item.split(',')
+              return {
+                id: Number(itemArr[0]),
+                name: itemArr[1]
+              }
+            })
+            supervisorOnDutyData.push({
+              dayOfWeek: key,
+              supervisorInfo
+            })
+          }
+          const req = { supervisorOnDutyData }
+          try {
+            this.$store.dispatch('setting/showLoading', this.routeName)
+            await SupervisorOnDuty.setSupervisorOnDuty(req)
+            this.$newMessage.success('修改成功')
+            this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          } catch (error) {
+            this.$store.dispatch('setting/hiddenLoading', this.routeName)
+            console.error(error)
+          }
+        } else {
+          this.$newMessage.warning('请选择值班主管')
+          return false
+        }
+      })
+    },
+    /**
+     * @description 获取值班数据列表
+     */
+    async getSupervisorOnDuty () {
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const data = await SupervisorOnDuty.getSupervisorOnDuty()
+        for (const key in this.submitData) {
+          this.$set(this.submitData, key, data[key])
+        }
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        console.error(error)
+      }
     }
   }
 }
@@ -58,8 +120,8 @@ export default {
 
 <style lang="less" scoped>
 .ShiftSupervisorManagement {
-  .el-select {
-    width: 360px;
+  .supervisor-onDuty-select {
+    width: 390px;
   }
 }
 </style>

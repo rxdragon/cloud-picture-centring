@@ -7,9 +7,9 @@
           <h3>我的待修订单</h3>
           <div class="header-left">
             <span v-if="state !== 2" class="queue-info queue-length">修图排队中流水：{{ queueInfo.waitRetouchStream }}</span>
-            <span v-if="state === 2" class="queue-info">排队接单中（顺序{{ queueInfo.retouchQueueIndex }}）</span>
-            <el-button v-if="state === 1 || state === 3" type="primary" :disabled="state === 3 || Boolean(retouchingListNum)" @click="joinQueue">接单</el-button>
-            <el-button v-if="state === 2" type="info" @click="exitQueue">取消排队</el-button>
+            <span v-else class="queue-info">排队接单中（顺序{{ queueInfo.retouchQueueIndex }}）</span>
+            <el-button v-if="state !== 2" type="primary" :disabled="disabledJoinQueue" @click="joinQueue">接单</el-button>
+            <el-button v-else type="info" @click="exitQueue">取消排队</el-button>
           </div>
         </div>
         <!-- 今日信息 -->
@@ -73,7 +73,7 @@
             <div class="box-left">
               <div class="title">今日获得收益</div>
               <div class="data-info">
-                <div class="num money-num">
+                <div class="num money-num" :class="{ 'no-income': isNoIncome }">
                   <span class="symbol money-color">¥</span>
                   <span class="actual-num money-color">
                     <count-to show-point :end-value="quotaInfo.todayIncome" />
@@ -121,6 +121,7 @@ import RetouchOrder from './components/RetouchOrder'
 import TakeOrdersList from './components/TakeOrdersList'
 import HangUpList from './components/HangUpList'
 import CountTo from '@/components/CountTo'
+import { mapGetters } from 'vuex'
 
 import * as SessionTool from '@/utils/sessionTool'
 import * as Retoucher from '@/api/retoucher.js'
@@ -157,16 +158,25 @@ export default {
         greenChannelStatus: false // 绿色通道
       },
       aid: '', // 订单id
-      hasInitialization: false // 是否有初始化数据
+      hasInitialization: false, // 是否有初始化数据
+      nextCheckOnlineTime: null
     }
   },
   computed: {
+    ...mapGetters(['lineState']),
     // 排队状态
     state () {
-      // 1 未接单  2 排队接单 3 接单中
+      // 1 未接单  2 排队 3 接单中
       if (this.queueInfo.inQueue) return 2
       if (this.retouchingListNum) return 3
       return 1
+    },
+    // 禁止接单
+    disabledJoinQueue () {
+      return this.state === 3 || Boolean(this.retouchingListNum) || this.lineState === 'offline'
+    },
+    isNoIncome () {
+      return Number(this.quotaInfo.todayIncome) === 0
     }
   },
   watch: {
@@ -263,9 +273,57 @@ export default {
         })
       }
       if (this.queueInfo.inQueue) {
+        this.checkOnlineTime()
+      }
+    },
+    /**
+     * @description 确认是否在线功能
+     */
+    checkOnlineTime () {
+      const nowTime = new Date().getTime()
+      // TODO 更改轮询时间
+      const checkInterval = 30 * 1000
+      const confirmationCheckInterval = 5 * 1000
+      if (!this.nextCheckOnlineTime) {
+        this.nextCheckOnlineTime = nowTime + checkInterval
         window.polling.getQueue = setTimeout(() => {
           this.getStreamQueueInfo()
         }, 3000)
+      } else {
+        if (nowTime >= this.nextCheckOnlineTime) {
+          clearTimeout(window.polling.getQueue)
+          window.polling.getQueue = null
+          window.polling.checkOnline = setTimeout(() => {
+            Retoucher.changeOffline()
+              .then(() => {
+                this.$store.dispatch('user/setUserlineState', 'offline')
+                this.$msgbox.close()
+                this.initializeData()
+              })
+              .catch(err => {
+                console.error(err)
+              })
+          }, confirmationCheckInterval)
+          this.$confirm('3分钟内未操作此弹窗将更换为离线模式', '您已长时间未操作系统是否仍要保持在线状态', {
+            confirmButtonText: '确定',
+            center: true,
+            type: 'warning',
+            customClass: 'check-online',
+            showCancelButton: false,
+            closeOnPressEscape: false,
+            showClose: false,
+            closeOnClickModal: false
+          }).then(() => {
+            window.polling.checkOnline = null
+            clearTimeout(window.polling.checkOnline)
+            this.nextCheckOnlineTime = null
+            this.getStreamQueueInfo()
+          })
+        } else {
+          window.polling.getQueue = setTimeout(() => {
+            this.getStreamQueueInfo()
+          }, 3000)
+        }
       }
     },
     /**
@@ -313,6 +371,7 @@ export default {
     initializeData () {
       this.$store.dispatch('setting/showLoading', this.routeName)
       this.aid = ''
+      this.nextCheckOnlineTime = null
       Promise.all([
         this.getSelfQuota(),
         this.getSelfBuffInfo(),
@@ -414,6 +473,12 @@ export default {
           margin-right: 12px;
         }
 
+        .no-income {
+          .money-color {
+            color: #909399 !important;
+          }
+        }
+
         .prop-icon-box {
           display: flex;
 
@@ -488,6 +553,14 @@ export default {
 .order-list {
   .el-tabs__content {
     overflow: inherit;
+  }
+}
+
+.check-online {
+  .el-message-box__title {
+    span {
+      font-size: 16px;
+    }
   }
 }
 </style>

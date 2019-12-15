@@ -1,5 +1,6 @@
 // retoucherCenter
 import axios from '@/plugins/axios.js'
+import { StreamStateEnum } from '@/utils/enumerate.js'
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
 import * as PhotoTool from '@/utils/photoTool.js'
@@ -23,9 +24,8 @@ export function getRetouchStreams (params) {
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
       listItem.waitTime = waitTime(listItem.created_at)
       listItem.photographerUpdate = listItem.created_at || '-'
-      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework') || false
-      // TODO
-      listItem.isStoreReturn = true
+      listItem.isCheckReturn = listItem.state === StreamStateEnum.ReviewReturnRetouch
+      listItem.isStoreReturn = listItem.state === StreamStateEnum.StoreReturnRetouch
       if (params.state === 'hanging') {
         listItem.hangTime = waitTime(listItem.last_hang_at)
       } else {
@@ -64,9 +64,8 @@ export function getStreamInfo (params) {
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
       streamState: msg.state,
-      isCheckReturn: msg.state === 'review_return_retouch',
-      // TODO 判断是否门店退回
-      isStoreReturn: true
+      isCheckReturn: msg.state === StreamStateEnum.ReviewReturnRetouch,
+      isStoreReturn: msg.state === StreamStateEnum.StoreReturnRetouch
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
@@ -178,7 +177,7 @@ export function getRetouchQuotaList (params) {
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
       listItem.plantNum = findPlantPhoto.length
       listItem.pullNum = findPullPhoto.length
-      // 门店满意度
+      listItem.retoucherNpsAvg = listItem.tags && listItem.tags.values && listItem.tags.values.retoucher_score || '-'
     })
     createData.list = msg.list
     return createData

@@ -18,6 +18,12 @@
         <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核拔草理由' }}</div>
       </div>
     </div>
+    <div class="store-return">
+      <div class="panel-box danger-box">
+        <div class="content-title">门店退回</div>
+        <div class="panel-content">{{ '暂无门店退回原因' }}</div>
+      </div>
+    </div>
     <!-- 纠偏 -->
     <div v-if="photoData.tags && photoData.tags.values&&photoData.tags.values.audit_correction" class="correct-data">
       <div class="panel-box primary-box">
