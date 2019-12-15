@@ -96,8 +96,7 @@ export default {
   },
   data () {
     return {
-      routeName: this.$route.name, // 路由名字
-      StreamStateEnum
+      routeName: this.$route.name // 路由名字
     }
   },
   computed: {
@@ -108,14 +107,14 @@ export default {
      * @description 是够可以加急
      */
     canUrgent (item) {
-      const urgentState = ['reviewing', 'finish']
+      const urgentState = [StreamStateEnum.Reviewing, StreamStateEnum.Finish]
       return this.showUrgentStream && !item.staticsUrgent && !urgentState.includes(item.state)
     },
     /**
      * @description 是否可以直接审核
      */
     canManualReview (item) {
-      const manualReviewState = ['wait_review']
+      const manualReviewState = [StreamStateEnum.WaitReview]
       // TODO 直接审核的权限
       return manualReviewState.includes(item.state)
     },

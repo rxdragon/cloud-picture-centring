@@ -214,6 +214,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
+      console.log(file)
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const finishPhotoArr = Object.values(this.finishPhoto)

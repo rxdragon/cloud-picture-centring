@@ -5201,6 +5201,11 @@ file-loader@^3.0.1:
     loader-utils "^1.0.2"
     schema-utils "^1.0.0"
 
+file-type@^12.4.0:
+  version "12.4.0"
+  resolved "https://registry.npm.taobao.org/file-type/download/file-type-12.4.0.tgz?cache=0&sync_timestamp=1572546188984&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffile-type%2Fdownload%2Ffile-type-12.4.0.tgz#a9a399459e1940d9f34b3973039958f1f36a565e"
+  integrity sha1-qaOZRZ4ZQNnzSzlzA5lY8fNqVl4=
+
 file-type@^9.0.0:
   version "9.0.0"
   resolved "https://registry.npm.taobao.org/file-type/download/file-type-9.0.0.tgz#a68d5ad07f486414dfb2c8866f73161946714a18"

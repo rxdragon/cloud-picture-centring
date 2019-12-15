@@ -6,7 +6,6 @@
       placement="bottom"
       width="600"
       trigger="click"
-      @show="showList"
     >
       <div class="down-list">
         <div class="title-row">
@@ -23,6 +22,7 @@
               <down-list-item
                 :key="uuid"
                 :uuid="uuid"
+                :show-popver="showManage"
                 :list-item="downItem"
                 :style="removeStyle"
               />
@@ -93,16 +93,6 @@ export default {
           .then(() => {
             Setting.updateSavePath(savePath)
           })
-      }
-    },
-    /**
-     * @description 显示列表
-     */
-    async showList () {
-      for (const uuid in this.downList) {
-        if (this.downList[uuid].status === 'completed') {
-          await DownIpc.transferToVuexList(uuid)
-        }
       }
     },
     /**
