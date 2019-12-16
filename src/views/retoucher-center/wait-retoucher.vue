@@ -282,8 +282,8 @@ export default {
     checkOnlineTime () {
       const nowTime = new Date().getTime()
       // TODO 更改轮询时间
-      const checkInterval = 30 * 1000
-      const confirmationCheckInterval = 5 * 1000
+      const checkInterval = 10 * 60 * 1000
+      const confirmationCheckInterval = 3 * 60 * 1000
       if (!this.nextCheckOnlineTime) {
         this.nextCheckOnlineTime = nowTime + checkInterval
         window.polling.getQueue = setTimeout(() => {
