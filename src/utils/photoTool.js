@@ -54,6 +54,8 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
     }
   }
   for (const version of PhotoEnums) {
+    const findFinishPhoto = photoArr.find(photoItem => photoItem.version === 'finish_photo')
+    if (version === 'last_retouch_photo' && !findFinishPhoto) break
     const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
     if (findVersionPhoto) { createData.push(findVersionPhoto) }
   }
