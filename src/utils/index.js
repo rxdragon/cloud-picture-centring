@@ -215,7 +215,10 @@ export function isObj (obj) {
  * @param {*} b 基数
  */
 export function getAvg (a, b) {
+  console.log(a, b)
+  console.log(!Number(a))
   if (!Number(a) || !Number(b)) return 0
   const avg = (Number(a) / Number(b)).toFixed(2)
+  console.log(avg)
   return parseFloat(avg)
 }

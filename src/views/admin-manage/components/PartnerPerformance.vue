@@ -27,7 +27,7 @@
       <div class="panel-title">其他数据</div>
       <div v-for="(itemData, itemIndex) in otherData" :key="itemIndex" class="num-box">
         <span class="num">
-          <count-to :end-value="itemData.value" show-point />
+          <count-to :end-value="itemData.value" show-point />{{ itemIndex === 'storeEvaluateScoreAvg' ? '星' : '' }}
         </span>
         <div class="desc">{{ itemData.label }}</div>
       </div>

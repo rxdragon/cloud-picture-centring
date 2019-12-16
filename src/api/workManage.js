@@ -86,7 +86,7 @@ export function getRetoucherQuota (params) {
     msg.retoucherEvaluatedNoPlantNoPullRate = getAvg(msg.retoucherEvaluatedNoPlantNoPullNum, evaluatedCount) // 直接通过率
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
     msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.score, retoucherNpsCount) // 顾客满意度
-    msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) + '星' // 门店评分
+    msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) // 门店评分
     msg.retouchReworkRate = getAvg(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     msg.storeReturnStreamNum = parseInt(msg.storeReturnStreamNum || 0) // 门店退单

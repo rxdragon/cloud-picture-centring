@@ -69,14 +69,15 @@ export default {
           waitTime: '暂无信息'
         }
       }
-    }
+    },
+    showRetouch: { type: Boolean }
   },
   data () {
     return {}
   },
   computed: {
     isRework () {
-      return this.orderData.isCheckReturn || this.orderData.isStoreReturn
+      return (this.orderData.isCheckReturn || this.orderData.isStoreReturn) && this.showRetouch
     }
   },
   mounted () {},
