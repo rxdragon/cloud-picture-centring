@@ -30,7 +30,9 @@ const actions = {
   // 查询订单
   async hasReturnNotification ({ commit }) {
     const data = await Retoucher.haveReworkStream()
-    const newReturnMsg = data.filter(item => !SessionTool.getReturnRetouchOrder(item.streamId))
+    const newReturnMsg = data.filter(item => {
+      return !SessionTool.getReturnRetouchOrder(item.streamId)
+    })
     if (!newReturnMsg.length) {
       store.dispatch('notification/pollingHasReturn')
       return

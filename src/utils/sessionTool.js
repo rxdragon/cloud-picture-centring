@@ -159,10 +159,11 @@ export function removeSureRetouchOrder (aid) {
  * @description 保存退单流水
  */
 export function saveReturnRetouchOrder (aid) {
-  const returnArr = new Set()
+  const saveKey = `return-retouch-id`
+  let returnArr = JSON.parse(localStorage.getItem(saveKey)) || []
+  returnArr = new Set([...returnArr])
   returnArr.add(aid)
   const data = JSON.stringify([...returnArr])
-  const saveKey = `return-retouch-id`
   localStorage.setItem(saveKey, data)
 }
 
