@@ -97,6 +97,9 @@ const actions = {
       if (newRolesArr.includes('WaitRetoucher')) {
         store.dispatch('notification/hasReturnNotification')
         store.dispatch('user/getRetoucherLineState')
+        window.addEventListener('click', () => {
+          store.commit('user/SET_ACTIVE_TIME')
+        })
       }
       newRolesArr = [...new Set(newRolesArr)]
       // 调试

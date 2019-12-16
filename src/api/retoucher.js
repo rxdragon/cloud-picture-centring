@@ -252,10 +252,12 @@ export function changeOnline () {
 /**
  * @description 下线功能
  */
-export function changeOffline () {
+export function changeOffline (params) {
+  const data = params || { action: 'self' }
   return axios({
     url: '/project_cloud/retoucher/offline',
-    method: 'PUT'
+    method: 'PUT',
+    data
   })
 }
 

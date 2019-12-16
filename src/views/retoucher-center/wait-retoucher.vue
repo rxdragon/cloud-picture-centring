@@ -158,8 +158,7 @@ export default {
         greenChannelStatus: false // 绿色通道
       },
       aid: '', // 订单id
-      hasInitialization: false, // 是否有初始化数据
-      nextCheckOnlineTime: null
+      hasInitialization: false // 是否有初始化数据
     }
   },
   computed: {
@@ -273,57 +272,9 @@ export default {
         })
       }
       if (this.queueInfo.inQueue) {
-        this.checkOnlineTime()
-      }
-    },
-    /**
-     * @description 确认是否在线功能
-     */
-    checkOnlineTime () {
-      const nowTime = new Date().getTime()
-      // TODO 更改轮询时间
-      const checkInterval = 10 * 60 * 1000
-      const confirmationCheckInterval = 3 * 60 * 1000
-      if (!this.nextCheckOnlineTime) {
-        this.nextCheckOnlineTime = nowTime + checkInterval
         window.polling.getQueue = setTimeout(() => {
           this.getStreamQueueInfo()
         }, 3000)
-      } else {
-        if (nowTime >= this.nextCheckOnlineTime) {
-          clearTimeout(window.polling.getQueue)
-          window.polling.getQueue = null
-          window.polling.checkOnline = setTimeout(() => {
-            Retoucher.changeOffline()
-              .then(() => {
-                this.$store.dispatch('user/setUserlineState', 'offline')
-                this.$msgbox.close()
-                this.initializeData()
-              })
-              .catch(err => {
-                console.error(err)
-              })
-          }, confirmationCheckInterval)
-          this.$confirm('3分钟内未操作此弹窗将更换为离线模式', '您已长时间未操作系统是否仍要保持在线状态', {
-            confirmButtonText: '确定',
-            center: true,
-            type: 'warning',
-            customClass: 'check-online',
-            showCancelButton: false,
-            closeOnPressEscape: false,
-            showClose: false,
-            closeOnClickModal: false
-          }).then(() => {
-            window.polling.checkOnline = null
-            clearTimeout(window.polling.checkOnline)
-            this.nextCheckOnlineTime = null
-            this.getStreamQueueInfo()
-          })
-        } else {
-          window.polling.getQueue = setTimeout(() => {
-            this.getStreamQueueInfo()
-          }, 3000)
-        }
       }
     },
     /**
@@ -371,7 +322,6 @@ export default {
     initializeData () {
       this.$store.dispatch('setting/showLoading', this.routeName)
       this.aid = ''
-      this.nextCheckOnlineTime = null
       Promise.all([
         this.getSelfQuota(),
         this.getSelfBuffInfo(),

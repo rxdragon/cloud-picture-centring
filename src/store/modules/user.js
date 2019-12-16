@@ -4,6 +4,7 @@ import * as SessionTool from '@/utils/sessionTool.js'
 import store from '@/store'
 import router from '@/router'
 import { resetRouter } from '@/router'
+import { MessageBox } from 'element-ui'
 
 const state = {
   token: '',
@@ -13,7 +14,10 @@ const state = {
   permissions: [],
   departmentName: '-',
   avatarImg: '',
-  lineState: 'offline'
+  lineState: 'offline',
+  nextCheckOnlineTime: null,
+  checkInterval: 10 * 60 * 1000,
+  confirmationCheckInterval: 3 * 60 * 1000
 }
 
 const mutations = {
@@ -41,6 +45,10 @@ const mutations = {
   },
   SET_LINE_STATE: (state, condition) => {
     state.lineState = condition
+  },
+  SET_ACTIVE_TIME: (state) => {
+    const nowTime = new Date().getTime()
+    state.nextCheckOnlineTime = nowTime + state.checkInterval
   }
 }
 
@@ -97,18 +105,63 @@ const actions = {
     })
   },
   // 设置在线状态
-  setUserlineState ({ commit }, state) {
-    commit('SET_LINE_STATE', state)
+  setUserlineState ({ dispatch, commit }, inState) {
+    if (inState === 'online') { dispatch('getNowTime') }
+    commit('SET_LINE_STATE', inState)
+  },
+  // 轮训是否激活状态
+  getNowTime ({ dispatch }) {
+    clearTimeout(window.polling.getTime)
+    window.polling.getTime = setTimeout(() => {
+      dispatch('checkOnlineTime')
+    }, 1000)
+  },
+  // 检查是否在线
+  checkOnlineTime ({ dispatch, commit, state }) {
+    const nowTime = new Date().getTime()
+    if (nowTime >= state.nextCheckOnlineTime) {
+      clearTimeout(window.polling.getTime)
+      window.polling.getTime = null
+      window.polling.checkOnline = setTimeout(() => {
+        const req = { action: 'auto' }
+        Retoucher.changeOffline(req)
+          .then(() => {
+            dispatch('setUserlineState', 'offline')
+            MessageBox.close()
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      }, state.confirmationCheckInterval)
+      MessageBox.confirm('3分钟内未操作此弹窗将更换为离线模式', '您已长时间未操作系统是否仍要保持在线状态', {
+        confirmButtonText: '确定',
+        center: true,
+        type: 'warning',
+        customClass: 'check-online',
+        showCancelButton: false,
+        closeOnPressEscape: false,
+        showClose: false,
+        closeOnClickModal: false
+      }).then(() => {
+        clearTimeout(window.polling.checkOnline)
+        window.polling.checkOnline = null
+        commit('SET_ACTIVE_TIME')
+        dispatch('getNowTime')
+      })
+    } else {
+      dispatch('getNowTime')
+    }
   },
   // 获取在线状态
-  getRetoucherLineState ({ commit }) {
+  getRetoucherLineState ({ dispatch, commit }) {
+    commit('SET_ACTIVE_TIME')
     return new Promise(async (resolve, reject) => {
       try {
         const state = await Retoucher.getOnlineState()
-        commit('SET_LINE_STATE', state)
+        dispatch('setUserlineState', state)
         resolve()
       } catch (error) {
-        commit('SET_LINE_STATE', 'offline')
+        dispatch('setUserlineState', 'offline')
         reject(error)
       }
     })

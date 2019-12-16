@@ -2,6 +2,7 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
+import { StreamStatics } from '@/utils/enumerate.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
 /**
@@ -23,8 +24,8 @@ export function getRetouchStreams (params) {
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
       listItem.waitTime = waitTime(listItem.created_at, listItem.pass_at)
       listItem.photographerUpdate = listItem.created_at || '-'
-      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework')
-      listItem.isStoreReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('store_rework')
+      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.CheckReturn)
+      listItem.isStoreReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.StoreReturn)
       if (params.state === 'hanging') {
         listItem.hangTime = waitTime(listItem.last_hang_at)
       } else {

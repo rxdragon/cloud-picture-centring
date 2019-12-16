@@ -35,9 +35,16 @@ export const StreamStateEnum = {
   Hanging: 'hanging'
 }
 
+// 流水静态状态资源
 export const StreamStatics = {
   StoreReturn: 'store_rework',
   CheckReturn: 'rework'
+}
+
+// 照片静态状态资源
+export const PhotoStatics = {
+  StoreReturn: 'store_rework',
+  CheckReturn: 'return_photo'
 }
 
 // 照片状态

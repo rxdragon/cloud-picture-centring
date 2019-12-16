@@ -1,8 +1,9 @@
 // commonality
 
 import axios from '@/plugins/axios.js'
-import { keyToHump } from '../utils/index.js'
-import { settlePhoto } from '../utils/photoTool.js'
+import { keyToHump } from '@/utils/index.js'
+import { settlePhoto } from '@/utils/photoTool.js'
+import { PhotoStatics } from '@/utils/enumerate.js'
 
 /**
  * @description 获取修图类型
@@ -43,8 +44,8 @@ export function getStreamInfo (params) {
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
-      const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
-      const isStoreReturn = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('store_rework')
+      const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.CheckReturn)
+      const isStoreReturn = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.StoreReturn)
       if (photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('plant')) {
         photoItem.grass = 'plant'
         plantNum++
