@@ -229,6 +229,12 @@
  显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
 
 
+### 🔙 撤销
+|范围|描述|commitId|
+--|--|--
+ 增加顾客满意度 | 增加顾客满意度 | [885acec](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/885acec)
+
+
 ### 🚀 性能优化
 |范围|描述|commitId|
 --|--|--

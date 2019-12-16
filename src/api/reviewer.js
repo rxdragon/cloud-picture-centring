@@ -1,6 +1,5 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump, timeFormat } from '@/utils/index.js'
-import { StreamStateEnum } from '@/utils/enumerate.js'
 import { waitTime } from '@/utils/validate.js'
 
 /**
@@ -52,8 +51,8 @@ export function getReviewInfo () {
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     createData.requireLabel = msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {}
     createData.streamState = msg.state
-    createData.isCheckReturn = msg.state === StreamStateEnum.ReviewReturnRetouch
-    createData.isStoreReturn = msg.state === StreamStateEnum.StoreReturnRetouch
+    createData.isCheckReturn = msg.tags && msg.tags.statics && msg.tags.statics.includes('rework')
+    createData.isStoreReturn = msg.tags && msg.tags.statics && msg.tags.statics.includes('store_rework')
     createData.photos = msg.photos
     createData.retoucherName = msg.retoucher && (msg.retoucher.name || msg.retoucher.real_name) || '-'
     return createData

@@ -1,6 +1,5 @@
 // retoucherCenter
 import axios from '@/plugins/axios.js'
-import { StreamStateEnum } from '@/utils/enumerate.js'
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
 import * as PhotoTool from '@/utils/photoTool.js'
@@ -24,8 +23,8 @@ export function getRetouchStreams (params) {
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
       listItem.waitTime = waitTime(listItem.created_at, listItem.pass_at)
       listItem.photographerUpdate = listItem.created_at || '-'
-      listItem.isCheckReturn = listItem.state === StreamStateEnum.ReviewReturnRetouch
-      listItem.isStoreReturn = listItem.state === StreamStateEnum.StoreReturnRetouch
+      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework')
+      listItem.isStoreReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('store_rework')
       if (params.state === 'hanging') {
         listItem.hangTime = waitTime(listItem.last_hang_at)
       } else {
@@ -64,8 +63,8 @@ export function getStreamInfo (params) {
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
       streamState: msg.state,
-      isCheckReturn: msg.state === StreamStateEnum.ReviewReturnRetouch,
-      isStoreReturn: msg.state === StreamStateEnum.StoreReturnRetouch
+      isCheckReturn: msg.tags && msg.tags.statics && msg.tags.statics.includes('rework'),
+      isStoreReturn: msg.tags && msg.tags.statics && msg.tags.statics.includes('store_rework')
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')

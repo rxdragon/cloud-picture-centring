@@ -35,6 +35,11 @@ export const StreamStateEnum = {
   Hanging: 'hanging'
 }
 
+export const StreamStatics = {
+  StoreReturn: 'store_rework',
+  CheckReturn: 'rework'
+}
+
 // 照片状态
 export const PhotoEnum = [
   'original_photo', // 原片
