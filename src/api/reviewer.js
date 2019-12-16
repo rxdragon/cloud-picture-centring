@@ -47,7 +47,7 @@ export function getReviewInfo () {
     createData.photographer = msg.order.tags && msg.order.tags.values.photographer
     createData.productName = msg.product && msg.product.name || '-'
     createData.photoNum = msg.photos.filter(item => +item.people_num > 0).length
-    createData.waitTime = waitTime(msg.created_at)
+    createData.waitTime = waitTime(msg.created_at, msg.pass_at)
     createData.retouchRemark = msg.note.retouch_note
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     createData.requireLabel = msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {}

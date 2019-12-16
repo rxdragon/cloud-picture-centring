@@ -63,7 +63,7 @@ export function getStreamList (params) {
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
         reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
-        waitTime: waitTime(item.created_at),
+        waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
@@ -98,7 +98,7 @@ export function getRetouchStreamList (params) {
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
         reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
-        waitTime: waitTime(item.created_at),
+        waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
@@ -145,7 +145,7 @@ export function getQueueStreamList (params) {
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
         reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
-        waitTime: waitTime(item.created_at),
+        waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
       })

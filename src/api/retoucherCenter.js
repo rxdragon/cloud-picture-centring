@@ -22,7 +22,7 @@ export function getRetouchStreams (params) {
       listItem.photoNum = listItem.photos_count
       listItem.type = listItem.product.retouch_standard
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
-      listItem.waitTime = waitTime(listItem.created_at)
+      listItem.waitTime = waitTime(listItem.created_at, listItem.pass_at)
       listItem.photographerUpdate = listItem.created_at || '-'
       listItem.isCheckReturn = listItem.state === StreamStateEnum.ReviewReturnRetouch
       listItem.isStoreReturn = listItem.state === StreamStateEnum.StoreReturnRetouch
@@ -60,7 +60,7 @@ export function getStreamInfo (params) {
       photographer: msg.order.tags ? msg.order.tags.values.photographer : '-', // 摄影
       productName: msg.product && msg.product.name,
       photoNum: msg.photos.filter(item => +item.people_num > 0).length,
-      waitTime: waitTime(msg.created_at),
+      waitTime: waitTime(msg.created_at, msg.pass_at),
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
       streamState: msg.state,
