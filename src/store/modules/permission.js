@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { asyncRoutes, constantRoutes, lastBaseRoutes } from '@/router'
 import { toCapitalHump } from '@/utils/index.js'
 import store from '@/store'
 
@@ -100,8 +100,8 @@ const actions = {
       }
       newRolesArr = [...new Set(newRolesArr)]
       // 调试
-      // accessedRoutes = filterAsyncRoutes(asyncRoutes, newRolesArr)
-      accessedRoutes = asyncRoutes
+      // accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
+      accessedRoutes = [...asyncRoutes, ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

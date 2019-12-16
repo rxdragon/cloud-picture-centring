@@ -170,11 +170,35 @@ export default {
     /**
      * @description 退出登录
      */
-    logout () {
-      User.logout()
-        .then(() => {
+    async logout () {
+      try {
+        if (!this.isRetoucher) {
+          await User.logout()
           this.$router.push('/login')
-        })
+          return
+        } else {
+          Retoucher.changeOffline()
+            .then(async () => {
+              await User.logout()
+              this.$router.push('/login')
+            })
+            .catch(() => {
+              this.$confirm('', '您当前有需要处理的订单暂不可退出系统', {
+                confirmButtonText: '确定',
+                center: true,
+                type: 'warning',
+                customClass: 'check-online',
+                showCancelButton: false,
+                closeOnPressEscape: false,
+                showClose: false,
+                closeOnClickModal: false
+              })
+            })
+        }
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error(error)
+      }
     }
   }
 }
