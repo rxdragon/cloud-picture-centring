@@ -4,7 +4,7 @@
       v-for="(photoItem, photoIndex) in photos.priviewPhotoData"
       :key="photoIndex"
       class="photo-box"
-      :class="{'rework-photo': (photoItem.version === 'original_photo' && (photos.isRework || photos.isStoreRework))}"
+      :class="{'rework-photo': (photoItem.version === 'original_photo' && photos.showReturnLabel)}"
     >
       <photo-box
         :src="photoItem.path"

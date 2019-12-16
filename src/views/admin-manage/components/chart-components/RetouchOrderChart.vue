@@ -30,7 +30,7 @@ export default {
         },
         icon: 'circle'
       },
-      grid: { x: 0, x2: 27, y: 50, y2: 0 },
+      grid: { x: 0, x2: 27, y: 60, y2: 0 },
       series: {
         label: {
           show: true,
