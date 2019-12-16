@@ -36,28 +36,35 @@ export const StreamStateEnum = {
 }
 
 // 照片状态
-export const PhotoEnum = {
-  OriginalPhoto: 'original_photo', // 原片
-  FirstPhoto: 'first_photo', // 一次成片
-  ReturnPhoto: 'return_photo', // 退回照片
-  CompletePhoto: 'complete_photo', // 审核成片
-  FinishPhoto: 'finish_photo' // 最终成片
-}
+export const PhotoEnum = [
+  'original_photo', // 原片
+  'first_photo', // 一次成片
+  'return_photo', // 退回照片
+  'complete_photo', // 审核成片
+  'last_retouch_photo', // 最新修照片
+  'finish_photo' // 最终成片
+]
 
 // 没有重修返回字段
-export const NoReturnPhotoEnum = {
-  OriginalPhoto: 'original_photo', // 原片
-  CompletePhoto: 'complete_photo', // 审核成片
-  FinishPhoto: 'finish_photo' // 最终成片
-}
+export const NoReturnPhotoEnum = [
+  'original_photo', // 原片
+  'complete_photo', // 审核成片
+  'last_retouch_photo', // 最新修照片
+  'finish_photo' // 最终成片
+]
 
 // 有重修返回字段
-export const ReturnOnePhotoEnum = {
-  OriginalPhoto: 'original_photo', // 原片
-  FirstPhoto: 'first_photo', // 一次成片
-  CompletePhoto: 'complete_photo', // 审核成片
-  FinishPhoto: 'finish_photo' // 最终成片
-}
+export const ReturnOnePhotoEnum = [
+  'original_photo',
+  'first_photo',
+  'complete_photo',
+  'last_retouch_photo',
+  'finish_photo'
+]
+
+export const StoreReturnPhoto = [
+  'store_rework' // 门店退回
+]
 
 export const PhotoEnumName = {
   OriginalPhoto: '原片',
@@ -69,7 +76,9 @@ export const PhotoEnumName = {
   first_photo: '一次成片',
   return_photo: '退回照片',
   complete_photo: '审核成片',
-  finish_photo: '最终成片'
+  finish_photo: '最终成片',
+  store_rework: '门店退回',
+  last_retouch_photo: '最新修后照片'
 }
 
 // 搜索类型

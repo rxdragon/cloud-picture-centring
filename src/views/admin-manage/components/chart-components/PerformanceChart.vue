@@ -30,7 +30,7 @@ export default {
         },
         icon: 'circle'
       },
-      grid: { x: 0, x2: 0, y: 50, y2: 0 },
+      grid: { x: 0, x2: 0, y: 60, y2: 0 },
       series: {
         label: {
           show: true,
@@ -38,7 +38,7 @@ export default {
           color: '#4669FB'
         },
         clip: false,
-        barWidth: 20,
+        barWidth: 24,
         barCategoryGap: '80%',
         itemStyle: {
           barBorderRadius: [6, 6, 0, 0],
@@ -58,15 +58,15 @@ export default {
               return Object.assign({}, baseColor, {
                 colorStops: [
                   { offset: 0, color: '#38BC7F' },
-                  { offset: 1, color: '#B7FF8F' }
+                  { offset: 1, color: '#7ce088' }
                 ]
               })
             }
             if (param.name.includes('拔草')) {
               return Object.assign({}, baseColor, {
                 colorStops: [
-                  { offset: 0, color: '#FFB4CA' },
-                  { offset: 1, color: '#FF3974' }
+                  { offset: 1, color: '#ff3974' },
+                  { offset: 0, color: '#ff89ad' }
                 ]
               })
             }

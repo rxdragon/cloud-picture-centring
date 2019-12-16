@@ -30,14 +30,14 @@ export default {
         },
         icon: 'circle'
       },
-      grid: { x: 0, x2: 27, y: 50, y2: 0 },
+      grid: { x: 0, x2: 27, y: 60, y2: 0 },
       series: {
         label: {
           show: true,
           position: 'top',
           color: '#4669FB'
         },
-        barWidth: 20,
+        barWidth: 24,
         barCategoryGap: '80%',
         itemStyle: {
           barBorderRadius: [6, 6, 0, 0],
@@ -54,7 +54,7 @@ export default {
               },
               {
                 offset: 1,
-                color: '#91F5FF' // 100% 处的颜色
+                color: '#71B9FD' // 100% 处的颜色
               }
             ],
             global: false // 缺省为 false

@@ -72,17 +72,12 @@ export function getStreamInfo (params) {
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
       photoItem.isCover = false
     })
-    if (msg.tags && msg.tags.statics && msg.tags.statics.includes('rework')) {
-      createData.photos = msg.photos.filter(photoItem => {
-        const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
-        photoItem.isReturnPhoto = isReturnPhoto
-        const findReturnPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_photo')
-        photoItem.returnPhotoPath = isReturnPhoto && PhotoTool.handlePicPath(findReturnPhoto.path)
-        return isReturnPhoto
-      })
-    } else {
-      createData.photos = msg.photos
-    }
+    // 最新退回照片
+    const returnShowPhotos = msg.photos.filter(photoItem => {
+      const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
+      return Boolean(findReturnShowPhoto)
+    })
+    createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
     createData.hourGlass = msg.hour_glass
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     return createData

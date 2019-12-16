@@ -1,7 +1,7 @@
 <template>
   <div id="photoShow">
     <div class="title">
-      {{ showPhoto.version | toPhotoEnumName }}
+      {{ showPhoto.version | toPhotoVerName }}
       <button id="closeImg" type="button" class="button-close" @click="closeShowPhoto">
         <i class="el-icon-close" />
       </button>
@@ -64,18 +64,6 @@ import Driver from 'driver.js' // 引导框
 import 'driver.js/dist/driver.min.css'
 export default {
   name: 'PreviewPhoto',
-  filters: {
-    toPhotoEnumName (value) {
-      const nameList = {
-        original_photo: '原片',
-        first_photo: '一次成片',
-        return_photo: '退回照片',
-        complete_photo: '审核成片',
-        finish_photo: '最终成片'
-      }
-      return nameList[value]
-    }
-  },
   props: {
     configs: {
       type: Object,

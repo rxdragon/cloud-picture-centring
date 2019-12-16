@@ -18,14 +18,14 @@
         <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核拔草理由' }}</div>
       </div>
     </div>
-    <div class="store-return">
+    <div v-if="storeRework" class="store-return">
       <div class="panel-box danger-box">
         <div class="content-title">门店退回</div>
-        <div class="panel-content">{{ '暂无门店退回原因' }}</div>
+        <div class="panel-content">{{ storeReworkReason || '暂无退回原因' }}</div>
       </div>
     </div>
     <!-- 纠偏 -->
-    <div v-if="photoData.tags && photoData.tags.values&&photoData.tags.values.audit_correction" class="correct-data">
+    <div v-if="photoData.tags && photoData.tags.values && photoData.tags.values.audit_correction" class="correct-data">
       <div class="panel-box primary-box">
         <div class="content-title">{{ [photoData.tags.values.audit_correction, photoData.spotGrass] | toAuditChange }}</div>
         <div class="panel-content">{{ photoData.tags.values.audit_note || '暂无纠偏理由' }}</div>
@@ -91,6 +91,11 @@ export default {
     photoData () {
       return this.photoItem
     },
+    storeReworkReason () {
+      return this.photoData.tags &&
+        this.photoData.tags.values &&
+        this.photoData.tags.values.store_rework_reason
+    },
     // 是够重修
     rework () {
       if (this.photoData.tags && this.photoData.tags.statics) {
@@ -99,6 +104,12 @@ export default {
       } else {
         return false
       }
+    },
+    // 是否门店退回
+    storeRework () {
+      return this.photoData.tags &&
+        this.photoData.tags.statics &&
+        this.photoData.tags.statics.includes('store_rework')
     }
   }
 }

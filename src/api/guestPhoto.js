@@ -63,9 +63,10 @@ export function getPhotoInfo (params) {
     if (createData.isPass) {
       const reworkNum = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.rework_num || 0
       const isReturnPhoto = createData.tags && createData.tags.statics && createData.tags.statics.includes('return_photo')
+      const isStoreReturn = createData.tags && createData.tags.statics && createData.tags.statics.includes('store_rework')
       createData.photoVersion = createData.lastFirstPhoto && isReturnPhoto
-        ? settlePhoto([...createData.otherPhotoVersion, createData.lastFirstPhoto], reworkNum)
-        : settlePhoto([...createData.otherPhotoVersion], reworkNum)
+        ? settlePhoto([...createData.otherPhotoVersion, createData.lastFirstPhoto], reworkNum, isStoreReturn)
+        : settlePhoto([...createData.otherPhotoVersion], reworkNum, isStoreReturn)
     } else {
       const originPhoto = createData.otherPhotoVersion.find(item => item.version === 'original_photo')
       createData.photoVersion = [originPhoto]
@@ -149,9 +150,10 @@ export function getAttitudePhotoInfo (params) {
   }).then(msg => {
     const createData = msg
     const isReturnPhoto = createData.tags && createData.tags.statics && createData.tags.statics.includes('return_photo')
+    const isStoreReturn = createData.tags && createData.tags.statics && createData.tags.statics.includes('store_rework')
     createData.photoVersion = createData.last_first_photo && isReturnPhoto
-      ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1)
-      : settlePhoto([...createData.other_photo_version], 2)
+      ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1, isStoreReturn)
+      : settlePhoto([...createData.other_photo_version], 2, isStoreReturn)
     createData.productName = createData.stream.product.name
     createData.retoucher = createData.stream.retoucher && (createData.stream.retoucher.name || createData.stream.retoucher.real_name) || '-'
     createData.retoucherLeader = createData.stream.retoucher.retoucher_leader.nickname || createData.stream.retoucher.retoucher_leader.name || '-'

@@ -174,6 +174,7 @@ export default {
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        return
       }
       upInput.uploadFiles(readFileArray)
     },
@@ -202,11 +203,15 @@ export default {
      * @param {*} file
      */
     async beforeUpload (file) {
+      const canUploadTpye = ['image/jpeg', 'image/png']
+      let uploadPhotoMd5
+      let type
+      this.$store.dispatch('setting/showLoading', this.routeName)
       if (!this.uploadPhoto.every(item => item.response)) {
         this.$newMessage.warning('请等待照片上传完成')
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
-      this.$store.dispatch('setting/showLoading', this.routeName)
       const name = PhotoTool.fileNameFormat(file.name)
       // 是否正确命名
       if (name.includes('.')) {
@@ -214,15 +219,21 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
-      console.log(file)
-      const isJPG = file.type === 'image/jpeg'
-      const isPNG = file.type === 'image/png'
+      try {
+        const imgInfo = await PhotoTool.getImgBufferPhoto(file)
+        uploadPhotoMd5 = imgInfo.uploadPhotoMd5
+        type = imgInfo.type
+      } catch (error) {
+        this.$newMessage.error('读取本地图片失败')
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        return Promise.reject()
+      }
       const finishPhotoArr = Object.values(this.finishPhoto)
       const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
       const hasSameName = this.photos.some(item => item.path.includes(name))
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
       // 判断是否是图片
-      if (!isJPG && !isPNG) {
+      if (!canUploadTpye.includes(type)) {
         this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
@@ -237,16 +248,8 @@ export default {
       const findOrginPhoto = this.photos.find(item => item.path.includes(name))
       // 最后一次提交文件名
       const beforeUploadFileName = findOrginPhoto.isReturnPhoto ? PhotoTool.fileNameFormat(findOrginPhoto.returnPhotoPath) : PhotoTool.fileNameFormat(file.name)
-      let uploadPhotoMd5 = ''
-      try {
-        uploadPhotoMd5 = await PhotoTool.getImgBufferPhoto(file)
-        if (beforeUploadFileName === uploadPhotoMd5) {
-          this.$newMessage.warning('请修改照片后再进行上传。')
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          return Promise.reject()
-        }
-      } catch (error) {
-        this.$newMessage.error('读取本地图片失败')
+      if (beforeUploadFileName === uploadPhotoMd5) {
+        this.$newMessage.warning('请修改照片后再进行上传。')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }

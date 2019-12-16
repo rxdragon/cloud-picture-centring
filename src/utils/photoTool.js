@@ -1,7 +1,8 @@
-import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
+import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } from '@/utils/enumerate.js'
 import md5 from 'md5'
 import store from '@/store' // vuex
 import * as SessionTool from '@/utils/sessionTool.js'
+const fileType = require('file-type')
 
 /**
  * @description 截取文件名
@@ -42,12 +43,17 @@ export function handlePicPath (path, type) {
  * @param {*} photoArr
  * @param {*} reworkTimes 重修次数
  */
-export function settlePhoto (photoArr, reworkTimes = 0) {
+export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
   const PhotoEnumArr = [NoReturnPhotoEnum, ReturnOnePhotoEnum, PhotoEnum]
   const createData = []
-  const PhotoEnums = reworkTimes < 2 ? PhotoEnumArr[reworkTimes] : PhotoEnumArr[2]
-  for (const key in PhotoEnums) {
-    const version = PhotoEnums[key]
+  const PhotoEnums = reworkTimes < 2 ? [...PhotoEnumArr[reworkTimes]] : [...PhotoEnumArr[2]]
+  if (storeReturn) {
+    const findCompeteIndex = PhotoEnums.findIndex(item => item === 'complete_photo')
+    if (findCompeteIndex) {
+      PhotoEnums.splice(findCompeteIndex + 1, 0, ...StoreReturnPhoto)
+    }
+  }
+  for (const version of PhotoEnums) {
     const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
     if (findVersionPhoto) { createData.push(findVersionPhoto) }
   }
@@ -102,7 +108,9 @@ export function getImgBufferPhoto (file) {
     const reader = new FileReader()
     reader.onload = function (evt) {
       const imgBuffer = Buffer.from(evt.target.result)
-      resolve(md5(imgBuffer))
+      const uploadPhotoMd5 = md5(imgBuffer)
+      const type = fileType(imgBuffer).mime
+      resolve({ uploadPhotoMd5, type })
     }
     reader.onerror = function (error) {
       reject(error)
