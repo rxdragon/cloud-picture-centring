@@ -21,8 +21,7 @@
         <div class="tabel-title">看片师评语</div>
       </div>
       <div class="tabel-panel content-box">
-        <!-- TODO 顾客满意度 -->
-        <div class="tabel-content">{{ orderData.retoucherNpsAvg }}</div>
+        <div class="tabel-content">{{ retoucherNpsAvg }}</div>
         <div class="tabel-content">
           <el-rate
             v-model="storeEvaluateStream.store_evaluate_star"
@@ -52,7 +51,8 @@ export default {
       orderId: '', // 订单id
       orderData: {}, // 订单信息
       photos: [],
-      storeEvaluateStream: null // 看片评分
+      storeEvaluateStream: null, // 看片评分
+      retoucherNpsAvg: '-分'
     }
   },
   computed: {
@@ -89,6 +89,7 @@ export default {
         this.orderData = data.orderData
         this.photos = data.photos
         this.storeEvaluateStream = data.storeEvaluateStream
+        this.retoucherNpsAvg = data.retoucherNpsAvg
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

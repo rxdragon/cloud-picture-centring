@@ -95,8 +95,21 @@ export function getStreamInfo (params) {
       data.storeEvaluateStream.store_evaluate_star = data.storeEvaluateStream.store_evaluate_star > 5 ? 5 : data.storeEvaluateStream.store_evaluate_star
     }
     createData.storeEvaluateStream = data.storeEvaluateStream
-    // TODO nps评分
-    createData.retoucherNpsAvg = '超满意（10分）'
+    const retoucherNpsAvg = data.tags && data.tags.values && data.tags.values.retoucher_score || '-'
+    switch (+retoucherNpsAvg) {
+      case 10:
+        createData.retoucherNpsAvg = `超满意（10分）`
+        break
+      case 6:
+        createData.retoucherNpsAvg = `基本满意（10分）`
+        break
+      case 2:
+        createData.retoucherNpsAvg = `不满意（2分）`
+        break
+      default:
+        createData.retoucherNpsAvg = `${retoucherNpsAvg}分`
+        break
+    }
     return createData
   })
 }
