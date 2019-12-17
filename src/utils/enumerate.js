@@ -83,12 +83,12 @@ export const PhotoEnumName = {
   FirstPhoto: '一次成片',
   ReturnPhoto: '退回照片',
   CompletePhoto: '审核成片',
-  FinishPhoto: '最终成片',
+  FinishPhoto: '顾客满意片',
   original_photo: '原片',
   first_photo: '一次成片',
   return_photo: '退回照片',
   complete_photo: '审核成片',
-  finish_photo: '最终成片',
+  finish_photo: '顾客满意片',
   store_rework: '门店退回',
   last_retouch_photo: '最新修后照片'
 }
