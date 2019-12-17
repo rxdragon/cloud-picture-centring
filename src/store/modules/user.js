@@ -113,9 +113,12 @@ const actions = {
   // 轮训是否激活状态
   getNowTime ({ dispatch, state }) {
     clearTimeout(window.polling.getTime)
+    const nowTime = new Date().getTime()
+    const differTime = state.nextCheckOnlineTime - nowTime
+    const time = differTime > 0 ? differTime : 30000
     window.polling.getTime = setTimeout(() => {
       dispatch('checkOnlineTime')
-    }, state.checkInterval)
+    }, time)
   },
   // 检查是否在线
   async checkOnlineTime ({ dispatch, commit, state }) {
