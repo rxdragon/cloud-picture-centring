@@ -102,7 +102,7 @@ export function getStreamInfo (params) {
         createData.retoucherNpsAvg = `超满意（10分）`
         break
       case 6:
-        createData.retoucherNpsAvg = `基本满意（10分）`
+        createData.retoucherNpsAvg = `基本满意（6分）`
         break
       case 2:
         createData.retoucherNpsAvg = `不满意（2分）`
