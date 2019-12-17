@@ -68,10 +68,10 @@ import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
 import DomainSwitchBox from '@/components/DomainSwitchBox'
 import UploadPhoto from './UploadPhoto.vue'
+import DownIpc from '@electronMain/ipc/DownIpc'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
-import DownIpc from '@electronMain/ipc/DownIpc'
 import * as SessionTool from '@/utils/sessionTool'
 
 export default {

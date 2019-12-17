@@ -43,6 +43,20 @@ export function getRetouchStreams (params) {
 }
 
 /**
+ * @description 是否有待修订单
+ */
+export function hasRetouchingStreams () {
+  const params = { state: 'retouching' }
+  return axios({
+    url: '/project_cloud/retoucher/getRetouchStreams',
+    method: 'get',
+    params
+  }).then(msg => {
+    return Boolean(msg.retouchingNum)
+  })
+}
+
+/**
  * @description 获取流水信息
  * @param {*} params
  */

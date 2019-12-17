@@ -1,6 +1,7 @@
 import * as UserAction from '@/api/user'
 import * as Retoucher from '@/api/retoucher'
 import * as SessionTool from '@/utils/sessionTool.js'
+import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import store from '@/store'
 import router from '@/router'
 import { resetRouter } from '@/router'
@@ -110,16 +111,27 @@ const actions = {
     commit('SET_LINE_STATE', inState)
   },
   // 轮训是否激活状态
-  getNowTime ({ dispatch }) {
+  getNowTime ({ dispatch, state }) {
     clearTimeout(window.polling.getTime)
     window.polling.getTime = setTimeout(() => {
       dispatch('checkOnlineTime')
-    }, 1000)
+    }, state.checkInterval)
   },
   // 检查是否在线
-  checkOnlineTime ({ dispatch, commit, state }) {
+  async checkOnlineTime ({ dispatch, commit, state }) {
     const nowTime = new Date().getTime()
     if (nowTime >= state.nextCheckOnlineTime) {
+      let hasRetouchingStreams = true
+      try {
+        hasRetouchingStreams = await RetoucherCenter.hasRetouchingStreams()
+      } catch {
+        hasRetouchingStreams = false
+      }
+      if (hasRetouchingStreams) {
+        commit('SET_ACTIVE_TIME')
+        dispatch('getNowTime')
+        return
+      }
       clearTimeout(window.polling.getTime)
       window.polling.getTime = null
       window.polling.checkOnline = setTimeout(() => {
