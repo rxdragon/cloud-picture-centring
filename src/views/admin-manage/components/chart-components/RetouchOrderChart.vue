@@ -114,13 +114,13 @@ export default {
       },
       {
         name: '非质量问题门店退单',
-        orderCount: this.chartDatas.storeReturnStreamNumForQuality,
-        photoCount: this.chartDatas.storeReturnPhotoNumForQuality
+        orderCount: this.chartDatas.storeReturnStreamNumForNotQuality,
+        photoCount: this.chartDatas.storeReturnPhotoNumForNotQuality
       },
       {
         name: '质量问题门店退单',
-        orderCount: this.chartDatas.storeReturnStreamNumForNotQuality,
-        photoCount: this.chartDatas.storeReturnPhotoNumForNotQuality
+        orderCount: this.chartDatas.storeReturnStreamNumForQuality,
+        photoCount: this.chartDatas.storeReturnPhotoNumForQuality
       }
     ]
   }

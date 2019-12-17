@@ -65,10 +65,10 @@ export default {
         overTimeStreamNum: { value: 0, label: '超时单量' },
         storeReturnStreamNum: { value: 0, label: '门店退单' },
         storeReturnPhotoNum: { value: 0, label: '门店退单张数' },
-        storeReturnStreamNumForQuality: { value: 0, label: '门店退单（非质量问题）' },
-        storeReturnPhotoNumForQuality: { value: 0, label: '门店退单（非质量问题）张数' },
-        storeReturnStreamNumForNotQuality: { value: 0, label: '门店退单（质量问题）' },
-        storeReturnPhotoNumForNotQuality: { value: 0, label: '门店退单（质量问题）张数' }
+        storeReturnStreamNumForQuality: { value: 0, label: '门店退单（质量问题）' },
+        storeReturnPhotoNumForQuality: { value: 0, label: '门店退单（质量问题）张数' },
+        storeReturnStreamNumForNotQuality: { value: 0, label: '门店退单（非质量问题）' },
+        storeReturnPhotoNumForNotQuality: { value: 0, label: '门店退单（非质量问题）张数' }
       },
       performanceData: {
         reviewPlant: { value: 0.00, label: '审核种草' },
@@ -116,7 +116,7 @@ export default {
         const data = await WorkManage.getRetoucherQuota(req)
         for (const key in data) {
           if (this.otherData[key]) { this.otherData[key].value = data[key] }
-          if (this.orderStatisticsData[key]) { this.orderStatisticsData[key].value = data[key] }
+          if (this.orderStatisticsData[key]) { this.orderStatisticsData[key].value = parseInt(data[key]) }
           if (this.performanceData[key]) { this.performanceData[key].value = data[key] }
         }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
