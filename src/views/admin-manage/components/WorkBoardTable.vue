@@ -162,6 +162,7 @@ export default {
       const req = { streamId }
       AdminManage.manualReview(req)
         .then(() => {
+          this.$newMessage.success('流水审核绑定成功。')
           this.$router.push({ path: '/audit-center' })
         })
         .catch(err => {

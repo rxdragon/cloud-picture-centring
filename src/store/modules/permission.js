@@ -57,7 +57,7 @@ const mutations = {
     state.showPartnerPerformance = roles.includes('AdminManage.performanceInquire.retoucherQuota')
     state.showAuditPerformance = roles.includes('AdminManage.performanceInquire.reviewQuota')
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
-    // TODO 判断是否显示显示总体叫
+    // TODO 判断是否显示显示总体绩效
     // state.showOverallPerformance = roles.includes('retoucherQuota')
     // TODO 判断是否显示用时统计
     // state.showTimeStatistics = false

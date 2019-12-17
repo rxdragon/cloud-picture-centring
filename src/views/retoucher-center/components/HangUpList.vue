@@ -6,7 +6,6 @@
           <div class="stream-state" :class="{'wrap': scope.row.isCheckReturn && scope.row.isStoreReturn}">
             <div class="stream-num">{{ scope.row.streamNum }}</div>
             <el-tag v-if="scope.row.isCheckReturn" size="mini" type="danger">审核退回</el-tag>
-            <!-- TODO 门店退回 -->
             <el-tag v-if="scope.row.isStoreReturn" size="mini" type="danger">门店退回</el-tag>
           </div>
         </template>

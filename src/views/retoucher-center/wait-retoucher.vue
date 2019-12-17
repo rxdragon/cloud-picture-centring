@@ -314,6 +314,9 @@ export default {
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        if (error === '离线无法加入队列') {
+          this.$store.dispatch('user/setUserlineState', 'offline')
+        }
       }
     },
     /**

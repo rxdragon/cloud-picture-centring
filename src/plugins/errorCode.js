@@ -6,7 +6,11 @@ const ApiException = [
   [0xA11001005, '存在未认领流水'],
   [0xA11001006, '不匹配的产品'],
   [0xA11001007, '密钥错误'],
-  [0xA11001008, '非拼接产品不可拼接']
+  [0xA11001008, '非拼接产品不可拼接'],
+  [0xA11001009, '不存在照片信息'],
+  [0xA11001010, '不匹配的照片'],
+  [0xA11001011, '参数格式异常'],
+  [0xA11001012, '修片师未在线'],
 ]
 
 const CardException = [
@@ -48,6 +52,10 @@ const OrgException = [
   [0xA11014003, '已存在机构代号']
 ]
 
+const PhotoPoolException = [
+  [0xA11013001, '客片池参数不能为空']
+]
+
 const ProductException = [
   [0xA11002001, '产品状态异常'],
   [0xA11002002, '海草收益数目不对'],
@@ -69,7 +77,8 @@ const StaffException = [
   [0xA11003007, '名称含非法字符'],
   [0xA11003008, '账号编辑失败'],
   [0xA11003009, '账号编辑失败'],
-  [0xA11003010, '账号已在云端存在']
+  [0xA11003010, '账号已在云端存在'],
+  [0xA11003011, '伙伴未在线']
 ]
 
 const StreamException = [
@@ -80,7 +89,14 @@ const StreamException = [
   [0xA11004005, '没有匹配的照片'],
   [0xA11004006, '不匹配的伙伴'],
   [0xA11004007, '仅缦图单可挂起'],
-  [0xA11004008, '无法重复加急']
+  [0xA11004008, '无法重复加急'],
+  [0xA11004009, '照片路径不能为空'],
+  [0xA11004010, '审核失败'],
+  [0xA11004011, '照片数不匹配'],
+  [0xA11004012, '照片不匹配'],
+  [0xA11004013, '已审核流水'],
+  [0xA11004014, '不匹配的流水'],
+  [0xA11004015, '离线无法加入队列']
 ]
 
 const TagException = [
@@ -97,6 +113,7 @@ export const errText = [
   ...ImpulseException,
   ...OrderException,
   ...OrgException,
+  ...PhotoPoolException,
   ...ProductException,
   ...QueueException,
   ...StaffException,

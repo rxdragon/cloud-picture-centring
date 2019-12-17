@@ -134,7 +134,7 @@ export function getStreamQueueInfo () {
 }
 
 /**
- * @description 退出流水
+ * @description 退出队列
  */
 export function exitQueue () {
   return axios({
@@ -144,7 +144,7 @@ export function exitQueue () {
 }
 
 /**
- * @description 加入流水
+ * @description 加入队列
  */
 export function joinQueue () {
   return axios({
