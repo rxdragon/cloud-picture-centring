@@ -61,14 +61,17 @@ export function getStreamInfo (params) {
       if (filmEvaluation && filmEvaluation === 'plant') { checkPlantNum++ }
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
       photoItem.reworkNum = reworkNum
+      console.log(photoItem)
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
         // 过滤看片师新增照片
         photoItem.photoVersion = ''
       } else {
+        photoItem.otherPhotoVersion = photoItem.other_photo_version.filter(versionItem => versionItem.version !== 'store_rework')
+        photoItem.last_store_rework_photo && (photoItem.otherPhotoVersion = [...photoItem.otherPhotoVersion, photoItem.last_store_rework_photo])
         photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
-          ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum, isStoreReturn)
-          : settlePhoto([...photoItem.other_photo_version], reworkNum, isStoreReturn)
+          ? settlePhoto([...photoItem.otherPhotoVersion, photoItem.first_photo], reworkNum, isStoreReturn)
+          : settlePhoto([...photoItem.otherPhotoVersion], reworkNum, isStoreReturn)
       }
     })
     data.photos = data.photos.filter(photoItem => Boolean(photoItem.photoVersion))
@@ -90,7 +93,6 @@ export function getStreamInfo (params) {
       retouchRemark: data.note.retouch_note || '暂无修图备注',
       reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注'
     }
-
     createData.photos = data.photos
     if (data.storeEvaluateStream) {
       data.storeEvaluateStream.store_evaluate_star = data.storeEvaluateStream.store_evaluate_star > 5 ? 5 : data.storeEvaluateStream.store_evaluate_star
