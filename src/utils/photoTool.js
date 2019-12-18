@@ -106,10 +106,10 @@ export function loadPhoto (path) {
  * @param {*} file
  * @param {String} streamNum 订单流水号
  */
-export function getImgBufferPhoto (file, streamNum = '') {
+export async function getImgBufferPhoto (file, streamNum = '') {
   const downloadPath = store.getters.saveFolder // 保存地址
   const filePath = store.getters.autoUpload ? mPath.joinPath(downloadPath, streamNum, file.name) : file.path
-  const data = UtilIpc.getImgBufferPhoto(filePath)
+  const data = await UtilIpc.getImgBufferPhoto(filePath)
   return data
 }
 

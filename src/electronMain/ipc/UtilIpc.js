@@ -1,16 +1,23 @@
 const { ipcRenderer } = require('electron')
+import * as mPath from '@/utils/selfPath.js'
 
 /**
  * @description 获取md5值
  * @param {*} filePath
  */
-function getImgBufferPhoto (filePath) {
-  const result = ipcRenderer.sendSync('get-img-info', { filePath })
-  if (result.state === 'error') {
-    console.log(result.msg)
-    throw new Error(result.msg)
-  }
-  return result.msg
+async function getImgBufferPhoto (filePath) {
+  return new Promise((resolve, reject) => {
+    ipcRenderer.send('get-img-info', { filePath })
+    const ext = mPath.getExtName(filePath)
+    const name = mPath.getBaseName(filePath, ext)
+    ipcRenderer.on(`get-img-info-return-${name}`, (event, { state, msg }) => {
+      if (state === 'success') {
+        resolve(msg)
+      } else {
+        reject(msg)
+      }
+    })
+  })
 }
 
 export default {
