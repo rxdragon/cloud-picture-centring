@@ -88,7 +88,7 @@ export const lastBaseRoutes = [
     component: Layout,
     children: [
       {
-        path: '',
+        path: 'updateNotes',
         name: 'updateNotes',
         component: () => import('@/views/update-notes/index.vue'),
         meta: { title: '关于', icon: 'el-icon-s-order' }

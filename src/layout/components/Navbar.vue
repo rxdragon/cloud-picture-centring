@@ -210,6 +210,7 @@ export default {
 .Navbar {
   width: 100%;
   height: 100%;
+  -webkit-app-region: drag;
 
   .navbar-main {
     margin-left: var(--navbarMainLeft);
@@ -221,6 +222,8 @@ export default {
     transition: all 0.3s;
 
     .nav-left {
+      -webkit-app-region: no-drag;
+
       .icon-button {
         padding: 0;
         width: 24px;
@@ -235,6 +238,7 @@ export default {
     .nav-right {
       display: flex;
       align-items: center;
+      -webkit-app-region: no-drag;
       -webkit-user-select: none;
 
       .download-management {
@@ -333,7 +337,6 @@ export default {
       height: 100%;
       width: 50%;
       cursor: pointer;
-      -webkit-app-region: drag;
       -webkit-user-select: none;
 
       .test-title {

@@ -89,6 +89,20 @@ export default {
 
 <style lang="less">
 .markdown-editor {
+  blockquote {
+    font-weight: 900;
+    font-size: 16px;
+    border-color: #42b983;
+    border-left-width: 4px;
+    border-left-style: solid;
+    background-color: #efeeee;
+    padding: 5px 15px;
+
+    p {
+      color: #545454;
+    }
+  }
+
   strong {
     background-color: #fff5f5;
     color: #ff502c;
