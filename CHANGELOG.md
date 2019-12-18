@@ -1,4 +1,4 @@
-# 2.0.0 (2019-12-17)
+# 2.0.0 (2019-12-18)
 
 |范围|描述|commitId|
 --|--|--
@@ -157,6 +157,7 @@
  增加不种不把查询 | [4f53e0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f53e0b)
  增加布局ui | [08ef4cd](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08ef4cd)
  增加显示ci | [8e2e4bb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8e2e4bb)
+ 增加版本更新说明 | [eb7ce67](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eb7ce67)
  审核退回增加修片师显示 | [04cc9ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/04cc9ad)
  提交版本 | [47b0857](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/47b0857)
  新增照片版本 | [30e0531](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/30e0531)
@@ -166,12 +167,12 @@
  更改列表问题 | [79a1242](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79a1242)
  更改成片种草显示逻辑 | [579efe7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/579efe7)
  更改调试轮询参数 | [dab85ba](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/dab85ba)
+ 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  直接审核功能 | [19689bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/19689bc)
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
  退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
- 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
  重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
 

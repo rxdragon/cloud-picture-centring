@@ -1,8 +1,8 @@
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } from '@/utils/enumerate.js'
-import md5 from 'md5'
-import store from '@/store' // vuex
+import * as mPath from '@/utils/selfPath.js'
 import * as SessionTool from '@/utils/sessionTool.js'
-const fileType = require('file-type')
+import UtilIpc from '@electronMain/ipc/UtilIpc'
+import store from '@/store' // vuex
 
 /**
  * @description 截取文件名
@@ -104,21 +104,13 @@ export function loadPhoto (path) {
 /**
  * @description 获取图片md5值
  * @param {*} file
+ * @param {String} streamNum 订单流水号
  */
-export function getImgBufferPhoto (file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = function (evt) {
-      const imgBuffer = Buffer.from(evt.target.result)
-      const uploadPhotoMd5 = md5(imgBuffer)
-      const type = fileType(imgBuffer).mime
-      resolve({ uploadPhotoMd5, type })
-    }
-    reader.onerror = function (error) {
-      reject(error)
-    }
-    reader.readAsArrayBuffer(file)
-  })
+export function getImgBufferPhoto (file, streamNum = '') {
+  const downloadPath = store.getters.saveFolder // 保存地址
+  const filePath = store.getters.autoUpload ? mPath.joinPath(downloadPath, streamNum, file.name) : file.path
+  const data = UtilIpc.getImgBufferPhoto(filePath)
+  return data
 }
 
 /**

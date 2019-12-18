@@ -1,6 +1,5 @@
 import mime from 'mime'
 import store from '@/store'
-import md5 from 'md5'
 import Vue from 'vue'
 import * as originalFs from 'original-fs'
 import * as mPath from '@/utils/selfPath.js'
@@ -48,22 +47,6 @@ export async function filterFiles (readfilePath) {
   const photoMime = ['image/jpeg', 'image/png']
   const filterData = files.filter(item => photoMime.includes(getFileMime(item)))
   return filterData
-}
-
-/**
- * @description 根据路径获取md5
- * @param {*} path
- */
-export async function reasonPathGetMd5 (path) {
-  try {
-    const imgBuffer = await originalFs.readFileSync(path)
-    return md5(imgBuffer)
-  } catch (error) {
-    if (error.message.includes('no such file or directory')) {
-      newMessage.error('找不到路径')
-    }
-    throw new Error(error)
-  }
 }
 
 /**

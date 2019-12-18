@@ -5,7 +5,7 @@
     </div>
     <div v-for="versionItem in versionArr" :key="versionItem.title">
       <h3 class="version-title">版本更新：{{ versionItem.title }} </h3>
-      <marddown-viewer :value="versionItem.desc" :key="versionItem.title + 'viewer'" />
+      <marddown-viewer :key="versionItem.title + 'viewer'" :value="versionItem.desc" />
     </div>
   </div>
 </template>

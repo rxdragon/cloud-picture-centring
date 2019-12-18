@@ -74,7 +74,6 @@
 import { mapGetters } from 'vuex'
 import variables from '@/styles/variables.less'
 import PhotoBox from '@/components/PhotoBox'
-import * as mPath from '@/utils/selfPath.js'
 import * as Commonality from '@/api/commonality'
 import * as SessionTool from '@/utils/sessionTool'
 import * as PhotoTool from '@/utils/photoTool'
@@ -207,6 +206,7 @@ export default {
       let uploadPhotoMd5
       let type
       this.$store.dispatch('setting/showLoading', this.routeName)
+      // 上一次照片是否上传完成
       if (!this.uploadPhoto.every(item => item.response)) {
         this.$newMessage.warning('请等待照片上传完成')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -220,10 +220,11 @@ export default {
         return Promise.reject()
       }
       try {
-        const imgInfo = await PhotoTool.getImgBufferPhoto(file)
+        const imgInfo = PhotoTool.getImgBufferPhoto(file, this.streamNum)
         uploadPhotoMd5 = imgInfo.uploadPhotoMd5
         type = imgInfo.type
       } catch (error) {
+        console.log(error)
         this.$newMessage.error('读取本地图片失败')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
@@ -279,13 +280,17 @@ export default {
       this.uploadPhoto = fileList
       // 校验数据
       if (this.autoUpload && file.response && file.response.url) {
-        const path = mPath.joinPath(this.saveFolder, this.streamNum, file.name)
-        const selfMd5 = await AutoUpload.reasonPathGetMd5(path)
-        if (!file.response.url.includes(selfMd5)) {
-          const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
-          willDeleteIndex >= 0 && (fileList.splice(willDeleteIndex, 1))
-          this.$newMessage.error('上传文件校验错误')
-          return false
+        try {
+          const selfMd5 = PhotoTool.getImgBufferPhoto(file, this.streamNum).uploadPhotoMd5
+          if (!file.response.url.includes(selfMd5)) {
+            const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
+            willDeleteIndex >= 0 && (fileList.splice(willDeleteIndex, 1))
+            this.$newMessage.error('上传文件校验错误')
+            return false
+          }
+        } catch (error) {
+          console.error(error)
+          this.$newMessage.error('上传校验错误')
         }
       }
       const uid = file.uid
