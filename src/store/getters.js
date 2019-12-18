@@ -18,6 +18,7 @@ const defaultGetters = {
   updateDomain: state => state.setting.updateDomain, // 上传后的照片域名
   returnStreamId: state => state.notification.returnStreamId, // 退单id
   showAnniversary: state => state.notification.showAnniversary, // 显示弹框
+  roles: state => state.permission.roles, // 全部权限
   downloadList: state => state.downloadlist.downloadList // 下载完成列表
 }
 

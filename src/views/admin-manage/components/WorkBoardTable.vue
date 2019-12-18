@@ -100,7 +100,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['showUrgentStream'])
+    ...mapGetters(['showUrgentStream', 'roles'])
   },
   methods: {
     /**
@@ -114,9 +114,9 @@ export default {
      * @description 是否可以直接审核
      */
     canManualReview (item) {
-      const manualReviewState = [StreamStateEnum.WaitReview]
-      // TODO 直接审核的权限
-      return manualReviewState.includes(item.state)
+      const isWaitReview = [StreamStateEnum.WaitReview].includes(item.state)
+      const hasManualReviewPermission = this.roles.includes('AdminManage.workBoard.manualReview')
+      return isWaitReview && hasManualReviewPermission
     },
     /**
      * @description 加急流水
