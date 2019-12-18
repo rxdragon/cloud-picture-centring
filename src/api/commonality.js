@@ -61,7 +61,6 @@ export function getStreamInfo (params) {
       if (filmEvaluation && filmEvaluation === 'plant') { checkPlantNum++ }
       if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
       photoItem.reworkNum = reworkNum
-      console.log(photoItem)
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
         // 过滤看片师新增照片

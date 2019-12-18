@@ -53,7 +53,6 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
-    console.log(roles)
     state.showPartnerPerformance = roles.includes('AdminManage.performanceInquire.retoucherQuota')
     state.showAuditPerformance = roles.includes('AdminManage.performanceInquire.reviewQuota')
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')

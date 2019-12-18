@@ -220,12 +220,12 @@ export default {
         return Promise.reject()
       }
       try {
-        const imgInfo = await PhotoTool.getImgBufferPhoto(file, this.streamNum)
-        uploadPhotoMd5 = imgInfo.uploadPhotoMd5
-        type = imgInfo.type
+        const imgInfo = await PhotoTool.getImgBufferPhoto(file)
+        uploadPhotoMd5 = imgInfo.md5
+        type = imgInfo.typeInfo.mime
       } catch (error) {
         console.error(error)
-        this.$newMessage.error('读取本地图片失败')
+        this.$newMessage.error(error)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
@@ -281,8 +281,8 @@ export default {
       // 校验数据
       if (this.autoUpload && file.response && file.response.url) {
         try {
-          const info = await PhotoTool.getImgBufferPhoto(file, this.streamNum)
-          const selfMd5 = info.uploadPhotoMd5
+          const info = await PhotoTool.getImgBufferPhoto(file)
+          const selfMd5 = info.md5
           if (!file.response.url.includes(selfMd5)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
             if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }

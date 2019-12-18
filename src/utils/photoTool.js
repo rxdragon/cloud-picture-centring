@@ -1,8 +1,9 @@
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } from '@/utils/enumerate.js'
-import * as mPath from '@/utils/selfPath.js'
 import * as SessionTool from '@/utils/sessionTool.js'
-import UtilIpc from '@electronMain/ipc/UtilIpc'
+import * as mPath from '@/utils/selfPath.js'
 import store from '@/store' // vuex
+import md5 from 'js-md5'
+const fileType = require('file-type')
 
 /**
  * @description 截取文件名
@@ -56,6 +57,7 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
   for (const version of PhotoEnums) {
     const findFinishPhoto = photoArr.find(photoItem => photoItem.version === 'finish_photo')
     if (version === 'last_retouch_photo' && !findFinishPhoto) break
+    if (version === 'store_rework' && !findFinishPhoto) break
     const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
     if (findVersionPhoto) { createData.push(findVersionPhoto) }
   }
@@ -102,14 +104,82 @@ export function loadPhoto (path) {
 }
 
 /**
+ * @description 分区读取文件
+ * @param {*} file
+ * @param {*} chunkCallback
+ * @param {*} endCallback 结束回调用
+ */
+function readChunked (file, chunkCallback, endCallback) {
+  const fileSize = file.size
+  const chunkSize = 10 * 1024 * 1024 // 10MB
+  let offset = 0
+  const readNext = () => {
+    const fileSlice = file.slice(offset, offset + chunkSize)
+    reader.readAsArrayBuffer(fileSlice)
+  }
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    if (reader.error) {
+      endCallback(reader.error || {})
+      return
+    }
+    offset += reader.result.byteLength
+    chunkCallback(reader.result, offset, fileSize)
+    if (offset >= fileSize) {
+      endCallback(null)
+      return
+    }
+    readNext()
+  }
+
+  reader.onerror = (err) => {
+    endCallback(err || {})
+  }
+
+  readNext()
+}
+
+/**
+ * @description 获取文件md5
+ * @param {*} file
+ * @param {*} cbProgress
+ */
+function getMD5 (file, cbProgress) {
+  let fileInfo = null
+  return new Promise((resolve, reject) => {
+    const hash = md5.create()
+    readChunked(file, (chunk, offs, total) => {
+      hash.update(chunk)
+      if (cbProgress) { cbProgress(offs / total) }
+      if (offs - chunk.byteLength === 0) {
+        fileInfo = fileType(chunk)
+      }
+    }, err => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve({
+          md5: hash.hex(),
+          typeInfo: fileInfo
+        })
+      }
+    })
+  })
+}
+
+/**
  * @description 获取图片md5值
  * @param {*} file
- * @param {String} streamNum 订单流水号
  */
-export async function getImgBufferPhoto (file, streamNum = '') {
-  const downloadPath = store.getters.saveFolder // 保存地址
-  const filePath = store.getters.autoUpload ? mPath.joinPath(downloadPath, streamNum, file.name) : file.path
-  const data = await UtilIpc.getImgBufferPhoto(filePath)
+export async function getImgBufferPhoto (file) {
+  const data = await getMD5(file)
+  if (file.path) {
+    const fileExt = mPath.getExtName(file.path)
+    if (fileExt !== `.${data.typeInfo.ext}`) {
+      return Promise.reject('格式错误')
+    }
+  }
   return data
 }
 
