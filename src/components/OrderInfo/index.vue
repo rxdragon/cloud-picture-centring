@@ -16,7 +16,7 @@
       </div>
       <div class="table-panel table-panel-concent" :class="{'table-panel-rework': isRework}">
         <div class="caid">
-          <div class="stream-state" :class="{'wrap': isRework}">
+          <div class="stream-state" :class="{'wrap': reworkTwice}">
             <div class="stream-num">{{ orderData.streamNum }}</div>
             <el-tag v-if="orderData.isCheckReturn" size="mini" type="danger">审核退回</el-tag>
             <el-tag v-if="orderData.isStoreReturn" size="mini" type="danger">门店退回</el-tag>
@@ -77,6 +77,9 @@ export default {
   computed: {
     isRework () {
       return (this.orderData.isCheckReturn || this.orderData.isStoreReturn) && this.showRetouch
+    },
+    reworkTwice () {
+      return this.orderData.isCheckReturn || this.orderData.isStoreReturn
     }
   },
   mounted () {},

@@ -177,7 +177,7 @@ export async function getImgBufferPhoto (file) {
   if (file.path) {
     const fileExt = mPath.getExtName(file.path)
     if (fileExt !== `.${data.typeInfo.ext}`) {
-      return Promise.reject('格式错误')
+      return Promise.reject(`${file.path}格式错误应为${data.typeInfo.ext}格式`)
     }
   }
   return data
