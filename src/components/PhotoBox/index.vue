@@ -70,21 +70,24 @@ export default {
     },
     // 重修理由
     recedeReason () {
-      if (this.showRecedeReason && this.tags && this.tags.values && this.tags.values.rework_reason) {
+      const hasReworkReason = this.tags && this.tags.values && this.tags.values.rework_reason
+      if (this.showRecedeReason && hasReworkReason) {
         return this.tags.values.rework_reason
       } else {
         return ''
       }
     },
     storeReworkReason () {
-      if (this.showRecedeReason && this.tags && this.tags.values && this.tags.values.store_rework_reason) {
+      const hasStoreReworkReason = this.tags && this.tags.values && this.tags.values.store_rework_reason
+      if (this.showRecedeReason && hasStoreReworkReason) {
         return this.tags.values.store_rework_reason
       } else {
         return ''
       }
     },
     storeReworkNote () {
-      if (this.showRecedeReason && this.tags && this.tags.values && this.tags.values.store_rework_note) {
+      const hasStoreReworkNote = this.tags && this.tags.values && this.tags.values.store_rework_note
+      if (this.showRecedeReason && hasStoreReworkNote) {
         return this.tags.values.store_rework_note
       } else {
         return ''

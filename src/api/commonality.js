@@ -98,20 +98,8 @@ export function getStreamInfo (params) {
     }
     createData.storeEvaluateStream = data.storeEvaluateStream
     const retoucherNpsAvg = data.tags && data.tags.values && data.tags.values.retoucher_score || '-'
-    switch (+retoucherNpsAvg) {
-      case 10:
-        createData.retoucherNpsAvg = `超满意（10分）`
-        break
-      case 6:
-        createData.retoucherNpsAvg = `基本满意（6分）`
-        break
-      case 2:
-        createData.retoucherNpsAvg = `不满意（2分）`
-        break
-      default:
-        createData.retoucherNpsAvg = `${retoucherNpsAvg}分`
-        break
-    }
+    const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
+    createData.retoucherNpsAvg = npsAvgEnum(+retoucherNpsAvg) || `${retoucherNpsAvg}分`
     return createData
   })
 }

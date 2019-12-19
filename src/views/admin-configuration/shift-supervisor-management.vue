@@ -87,10 +87,10 @@ export default {
             this.$store.dispatch('setting/showLoading', this.routeName)
             await SupervisorOnDuty.setSupervisorOnDuty(req)
             this.$newMessage.success('修改成功')
-            this.$store.dispatch('setting/hiddenLoading', this.routeName)
           } catch (error) {
-            this.$store.dispatch('setting/hiddenLoading', this.routeName)
             console.error(error)
+          } finally {
+            this.$store.dispatch('setting/hiddenLoading', this.routeName)
           }
         } else {
           this.$newMessage.warning('请选择值班主管')

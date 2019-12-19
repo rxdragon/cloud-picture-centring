@@ -160,7 +160,7 @@ export function removeSureRetouchOrder (aid) {
  */
 export function saveReturnRetouchOrder (aid) {
   const saveKey = `return-retouch-id`
-  let returnArr = JSON.parse(localStorage.getItem(saveKey)) || []
+  let returnArr = localStorage.getItem(saveKey) ? JSON.parse(localStorage.getItem(saveKey)) : []
   returnArr = new Set([...returnArr])
   returnArr.add(aid)
   const data = JSON.stringify([...returnArr])
@@ -172,7 +172,7 @@ export function saveReturnRetouchOrder (aid) {
  */
 export function getReturnRetouchOrder (aid) {
   const saveKey = `return-retouch-id`
-  const returnArr = JSON.parse(localStorage.getItem(saveKey))
+  const returnArr = localStorage.getItem(saveKey) ? JSON.parse(localStorage.getItem(saveKey)) : null
   return returnArr ? returnArr.includes(aid) : false
 }
 

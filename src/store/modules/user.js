@@ -162,7 +162,7 @@ const actions = {
         window.polling.checkOnline = null
         commit('SET_ACTIVE_TIME')
         dispatch('getNowTime')
-      })
+      }).catch(() => {})
     } else {
       dispatch('getNowTime')
     }
