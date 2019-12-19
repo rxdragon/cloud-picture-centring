@@ -1,8 +1,9 @@
 // commonality
 
 import axios from '@/plugins/axios.js'
-import { keyToHump } from '../utils/index.js'
-import { settlePhoto } from '../utils/photoTool.js'
+import { keyToHump } from '@/utils/index.js'
+import { settlePhoto } from '@/utils/photoTool.js'
+import { PhotoStatics } from '@/utils/enumerate.js'
 
 /**
  * @description 获取修图类型
@@ -43,7 +44,8 @@ export function getStreamInfo (params) {
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
-      const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
+      const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.CheckReturn)
+      const isStoreReturn = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.StoreReturn)
       if (photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('plant')) {
         photoItem.grass = 'plant'
         plantNum++
@@ -61,11 +63,14 @@ export function getStreamInfo (params) {
       photoItem.reworkNum = reworkNum
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
+        // 过滤看片师新增照片
         photoItem.photoVersion = ''
       } else {
+        photoItem.otherPhotoVersion = photoItem.other_photo_version.filter(versionItem => versionItem.version !== 'store_rework')
+        photoItem.last_store_rework_photo && (photoItem.otherPhotoVersion = [...photoItem.otherPhotoVersion, photoItem.last_store_rework_photo])
         photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
-          ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo], reworkNum)
-          : settlePhoto([...photoItem.other_photo_version], reworkNum)
+          ? settlePhoto([...photoItem.otherPhotoVersion, photoItem.first_photo], reworkNum, isStoreReturn)
+          : settlePhoto([...photoItem.otherPhotoVersion], reworkNum, isStoreReturn)
       }
     })
     data.photos = data.photos.filter(photoItem => Boolean(photoItem.photoVersion))
@@ -92,6 +97,9 @@ export function getStreamInfo (params) {
       data.storeEvaluateStream.store_evaluate_star = data.storeEvaluateStream.store_evaluate_star > 5 ? 5 : data.storeEvaluateStream.store_evaluate_star
     }
     createData.storeEvaluateStream = data.storeEvaluateStream
+    const retoucherNpsAvg = data.tags && data.tags.values && data.tags.values.retoucher_score || '-'
+    const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
+    createData.retoucherNpsAvg = npsAvgEnum[+retoucherNpsAvg] || `${retoucherNpsAvg}分`
     return createData
   })
 }

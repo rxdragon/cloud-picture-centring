@@ -18,45 +18,79 @@ export function StreamState () {
     review_return_retouch: '审核退回修图中',
     wait_review: '等待审核',
     reviewing: '审核中',
-    finish: '审核完成'
+    finish: '审核完成',
+    store_return_retouch: '门店退回',
+    hanging: '挂起中'
   }
 }
 
-// 照片状态
-export const PhotoEnum = {
-  OriginalPhoto: 'original_photo', // 原片
-  FirstPhoto: 'first_photo', // 一次成片
-  ReturnPhoto: 'return_photo', // 退回照片
-  CompletePhoto: 'complete_photo', // 审核成片
-  FinishPhoto: 'finish_photo' // 最终成片
+export const StreamStateEnum = {
+  WaitRetouch: 'wait_retouch',
+  Retouching: 'retouching',
+  ReviewReturnRetouch: 'review_return_retouch',
+  WaitReview: 'wait_review',
+  Reviewing: 'reviewing',
+  Finish: 'finish',
+  StoreReturnRetouch: 'store_return_retouch',
+  Hanging: 'hanging'
 }
+
+// 流水静态状态资源
+export const StreamStatics = {
+  StoreReturn: 'store_rework',
+  CheckReturn: 'rework'
+}
+
+// 照片静态状态资源
+export const PhotoStatics = {
+  StoreReturn: 'store_rework',
+  CheckReturn: 'return_photo'
+}
+
+// 照片状态
+export const PhotoEnum = [
+  'original_photo', // 原片
+  'first_photo', // 一次成片
+  'return_photo', // 退回照片
+  'complete_photo', // 审核成片
+  'last_retouch_photo', // 最新修照片
+  'finish_photo' // 最终成片
+]
 
 // 没有重修返回字段
-export const NoReturnPhotoEnum = {
-  OriginalPhoto: 'original_photo', // 原片
-  CompletePhoto: 'complete_photo', // 审核成片
-  FinishPhoto: 'finish_photo' // 最终成片
-}
+export const NoReturnPhotoEnum = [
+  'original_photo', // 原片
+  'complete_photo', // 审核成片
+  'last_retouch_photo', // 最新修照片
+  'finish_photo' // 最终成片
+]
 
 // 有重修返回字段
-export const ReturnOnePhotoEnum = {
-  OriginalPhoto: 'original_photo', // 原片
-  FirstPhoto: 'first_photo', // 一次成片
-  CompletePhoto: 'complete_photo', // 审核成片
-  FinishPhoto: 'finish_photo' // 最终成片
-}
+export const ReturnOnePhotoEnum = [
+  'original_photo',
+  'first_photo',
+  'complete_photo',
+  'last_retouch_photo',
+  'finish_photo'
+]
+
+export const StoreReturnPhoto = [
+  'store_rework' // 门店退回
+]
 
 export const PhotoEnumName = {
   OriginalPhoto: '原片',
   FirstPhoto: '一次成片',
   ReturnPhoto: '退回照片',
   CompletePhoto: '审核成片',
-  FinishPhoto: '最终成片',
+  FinishPhoto: '顾客满意片',
   original_photo: '原片',
   first_photo: '一次成片',
   return_photo: '退回照片',
   complete_photo: '审核成片',
-  finish_photo: '最终成片'
+  finish_photo: '顾客满意片',
+  store_rework: '门店退回',
+  last_retouch_photo: '最新修后照片'
 }
 
 // 搜索类型

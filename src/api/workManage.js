@@ -74,15 +74,26 @@ export function getRetoucherQuota (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.retouchSinglePhotoNum = Number(msg.retouchSinglePhotoNum)
-    msg.retouchMultiPhotoNum = Number(msg.retouchMultiPhotoNum)
-    msg.income = Number(msg.income.impulse) + Number(msg.income.retouch)
-    const count = Number(msg.retoucherFinishPhotoNum)
-    msg.reviewPlantRate = transformPercentage(msg.reviewPlant, count)
-    msg.reviewPullRate = transformPercentage(msg.reviewPull, count)
-    msg.retouchReworkRate = transformPercentage(msg.retouchRework, msg.retoucherFinishStreamNum)
-    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum)
-    msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) + '星'
+    msg.retouchSinglePhotoNum = Number(msg.retouchSinglePhotoNum) // 单人修图张数
+    msg.retouchMultiPhotoNum = Number(msg.retouchMultiPhotoNum) // 多人修图张数
+    msg.income = Number(msg.income.impulse) + Number(msg.income.retouch) + Number(msg.income.reward)// 收益
+    const reviewCount = Number(msg.retoucherFinishPhotoNum) // 修图张数
+    msg.reviewPlantRate = getAvg(msg.reviewPlant, reviewCount) // 审核种草数量
+    msg.reviewPullRate = getAvg(msg.reviewPull, reviewCount) // 审核拔草数量
+    const evaluatedCount = Number(msg.retoucherEvaluatedNum) // 抽查总数
+    msg.retoucherEvaluatedPlantRate = getAvg(msg.retoucherEvaluatedPlantNum, evaluatedCount) // 抽查种草率
+    msg.retoucherEvaluatedPullRate = getAvg(msg.retoucherEvaluatedPullNum, evaluatedCount) // 抽查拔草率
+    msg.retoucherEvaluatedNoPlantNoPullRate = getAvg(msg.retoucherEvaluatedNoPlantNoPullNum, evaluatedCount) // 直接通过率
+    const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
+    msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.score, retoucherNpsCount) // 顾客满意度
+    msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) // 门店评分
+    msg.retouchReworkRate = getAvg(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
+    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
+    msg.storeReturnStreamNum = parseInt(msg.storeReturnStreamNum || 0) // 门店退单
+    msg.storeReturnStreamNumForQuality = parseInt(msg.storeReturnStreamNumForQuality || 0) // 门店退单（非质量问题）
+    msg.storeReturnPhotoNumForQuality = parseInt(msg.storeReturnPhotoNumForQuality || 0) // 门店退单（非质量问题）张数
+    msg.storeReturnStreamNumForNotQuality = parseInt(msg.storeReturnStreamNumForNotQuality || 0) // 门店退单（质量问题）
+    msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
     return msg
   })
 }
@@ -168,6 +179,7 @@ export function getStoreEvaluate (params) {
     msg.list.forEach(listItem => {
       listItem.retoucherName = listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
       listItem.retouchGroupName = listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name || '-'
+      listItem.retoucherNpsAvg = listItem.stream.tags && listItem.stream.tags.values && listItem.stream.tags.values.retoucher_score || '-'
     })
     return msg
   })

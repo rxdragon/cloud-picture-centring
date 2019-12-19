@@ -22,13 +22,13 @@
     </div>
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="stream_num" label="流水号" width="250px" />
-        <el-table-column label="接单时间" width="150px">
+        <el-table-column prop="stream_num" label="流水号" width="160" />
+        <el-table-column label="接单时间" width="150">
           <template slot-scope="scope">
             {{ scope.row.receipt_at | toTimeSpan }}
           </template>
         </el-table-column>
-        <el-table-column label="审核通过时间" width="150px">
+        <el-table-column label="审核通过时间" width="150">
           <template slot-scope="scope">
             {{ scope.row.pass_at | toTimeSpan }}
           </template>
@@ -56,6 +56,7 @@
             </el-popover>
           </template>
         </el-table-column>
+        <el-table-column prop="retoucherNpsAvg" label="顾客满意度" />
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="linkto(scope.row.id)">详情</el-button>
@@ -223,6 +224,22 @@ export default {
       position: sticky;
       top: 0;
       z-index: 99;
+    }
+  }
+
+  .stream-state {
+    .el-tag:nth-last-of-type(1) {
+      margin-left: 12px;
+    }
+
+    .stream-num {
+      display: inline-block;
+    }
+
+    &.wrap {
+      .stream-num {
+        display: block;
+      }
     }
   }
 }

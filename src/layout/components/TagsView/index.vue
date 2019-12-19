@@ -203,6 +203,7 @@ export default {
     toLastView (visitedViews, view) {
       const latestView = visitedViews.slice(-1)[0]
       if (latestView) {
+        delete latestView.name
         this.$router.push(latestView)
       } else {
         // now the default is to redirect to the home page if there is no tags-view,

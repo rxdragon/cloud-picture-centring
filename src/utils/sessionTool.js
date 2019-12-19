@@ -159,10 +159,11 @@ export function removeSureRetouchOrder (aid) {
  * @description 保存退单流水
  */
 export function saveReturnRetouchOrder (aid) {
-  const returnArr = new Set()
+  const saveKey = `return-retouch-id`
+  let returnArr = localStorage.getItem(saveKey) ? JSON.parse(localStorage.getItem(saveKey)) : []
+  returnArr = new Set([...returnArr])
   returnArr.add(aid)
   const data = JSON.stringify([...returnArr])
-  const saveKey = `return-retouch-id`
   localStorage.setItem(saveKey, data)
 }
 
@@ -171,7 +172,7 @@ export function saveReturnRetouchOrder (aid) {
  */
 export function getReturnRetouchOrder (aid) {
   const saveKey = `return-retouch-id`
-  const returnArr = JSON.parse(localStorage.getItem(saveKey))
+  const returnArr = localStorage.getItem(saveKey) ? JSON.parse(localStorage.getItem(saveKey)) : null
   return returnArr ? returnArr.includes(aid) : false
 }
 
@@ -238,4 +239,23 @@ export function getStaffList () {
   const saveKey = `staff-info`
   const data = localStorage.getItem(saveKey)
   return data ? JSON.parse(data) : null
+}
+
+/**
+ * @description 获取主管列表
+ */
+export function getExecutiveList () {
+  const saveKey = `executive`
+  const data = localStorage.getItem(saveKey)
+  return data ? JSON.parse(data) : null
+}
+
+/**
+ * @description 保存主管列表
+ * @param {*} params
+ */
+export function setExecutiveList (executiveList) {
+  const saveKey = `executive`
+  const data = JSON.stringify(executiveList)
+  localStorage.setItem(saveKey, data)
 }

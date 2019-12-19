@@ -15,8 +15,14 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
+    <div v-if="storeReworkReason" class="recede-reason">
+      门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
+    </div>
+    <div v-if="storeReworkNote" class="recede-reason">
+      门店退回备注： <span class="reason-content">{{ storeReworkNote }}</span>
+    </div>
     <div v-if="recedeReason" class="recede-reason">
-      重修原因： {{ recedeReason }}
+      审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
     </div>
   </div>
 </template>
@@ -64,8 +70,25 @@ export default {
     },
     // 重修理由
     recedeReason () {
-      if (this.showRecedeReason && this.tags && this.tags.values && this.tags.values.rework_reason) {
+      const hasReworkReason = this.tags && this.tags.values && this.tags.values.rework_reason
+      if (this.showRecedeReason && hasReworkReason) {
         return this.tags.values.rework_reason
+      } else {
+        return ''
+      }
+    },
+    storeReworkReason () {
+      const hasStoreReworkReason = this.tags && this.tags.values && this.tags.values.store_rework_reason
+      if (this.showRecedeReason && hasStoreReworkReason) {
+        return this.tags.values.store_rework_reason
+      } else {
+        return ''
+      }
+    },
+    storeReworkNote () {
+      const hasStoreReworkNote = this.tags && this.tags.values && this.tags.values.store_rework_note
+      if (this.showRecedeReason && hasStoreReworkNote) {
+        return this.tags.values.store_rework_note
       } else {
         return ''
       }
@@ -189,6 +212,12 @@ export default {
   color: @red;
   margin: 0 6px 6px;
   padding-top: 9px;
-  border-top: 1px solid #dddfe6;
+  border-top: 1px solid #ebeef5;
+  line-height: 20px;
+
+  .reason-content {
+    color: #606266;
+    word-break: break-all;
+  }
 }
 </style>

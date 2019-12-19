@@ -2,11 +2,12 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
+import { StreamStatics } from '@/utils/enumerate.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
 /**
  * @description 流水列表[待修，挂起]
- * @param {*} params [state]
+ * @param {*} params [state] [待修，挂起]
  */
 export function getRetouchStreams (params) {
   return axios({
@@ -21,9 +22,10 @@ export function getRetouchStreams (params) {
       listItem.photoNum = listItem.photos_count
       listItem.type = listItem.product.retouch_standard
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
-      listItem.waitTime = waitTime(listItem.created_at)
+      listItem.waitTime = waitTime(listItem.created_at, listItem.pass_at)
       listItem.photographerUpdate = listItem.created_at || '-'
-      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework') || false
+      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.CheckReturn)
+      listItem.isStoreReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.StoreReturn)
       if (params.state === 'hanging') {
         listItem.hangTime = waitTime(listItem.last_hang_at)
       } else {
@@ -37,6 +39,20 @@ export function getRetouchStreams (params) {
       }
     })
     return msg
+  })
+}
+
+/**
+ * @description 是否有待修订单
+ */
+export function hasRetouchingStreams () {
+  const params = { state: 'retouching' }
+  return axios({
+    url: '/project_cloud/retoucher/getRetouchStreams',
+    method: 'get',
+    params
+  }).then(msg => {
+    return Boolean(msg.retouchingNum)
   })
 }
 
@@ -58,27 +74,24 @@ export function getStreamInfo (params) {
       photographer: msg.order.tags ? msg.order.tags.values.photographer : '-', // 摄影
       productName: msg.product && msg.product.name,
       photoNum: msg.photos.filter(item => +item.people_num > 0).length,
-      waitTime: waitTime(msg.created_at),
+      waitTime: waitTime(msg.created_at, msg.pass_at),
       retouchRemark: msg.note.retouch_note,
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
-      streamState: msg.state
+      streamState: msg.state,
+      isCheckReturn: msg.tags && msg.tags.statics && msg.tags.statics.includes('rework'),
+      isStoreReturn: msg.tags && msg.tags.statics && msg.tags.statics.includes('store_rework')
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
       photoItem.isCover = false
     })
-    if (msg.tags && msg.tags.statics && msg.tags.statics.includes('rework')) {
-      createData.photos = msg.photos.filter(photoItem => {
-        const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('return_photo')
-        photoItem.isReturnPhoto = isReturnPhoto
-        const findReturnPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_photo')
-        photoItem.returnPhotoPath = isReturnPhoto && PhotoTool.handlePicPath(findReturnPhoto.path)
-        return isReturnPhoto
-      })
-    } else {
-      createData.photos = msg.photos
-    }
+    // 最新退回照片
+    const returnShowPhotos = msg.photos.filter(photoItem => {
+      const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
+      return Boolean(findReturnShowPhoto)
+    })
+    createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
     createData.hourGlass = msg.hour_glass
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     return createData
@@ -121,7 +134,7 @@ export function getStreamQueueInfo () {
 }
 
 /**
- * @description 退出流水
+ * @description 退出队列
  */
 export function exitQueue () {
   return axios({
@@ -131,7 +144,7 @@ export function exitQueue () {
 }
 
 /**
- * @description 加入流水
+ * @description 加入队列
  */
 export function joinQueue () {
   return axios({
@@ -173,6 +186,7 @@ export function getRetouchQuotaList (params) {
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
       listItem.plantNum = findPlantPhoto.length
       listItem.pullNum = findPullPhoto.length
+      listItem.retoucherNpsAvg = listItem.tags && listItem.tags.values && listItem.tags.values.retoucher_score || '-'
     })
     createData.list = msg.list
     return createData

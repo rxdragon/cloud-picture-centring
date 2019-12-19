@@ -77,7 +77,8 @@ export default {
   props: {
     listItem: { type: Object, required: true },
     uuid: { type: String, required: true },
-    finished: { type: Boolean }
+    finished: { type: Boolean },
+    showPopver: { type: Boolean }
   },
   data () {
     return {
@@ -86,6 +87,9 @@ export default {
   },
   computed: {
     state () {
+      if (!this.finished && this.listItem.status === 'completed' && this.showPopver) {
+        DownIpc.transferToVuexList(this.uuid)
+      }
       return this.listItem.status
     },
     canResume () {

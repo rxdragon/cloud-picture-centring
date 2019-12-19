@@ -1,6 +1,7 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump, timeFormat } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
+import { StreamStatics } from '@/utils/enumerate.js'
 
 /**
  * @description 获取审核信息
@@ -13,7 +14,6 @@ export function getReviewInfo () {
     if (!msg) return null
     const createData = {}
     createData.canGlass = true
-    createData.isRework = false
     msg.photos.forEach(photoItem => {
       const findOrigianlPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
       photoItem.priviewPhotoData = [{
@@ -27,9 +27,9 @@ export function getReviewInfo () {
       }]
       photoItem.isTemplate = photoItem.priviewPhotoData[0].path.includes('template')
       photoItem.isRework = false
+      photoItem.showReturnLabel = photoItem.other_photo_version.find(versionItem => versionItem.version === 'return_show')
       if (photoItem.tags && photoItem.tags.statics) {
         photoItem.isRework = photoItem.tags.statics.includes('return_photo')
-        createData.isRework = photoItem.isRework || createData.isRework
         photoItem.canGlass = !photoItem.tags.statics.includes('plant') &&
           !photoItem.tags.statics.includes('pull') &&
           !photoItem.isRework
@@ -47,11 +47,13 @@ export function getReviewInfo () {
     createData.photographer = msg.order.tags && msg.order.tags.values.photographer
     createData.productName = msg.product && msg.product.name || '-'
     createData.photoNum = msg.photos.filter(item => +item.people_num > 0).length
-    createData.waitTime = waitTime(msg.created_at)
+    createData.waitTime = waitTime(msg.created_at, msg.pass_at)
     createData.retouchRemark = msg.note.retouch_note
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     createData.requireLabel = msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {}
     createData.streamState = msg.state
+    createData.isCheckReturn = msg.tags && msg.tags.statics && msg.tags.statics.includes(StreamStatics.CheckReturn)
+    createData.isStoreReturn = msg.tags && msg.tags.statics && msg.tags.statics.includes(StreamStatics.StoreReturn)
     createData.photos = msg.photos
     createData.retoucherName = msg.retoucher && (msg.retoucher.name || msg.retoucher.real_name) || '-'
     return createData

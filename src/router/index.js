@@ -82,6 +82,21 @@ export const constantRoutes = [
   }
 ]
 
+export const lastBaseRoutes = [
+  {
+    path: '/update-notes',
+    component: Layout,
+    children: [
+      {
+        path: 'updateNotes',
+        name: 'updateNotes',
+        component: () => import('@/views/update-notes/index.vue'),
+        meta: { title: '关于', icon: 'el-icon-s-order' }
+      }
+    ]
+  }
+]
+
 export const asyncRoutes = [
   retoucherCenter,
   accountManage,

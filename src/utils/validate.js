@@ -96,10 +96,12 @@ export function isTwoDecimals (value) {
  * @description 等待时间
  * @param {*} time
  */
-export function waitTime (time) {
+export function waitTime (time, passTime) {
   const nowTime = new Date().getTime()
   const valueTime = new Date(time).getTime()
-  let differ = nowTime - valueTime
+  let passAtTime
+  if (passTime) { passAtTime = new Date(passTime).getTime() }
+  let differ = passTime ? (passAtTime - valueTime) : (nowTime - valueTime)
   differ = (differ / 1000 / 60).toFixed(0) + 'min'
   return differ
 }

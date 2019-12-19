@@ -127,7 +127,7 @@ function resume (uuid) {
 
 // 删除完成或者未开始项
 function deleteItem (uuid) {
-  if (downloadList[uuid].status !== 'completed') {
+  if (downloadList[uuid] && downloadList[uuid].status !== 'completed') {
     const result = ipcRenderer.sendSync('download-manage:delete', { uuid })
     if (result === 'fail') throw new Error('pause fail, maybe not pause or uuid not exists')
   }

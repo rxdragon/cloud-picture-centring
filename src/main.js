@@ -16,6 +16,8 @@ import { ipcRenderer } from 'electron'
 import lottie from 'lottie-web'
 
 window.bodymovin = lottie
+// TODO 注册websocket
+// Vue.prototype.$ws = new Ws()
 
 // 注入全局过滤器
 Object.keys(filters).forEach(key => {

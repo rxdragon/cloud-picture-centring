@@ -53,15 +53,27 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="scope">
           <div class="operation-box">
-            <el-button type="primary" size="mini" @click="linkto(scope.row)">详情</el-button>
-            <el-button
-              v-if="!scope.row.staticsUrgent && scope.row.state !== 'reviewing' && scope.row.state !== 'finish' "
-              type="danger"
-              size="mini"
-              @click="urgentStream(scope.row.id)"
-            >
-              加急
-            </el-button>
+            <el-dropdown v-if="showDropdown(scope.row)" placement="bottom" :show-timeout="100" trigger="hover">
+              <el-button size="mini" type="primary">操作<i class="el-icon-arrow-down el-icon--right" /></el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item class="primary-color" @click.native="linkto(scope.row)">流水详情</el-dropdown-item>
+                <el-dropdown-item
+                  v-if="canUrgent(scope.row)"
+                  class="danger-color"
+                  @click.native="urgentStream(scope.row.id)"
+                >
+                  流水加急
+                </el-dropdown-item>
+                <el-dropdown-item
+                  v-if="canManualReview(scope.row)"
+                  class="warning-color"
+                  @click.native="manualReview(scope.row.id)"
+                >
+                  直接审核
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <el-button v-else size="mini" type="primary" @click.native="linkto(scope.row)">流水详情</el-button>
           </div>
         </template>
       </el-table-column>
@@ -71,6 +83,9 @@
 
 <script>
 import * as AdminManage from '@/api/adminManage'
+import { StreamStateEnum } from '@/utils/enumerate'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'WorkBoardTable',
   props: {
@@ -83,7 +98,31 @@ export default {
       routeName: this.$route.name // 路由名字
     }
   },
+  computed: {
+    ...mapGetters(['showUrgentStream', 'roles'])
+  },
   methods: {
+    /**
+     * @description 是否显示下拉框
+     */
+    showDropdown (item) {
+      return this.canUrgent(item) || this.canManualReview(item)
+    },
+    /**
+     * @description 是够可以加急
+     */
+    canUrgent (item) {
+      const urgentState = [StreamStateEnum.Reviewing, StreamStateEnum.Finish]
+      return this.showUrgentStream && !item.staticsUrgent && !urgentState.includes(item.state)
+    },
+    /**
+     * @description 是否可以直接审核
+     */
+    canManualReview (item) {
+      const isWaitReview = [StreamStateEnum.WaitReview].includes(item.state)
+      const hasManualReviewPermission = this.roles.includes('AdminManage.workBoard.manualReview')
+      return isWaitReview && hasManualReviewPermission
+    },
     /**
      * @description 加急流水
      */
@@ -119,6 +158,24 @@ export default {
           query: { workBoardStreamNum }
         })
       }
+    },
+    /**
+     * @description 直接审核
+     */
+    manualReview (streamId) {
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      const req = { streamId }
+      AdminManage.manualReview(req)
+        .then(() => {
+          this.$newMessage.success('流水审核绑定成功。')
+          this.$router.push({ path: '/audit-center' })
+        })
+        .catch(err => {
+          console.error(err)
+        })
+        .finally(() => {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        })
     }
   }
 }
@@ -165,6 +222,32 @@ export default {
   .staff-info {
     display: grid;
     text-align: left;
+  }
+}
+</style>
+
+<style lang="less">
+@import '~@/styles/variables.less';
+
+.primary-color {
+  color: @blue;
+}
+
+.danger-color {
+  color: @red;
+
+  &:hover {
+    background-color: @bgRed !important;
+    color: #ff1b5b !important;
+  }
+}
+
+.warning-color {
+  color: #f7a741;
+
+  &:hover {
+    background-color: @bgOrange !important;
+    color: @orange !important;
   }
 }
 </style>

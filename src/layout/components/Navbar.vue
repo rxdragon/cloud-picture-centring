@@ -18,7 +18,37 @@
       </span>
       <div class="nav-right">
         <download-management />
-        <el-avatar :src="userInfo.avatarImg" />
+        <!-- 修图师在线功能 -->
+        <el-popover
+          v-if="isRetoucher"
+          placement="bottom-start"
+          width="200"
+          popper-class="change-popover"
+          trigger="click"
+        >
+          <div class="change-state">
+            <ul>
+              <li class="online-li" @click="setOnline">
+                <div class="change-point" />
+                <span class="change-text" :class="{'active': isOnline, 'disabled-li': loading}">在线</span>
+                <transition name="el-zoom-in-top">
+                  <i v-show="isOnline" class="li-check el-icon-check" />
+                </transition>
+              </li>
+              <li class="offline-li" @click="setOffline">
+                <div class="change-point" />
+                <span class="change-text" :class="{'active': !isOnline, 'disabled-li': loading}">离线</span>
+                <transition name="el-zoom-in-top">
+                  <i v-show="!isOnline" class="li-check el-icon-check" />
+                </transition>
+              </li>
+            </ul>
+          </div>
+          <el-avatar slot="reference" class="online-point" :class="isOnline ? 'online' : 'offline'" :src="userInfo.avatarImg" />
+        </el-popover>
+        <div v-if="isRetoucher" class="online-state" :class="{ 'online': isOnline }">{{ isOnline ? '[在线]' : '[离线]' }}</div>
+        <!-- 非修图师 -->
+        <el-avatar v-if="!isRetoucher" slot="reference" :src="userInfo.avatarImg" />
         <div class="user-name">{{ userInfo.nickname || userInfo.name }}</div>
         <div class="label">{{ userInfo.departmentName }}</div>
         <el-button class="icon-button" icon="iconfont iconlogin-out" @click="logout" />
@@ -31,6 +61,7 @@
 import DownloadManagement from '@/components/DownloadManagement'
 
 import * as User from '@/api/user.js'
+import * as Retoucher from '@/api/retoucher.js'
 import { throttle } from '@/utils/throttle.js'
 import { mapGetters } from 'vuex'
 export default {
@@ -40,11 +71,15 @@ export default {
     return {
       throttleRefresh: throttle(this.refresh, 1000),
       starTime: null,
-      deplay: 3000
+      deplay: 3000,
+      loading: false
     }
   },
   computed: {
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo', 'lineState', 'isRetoucher']),
+    isOnline () {
+      return this.lineState === 'online'
+    }
   },
   mounted () {
     this.$ipcRenderer.on('enter-full', (e, item) => {
@@ -98,13 +133,72 @@ export default {
       }
     },
     /**
+     * @description 上线
+     */
+    setOnline () {
+      if (this.loading || this.isOnline) return
+      this.loading = true
+      Retoucher.changeOnline()
+        .then(() => {
+          this.$store.dispatch('user/setUserlineState', 'online')
+        })
+        .catch(err => {
+          this.$newMessage.error('上线失败')
+          console.error(err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    /**
+     * @description 下线
+     */
+    setOffline () {
+      if (this.loading || !this.isOnline) return
+      this.loading = true
+      Retoucher.changeOffline()
+        .then(() => {
+          this.$store.dispatch('user/setUserlineState', 'offline')
+        })
+        .catch(err => {
+          console.error(err)
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    /**
      * @description 退出登录
      */
-    logout () {
-      User.logout()
-        .then(() => {
+    async logout () {
+      try {
+        if (!this.isRetoucher) {
+          await User.logout()
           this.$router.push('/login')
-        })
+          return
+        } else {
+          Retoucher.changeOffline()
+            .then(async () => {
+              await User.logout()
+              this.$router.push('/login')
+            })
+            .catch(() => {
+              this.$confirm('', '您当前有需要处理的订单暂不可退出系统', {
+                confirmButtonText: '确定',
+                center: true,
+                type: 'warning',
+                customClass: 'check-online',
+                showCancelButton: false,
+                closeOnPressEscape: false,
+                showClose: false,
+                closeOnClickModal: false
+              })
+            })
+        }
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error(error)
+      }
     }
   }
 }
@@ -116,6 +210,7 @@ export default {
 .Navbar {
   width: 100%;
   height: 100%;
+  -webkit-app-region: drag;
 
   .navbar-main {
     margin-left: var(--navbarMainLeft);
@@ -127,6 +222,8 @@ export default {
     transition: all 0.3s;
 
     .nav-left {
+      -webkit-app-region: no-drag;
+
       .icon-button {
         padding: 0;
         width: 24px;
@@ -141,6 +238,7 @@ export default {
     .nav-right {
       display: flex;
       align-items: center;
+      -webkit-app-region: no-drag;
       -webkit-user-select: none;
 
       .download-management {
@@ -152,6 +250,68 @@ export default {
         height: 24px;
         border: 1px solid #fff;
         margin-right: 6px;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .online-point {
+        position: relative;
+        overflow: inherit;
+
+        img {
+          width: 100%;
+          border-radius: 50%;
+        }
+
+        &::after {
+          content: '';
+          display: block;
+          width: 8px;
+          height: 8px;
+          background-color: #909399;
+          position: absolute;
+          bottom: -2px;
+          right: -2px;
+          border-radius: 50%;
+        }
+
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          background-color: #fff;
+          opacity: 0;
+          border-radius: 50%;
+          transition: all 0.3s;
+        }
+      }
+
+      .online {
+        color: @green !important;
+
+        &::after {
+          background-color: @green;
+        }
+      }
+
+      .offline {
+        position: relative;
+
+        &::before {
+          opacity: 0.6;
+        }
+      }
+
+      .online-state {
+        font-size: 14px;
+        margin-right: 8px;
+        font-weight: 500;
+        color: #909399;
+        transition: color 0.3s;
       }
 
       .user-name {
@@ -177,13 +337,76 @@ export default {
       height: 100%;
       width: 50%;
       cursor: pointer;
-      -webkit-app-region: drag;
       -webkit-user-select: none;
 
       .test-title {
         color: red;
         font-size: 40px;
         vertical-align: middle;
+      }
+    }
+  }
+}
+
+.change-state {
+  ul {
+    margin: 0;
+    list-style: none;
+    padding: 0 12px;
+
+    li {
+      line-height: 34px;
+      height: 34px;
+      cursor: pointer;
+
+      .change-point {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: @green;
+        display: inline-block;
+        margin-right: 12px;
+      }
+
+      .li-check {
+        font-size: 16px;
+        color: @blue;
+        font-weight: 600;
+        margin-top: 9px;
+        float: right;
+      }
+
+      .change-text {
+        font-weight: 500;
+        font-size: 14px;
+        color: #606266;
+
+        &.active {
+          color: @blue;
+        }
+
+        &.disabled-li {
+          color: #c1c0c0 !important;
+          cursor: progress;
+        }
+      }
+
+      &:hover {
+        .change-text {
+          color: @blue;
+        }
+      }
+    }
+
+    .online-li {
+      .change-point {
+        background-color: @green;
+      }
+    }
+
+    .offline-li {
+      .change-point {
+        background-color: #909399;
       }
     }
   }

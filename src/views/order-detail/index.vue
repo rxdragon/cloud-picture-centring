@@ -1,5 +1,5 @@
 <template>
-  <div class="order-detail">
+  <div class="order-detail page-class">
     <div class="header">
       <h3>修图详情</h3>
     </div>
@@ -14,19 +14,22 @@
     </div>
     <!-- 看片师评价 -->
     <div v-if="storeEvaluateStream" class="check-evaluate module-panel">
-      <div class="panel-title">审核评价</div>
+      <div class="panel-title">门店评价</div>
       <div class="tabel-panel">
-        <div class="panel-content">
+        <div class="tabel-title">顾客满意度评价</div>
+        <div class="tabel-title">看片师评价</div>
+        <div class="tabel-title">看片师评语</div>
+      </div>
+      <div class="tabel-panel content-box">
+        <div class="tabel-content">{{ retoucherNpsAvg }}</div>
+        <div class="tabel-content">
           <el-rate
             v-model="storeEvaluateStream.store_evaluate_star"
             disabled
             :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
           />
         </div>
-        <div class="require-box">
-          <span class="require-title">修图评语：</span>
-          <span class="require-content">{{ storeEvaluateStream.store_evaluate_reason || '暂无评语' }}</span>
-        </div>
+        <div class="tabel-content">{{ storeEvaluateStream.store_evaluate_reason || '暂无评语' }}</div>
       </div>
     </div>
   </div>
@@ -48,7 +51,8 @@ export default {
       orderId: '', // 订单id
       orderData: {}, // 订单信息
       photos: [],
-      storeEvaluateStream: null // 看片评分
+      storeEvaluateStream: null, // 看片评分
+      retoucherNpsAvg: '-分'
     }
   },
   computed: {
@@ -85,6 +89,7 @@ export default {
         this.orderData = data.orderData
         this.photos = data.photos
         this.storeEvaluateStream = data.storeEvaluateStream
+        this.retoucherNpsAvg = data.retoucherNpsAvg
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -128,35 +133,42 @@ export default {
   }
 
   .check-evaluate {
+    padding: 26px 20px;
+
     .tabel-panel {
       background-color: #fafafa;
       border-radius: 4px;
-      padding: 26px 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-items: flex-start;
 
-      .panel-content {
-        text-align: left;
-        padding-bottom: 24px;
-        border-bottom: 1px solid @borderColor;
-      }
-
-      .require-box {
-        margin-top: 16px;
+      .tabel-title {
+        padding: 17px 20px;
         font-size: 14px;
-        font-weight: 400;
+        font-weight: 500;
         color: #303133;
         line-height: 22px;
-        display: flex;
-
-        .require-title {
-          width: 70px;
-          display: inline-block;
-        }
-
-        .require-content {
-          width: 500px;
-          display: inline-block;
-        }
+        text-align: left;
       }
+
+      .tabel-content {
+        text-align: left;
+        padding: 21px 20px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #606266;
+        line-height: 24px;
+        background-color: #fff;
+      }
+
+      .panel-content {
+        border-bottom: 1px solid @borderColor;
+        text-align: center;
+      }
+    }
+
+    .content-box {
+      border-bottom: 1px solid #f2f6fc;
     }
   }
 }
@@ -168,6 +180,6 @@ export default {
 }
 
 .el-rate__icon {
-  font-size: 30px;
+  font-size: 24px;
 }
 </style>

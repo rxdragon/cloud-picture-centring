@@ -11,7 +11,7 @@ export default {
   props: {
     endValue: { type: [String, Number], required: true },
     decimals: { type: Boolean }, // 是否是小数动画
-    showPoint: { type: Boolean } // 是否显示小数
+    showPoint: { type: Boolean } // 是否显示小数点
   },
   watch: {
     endValue (newValue, oldValue) {

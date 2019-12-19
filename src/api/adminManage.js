@@ -63,7 +63,7 @@ export function getStreamList (params) {
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
         reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
-        waitTime: waitTime(item.created_at),
+        waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
@@ -98,7 +98,7 @@ export function getRetouchStreamList (params) {
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
         reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
-        waitTime: waitTime(item.created_at),
+        waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
@@ -145,7 +145,7 @@ export function getQueueStreamList (params) {
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
         reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
-        waitTime: waitTime(item.created_at),
+        waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
       })
@@ -198,9 +198,21 @@ export function getStreamInfo (params) {
       streamState: data.state,
       retoucherName: data.retoucher && (data.retoucher.name || data.retoucher.real_name) || '-',
       reviewerName: data.reviewer && data.reviewer.name || '',
-      photographer: data.order.tags && data.order.tags.values.photographer || '-'
+      photographerName: data.order.tags && data.order.tags.values.photographer || '-'
     }
     createData.photos = data.photos
     return createData
+  })
+}
+
+/**
+ * @description 直接审核
+ * @param {*} params
+ */
+export function manualReview (params) {
+  return axios({
+    url: '/project_cloud/operator/manualReview',
+    method: 'POST',
+    data: params
   })
 }
