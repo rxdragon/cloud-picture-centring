@@ -111,7 +111,7 @@ export function loadPhoto (path) {
  */
 function readChunked (file, chunkCallback, endCallback) {
   const fileSize = file.size
-  const chunkSize = 10 * 1024 * 1024 // 10MB
+  const chunkSize = 4 * 1024 * 1024 // 4MB
   let offset = 0
   const readNext = () => {
     const fileSlice = file.slice(offset, offset + chunkSize)
