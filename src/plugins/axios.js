@@ -3,9 +3,9 @@
 import Vue from 'vue'
 import axios from 'axios'
 import router from '@/router/index.js'
+import store from '../store' // vuex
 import { newMessage } from '@/utils/message.js'
 import { Message } from 'element-ui'
-import store from '../store' // vuex
 import { errorCode } from './errorCode'
 import { readConfig } from "../utils/electronConfig"
 

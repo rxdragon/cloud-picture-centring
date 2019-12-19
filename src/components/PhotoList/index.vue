@@ -3,7 +3,7 @@
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
       <photo-box downing :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)">
         <template v-slot:title>
-          <span class="lable-title">{{ photoItem.version | toPhotoEnumName }}</span>
+          <span class="lable-title">{{ photoItem.version | toPhotoVerName }}</span>
         </template>
       </photo-box>
       <div v-if="photoItem.version === 'complete_photo' && needGrade" class="grade-box">
@@ -50,18 +50,6 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'PhotoList',
   components: { PhotoBox, PreviewPhoto },
-  filters: {
-    toPhotoEnumName (value) {
-      const nameList = {
-        original_photo: '原片',
-        first_photo: '一次成片',
-        return_photo: '退回照片',
-        complete_photo: '审核成片',
-        finish_photo: '最终成片'
-      }
-      return nameList[value]
-    }
-  },
   props: {
     photoData: { type: Array, default: () => [] }, // 照片数据
     needGrade: { type: Boolean },

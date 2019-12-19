@@ -223,7 +223,47 @@ export function haveReworkStream () {
     url: '/project_cloud/retoucher/haveReworkStream',
     method: 'GET'
   }).then(msg => {
-    if (msg.length) return msg[0]
-    return null
+    if (!Object.values(msg).length) return []
+    const returnType = ['review_return_retouch', 'store_return_retouch']
+    let createData = []
+    returnType.forEach(type => {
+      if (msg[type]) {
+        const data = msg[type].map(returnMsg => {
+          return { streamId: returnMsg, type }
+        })
+        createData = [...createData, ...data]
+      }
+    })
+    return createData
+  })
+}
+
+/**
+ * @description 上线功能
+ * @param {*} params
+ */
+export function changeOnline () {
+  return axios({
+    url: '/project_cloud/retoucher/online',
+    method: 'PUT'
+  })
+}
+
+/**
+ * @description 下线功能
+ */
+export function changeOffline (params) {
+  const data = params || { action: 'self' }
+  return axios({
+    url: '/project_cloud/retoucher/offline',
+    method: 'PUT',
+    data
+  })
+}
+
+export function getOnlineState () {
+  return axios({
+    url: '/project_cloud/retoucher/getOnlineState',
+    method: 'GET'
   })
 }

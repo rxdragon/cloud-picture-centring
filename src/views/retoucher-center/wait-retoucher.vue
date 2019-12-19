@@ -7,9 +7,9 @@
           <h3>我的待修订单</h3>
           <div class="header-left">
             <span v-if="state !== 2" class="queue-info queue-length">修图排队中流水：{{ queueInfo.waitRetouchStream }}</span>
-            <span v-if="state === 2" class="queue-info">排队接单中（顺序{{ queueInfo.retouchQueueIndex }}）</span>
-            <el-button v-if="state === 1 || state === 3" type="primary" :disabled="state === 3 || Boolean(retouchingListNum)" @click="joinQueue">接单</el-button>
-            <el-button v-if="state === 2" type="info" @click="exitQueue">取消排队</el-button>
+            <span v-else class="queue-info">排队接单中（顺序{{ queueInfo.retouchQueueIndex }}）</span>
+            <el-button v-if="state !== 2" type="primary" :disabled="disabledJoinQueue" @click="joinQueue">接单</el-button>
+            <el-button v-else type="info" @click="exitQueue">取消排队</el-button>
           </div>
         </div>
         <!-- 今日信息 -->
@@ -73,7 +73,7 @@
             <div class="box-left">
               <div class="title">今日获得收益</div>
               <div class="data-info">
-                <div class="num money-num">
+                <div class="num money-num" :class="{ 'no-income': isNoIncome }">
                   <span class="symbol money-color">¥</span>
                   <span class="actual-num money-color">
                     <count-to show-point :end-value="quotaInfo.todayIncome" />
@@ -121,6 +121,7 @@ import RetouchOrder from './components/RetouchOrder'
 import TakeOrdersList from './components/TakeOrdersList'
 import HangUpList from './components/HangUpList'
 import CountTo from '@/components/CountTo'
+import { mapGetters } from 'vuex'
 
 import * as SessionTool from '@/utils/sessionTool'
 import * as Retoucher from '@/api/retoucher.js'
@@ -161,12 +162,20 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['lineState']),
     // 排队状态
     state () {
-      // 1 未接单  2 排队接单 3 接单中
+      // 1 未接单  2 排队 3 接单中
       if (this.queueInfo.inQueue) return 2
       if (this.retouchingListNum) return 3
       return 1
+    },
+    // 禁止接单
+    disabledJoinQueue () {
+      return this.state === 3 || Boolean(this.retouchingListNum) || this.lineState === 'offline'
+    },
+    isNoIncome () {
+      return Number(this.quotaInfo.todayIncome) === 0
     }
   },
   watch: {
@@ -305,6 +314,9 @@ export default {
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        if (error === '离线无法加入队列') {
+          this.$store.dispatch('user/setUserlineState', 'offline')
+        }
       }
     },
     /**
@@ -414,6 +426,12 @@ export default {
           margin-right: 12px;
         }
 
+        .no-income {
+          .money-color {
+            color: #909399 !important;
+          }
+        }
+
         .prop-icon-box {
           display: flex;
 
@@ -488,6 +506,14 @@ export default {
 .order-list {
   .el-tabs__content {
     overflow: inherit;
+  }
+}
+
+.check-online {
+  .el-message-box__title {
+    span {
+      font-size: 16px;
+    }
   }
 }
 </style>

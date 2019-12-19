@@ -1,5 +1,5 @@
 <template>
-  <div class="performance">
+  <div class="performance page-class">
     <div class="header">
       <h3>修图机构绩效</h3>
     </div>
@@ -33,7 +33,6 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import InstitutionSelect from '@SelectBox/InstitutionSelect'
-
 import { parseTime } from '@/utils/index.js'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as Institution from '@/api/institution.js'

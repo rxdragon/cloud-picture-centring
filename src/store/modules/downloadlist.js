@@ -4,6 +4,10 @@ const state = {
 
 const mutations = {
   ADD_DOWNLOAD_LIST: (state, { downloadItem }) => {
+    const findSameUuidDownItem = state.downloadList.find(item => item.config.uuid === downloadItem.config.uuid)
+    if (findSameUuidDownItem) {
+      return false
+    }
     state.downloadList.unshift(downloadItem)
   },
   DEL_DOWNLOAD_LIST: (state, { uuid }) => {

@@ -1,7 +1,9 @@
-import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum } from '@/utils/enumerate.js'
-import md5 from 'md5'
-import store from '@/store' // vuex
+import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } from '@/utils/enumerate.js'
 import * as SessionTool from '@/utils/sessionTool.js'
+import * as mPath from '@/utils/selfPath.js'
+import store from '@/store' // vuex
+import md5 from 'js-md5'
+const fileType = require('file-type')
 
 /**
  * @description 截取文件名
@@ -42,12 +44,20 @@ export function handlePicPath (path, type) {
  * @param {*} photoArr
  * @param {*} reworkTimes 重修次数
  */
-export function settlePhoto (photoArr, reworkTimes = 0) {
+export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
   const PhotoEnumArr = [NoReturnPhotoEnum, ReturnOnePhotoEnum, PhotoEnum]
   const createData = []
-  const PhotoEnums = reworkTimes < 2 ? PhotoEnumArr[reworkTimes] : PhotoEnumArr[2]
-  for (const key in PhotoEnums) {
-    const version = PhotoEnums[key]
+  const PhotoEnums = reworkTimes < 2 ? [...PhotoEnumArr[reworkTimes]] : [...PhotoEnumArr[2]]
+  if (storeReturn) {
+    const findCompeteIndex = PhotoEnums.findIndex(item => item === 'complete_photo')
+    if (findCompeteIndex) {
+      PhotoEnums.splice(findCompeteIndex + 1, 0, ...StoreReturnPhoto)
+    }
+  }
+  for (const version of PhotoEnums) {
+    const findFinishPhoto = photoArr.find(photoItem => photoItem.version === 'finish_photo')
+    if (version === 'last_retouch_photo' && !findFinishPhoto) break
+    if (version === 'store_rework' && !findFinishPhoto) break
     const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
     if (findVersionPhoto) { createData.push(findVersionPhoto) }
   }
@@ -94,21 +104,83 @@ export function loadPhoto (path) {
 }
 
 /**
+ * @description 分区读取文件
+ * @param {*} file
+ * @param {*} chunkCallback
+ * @param {*} endCallback 结束回调用
+ */
+function readChunked (file, chunkCallback, endCallback) {
+  const fileSize = file.size
+  const chunkSize = 4 * 1024 * 1024 // 4MB
+  let offset = 0
+  const readNext = () => {
+    const fileSlice = file.slice(offset, offset + chunkSize)
+    reader.readAsArrayBuffer(fileSlice)
+  }
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    if (reader.error) {
+      endCallback(reader.error || {})
+      return
+    }
+    offset += reader.result.byteLength
+    chunkCallback(reader.result, offset, fileSize)
+    if (offset >= fileSize) {
+      endCallback(null)
+      return
+    }
+    readNext()
+  }
+
+  reader.onerror = (err) => {
+    endCallback(err || {})
+  }
+
+  readNext()
+}
+
+/**
+ * @description 获取文件md5
+ * @param {*} file
+ * @param {*} cbProgress
+ */
+function getMD5 (file, cbProgress) {
+  let fileInfo = null
+  return new Promise((resolve, reject) => {
+    const hash = md5.create()
+    readChunked(file, (chunk, offs, total) => {
+      hash.update(chunk)
+      if (cbProgress) { cbProgress(offs / total) }
+      if (offs - chunk.byteLength === 0) {
+        fileInfo = fileType(chunk)
+      }
+    }, err => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve({
+          md5: hash.hex(),
+          typeInfo: fileInfo
+        })
+      }
+    })
+  })
+}
+
+/**
  * @description 获取图片md5值
  * @param {*} file
  */
-export function getImgBufferPhoto (file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = function (evt) {
-      const imgBuffer = Buffer.from(evt.target.result)
-      resolve(md5(imgBuffer))
+export async function getImgBufferPhoto (file) {
+  const data = await getMD5(file)
+  if (file.path) {
+    const fileExt = mPath.getExtName(file.path)
+    if (fileExt !== `.${data.typeInfo.ext}`) {
+      return Promise.reject('格式错误')
     }
-    reader.onerror = function (error) {
-      reject(error)
-    }
-    reader.readAsArrayBuffer(file)
-  })
+  }
+  return data
 }
 
 /**

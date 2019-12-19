@@ -65,20 +65,19 @@
         <el-button type="primary" @click="modifyStream(item)">提交修改</el-button>
       </div>
     </div>
-    <div v-if="!dataList.length" class="module-panel no-data">
-      暂无数据
-    </div>
+    <no-data v-if="!dataList.length" class="module-panel" />
   </div>
 </template>
 
 <script>
 import PhotoBox from '@/components/PhotoBox'
+import NoData from '@/components/NoData'
 import * as WorkManage from '@/api/workManage'
 import { jointClass } from '@/assets/config/jointClass.js'
 
 export default {
   name: 'AmendOrder',
-  components: { PhotoBox },
+  components: { PhotoBox, NoData },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -275,10 +274,6 @@ export default {
     .submit-box {
       text-align: center;
     }
-  }
-
-  .no-data {
-    padding: 40px 24px;
   }
 }
 

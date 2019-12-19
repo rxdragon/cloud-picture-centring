@@ -39,14 +39,12 @@
     <template v-else>
       <div class="table-panel panel-grade">
         <div class="content-title">修图类型</div>
-        <div class="content-title">摄影师</div>
         <div class="content-title">当前状态</div>
         <div class="content-title">修图师</div>
         <div v-if="orderInfo.reviewerName" class="content-title">审核人</div>
       </div>
       <div class="table-panel panel-grade">
         <div class="panel-content">{{ orderInfo.retouchStandard | toRetouchClass }}</div>
-        <div class="panel-content">{{ orderInfo.photographer }}</div>
         <div class="panel-content">{{ orderInfo.streamState | toStreamState }}</div>
         <div class="panel-content">{{ orderInfo.retoucherName }}</div>
         <div v-if="orderInfo.reviewerName" class="panel-content">{{ orderInfo.reviewerName }}</div>
@@ -126,10 +124,11 @@ export default {
     line-height: 14px;
     text-align: left;
     border-bottom: 1px solid #f2f6fc;
-    margin-bottom: 24px;
   }
 
   .panel-require {
+    margin-top: 24px;
+
     .panel-main {
       background-color: #fafafa;
       border-radius: 4px;

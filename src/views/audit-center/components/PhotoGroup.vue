@@ -1,6 +1,11 @@
 <template>
   <div class="photo-grop">
-    <div v-for="(photoItem, photoIndex) in photos.priviewPhotoData" :key="photoIndex" class="photo-box" :class="{'rework-photo': (photoItem.version === 'original_photo' && photos.isRework)}">
+    <div
+      v-for="(photoItem, photoIndex) in photos.priviewPhotoData"
+      :key="photoIndex"
+      class="photo-box"
+      :class="{'rework-photo': (photoItem.version === 'original_photo' && photos.showReturnLabel)}"
+    >
       <photo-box
         :src="photoItem.path"
         show-joint-label
@@ -193,6 +198,7 @@ export default {
   display: flex;
   padding: 20px 0;
   flex-wrap: wrap;
+  align-items: flex-start;
 
   .photo-box {
     width: @photoBox;

@@ -18,7 +18,7 @@ export default {
   name: 'App',
   components: { PaintedEggshell },
   computed: {
-    ...mapGetters(['showCat'])
+    ...mapGetters(['showCat', 'isRetoucher', 'lineState'])
   },
   created () {
     if (this.$isDev) {

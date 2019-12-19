@@ -30,29 +30,38 @@ const actions = {
   // 查询订单
   async hasReturnNotification ({ commit }) {
     const data = await Retoucher.haveReworkStream()
-    if (data && !SessionTool.getReturnRetouchOrder(data)) {
+    const newReturnMsg = data.filter(item => {
+      return !SessionTool.getReturnRetouchOrder(item.streamId)
+    })
+    if (!newReturnMsg.length) {
+      store.dispatch('notification/pollingHasReturn')
+      return
+    }
+    for (const returnMsg of newReturnMsg) {
+      const { streamId, type } = returnMsg
+      const returnMessageText = type === 'review_return_retouch'
+        ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
+        : '您当前有门店退回订单需要处理，未免影响顾客取片时间请及时处理。'
       try {
-        await MessageBox.confirm('您有新的重修流水，为免影响沙漏时间请及时处理。', '', {
+        await MessageBox.confirm(returnMessageText, '', {
           confirmButtonText: '现在处理',
           cancelButtonText: '稍后处理',
           type: 'warning',
           closeOnPressEscape: false,
           center: true
         })
-        commit('SET_RETURN_STREAM_ID', data)
+        commit('SET_RETURN_STREAM_ID', streamId)
         if (router.app.$route.name !== 'WaitRetoucher') {
-          router.push({
-            path: '/retoucher-center'
-          })
+          router.push({ path: '/retoucher-center' })
         }
+      } catch (error) {
+        console.error(error)
       } finally {
-        SessionTool.saveReturnRetouchOrder(data)
-        LogStream.retoucherRebuildOk(+data)
-        store.dispatch('notification/pollingHasReturn')
+        SessionTool.saveReturnRetouchOrder(streamId)
+        LogStream.retoucherRebuildOk(+streamId)
       }
-    } else {
-      store.dispatch('notification/pollingHasReturn')
     }
+    store.dispatch('notification/pollingHasReturn')
   },
   // 轮询是够有退单
   pollingHasReturn ({ commit }) {

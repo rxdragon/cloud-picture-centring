@@ -33,6 +33,11 @@ const adminConfiguration = {
       component: () => import('@/views/admin-configuration/green-aisle.vue'),
       meta: { title: '绿色免审通道', icon: '', noCache: true }
     }, {
+      path: 'shift-supervisor-management',
+      name: 'ShiftSupervisorManagement',
+      component: () => import('@/views/admin-configuration/shift-supervisor-management.vue'),
+      meta: { title: '值班主管配置', icon: '', noCache: true }
+    }, {
       path: 'product-control',
       name: 'ProductControl',
       component: () => import('@/views/admin-configuration/product-control.vue'),

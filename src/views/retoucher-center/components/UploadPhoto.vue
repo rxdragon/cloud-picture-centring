@@ -47,6 +47,7 @@
       </div>
       <div v-show="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
         <el-upload
+          id="el-upload-file"
           ref="uploadButton"
           class="upload-crop-button"
           accept="image/*"
@@ -74,7 +75,6 @@
 import { mapGetters } from 'vuex'
 import variables from '@/styles/variables.less'
 import PhotoBox from '@/components/PhotoBox'
-import * as mPath from '@/utils/selfPath.js'
 import * as Commonality from '@/api/commonality'
 import * as SessionTool from '@/utils/sessionTool'
 import * as PhotoTool from '@/utils/photoTool'
@@ -148,12 +148,10 @@ export default {
     /**
      * @description 获取文件自动上传
      */
-    async getFiles (event) {
+    getFiles (event) {
       // 扩展功能
       if (!this.autoUpload || !this.streamNum) return
       event.stopPropagation()
-      let upInput
-      let readFileArray
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const needUploadPhotos = []
@@ -164,18 +162,13 @@ export default {
             needUploadPhotos.push(photoItem.path)
           }
         })
-        readFileArray = await AutoUpload.getFiles(this.streamNum, needUploadPhotos)
-        if (!readFileArray.length) {
-          this.$newMessage.warning('找不到相关图片')
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          return false
-        }
-        upInput = this.$refs['uploadButton'].$children[0]
+        AutoUpload.getFiles(this.streamNum, needUploadPhotos)
       } catch (error) {
+        this.$newMessage.error(error.message)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        return false
       }
-      upInput.uploadFiles(readFileArray)
     },
     /**
      * @description 获取又拍云
@@ -202,11 +195,16 @@ export default {
      * @param {*} file
      */
     async beforeUpload (file) {
+      const canUploadTpye = ['image/jpeg', 'image/png']
+      let uploadPhotoMd5
+      let type
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      // 上一次照片是否上传完成
       if (!this.uploadPhoto.every(item => item.response)) {
         this.$newMessage.warning('请等待照片上传完成')
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
-      this.$store.dispatch('setting/showLoading', this.routeName)
       const name = PhotoTool.fileNameFormat(file.name)
       // 是否正确命名
       if (name.includes('.')) {
@@ -214,14 +212,23 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
-      const isJPG = file.type === 'image/jpeg'
-      const isPNG = file.type === 'image/png'
+      try {
+        const imgInfo = await PhotoTool.getImgBufferPhoto(file)
+        uploadPhotoMd5 = imgInfo.md5
+        console.log(uploadPhotoMd5)
+        type = imgInfo.typeInfo.mime
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error(error)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        return Promise.reject()
+      }
       const finishPhotoArr = Object.values(this.finishPhoto)
       const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
       const hasSameName = this.photos.some(item => item.path.includes(name))
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
       // 判断是否是图片
-      if (!isJPG && !isPNG) {
+      if (!canUploadTpye.includes(type)) {
         this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
@@ -236,16 +243,8 @@ export default {
       const findOrginPhoto = this.photos.find(item => item.path.includes(name))
       // 最后一次提交文件名
       const beforeUploadFileName = findOrginPhoto.isReturnPhoto ? PhotoTool.fileNameFormat(findOrginPhoto.returnPhotoPath) : PhotoTool.fileNameFormat(file.name)
-      let uploadPhotoMd5 = ''
-      try {
-        uploadPhotoMd5 = await PhotoTool.getImgBufferPhoto(file)
-        if (beforeUploadFileName === uploadPhotoMd5) {
-          this.$newMessage.warning('请修改照片后再进行上传。')
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          return Promise.reject()
-        }
-      } catch (error) {
-        this.$newMessage.error('读取本地图片失败')
+      if (beforeUploadFileName === uploadPhotoMd5) {
+        this.$newMessage.warning('请修改照片后再进行上传。')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         return Promise.reject()
       }
@@ -275,12 +274,20 @@ export default {
       this.uploadPhoto = fileList
       // 校验数据
       if (this.autoUpload && file.response && file.response.url) {
-        const path = mPath.joinPath(this.saveFolder, this.streamNum, file.name)
-        const selfMd5 = await AutoUpload.reasonPathGetMd5(path)
-        if (!file.response.url.includes(selfMd5)) {
+        try {
+          const info = await PhotoTool.getImgBufferPhoto(file.raw)
+          const selfMd5 = info.md5
+          if (!file.response.url.includes(selfMd5)) {
+            const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
+            if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
+            this.$newMessage.error('上传文件校验错误')
+            return false
+          }
+        } catch (error) {
+          console.error(error)
           const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
-          willDeleteIndex >= 0 && (fileList.splice(willDeleteIndex, 1))
-          this.$newMessage.error('上传文件校验错误')
+          if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
+          this.$newMessage.error('上传校验错误')
           return false
         }
       }
