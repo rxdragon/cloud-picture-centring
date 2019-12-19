@@ -47,6 +47,7 @@
       </div>
       <div v-show="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
         <el-upload
+          id="el-upload-file"
           ref="uploadButton"
           class="upload-crop-button"
           accept="image/*"
@@ -147,12 +148,10 @@ export default {
     /**
      * @description 获取文件自动上传
      */
-    async getFiles (event) {
+    getFiles (event) {
       // 扩展功能
       if (!this.autoUpload || !this.streamNum) return
       event.stopPropagation()
-      let upInput
-      let readFileArray
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const needUploadPhotos = []
@@ -163,19 +162,13 @@ export default {
             needUploadPhotos.push(photoItem.path)
           }
         })
-        readFileArray = await AutoUpload.getFiles(this.streamNum, needUploadPhotos)
-        if (!readFileArray.length) {
-          this.$newMessage.warning('找不到相关图片')
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          return false
-        }
-        upInput = this.$refs['uploadButton'].$children[0]
+        AutoUpload.getFiles(this.streamNum, needUploadPhotos)
       } catch (error) {
+        this.$newMessage.error(error.message)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
-        return
+        return false
       }
-      upInput.uploadFiles(readFileArray)
     },
     /**
      * @description 获取又拍云
@@ -222,6 +215,7 @@ export default {
       try {
         const imgInfo = await PhotoTool.getImgBufferPhoto(file)
         uploadPhotoMd5 = imgInfo.md5
+        console.log(uploadPhotoMd5)
         type = imgInfo.typeInfo.mime
       } catch (error) {
         console.error(error)

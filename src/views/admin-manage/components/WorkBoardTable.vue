@@ -53,10 +53,8 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="scope">
           <div class="operation-box">
-            <el-dropdown placement="bottom" :show-timeout="100" trigger="hover">
-              <el-button size="mini" type="primary">
-                操作<i class="el-icon-arrow-down el-icon--right" />
-              </el-button>
+            <el-dropdown v-if="showDropdown(scope.row)" placement="bottom" :show-timeout="100" trigger="hover">
+              <el-button size="mini" type="primary">操作<i class="el-icon-arrow-down el-icon--right" /></el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item class="primary-color" @click.native="linkto(scope.row)">流水详情</el-dropdown-item>
                 <el-dropdown-item
@@ -75,6 +73,7 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+            <el-button v-else size="mini" type="primary" @click.native="linkto(scope.row)">流水详情</el-button>
           </div>
         </template>
       </el-table-column>
@@ -103,6 +102,12 @@ export default {
     ...mapGetters(['showUrgentStream', 'roles'])
   },
   methods: {
+    /**
+     * @description 是否显示下拉框
+     */
+    showDropdown (item) {
+      return this.canUrgent(item) || this.canManualReview(item)
+    },
     /**
      * @description 是够可以加急
      */

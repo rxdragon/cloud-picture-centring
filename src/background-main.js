@@ -5,6 +5,7 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 import path from 'path'
 import initDownloadManager from './electronMain/downTool'
 import initDialog from './electronMain/dialog'
+import initUtils from './electronMain/utils'
 import initExecIncident from './electronMain/execNode'
 import { setMenu } from './electronMain/resetMenu.js'
 
@@ -59,6 +60,7 @@ async function createWindow () {
   initDownloadManager(win, ipcMain)
   // 注册文件弹框事件
   initDialog(win, ipcMain)
+  initUtils(win, ipcMain)
   initExecIncident(win, ipcMain)
 
   // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug

@@ -3,39 +3,31 @@ import store from '@/store'
 import Vue from 'vue'
 import * as originalFs from 'original-fs'
 import * as mPath from '@/utils/selfPath.js'
-import { newMessage } from '@/utils/message.js'
-const fileType = require('file-type')
+const { ipcRenderer } = require('electron')
 
 /**
  * @description 获取文件
  * @param {*} streamNum
  */
 export function getFiles (streamNum, needUploadPhotos) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const downloadPath = store.getters.saveFolder // 保存地址
-      const readfilePath = mPath.joinPath(downloadPath, streamNum) // 文件地址
-      const readFileArray = []
-      for (const fileNameItem of needUploadPhotos) {
-        const filePath = mPath.joinPath(readfilePath, fileNameItem)
-        const fileBuffer = await originalFs.readFileSync(filePath)
-        const { mime, ext } = fileType(fileBuffer)
-        const fileExt = mPath.getExtName(fileNameItem)
-        if (fileExt !== `.${ext}`) {
-          Vue.prototype.$newMessage.error(`${fileNameItem}格式为${ext}`)
-          reject(`${fileNameItem}格式为${ext}`)
-        }
-        const newFile = new window.File([fileBuffer], fileNameItem, { type: mime })
-        readFileArray.push(newFile)
-      }
-      resolve(readFileArray)
-    } catch (error) {
-      if (error.message.includes('no such file or directory')) {
-        newMessage.error(error.message)
-      }
-      reject(error)
+  const downloadPath = store.getters.saveFolder // 保存地址
+  const readfilePath = mPath.joinPath(downloadPath, streamNum) // 文件地址
+  const noFilePath = []
+  const handlerPath = []
+  needUploadPhotos.forEach(fileNameItem => {
+    const filePath = mPath.joinPath(readfilePath, fileNameItem)
+    if (!originalFs.existsSync(filePath)) {
+      noFilePath.push(fileNameItem)
+    } else {
+      handlerPath.push(filePath)
     }
   })
+  if (!handlerPath.length) { throw new Error(`${readfilePath}文件夹不存在`) }
+  if (noFilePath.length) {
+    const errorMessage = `以下文件不存在\n${noFilePath.join(',\n')}`
+    Vue.prototype.$newMessage.error(errorMessage)
+  }
+  ipcRenderer.send('select-file', { filePath: handlerPath })
 }
 
 /**
