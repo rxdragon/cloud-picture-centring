@@ -23,7 +23,7 @@ export function getFiles (streamNum, needUploadPhotos) {
         const fileExt = mPath.getExtName(fileNameItem)
         if (fileExt !== `.${ext}`) {
           Vue.prototype.$newMessage.error(`${fileNameItem}格式为${ext}`)
-          reject('格式错误')
+          reject(`${fileNameItem}格式为${ext}`)
         }
         const newFile = new window.File([fileBuffer], fileNameItem, { type: mime })
         readFileArray.push(newFile)
@@ -31,7 +31,7 @@ export function getFiles (streamNum, needUploadPhotos) {
       resolve(readFileArray)
     } catch (error) {
       if (error.message.includes('no such file or directory')) {
-        newMessage.error('找不到路径')
+        newMessage.error(error.message)
       }
       reject(error)
     }

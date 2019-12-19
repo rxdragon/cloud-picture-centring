@@ -281,7 +281,7 @@ export default {
       // 校验数据
       if (this.autoUpload && file.response && file.response.url) {
         try {
-          const info = await PhotoTool.getImgBufferPhoto(file)
+          const info = await PhotoTool.getImgBufferPhoto(file.raw)
           const selfMd5 = info.md5
           if (!file.response.url.includes(selfMd5)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
@@ -291,7 +291,10 @@ export default {
           }
         } catch (error) {
           console.error(error)
+          const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
+          if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
           this.$newMessage.error('上传校验错误')
+          return false
         }
       }
       const uid = file.uid
