@@ -99,7 +99,7 @@ export function getStreamInfo (params) {
     createData.storeEvaluateStream = data.storeEvaluateStream
     const retoucherNpsAvg = data.tags && data.tags.values && data.tags.values.retoucher_score || '-'
     const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
-    createData.retoucherNpsAvg = npsAvgEnum(+retoucherNpsAvg) || `${retoucherNpsAvg}分`
+    createData.retoucherNpsAvg = npsAvgEnum[+retoucherNpsAvg] || `${retoucherNpsAvg}分`
     return createData
   })
 }
