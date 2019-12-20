@@ -42,8 +42,9 @@ const actions = {
       const returnMessageText = type === 'review_return_retouch'
         ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
         : '您当前有门店退回订单需要处理，未免影响顾客取片时间请及时处理。'
+      SessionTool.saveReturnRetouchOrder(streamId)
       try {
-        await MessageBox.confirm(returnMessageText, '', {
+        MessageBox.confirm(returnMessageText, '', {
           confirmButtonText: '现在处理',
           cancelButtonText: '稍后处理',
           type: 'warning',
@@ -57,7 +58,6 @@ const actions = {
       } catch (error) {
         console.error(error)
       } finally {
-        SessionTool.saveReturnRetouchOrder(streamId)
         LogStream.retoucherRebuildOk(+streamId)
       }
     }
