@@ -3,9 +3,11 @@
     <div class="header" :class="showBorder">
       <h3>关于</h3>
     </div>
-    <div v-for="versionItem in versionArr" :key="versionItem.title" class="content-main" @scroll="scrollMove">
-      <h3 class="version-title">版本更新：{{ versionItem.title }} </h3>
-      <marddown-viewer :key="versionItem.title + 'viewer'" :value="versionItem.desc" />
+    <div class="content-main" @scroll="scrollMove">
+      <div v-for="versionItem in versionArr" :key="versionItem.title">
+        <h3 class="version-title">版本更新：{{ versionItem.title }} </h3>
+        <marddown-viewer :key="versionItem.title + 'viewer'" :value="versionItem.desc" />
+      </div>
     </div>
   </div>
 </template>
