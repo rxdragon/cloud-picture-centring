@@ -78,12 +78,18 @@ const version_2_2_1 = {
   title: '2.2.1',
   desc: `> 版本概况
 
-	* 修图师在线功能
-
-	> 修图师
-
-	* 待修订单页面
-			1. <span class="mark-opt">优化</span>排队接单中，不会自动退出排队和提示排队弹框`
+  * 修图师在线功能
+  
+  > 修图师
+  
+  * 待修订单页面
+    1. <span class="mark-opt">优化</span>排队接单中，不会自动退出排队和提示排队弹框
+  
+  * 修图历史记录
+      1. <span class="mark-fix">修复</span>查询种草数据不能翻页问题
+  
+  * 冲量奖
+      1. <span class="mark-fix">修复</span>由原来大于特定海草值更改为大于等于该目标海草`
 }
 
 export default [
