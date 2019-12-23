@@ -74,6 +74,19 @@ const version_2_2_0 = {
       1. <span class="mark-new">新增</span>列表顾客满意度显示`
 }
 
+const version_2_2_1 = {
+  title: '2.2.1',
+  desc: `> 版本概况
+
+	* 修图师在线功能
+
+	> 修图师
+
+	* 待修订单页面
+			1. <span class="mark-opt">优化</span>排队接单中，不会自动退出排队和提示排队弹框`
+}
+
 export default [
+  version_2_2_1,
   version_2_2_0
 ]

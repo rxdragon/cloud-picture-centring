@@ -125,12 +125,14 @@ const actions = {
     const nowTime = new Date().getTime()
     if (nowTime >= state.nextCheckOnlineTime) {
       let hasRetouchingStreams = true
+      let queueInfo = {}
       try {
         hasRetouchingStreams = await RetoucherCenter.hasRetouchingStreams()
+        queueInfo = await RetoucherCenter.getStreamQueueInfo()
       } catch {
         hasRetouchingStreams = false
       }
-      if (hasRetouchingStreams) {
+      if (hasRetouchingStreams || queueInfo.inQueue) {
         commit('SET_ACTIVE_TIME')
         dispatch('getNowTime')
         return
