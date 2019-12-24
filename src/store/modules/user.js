@@ -17,8 +17,8 @@ const state = {
   avatarImg: '',
   lineState: 'offline',
   nextCheckOnlineTime: null,
-  checkInterval: 10 * 60 * 1000,
-  confirmationCheckInterval: 3 * 60 * 1000
+  checkInterval: 10 * 1000,
+  confirmationCheckInterval: 3 * 1000
 }
 
 const mutations = {
