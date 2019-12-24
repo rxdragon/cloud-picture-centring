@@ -26,10 +26,10 @@
             <span>
               <span class="info-title">流水号：</span>{{ scope.row.stream_num || '-' }}
             </span>
-            <span>
+            <span v-if="canSeeInfo(scope.row)">
               <span class="info-title">拍摄产品：</span>{{ scope.row.product && scope.row.product.name || '-' }}
             </span>
-            <span>
+            <span v-if="canSeeInfo(scope.row)">
               <span class="info-title">照片数量：</span>{{ scope.row.photoNum }}
             </span>
           </div>
@@ -56,7 +56,13 @@
             <el-dropdown v-if="showDropdown(scope.row)" placement="bottom" :show-timeout="100" trigger="hover">
               <el-button size="mini" type="primary">操作<i class="el-icon-arrow-down el-icon--right" /></el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item class="primary-color" @click.native="linkto(scope.row)">流水详情</el-dropdown-item>
+                <el-dropdown-item
+                  :disabled="!canSeeInfo(scope.row)"
+                  class="primary-color"
+                  @click.native="linkto(scope.row)"
+                >
+                  流水详情
+                </el-dropdown-item>
                 <el-dropdown-item
                   v-if="canUrgent(scope.row)"
                   class="danger-color"
@@ -73,7 +79,7 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-button v-else size="mini" type="primary" @click.native="linkto(scope.row)">流水详情</el-button>
+            <el-button v-else size="mini" type="primary" :disabled="!canSeeInfo(scope.row)" @click.native="linkto(scope.row)">流水详情</el-button>
           </div>
         </template>
       </el-table-column>
@@ -99,7 +105,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['showUrgentStream', 'roles'])
+    ...mapGetters(['showUrgentStream', 'roles', 'showWorkInfo'])
   },
   methods: {
     /**
@@ -107,6 +113,9 @@ export default {
      */
     showDropdown (item) {
       return this.canUrgent(item) || this.canManualReview(item)
+    },
+    canSeeInfo (item) {
+      return this.showWorkInfo || item.state !== StreamStateEnum.WaitRetouch
     },
     /**
      * @description 是够可以加急
