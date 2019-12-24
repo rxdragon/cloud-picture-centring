@@ -69,7 +69,7 @@
           </div>
         </transition>
       </div>
-      <div class="submit-box">
+      <div v-if="!item.isOperatorDeletedStream" class="submit-box">
         <el-button type="primary" @click="modifyStream(item)">提交修改</el-button>
       </div>
     </div>
