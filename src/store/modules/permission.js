@@ -43,7 +43,8 @@ const state = {
   showReviewStreamList: false, // 是否显示审核队列
   showStreamList: false, // 是否显示浏览加急查询
   showUrgentStream: false, // 是否显示加急按钮
-  isRetoucher: false // 是否是修片师
+  isRetoucher: false, // 是否是修片师
+  showWorkInfo: false // 是否可以查看工作看板详情按钮
 }
 
 const mutations = {
@@ -66,6 +67,7 @@ const mutations = {
     state.showStreamList = roles.includes('AdminManage.workBoard.streamList')
     state.showUrgentStream = roles.includes('AdminManage.workBoard.urgentStream')
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
+    state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
     state.personageRouters = routes
