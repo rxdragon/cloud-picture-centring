@@ -1,5 +1,6 @@
 const version_2_2_0 = {
   title: '2.2.0',
+  time: '2019-12-20',
   desc: `> 版本概况
 
   * 修图师在线功能
@@ -76,6 +77,7 @@ const version_2_2_0 = {
 
 const version_2_2_1 = {
   title: '2.2.1',
+  time: '2019-12-24',
   desc: `> 版本概况
 
   * 修图师在线功能
@@ -93,7 +95,21 @@ const version_2_2_1 = {
       1. <span class="mark-fix">修复</span>由原来大于特定海草值更改为大于等于该目标海草`
 }
 
+const version_2_2_2 = {
+  title: '2.2.2',
+  time: '2019-12-25',
+  desc: `> 版本概况
+  
+  * 工作看板，修图队列增加查看权限
+    
+  > 云端工作管理
+  
+  * 云端工作看板
+    1. <span class="mark-new">新增</span>修图队列**查看修图队列订单详情**`
+}
+
 export default [
+  version_2_2_2,
   version_2_2_1,
   version_2_2_0
 ]

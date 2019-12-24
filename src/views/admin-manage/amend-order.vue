@@ -34,32 +34,40 @@
         </div>
       </div>
       <div class="photo-list">
-        <div v-for="(photoItem, photoIndex) in item.photos" :key="photoIndex" :style="photoItem.isDelete && 'display: none;'">
-          <div v-if="!photoItem.isDelete" class="photo-box">
-            <photo-box :src="photoItem.path" />
-            <div class="change-num">
-              <span>人数：</span>
-              <input v-model="photoItem.people_num" v-numberOnly class="fake-el-input" min="1" size="mini" placeholder="请输入人数">
-            </div>
-            <!-- 拼接信息 -->
-            <div v-if="photoItem.isJoint" class="joint-box">
-              <div class="joint-type">
-                <span>拼接：</span>
-                <el-select v-model="photoItem.jointClass" size="mini" placeholder="请选择">
-                  <el-option v-for="(typeItem, typeIndex) in jointClassOption" :key="typeIndex" :label="typeItem.label" :value="typeItem.value" />
-                </el-select>
+        <transition name="fade-transform" mode="out-in">
+          <div v-if="!isAlldelete(item.photos)" key="photoList" class="photo-list-box">
+            <div v-for="(photoItem, photoIndex) in item.photos" :key="photoIndex" :style="photoItem.isDelete && 'display: none;'">
+              <div v-if="!photoItem.isDelete" class="photo-box">
+                <photo-box :src="photoItem.path" />
+                <div class="change-num">
+                  <span>人数：</span>
+                  <input v-model="photoItem.people_num" v-numberOnly class="fake-el-input" min="1" size="mini" placeholder="请输入人数">
+                </div>
+                <!-- 拼接信息 -->
+                <div v-if="photoItem.isJoint" class="joint-box">
+                  <div class="joint-type">
+                    <span>拼接：</span>
+                    <el-select v-model="photoItem.jointClass" size="mini" placeholder="请选择">
+                      <el-option v-for="(typeItem, typeIndex) in jointClassOption" :key="typeIndex" :label="typeItem.label" :value="typeItem.value" />
+                    </el-select>
+                  </div>
+                  <div class="joint-sequence">
+                    <span>顺序：</span>
+                    <el-input v-model="photoItem.jointClassNum" size="mini" placeholder="" />
+                  </div>
+                </div>
+                <span class="delete-button" @click="deletePhoto(item, photoItem)">
+                  <i class="el-icon-error" />
+                </span>
               </div>
-              <div class="joint-sequence">
-                <span>顺序：</span>
-                <el-input v-model="photoItem.jointClassNum" size="mini" placeholder="" />
-              </div>
             </div>
-            <span class="delete-button" @click="deletePhoto(item, photoItem)">
-              <i class="el-icon-error" />
-            </span>
+            <div class="empty-box" />
           </div>
-        </div>
-        <div class="empty-box" />
+          <div v-else key="noData" class="delete-all">
+            <i class="el-icon-document-delete" />
+            已删除全部
+          </div>
+        </transition>
       </div>
       <div class="submit-box">
         <el-button type="primary" @click="modifyStream(item)">提交修改</el-button>
@@ -92,6 +100,9 @@ export default {
     this.jointClassOption = jointClass
   },
   methods: {
+    isAlldelete (photos) {
+      return photos.every(photoItem => photoItem.isDelete)
+    },
     /**
      * @description 获取照片订单信息
      */
@@ -105,6 +116,7 @@ export default {
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.dataList = await WorkManage.getStreamInfo(req)
+        console.log(this.dataList)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -186,93 +198,102 @@ export default {
     }
 
     .photo-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
       margin-top: 20px;
 
-      .photo-box {
-        width: 303px;
-        margin-right: 24px;
-        margin-bottom: 24px;
-        position: relative;
+      .photo-list-box {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
 
-        .change-num {
-          display: flex;
-          align-items: center;
-          width: 90%;
-          margin: auto;
-          justify-content: space-between;
-          padding: 10px 0;
-          font-size: 12px;
+        .photo-box {
+          width: 303px;
+          margin-right: 24px;
+          margin-bottom: 24px;
+          position: relative;
 
-          .el-input {
-            width: calc(~'100% - 48px');
-          }
-        }
-
-        .joint-type,
-        .joint-sequence,
-        .change-num {
-          & > span {
-            width: 48px;
-            text-align: center;
-          }
-        }
-
-        .joint-box {
-          display: flex;
-          width: 90%;
-          padding: 0 0 10px;
-          margin: auto;
-          font-size: 12px;
-
-          .joint-type {
-            width: 50%;
+          .change-num {
             display: flex;
             align-items: center;
-
-            .el-select {
-              width: 80px;
-            }
-          }
-
-          .joint-sequence {
-            width: 50%;
-            display: flex;
-            align-items: center;
+            width: 90%;
+            margin: auto;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 12px;
 
             .el-input {
-              width: 80px;
+              width: calc(~'100% - 48px');
             }
           }
-        }
 
-        .delete-button {
-          position: absolute;
-          right: -14px;
-          top: -14px;
-          display: none;
-          transition: all 0.3s;
-          cursor: pointer;
+          .joint-type,
+          .joint-sequence,
+          .change-num {
+            & > span {
+              width: 48px;
+              text-align: center;
+            }
+          }
 
-          .el-icon-error {
-            font-size: 28px;
+          .joint-box {
+            display: flex;
+            width: 90%;
+            padding: 0 0 10px;
+            margin: auto;
+            font-size: 12px;
+
+            .joint-type {
+              width: 50%;
+              display: flex;
+              align-items: center;
+
+              .el-select {
+                width: 80px;
+              }
+            }
+
+            .joint-sequence {
+              width: 50%;
+              display: flex;
+              align-items: center;
+
+              .el-input {
+                width: 80px;
+              }
+            }
+          }
+
+          .delete-button {
+            position: absolute;
+            right: -14px;
+            top: -14px;
+            display: none;
+            transition: all 0.3s;
+            cursor: pointer;
+
+            .el-icon-error {
+              font-size: 28px;
+            }
+          }
+
+          &:hover .delete-button {
+            display: block;
           }
         }
 
-        &:hover .delete-button {
-          display: block;
+        .empty-box {
+          width: 30%;
         }
       }
 
-      .empty-box {
-        width: 30%;
-      }
-    }
+      .delete-all {
+        color: @red;
+        margin-bottom: 20px;
 
-    .submit-box {
-      text-align: center;
+        i {
+          color: #9f9fa0;
+          font-size: 24px;
+        }
+      }
     }
   }
 }

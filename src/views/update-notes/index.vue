@@ -5,8 +5,10 @@
     </div>
     <div class="content-main" @scroll="scrollMove">
       <div v-for="versionItem in versionArr" :key="versionItem.title">
-        <h3 class="version-title">版本更新：{{ versionItem.title }} </h3>
-        <marddown-viewer :key="versionItem.title + 'viewer'" :value="versionItem.desc" />
+        <div class="module-panel">
+          <h3 class="version-title">版本更新：{{ versionItem.title }} <time>{{ versionItem.time }}</time></h3>
+          <marddown-viewer :key="versionItem.title + 'viewer'" :value="versionItem.desc" />
+        </div>
       </div>
     </div>
   </div>
@@ -41,10 +43,20 @@ export default {
 
 .version-title {
   font-weight: 400;
+
+  time {
+    font-size: 14px;
+    color: #989898;
+    margin-left: 20px;
+  }
 }
 
 .content-main {
   margin-right: -24px;
   padding-right: 24px;
+
+  .module-panel {
+    margin-bottom: 24px;
+  }
 }
 </style>

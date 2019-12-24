@@ -196,8 +196,9 @@ export function getStreamInfo (params) {
     params
   }).then(msg => {
     msg.forEach(listItem => {
+      listItem.product = listItem.product || { id: '' }
       listItem.photos.forEach(photoItem => {
-        photoItem.isDelete = false
+        photoItem.isDelete = listItem.isOperatorDeletedStream || false
         photoItem.isJoint = photoItem.tags && photoItem.tags.values && Boolean(photoItem.tags.values.splice_mark) || false
         const findOriginalPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
         photoItem.path = findOriginalPhoto ? findOriginalPhoto.path : ''
