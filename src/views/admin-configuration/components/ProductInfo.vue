@@ -68,6 +68,14 @@
               <el-radio :label="1">是</el-radio>
               <el-radio :label="2">否</el-radio>
             </el-radio-group>
+            <el-radio-group
+              v-if="productConfig.needTemplate === 1"
+              v-model="productConfig.templateSuffix"
+              class="template-box"
+            >
+              <el-radio label="jpg">JPG</el-radio>
+              <el-radio label="png">PNG</el-radio>
+            </el-radio-group>
           </el-form-item>
           <el-form-item label="海草值">
             <div slot="label" class="slot-label">
@@ -218,7 +226,8 @@ export default {
         standard: '', // 修图标准
         weightType: '', // 权重等级
         needTemplate: '', // 是否需要模版
-        grassData: {},
+        templateSuffix: 'jpg', // 模版照类型
+        grassData: {}, // 海草数据
         joinGrassData: {}, // 拼接海草
         notJointMoney: {},
         jointMoney: {}, // 拼接收益
@@ -262,6 +271,7 @@ export default {
         blueNotJointMoney[key] = createObj
         blueJointMoney[key] = createObj
       }
+      this.productConfig.templateSuffix = 'jpg'
       this.productConfig.grassData = JSON.parse(JSON.stringify(createObj))
       this.productConfig.joinGrassData = JSON.parse(JSON.stringify(createObj))
       this.productConfig.notJointMoney = JSON.parse(JSON.stringify(createObj))
@@ -367,6 +377,7 @@ export default {
           this.productConfig.needJoint = data.needSplicing ? 1 : 2
           this.productConfig.productRemark = data.note
           this.productConfig.grassData = data.seaGrassConfig
+          this.productConfig.templateSuffix = data.templateSuffix
           if (data.retouchStandard !== 'blue') {
             this.productConfig.notJointMoney = data.normalIncomeConfig
             this.productConfig.jointMoney = data.splicingIncomeConfig
@@ -413,6 +424,7 @@ export default {
         weightLevel: this.productConfig.weightType,
         needSplicing: +this.productConfig.needJoint === 1,
         needTemplate: +this.productConfig.needTemplate === 1,
+        templateSuffix: this.productConfig.templateSuffix,
         normalIncomeConfig: this.productConfig.notJointMoney,
         splicingIncomeConfig: this.productConfig.jointMoney,
         seaGrassConfig: this.productConfig.grassData,
@@ -612,6 +624,10 @@ export default {
           }
         }
       }
+    }
+
+    .template-box {
+      margin-left: 24px;
     }
   }
 

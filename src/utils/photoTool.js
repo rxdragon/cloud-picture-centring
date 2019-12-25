@@ -175,9 +175,10 @@ function getMD5 (file, cbProgress) {
 export async function getImgBufferPhoto (file) {
   const data = await getMD5(file)
   if (file.path) {
-    const fileExt = mPath.getExtName(file.path)
-    if (fileExt !== `.${data.typeInfo.ext}`) {
-      return Promise.reject(`${file.path}格式错误应为${data.typeInfo.ext}格式`)
+    const fileExt = mPath.getExtName(file.path).toLowerCase()
+    const originalExt = data.typeInfo.ext.toLowerCase()
+    if (fileExt !== `.${originalExt}`) {
+      return Promise.reject(`${file.path}格式错误应为${originalExt}格式`)
     }
   }
   return data
