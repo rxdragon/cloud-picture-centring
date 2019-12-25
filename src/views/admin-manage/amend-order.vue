@@ -116,7 +116,6 @@ export default {
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.dataList = await WorkManage.getStreamInfo(req)
-        console.log(this.dataList)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

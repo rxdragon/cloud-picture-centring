@@ -215,7 +215,6 @@ export default {
       try {
         const imgInfo = await PhotoTool.getImgBufferPhoto(file)
         uploadPhotoMd5 = imgInfo.md5
-        console.log(uploadPhotoMd5)
         type = imgInfo.typeInfo.mime
       } catch (error) {
         console.error(error)
@@ -225,7 +224,7 @@ export default {
       }
       const finishPhotoArr = Object.values(this.finishPhoto)
       const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
-      const hasSameName = this.photos.some(item => item.path.includes(name))
+      const hasSameName = this.photos.some(item => item.path === file.name)
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
       // 判断是否是图片
       if (!canUploadTpye.includes(type)) {
