@@ -94,6 +94,18 @@ export const lastBaseRoutes = [
         meta: { title: '关于', icon: 'el-icon-s-order' }
       }
     ]
+  },
+  {
+    path: '/test',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'test',
+        component: () => import('@/views/test/index.vue'),
+        meta: { title: '测试', icon: 'el-icon-s-order' }
+      }
+    ]
   }
 ]
 
