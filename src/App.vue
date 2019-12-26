@@ -14,7 +14,6 @@ import { clearAllStorage } from '@/utils/sessionTool'
 import { throttle } from '@/utils/throttle.js'
 import Mousetrap from 'mousetrap'
 import variables from '@/styles/variables.less'
-import * as LocalServe from '@/api/localServe/index.js'
 export default {
   name: 'App',
   components: { PaintedEggshell },
@@ -22,7 +21,6 @@ export default {
     ...mapGetters(['showCat', 'isRetoucher', 'lineState'])
   },
   created () {
-    console.log(LocalServe.sayHello())
     if (this.$isDev) {
       document.body.style.setProperty('--subMenuBg', variables.devSubMenuBg)
       document.body.style.setProperty('--menuBg', variables.devMenuBg)

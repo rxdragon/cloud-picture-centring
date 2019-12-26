@@ -12,6 +12,8 @@
       <div class="logo-desc">
         <span class="black">欢迎来到</span>
         <span class="desc">缦图云端修图中心</span>
+        <!-- 调试 -->
+        <img src="http://localhost:3000/image/1a18fd31f302a38ce1bb008e3855f672.jpg" alt="">
       </div>
     </div>
   </div>
@@ -71,6 +73,12 @@ export default {
 
       .desc {
         color: @blue;
+      }
+
+      img {
+        background-color: #eee;
+        width: 400px;
+        height: 400px;
       }
     }
   }
