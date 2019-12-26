@@ -141,8 +141,8 @@
 |范围|描述|commitId|
 --|--|--
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
  test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
+ test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
  下载优化 | [63ecdfe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/63ecdfe)
@@ -171,6 +171,7 @@
  提交版本 | [47b0857](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/47b0857)
  新增照片版本 | [30e0531](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/30e0531)
  新增照片类型判断 | [07af4c5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/07af4c5)
+ 新增照片缓存 | [206ddf1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/206ddf1)
  新增直接审核按钮显示权限 | [ee806b4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ee806b4)
  新增缓存队列 | [26e1ed6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/26e1ed6)
  新增获取值班主管信息 | [e353130](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e353130)
@@ -181,8 +182,8 @@
  更行版本说明 | [54252b5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/54252b5)
  测试自动下线时间改为10s | [c96287e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c96287e)
  直接审核功能 | [19689bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/19689bc)
- test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
  退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
