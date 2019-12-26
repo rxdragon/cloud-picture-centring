@@ -38,7 +38,6 @@ export default {
       'cacheImageSwitch'
     ]),
     cacheImageSwitchValue () {
-      console.log(this.cacheImageSwitch)
       return Boolean(Number(this.cacheImageSwitch))
     }
   },

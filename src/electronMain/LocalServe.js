@@ -7,9 +7,16 @@ const userDir = global.userDir
 const imageCachePath = path.join(userDir, 'imageCache')
 const uuidv4 = require('uuid/v4')
 
+const MaxFileCount = 10
+const clearCacheTime = 60 * 60 * 1000
 const cloudPhotoHost = process.env.VUE_APP_DOWN_DOMAIN || 'fed.dev.hzmantu.com/upload_dev/'
 
 createImageCacheDir()
+clearCache()
+
+setInterval(() => {
+  clearCache()
+}, clearCacheTime)
 
 exp.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -49,7 +56,7 @@ function downloadFile (url, imageName, res) {
         fs.unlinkSync(temporarySavePath)
       } else {
         fs.rename(temporarySavePath, imageLocalPath, async (err) => {
-          if (err) { console.error(err) }
+          if (err) throw err
         })
       }
     })
@@ -58,6 +65,27 @@ function downloadFile (url, imageName, res) {
     })
   httpStream.pipe(writeStream)
   httpStream.pipe(res)
+}
+
+function clearCache () {
+  fs.readdir(imageCachePath, (err, data) => {
+    if (err) throw err
+    const fileLength = data.length
+    if (fileLength > MaxFileCount) {
+      data.sort((a, b) => {
+        const filePatha = path.join(imageCachePath, a)
+        const filePathb = path.join(imageCachePath, b)
+        const fileStatCreateTimea = fs.statSync(filePatha).ctimeMs
+        const fileStatCreateTimeb = fs.statSync(filePathb).ctimeMs
+        return fileStatCreateTimeb - fileStatCreateTimea
+      })
+      const willDeleteFile = data.slice(MaxFileCount / 2)
+      willDeleteFile.forEach(fileName => {
+        const deleteFilePath = path.join(imageCachePath, fileName)
+        fs.unlinkSync(deleteFilePath)
+      })
+    }
+  })
 }
 
 /**

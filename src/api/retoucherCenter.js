@@ -1,5 +1,6 @@
 // retoucherCenter
 import axios from '@/plugins/axios.js'
+import store from '@/store' // vuex
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
 import { StreamStatics } from '@/utils/enumerate.js'
@@ -86,6 +87,11 @@ export function getStreamInfo (params) {
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
       photoItem.isCover = false
     })
+    // 预加载
+    if (+store.getters.cacheImageSwitch) {
+      const photoArr = msg.photos.map(photoItem => photoItem.path)
+      PhotoTool.preloadPhoto(photoArr)
+    }
     // 最新退回照片
     const returnShowPhotos = msg.photos.filter(photoItem => {
       const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
