@@ -163,6 +163,7 @@
  增加更改修复说明 | [81564e6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/81564e6)
  增加版本更新说明 | [eb7ce67](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eb7ce67)
  审核退回增加修片师显示 | [04cc9ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/04cc9ad)
+ 开启服务器 | [c2a46b9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c2a46b9)
  排队中不会弹出是否在线弹框，不会自动下线 | [f09892a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f09892a)
  提交版本 | [47b0857](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/47b0857)
  新增照片版本 | [30e0531](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/30e0531)
