@@ -14,6 +14,21 @@ module.exports = {
   lintOnSave: true, // eslint 错误处理，true表示对待eslint错误为warnings，warnings不会导致编译失败
   productionSourceMap: true, // 生产环境是否开启source map
   integrity: false, // 内容安全策略及子资源完整性
+  devServer: {
+    disableHostCheck: true,
+    open: process.platform === 'darwin',
+    host: '0.0.0.0',
+    port: 8080,
+    https: false,
+    hotOnly: false,
+    proxy: {
+      '/': {
+        target: 'http://localhost:3000',
+        ws: false,
+        changOrigin: true
+      }
+    }
+  },
   configureWebpack: (c) => {
     const config = {
       resolve: {

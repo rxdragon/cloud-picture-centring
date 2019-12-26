@@ -9,6 +9,8 @@ import initUtils from './electronMain/utils'
 import initExecIncident from './electronMain/execNode'
 import { setMenu } from './electronMain/resetMenu.js'
 
+require('./electronMain/LocalServe')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
