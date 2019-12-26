@@ -22,3 +22,14 @@ export function sayHello2 () {
     console.log(msg)
   })
 }
+
+
+export function sayHello3 () {
+  return axios({
+    baseURL: 'http://localhost:3000',
+    url: '/hello',
+    method: 'GET'
+  }).then(msg => {
+    console.log(msg)
+  })
+}
