@@ -170,6 +170,7 @@
  新增直接审核按钮显示权限 | [ee806b4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ee806b4)
  新增缓存队列 | [26e1ed6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/26e1ed6)
  新增获取值班主管信息 | [e353130](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e353130)
+ 更改修图历史纪律 海草数 | [652bd21](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/652bd21)
  更改切片时间 | [e959300](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e959300)
  更改列表问题 | [79a1242](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79a1242)
  更改成片种草显示逻辑 | [579efe7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/579efe7)
