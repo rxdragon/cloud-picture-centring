@@ -45,13 +45,15 @@ function downloadFile (url, imageName, res) {
   const httpStream = request(url)
   httpStream
     .on('end', () => {
-      // TODO 改文件名文件名
-      fs.rename(temporarySavePath, imageLocalPath, async (err) => {
-        if (err) { console.error(err) }
-      })
+      if (hasImageCache(imageLocalPath)) {
+        fs.unlinkSync(temporarySavePath)
+      } else {
+        fs.rename(temporarySavePath, imageLocalPath, async (err) => {
+          if (err) { console.error(err) }
+        })
+      }
     })
     .on('error', () => {
-      // TODO 删除错误文件
       fs.unlinkSync(temporarySavePath)
     })
   httpStream.pipe(writeStream)
