@@ -23,8 +23,6 @@ export default {
   },
   created () {
     console.log(LocalServe.sayHello())
-    console.log(LocalServe.sayHello3())
-    console.log(LocalServe.sayHello2())
     if (this.$isDev) {
       document.body.style.setProperty('--subMenuBg', variables.devSubMenuBg)
       document.body.style.setProperty('--menuBg', variables.devMenuBg)
