@@ -9,8 +9,8 @@ const uuidv4 = require('uuid/v4')
 
 const MaxFileCount = 10
 const clearCacheTime = 60 * 60 * 1000
-const cloudPhotoHost = process.env.VUE_APP_DOWN_DOMAIN || 'fed.dev.hzmantu.com/upload_dev/'
-
+const cloudPhotoHost = global.env !== 'production' ? 'fed.dev.hzmantu.com/upload_dev/' : 'cloud.cdn.hzmantu.com/upload/'
+console.log(cloudPhotoHost)
 createImageCacheDir()
 clearCache()
 
@@ -30,6 +30,7 @@ exp.get('/image/*', (req, res, next) => {
   const imageName = path.basename(req.originalUrl)
   const imageLocalPath = path.join(imageCachePath, imageName)
   const imageOnlinePath = 'https://' + path.join(cloudPhotoHost, imageName)
+  console.log(imageOnlinePath)
   if (!hasImageCache(imageLocalPath)) {
     downloadFile(imageOnlinePath, imageName, res)
   } else {
