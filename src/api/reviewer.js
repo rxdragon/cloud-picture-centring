@@ -16,13 +16,15 @@ export function getReviewInfo () {
     createData.canGlass = true
     msg.photos.forEach(photoItem => {
       const findOrigianlPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
+      const findOrigianlPhotoPath = findOrigianlPhoto && findOrigianlPhoto.path || ''
+      const lastFirstPhotoPath = photoItem.last_first_photo && photoItem.last_first_photo.path || ''
       photoItem.priviewPhotoData = [{
         id: photoItem.id,
-        path: findOrigianlPhoto && findOrigianlPhoto.path,
+        path: findOrigianlPhotoPath,
         version: 'original_photo'
       }, {
         id: photoItem.id,
-        path: photoItem.last_first_photo && photoItem.last_first_photo.path,
+        path: lastFirstPhotoPath,
         version: 'first_photo'
       }]
       photoItem.isTemplate = photoItem.priviewPhotoData[0].path.includes('template')

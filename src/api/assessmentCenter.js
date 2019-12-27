@@ -3,6 +3,7 @@ import axios from '@/plugins/axios.js'
 import { transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import store from '@/store' // vuex
 
 /**
  * @description 获取今日抽片指标
@@ -102,7 +103,9 @@ export function getSpotCheckResult (params) {
         item.photoData.stream.tags.values.retouch_claim ||
         retouchRequire
     })
-    PhotoTool.readAllPhoto(allPhotoPath)
+    if (!+store.getters.cacheImageSwitch) {
+      PhotoTool.readAllPhoto(allPhotoPath)
+    }
     const createData = {
       list: data,
       allPhotoPath,

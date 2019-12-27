@@ -14,6 +14,9 @@
         <el-form-item label="是否开启自动选中文件">
           <el-switch :value="autoUpload" @change="setAutoUpload" />
         </el-form-item>
+        <el-form-item label="是否开启预加载功能">
+          <el-switch :value="cacheImageSwitchValue" @change="setCacheImageSwitch" />
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -21,6 +24,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import * as Setting from '@/indexDB/getSetting.js'
 export default {
   name: 'ExperimentView',
   data () {
@@ -30,8 +34,12 @@ export default {
     ...mapGetters([
       'showCat',
       'showOverTag',
-      'autoUpload'
-    ])
+      'autoUpload',
+      'cacheImageSwitch'
+    ]),
+    cacheImageSwitchValue () {
+      return Boolean(Number(this.cacheImageSwitch))
+    }
   },
   methods: {
     setCatShow (value) {
@@ -42,6 +50,13 @@ export default {
     },
     setAutoUpload (value) {
       this.$store.dispatch('setting/setAutoUpload', value)
+    },
+    setCacheImageSwitch (value) {
+      this.$store.dispatch('setting/setImageCacheSwitch', value)
+        .then(() => {
+          const data = value ? 1 : 0
+          Setting.updateSetting('imageCacheSwitch', data)
+        })
     }
   }
 }

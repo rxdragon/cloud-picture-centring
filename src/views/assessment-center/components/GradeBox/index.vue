@@ -2,7 +2,7 @@
   <div class="grade-box">
     <div class="photo-panel">
       <div class="panel-title">订单照片</div>
-      <photo-list :photo-data="photoInfoData.photoVersion" />
+      <photo-list :need-preload="isGrade" :photo-data="photoInfoData.photoVersion" />
     </div>
     <!-- 订单信息 -->
     <div class="panel-info">

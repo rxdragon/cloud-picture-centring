@@ -219,3 +219,16 @@ export function renameFirstPhoto (filePath) {
   const name = fileNameFormat(filePath)
   return `${name}_ps${ext}`
 }
+
+export function preloadPhoto (photoArr) {
+  const imgDomain = store.getters.imgDomain
+  const head = document.getElementsByTagName('head')[0]
+  photoArr.forEach(name => {
+    const photoLink = imgDomain + name
+    const linkTag = document.createElement('link')
+    linkTag.href = photoLink
+    linkTag.rel = 'preload'
+    linkTag.setAttribute('as', 'image')
+    head.appendChild(linkTag)
+  })
+}

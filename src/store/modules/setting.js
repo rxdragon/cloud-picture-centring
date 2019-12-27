@@ -6,7 +6,8 @@ const state = {
   showCat: false,
   showOverTag: false,
   autoUpload: false,
-  savePath: ''
+  savePath: '',
+  cacheImageSwitch: 0
 }
 
 const mutations = {
@@ -45,6 +46,11 @@ const mutations = {
   },
   SET_SAVE_PATH: (state, data) => {
     state.savePath = data
+  },
+  SET_IMAGE_CACHE_PATH: (state, data) => {
+    state.cacheImageSwitch = data
+    const isTurnOn = Boolean(Number(data))
+    state.imgDomain = isTurnOn ? process.env.VUE_APP_LOCAL_DOMAIN : process.env.VUE_APP_DOMAIN
   }
 }
 
@@ -72,6 +78,9 @@ const actions = {
   },
   setSavePath ({ commit }, path) {
     commit('SET_SAVE_PATH', path)
+  },
+  setImageCacheSwitch ({ commit }, data) {
+    commit('SET_IMAGE_CACHE_PATH', data)
   }
 }
 
