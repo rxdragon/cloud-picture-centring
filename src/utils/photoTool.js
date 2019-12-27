@@ -230,8 +230,5 @@ export function preloadPhoto (photoArr) {
     linkTag.rel = 'preload'
     linkTag.setAttribute('as', 'image')
     head.appendChild(linkTag)
-    setTimeout(() => {
-      head.removeChild(linkTag)
-    }, 1000)
   })
 }

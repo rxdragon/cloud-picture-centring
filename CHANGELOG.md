@@ -1,4 +1,4 @@
-# 2.0.0 (2019-12-26)
+# 2.0.0 (2019-12-27)
 
 |范围|描述|commitId|
 --|--|--
@@ -156,6 +156,7 @@
  值班主管 | [72300dc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/72300dc)
  值班主管配置页面进入 显示配置 | [eddb660](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eddb660)
  冲量显示 | [9fd05c6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fd05c6)
+ 图片与加载 | [bf6742e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bf6742e)
  增加上传标记 | [5428235](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5428235)
  增加上传预览 | [5a72992](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5a72992)
  增加不种不把查询 | [4f53e0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f53e0b)
@@ -184,12 +185,12 @@
  格式化代码 | [71faa62](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/71faa62)
  测试自动下线时间改为10s | [c96287e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c96287e)
  直接审核功能 | [19689bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/19689bc)
- test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
- 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
  退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
+ 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
  重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
  验证照片后最名字，增加产品配置，新增模版照片格式选项 | [73b95b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/73b95b8)

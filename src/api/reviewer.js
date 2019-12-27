@@ -1,6 +1,4 @@
 import axios from '@/plugins/axios.js'
-import store from '@/store' // vuex
-import * as PhotoTool from '@/utils/photoTool.js'
 import { keyToHump, timeFormat } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
 import { StreamStatics } from '@/utils/enumerate.js'
@@ -15,7 +13,6 @@ export function getReviewInfo () {
   }).then(msg => {
     if (!msg) return null
     const createData = {}
-    let photoArr = []
     createData.canGlass = true
     msg.photos.forEach(photoItem => {
       const findOrigianlPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
@@ -30,7 +27,6 @@ export function getReviewInfo () {
         path: lastFirstPhotoPath,
         version: 'first_photo'
       }]
-      photoArr = [...photoArr, findOrigianlPhoto.path, lastFirstPhotoPath]
       photoItem.isTemplate = photoItem.priviewPhotoData[0].path.includes('template')
       photoItem.isRework = false
       photoItem.showReturnLabel = photoItem.other_photo_version.find(versionItem => versionItem.version === 'return_show')
@@ -46,11 +42,6 @@ export function getReviewInfo () {
       photoItem.reworkMark = false
       photoItem.reworkMarkReason = ''
     })
-    // 预加载
-    if (+store.getters.cacheImageSwitch) {
-      photoArr = photoArr.filter(item => item)
-      PhotoTool.preloadPhoto(photoArr)
-    }
     createData.streamId = msg.id
     createData.streamNum = msg.stream_num
     createData.type = msg.product && msg.product.retouch_standard || '-'

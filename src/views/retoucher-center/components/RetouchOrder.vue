@@ -32,6 +32,7 @@
             preview
             :stream-num="orderData.streamNum"
             photo-name
+            preload-photo
             :tags="photoItem.tags"
             show-joint-label
             show-recede-reason

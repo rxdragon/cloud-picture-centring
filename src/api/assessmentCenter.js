@@ -103,10 +103,7 @@ export function getSpotCheckResult (params) {
         item.photoData.stream.tags.values.retouch_claim ||
         retouchRequire
     })
-    if (+store.getters.cacheImageSwitch) {
-      const photoArr = allPhotoPath.map(photoItem => photoItem.path)
-      PhotoTool.preloadPhoto(photoArr)
-    } else {
+    if (!+store.getters.cacheImageSwitch) {
       PhotoTool.readAllPhoto(allPhotoPath)
     }
     const createData = {

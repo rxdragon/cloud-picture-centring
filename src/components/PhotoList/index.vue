@@ -1,7 +1,7 @@
 <template>
   <div class="photo-list">
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
-      <photo-box downing :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)">
+      <photo-box downing :preload-photo="needPreload" :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)">
         <template v-slot:title>
           <span class="lable-title">{{ photoItem.version | toPhotoVerName }}</span>
         </template>
@@ -51,6 +51,7 @@ export default {
   name: 'PhotoList',
   components: { PhotoBox, PreviewPhoto },
   props: {
+    needPreload: { type: Boolean },
     photoData: { type: Array, default: () => [] }, // 照片数据
     needGrade: { type: Boolean },
     gradeInfo: { type: Object, default: () => {

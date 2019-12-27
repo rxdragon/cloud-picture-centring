@@ -9,6 +9,7 @@
       <photo-box
         :src="photoItem.path"
         show-joint-label
+        preload-photo
         :show-recede-reason="photoItem.version === 'first_photo'"
         :photo-name="photoItem.version === 'first_photo'"
         :tags="photos.tags"

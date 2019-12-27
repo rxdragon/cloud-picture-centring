@@ -51,15 +51,17 @@ export default {
     tags: { type: Object, default: () => {
       return null
     } }, // 标记信息
-    streamNum: { type: String, default: '' } // 流水号
+    streamNum: { type: String, default: '' }, // 流水号
+    preloadPhoto: { type: Boolean }
   },
   data () {
     return {
-      breviary: '!thumb.small.50'
+      breviary: '!thumb.small.50',
+      linkTag: null
     }
   },
   computed: {
-    ...mapGetters(['imgDomain']),
+    ...mapGetters(['imgDomain', 'cacheImageSwitch']),
     // 拼接信息
     jointLabel () {
       if (this.showJointLabel && this.tags && this.tags.values && this.tags.values.splice_mark) {
@@ -108,6 +110,15 @@ export default {
       }
     }
   },
+  mounted () {
+    this.preloadImg()
+  },
+  beforeDestroy () {
+    if (!this.linkTag) return
+    console.log('销毁组件')
+    const head = document.getElementsByTagName('head')[0]
+    head.removeChild(this.linkTag)
+  },
   methods: {
     /**
      * @description 下载成功
@@ -120,6 +131,20 @@ export default {
       }
       this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)
+    },
+    /**
+     * @description 预加载
+     */
+    preloadImg () {
+      if (this.preloadPhoto && this.cacheImageSwitch) {
+        const head = document.getElementsByTagName('head')[0]
+        const photoLink = this.imgDomain + this.src
+        this.linkTag = document.createElement('link')
+        this.linkTag.href = photoLink
+        this.linkTag.rel = 'preload'
+        this.linkTag.setAttribute('as', 'image')
+        head.appendChild(this.linkTag)
+      }
     }
   }
 }
