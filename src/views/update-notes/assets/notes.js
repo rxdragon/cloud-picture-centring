@@ -117,7 +117,21 @@ const version_2_2_2 = {
       1. <span class="mark-opt">优化</span>删除全部照片后查询还会显示照片信息`
 }
 
+const version_2_2_3 = {
+  title: '2.2.3',
+  time: '2019-12-26',
+  desc: `> 版本概况
+  
+  * 缦图种拔草修复
+
+  > 修图师
+  
+  * 缦图种草数
+      1. <span class="mark-fix">修复</span>缦图种拔草3倍问题`
+}
+
 export default [
+  version_2_2_3,
   version_2_2_2,
   version_2_2_1,
   version_2_2_0

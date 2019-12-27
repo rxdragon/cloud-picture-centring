@@ -172,20 +172,10 @@ export function getRetouchQuotaList (params) {
       const allTime = listItem.retouch_time + listItem.review_return_rebuild_time
       listItem.pass_at = listItem.pass_at || '-'
       listItem.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
-      let findPlantPhoto = []
-      let findPullPhoto = []
-      findPlantPhoto = listItem.photos.filter(photoItem => {
-        if (photoItem.tags && photoItem.tags.statics) return photoItem.tags.statics.includes('plant')
-        return
-      })
-      findPullPhoto = listItem.photos.filter(photoItem => {
-        if (photoItem.tags && photoItem.tags.statics) return photoItem.tags.statics.includes('pull')
-        return
-      })
       listItem.exp = Number(listItem.exp) === 0 ? '-' : parseFloat(listItem.exp)
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
-      listItem.plantNum = findPlantPhoto.length
-      listItem.pullNum = findPullPhoto.length
+      listItem.plantNum = listItem.tags && listItem.tags.values && listItem.tags.values.plant_num || 0
+      listItem.pullNum = listItem.tags && listItem.tags.values && listItem.tags.values.pull_num || 0
       listItem.retoucherNpsAvg = listItem.tags && listItem.tags.values && listItem.tags.values.retoucher_score || '-'
     })
     createData.list = msg.list

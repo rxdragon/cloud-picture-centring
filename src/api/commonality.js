@@ -36,8 +36,8 @@ export function getStreamInfo (params) {
   }).then(msg => {
     const data = keyToHump(msg)
     const createData = {}
-    let plantNum = 0 // 审核种草
-    let pullNum = 0 // 审核拔草
+    const plantNum = data.tags && data.tags.values && data.tags.values.plant_num || 0 // 审核种草
+    const pullNum = data.tags && data.tags.values && data.tags.values.pull_num || 0 // 审核拔草
     let checkPlantNum = 0
     let checkPullNum = 0
     const reworkNum = data.tags && data.tags.values && data.tags.values.rework_num || 0
@@ -48,11 +48,9 @@ export function getStreamInfo (params) {
       const isStoreReturn = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.StoreReturn)
       if (photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('plant')) {
         photoItem.grass = 'plant'
-        plantNum++
       }
       if (photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('pull')) {
         photoItem.grass = 'pull'
-        pullNum++
       }
       const filmEvaluation = photoItem.tags && photoItem.tags.values && photoItem.tags.values.film_evaluation || ''
       const spotGrass = photoItem.tags && photoItem.tags.values && photoItem.tags.values.audit_glass || ''
