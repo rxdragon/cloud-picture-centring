@@ -23,9 +23,9 @@
         </div>
         <div class="product search-item">
           <span>拍摄产品</span>
-          <el-select v-model="item.product.id" clearable filterable placeholder="请选择产品">
+          <el-select v-model="item.product.id" placeholder="请选择产品">
             <el-option
-              v-for="(optionItem, pIndex) in productsList"
+              v-for="(optionItem, pIndex) in item.order.products"
               :key="pIndex"
               :label="optionItem.name"
               :value="optionItem.id"
@@ -81,7 +81,6 @@
 import PhotoBox from '@/components/PhotoBox'
 import NoData from '@/components/NoData'
 import * as WorkManage from '@/api/workManage'
-import * as Product from '@/api/product'
 import { jointClass } from '@/assets/config/jointClass.js'
 
 export default {
@@ -92,7 +91,6 @@ export default {
       routeName: this.$route.name, // 路由名字
       caid: '', // 流水号
       id: '', // 订单号
-      productsList: [], // 产品信息
       jointSequence: '',
       dataList: [], // 流水列表
       jointClassOption: [] // 修图类别
@@ -117,12 +115,7 @@ export default {
           return this.$newMessage.warning('请输入订单号或流水号')
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
-        this.productsList = []
         this.dataList = await WorkManage.getStreamInfo(req)
-        if (this.dataList.length) {
-          const retouchStandard = this.dataList[0].product.retouch_standard
-          this.productsList = await Product.getAllProductSelect(retouchStandard)
-        }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
