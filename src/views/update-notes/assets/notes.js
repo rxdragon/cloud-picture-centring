@@ -130,7 +130,27 @@ const version_2_2_3 = {
       1. <span class="mark-fix">修复</span>缦图种拔草3倍问题`
 }
 
+const version_2_2_4 = {
+  title: '2.2.4',
+  time: '2019-12-29',
+  desc: `> 版本概况
+    
+  * 修图上传不验证后缀名大小写
+  * 修图详情老数据容错
+  
+  > 综合改动
+
+  * 修图详情页面
+      1. <span class="mark-fix">修复</span>老数据不展示照片数据
+
+  > 修图师
+    
+  * 待修订单页面
+      1. <span class="mark-opt">优化</span>修图上传不验证后缀名大小写`
+}
+
 export default [
+  version_2_2_4,
   version_2_2_3,
   version_2_2_2,
   version_2_2_1,
