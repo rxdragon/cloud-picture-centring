@@ -51,20 +51,13 @@
       </div>
     </div>
     <div class="search-data table-box">
-      <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
-        <photo-box :tags="photoItem.tags" :src="photoItem.src" @click.native="goGuestInfo(photoItem)" />
-      </div>
-      <div v-for="i in 4" :key="'empty' + i" class="empty-box" />
-      <div v-if="pager.total > pager.pageSize" class="page-box">
-        <el-pagination
-          :hide-on-single-page="true"
-          :current-page.sync="pager.page"
-          :page-size="pager.pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="pager.total"
-          @current-change="handleCurrentChange"
-        />
-      </div>
+      <list-scroll :list.sync='photos' :loadMoreData="getData">
+        <template v-slot="data">
+          <div>
+            {{ data }}
+          </div>
+        </template>
+      </list-scroll>
       <div v-if="!photos.length" class="no-data">暂无数据</div>
     </div>
   </div>
@@ -73,6 +66,7 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import PhotoBox from '@/components/PhotoBox'
+import ListScroll from '@/components/ListScroll'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
 import StaffSelect from '@SelectBox/StaffSelect'
@@ -82,7 +76,7 @@ import * as GuestPhoto from '@/api/guestPhoto'
 
 export default {
   name: 'GuestPhotoCenter',
-  components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect },
+  components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect, ListScroll },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -96,8 +90,7 @@ export default {
       photos: [], // 照片列表
       pager: {
         page: 1,
-        pageSize: 12,
-        total: 0
+        pageSize: 12
       },
       checkOption: [
         {
@@ -140,6 +133,16 @@ export default {
         }
       })
     },
+    handleRowData (msg) {
+      const rowData = []
+      const columnCount = 4
+      const sliceTimes = Math.ceil(msg.length / columnCount)
+      for (let index = 0; index < sliceTimes; index++) {
+        const firstIndex = index * columnCount
+        const lastIndex = firstIndex + columnCount
+        rowData.push(msg.slice(firstIndex, lastIndex))
+      }
+    },
     /**
      * @description 获取客片池列表
      */
@@ -173,13 +176,15 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
-        this.photos = data.list || []
-        this.pager.total = data.total
+        this.photos = this.handleRowData(data) || []
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    async getData () {
+      return []
     }
   }
 }
