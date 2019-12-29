@@ -141,8 +141,8 @@
 |范围|描述|commitId|
 --|--|--
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
+ test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
  下载优化 | [63ecdfe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/63ecdfe)
@@ -152,7 +152,6 @@
  保存路径 | [1c4d95f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1c4d95f)
  修图详情增加种草数显示 | [286c103](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/286c103)
  修复门店评分显示错误 | [62147a8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/62147a8)
- 修改产品能配置多个产品 | [5727a79](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5727a79)
  修改照片优化删除订单后会立刻生效被删除 | [76219f5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/76219f5)
  修片师详情页面增加摄影师信息 | [75cc092](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/75cc092)
  值班主管 | [72300dc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/72300dc)
@@ -193,9 +192,9 @@
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
+ 退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
  test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
- 退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
  重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
  验证照片后最名字，增加产品配置，新增模版照片格式选项 | [73b95b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/73b95b8)
