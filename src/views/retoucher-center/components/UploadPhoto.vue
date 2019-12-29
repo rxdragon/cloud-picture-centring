@@ -224,7 +224,7 @@ export default {
       }
       const finishPhotoArr = Object.values(this.finishPhoto)
       const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
-      const hasSameName = this.photos.some(item => item.path === file.name)
+      const hasSameName = this.photos.some(item => PhotoTool.photoPathExtToLowerCase(item.path) === PhotoTool.photoPathExtToLowerCase(file.name))
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
       // 判断是否是图片
       if (!canUploadTpye.includes(type)) {
