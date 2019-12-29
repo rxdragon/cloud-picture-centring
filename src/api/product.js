@@ -92,6 +92,26 @@ export function getAllProductPanel () {
   })
 }
 
+/**
+ * @description 获取全部产品选择框数据
+ */
+export function getAllProductSelect (retouchStandard) {
+  return axios({
+    url: '/project_cloud/common/getAllProduct',
+    method: 'get'
+  }).then(msg => {
+    const products = msg.filter(productItem => productItem.retouch_standard === retouchStandard)
+    const productsList = products.map(productItem => {
+      return {
+        name: productItem.name,
+        id: productItem.id,
+        retouchStandard
+      }
+    })
+    return productsList
+  })
+}
+
 function findTypeId (value) {
   switch (value) {
     case 'blue':
