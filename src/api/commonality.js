@@ -86,7 +86,7 @@ export function getStreamInfo (params) {
       overTime: data.hourGlass ? data.hourGlass.over_time : '-',
       checkPlantNum,
       checkPullNum,
-      requireLabel: data.tags.values.retouch_claim,
+      requireLabel: data.tags && data.tags.values && data.tags.values.retouch_claim || {},
       retouchRemark: data.note.retouch_note || '暂无修图备注',
       reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注'
     }
