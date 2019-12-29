@@ -14,11 +14,13 @@ export function getPhotoList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.forEach(listItem => {
-      const completePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
-      listItem.src = completePhoto && completePhoto.path || ''
-    })
-    msg = msg.filter(listItem => Boolean(listItem.src))
+    if (msg.list) {
+      msg.list.forEach(listItem => {
+        const completePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
+        listItem.src = completePhoto && completePhoto.path || ''
+      })
+      msg.list = msg.list.filter(listItem => Boolean(listItem.src))
+    }
     return msg
   })
 }
