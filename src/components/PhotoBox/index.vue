@@ -8,7 +8,7 @@
           <span>加载失败...</span>
         </div>
       </el-image>
-      <img class="orgin-img" v-else :src="imageSrc" alt="">
+      <img v-else class="orgin-img" :src="imageSrc" alt="">
       <span v-if="photoName" class="photo-name" @click.stop="">{{ src }}</span>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">

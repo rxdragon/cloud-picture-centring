@@ -39,9 +39,11 @@ export default {
       twoWays: true
     },
     height: { type: Number, default: 44 },
+    listHeight: { type: Number, default: 200 },
     canScroll: { type: Boolean, default: true },
     dispatchData: { type: Function, default: () => {} },
-    loadMoreData: { type: Function, required: true }
+    loadMoreData: { type: Function, required: true },
+    page: { type: Number, default: 1 }
   },
   data () {
     return {
@@ -57,6 +59,21 @@ export default {
       from: 0 // 上一展示接待你
     }
   },
+  watch: {
+    listHeight: {
+      handler: function (value) {
+        this.initData()
+        this.handleScroll()
+      }
+    },
+    list () {
+      if (this.page === 1) {
+        this.$el.scrollTop = 0
+        this.initData()
+        this.handleScroll()
+      }
+    }
+  },
   mounted () {
     this.initData()
     this.handleScroll()
@@ -64,27 +81,26 @@ export default {
   methods: {
     initData () {
       // init all data
+      this.lastScrollTop = null
       this._rowsInWindow = Math.ceil(this.$el.offsetHeight / this.height) // 显示窗口展示的行数
       this._above = this._rowsInWindow * 2 // 列表上面的元素
       this._below = this._rowsInWindow // 屏幕下面的元素
       this._max = this._rowsInWindow * this.height // 显示区域最大高度
       if (!this.list.length) { this.hasMoreData = false }
-      console.log(this._rowsInWindow, '_rowsInWindow')
-      console.log(this._above, '_above')
-      console.log(this._below, '_below')
-      console.log(this._max, '_max')
+      // console.log(this._rowsInWindow, '_rowsInWindow')
+      // console.log(this._above, '_above')
+      // console.log(this._below, '_below')
+      // console.log(this._max, '_max')
     },
     handleScroll () {
       const _scrollTop = this.$el.scrollTop // 滚动条高度
       // 已经滑过后的元素
-      console.log(_scrollTop)
+      // console.log(_scrollTop)
       this.displayCount = this.getDisplayCount(_scrollTop)
       // 是否滚动了一个可视区域
       const isScrollOneVisibleArea = Math.abs(_scrollTop - this.lastScrollTop) >= this._max
-      console.log(_scrollTop, this.lastScrollTop, _scrollTop - this.lastScrollTop, isScrollOneVisibleArea)
       if (this.lastScrollTop === null || isScrollOneVisibleArea) {
         this.lastScrollTop = _scrollTop
-        console.log('滑动一个可视区', this.lastScrollTop)
       } else {
         this.judgeLoadMore()
         return
@@ -108,15 +124,15 @@ export default {
       console.log(this.canLoadmore, 'this.canLoadmore')
       this.canLoadmore = false
       const data = await this.loadMoreData()
-      console.log(data, 'loadmore')
+      // console.log(data, 'loadmore')
       if (!data.length) {
         this.hasMoreData = false
         return
       }
       const _to = to + this._below
-      console.log(this.from, from, 'from')
-      console.log(to, _to, 'loadmore')
-      console.log(this.list.length - _to)
+      // console.log(this.from, from, 'from')
+      // console.log(to, _to, 'loadmore')
+      // console.log(this.list.length - _to)
       this.resetPreviewList(from, _to)
       this.lineBottomHeight = (this.list.length - _to) * this.height
       this.handleScroll()
@@ -129,7 +145,7 @@ export default {
       const _scrollTop = this.$el.scrollTop
       const isLoadingMoveUp = _scrollTop < this.lastScrollTop
       if (isLoadingMoveUp) return
-      console.log(_scrollTop, this.lastScrollTop)
+      // console.log(_scrollTop, this.lastScrollTop)
       this.previewList = []
       for (let i = from; i < to; i++) {
         this.previewList.push(this.list[i])
@@ -145,7 +161,7 @@ export default {
       const isScollFinish = this.to === this.list.length
       const scollApartBottom = _height - _scrollTop - _contentHeight // 滚动元素距离底部的距离
       const isArriveArea = scollApartBottom < this.distance
-      console.log(isScollFinish, scollApartBottom, 'scollApartBottom')
+      // console.log(isScollFinish, scollApartBottom, 'scollApartBottom')
       if (isScollFinish && isArriveArea && this.canScroll) { this.loadmore(this.from, this.to) }
     },
     /**
@@ -160,7 +176,7 @@ export default {
      */
     setPadding () {
       this.lineTopHeight = this.from * this.height // 顶部padding
-      console.log(this.list.length - this.to, 'setPadding')
+      // console.log(this.list.length - this.to, 'setPadding')
       this.lineBottomHeight = (this.list.length - this.to) * this.height // 底部padding
     },
     /**

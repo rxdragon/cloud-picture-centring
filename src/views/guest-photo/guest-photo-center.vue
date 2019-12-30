@@ -51,18 +51,26 @@
       </div>
     </div>
     <div
+      ref="tableBox"
       class="search-data table-box"
       :style="{
         height: searchDataBox + 'px'
       }"
     >
-      <list-scroll v-if="photos.length" :list.sync="photos" :height="277" :load-more-data="getData">
+      <list-scroll
+        v-if="photos.length"
+        :list.sync="photos"
+        :height="277"
+        :list-height="searchDataBox"
+        :page="pager.page"
+        :load-more-data="getData"
+      >
         <template v-slot="{ data }">
           <div class="photo-row">
             <div v-for="photoItem in data" :key="photoItem.id" class="photo-box">
               <photo-box :use-ele-image="false" :src="photoItem.src" />
             </div>
-            <div v-for="i in 4" :key="i + 'empty'" class="empty-box" />
+            <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
           </div>
         </template>
       </list-scroll>
@@ -98,6 +106,7 @@ export default {
       retouchStandard: '', // 修图标准
       photos: [], // 照片列表
       searchDataBox: 200,
+      columnCount: 4, // 照片列数
       pager: {
         page: 1,
         pageSize: 16
@@ -132,19 +141,32 @@ export default {
     this.getPhotoList()
   },
   mounted () {
-    console.log(window.global.onresize)
-    window.οnresize = () => {
-      console.log(1)
-    }
     console.log(window.onresize)
     this.resizeWindow()
+    this.$ipcRenderer.on('win-resize', (e, item) => {
+      const { data } = item
+      console.log(data)
+      console.log(window.innerHeight, 'win-resize')
+      this.resizeWindow(data)
+    })
   },
   methods: {
-    resizeWindow () {
-      console.dir(window.innerHeight)
+    /**
+     * @description 窗口调整大小后事件
+     */
+    resizeWindow (data) {
+      const height = data ? data[1] : null
       const otherHeight = 310
-      this.searchDataBox = window.innerHeight - otherHeight
-      console.log(this.searchDataBox)
+      const paddingWidth = 48
+      const photoBoxWidth = 253
+      const AppHeight = height || window.innerHeight
+      const searchDataWidth = this.$refs['tableBox'].offsetWidth - paddingWidth
+      this.searchDataBox = AppHeight - otherHeight
+      const columnCount = parseInt(searchDataWidth / photoBoxWidth)
+      if (this.columnCount === columnCount) return
+      this.getPhotoList()
+      this.columnCount = columnCount
+      console.log(this.columnCount)
     },
     /**
      * @description 页面变化
@@ -168,11 +190,10 @@ export default {
      */
     handleRowData (data) {
       const rowData = []
-      const columnCount = 4
-      const sliceTimes = Math.ceil(data.length / columnCount)
+      const sliceTimes = Math.ceil(data.length / this.columnCount)
       for (let index = 0; index < sliceTimes; index++) {
-        const firstIndex = index * columnCount
-        const lastIndex = firstIndex + columnCount
+        const firstIndex = index * this.columnCount
+        const lastIndex = firstIndex + this.columnCount
         rowData.push(data.slice(firstIndex, lastIndex))
       }
       return rowData
@@ -184,7 +205,7 @@ export default {
       if (!newPhotos.length) return
       const lastPhotoIndex = this.photos.length - 1
       const lastPhotoslength = this.photos[lastPhotoIndex].length
-      const sliceLength = 4 - lastPhotoslength
+      const sliceLength = this.columnCount - lastPhotoslength
       const slicePhoto = newPhotos.slice(0, sliceLength)
       slicePhoto.forEach(photoItem => this.photos[lastPhotoIndex].push(photoItem))
       newPhotos.splice(0, sliceLength)
@@ -228,7 +249,6 @@ export default {
      */
     async getPhotoList () {
       this.pager.page = 1
-      console.log(this.$el)
       const reqData = this.getParam()
       if (!reqData) return
       try {
@@ -330,16 +350,16 @@ export default {
       margin-bottom: 24px;
       flex-wrap: wrap;
 
-      .photo-box {
-        width: 253px;
-        display: inline-block;
-        cursor: pointer;
-        height: 253px;
-      }
-
       .empty-box {
         width: 253px;
       }
+    }
+
+    .photo-box {
+      width: 253px;
+      display: inline-block;
+      cursor: pointer;
+      height: 253px;
     }
 
     .page-box {
