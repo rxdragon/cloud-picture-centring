@@ -6,17 +6,23 @@
         paddingBottom: lineBottomHeight + 'px'
       }"
     >
-      <li v-for="item in previewList" :style="{
-        height: _height + 'px'
-      }" :key="item">
-        <slot :data="item"></slot>
+      <li
+        v-for="(item, index) in previewList"
+        :key="index"
+        :style="{
+          height: height + 'px'
+        }"
+      >
+        <slot :data="item" />
       </li>
     </ul>
-    <div v-if="hasMoreData" 
+    <div
+      v-if="hasMoreData"
       :style="{
         height: distance + 'px'
       }"
-      class="load-more-gif">loading...</div>
+      class="load-more-gif"
+    >loading...</div>
   </div>
 </template>
 
@@ -59,7 +65,7 @@ export default {
     initData () {
       // init all data
       this._rowsInWindow = Math.ceil(this.$el.offsetHeight / this.height) // 显示窗口展示的行数
-      this._above = this._rowsInWindow // 列表上面的元素
+      this._above = this._rowsInWindow * 2 // 列表上面的元素
       this._below = this._rowsInWindow // 屏幕下面的元素
       this._max = this._rowsInWindow * this.height // 显示区域最大高度
       if (!this.list.length) { this.hasMoreData = false }
@@ -71,9 +77,11 @@ export default {
     handleScroll () {
       const _scrollTop = this.$el.scrollTop // 滚动条高度
       // 已经滑过后的元素
+      console.log(_scrollTop)
       this.displayCount = this.getDisplayCount(_scrollTop)
       // 是否滚动了一个可视区域
-      const isScrollOneVisibleArea = Math.abs(_scrollTop - this.lastScrollTop) > this._max
+      const isScrollOneVisibleArea = Math.abs(_scrollTop - this.lastScrollTop) >= this._max
+      console.log(_scrollTop, this.lastScrollTop, _scrollTop - this.lastScrollTop, isScrollOneVisibleArea)
       if (this.lastScrollTop === null || isScrollOneVisibleArea) {
         this.lastScrollTop = _scrollTop
         console.log('滑动一个可视区', this.lastScrollTop)
@@ -97,19 +105,20 @@ export default {
      */
     async loadmore (from, to) {
       if (!this.canLoadmore) return
-      console.log(this.canLoadmore)
+      console.log(this.canLoadmore, 'this.canLoadmore')
       this.canLoadmore = false
       const data = await this.loadMoreData()
-      // if (!data.length) {
-      //   this.hasMoreData = false
-      //   return
-      // }
-      const nowTo = this.to + this._below
-      console.log(this.to, to, 'loadmore')
-      if (this.from === from) {
-        this.resetPreviewList(from, nowTo)
+      console.log(data, 'loadmore')
+      if (!data.length) {
+        this.hasMoreData = false
+        return
       }
-      this.lineBottomHeight = (this.list.length - nowTo) * this.height
+      const _to = to + this._below
+      console.log(this.from, from, 'from')
+      console.log(to, _to, 'loadmore')
+      console.log(this.list.length - _to)
+      this.resetPreviewList(from, _to)
+      this.lineBottomHeight = (this.list.length - _to) * this.height
       this.handleScroll()
       this.canLoadmore = true
     },
@@ -136,6 +145,7 @@ export default {
       const isScollFinish = this.to === this.list.length
       const scollApartBottom = _height - _scrollTop - _contentHeight // 滚动元素距离底部的距离
       const isArriveArea = scollApartBottom < this.distance
+      console.log(isScollFinish, scollApartBottom, 'scollApartBottom')
       if (isScollFinish && isArriveArea && this.canScroll) { this.loadmore(this.from, this.to) }
     },
     /**
@@ -143,11 +153,7 @@ export default {
      */
     getDisplayCount (scrollTop) {
       const upglideRowCount = scrollTop / this.height
-      if (upglideRowCount - Math.floor(upglideRowCount) > 0.5) {
-        return Math.ceil(upglideRowCount)
-      } else {
-        return Math.floor(upglideRowCount)
-      }
+      return parseInt(upglideRowCount)
     },
     /**
      * @description 设置滚动元素padding
@@ -187,8 +193,6 @@ export default {
       font-size: 14px;
       line-height: 3;
       text-align: left;
-      padding-left: 15px;
-      border-bottom: 1px solid #ddd;
       box-sizing: border-box;
       background: #fff;
 

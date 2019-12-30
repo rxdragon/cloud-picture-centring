@@ -50,15 +50,23 @@
         <el-button type="primary" @click="getPhotoList(1)">查询</el-button>
       </div>
     </div>
-    <div class="search-data table-box">
-      <list-scroll :list.sync='photos' :loadMoreData="getData">
-        <template v-slot="data">
-          <div>
-            {{ data }}
+    <div
+      class="search-data table-box"
+      :style="{
+        height: searchDataBox + 'px'
+      }"
+    >
+      <list-scroll v-if="photos.length" :list.sync="photos" :height="277" :load-more-data="getData">
+        <template v-slot="{ data }">
+          <div class="photo-row">
+            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box">
+              <photo-box :use-ele-image="false" :src="photoItem.src" />
+            </div>
+            <div v-for="i in 4" :key="i + 'empty'" class="empty-box" />
           </div>
         </template>
       </list-scroll>
-      <div v-if="!photos.length" class="no-data">暂无数据</div>
+      <no-data v-else />
     </div>
   </div>
 </template>
@@ -70,13 +78,14 @@ import ListScroll from '@/components/ListScroll'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
 import StaffSelect from '@SelectBox/StaffSelect'
+import NoData from '@/components/NoData'
 import { joinTimeSpan } from '@/utils/timespan.js'
 
 import * as GuestPhoto from '@/api/guestPhoto'
 
 export default {
   name: 'GuestPhotoCenter',
-  components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect, ListScroll },
+  components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect, ListScroll, NoData },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -88,9 +97,10 @@ export default {
       productValue: '', // 产品id
       retouchStandard: '', // 修图标准
       photos: [], // 照片列表
+      searchDataBox: 200,
       pager: {
         page: 1,
-        pageSize: 12
+        pageSize: 16
       },
       checkOption: [
         {
@@ -115,7 +125,27 @@ export default {
       ]
     }
   },
+  created () {
+    const startAt = '2019-12-01'
+    const endAt = '2019-12-30'
+    this.timeSpan = [startAt, endAt]
+    this.getPhotoList()
+  },
+  mounted () {
+    console.log(window.global.onresize)
+    window.οnresize = () => {
+      console.log(1)
+    }
+    console.log(window.onresize)
+    this.resizeWindow()
+  },
   methods: {
+    resizeWindow () {
+      console.dir(window.innerHeight)
+      const otherHeight = 310
+      this.searchDataBox = window.innerHeight - otherHeight
+      console.log(this.searchDataBox)
+    },
     /**
      * @description 页面变化
      */
@@ -133,21 +163,39 @@ export default {
         }
       })
     },
-    handleRowData (msg) {
+    /**
+     * @description 处理行数据
+     */
+    handleRowData (data) {
       const rowData = []
       const columnCount = 4
-      const sliceTimes = Math.ceil(msg.length / columnCount)
+      const sliceTimes = Math.ceil(data.length / columnCount)
       for (let index = 0; index < sliceTimes; index++) {
         const firstIndex = index * columnCount
         const lastIndex = firstIndex + columnCount
-        rowData.push(msg.slice(firstIndex, lastIndex))
+        rowData.push(data.slice(firstIndex, lastIndex))
       }
+      return rowData
     },
     /**
-     * @description 获取客片池列表
+     * @description 拼接数据
      */
-    async getPhotoList (page) {
-      this.pager.page = page || this.pager.page
+    jointData (newPhotos) {
+      if (!newPhotos.length) return
+      const lastPhotoIndex = this.photos.length - 1
+      const lastPhotoslength = this.photos[lastPhotoIndex].length
+      const sliceLength = 4 - lastPhotoslength
+      const slicePhoto = newPhotos.slice(0, sliceLength)
+      slicePhoto.forEach(photoItem => this.photos[lastPhotoIndex].push(photoItem))
+      newPhotos.splice(0, sliceLength)
+      const newRowPhotos = this.handleRowData(newPhotos)
+      newRowPhotos.forEach(rowItem => this.photos.push(rowItem))
+      return newRowPhotos
+    },
+    /**
+     * @description 获取参数
+     */
+    getParam () {
       const type = ['streamNum', 'customerName', 'telephone']
       const reqData = {
         page: this.pager.page,
@@ -173,18 +221,54 @@ export default {
       if (this.checkValue) { reqData.evaluateStar = this.checkValue }
       if (this.productValue) { reqData.productId = this.productValue }
       if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
+      return reqData
+    },
+    /**
+     * @description 获取客片池列表
+     */
+    async getPhotoList () {
+      this.pager.page = 1
+      console.log(this.$el)
+      const reqData = this.getParam()
+      if (!reqData) return
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
+        // 调试
+        data.forEach((item, index) => {
+          item.indexNumber = index
+        })
         this.photos = this.handleRowData(data) || []
+        console.log(this.photos)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
     },
+    /**
+     * @description 获取数据分页
+     */
     async getData () {
-      return []
+      this.pager.page += 1
+      const reqData = this.getParam()
+      if (!reqData) return
+      try {
+        const data = await GuestPhoto.getPhotoList(reqData)
+        // 调试
+        let count = 0
+        this.photos.forEach(item => {
+          count += item.length
+        })
+        data.forEach((item, index) => {
+          item.indexNumber = count + index
+        })
+        const newRowPhotos = this.jointData(data)
+        return newRowPhotos
+      } catch (error) {
+        console.error(error)
+        return []
+      }
     }
   }
 }
@@ -240,14 +324,22 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
 
-    .photo-box {
-      width: 24%;
+    .photo-row {
+      display: flex;
+      justify-content: space-between;
       margin-bottom: 24px;
-      cursor: pointer;
-    }
+      flex-wrap: wrap;
 
-    .empty-box {
-      width: 24%;
+      .photo-box {
+        width: 253px;
+        display: inline-block;
+        cursor: pointer;
+        height: 253px;
+      }
+
+      .empty-box {
+        width: 253px;
+      }
     }
 
     .page-box {
