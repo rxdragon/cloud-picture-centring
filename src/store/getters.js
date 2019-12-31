@@ -13,6 +13,7 @@ const defaultGetters = {
   showOverTag: state => state.setting.showOverTag, // 是否已上传照片进行标记
   autoUpload: state => state.setting.autoUpload, // 是否开启自动上传
   cacheImageSwitch: state => state.setting.cacheImageSwitch, // 是否开启自动上传
+  guestInfiniteScroll: state => state.setting.guestInfiniteScroll, // 是否开启自动上传
   saveFolder: state => state.setting.savePath, // 保存路径
   imgUploadDomain: state => state.setting.imgUploadDomain, // 上传后的照片域名
   imgDomain: state => state.setting.imgDomain, // 上传后的照片域名
