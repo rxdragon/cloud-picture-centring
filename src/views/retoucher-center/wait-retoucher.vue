@@ -100,18 +100,18 @@
           <el-tabs v-model="listActive">
             <el-tab-pane :label="'接单中(' + retouchingListNum + ')'" name="retouching">
               <div class="table-box" :class="{'no-border': listActive === 'retouching'}">
-                <take-orders-list :aid.sync="aid" :show-detail.sync="showDetail" :table-data="tableData" />
+                <take-orders-list :show-detail.sync="showDetail" :table-data="tableData" />
               </div>
             </el-tab-pane>
             <el-tab-pane :label="'已挂起(' + hangingListNum + ')'" name="hanging">
               <div class="table-box" :class="{'no-border': listActive === 'retouching'}">
-                <hang-up-list :aid.sync="aid" :show-detail.sync="showDetail" :table-data="tableData" />
+                <hang-up-list :show-detail.sync="showDetail" :table-data="tableData" />
               </div>
             </el-tab-pane>
           </el-tabs>
         </div>
       </div>
-      <RetouchOrder v-else key="RetouchOrder" :show-detail.sync="showDetail" :aid="aid" />
+      <RetouchOrder v-else key="RetouchOrder" :show-detail.sync="showDetail" />
     </transition>
   </div>
 </template>
@@ -123,7 +123,6 @@ import HangUpList from './components/HangUpList'
 import CountTo from '@/components/CountTo'
 import { mapGetters } from 'vuex'
 
-import * as SessionTool from '@/utils/sessionTool'
 import * as Retoucher from '@/api/retoucher.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
@@ -140,10 +139,9 @@ export default {
       showDetail: false, // 是否显示订单详情
       queueInfo: {
         inQueue: false,
-        retouchQueueIndex: 0,
-        retouchQueueTotal: 0,
-        retouchStreamId: '',
-        waitRetouchStream: 0
+        retouchQueueIndex: 0, // 排队接单中（顺序)
+        retouchQueueTotal: 0, // 总共排队人数
+        waitRetouchStream: 0 // 修图排队中流水
       },
       quotaInfo: { // 个人信息
         todayFinishPhotoNum: 0,
@@ -157,7 +155,6 @@ export default {
         goldReward: 0, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
-      aid: '', // 订单id
       hasInitialization: false // 是否有初始化数据
     }
   },
@@ -186,17 +183,14 @@ export default {
     },
     // 详情页显示
     showDetail: {
-      handler: function (value) {
-        if (!value) {
-          this.initializeData()
-        }
+      handler (value) {
+        if (value) return
+        this.initializeData()
       }
     },
-    '$store.state.notification.returnStreamId': {
+    '$store.state.notification.retouchId': {
       handler: function (value) {
-        if (value) {
-          this.showDetail = true
-        }
+        this.showDetail = Boolean(value)
       },
       immediate: true
     }
@@ -206,11 +200,8 @@ export default {
     this.initializeData()
   },
   activated () {
-    if (!this.$store.state.notification.returnStreamId) {
-      !this.hasInitialization && (this.initializeData())
-      this.hasInitialization = false
-      this.showDetail = false
-    }
+    this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
+    this.showDetail = false
   },
   methods: {
     /**
@@ -239,43 +230,7 @@ export default {
      * @description 获取排队信息
      */
     async getStreamQueueInfo () {
-      try {
-        this.queueInfo = await RetoucherCenter.getStreamQueueInfo()
-      } catch (error) {
-        setTimeout(() => {
-          this.getStreamQueueInfo()
-        }, 3000)
-      }
-      clearTimeout(window.polling.getQueue)
-      window.polling.getQueue = null
-      if (+this.queueInfo.retouchStreamId && !SessionTool.getSureRetouchOrder(this.queueInfo.retouchStreamId)) {
-        await RetoucherCenter.exitQueue()
-        this.$confirm('', '你有新的订单请及时处理', {
-          confirmButtonText: '确定',
-          center: true,
-          type: 'warning',
-          showCancelButton: false,
-          closeOnPressEscape: false,
-          showClose: false,
-          closeOnClickModal: false
-        }).then(() => {
-          SessionTool.saveSureRetouchOrder(this.queueInfo.retouchStreamId)
-          if (this.$route.name !== 'WaitRetoucher') {
-            this.$router.push({
-              path: '/retoucher-center',
-              query: { aid: this.queueInfo.retouchStreamId }
-            })
-          } else {
-            this.aid = this.queueInfo.retouchStreamId
-            this.showDetail = true
-          }
-        })
-      }
-      if (this.queueInfo.inQueue) {
-        window.polling.getQueue = setTimeout(() => {
-          this.getStreamQueueInfo()
-        }, 3000)
-      }
+      this.queueInfo = await RetoucherCenter.getStreamQueueInfo()
     },
     /**
      * @description 退出队列
@@ -291,8 +246,6 @@ export default {
           this.$store.dispatch('setting/showLoading', this.routeName)
           await RetoucherCenter.exitQueue()
           this.$newMessage.success('退出队列成功')
-          clearTimeout(window.polling.getQueue)
-          window.polling.getQueue = null
           await this.getStreamQueueInfo()
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
         }).catch(() => {})
@@ -309,7 +262,6 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await RetoucherCenter.joinQueue()
         this.$newMessage.success('进入排队成功')
-        this.getStreamQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -324,7 +276,6 @@ export default {
      */
     initializeData () {
       this.$store.dispatch('setting/showLoading', this.routeName)
-      this.aid = ''
       Promise.all([
         this.getSelfQuota(),
         this.getSelfBuffInfo(),

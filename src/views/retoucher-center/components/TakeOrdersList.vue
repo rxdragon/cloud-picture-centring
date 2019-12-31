@@ -44,10 +44,7 @@ export default {
   },
   methods: {
     handleOrder (aid) {
-      this.$emit('update:aid', aid)
-      this.$nextTick(() => {
-        this.$emit('update:showDetail', true)
-      })
+      this.$store.commit('notification/SET_RETOUCH_STREAM_ID', aid)
     }
   }
 }
