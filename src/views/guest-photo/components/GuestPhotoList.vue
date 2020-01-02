@@ -14,8 +14,9 @@
         <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" class="input-with-select" @keyup.native.enter="getPhotoList(1)">
           <el-select slot="prepend" v-model="orderType" placeholder="请选择">
             <el-option label="云端流水号" :value="1" />
-            <el-option label="顾客姓名" :value="2" />
-            <el-option label="手机号" :value="3" />
+            <el-option label="订单号" :value="2" />
+            <el-option label="顾客姓名" :value="3" />
+            <el-option label="手机号" :value="4" />
           </el-select>
         </el-input>
       </div>
@@ -86,7 +87,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 查询时间
-      orderType: 1, // 查询类型 1 云端流水号 2 顾客姓名 3 手机号
+      orderType: 1, // 查询类型 1 云端流水号 2 订单号 3 顾客姓名 4 手机号
       orderSearchValue: '', // 订单信息
       checkValue: 0, // 看片评价星数
       staffId: [], // 伙伴id
@@ -145,7 +146,7 @@ export default {
      * @description 获取参数
      */
     getParam () {
-      const type = ['streamNum', 'customerName', 'telephone']
+      const type = ['streamNum', 'orderNum', 'customerName', 'telephone']
       const reqData = {
         page: this.pager.page,
         pageSize: this.pager.pageSize
@@ -153,10 +154,6 @@ export default {
       if (this.orderSearchValue) {
         const key = type[this.orderType - 1]
         reqData[key] = this.orderSearchValue
-        if (key !== 'streamNum' && !this.timeSpan) {
-          this.$newMessage.warning('请填写时间')
-          return false
-        }
       }
       if (!this.timeSpan && !this.orderSearchValue) {
         this.$newMessage.warning('请填写时间')

@@ -1,4 +1,4 @@
-# 2.0.0 (2019-12-31)
+# 2.0.0 (2020-01-02)
 
 |范围|描述|commitId|
 --|--|--
@@ -225,14 +225,15 @@
  去除console | [e867487](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e867487)
  去除console | [3399ad4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3399ad4)
  去除console.log | [eae5792](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eae5792)
+ 去除console.log | [80a214e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/80a214e)
  将最终成片文案改为顾客满意片 | [5766118](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5766118)
  更改样式 | [a021d75](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a021d75)
  更改错误显示数据名字 | [8096dd7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8096dd7)
+ ' | 优化样式 | [0fad9a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0fad9a5)
  格式化代码 | [e2ab9b0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2ab9b0)
  格式化代码 | [d71a32c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d71a32c)
  滚动条样式优化，流量看板样式优化 | [6c61941](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c61941)
  默认值处理 | [0aa4c73](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0aa4c73)
- ' | 优化样式 | [0fad9a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0fad9a5)
 
 
 ### 🐛 Bug 修复
