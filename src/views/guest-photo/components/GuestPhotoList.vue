@@ -50,7 +50,7 @@
     </div>
     <div class="search-data table-box">
       <div v-if="photos.length" class="photo-module">
-        <div v-for="photoItem in photos" :key="photoItem.id" class="photo-box">
+        <div v-for="photoItem in photos" :key="photoItem.id" class="photo-box" @click="goGuestInfo(photoItem)">
           <photo-box :src="photoItem.src" />
         </div>
         <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
@@ -263,6 +263,7 @@ export default {
       .photo-box {
         width: 24%;
         margin-bottom: 24px;
+        cursor: pointer;
       }
 
       .empty-box {

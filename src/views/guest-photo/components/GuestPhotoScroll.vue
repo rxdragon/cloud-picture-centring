@@ -65,7 +65,7 @@
       >
         <template v-slot="{ data }">
           <div class="photo-row">
-            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box">
+            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box" @click="goGuestInfo(photoItem)">
               <photo-box :use-ele-image="false" :src="photoItem.src" />
             </div>
             <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
