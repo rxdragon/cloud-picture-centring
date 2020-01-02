@@ -55,6 +55,7 @@ export default {
       previewList: [],
       displayCount: 0, // 已经滑过的元素
       hasMoreData: true,
+      cacheScrollTop: 0,
       to: 0, // 下一个展示节点
       from: 0 // 上一展示接待你
     }
@@ -73,6 +74,12 @@ export default {
         this.handleScroll()
       }
     }
+  },
+  activated () {
+    this.$el.scrollTop = this.cacheScrollTop
+  },
+  deactivated () {
+    this.cacheScrollTop = this.$el.scrollTop
   },
   mounted () {
     this.initData()
