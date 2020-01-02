@@ -96,7 +96,6 @@ const actions = {
       commit('SET_ROLES', newPermissionArr)
       // 如果有修图权限 启动轮询
       if (newRolesArr.includes('WaitRetoucher')) {
-        store.dispatch('notification/hasReturnNotification')
         store.dispatch('user/getRetoucherLineState')
         window.addEventListener('click', () => {
           store.commit('user/SET_ACTIVE_TIME')

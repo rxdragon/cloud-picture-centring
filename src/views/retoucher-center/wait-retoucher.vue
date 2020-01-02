@@ -189,7 +189,7 @@ export default {
       }
     },
     '$store.state.notification.retouchId': {
-      handler: function (value) {
+      handler (value) {
         this.showDetail = Boolean(value)
       },
       immediate: true

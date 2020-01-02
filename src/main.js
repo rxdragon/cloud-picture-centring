@@ -20,6 +20,7 @@ import '@/directive'
 window.bodymovin = lottie
 // 注册websocket
 Vue.prototype.$ws = new Ws()
+Vue.prototype.$eventEmitter = eventEmitter
 
 // 注入全局过滤器
 Object.keys(filters).forEach(key => {

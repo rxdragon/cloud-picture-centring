@@ -159,6 +159,7 @@ export default {
             this.$refs['uploadPhoto'].saveUpdatePhoto()
           }
           this.$newMessage.success('流水挂起成功，不要忘记处理哦～')
+          this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
           this.$emit('update:showDetail', false)
         })
     },

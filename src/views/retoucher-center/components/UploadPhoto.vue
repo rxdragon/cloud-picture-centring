@@ -134,6 +134,9 @@ export default {
     photos: {
       handler () {
         this.cachePhoto = []
+        this.uploadPhoto.forEach((photoItem, photoIndex) => {
+          this.deleteUploadPhoto(photoItem, photoIndex)
+        })
         this.uploadPhoto = []
         this.$emit('change', {})
         this.getCachePhoto()
