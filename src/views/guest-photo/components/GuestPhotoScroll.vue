@@ -138,6 +138,9 @@ export default {
       this.resizeWindow(data)
     })
   },
+  destroyed () {
+    this.$ipcRenderer.removeAllListeners('win-resize')
+  },
   methods: {
     /**
      * @description 窗口调整大小后事件
