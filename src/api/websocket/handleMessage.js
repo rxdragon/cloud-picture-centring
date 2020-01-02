@@ -7,7 +7,6 @@ import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default function handleMessage (data) {
-  data.typeName = 'StreamReviewerReceive'
   if (!data.typeName) return
   const { typeName } = data
   switch (typeName) {

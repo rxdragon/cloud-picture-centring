@@ -76,9 +76,6 @@ export default {
       }]
     }
   },
-  created () {
-    this.getWholeQuota()
-  },
   methods: {
     getParams () {
       const req = {}

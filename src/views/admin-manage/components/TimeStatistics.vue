@@ -88,9 +88,6 @@ export default {
       tableData: {}
     }
   },
-  created () {
-    this.getStreamTimesQuota()
-  },
   methods: {
     getParams () {
       const req = {}
