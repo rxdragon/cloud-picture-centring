@@ -54,6 +54,11 @@ async function createWindow () {
     win.webContents.send('leave-full')
   })
 
+  win.on('resize', () => {
+    const data = win.getSize()
+    win.webContents.send('win-resize', { data })
+  })
+
   win.webContents.on('new-window', (event, url) => {
     event.preventDefault()
   })

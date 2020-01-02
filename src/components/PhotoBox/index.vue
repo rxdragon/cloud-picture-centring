@@ -2,12 +2,13 @@
   <div class="photo">
     <div class="img-box">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-image :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
+      <el-image v-if="useEleImage" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
         </div>
       </el-image>
+      <img v-else class="orgin-img" :src="imageSrc" alt="">
       <span v-if="photoName" class="photo-name" @click.stop="">{{ src }}</span>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
@@ -52,7 +53,8 @@ export default {
       return null
     } }, // 标记信息
     streamNum: { type: String, default: '' }, // 流水号
-    preloadPhoto: { type: Boolean }
+    preloadPhoto: { type: Boolean },
+    useEleImage: { type: Boolean, default: true }
   },
   data () {
     return {
@@ -209,6 +211,16 @@ export default {
       font-size: 16px;
       margin-top: 20px;
     }
+  }
+
+  .orgin-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 }
 
