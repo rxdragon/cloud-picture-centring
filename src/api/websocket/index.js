@@ -21,7 +21,7 @@ function getUrlHost (url) {
   return new URL(url).host
 }
 
-export class Ws {
+class Ws {
   chat = null
   state = 'unConnect' // unconnect connecting connected
   sendList = [] // 需要发送的消息列表
@@ -56,7 +56,11 @@ export class Ws {
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
     for (const type of firstSendType) {
-      this.sendMessage({ typeName: type })
+      if (!this.chat) {
+        this.sendList.push({ typeName: type })
+      } else {
+        this.sendMessage({ typeName: type })
+      }
     }
   }
 
@@ -119,3 +123,5 @@ export class Ws {
     })
   }
 }
+const chat = new Ws()
+export default chat

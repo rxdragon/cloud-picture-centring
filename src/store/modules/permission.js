@@ -1,7 +1,7 @@
 import { asyncRoutes, constantRoutes, lastBaseRoutes } from '@/router'
 import { toCapitalHump } from '@/utils/index.js'
 import store from '@/store'
-import Vue from 'vue'
+import chat from '@/api/websocket'
 
 /**
  * @param roles // 权限
@@ -72,7 +72,7 @@ const mutations = {
     state.showUrgentStream = roles.includes('AdminManage.workBoard.urgentStream')
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
-    Vue.prototype.$ws.initializeSendMessage(state.isRetoucher)
+    chat.initializeSendMessage(state.isRetoucher)
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
     state.personageRouters = routes

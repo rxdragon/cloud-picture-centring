@@ -143,8 +143,8 @@
 |范围|描述|commitId|
 --|--|--
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
+ test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
  webSocket | [7d7b973](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7d7b973)
@@ -162,6 +162,7 @@
  值班主管 | [72300dc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/72300dc)
  值班主管配置页面进入 显示配置 | [eddb660](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eddb660)
  冲量显示 | [9fd05c6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fd05c6)
+ 初始化websockey | [673fbd2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/673fbd2)
  图片与加载 | [bf6742e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bf6742e)
  图片预加载 | [9e9a128](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e9a128)
  增加websocket | [c98115c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c98115c)
@@ -172,7 +173,6 @@
  增加审核权限管理 | [9a76716](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a76716)
  增加布局ui | [08ef4cd](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08ef4cd)
  增加显示ci | [8e2e4bb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8e2e4bb)
- test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  增加更改修复说明 | [81564e6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/81564e6)
  增加版本更新说明 | [eb7ce67](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eb7ce67)
  审核退回增加修片师显示 | [04cc9ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/04cc9ad)
@@ -196,6 +196,7 @@
  更行版本说明 | [54252b5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/54252b5)
  格式化代码 | [71faa62](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/71faa62)
  测试自动下线时间改为10s | [c96287e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c96287e)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  直接审核功能 | [19689bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/19689bc)
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
