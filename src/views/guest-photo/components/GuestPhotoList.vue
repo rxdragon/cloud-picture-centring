@@ -183,6 +183,7 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
+        if (page && !data.length) { this.photos = [] }
         if (data.length) {
           this.photos = data
           if (this.cachepage < this.pager.page) { this.cachepage++ }

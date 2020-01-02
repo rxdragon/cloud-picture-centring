@@ -175,6 +175,7 @@
  增加更改修复说明 | [81564e6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/81564e6)
  增加版本更新说明 | [eb7ce67](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eb7ce67)
  审核退回增加修片师显示 | [04cc9ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/04cc9ad)
+ 客片池新增订单查询 | [b21aa4b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b21aa4b)
  客片池无限下拉 | [ba066bd](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ba066bd)
  开启服务器 | [c2a46b9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c2a46b9)
  排队中不会弹出是否在线弹框，不会自动下线 | [f09892a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f09892a)
@@ -201,11 +202,11 @@
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
+ 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
  重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
- test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
- 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  验证照片后最名字，增加产品配置，新增模版照片格式选项 | [73b95b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/73b95b8)
 
 

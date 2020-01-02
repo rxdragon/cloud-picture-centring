@@ -190,7 +190,7 @@ export default {
      * @description 拼接数据
      */
     jointData (newPhotos) {
-      if (!newPhotos.length) return
+      if (!newPhotos.length) return []
       const lastPhotoIndex = this.photos.length - 1
       const lastPhotoslength = this.photos[lastPhotoIndex].length
       const sliceLength = this.columnCount - lastPhotoslength
@@ -239,7 +239,6 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
         this.photos = this.handleRowData(data) || []
-        console.log(this.photos)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
