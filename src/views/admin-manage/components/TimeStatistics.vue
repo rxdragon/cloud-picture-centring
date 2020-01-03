@@ -10,15 +10,15 @@
         <retoucher-group-select v-model="retoucherGroupValue" />
       </div>
       <div class="outsourc-staff-search search-item">
-        <span>修图类型</span>
-        <retouch-type-select v-model="retouchType" />
+        <span>修图标准</span>
+        <retouch-kind-select v-model="retouchType" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamTimesQuota">查询</el-button>
       </div>
     </div>
     <div class="table-panel">
-      <div class="unit">单位：分数</div>
+      <div class="unit">单位：分钟</div>
       <!-- 第一行 -->
       <div class="list-panel-title row-one">
         <div class="title">
@@ -30,20 +30,20 @@
           <span class="describe">(修图师接单至审核通过的平均时长)</span>
         </div>
         <div class="title">
-          <span>外包修图时长</span>
+          <span>云端修图时长</span>
           <span class="describe">(云端修图师接单至审核通过的平均时长)</span>
         </div>
         <div class="title">
-          <span>接单时间</span>
+          <span>外包修图时长</span>
           <span class="describe">(外包修图师接单至审核通过的平均时长)</span>
         </div>
       </div>
       <div class="list-panel-content">
         <div class="content row-one">
-          <span>{{ tableData.take_time | formatDuring }}</span>
-          <span>{{ tableData.retouch_all_time | formatDuring }}</span>
-          <span>{{ tableData.cloud_retouch_all_time | formatDuring }}</span>
-          <span>{{ tableData.outer_retouch_all_time | formatDuring }}</span>
+          <span>{{ tableData.takeTime | formatDuring }}</span>
+          <span>{{ tableData.retouchAllTime | formatDuring }}</span>
+          <span>{{ tableData.cloudRetouchAllTime | formatDuring }}</span>
+          <span>{{ tableData.outerRetouchAllTime | formatDuring }}</span>
         </div>
       </div>
       <div class="list-panel-title row-two">
@@ -55,11 +55,16 @@
           <span>审核退回重修时长</span>
           <span class="describe">(审核团退回修图师至修图师再次提交的平均时长)</span>
         </div>
+        <div class="title">
+          <span>门店退回时长</span>
+          <span class="describe">(门店看片师退回质量问题单到修片师重新上传平均用时)</span>
+        </div>
       </div>
       <div class="list-panel-content">
         <div class="content row-two">
-          <span>{{ tableData.review_time | formatDuring }}</span>
-          <span>{{ tableData.return_to_rebuild_time | formatDuring }}</span>
+          <span>{{ tableData.reviewTime | formatDuring }}</span>
+          <span>{{ tableData.returnToRebuildTime | formatDuring }}</span>
+          <span>{{ tableData.returnToRebuildTime | formatDuring }}</span>
         </div>
       </div>
     </div>
@@ -69,45 +74,56 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import RetoucherGroupSelect from '@SelectBox/RetoucherGroupSelect'
-import RetouchTypeSelect from '@SelectBox/RetouchTypeSelect'
+import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
+
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as WorkManage from '@/api/workManage'
 import { formatDuring } from '@/utils'
 
 export default {
   name: 'TimeStatistics',
-  components: { DatePicker, RetoucherGroupSelect, RetouchTypeSelect },
-  filters: {
-    formatDuring
-  },
+  components: { DatePicker, RetoucherGroupSelect, RetouchKindSelect },
+  filters: { formatDuring },
   data () {
     return {
-      timeSpan: '',
-      retouchType: 0,
-      retoucherGroupValue: 0,
+      routeName: this.$route.name, // 路由名字
+      timeSpan: '', // 时间戳
+      retouchType: '', // 修图标准
+      retoucherGroupValue: '', // 修图组
       tableData: {}
     }
   },
   methods: {
+    /**
+     * @description 获取请求参数
+     */
     getParams () {
       const req = {}
-      if (this.timeSpan) {
-        req.startAt = joinTimeSpan(this.timeSpan[0])
-        req.endAt = joinTimeSpan(this.timeSpan[1], 1)
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请填写时间')
+        return false
       }
-      if (this.retoucherGroupValue) {
-        req.retouch_group = this.retoucherGroupValue
-      }
-      if (this.retouchType) {
-        req.retouch_class = this.retouchType
-      }
+      req.startAt = joinTimeSpan(this.timeSpan[0])
+      req.endAt = joinTimeSpan(this.timeSpan[1], 1)
+      if (this.retoucherGroupValue) { req.retouchGroup = this.retoucherGroupValue }
+      if (this.retouchType) { req.retouchClass = this.retouchType }
       return req
     },
-    getStreamTimesQuota () {
-      const req = this.getParams()
-      WorkManage.getStreamTimesQuota(req).then(data => {
-        this.tableData = data
-      })
+    /**
+     * @description 查询绩效
+     */
+    async getStreamTimesQuota () {
+      try {
+        const req = this.getParams()
+        if (!req) return
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        // TODO 门店退回时长
+        this.tableData = await WorkManage.getStreamTimesQuota(req)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     }
   }
 }
@@ -118,14 +134,16 @@ export default {
 
 .time-statistics {
   .table-panel {
-    margin-top: 24px;
+    margin-top: 32px;
     position: relative;
-    box-shadow: @boxShadow;
+    border-bottom: 1px solid #f2f6fc;
 
     .unit {
       position: absolute;
       top: -30px;
       right: 0;
+      font-size: 14px;
+      color: #606266;
     }
 
     .row-one {
@@ -133,29 +151,31 @@ export default {
     }
 
     .row-two {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
     }
 
     .list-panel-title {
       display: grid;
+      background-color: #fafafa;
 
       .title {
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: #daedf7;
-        padding: 5px 0;
+        padding: 17px 0;
         font-size: 15px;
 
         & > span {
-          color: #387ebb;
-          font-weight: bold;
+          font-size: 14px;
+          font-weight: 500;
+          color: #303133;
+          line-height: 22px;
         }
 
         .describe {
-          color: #aaa;
           font-weight: 400;
-          font-size: 14px;
+          color: #909399;
+          line-height: 14px;
         }
       }
     }
@@ -164,12 +184,13 @@ export default {
       .content {
         display: grid;
         text-align: center;
-        grid-column-gap: 2px;
-        background-color: #eee;
 
         & > span {
-          padding: 10px;
-          background-color: #fff;
+          font-size: 14px;
+          font-weight: 400;
+          color: #606266;
+          line-height: 14px;
+          padding: 21px 20px;
         }
       }
     }

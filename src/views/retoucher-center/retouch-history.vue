@@ -34,8 +34,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="retouchAllTime" label="修图总时长" />
-        <el-table-column prop="plantNum" label="种草" />
-        <el-table-column prop="pullNum" label="拔草" />
+        <el-table-column prop="plantNum" label="种草" width="60" />
+        <el-table-column prop="pullNum" label="拔草" width="60" />
         <el-table-column prop="exp" label="海草值">
           <template slot-scope="scope">
             <el-popover
@@ -56,6 +56,7 @@
             </el-popover>
           </template>
         </el-table-column>
+        <el-table-column prop="lekimaCount" label="利奇马" />
         <el-table-column prop="retoucherNpsAvg" label="顾客满意度" />
         <el-table-column label="操作">
           <template slot-scope="scope">

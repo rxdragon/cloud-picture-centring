@@ -1,4 +1,4 @@
-# 2.0.0 (2020-01-02)
+# 2.0.0 (2020-01-03)
 
 |范围|描述|commitId|
 --|--|--
@@ -143,10 +143,11 @@
 |范围|描述|commitId|
 --|--|--
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
  test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
+ test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
+ websocket | [22821d0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22821d0)
  webSocket | [7d7b973](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7d7b973)
  下载优化 | [63ecdfe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/63ecdfe)
  优化代码 | [db9981b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/db9981b)
@@ -196,8 +197,8 @@
  更行版本说明 | [54252b5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/54252b5)
  格式化代码 | [71faa62](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/71faa62)
  测试自动下线时间改为10s | [c96287e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c96287e)
- test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  直接审核功能 | [19689bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/19689bc)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
