@@ -89,28 +89,31 @@ export function getRetouchQuota (params) {
   }).then(msg => {
     const data = keyToHump(msg)
     const avgTime = data.avgRetouchAndRebuildTime
-    const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
-    const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
+    const allRetouchTime = Number(avgTime.retouchTime.sum) + Number(avgTime.rebuildTime.sum)
+    const avgRetouchTimeStream = getAvg(allRetouchTime, avgTime.retouchTime.count)
+    const avgRetouchTimePhoto = getAvg(allRetouchTime, avgTime.retouchTimeForPhotoNum.count)
     const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
+    const storeEvaluateAvg = getAvg(data.storeEvaluate.sum, data.storeEvaluate.count).toFixed(2)
+    const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count).toFixed(2)
     const createData = [{
       retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
-      avgRetouchTime: timeFormat((avgRetouchTime + avgRebuildTime), 'text', true),
+      avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
+      avgRetouchTimePhoto: timeFormat(avgRetouchTimePhoto, 'text', true),
       plantNum: data.plantNum + ' / ' + transformPercentage(data.plantNum, data.retouchPhotoNum),
       pullNum: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
       overNum: data.overNum,
-      retouchIncome: {
+      retouchIncomeInfo: {
         getIncome: Number(data.retouchIncome).toFixed(2),
         rewardIncome: rewardIncome.toFixed(2),
         // TODO 惩罚收益
         punishIncome: 0.00,
-        actualIncome: (data.retouchIncome + rewardIncome - 0).toFixed(2)
+        actualIncome: (Number(data.retouchIncome) + rewardIncome - 0).toFixed(2)
       },
       exp: data.exp,
-      lekimaCount: '0 / 0',
-      // TODO 评分
+      lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),
       gradeInfo: {
-        storeGrade: '9.99',
-        npsGrade: '9.99'
+        storeGrade: storeEvaluateAvg,
+        npsGrade: retoucherNpsScoreAvg
       }
     }]
     return createData

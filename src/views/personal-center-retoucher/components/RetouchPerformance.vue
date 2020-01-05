@@ -12,10 +12,17 @@
       <el-table :data="performanceData" style="width: 100%;">
         <el-table-column label="修图单量/张数" min-width="120" fixed>
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan">{{ scope.row.retouchNum }}</router-link>
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.retouchNum }}</router-link>
           </template>
         </el-table-column>
-        <el-table-column prop="avgRetouchTime" label="修图平均用时" min-width="120" />
+        <el-table-column prop="avgRetouchTime" label="修图平均用时" min-width="120">
+          <template slot-scope="{ row }">
+            <div class="avg-time">
+              <span>{{ row.avgRetouchTimeStream }}(单)</span>
+              <span>{{ row.avgRetouchTimePhoto }}(张)</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="种草量/种草率" min-width="120">
           <template slot-scope="scope">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.CheckPlant">
@@ -32,12 +39,12 @@
         </el-table-column>
         <el-table-column label="超时单量" min-width="80">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan">{{ scope.row.overNum }}</router-link>
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.overNum }}</router-link>
           </template>
         </el-table-column>
         <el-table-column label="利奇马单量/张数" min-width="140">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan">{{ scope.row.lekimaCount }}</router-link>
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.lekimaCount }}</router-link>
           </template>
         </el-table-column>
         <el-table-column label="修图获得收益" min-width="150">
@@ -45,19 +52,19 @@
             <div class="income-box">
               <span class="span-row">
                 <span class="span-title">修图收益：</span>
-                {{ scope.row.retouchIncome.getIncome }}
+                {{ scope.row.retouchIncomeInfo.getIncome }}
               </span>
               <span class="span-row text-money">
                 <span class="span-title">奖励收益：</span>
-                {{ scope.row.retouchIncome.rewardIncome }}
+                {{ scope.row.retouchIncomeInfo.rewardIncome }}
               </span>
               <span class="span-row text-red">
                 <span class="span-title">惩罚收益：</span>
-                {{ scope.row.retouchIncome.punishIncome }}
+                {{ scope.row.retouchIncomeInfo.punishIncome }}
               </span>
               <span class="span-row">
                 <span class="span-title">实获收益：</span>
-                {{ scope.row.retouchIncome.actualIncome }}
+                {{ scope.row.retouchIncomeInfo.actualIncome }}
               </span>
             </div>
           </template>
@@ -71,15 +78,13 @@
                 {{ scope.row.gradeInfo.storeGrade }}
               </span>
               <span class="span-row">
-                <span class="span-title">顾客满意度：</span>
+                <span class="span-title nps-grade">顾客满意度：</span>
                 {{ scope.row.gradeInfo.npsGrade }}
               </span>
             </div>
           </template>
         </el-table-column>
       </el-table>
-      <!-- <list-table v-if="performanceData.length" key="performanceData" :listdata="performanceData" /> -->
-      <!-- <div v-else class="no-data">暂无数据</div> -->
     </div>
   </div>
 </template>
@@ -158,15 +163,26 @@ export default {
       text-decoration: underline;
     }
 
+    .avg-time {
+      & > span {
+        display: block;
+      }
+    }
+
     .grade-box,
     .income-box {
       .span-row {
         display: flex;
+        justify-content: space-between;
 
         .span-title {
           display: inline-block;
-          width: 90px;
+          width: 80px;
           text-align: left;
+        }
+
+        .nps-grade {
+          width: 90px;
         }
       }
     }

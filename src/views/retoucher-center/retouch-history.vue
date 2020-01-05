@@ -119,6 +119,7 @@ export default {
               this.searchType = 'pull'
               break
             default:
+              this.searchType = 0
               break
           }
         }
