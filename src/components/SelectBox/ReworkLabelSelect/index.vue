@@ -27,7 +27,7 @@ export default {
     return {
       options: [{
         label: '穿帮',
-        value: '穿帮'
+        value: 'lichma'
       }]
     }
   }

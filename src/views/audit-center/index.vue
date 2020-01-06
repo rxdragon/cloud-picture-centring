@@ -314,14 +314,15 @@ export default {
       }
       if (this.reviewMark) { req.reviewNote = this.reviewMark }
       this.orderData.photos.forEach(photoItem => {
-        // TODO 添加重修标记
-        submitData.push({
+        const photoItemInfo = {
           id: photoItem.id,
           glass: photoItem.glass,
           grassReason: photoItem.grassReason,
           reworkMark: photoItem.reworkMark,
           reworkMarkReason: photoItem.reworkMarkReason
-        })
+        }
+        if (photoItem.reworkLabel.length) { photoItemInfo.tags = photoItem.reworkLabel }
+        submitData.push(photoItemInfo)
       })
       submitData.forEach(photoItem => {
         for (const key in photoItem) {

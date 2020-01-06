@@ -177,8 +177,7 @@ export function getRetouchQuotaList (params) {
       listItem.plantNum = listItem.tags && listItem.tags.values && listItem.tags.values.plant_num || 0
       listItem.pullNum = listItem.tags && listItem.tags.values && listItem.tags.values.pull_num || 0
       listItem.retoucherNpsAvg = listItem.tags && listItem.tags.values && listItem.tags.values.retoucher_score || '-'
-      // TODO 利奇马数量
-      listItem.lekimaCount = '-'
+      listItem.lekimaCount = listItem.tags && listItem.tags.values && listItem.tags.values.lichma_photo_num || '-'
     })
     createData.list = msg.list
     return createData
