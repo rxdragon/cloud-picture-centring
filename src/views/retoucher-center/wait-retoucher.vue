@@ -197,6 +197,7 @@ export default {
   },
   created () {
     this.$eventEmitter.on('getRetouchStream', () => {
+      this.queueInfo.inQueue = false
       this.getStreamQueueInfo()
     })
     this.hasInitialization = true
@@ -259,6 +260,7 @@ export default {
           this.$store.dispatch('setting/showLoading', this.routeName)
           await RetoucherCenter.exitQueue()
           this.$newMessage.success('退出队列成功')
+          this.queueInfo.inQueue = false
           this.getStreamQueueInfo()
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
         }).catch(() => {})

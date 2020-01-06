@@ -145,6 +145,7 @@ export default {
   created () {
     this.$eventEmitter.on('getReviewerReceive', () => {
       console.log('getReviewerReceiveeventEmitter')
+      this.queueInfo.inQueue = false
       if (this.isChecking) return
       this.getReviewQueueInfo()
       this.getReviewInfo()
@@ -257,6 +258,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.joinReviewQueue()
         this.$newMessage.success('进入排队成功')
+        this.queueInfo.inQueue = true
         this.getReviewQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
@@ -273,6 +275,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.exitReviewQueue()
         this.$newMessage.success('退出排队成功')
+        this.queueInfo.inQueue = false
         await this.getReviewQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
@@ -366,6 +369,7 @@ export default {
       this.orderData = null
       this.reviewMark = ''
       this.headerClass = ''
+      this.queueInfo.inQueue = false
       await this.getTodayReviewQuota()
     }
   }
