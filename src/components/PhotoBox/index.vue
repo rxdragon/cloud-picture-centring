@@ -10,6 +10,7 @@
       </el-image>
       <img v-else class="orgin-img" :src="imageSrc" alt="">
       <span v-if="photoName" class="photo-name" @click.stop="">{{ src }}</span>
+      <div v-if="isLekima" class="lekima-tag">icon</div>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">下载照片</el-button>
@@ -54,7 +55,8 @@ export default {
     } }, // 标记信息
     streamNum: { type: String, default: '' }, // 流水号
     preloadPhoto: { type: Boolean },
-    useEleImage: { type: Boolean, default: true }
+    useEleImage: { type: Boolean, default: true },
+    isLekima: { type: Boolean }
   },
   data () {
     return {
@@ -81,6 +83,7 @@ export default {
         return ''
       }
     },
+    // 门店退回理由
     storeReworkReason () {
       const hasStoreReworkReason = this.tags && this.tags.values && this.tags.values.store_rework_reason
       if (this.showRecedeReason && hasStoreReworkReason) {
@@ -89,7 +92,9 @@ export default {
         return ''
       }
     },
+    // 门店退回备注
     storeReworkNote () {
+      console.log(this.tags)
       const hasStoreReworkNote = this.tags && this.tags.values && this.tags.values.store_rework_note
       if (this.showRecedeReason && hasStoreReworkNote) {
         return this.tags.values.store_rework_note
@@ -185,6 +190,11 @@ export default {
     width: 100%;
     padding: 10px;
     word-break: break-all;
+  }
+
+  .lekima-tag {
+    position: absolute;
+    color: red;
   }
 
   .el-image {
