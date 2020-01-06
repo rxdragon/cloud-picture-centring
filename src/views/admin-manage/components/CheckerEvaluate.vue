@@ -1,5 +1,5 @@
 <template>
-  <div class="checker-evaluate">
+  <div v-loading="loading" class="checker-evaluate">
     <div class="search-box">
       <div class="search-item">
         <span>时间</span>
@@ -67,7 +67,7 @@ export default {
   components: { DatePicker, StaffSelect },
   data () {
     return {
-      routeName: this.$route.name, // 路由名字
+      loading: false,
       timeSpan: null, // 时间
       storeGrade: 0, // 门店评分
       staffId: '', // 伙伴id
@@ -121,14 +121,14 @@ export default {
         if (page) { this.pager.page = page }
         const req = this.getParams()
         if (!req) return
-        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.loading = true
         const data = await WorkManage.getStoreEvaluate(req)
         this.tableData = data.list
         this.pager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        setTimeout(() => { this.loading = false }, 500)
       }
     }
   }

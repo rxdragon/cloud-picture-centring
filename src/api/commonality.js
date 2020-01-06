@@ -70,9 +70,12 @@ export function getStreamInfo (params) {
           ? settlePhoto([...photoItem.otherPhotoVersion, photoItem.first_photo], reworkNum, isStoreReturn)
           : settlePhoto([...photoItem.otherPhotoVersion], reworkNum, isStoreReturn)
       }
-      // TODO 标记利奇马
       if (photoItem.photoVersion) {
-        photoItem.photoVersion.forEach(versionItem => { versionItem.isLekima = true })
+        photoItem.photoVersion.forEach(versionItem => {
+          versionItem.isLekima = versionItem.tags &&
+            versionItem.tags.statics &&
+            versionItem.tags.statics.includes('lichma')
+        })
       }
     })
     data.photos = data.photos.filter(photoItem => Boolean(photoItem.photoVersion))

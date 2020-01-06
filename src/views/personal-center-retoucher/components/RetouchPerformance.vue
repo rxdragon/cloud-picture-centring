@@ -9,7 +9,7 @@
       <el-button type="primary" @click="getRetouchQuota">查 询</el-button>
     </div>
     <div class="panel-content">
-      <el-table :data="performanceData" style="width: 100%;">
+      <el-table ref="panel-table" :data="performanceData" style="width: 100%;">
         <el-table-column label="修图单量/张数" min-width="120" fixed>
           <template slot-scope="scope">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.retouchNum }}</router-link>
@@ -129,19 +129,18 @@ export default {
         }
         this.loading = true
         this.performanceData = await Retoucher.getRetouchQuota(reqData)
+        this.$refs['panel-table'].doLayout()
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => {
-          this.loading = false
-        }, 500)
+        setTimeout(() => { this.loading = false }, 500)
       }
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "~@/styles/variables.less";
 
 .retouch-performance {
@@ -185,6 +184,19 @@ export default {
           width: 90px;
         }
       }
+    }
+
+    ::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .el-table--scrollable-x .el-table__body-wrapper {
+      overflow-x: overlay;
+    }
+
+    .el-table__fixed-right,
+    .el-table__fixed {
+      height: 156px !important;
     }
   }
 }

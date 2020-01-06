@@ -94,7 +94,6 @@ export default {
     },
     // 门店退回备注
     storeReworkNote () {
-      console.log(this.tags)
       const hasStoreReworkNote = this.tags && this.tags.values && this.tags.values.store_rework_note
       if (this.showRecedeReason && hasStoreReworkNote) {
         return this.tags.values.store_rework_note
@@ -122,7 +121,6 @@ export default {
   },
   beforeDestroy () {
     if (!this.linkTag) return
-    console.log('销毁组件')
     const head = document.getElementsByTagName('head')[0]
     head.removeChild(this.linkTag)
   },

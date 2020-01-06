@@ -93,6 +93,7 @@ export function getRetouchQuota (params) {
     const avgRetouchTimeStream = getAvg(allRetouchTime, avgTime.retouchTime.count)
     const avgRetouchTimePhoto = getAvg(allRetouchTime, avgTime.retouchTimeForPhotoNum.count)
     const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
+    const punishIncome = Number(data.rewardIncome.punishIncome)
     const storeEvaluateAvg = getAvg(data.storeEvaluate.sum, data.storeEvaluate.count).toFixed(2)
     const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count).toFixed(2)
     const createData = [{
@@ -105,9 +106,8 @@ export function getRetouchQuota (params) {
       retouchIncomeInfo: {
         getIncome: Number(data.retouchIncome).toFixed(2),
         rewardIncome: rewardIncome.toFixed(2),
-        // TODO 惩罚收益
-        punishIncome: 0.00,
-        actualIncome: (Number(data.retouchIncome) + rewardIncome - 0).toFixed(2)
+        punishIncome: punishIncome.toFixed(2),
+        actualIncome: (Number(data.retouchIncome) + rewardIncome - punishIncome).toFixed(2)
       },
       exp: data.exp,
       lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),

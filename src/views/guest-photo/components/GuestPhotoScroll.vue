@@ -157,7 +157,6 @@ export default {
       if (this.columnCount === columnCount) return
       this.getPhotoList()
       this.columnCount = columnCount
-      console.log(this.columnCount)
     },
     /**
      * @description 页面变化

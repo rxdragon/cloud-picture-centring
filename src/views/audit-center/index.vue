@@ -144,7 +144,9 @@ export default {
   },
   created () {
     this.$eventEmitter.on('getReviewerReceive', () => {
+      console.log('getReviewerReceiveeventEmitter')
       if (this.isChecking) return
+      this.getReviewQueueInfo()
       this.getReviewInfo()
     })
     this.getUpyunSign()
@@ -235,8 +237,11 @@ export default {
      */
     async getReviewQueueInfo () {
       this.queueInfo = await Reviewer.getReviewQueueInfo()
-      if (this.queueInfo.inQueue) return
-      this.getReviewInfo()
+      if (this.queueInfo.inQueue) {
+        window.polling.getReviewQueue = setTimeout(() => {
+          this.getReviewQueueInfo()
+        }, 10000)
+      }
     },
     /**
      * @description 获取今日审核工作统计
