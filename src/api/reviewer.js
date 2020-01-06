@@ -41,6 +41,7 @@ export function getReviewInfo () {
       photoItem.grassReason = ''
       photoItem.reworkMark = false
       photoItem.reworkMarkReason = ''
+      photoItem.reworkLabel = []
     })
     createData.streamId = msg.id
     createData.streamNum = msg.stream_num

@@ -79,7 +79,6 @@ export default {
   name: 'RetouchOrder',
   components: { OrderInfo, PhotoBox, DomainSwitchBox, UploadPhoto },
   props: {
-    aid: { type: [Number, String], required: true },
     showDetail: { type: Boolean }
   },
   data () {
@@ -114,7 +113,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['returnStreamId', 'showOverTag']),
+    ...mapGetters(['retouchId', 'showOverTag']),
     // 是否开启沙漏
     isSandClockOpen () {
       if (!this.hourGlass) return this.hourGlass
@@ -122,23 +121,18 @@ export default {
     }
   },
   watch: {
-    aid (value) {
-      if (value) {
-        this.realAid = this.aid
+    retouchId: {
+      handler (id) {
+        console.log(id, 'watchId')
+        if (!id) return
+        this.realAid = id
         this.getStreamInfo()
-      }
-    },
-    returnStreamId (value) {
-      if (value) {
-        this.realAid = this.returnStreamId
-        this.getStreamInfo()
-      }
+      },
+      immediate: true
     }
   },
   created () {
-    if (!this.aid && !this.returnStreamId) { this.$emit('update:showDetail', false) }
-    this.realAid = this.returnStreamId || this.aid
-    this.getStreamInfo()
+    if (!this.retouchId) { this.$emit('update:showDetail', false) }
   },
   methods: {
     /**
@@ -165,6 +159,7 @@ export default {
             this.$refs['uploadPhoto'].saveUpdatePhoto()
           }
           this.$newMessage.success('流水挂起成功，不要忘记处理哦～')
+          this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
           this.$emit('update:showDetail', false)
         })
     },
@@ -187,7 +182,6 @@ export default {
         }
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
-        this.$store.commit('notification/CLEAR_RETURN_STREAM_ID')
         LogStream.retoucherSee(+this.realAid)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
@@ -261,6 +255,7 @@ export default {
         SessionTool.removeSureRetouchOrder(this.realAid)
         SessionTool.removeReturnRetouchOrder(this.realAid)
         this.$newMessage.success('提交审核成功。')
+        this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
         this.$emit('update:showDetail', false)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

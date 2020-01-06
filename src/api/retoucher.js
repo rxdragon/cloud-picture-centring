@@ -1,7 +1,5 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump, transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
-import { revertTimeSpan } from '@/utils/timespan.js'
-import { SearchType } from '@/utils/enumerate.js'
 
 /**
  * @description 获取个人今日指标
@@ -84,7 +82,6 @@ export function getRankInfo () {
  * @param {*} params
  */
 export function getRetouchQuota (params) {
-  const timeSpan = [revertTimeSpan(params.startAt), revertTimeSpan(params.endAt, 1)]
   return axios({
     url: '/project_cloud/retoucher/getRetouchQuota',
     method: 'GET',
@@ -92,40 +89,33 @@ export function getRetouchQuota (params) {
   }).then(msg => {
     const data = keyToHump(msg)
     const avgTime = data.avgRetouchAndRebuildTime
-    const avgRetouchTime = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
-    const avgRebuildTime = getAvg(avgTime.rebuildTime.sum, avgTime.rebuildTime.count)
+    const allRetouchTime = Number(avgTime.retouchTime.sum) + Number(avgTime.rebuildTime.sum)
+    const avgRetouchTimeStream = getAvg(allRetouchTime, avgTime.retouchTime.count)
+    const avgRetouchTimePhoto = getAvg(allRetouchTime, avgTime.retouchTimeForPhotoNum.count)
     const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
-    const createData = [
-      {
-        label: '修图单量/张数',
-        value: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
-        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan
-      }, {
-        label: '修图平均用时',
-        value: timeFormat((avgRetouchTime + avgRebuildTime), 'text', true)
-      }, {
-        label: '种草量/种草率',
-        value: data.plantNum + ' / ' + transformPercentage(data.plantNum, data.retouchPhotoNum),
-        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.CheckPlant
-      }, {
-        label: '拔草量/拔草率',
-        value: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
-        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.CheckPull
-      }, {
-        label: '超时单量',
-        value: data.overNum,
-        link: '/retoucher-center/retouch-history' + '?retouchHistoryTimeSpan=' + timeSpan
-      }, {
-        label: '修图获得收益',
-        value: data.retouchIncome
-      }, {
-        label: '奖励收益',
-        value: rewardIncome.toFixed(2)
-      }, {
-        label: '获得海草',
-        value: data.exp
+    const storeEvaluateAvg = getAvg(data.storeEvaluate.sum, data.storeEvaluate.count).toFixed(2)
+    const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count).toFixed(2)
+    const createData = [{
+      retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
+      avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
+      avgRetouchTimePhoto: timeFormat(avgRetouchTimePhoto, 'text', true),
+      plantNum: data.plantNum + ' / ' + transformPercentage(data.plantNum, data.retouchPhotoNum),
+      pullNum: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
+      overNum: data.overNum,
+      retouchIncomeInfo: {
+        getIncome: Number(data.retouchIncome).toFixed(2),
+        rewardIncome: rewardIncome.toFixed(2),
+        // TODO 惩罚收益
+        punishIncome: 0.00,
+        actualIncome: (Number(data.retouchIncome) + rewardIncome - 0).toFixed(2)
+      },
+      exp: data.exp,
+      lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),
+      gradeInfo: {
+        storeGrade: storeEvaluateAvg,
+        npsGrade: retoucherNpsScoreAvg
       }
-    ]
+    }]
     return createData
   })
 }

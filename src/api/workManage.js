@@ -163,6 +163,12 @@ export function getStreamTimesQuota (params) {
     url: '/project_cloud/operator/getStreamTimesQuota',
     method: 'GET',
     params
+  }).then(msg => {
+    const data = keyToHump(msg)
+    for (const key in data) {
+      data[key] = data[key] * 1000
+    }
+    return data
   })
 }
 

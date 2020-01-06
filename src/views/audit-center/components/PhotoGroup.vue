@@ -43,8 +43,9 @@
       <div class="button-list">
         <el-button :icon="isReturn ? 'el-icon-check' : ''" type="warning" size="small" :plain="!isReturn" @click="returnPhoto">重修</el-button>
       </div>
-      <div class="reason-box">
-        <el-input v-if="isReturn" v-model="photos.reworkMarkReason" placeholder="请输入重修理由" />
+      <div v-if="isReturn" class="reason-box">
+        <el-input v-model="photos.reworkMarkReason" placeholder="请输入重修理由" />
+        <rework-label-select v-model="photos.reworkLabel" />
       </div>
     </div>
     <preview-photo
@@ -60,13 +61,14 @@
 import PhotoBox from '@/components/PhotoBox'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
+import ReworkLabelSelect from '@SelectBox/ReworkLabelSelect'
 import { mapGetters } from 'vuex'
 import * as Commonality from '@/api/commonality'
 import * as PhotoTool from '@/utils/photoTool'
 
 export default {
   name: 'PhotoGroup',
-  components: { PhotoBox, PreviewPhoto },
+  components: { PhotoBox, PreviewPhoto, ReworkLabelSelect },
   filters: {
     toGlassPlaceholder (value) {
       return value ? '请输入种草理由' : '请输入拔草理由'
@@ -283,6 +285,10 @@ export default {
 
       .el-input {
         width: 100%;
+      }
+
+      .rework-label-select {
+        margin-top: 16px;
       }
     }
   }

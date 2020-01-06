@@ -97,7 +97,7 @@ import * as Commonality from '@/api/commonality'
 import * as Reviewer from '@/api/reviewer.js'
 
 export default {
-  name: 'AuditCenter',
+  name: 'AuditReview',
   components: { OrderInfo, PhotoGroup, DomainSwitchBox },
   data () {
     return {
@@ -143,15 +143,22 @@ export default {
     }
   },
   created () {
+    this.$eventEmitter.on('getReviewerReceive', () => {
+      if (this.isChecking) return
+      this.getReviewInfo()
+    })
     this.getUpyunSign()
     this.getTodayReviewQuota()
     this.getReviewQueueInfo()
   },
   activated () {
-    if (!this.orderData) {
+    if (!this.isChecking) {
       this.getTodayReviewQuota()
       this.getReviewQueueInfo()
     }
+  },
+  destroyed () {
+    this.$eventEmitter.removeAllListeners('getReviewerReceive')
   },
   methods: {
     /**
@@ -199,7 +206,6 @@ export default {
      */
     async getReviewInfo () {
       try {
-        this.resetData()
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.orderData = await Reviewer.getReviewInfo()
         this.$nextTick(this.createdJudgePadding)
@@ -229,15 +235,8 @@ export default {
      */
     async getReviewQueueInfo () {
       this.queueInfo = await Reviewer.getReviewQueueInfo()
-      clearTimeout(window.polling.getReviewQueue)
-      window.polling.getReviewQueue = null
-      if (this.queueInfo.inQueue) {
-        window.polling.getReviewQueue = setTimeout(() => {
-          this.getReviewQueueInfo()
-        }, 3000)
-      } else {
-        this.getReviewInfo()
-      }
+      if (this.queueInfo.inQueue) return
+      this.getReviewInfo()
     },
     /**
      * @description 获取今日审核工作统计
@@ -269,8 +268,6 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.exitReviewQueue()
         this.$newMessage.success('退出排队成功')
-        clearTimeout(window.polling.getReviewQueue)
-        window.polling.getReviewQueue = null
         await this.getReviewQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
@@ -300,7 +297,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.passStream(req)
         this.$newMessage.success('审核成功')
-        await this.getTodayReviewQuota()
+        await this.resetData()
         this.getReviewQueueInfo()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -317,13 +314,15 @@ export default {
       }
       if (this.reviewMark) { req.reviewNote = this.reviewMark }
       this.orderData.photos.forEach(photoItem => {
-        submitData.push({
+        const photoItemInfo = {
           id: photoItem.id,
           glass: photoItem.glass,
           grassReason: photoItem.grassReason,
           reworkMark: photoItem.reworkMark,
           reworkMarkReason: photoItem.reworkMarkReason
-        })
+        }
+        if (photoItem.reworkLabel.length) { photoItemInfo.tags = photoItem.reworkLabel }
+        submitData.push(photoItemInfo)
       })
       submitData.forEach(photoItem => {
         for (const key in photoItem) {
@@ -347,7 +346,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.refuseStream(req)
         this.$newMessage.success('退回成功')
-        await this.getTodayReviewQuota()
+        await this.resetData()
         this.getReviewQueueInfo()
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

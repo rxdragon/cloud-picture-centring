@@ -1,5 +1,7 @@
 import MicroWebSocket from 'mainto-jssdk/socket/MicroWebsocket'
+import handleMessage from './handleMessage'
 import axios from '@/plugins/axios.js'
+import store from '@/store'
 import * as SessionTool from '@/utils/sessionTool.js'
 import { readConfig } from '@/utils/electronConfig'
 
@@ -19,7 +21,7 @@ function getUrlHost (url) {
   return new URL(url).host
 }
 
-export class Ws {
+class Ws {
   chat = null
   state = 'unConnect' // unconnect connecting connected
   sendList = [] // 需要发送的消息列表
@@ -47,6 +49,18 @@ export class Ws {
       this.chat.send(msg)
     } else {
       this.sendList.push(msg)
+    }
+  }
+
+  initializeSendMessage (isRetoucher) {
+    if (!isRetoucher) return
+    const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
+    for (const type of firstSendType) {
+      if (!this.chat) {
+        this.sendList.push({ typeName: type })
+      } else {
+        this.sendMessage({ typeName: type })
+      }
     }
   }
 
@@ -79,11 +93,12 @@ export class Ws {
         })
         // 消息到来时触发
         chat.onMessageCallback = data => {
-          console.log(data)
+          handleMessage(data)
         }
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
           this.state = 'connected'
+          console.log(store.state.permission.isRetoucher, 'connected')
           if (this.sendList.length) {
             this.sendList.map(item => this.sendMessage(item))
             this.sendList = []
@@ -108,3 +123,5 @@ export class Ws {
     })
   }
 }
+const chat = new Ws()
+export default chat
