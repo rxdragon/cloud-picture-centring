@@ -8,23 +8,27 @@ import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default function handleMessage (data) {
   if (!data.typeName) return
-  const { typeName } = data
+  console.log(data)
+  const { typeName, typeMessage } = data
   switch (typeName) {
     // 门店退单
     case 'StreamPhotographerOrgReturn':
-      getReturnStream(data, typeName)
+      getReturnStream(typeMessage, typeName)
       break
     // 审核退单
     case 'StreamReviewerReturn':
-      getReturnStream(data, typeName)
+      getReturnStream(typeMessage, typeName)
       break
     // 修片师接单
     case 'StreamRetoucherReceive':
-      getRetouchStream(data)
+      getRetouchStream(typeMessage)
       break
     // 审核人接单
     case 'StreamReviewerReceive':
       getReviewerReceive()
+      break
+    case 'StaffOffline':
+      setStaffOffline()
       break
     default:
       break
@@ -39,6 +43,7 @@ async function getRetouchStream (data) {
   const { streamId } = data
   if (SessionTool.getSureRetouchOrder(streamId)) return
   await RetoucherCenter.exitQueue()
+  eventEmitter.emit('getRetouchStream')
   MessageBox.confirm('', '你有新的订单请及时处理', {
     confirmButtonText: '确定',
     center: true,
@@ -94,4 +99,11 @@ async function getReturnStream (data, type) {
  */
 async function getReviewerReceive () {
   eventEmitter.emit('getReviewerReceive')
+}
+
+/**
+ * @description 设置下线
+ */
+function setStaffOffline () {
+  store.dispatch('user/setUserlineState', 'offline')
 }

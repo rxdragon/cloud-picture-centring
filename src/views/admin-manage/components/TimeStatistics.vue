@@ -1,5 +1,5 @@
 <template>
-  <div class="time-statistics">
+  <div v-loading="loading" class="time-statistics">
     <div class="search-box">
       <div class="search-item">
         <span>时间</span>
@@ -75,9 +75,9 @@
 import DatePicker from '@/components/DatePicker'
 import RetoucherGroupSelect from '@SelectBox/RetoucherGroupSelect'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
-
-import { joinTimeSpan } from '@/utils/timespan.js'
+import moment from 'moment'
 import * as WorkManage from '@/api/workManage'
+import { joinTimeSpan } from '@/utils/timespan.js'
 import { formatDuring } from '@/utils'
 
 export default {
@@ -86,12 +86,17 @@ export default {
   filters: { formatDuring },
   data () {
     return {
-      routeName: this.$route.name, // 路由名字
+      loading: false,
       timeSpan: '', // 时间戳
       retouchType: '', // 修图标准
       retoucherGroupValue: '', // 修图组
       tableData: {}
     }
+  },
+  created () {
+    const nowAt = moment().locale('zh-cn').format('YYYY-MM-DD')
+    this.timeSpan = [nowAt, nowAt]
+    this.getStreamTimesQuota()
   },
   methods: {
     /**
@@ -116,13 +121,13 @@ export default {
       try {
         const req = this.getParams()
         if (!req) return
-        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.loading = true
         // TODO 门店退回时长
         this.tableData = await WorkManage.getStreamTimesQuota(req)
       } catch (error) {
         console.error(error)
       } finally {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        setTimeout(() => { this.loading = false }, 500)
       }
     }
   }

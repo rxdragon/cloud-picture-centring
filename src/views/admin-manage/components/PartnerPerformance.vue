@@ -1,5 +1,5 @@
 <template>
-  <div class="partner-performance">
+  <div v-loading="loading" class="partner-performance">
     <div class="search-box">
       <div class="search-item">
         <span>审核通过时间</span>
@@ -50,7 +50,7 @@ export default {
   components: { DatePicker, StaffSelect, RetouchOrderChart, PerformanceChart, CountTo },
   data () {
     return {
-      routeName: this.$route.name, // 路由名字
+      loading: false,
       timeSpan: null, // 时间戳
       staffIds: [], // 伙伴id
       otherData: {
@@ -112,17 +112,17 @@ export default {
       try {
         const req = this.getParams()
         if (!req) return false
-        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.loading = true
         const data = await WorkManage.getRetoucherQuota(req)
         for (const key in data) {
           if (this.otherData[key]) { this.otherData[key].value = data[key] }
           if (this.orderStatisticsData[key]) { this.orderStatisticsData[key].value = parseInt(data[key]) }
           if (this.performanceData[key]) { this.performanceData[key].value = data[key] }
         }
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        setTimeout(() => { this.loading = false }, 500)
       }
     }
   }

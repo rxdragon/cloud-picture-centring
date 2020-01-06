@@ -196,12 +196,18 @@ export default {
     }
   },
   created () {
+    this.$eventEmitter.on('getRetouchStream', () => {
+      this.getStreamQueueInfo()
+    })
     this.hasInitialization = true
     this.initializeData()
   },
   activated () {
     this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
     this.showDetail = false
+  },
+  destroyed () {
+    this.$eventEmitter.removeAllListeners('getReviewerReceive')
   },
   methods: {
     /**
@@ -231,6 +237,13 @@ export default {
      */
     async getStreamQueueInfo () {
       this.queueInfo = await RetoucherCenter.getStreamQueueInfo()
+      clearTimeout(window.polling.getQueue)
+      window.polling.getQueue = null
+      if (this.queueInfo.inQueue) {
+        window.polling.getQueue = setTimeout(() => {
+          this.getStreamQueueInfo()
+        }, 10000)
+      }
     },
     /**
      * @description 退出队列
@@ -246,7 +259,7 @@ export default {
           this.$store.dispatch('setting/showLoading', this.routeName)
           await RetoucherCenter.exitQueue()
           this.$newMessage.success('退出队列成功')
-          await this.getStreamQueueInfo()
+          this.getStreamQueueInfo()
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
         }).catch(() => {})
       } catch (error) {
@@ -262,6 +275,8 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await RetoucherCenter.joinQueue()
         this.$newMessage.success('进入排队成功')
+        this.queueInfo.inQueue = true
+        this.getStreamQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
