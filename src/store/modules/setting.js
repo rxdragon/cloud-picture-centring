@@ -7,7 +7,8 @@ const state = {
   showOverTag: false,
   autoUpload: false,
   savePath: '',
-  cacheImageSwitch: 0
+  cacheImageSwitch: 0,
+  guestInfiniteScroll: 0
 }
 
 const mutations = {
@@ -51,6 +52,9 @@ const mutations = {
     state.cacheImageSwitch = data
     const isTurnOn = Boolean(Number(data))
     state.imgDomain = isTurnOn ? process.env.VUE_APP_LOCAL_DOMAIN : process.env.VUE_APP_DOMAIN
+  },
+  SET_GUEST_INFINITE_SCROLL: (state, data) => {
+    state.guestInfiniteScroll = data
   }
 }
 
@@ -81,6 +85,9 @@ const actions = {
   },
   setImageCacheSwitch ({ commit }, data) {
     commit('SET_IMAGE_CACHE_PATH', data)
+  },
+  setGuestInfiniteScroll ({ commit }, data) {
+    commit('SET_GUEST_INFINITE_SCROLL', data)
   }
 }
 

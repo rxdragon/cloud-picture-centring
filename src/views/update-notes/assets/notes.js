@@ -149,7 +149,28 @@ const version_2_2_4 = {
       1. <span class="mark-opt">优化</span>修图上传不验证后缀名大小写`
 }
 
+const version_2_2_5 = {
+  title: '2.2.5',
+  time: '2020-1-2',
+  desc: `> 版本概况
+    
+  * 修复修改流水号产品，再删除模版照会造成流水号删除问题
+  * 优化客片池查询
+  
+  > 综合改动
+
+  * 客片池
+      1. <span class="mark-opt">优化</span>查询页面报错，系统繁忙
+      2. <span class="mark-new">新增</span>订单号查询
+
+  > 云端运营
+    
+  * 修改产品页面
+      1. <span class="mark-fix">修复</span>更改流水号产品，再删除模版照，导致的流水号被删除问题`
+}
+
 export default [
+  version_2_2_5,
   version_2_2_4,
   version_2_2_3,
   version_2_2_2,

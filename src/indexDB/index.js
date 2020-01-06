@@ -17,6 +17,11 @@ Idb(db_cloud_config)
     const imageCacheSwitch = imageCacheSwitchObj ? imageCacheSwitchObj.settingValue : 0
     store.dispatch('setting/setImageCacheSwitch', imageCacheSwitch)
     if (!imageCacheSwitch) { Setting.setSetting('imageCacheSwitch', imageCacheSwitch) }
+    // 客片池无限下拉开关
+    const guestInfiniteScrollObj = await Setting.getSetting('guestInfiniteScroll')
+    const guestInfiniteScroll = guestInfiniteScrollObj ? guestInfiniteScrollObj.settingValue : 0
+    store.dispatch('setting/setGuestInfiniteScroll', guestInfiniteScroll)
+    if (!guestInfiniteScroll) { Setting.setSetting('guestInfiniteScroll', guestInfiniteScroll) }
   })
   .catch(err => {
     console.error(err)

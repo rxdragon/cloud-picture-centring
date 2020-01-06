@@ -17,6 +17,9 @@
         <el-form-item label="是否开启预加载功能">
           <el-switch :value="cacheImageSwitchValue" @change="setCacheImageSwitch" />
         </el-form-item>
+        <el-form-item label="客片池使用无限下拉">
+          <el-switch :value="cacheGuestInfiniteScroll" @change="setCacheGuestInfiniteScroll" />
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -35,10 +38,14 @@ export default {
       'showCat',
       'showOverTag',
       'autoUpload',
-      'cacheImageSwitch'
+      'cacheImageSwitch',
+      'guestInfiniteScroll'
     ]),
     cacheImageSwitchValue () {
       return Boolean(Number(this.cacheImageSwitch))
+    },
+    cacheGuestInfiniteScroll () {
+      return Boolean(Number(this.guestInfiniteScroll))
     }
   },
   methods: {
@@ -56,6 +63,13 @@ export default {
         .then(() => {
           const data = value ? 1 : 0
           Setting.updateSetting('imageCacheSwitch', data)
+        })
+    },
+    setCacheGuestInfiniteScroll (value) {
+      this.$store.dispatch('setting/setGuestInfiniteScroll', value)
+        .then(() => {
+          const data = value ? 1 : 0
+          Setting.updateSetting('guestInfiniteScroll', data)
         })
     }
   }
