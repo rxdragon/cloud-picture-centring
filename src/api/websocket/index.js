@@ -23,7 +23,7 @@ function getUrlHost (url) {
 
 class Ws {
   chat = null
-  state = 'unConnect' // unconnect connecting connected
+  state = 'unConnect' // unConnect connecting connected
   sendList = [] // 需要发送的消息列表
 
   constructor () {
@@ -31,6 +31,7 @@ class Ws {
   }
   // 创建websocket
   async createChat () {
+    console.log(this.chat)
     if (!this.chat) {
       await this.connect()
     }
@@ -44,6 +45,7 @@ class Ws {
 
   // 发送消息
   async sendMessage (msg) {
+    if (this.state === 'unConnect') { await this.createChat() }
     if (this.state === 'connected') {
       this.chat.send(msg)
     } else {
@@ -51,8 +53,7 @@ class Ws {
     }
   }
 
-  async initializeSendMessage (isRetoucher) {
-    if (!this.chat) { await this.createChat() }
+  initializeSendMessage (isRetoucher) {
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
     for (const type of firstSendType) {
@@ -63,13 +64,15 @@ class Ws {
   // 链接websocket
   connect (options) {
     return new Promise(async resolve => {
-      if (this.state === 'connecting') return
+      if (this.state === 'connecting' || this.state === 'connected') return
       // 未登录
       const xstreamId = SessionTool.getXStreamId('xStreamId')
       const user = SessionTool.getUserInfo('userInfo')
+      console.log(xstreamId, user)
       if (!xstreamId || !user) return
       try {
         this.state = 'connecting'
+        console.log(this.state)
         const WebSocketSignature = await getWebSocketSignature()
         console.log(WebSocketSignature)
         // 初始化socket配置
@@ -103,11 +106,11 @@ class Ws {
         }
         // 错误时触发
         chat.onErrorCallback = () => {
-          this.state = 'unconnect'
+          this.state = 'unConnect'
         }
         // 断开连接时触发
         chat.onDisconnectCallback = () => {
-          this.state = 'unconnect'
+          this.state = 'unConnect'
         }
         // 连接到远程服务器
         chat.start()
