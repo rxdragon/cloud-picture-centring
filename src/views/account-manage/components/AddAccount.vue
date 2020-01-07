@@ -157,7 +157,10 @@ export default {
         const req = { retoucherClassId: id }
         const data = await AccountManage.getRetoucherClassInfo(req)
         this.retouchClassProduct = data.products.map(item => item.id)
-        console.log(this.retouchClassProduct, 'getRetoucherClassInfo')
+        this.toData = []
+        const productIds = this.staffInfo.can_receive_product.map(item => item.id)
+        const defaultCheckedKeys = new Set([...productIds, ...this.retouchClassProduct])
+        this.defaultCheckedKeys = [...defaultCheckedKeys]
       } catch (error) {
         this.$newMessage.error(error.message || error)
         this.retouchClassProduct = []

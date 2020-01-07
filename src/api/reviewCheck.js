@@ -91,6 +91,7 @@ export function getGroupReviewQuotaBySelf (params) {
     data.reviewerReviewPhotoNum = parseInt(data.reviewerReviewPhotoNum) // 审核张数
     // TODO 审核平均用时张
     data.reviewTimeAvgStream = timeFormat(getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count), 'text', true) // 审核平均用时
+    data.reviewTimeAvgPhoto = timeFormat(getAvg(data.reviewTimeAvg.sum, data.reviewerReviewPhotoNum), 'text', true) // 审核平均用时
     const reviewPhotoPlantRate = transformPercentage(data.reviewPhotoPlantNum, data.reviewerReviewPhotoNum)
     const reviewPhotoPullRate = transformPercentage(data.reviewPhotoPullNum, data.reviewerReviewPhotoNum)
     data.reviewPhotoPlantInfo = data.reviewPhotoPlantNum + ' / ' + reviewPhotoPlantRate // 审核种草

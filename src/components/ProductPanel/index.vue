@@ -1,6 +1,7 @@
 <template>
   <div v-loading="productLoading" class="product-panel">
     <transfer-extend
+      v-if="!productLoading"
       :default-checked-keys="defaultChecks"
       :from-data="fromData"
       :title="title"
@@ -24,7 +25,8 @@ export default {
   name: 'ProductPanel',
   components: { TransferExtend },
   props: {
-    defaultCheckedKeys: { type: Array, default: () => [] } // 默认选中组员
+    defaultCheckedKeys: { type: Array, default: () => [] }, // 默认选中组员
+    disabledChecked: { type: Array, default: null } // 禁止选中
   },
   data () {
     return {
@@ -37,15 +39,20 @@ export default {
   watch: {
     defaultCheckedKeys: {
       handler (value) {
-        console.log(value, 'defaultCheckedKeys')
-        if (!this.fromData.length) return
         this.defaultChecks = this.defaultCheckedKeys
+      },
+      immediate: true
+    },
+    disabledChecked: {
+      handler (value) {
+        if (value) {
+          this.getAllProductPanel(value)
+        }
       },
       immediate: true
     }
   },
   created () {
-    this.getAllProductPanel()
   },
   methods: {
     /**
@@ -70,12 +77,11 @@ export default {
     /**
      * @description 获取全部产品
      */
-    async getAllProductPanel () {
-      const list = await Product.getAllProductPanel()
+    async getAllProductPanel (disabledId) {
+      this.productLoading = true
+      const list = await Product.getAllProductPanel(disabledId)
+      console.log(disabledId, '获取全部产品')
       this.fromData = JSON.parse(JSON.stringify(list))
-      if (!this.defaultChecks.length && this.defaultCheckedKeys.length) {
-        this.defaultChecks = this.defaultCheckedKeys
-      }
       this.productLoading = false
     }
   }
@@ -83,6 +89,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.product-panel {
+  height: 540px;
+
+  ::-webkit-scrollbar {
+    height: 8px;
+  }
+}
+
 .staff-panel {
   display: flex;
   width: 800px;

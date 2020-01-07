@@ -238,27 +238,26 @@ export default {
     filterTo (val) {
       this.$refs['to-tree'].filter(val)
     },
+    toData (val) {
+      console.log(val, 'toData')
+    },
     // 监视默认选中
-    defaultCheckedKeys (val) {
-      if (val && this.defaultTransfer) {
-        this.$nextTick(() => {
-          this.from_check_keys = this.defaultCheckedKeys
-          this.addToAims()
-        })
-      }
+    defaultCheckedKeys: {
+      handler (val) {
+        if (val.length && this.defaultTransfer) {
+          this.$nextTick(() => {
+            this.from_check_keys = this.defaultCheckedKeys
+            this.addToAims()
+          })
+        }
+      },
+      immediate: true
     },
     cacheCheck: {
       handler: function (val) {
         this.changeDefault()
       },
       immediate: false
-    }
-  },
-  mounted () {
-    if (this.defaultCheckedKeys.length > 0 && this.defaultTransfer) {
-      this.$nextTick(() => {
-        this.addToAims()
-      })
     }
   },
   methods: {
@@ -376,9 +375,7 @@ export default {
       // 获取半选通过穿梭框的keys - 仅用于传送纯净的id数组到父组件同后台通信
       const harfKeys = this.$refs['to-tree'].getHalfCheckedKeys()
       // 获取选中通过穿梭框的nodes 选中节点数据
-      const arrayCheckedNodes = this.$refs['to-tree'].getCheckedNodes(
-        this.leafOnly
-      )
+      const arrayCheckedNodes = this.$refs['to-tree'].getCheckedNodes(this.leafOnly)
       // 获取选中通过穿梭框的nodes - 仅用于传送选中节点数组到父组件同后台通信需求
       const nodes = JSON.parse(JSON.stringify(arrayCheckedNodes))
       // 半选中节点数据
@@ -464,7 +461,7 @@ export default {
       arrayCheckedNodes.forEach(item => {
         this.$refs['to-tree'].remove(item)
       })
-
+      console.log('time')
       // 处理完毕按钮恢复禁用状态
       this.to_check_keys = []
 
