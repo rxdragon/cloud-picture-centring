@@ -34,6 +34,7 @@
           <div class="product-box search-item">
             <span>可接产品</span>
             <product-panel
+              ref="product-panel"
               :default-checked-keys="defaultCheckedKeys"
               :disabled-checked="retouchClassProduct"
               :to-data.sync="toData"
@@ -120,7 +121,6 @@ export default {
     },
     retouchSelectType: {
       handler (value) {
-        console.log(value, 'retouchSelectType')
         if (!value) {
           this.retouchClassProduct = []
           return
@@ -155,12 +155,10 @@ export default {
     async getRetoucherClassInfo (id) {
       try {
         const req = { retoucherClassId: id }
+        this.$refs['product-panel'].productLoading = true
         const data = await AccountManage.getRetoucherClassInfo(req)
-        this.retouchClassProduct = data.products.map(item => item.id)
         this.toData = []
-        const productIds = this.staffInfo.can_receive_product.map(item => item.id)
-        const defaultCheckedKeys = new Set([...productIds, ...this.retouchClassProduct])
-        this.defaultCheckedKeys = [...defaultCheckedKeys]
+        this.retouchClassProduct = data.products.map(item => item.id)
       } catch (error) {
         this.$newMessage.error(error.message || error)
         this.retouchClassProduct = []
@@ -217,10 +215,17 @@ export default {
         roleId: this.roleValue,
         permissionIds: this.hasPermission
       }
+      let productIds = []
       this.toData.forEach(listItem => {
-        const childrenIds = listItem.children.map(item => item.id)
-        req.productIds = [...req.productIds, ...childrenIds]
+        let childrenIds = listItem.children.map(item => {
+          if (!this.retouchClassProduct.includes(item.id)) {
+            return item.id
+          }
+        })
+        childrenIds = childrenIds.filter(item => item)
+        productIds = [...productIds, ...childrenIds]
       })
+      req.productIds = productIds
       return req
     },
     /**

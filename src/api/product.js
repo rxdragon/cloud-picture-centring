@@ -83,7 +83,7 @@ export function getAllProductPanel (disabledId = []) {
           children: [],
           id: productItem.id,
           pid: findTypeId(findType.name),
-          label: productItem.name
+          label: productItem.name || '暂无名称'
         }
         productInfo.disabled = disabledId.includes(productItem.id)
         findType.children = [...findType.children, productInfo]

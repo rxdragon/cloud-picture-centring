@@ -238,9 +238,6 @@ export default {
     filterTo (val) {
       this.$refs['to-tree'].filter(val)
     },
-    toData (val) {
-      console.log(val, 'toData')
-    },
     // 监视默认选中
     defaultCheckedKeys: {
       handler (val) {
@@ -461,7 +458,6 @@ export default {
       arrayCheckedNodes.forEach(item => {
         this.$refs['to-tree'].remove(item)
       })
-      console.log('time')
       // 处理完毕按钮恢复禁用状态
       this.to_check_keys = []
 
@@ -573,8 +569,14 @@ export default {
   overflow: hidden;
 
   .el-tree {
-    min-width: 100%;
+    width: 100%;
+    max-height: calc(~'100% - 45px');
     display: inline-block !important;
+    overflow: auto;
+
+    .el-tree-node {
+      width: max-content;
+    }
   }
 
   .transfer-left {
@@ -602,7 +604,6 @@ export default {
     padding: 10px;
     height: calc(100% - 41px);
     box-sizing: border-box;
-    overflow: auto;
 
     .el-input {
       width: 100% !important;

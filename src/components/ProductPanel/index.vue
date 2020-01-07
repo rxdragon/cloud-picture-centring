@@ -39,20 +39,26 @@ export default {
   watch: {
     defaultCheckedKeys: {
       handler (value) {
-        this.defaultChecks = this.defaultCheckedKeys
+        const disabledChecked = this.disabledChecked || []
+        const data = new Set([...this.defaultCheckedKeys, ...disabledChecked])
+        this.defaultChecks = [...data]
       },
       immediate: true
     },
     disabledChecked: {
       handler (value) {
-        if (value) {
-          this.getAllProductPanel(value)
-        }
+        const data = new Set([...this.defaultCheckedKeys, ...value])
+        this.defaultChecks = [...data]
+        this.getAllProductPanel(value)
       },
-      immediate: true
+      immediate: false
     }
   },
-  created () {
+  mounted () {
+    if (!this.disabledChecked) {
+      this.defaultChecks = this.defaultCheckedKeys
+      this.getAllProductPanel()
+    }
   },
   methods: {
     /**
@@ -80,7 +86,6 @@ export default {
     async getAllProductPanel (disabledId) {
       this.productLoading = true
       const list = await Product.getAllProductPanel(disabledId)
-      console.log(disabledId, '获取全部产品')
       this.fromData = JSON.parse(JSON.stringify(list))
       this.productLoading = false
     }

@@ -86,7 +86,6 @@ export default {
   watch: {
     retouchInstitutionId: {
       handler (value) {
-        console.log(value)
         if (value) { this.getRetouchOrgInfo() }
       },
       immediate: true
