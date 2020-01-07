@@ -35,7 +35,7 @@
             <span>可接产品</span>
             <product-panel
               :default-checked-keys="defaultCheckedKeys"
-              :is-loading-down.sync="isLoadingDown"
+              :disabled-checked="retouchClassProduct"
               :to-data.sync="toData"
             />
           </div>
@@ -91,13 +91,13 @@ export default {
       retouchSelectType: '', // 修图列表选项
       roleValue: '', // 权限值
       toData: [], // 产品选中数据
-      isLoadingDown: false, // 产品模块 是否加载完成
       defaultCheckedKeys: [], // 默认选中产品
       hasPermission: [], // 默认选中权限
       staffInfo: {}, // 用户信息
       roleList: [], // 权限列表
       staffPermission: [], // 用户个人权限
-      rolePermissionArr: [] // 角色id
+      rolePermissionArr: [], // 角色id
+      retouchClassProduct: [] // 修图类别的可接产品
     }
   },
   computed: {
@@ -108,13 +108,26 @@ export default {
     }
   },
   watch: {
-    isLoadingDown (value) {
-      if (value && Object.keys(this.staffInfo).length) {
+    staffInfo: {
+      handler (value) {
+        if (!Object.keys(this.staffInfo).length) return
         if (this.staffInfo.can_receive_product) {
           const productIds = this.staffInfo.can_receive_product.map(item => item.id)
           this.defaultCheckedKeys = productIds
         }
-      }
+      },
+      immediate: true
+    },
+    retouchSelectType: {
+      handler (value) {
+        console.log(value, 'retouchSelectType')
+        if (!value) {
+          this.retouchClassProduct = []
+          return
+        }
+        this.getRetoucherClassInfo(value)
+      },
+      immediate: true
     }
   },
   async created () {
@@ -136,6 +149,20 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 获取修图类别能接产品
+     */
+    async getRetoucherClassInfo (id) {
+      try {
+        const req = { retoucherClassId: id }
+        const data = await AccountManage.getRetoucherClassInfo(req)
+        this.retouchClassProduct = data.products.map(item => item.id)
+        console.log(this.retouchClassProduct, 'getRetoucherClassInfo')
+      } catch (error) {
+        this.$newMessage.error(error.message || error)
+        this.retouchClassProduct = []
+      }
+    },
     /**
      * @description 下一步
      */
@@ -261,9 +288,9 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Staff.getStaffInfo(req)
         this.staffInfo = data
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         console.error(error)
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
