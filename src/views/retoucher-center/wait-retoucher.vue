@@ -205,7 +205,7 @@ export default {
     this.hasInitialization = true
     this.initializeData()
   },
-  activated () {
+  deactivated () {
     this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
     this.showDetail = false
   },

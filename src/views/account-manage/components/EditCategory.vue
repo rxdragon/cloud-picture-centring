@@ -16,7 +16,6 @@
       <div class="panel-title">可接产品</div>
       <product-panel
         :default-checked-keys="defaultCheckedKeys"
-        :is-loading-down.sync="isLoadingDown"
         :to-data.sync="toData"
       />
     </div>
@@ -43,7 +42,6 @@ export default {
       routeName: this.$route.name,
       categoryName: '',
       defaultCheckedKeys: [],
-      isLoadingDown: false,
       toData: []
     }
   },
@@ -53,14 +51,10 @@ export default {
       return Object.keys(this.editData).length
     }
   },
-  watch: {
-    isLoadingDown (value) {
-      if (value && this.isEdit) { this.getRetoucherClassInfo(this.editData.id) }
-    }
-  },
   created () {
     if (this.isEdit) {
       this.categoryName = this.editData.name
+      this.getRetoucherClassInfo(this.editData.id)
     }
   },
   methods: {
@@ -80,10 +74,10 @@ export default {
         const data = await AccountManage.getRetoucherClassInfo(req)
         const productIds = data.products.map(item => item.id)
         this.defaultCheckedKeys = productIds
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**

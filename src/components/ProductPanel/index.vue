@@ -1,7 +1,7 @@
 <template>
   <div v-loading="productLoading" class="product-panel">
     <transfer-extend
-      :default-checked-keys="defaultCheckedKeys"
+      :default-checked-keys="defaultChecks"
       :from-data="fromData"
       :title="title"
       mode="transfer"
@@ -30,7 +30,18 @@ export default {
     return {
       fromData: [], // 源数据
       title: ['可选产品', '已选产品'], // 人员选中列表
-      productLoading: true
+      productLoading: true,
+      defaultChecks: []
+    }
+  },
+  watch: {
+    defaultCheckedKeys: {
+      handler (value) {
+        console.log(value, 'defaultCheckedKeys')
+        if (!this.fromData.length) return
+        this.defaultChecks = this.defaultCheckedKeys
+      },
+      immediate: true
     }
   },
   created () {
@@ -62,7 +73,9 @@ export default {
     async getAllProductPanel () {
       const list = await Product.getAllProductPanel()
       this.fromData = JSON.parse(JSON.stringify(list))
-      this.$emit('update:isLoadingDown', true)
+      if (!this.defaultChecks.length && this.defaultCheckedKeys.length) {
+        this.defaultChecks = this.defaultCheckedKeys
+      }
       this.productLoading = false
     }
   }

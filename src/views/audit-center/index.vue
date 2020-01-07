@@ -148,7 +148,6 @@ export default {
       this.queueInfo.inQueue = false
       if (this.isChecking) return
       this.getReviewQueueInfo()
-      this.getReviewInfo()
     })
     this.getUpyunSign()
     this.getTodayReviewQuota()
@@ -242,6 +241,9 @@ export default {
         window.polling.getReviewQueue = setTimeout(() => {
           this.getReviewQueueInfo()
         }, 10000)
+      }
+      if (this.queueInfo.reviewStreamId.length) {
+        this.getReviewInfo()
       }
     },
     /**
