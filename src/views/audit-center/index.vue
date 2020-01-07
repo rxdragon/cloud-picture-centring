@@ -308,8 +308,9 @@ export default {
         await this.resetData()
         this.getReviewQueueInfo()
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
@@ -357,8 +358,9 @@ export default {
         await this.resetData()
         this.getReviewQueueInfo()
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
