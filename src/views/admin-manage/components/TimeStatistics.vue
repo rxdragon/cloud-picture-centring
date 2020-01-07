@@ -40,10 +40,10 @@
       </div>
       <div class="list-panel-content">
         <div class="content row-one">
-          <span>{{ tableData.takeTime | formatDuring }}</span>
-          <span>{{ tableData.retouchAllTime | formatDuring }}</span>
-          <span>{{ tableData.cloudRetouchAllTime | formatDuring }}</span>
-          <span>{{ tableData.outerRetouchAllTime | formatDuring }}</span>
+          <span>{{ tableData.receiptTime | formatDuring }}</span>
+          <span>{{ tableData.retouchAllTimeAvg | formatDuring }}</span>
+          <span>{{ tableData.retouchTimeAvg | formatDuring }}</span>
+          <span>{{ tableData.outerRetouchTimeAvg | formatDuring }}</span>
         </div>
       </div>
       <div class="list-panel-title row-two">
@@ -62,9 +62,9 @@
       </div>
       <div class="list-panel-content">
         <div class="content row-two">
-          <span>{{ tableData.reviewTime | formatDuring }}</span>
+          <span>{{ tableData.reviewTimeAvg | formatDuring }}</span>
           <span>{{ tableData.returnToRebuildTime | formatDuring }}</span>
-          <span>{{ tableData.returnToRebuildTime | formatDuring }}</span>
+          <span>{{ tableData.storeReturnTime | formatDuring }}</span>
         </div>
       </div>
     </div>
@@ -122,9 +122,7 @@ export default {
         const req = this.getParams()
         if (!req) return
         this.loading = true
-        // TODO 门店退回时长
         this.tableData = await WorkManage.getStreamTimesQuota(req)
-        console.log(this.tableData)
       } catch (error) {
         console.error(error)
       } finally {

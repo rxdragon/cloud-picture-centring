@@ -126,7 +126,7 @@ export function formatDuring (mss) {
   var days = parseInt(mss / (1000 * 60 * 60 * 24))
   var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
   var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
-  var seconds = (mss % (1000 * 60)) / 1000
+  var seconds = parseInt((mss % (1000 * 60)) / 1000)
   let str = ''
   function isNull (t, v) {
     if (t) str += t + v

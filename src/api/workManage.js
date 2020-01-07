@@ -94,6 +94,8 @@ export function getRetoucherQuota (params) {
     msg.storeReturnPhotoNumForQuality = parseInt(msg.storeReturnPhotoNumForQuality || 0) // 门店退单（非质量问题）张数
     msg.storeReturnStreamNumForNotQuality = parseInt(msg.storeReturnStreamNumForNotQuality || 0) // 门店退单（质量问题）
     msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
+    msg.lekimaStreamNum = parseInt(msg.lichmaStreamNum || 0) // 利奇马张数
+    msg.lekimaPhotoNum = parseInt(msg.lichmaPhotoNum || 0) // 利奇马单数
     return msg
   })
 }
@@ -165,10 +167,24 @@ export function getStreamTimesQuota (params) {
     params
   }).then(msg => {
     const data = keyToHump(msg)
+    const createData = {}
     for (const key in data) {
-      data[key] = data[key] * 1000
+      if (key !== 'retouchTimeAvg') {
+        createData[key] = getAvg(data[key].sum * 1000, data[key].count)
+      }
     }
-    return data
+    const retouchTime = Number(data.retouchTimeAvg.rebuildTime.sum) + Number(data.retouchTimeAvg.retouchTime.sum)
+    const outerRetouchTime = Number(data.outerRetouchTimeAvg.sum)
+    const allRetouchTime = outerRetouchTime + retouchTime
+    const retouchCount = Number(data.retouchTimeAvg.retouchTime.count)
+    const outerRetouchCount = Number(data.outerRetouchTimeAvg.count)
+    const allRetouchCount = retouchCount + outerRetouchCount
+    createData['retouchTimeAvg'] = getAvg(retouchTime * 1000, retouchCount)
+    createData['retouchAllTimeAvg'] = getAvg(allRetouchTime * 1000, allRetouchCount)
+    const returnCount = Number(data.retouchTimeAvg.rebuildTime.count)
+    const returnTime = Number(data.retouchTimeAvg.rebuildTime.sum)
+    createData['returnToRebuildTime'] = getAvg(returnTime * 1000, returnCount)
+    return createData
   })
 }
 
