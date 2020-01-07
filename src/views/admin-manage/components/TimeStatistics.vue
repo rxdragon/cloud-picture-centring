@@ -87,7 +87,7 @@ export default {
   data () {
     return {
       loading: false,
-      timeSpan: '', // 时间戳
+      timeSpan: null, // 时间戳
       retouchType: '', // 修图标准
       retoucherGroupValue: '', // 修图组
       tableData: {}
@@ -124,6 +124,7 @@ export default {
         this.loading = true
         // TODO 门店退回时长
         this.tableData = await WorkManage.getStreamTimesQuota(req)
+        console.log(this.tableData)
       } catch (error) {
         console.error(error)
       } finally {

@@ -106,11 +106,17 @@ class Ws {
         }
         // 错误时触发
         chat.onErrorCallback = () => {
+          console.log('错误时触发')
           this.state = 'unConnect'
         }
         // 断开连接时触发
         chat.onDisconnectCallback = () => {
+          console.log('断开连接时触发')
           this.state = 'unConnect'
+        }
+        chat.onReConnectCallback = e => {
+          console.log('重新连接')
+          this.state = 'connected'
         }
         // 连接到远程服务器
         chat.start()

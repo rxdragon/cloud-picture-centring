@@ -98,7 +98,7 @@ export default {
   created () {
     this.chartData.rows = [
       {
-        name: '总单量',
+        name: '总数量',
         orderCount: this.chartDatas.retoucherFinishStreamNum,
         photoCount: this.chartDatas.retoucherFinishPhotoNum
       },
@@ -108,17 +108,22 @@ export default {
         photoCount: 0
       },
       {
+        name: '利奇马',
+        orderCount: this.chartDatas.lekimaStreamNum,
+        photoCount: this.chartDatas.lekimaPhotoNum
+      },
+      {
         name: '门店退单',
         orderCount: this.chartDatas.storeReturnStreamNum,
         photoCount: this.chartDatas.storeReturnPhotoNum
       },
       {
-        name: '非质量问题门店退单',
+        name: '非质量问题\n门店退单',
         orderCount: this.chartDatas.storeReturnStreamNumForNotQuality,
         photoCount: this.chartDatas.storeReturnPhotoNumForNotQuality
       },
       {
-        name: '质量问题门店退单',
+        name: '质量问题\n门店退单',
         orderCount: this.chartDatas.storeReturnStreamNumForQuality,
         photoCount: this.chartDatas.storeReturnPhotoNumForQuality
       }
