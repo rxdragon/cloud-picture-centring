@@ -4,7 +4,7 @@ const state = {
   updateDomain: process.env.VUE_APP_UPDATE_DOMAIN,
   loadRoutes: [],
   showCat: false,
-  showOverTag: false,
+  showOverTag: true,
   autoUpload: false,
   savePath: '',
   cacheImageSwitch: 0,
