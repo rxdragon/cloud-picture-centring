@@ -44,7 +44,6 @@ class Ws {
 
   // 发送消息
   async sendMessage (msg) {
-    if (!this.chat) { await this.createChat() }
     if (this.state === 'connected') {
       this.chat.send(msg)
     } else {
@@ -52,15 +51,12 @@ class Ws {
     }
   }
 
-  initializeSendMessage (isRetoucher) {
+  async initializeSendMessage (isRetoucher) {
+    if (!this.chat) { await this.createChat() }
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
     for (const type of firstSendType) {
-      if (!this.chat) {
-        this.sendList.push({ typeName: type })
-      } else {
-        this.sendMessage({ typeName: type })
-      }
+      this.sendMessage({ typeName: type })
     }
   }
 
@@ -73,6 +69,7 @@ class Ws {
       const user = SessionTool.getUserInfo('userInfo')
       if (!xstreamId || !user) return
       try {
+        this.state = 'connecting'
         const WebSocketSignature = await getWebSocketSignature()
         console.log(WebSocketSignature)
         // 初始化socket配置
@@ -114,7 +111,6 @@ class Ws {
         }
         // 连接到远程服务器
         chat.start()
-        this.state = 'connecting'
         this.chat = chat
         resolve()
       } catch (error) {
@@ -123,5 +119,6 @@ class Ws {
     })
   }
 }
+console.log(1)
 const chat = new Ws()
 export default chat
