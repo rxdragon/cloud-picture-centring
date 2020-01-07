@@ -65,6 +65,8 @@ export default {
         overTimeStreamNum: { value: 0, label: '超时单量' },
         storeReturnStreamNum: { value: 0, label: '门店退单' },
         storeReturnPhotoNum: { value: 0, label: '门店退单张数' },
+        lekimaStreamNum: { value: 0, label: '利奇马单量' },
+        lekimaPhotoNum: { value: 0, label: '利奇马张数' },
         storeReturnStreamNumForQuality: { value: 0, label: '门店退单（质量问题）' },
         storeReturnPhotoNumForQuality: { value: 0, label: '门店退单（质量问题）张数' },
         storeReturnStreamNumForNotQuality: { value: 0, label: '门店退单（非质量问题）' },

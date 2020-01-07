@@ -147,6 +147,7 @@
  test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
+ webscoket | [c20df39](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c20df39)
  webscoket | [a474182](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a474182)
  websocket | [22821d0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22821d0)
  webSocket | [7d7b973](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7d7b973)
@@ -218,10 +219,10 @@
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
  重建webscoket | [7990034](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7990034)
  重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
+ 验证照片后最名字，增加产品配置，新增模版照片格式选项 | [73b95b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/73b95b8)
  ] | 新增个人绩效数据数据接入 | [c7196d9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c7196d9)
  test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
- 验证照片后最名字，增加产品配置，新增模版照片格式选项 | [73b95b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/73b95b8)
 
 
 ### 🎨 代码样式
