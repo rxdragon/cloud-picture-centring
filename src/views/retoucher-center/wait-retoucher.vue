@@ -196,7 +196,9 @@ export default {
     }
   },
   created () {
+    console.log('created')
     this.$eventEmitter.on('getRetouchStream', () => {
+      console.log('getRetouchStream')
       this.queueInfo.inQueue = false
       this.getStreamQueueInfo()
     })
@@ -208,7 +210,7 @@ export default {
     this.showDetail = false
   },
   destroyed () {
-    this.$eventEmitter.removeAllListeners('getReviewerReceive')
+    this.$eventEmitter.removeAllListeners('getRetouchStream')
   },
   methods: {
     /**
