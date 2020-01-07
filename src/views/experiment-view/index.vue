@@ -11,9 +11,6 @@
         <el-form-item label="是否对已上传的照片打标记">
           <el-switch :value="showOverTag" @change="setShowOverTag" />
         </el-form-item>
-        <el-form-item label="是否开启自动选中文件">
-          <el-switch :value="autoUpload" @change="setAutoUpload" />
-        </el-form-item>
         <el-form-item label="是否开启预加载功能">
           <el-switch :value="cacheImageSwitchValue" @change="setCacheImageSwitch" />
         </el-form-item>
@@ -37,7 +34,6 @@ export default {
     ...mapGetters([
       'showCat',
       'showOverTag',
-      'autoUpload',
       'cacheImageSwitch',
       'guestInfiniteScroll'
     ]),
@@ -54,9 +50,6 @@ export default {
     },
     setShowOverTag (value) {
       this.$store.dispatch('setting/setShowOverTag', value)
-    },
-    setAutoUpload (value) {
-      this.$store.dispatch('setting/setAutoUpload', value)
     },
     setCacheImageSwitch (value) {
       this.$store.dispatch('setting/setImageCacheSwitch', value)

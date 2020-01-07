@@ -5,7 +5,6 @@ const state = {
   loadRoutes: [],
   showCat: false,
   showOverTag: true,
-  autoUpload: false,
   savePath: '',
   cacheImageSwitch: 0,
   guestInfiniteScroll: 0
@@ -41,10 +40,6 @@ const mutations = {
   SET_OVER_TAG: (state, data) => {
     state.showOverTag = data
   },
-  // 是否开启自动上传
-  SET_AUTO_UPLOAD: (state, data) => {
-    state.autoUpload = data
-  },
   SET_SAVE_PATH: (state, data) => {
     state.savePath = data
   },
@@ -72,9 +67,6 @@ const actions = {
   },
   setShowOverTag ({ commit }, data) {
     commit('SET_OVER_TAG', data)
-  },
-  setAutoUpload ({ commit }, data) {
-    commit('SET_AUTO_UPLOAD', data)
   },
   // 更换域名
   changeDomain ({ commit }, domainType) {
