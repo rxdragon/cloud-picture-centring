@@ -89,6 +89,10 @@ export function getStreamInfo (params) {
     // 最新退回照片
     const returnShowPhotos = msg.photos.filter(photoItem => {
       const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
+      if (findReturnShowPhoto) {
+        photoItem.isReturnPhoto = true
+        photoItem.returnPhotoPath = findReturnShowPhoto.path
+      }
       return Boolean(findReturnShowPhoto)
     })
     createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos

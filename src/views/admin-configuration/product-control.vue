@@ -33,7 +33,12 @@
             <el-table-column v-if="isPending" prop="retouch_require" label="修图要求" />
             <el-table-column v-if="!isPending" label="修图标准">
               <template slot-scope="scope">
-                {{ scope.row.retouch_standard | filterRetouchStandard }}
+                <div class="standard-box">
+                  {{ scope.row.retouch_standard | toRetouchClass }}
+                  <div class="standard-icon">
+                    <div :class="`iconmap-standard-${scope.row.retouch_standard}`" />
+                  </div>
+                </div>
               </template>
             </el-table-column>
             <el-table-column v-if="!isPending" prop="weight_level" label="权重等级">
@@ -71,17 +76,13 @@ import ProductInfo from './components/ProductInfo'
 import InstitutionSelect from '@SelectBox/InstitutionSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
 import WeightSelect from '@SelectBox/WeightSelect'
-
 import * as OperationManage from '@/api/operationManage.js'
-import { RetouchStandard, WeightEnum } from '@/utils/enumerate.js'
+import { WeightEnum } from '@/utils/enumerate.js'
 
 export default {
   name: 'ProductControl',
   components: { ProductInfo, InstitutionSelect, ProductSelect, WeightSelect },
   filters: {
-    filterRetouchStandard (value) {
-      return RetouchStandard()[value]
-    },
     filterWeightEnum (value) {
       return WeightEnum[value]
     }

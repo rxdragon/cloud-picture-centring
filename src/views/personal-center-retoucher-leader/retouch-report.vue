@@ -45,6 +45,7 @@ import CrewSelect from '@SelectBox/CrewSelect'
 
 import { parseTime } from '@/utils/index.js'
 import { joinTimeSpan } from '@/utils/timespan.js'
+import { SearchType } from '@/utils/enumerate.js'
 import * as RetouchLeader from '@/api/retouchLeader.js'
 import * as Staff from '@/api/staff.js'
 
@@ -60,52 +61,45 @@ export default {
       staffId: 0,
       allStaffs: [],
       searchType: '', // 搜索类型
-      tableDataCount: [{
-        label: '修图单量',
-        value: '-',
-        componentSwitch: false
-      }, {
-        label: '修图张数',
-        value: '-'
-      }, {
-        label: '重修次数',
-        value: '-',
-        componentSwitch: false
-      }, {
-        label: '超时单量',
-        value: '-',
-        componentSwitch: false
-      }, {
-        label: '修图平均用时',
-        value: '-'
-      }, {
-        label: '收益',
-        value: '-'
-      }, {
-        label: '未完成指标（天）',
-        value: '-'
-      }],
-      tableDataRate: [{
-        label: '审核种草 / 种草率',
-        value: '- / -',
-        componentSwitch: false
-      }, {
-        label: '审核拔草 / 拔草率',
-        value: '- / -',
-        componentSwitch: false
-      }, {
-        label: '抽查种草 / 种草率',
-        value: '- / -',
-        componentSwitch: false
-      }, {
-        label: '抽查拔草 / 拔草率',
-        value: '- / -',
-        componentSwitch: false
-      }, {
-        label: '抽查通过 / 直接通过率',
-        value: '- / -',
-        componentSwitch: false
-      }]
+      tableDataCount: {
+        finishStreamNum: { label: '修图单量', value: '-', componentSwitch: true },
+        finishPhotoNum: { label: '修图张数', value: '-' },
+        reworkStreamNum: { label: '重修次数', value: '-', componentSwitch: true },
+        overTimeStreamNum: { label: '超时单量', value: '-', componentSwitch: true },
+        avgRetouchTime: { label: '修图平均用时', value: '-' },
+        income: { label: '收益', value: '-' },
+        notReachStandardDays: { label: '未完成指标（天）', value: '-' }
+      },
+      tableDataRate: {
+        reviewPlantInfo: { label: '审核种草 / 种草率', value: '- / -', componentSwitch: true, query: SearchType.CheckPlant },
+        reviewPullInfo: { label: '审核拔草 / 拔草率', value: '- / -', componentSwitch: true, query: SearchType.CheckPull },
+        spotCheckPlantInfo: {
+          label: '抽查种草 / 种草率',
+          value: '- / -',
+          link: '',
+          query: SearchType.SpotPlant
+        },
+        spotCheckPullInfo: {
+          label: '抽查拔草 / 拔草率',
+          value: '- / -',
+          link: '',
+          query: SearchType.SpotPull
+        },
+        spotCheckNoneInfo: {
+          label: '抽查通过 / 直接通过率',
+          value: '- / -',
+          link: '',
+          query: SearchType.SpotNone
+        }
+      }
+    }
+  },
+  computed: {
+    sendStaff () {
+      return this.staffId ? [this.staffId] : this.allStaffs
+    },
+    linkTime () {
+      return this.timeSpan
     }
   },
   async created () {
@@ -142,19 +136,26 @@ export default {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.staffId) {
-          req.staffId = this.staffId
-          req.sendStaff = [this.staffId]
-        } else {
-          req.sendStaff = this.allStaffs
-        }
+        if (this.staffId) { req.staffId = this.staffId }
         const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
-        this.tableDataCount = data.tableDataCount
-        this.tableDataRate = data.tableDataRate
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        const lintKey = ['spotCheckPlantInfo', 'spotCheckPullInfo', 'spotCheckNoneInfo']
+        for (const key in data) {
+          if (this.tableDataCount[key]) { this.tableDataCount[key].value = data[key] }
+          if (this.tableDataRate[key]) {
+            this.tableDataRate[key].value = data[key]
+            if (lintKey.includes(key)) {
+              const sendStaff = this.staffId ? [this.staffId] : this.allStaffs
+              this.tableDataRate[key].link = '/assessment-center/assessment-history' +
+                '?searchTimeSpan=' + this.timeSpan +
+                '&searchType=' + this.tableDataRate[key].query +
+                '&sendStaff=' + sendStaff
+            }
+          }
+        }
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
   }

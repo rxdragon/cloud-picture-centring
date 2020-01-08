@@ -14,7 +14,12 @@
       </el-table-column>
       <el-table-column label="修图标准">
         <template slot-scope="scope">
-          {{ scope.row.retouchType | toRetouchClass }}
+          <div class="standard-box">
+            {{ scope.row.retouchType | toRetouchClass }}
+            <div class="standard-icon">
+              <div :class="`iconmap-standard-${scope.row.retouchType}`" />
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="订单信息" min-width="240">

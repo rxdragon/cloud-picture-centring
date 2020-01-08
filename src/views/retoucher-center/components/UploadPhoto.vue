@@ -250,8 +250,10 @@ export default {
      * @param {String} uploadPhotoMd5 [上传文件的md5]
      */
     checkPsPhoto (file, uploadPhotoMd5) {
+      console.log(file.name)
       const fileName = PhotoTool.fileNameFormat(file.name)
       const findOrginPhoto = this.photos.find(item => item.path.includes(fileName))
+      console.log(findOrginPhoto)
       // 最后一次提交文件名
       const beforeUploadFilePath = findOrginPhoto.isReturnPhoto ? findOrginPhoto.returnPhotoPath : file.name
       const beforeUploadFileName = PhotoTool.fileNameFormat(beforeUploadFilePath)

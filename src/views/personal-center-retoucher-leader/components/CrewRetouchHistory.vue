@@ -33,6 +33,21 @@
         <el-table-column prop="retouchAllTime" label="修图总时长" />
         <el-table-column prop="reviewPhoto" label="审核种 / 拔草" />
         <el-table-column prop="checkPhoto" label="抽查种 / 拔草" />
+        <el-table-column prop="lekimaInfo" label="利奇马" />
+        <el-table-column prop="checkPhoto" label="评分">
+          <template slot-scope="{row}">
+            <div class="grade-box">
+              <span class="span-row">
+                <span class="span-title">门店评分：</span>
+                {{ row.gradeInfo.storeGrade }}
+              </span>
+              <span class="span-row">
+                <span class="span-title nps-grade">顾客满意度：</span>
+                {{ row.gradeInfo.npsGrade }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="linkto(scope.row.id)">详情</el-button>
@@ -179,6 +194,28 @@ export default {
         color: #303133;
         font-weight: 400;
         line-height: 22px;
+      }
+    }
+  }
+
+  .table-box {
+    .grade-box,
+    .income-box {
+      margin: 0;
+
+      .span-row {
+        display: flex;
+        justify-content: space-between;
+
+        .span-title {
+          display: inline-block;
+          width: 80px;
+          text-align: left;
+        }
+
+        .nps-grade {
+          width: 90px;
+        }
       }
     }
   }
