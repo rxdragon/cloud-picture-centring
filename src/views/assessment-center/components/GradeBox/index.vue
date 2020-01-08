@@ -10,11 +10,21 @@
       <div class="panel-content">
         <div class="base-info panel-row">
           <template v-if="isGrade">
-            <span>修图标准：{{ photoInfoData.retouchStandard | toRetouchClass }}</span>
+            <span>修图标准：
+              {{ photoInfoData.retouchStandard | toRetouchClass }}
+              <div class="standard-icon">
+                <div :class="`iconmap-standard-${photoInfoData.retouchStandard}`" />
+              </div>
+            </span>
             <span>产品名称：{{ photoInfoData.productName }}</span>
           </template>
           <template v-else>
-            <span>修图标准：{{ photoInfoData.retouchStandard | toRetouchClass }}</span>
+            <span>修图标准：
+              {{ photoInfoData.retouchStandard | toRetouchClass }}
+              <div class="standard-icon">
+                <div :class="`iconmap-standard-${photoInfoData.retouchStandard}`" />
+              </div>
+            </span>
             <span>拍摄产品：{{ photoInfoData.productName }}</span>
             <span>流水号：{{ photoInfoData.streamNum }}</span>
             <span>修图师：{{ photoInfoData.retouchName }}</span>

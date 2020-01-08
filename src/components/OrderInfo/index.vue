@@ -24,7 +24,14 @@
         </div>
         <div class="institution">{{ orderData.photographerName }}</div>
         <div class="institution">{{ orderData.photographer }}</div>
-        <div class="type">{{ orderData.type | toRetouchClass }}</div>
+        <div class="type">
+          <div class="standard-box">
+            {{ orderData.type | toRetouchClass }}
+            <div class="standard-icon">
+              <div :class="`iconmap-standard-${orderData.type}`" />
+            </div>
+          </div>
+        </div>
         <div v-if="isRework" class="retoucher">{{ orderData.retoucherName }}</div>
         <div class="product">{{ orderData.productName }}</div>
         <div class="wait-time">{{ orderData.waitTime }}</div>

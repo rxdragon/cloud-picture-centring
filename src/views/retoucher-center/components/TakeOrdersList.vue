@@ -14,7 +14,12 @@
       <el-table-column prop="photoNum" label="照片张数" />
       <el-table-column label="修图标准">
         <template slot-scope="scope">
-          {{ scope.row.type | toRetouchClass }}
+          <div class="standard-box">
+            {{ scope.row.type | toRetouchClass }}
+            <div class="standard-icon">
+              <div :class="`iconmap-standard-${scope.row.type}`" />
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="photographerName" label="所属机构" />

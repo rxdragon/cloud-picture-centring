@@ -38,13 +38,20 @@
     </template>
     <template v-else>
       <div class="table-panel panel-grade">
-        <div class="content-title">修图类型</div>
+        <div class="content-title">修图标准</div>
         <div class="content-title">当前状态</div>
         <div class="content-title">修图师</div>
         <div v-if="orderInfo.reviewerName" class="content-title">审核人</div>
       </div>
       <div class="table-panel panel-grade">
-        <div class="panel-content">{{ orderInfo.retouchStandard | toRetouchClass }}</div>
+        <div class="panel-content">
+          <div class="standard-box">
+            {{ orderInfo.retouchStandard | toRetouchClass }}
+            <div class="standard-icon">
+              <div :class="`iconmap-standard-${orderInfo.retouchStandard}`" />
+            </div>
+          </div>
+        </div>
         <div class="panel-content">{{ orderInfo.streamState | toStreamState }}</div>
         <div class="panel-content">{{ orderInfo.retoucherName }}</div>
         <div v-if="orderInfo.reviewerName" class="panel-content">{{ orderInfo.reviewerName }}</div>
