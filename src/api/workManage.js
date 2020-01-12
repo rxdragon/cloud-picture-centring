@@ -136,8 +136,9 @@ export function getWholeQuota (params) {
     createData.outerRetouchPhotoNum = data.outerRetouchPhotoNum // 外包已修张数
     createData.outerRetouchStreamNum = data.outerRetouchStreamNum // 外包已修单量
     createData.templatePhotoNum = data.templatePhotoNum // 模版照
-    createData.reworkRate = getAvg(data.retoucherReworkStreamNum, data.retoucherFinishStreamNum) // 重修率
-    return data
+    createData.reworkRate = getAvg(data.retoucherReworkStreamNum, data.retoucherFinishStreamNum) * 100 // 重修率
+    console.log(createData)
+    return createData
   })
 }
 
