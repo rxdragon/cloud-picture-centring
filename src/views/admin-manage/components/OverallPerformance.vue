@@ -103,12 +103,7 @@ export default {
         if (!req) return
         this.loading = true
         const data = await WorkManage.getWholeQuota(req)
-        this.listDataOne.forEach(item => {
-          item.value = data[item.key]
-        })
-        this.listDataTwo.forEach(item => {
-          item.value = data[item.key]
-        })
+        // TODO 处理bi数据
       } catch (error) {
         console.error(error)
       } finally {

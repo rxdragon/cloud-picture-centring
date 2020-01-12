@@ -1,72 +1,52 @@
 <template>
-  <div class="guest-photo-scroll">
+  <div class="evaluate-photo-scroll">
     <div class="search-box">
       <div class="search-item">
         <span>摄影上传时间</span>
         <date-picker v-model="timeSpan" />
       </div>
       <div class="staff-box search-item">
-        <span class="row-title">伙伴</span>
+        <span>伙伴</span>
         <staff-select v-model="staffId" />
-      </div>
-      <!-- 订单信息 -->
-      <div class="order-search search-item">
-        <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" class="input-with-select" @keyup.native.enter="getPhotoList(1)">
-          <el-select slot="prepend" v-model="orderType" placeholder="请选择">
-            <el-option label="云端流水号" :value="1" />
-            <el-option label="订单号" :value="2" />
-            <el-option label="顾客姓名" :value="3" />
-            <el-option label="手机号" :value="4" />
-          </el-select>
-        </el-input>
-      </div>
-    </div>
-    <div class="search-box">
-      <!-- 看片评价 -->
-      <div class="check-evaluate search-item">
-        <span>看片评价</span>
-        <el-select v-model="checkValue" placeholder="请选择">
-          <el-option
-            v-for="item in checkOption"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </div>
-      <!-- 产品名称 -->
-      <div class="product-box search-item">
-        <span class="row-title">产品名称</span>
-        <product-select v-model="productValue" :props="{ multiple: false }" />
       </div>
       <!-- 修图标准 -->
       <div class="search-item">
         <span>修图标准</span>
         <retouch-kind-select v-model="retouchStandard" />
       </div>
-      <div class="button-box search-item">
-        <el-button type="primary" @click="getPhotoList(1)">查询</el-button>
+      <div class="button-box">
+        <el-button type="primary" @click="getAttitudePhotoList(1)">查询</el-button>
+      </div>
+    </div>
+    <div class="search-box">
+      <!-- 产品名称 -->
+      <div class="product-box search-item">
+        <span class="row-title">产品名称</span>
+        <product-select v-model="productValue" :props="{ multiple: false }" />
       </div>
     </div>
     <div
       ref="tableBox"
-      class="search-data table-box"
+      class="module-panel search-data table-box"
       :style="{
         height: searchDataBox + 'px'
       }"
     >
+      <div class="panel-title">照片列表</div>
       <list-scroll
         v-if="photos.length"
         :list.sync="photos"
-        :height="277"
+        :height="330"
         :list-height="searchDataBox"
         :page="pager.page"
         :load-more-data="getData"
       >
         <template v-slot="{ data }">
           <div class="photo-row">
-            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box" @click="goGuestInfo(photoItem)">
+            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box" @click="goToDetails(photoItem)">
               <photo-box :use-ele-image="false" :src="photoItem.src" />
+              <div class="staff-name">修图师：{{ photoItem.retoucherName }}</div>
+              <div class="group-name">修图小组：{{ photoItem.retouchGroupName }}</div>
             </div>
             <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
           </div>
@@ -81,58 +61,47 @@
 import DatePicker from '@/components/DatePicker'
 import PhotoBox from '@/components/PhotoBox'
 import ListScroll from '@/components/ListScroll'
+import StaffSelect from '@SelectBox/StaffSelect'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
-import StaffSelect from '@SelectBox/StaffSelect'
 import NoData from '@/components/NoData'
 import { joinTimeSpan } from '@/utils/timespan.js'
-import * as GuestPhoto from '@/api/guestPhoto'
+
+import * as GuestPhoto from '@/api/guestPhoto.js'
 
 export default {
-  name: 'GuestPhotoScroll',
-  components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect, ListScroll, NoData },
+  name: 'EvaluatePhotoScroll',
+  components: { DatePicker, PhotoBox, StaffSelect, RetouchKindSelect, ProductSelect, NoData, ListScroll },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      timeSpan: null, // 查询时间
-      orderType: 1, // 查询类型 1 云端流水号 2 订单号 3 顾客姓名 4 手机号
-      orderSearchValue: '', // 订单信息
-      checkValue: 0, // 看片评价星数
+      timeSpan: null, // 时间戳
+      type: '', // 查看类型
       staffId: [], // 伙伴id
       productValue: '', // 产品id
-      retouchStandard: '', // 修图标准
-      photos: [], // 照片列表
-      searchDataBox: 200,
+      retouchStandard: '', // 修图类别
+      photos: [], // 照片数据
       columnCount: 4, // 照片列数
+      searchDataBox: 200,
       pager: {
         page: 1,
         pageSize: 16
-      },
-      checkOption: [
-        {
-          label: '全部',
-          value: 0
-        }, {
-          label: '一星',
-          value: 1
-        }, {
-          label: '二星',
-          value: 2
-        }, {
-          label: '三星',
-          value: 3
-        }, {
-          label: '四星',
-          value: 4
-        }, {
-          label: '五星',
-          value: 5
-        }
-      ]
+      }
+    }
+  },
+  created () {
+    const name = this.$route.name
+    if (name === 'GoodGuest') {
+      this.type = 'good'
+    } else if (name === 'BadGuest') {
+      this.type = 'bad'
+    } else {
+      this.$router.replace('/404')
     }
   },
   mounted () {
     this.resizeWindow()
+    console.log(this.routeName, 'routeName')
     this.$ipcRenderer.on('win-resize', (e, item) => {
       const { data } = item
       this.resizeWindow(data)
@@ -154,15 +123,15 @@ export default {
       const columnCount = parseInt(searchDataWidth / photoBoxWidth)
       if (this.columnCount === columnCount) return
       if (!this.timeSpan) return
-      this.getPhotoList()
+      this.getAttitudePhotoList()
       this.columnCount = columnCount
     },
     /**
-     * @description 跳转到客片池详情
+     * @description 调整到详情页面
      */
-    goGuestInfo (photoItem) {
+    goToDetails (photoItem) {
       this.$router.push({
-        name: 'GuestInfo',
+        path: '/guest-photo-details',
         query: {
           uuid: photoItem.uuid
         }
@@ -200,39 +169,32 @@ export default {
      * @description 获取参数
      */
     getParam () {
-      const type = ['streamNum', 'orderNum', 'customerName', 'telephone']
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请输入时间')
+        return false
+      }
       const reqData = {
+        attitude: this.type,
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1),
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.orderSearchValue) {
-        const key = type[this.orderType - 1]
-        reqData[key] = this.orderSearchValue
-      }
-      if (!this.timeSpan && !this.orderSearchValue) {
-        this.$newMessage.warning('请填写时间')
-        return false
-      }
-      if (this.timeSpan) {
-        reqData.startAt = joinTimeSpan(this.timeSpan[0])
-        reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
-      }
       if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.checkValue) { reqData.evaluateStar = this.checkValue }
-      if (this.productValue) { reqData.productId = this.productValue }
       if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
+      if (this.productValue) { reqData.productId = this.productValue }
       return reqData
     },
     /**
-     * @description 获取客片池列表
+     * @description 获取优秀客片列表
      */
-    async getPhotoList () {
-      this.pager.page = 1
-      const reqData = this.getParam()
-      if (!reqData) return
+    async getAttitudePhotoList (page) {
       try {
+        this.pager.page = 1
+        const reqData = this.getParam()
+        if (!reqData) return
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = await GuestPhoto.getPhotoList(reqData)
+        const data = await GuestPhoto.getAttitudePhotoList(reqData)
         this.photos = this.handleRowData(data) || []
       } catch (error) {
         console.error(error)
@@ -248,7 +210,7 @@ export default {
       const reqData = this.getParam()
       if (!reqData) return
       try {
-        const data = await GuestPhoto.getPhotoList(reqData)
+        const data = await GuestPhoto.getAttitudePhotoList(reqData)
         const newRowPhotos = this.jointData(data)
         return newRowPhotos
       } catch (error) {
@@ -263,52 +225,33 @@ export default {
 <style lang="less">
 @import "~@/styles/variables.less";
 
-.guest-photo-scroll {
+.evaluate-photo-scroll {
   .search-box {
-    flex-wrap: wrap;
-    align-items: center;
+    margin-bottom: 20px;
 
-    .search-item {
-      margin-bottom: 20px;
-      margin-right: 24px;
-
-      & > span {
-        text-align-last: justify;
-      }
-    }
-
-    .row-title {
-      width: 56px;
+    .panel-title {
+      margin-bottom: 12px;
     }
 
     .product-box {
-      .el-cascader {
-        width: 220px !important;
-      }
-    }
-
-    .order-search {
-      .el-input-group__prepend {
-        width: 120px;
-      }
-    }
-
-    .check-evaluate {
-      & > span {
+      .row-title {
         width: 84px;
       }
 
-      .el-select {
+      .el-cascader {
         width: 300px;
+      }
+    }
+
+    .search-item {
+      & > span {
+        text-align-last: justify;
       }
     }
   }
 
   .search-data {
     margin-top: 0;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
 
     .photo-row {
       display: flex;
@@ -324,12 +267,28 @@ export default {
     .photo-box {
       width: 253px;
       display: inline-block;
+      height: 330px;
       cursor: pointer;
-      height: 253px;
+
+      .group-name,
+      .staff-name {
+        font-size: 12px;
+        color: #606266;
+        line-height: 17px;
+      }
+
+      .staff-name {
+        padding: 12px 6px 10px;
+        border-bottom: 1px solid @borderColor;
+      }
+
+      .group-name {
+        padding: 9px 6px 4px;
+      }
     }
 
-    .no-data {
-      margin-bottom: 0;
+    .no-data-components {
+      height: 100%;
     }
   }
 }

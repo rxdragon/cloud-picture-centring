@@ -84,6 +84,19 @@ export function isArray (arg) {
 }
 
 /**
+ * @description 是否是数组
+ * @param {Array} arg
+ * @returns {Boolean}
+ */
+export function isNumber (arg) {
+  const num = Number(arg)
+  if (num === 0) {
+    return true
+  }
+  return Boolean(num)
+}
+
+/**
  * @description 是否是两位小数
  * @param {Array} value
  * @returns {Boolean}

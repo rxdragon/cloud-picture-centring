@@ -15,7 +15,7 @@
             <crew-select v-model="staffId" />
           </div>
           <div class="button-box">
-            <el-button type="primary" @click="getGroupStaffQuotaInfo">查 询</el-button>
+            <el-button type="primary" @click="searchData">查 询</el-button>
           </div>
         </div>
         <div class="module-panel">
@@ -24,6 +24,9 @@
             <list-table key="tableDataCount" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataCount" />
             <list-table key="tableDataRate" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataRate" />
           </div>
+        </div>
+        <div class="module-panel">
+          <retoucher-chart v-for="keyItem in chartShowKeys" :key="keyItem" :show-key="keyItem" :chart-datas="chartInfo" />
         </div>
       </div>
       <CrewRetouchHistory
@@ -41,6 +44,7 @@
 import DatePicker from '@/components/DatePicker'
 import ListTable from '@/components/ListTable'
 import CrewRetouchHistory from './components/CrewRetouchHistory'
+import RetoucherChart from './components/RetoucherChart'
 import CrewSelect from '@SelectBox/CrewSelect'
 
 import { parseTime } from '@/utils/index.js'
@@ -51,7 +55,7 @@ import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'RetouchReport',
-  components: { DatePicker, ListTable, CrewRetouchHistory, CrewSelect },
+  components: { DatePicker, ListTable, CrewRetouchHistory, CrewSelect, RetoucherChart },
   props: {},
   data () {
     return {
@@ -91,7 +95,9 @@ export default {
           link: '',
           query: SearchType.SpotNone
         }
-      }
+      },
+      chartInfo: [],
+      chartShowKeys: ['finishPhotoNum', 'retouchAvgTime', 'lekimaCount', 'reviewPlantPhotoNum', 'reviewPullPhotoNum']
     }
   },
   computed: {
@@ -106,7 +112,7 @@ export default {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
     this.timeSpan = [nowTime, nowTime]
     await this.getSelfStaffs()
-    this.getGroupStaffQuotaInfo()
+    this.searchData()
   },
   methods: {
     /**
@@ -126,37 +132,51 @@ export default {
      * @description 获取组员修图报告
      */
     async getGroupStaffQuotaInfo () {
-      try {
-        if (!this.timeSpan) {
-          this.$newMessage.warning('请输入时间')
-          return false
-        }
-        this.$store.dispatch('setting/showLoading', this.routeName)
-        const req = {
-          startAt: joinTimeSpan(this.timeSpan[0]),
-          endAt: joinTimeSpan(this.timeSpan[1], 1)
-        }
-        if (this.staffId) { req.staffId = this.staffId }
-        const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
-        const lintKey = ['spotCheckPlantInfo', 'spotCheckPullInfo', 'spotCheckNoneInfo']
-        for (const key in data) {
-          if (this.tableDataCount[key]) { this.tableDataCount[key].value = data[key] }
-          if (this.tableDataRate[key]) {
-            this.tableDataRate[key].value = data[key]
-            if (lintKey.includes(key)) {
-              const sendStaff = this.staffId ? [this.staffId] : this.allStaffs
-              this.tableDataRate[key].link = '/assessment-center/assessment-history' +
-                '?searchTimeSpan=' + this.timeSpan +
-                '&searchType=' + this.tableDataRate[key].query +
-                '&sendStaff=' + sendStaff
-            }
+      const req = {
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1)
+      }
+      if (this.staffId) { req.staffId = this.staffId }
+      const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
+      const lintKey = ['spotCheckPlantInfo', 'spotCheckPullInfo', 'spotCheckNoneInfo']
+      for (const key in data) {
+        if (this.tableDataCount[key]) { this.tableDataCount[key].value = data[key] }
+        if (this.tableDataRate[key]) {
+          this.tableDataRate[key].value = data[key]
+          if (lintKey.includes(key)) {
+            const sendStaff = this.staffId ? [this.staffId] : this.allStaffs
+            this.tableDataRate[key].link = '/assessment-center/assessment-history' +
+              '?searchTimeSpan=' + this.timeSpan +
+              '&searchType=' + this.tableDataRate[key].query +
+              '&sendStaff=' + sendStaff
           }
         }
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
+    },
+    /**
+     * @description 获取组员对比数据
+     */
+    async getStaffQuotaInfoGroupByStaff () {
+      const req = {
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1)
+      }
+      this.chartInfo = await RetouchLeader.getStaffQuotaInfoGroupByStaff(req)
+    },
+    searchData () {
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请输入时间')
+        return false
+      }
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      Promise.all([
+        this.getGroupStaffQuotaInfo(),
+        this.getStaffQuotaInfoGroupByStaff()
+      ]).catch(error => {
+        console.error(error)
+      }).finally(() => {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      })
     }
   }
 }
@@ -170,6 +190,12 @@ export default {
 
 .module-panel {
   margin-top: 20px;
+
+  .retoucher-chart {
+    &:last-of-type {
+      margin-bottom: -48px;
+    }
+  }
 }
 
 .table-content {
