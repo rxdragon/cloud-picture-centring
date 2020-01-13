@@ -80,7 +80,6 @@ export function getSpotCheckResult (params) {
       allPhotoPath = [...allPhotoPath, ...item.photoVersion]
       item.retouchStandard = item.retouch_standard
       item.productName = item.photoData.stream && item.photoData.stream.product && item.photoData.stream.product.name
-
       item.isPull = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('pull') || false
       item.isPlant = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('plant') || false
 
@@ -149,6 +148,10 @@ export function getSearchHistory (params) {
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
       item.productName = item.photoData.stream && item.photoData.stream.product && item.photoData.stream.product.name || '-'
       item.retouchName = item.photoData.stream && item.photoData.stream.retoucher && (item.photoData.stream.retoucher.name || item.photoData.stream.retoucher.real_name) || '暂无信息'
+      item.retouchLeaderName = item.photoData.stream &&
+        item.photoData.stream.retoucher &&
+        item.photoData.stream.retoucher.retoucher_leader &&
+        (item.photoData.stream.retoucher.retoucher_leader.nickname || item.photoData.stream.retoucher.retoucher_leader.name) || '暂无'
       item.retouchStandard = item.retouch_standard
 
       item.isPull = false

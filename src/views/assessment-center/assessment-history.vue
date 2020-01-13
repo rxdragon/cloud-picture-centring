@@ -178,6 +178,7 @@ export default {
      * @description 监听页面变化
      */
     handlePage () {
+      this.$el.parentElement.scrollTop = 0
       this.getSearchHistory()
     }
   }
