@@ -26,7 +26,6 @@
       </div>
     </div>
     <div class="module-panel table-box">
-      <div class="panel-title">照片列表</div>
       <div v-if="photos.length" class="search-data">
         <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
           <photo-box

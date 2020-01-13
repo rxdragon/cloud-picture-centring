@@ -144,7 +144,6 @@ export default {
   },
   created () {
     this.$eventEmitter.on('getReviewerReceive', () => {
-      console.log('getReviewerReceiveeventEmitter')
       this.queueInfo.inQueue = false
       if (this.isChecking) return
       this.getReviewQueueInfo()

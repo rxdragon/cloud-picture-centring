@@ -83,7 +83,6 @@ export default {
   watch: {
     photoData: {
       handler (value) {
-        console.log(value)
         this.chartData.rows[0].num = value.outerRetouchPhotoNum.single + value.outerRetouchPhotoNum.multi
         this.chartData.rows[0].single = value.outerRetouchPhotoNum.single
         this.chartData.rows[0].multi = value.outerRetouchPhotoNum.multi

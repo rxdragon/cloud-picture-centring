@@ -123,7 +123,6 @@ export default {
   watch: {
     retouchId: {
       handler (id) {
-        console.log(id, 'watchId')
         if (!id) return
         this.realAid = id
         this.getStreamInfo()

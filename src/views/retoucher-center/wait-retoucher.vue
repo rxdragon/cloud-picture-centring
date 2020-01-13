@@ -196,9 +196,7 @@ export default {
     }
   },
   created () {
-    console.log('created')
     this.$eventEmitter.on('getRetouchStream', () => {
-      console.log('getRetouchStream')
       this.queueInfo.inQueue = false
       this.getStreamQueueInfo()
     })

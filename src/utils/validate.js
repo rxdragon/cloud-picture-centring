@@ -84,16 +84,12 @@ export function isArray (arg) {
 }
 
 /**
- * @description 是否是数组
+ * @description 是否是数字
  * @param {Array} arg
  * @returns {Boolean}
  */
 export function isNumber (arg) {
-  const num = Number(arg)
-  if (num === 0) {
-    return true
-  }
-  return Boolean(num)
+  return !isNaN(arg)
 }
 
 /**
