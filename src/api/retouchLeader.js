@@ -62,6 +62,34 @@ export function getGroupStaffQuotaInfo (params) {
 }
 
 /**
+ * @description 获取组员对比数据
+ */
+export function getStaffQuotaInfoGroupByStaff (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getStaffQuotaInfoGroupByStaff',
+    method: 'GET',
+    params
+  }).then(data => {
+    const createData = []
+    for (const staffInfoKey in data) {
+      const staffInfoItem = data[staffInfoKey]
+      const createItem = {}
+      const retouchAllTime = Number(staffInfoItem.retouchTimeAvg.rebuildTime.sum) + Number(staffInfoItem.retouchTimeAvg.retouchTime.sum)
+      const retouchPhotoCount = parseInt(staffInfoItem.finishPhotoNum)
+      createItem.name = staffInfoItem.name
+      createItem.finishPhotoNum = retouchPhotoCount // 完成张数
+      const retouchAvgTimeSec = getAvg(retouchAllTime, retouchPhotoCount)
+      createItem.retouchAvgTime = (retouchAvgTimeSec / 60).toFixed(2) // 平均修图时间
+      createItem.lekimaCount = parseInt(staffInfoItem.lichmaPhotoNum) // 利奇马张数
+      createItem.reviewPlantPhotoNum = parseInt(staffInfoItem.reviewPlantPhotoNum) // 审核种草数
+      createItem.reviewPullPhotoNum = parseInt(staffInfoItem.reviewPullPhotoNum) // 审核报草数
+      createData.push(createItem)
+    }
+    return createData
+  })
+}
+
+/**
  * @description 获取组员修图记录
  * @param {*} params
  */

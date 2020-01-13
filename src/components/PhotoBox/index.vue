@@ -10,7 +10,7 @@
       </el-image>
       <img v-else class="orgin-img" :src="imageSrc" alt="">
       <span v-if="photoName" class="photo-name" @click.stop="">{{ src }}</span>
-      <div v-if="isLekima" class="lekima-tag">icon</div>
+      <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">下载照片</el-button>
@@ -192,7 +192,17 @@ export default {
 
   .lekima-tag {
     position: absolute;
-    color: red;
+    top: 0;
+    left: 0;
+    width: 56px;
+    height: 24px;
+    background: linear-gradient(51deg, rgb(255, 126, 0) 0%, rgb(255, 0, 0) 100%);
+    border-radius: 0 0 6px 0;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 24px;
   }
 
   .el-image {
