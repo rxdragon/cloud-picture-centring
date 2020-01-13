@@ -602,7 +602,7 @@ export default {
 
   .transfer-main {
     padding: 10px;
-    height: calc(100% - 41px);
+    height: calc(~'100% - 41px');
     box-sizing: border-box;
 
     .el-input {

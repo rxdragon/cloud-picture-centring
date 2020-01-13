@@ -92,6 +92,7 @@ export default {
     initData () {
       // init all data
       this.lastScrollTop = null
+      this.canLoadmore = true
       this._rowsInWindow = Math.ceil(this.$el.offsetHeight / this.height) // 显示窗口展示的行数
       this._above = this._rowsInWindow * 2 // 列表上面的元素
       this._below = this._rowsInWindow // 屏幕下面的元素

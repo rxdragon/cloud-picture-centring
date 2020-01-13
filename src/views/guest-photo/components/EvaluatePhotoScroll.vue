@@ -26,17 +26,16 @@
       </div>
     </div>
     <div
-      ref="tableBox"
+      id="tableBox"
       class="module-panel search-data table-box"
       :style="{
         height: searchDataBox + 'px'
       }"
     >
-      <div class="panel-title">照片列表</div>
       <list-scroll
         v-if="photos.length"
         :list.sync="photos"
-        :height="330"
+        :height="354"
         :list-height="searchDataBox"
         :page="pager.page"
         :load-more-data="getData"
@@ -101,7 +100,6 @@ export default {
   },
   mounted () {
     this.resizeWindow()
-    console.log(this.routeName, 'routeName')
     this.$ipcRenderer.on('win-resize', (e, item) => {
       const { data } = item
       this.resizeWindow(data)
@@ -118,7 +116,8 @@ export default {
       const paddingWidth = 48
       const photoBoxWidth = 253
       const AppHeight = height || window.innerHeight
-      const searchDataWidth = this.$refs['tableBox'].offsetWidth - paddingWidth
+      const tableBoxDom = document.querySelector('#tableBox')
+      const searchDataWidth = tableBoxDom.offsetWidth - paddingWidth
       this.searchDataBox = AppHeight - otherHeight
       const columnCount = parseInt(searchDataWidth / photoBoxWidth)
       if (this.columnCount === columnCount) return
@@ -252,6 +251,7 @@ export default {
 
   .search-data {
     margin-top: 0;
+    overflow: hidden;
 
     .photo-row {
       display: flex;
