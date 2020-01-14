@@ -40,7 +40,7 @@ export function getGroupStaffQuotaInfo (params) {
     for (const key in data.income) {
       data.income[key] = Number(data.income[key])
     }
-    const income = data.income.retouch + data.income.impulse - data.income.punish
+    const income = data.income.retouch + data.income.impulse + data.income.reward - data.income.punish
     data.spotCheckNonePhotoNum = data.spotCheckPhotoNum - data.spotCheckPlantPhotoNum - data.spotCheckPullPhotoNum
     const createData = {}
     createData.finishStreamNum = parseInt(data.finishStreamNum) // 修图单量
