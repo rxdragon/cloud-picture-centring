@@ -27,13 +27,20 @@ class Ws {
   sendList = [] // 需要发送的消息列表
 
   constructor () {
+    console.log('web构建')
     this.connect()
   }
   // 创建websocket
   async createChat () {
-    console.log(this.chat)
     if (!this.chat) {
       await this.connect()
+    }
+  }
+
+  stopLink () {
+    if (this.chat) {
+      this.chat.stop()
+      this.chat = null
     }
   }
 

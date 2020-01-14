@@ -29,7 +29,7 @@
       </div>
       <!-- 查询按钮 -->
       <div class="button-box">
-        <el-button type="primary" class="search-button" @click="getSearchHistory(1)">查询</el-button>
+        <el-button :disabled="!Boolean(timeSpan)" type="primary" class="search-button" @click="getSearchHistory(1)">查询</el-button>
       </div>
     </div>
     <div class="search-box">
@@ -157,6 +157,7 @@ export default {
         this.cacheSendStaff = this.staffIds.join(',')
       }
       if (this.reviewerId) { req.reviewerId = this.reviewerId }
+      if (this.productValue.length) { req.productIds = this.productValue }
       this.cacheTimeSpan = this.timeSpan
       this.cacheSearchType = this.spotType
       return req
@@ -169,15 +170,16 @@ export default {
       try {
         this.pager.page = page || this.pager.page
         const req = this.getSearchParams()
+        console.log(req)
         if (!req) return false
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AssessmentCenter.getSearchHistory(req)
         this.photoData = data.list
         this.pager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**

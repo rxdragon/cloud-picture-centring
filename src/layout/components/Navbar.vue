@@ -180,6 +180,7 @@ export default {
           Retoucher.changeOffline()
             .then(async () => {
               await User.logout()
+              this.$ws.stopLink()
               this.$router.push('/login')
             })
             .catch(() => {
