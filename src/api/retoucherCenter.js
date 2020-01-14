@@ -89,6 +89,10 @@ export function getStreamInfo (params) {
     // 最新退回照片
     const returnShowPhotos = msg.photos.filter(photoItem => {
       const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
+      if (findReturnShowPhoto) {
+        photoItem.isReturnPhoto = true
+        photoItem.returnPhotoPath = findReturnShowPhoto.path
+      }
       return Boolean(findReturnShowPhoto)
     })
     createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
@@ -177,6 +181,7 @@ export function getRetouchQuotaList (params) {
       listItem.plantNum = listItem.tags && listItem.tags.values && listItem.tags.values.plant_num || 0
       listItem.pullNum = listItem.tags && listItem.tags.values && listItem.tags.values.pull_num || 0
       listItem.retoucherNpsAvg = listItem.tags && listItem.tags.values && listItem.tags.values.retoucher_score || '-'
+      listItem.lekimaCount = listItem.tags && listItem.tags.values && listItem.tags.values.lichma_photo_num || '-'
     })
     createData.list = msg.list
     return createData

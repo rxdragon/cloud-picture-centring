@@ -176,8 +176,8 @@ export default {
       if (page) {
         this.cachepage = 0
         this.maxPage = 0
+        this.pager.page = page
       }
-      this.pager.page = page || this.pager.page
       const reqData = this.getParam()
       if (!reqData) return
       try {
@@ -194,10 +194,10 @@ export default {
           this.pager.page--
           this.pager.total = this.cachepage * this.pager.pageSize
         }
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
   }

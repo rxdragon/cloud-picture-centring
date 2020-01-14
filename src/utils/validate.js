@@ -84,6 +84,15 @@ export function isArray (arg) {
 }
 
 /**
+ * @description 是否是数字
+ * @param {Array} arg
+ * @returns {Boolean}
+ */
+export function isNumber (arg) {
+  return !isNaN(arg)
+}
+
+/**
  * @description 是否是两位小数
  * @param {Array} value
  * @returns {Boolean}

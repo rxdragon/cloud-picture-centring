@@ -1,6 +1,7 @@
 import { asyncRoutes, constantRoutes, lastBaseRoutes } from '@/router'
 import { toCapitalHump } from '@/utils/index.js'
 import store from '@/store'
+import chat from '@/api/websocket'
 
 /**
  * @param roles // 权限
@@ -59,8 +60,11 @@ const mutations = {
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
     // TODO 判断是否显示显示总体绩效
     // state.showOverallPerformance = roles.includes('retoucherQuota')
+    // 调试
+    state.showOverallPerformance = true
     // TODO 判断是否显示用时统计
-    // state.showTimeStatistics = false
+    // 调试
+    state.showTimeStatistics = true
     state.showFlowInfo = roles.includes('AdminManage.workBoard.flowInfo')
     state.showRetouchStreamList = roles.includes('AdminManage.workBoard.retouchStreamList')
     state.showReviewStreamList = roles.includes('AdminManage.workBoard.reviewStreamList')
@@ -68,6 +72,7 @@ const mutations = {
     state.showUrgentStream = roles.includes('AdminManage.workBoard.urgentStream')
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
+    chat.initializeSendMessage(state.isRetoucher)
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
     state.personageRouters = routes
@@ -94,9 +99,8 @@ const actions = {
         }
       })
       commit('SET_ROLES', newPermissionArr)
-      // 如果有修图权限 启动轮询
+      // 如果有修图权限 查询在线状态
       if (newRolesArr.includes('WaitRetoucher')) {
-        store.dispatch('notification/hasReturnNotification')
         store.dispatch('user/getRetoucherLineState')
         window.addEventListener('click', () => {
           store.commit('user/SET_ACTIVE_TIME')

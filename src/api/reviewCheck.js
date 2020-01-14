@@ -80,6 +80,39 @@ export function getGroupReviewQuota (params) {
   })
 }
 
+export function getGroupReviewQuotaBySelf (params) {
+  return axios({
+    url: '/project_cloud/reviewLeader/getGroupReviewQuota',
+    method: 'GET',
+    params
+  }).then(msg => {
+    const data = keyToHump(msg)
+    data.reviewerReviewStreamNum = parseInt(data.reviewerReviewStreamNum) // 审核单量
+    data.reviewerReviewPhotoNum = parseInt(data.reviewerReviewPhotoNum) // 审核张数
+    data.reviewTimeAvgStream = timeFormat(getAvg(data.reviewTimeAvg.sum, data.reviewTimeAvg.count), 'text', true) // 审核平均用时
+    data.reviewTimeAvgPhoto = timeFormat(getAvg(data.reviewTimeAvg.sum, data.reviewerReviewPhotoNum), 'text', true) // 审核平均用时
+    const reviewPhotoPlantRate = transformPercentage(data.reviewPhotoPlantNum, data.reviewerReviewPhotoNum)
+    const reviewPhotoPullRate = transformPercentage(data.reviewPhotoPullNum, data.reviewerReviewPhotoNum)
+    data.reviewPhotoPlantInfo = data.reviewPhotoPlantNum + ' / ' + reviewPhotoPlantRate // 审核种草
+    data.reviewPhotoPullInfo = data.reviewPhotoPullNum + ' / ' + reviewPhotoPullRate // 审核拔草\
+    const spotCheckPhotoPlantRate = transformPercentage(data.spotCheckPhotoPlantNum, data.spotCheckPhotoNum)
+    const spotCheckPhotoPullRate = transformPercentage(data.spotCheckPhotoPullNum, data.spotCheckPhotoNum)
+    data.spotCheckPhotoPlantInfo = data.spotCheckPhotoPlantNum + ' / ' + spotCheckPhotoPlantRate // 抽查种草
+    data.spotCheckPhotoPullInfo = data.spotCheckPhotoPullNum + ' / ' + spotCheckPhotoPullRate // 抽查拔草
+    const rectifyDifferentPhotoRate = transformPercentage(data.rectifyDifferentPhotoNum, data.spotCheckPhotoNum)
+    const rectifyDifferentPlantPhotoRate = transformPercentage(data.rectifyDifferentPlantPhotoNum, data.spotCheckPhotoNum)
+    const rectifyDifferentPullPhotoRate = transformPercentage(data.rectifyDifferentPullPhotoNum, data.spotCheckPhotoNum)
+    const rectifyDifferentNoGrassPhotoRate = transformPercentage(data.rectifyDifferentNoGrassPhotoNum, data.spotCheckPhotoNum)
+    const rectifySamePhotoRate = transformPercentage(data.rectifySamePhotoNum, data.spotCheckPhotoNum)
+    data.rectifyDifferentPhotoInfo = data.rectifyDifferentPhotoNum + ' / ' + rectifyDifferentPhotoRate // 纠偏意见不同单位
+    data.rectifyDifferentPlantPhotoInfo = data.rectifyDifferentPlantPhotoNum + ' / ' + rectifyDifferentPlantPhotoRate // 纠偏意见不同单位-种草单位
+    data.rectifyDifferentPullPhotoInfo = data.rectifyDifferentPullPhotoNum + ' / ' + rectifyDifferentPullPhotoRate // 纠偏意见不同单位-拔草单位
+    data.rectifyDifferentNoGrassPhotoInfo = data.rectifyDifferentNoGrassPhotoNum + ' / ' + rectifyDifferentNoGrassPhotoRate // 纠偏意见不同单位-不种不拔
+    data.rectifySamePhotoInfo = data.rectifySamePhotoNum + ' / ' + rectifySamePhotoRate // 纠偏意见相同
+    return data
+  })
+}
+
 /**
  * @description 获取历史记录
  * @param {*} params

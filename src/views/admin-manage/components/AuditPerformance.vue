@@ -1,5 +1,5 @@
 <template>
-  <div class="audit-performance">
+  <div v-loading="loading" class="audit-performance">
     <div class="search-box">
       <div class="search-item">
         <span>时间</span>
@@ -39,6 +39,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null,
+      loading: false,
       reviewerValue: '',
       retoucherGroupValue: '',
       listDataOne: [{
@@ -129,19 +130,18 @@ export default {
       try {
         const req = this.getParams()
         if (!req) return
-        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.loading = true
         const data = await WorkManage.getReviewQuota(req)
         if (!data) {
           this.$newMessage.warning('暂无数据')
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          return false
+          throw new Error('暂无数据')
         }
         this.listDataOne.forEach(item => { item.value = data[item.key] })
         this.listDataTwo.forEach(item => { item.value = data[item.key] })
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        setTimeout(() => { this.loading = false }, 500)
       }
     }
   }

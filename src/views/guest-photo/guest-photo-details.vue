@@ -14,9 +14,9 @@
         </div>
         <div class="tabel-value">
           <span>{{ productName }}</span>
-          <span>
+          <span class="retouch-name">
             {{ retoucher }}
-            <el-tag>{{ retouchGroup }}</el-tag>
+            <el-tag class="retouch-group">{{ retouchGroup }}</el-tag>
           </span>
           <span>{{ retoucherLeader }}</span>
           <span />
@@ -102,6 +102,7 @@ export default {
 .guest-photo-details {
   .module-panel {
     margin-bottom: 24px;
+    padding-bottom: 0;
 
     .panel-title {
       margin-bottom: 20px;
@@ -135,15 +136,23 @@ export default {
           font-size: 14px;
           font-weight: 400;
           color: #606266;
-          line-height: 14px;
           padding: 20px 21px;
+          display: flex;
+          align-items: center;
           border-bottom: 1px solid #f2f6fc;
+        }
+
+        .retouch-name {
+          .retouch-group {
+            margin-left: 12px;
+          }
         }
       }
     }
 
     .evaluate-info {
       margin-top: 20px;
+      padding-bottom: 24px;
       font-size: 14px;
       font-weight: 500;
       color: #303133;

@@ -1,5 +1,7 @@
 import MicroWebSocket from 'mainto-jssdk/socket/MicroWebsocket'
+import handleMessage from './handleMessage'
 import axios from '@/plugins/axios.js'
+import store from '@/store'
 import * as SessionTool from '@/utils/sessionTool.js'
 import { readConfig } from '@/utils/electronConfig'
 
@@ -19,9 +21,9 @@ function getUrlHost (url) {
   return new URL(url).host
 }
 
-export class Ws {
+class Ws {
   chat = null
-  state = 'unConnect' // unconnect connecting connected
+  state = 'unConnect' // unConnect connecting connected
   sendList = [] // 需要发送的消息列表
 
   constructor () {
@@ -29,6 +31,7 @@ export class Ws {
   }
   // 创建websocket
   async createChat () {
+    console.log(this.chat)
     if (!this.chat) {
       await this.connect()
     }
@@ -42,7 +45,7 @@ export class Ws {
 
   // 发送消息
   async sendMessage (msg) {
-    if (!this.chat) { await this.createChat() }
+    if (this.state === 'unConnect') { await this.createChat() }
     if (this.state === 'connected') {
       this.chat.send(msg)
     } else {
@@ -50,15 +53,26 @@ export class Ws {
     }
   }
 
+  initializeSendMessage (isRetoucher) {
+    if (!isRetoucher) return
+    const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
+    for (const type of firstSendType) {
+      this.sendMessage({ typeName: type })
+    }
+  }
+
   // 链接websocket
   connect (options) {
     return new Promise(async resolve => {
-      if (this.state === 'connecting') return
+      if (this.state === 'connecting' || this.state === 'connected') return
       // 未登录
       const xstreamId = SessionTool.getXStreamId('xStreamId')
       const user = SessionTool.getUserInfo('userInfo')
+      console.log(xstreamId, user)
       if (!xstreamId || !user) return
       try {
+        this.state = 'connecting'
+        console.log(this.state)
         const WebSocketSignature = await getWebSocketSignature()
         console.log(WebSocketSignature)
         // 初始化socket配置
@@ -79,11 +93,12 @@ export class Ws {
         })
         // 消息到来时触发
         chat.onMessageCallback = data => {
-          console.log(data)
+          handleMessage(data)
         }
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
           this.state = 'connected'
+          console.log(store.state.permission.isRetoucher, 'connected')
           if (this.sendList.length) {
             this.sendList.map(item => this.sendMessage(item))
             this.sendList = []
@@ -91,15 +106,20 @@ export class Ws {
         }
         // 错误时触发
         chat.onErrorCallback = () => {
-          this.state = 'unconnect'
+          console.log('错误时触发')
+          this.state = 'unConnect'
         }
         // 断开连接时触发
         chat.onDisconnectCallback = () => {
-          this.state = 'unconnect'
+          console.log('断开连接时触发')
+          this.state = 'unConnect'
+        }
+        chat.onReConnectCallback = e => {
+          console.log('重新连接')
+          this.state = 'connected'
         }
         // 连接到远程服务器
         chat.start()
-        this.state = 'connecting'
         this.chat = chat
         resolve()
       } catch (error) {
@@ -108,3 +128,6 @@ export class Ws {
     })
   }
 }
+console.log(1)
+const chat = new Ws()
+export default chat

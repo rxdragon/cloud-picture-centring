@@ -239,26 +239,22 @@ export default {
       this.$refs['to-tree'].filter(val)
     },
     // 监视默认选中
-    defaultCheckedKeys (val) {
-      if (val && this.defaultTransfer) {
-        this.$nextTick(() => {
-          this.from_check_keys = this.defaultCheckedKeys
-          this.addToAims()
-        })
-      }
+    defaultCheckedKeys: {
+      handler (val) {
+        if (val.length && this.defaultTransfer) {
+          this.$nextTick(() => {
+            this.from_check_keys = this.defaultCheckedKeys
+            this.addToAims()
+          })
+        }
+      },
+      immediate: true
     },
     cacheCheck: {
       handler: function (val) {
         this.changeDefault()
       },
       immediate: false
-    }
-  },
-  mounted () {
-    if (this.defaultCheckedKeys.length > 0 && this.defaultTransfer) {
-      this.$nextTick(() => {
-        this.addToAims()
-      })
     }
   },
   methods: {
@@ -376,9 +372,7 @@ export default {
       // 获取半选通过穿梭框的keys - 仅用于传送纯净的id数组到父组件同后台通信
       const harfKeys = this.$refs['to-tree'].getHalfCheckedKeys()
       // 获取选中通过穿梭框的nodes 选中节点数据
-      const arrayCheckedNodes = this.$refs['to-tree'].getCheckedNodes(
-        this.leafOnly
-      )
+      const arrayCheckedNodes = this.$refs['to-tree'].getCheckedNodes(this.leafOnly)
       // 获取选中通过穿梭框的nodes - 仅用于传送选中节点数组到父组件同后台通信需求
       const nodes = JSON.parse(JSON.stringify(arrayCheckedNodes))
       // 半选中节点数据
@@ -464,7 +458,6 @@ export default {
       arrayCheckedNodes.forEach(item => {
         this.$refs['to-tree'].remove(item)
       })
-
       // 处理完毕按钮恢复禁用状态
       this.to_check_keys = []
 
@@ -576,8 +569,14 @@ export default {
   overflow: hidden;
 
   .el-tree {
-    min-width: 100%;
+    width: 100%;
+    max-height: calc(~'100% - 45px');
     display: inline-block !important;
+    overflow: auto;
+
+    .el-tree-node {
+      width: max-content;
+    }
   }
 
   .transfer-left {
@@ -603,9 +602,8 @@ export default {
 
   .transfer-main {
     padding: 10px;
-    height: calc(100% - 41px);
+    height: calc(~'100% - 41px');
     box-sizing: border-box;
-    overflow: auto;
 
     .el-input {
       width: 100% !important;

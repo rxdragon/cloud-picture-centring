@@ -178,7 +178,11 @@ export async function getImgBufferPhoto (file) {
     const fileExt = mPath.getExtName(file.path).toLowerCase()
     const originalExt = data.typeInfo.ext.toLowerCase()
     if (fileExt !== `.${originalExt}`) {
-      return Promise.reject(`${file.path}格式错误应为${originalExt}格式`)
+      const errorMessage = `
+        <span class="danger-color">${file.name}</span>格式错误，
+        文件原始格式为<span class="danger-color">${originalExt}</span>格式，
+        请使用<span class="danger-color">PS另存为</span>保存!`
+      throw new Error(errorMessage)
     }
   }
   return data

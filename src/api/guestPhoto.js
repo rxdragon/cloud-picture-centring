@@ -118,21 +118,19 @@ export function getAttitudePhotoList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    if (msg.list) {
-      msg.list.forEach(listItem => {
-        const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
-        listItem.src = findCompletePhoto && findCompletePhoto.path || ''
-        listItem.retoucherName = listItem.stream &&
-          listItem.stream.retoucher &&
-          (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
-        listItem.retouchGroupName = listItem.stream &&
-          listItem.stream.retoucher &&
-          listItem.stream.retoucher.retouch_group &&
-          listItem.stream.retoucher.retouch_group.name ||
-          '-'
-      })
-      msg.list = msg.list.filter(listItem => Boolean(listItem.src))
-    }
+    msg.forEach(listItem => {
+      const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
+      listItem.src = findCompletePhoto && findCompletePhoto.path || ''
+      listItem.retoucherName = listItem.stream &&
+        listItem.stream.retoucher &&
+        (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
+      listItem.retouchGroupName = listItem.stream &&
+        listItem.stream.retoucher &&
+        listItem.stream.retoucher.retouch_group &&
+        listItem.stream.retoucher.retouch_group.name ||
+        '-'
+    })
+    msg = msg.filter(listItem => Boolean(listItem.src))
     return msg
   })
 }

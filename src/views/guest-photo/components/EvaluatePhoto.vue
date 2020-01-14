@@ -1,8 +1,5 @@
 <template>
   <div class="evaluate-photo">
-    <div class="header">
-      <h3>{{ $route.name === 'IssuePhoto' ? '问题客片' : '优秀客片' }}</h3>
-    </div>
     <div class="search-box">
       <div class="search-item">
         <span>摄影上传时间</span>
@@ -29,8 +26,7 @@
       </div>
     </div>
     <div class="module-panel table-box">
-      <div class="panel-title">照片列表</div>
-      <div class="search-data">
+      <div v-if="photos.length" class="search-data">
         <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
           <photo-box
             :tags="photoItem.tags"
@@ -40,20 +36,20 @@
           <div class="staff-name">修图师：{{ photoItem.retoucherName }}</div>
           <div class="group-name">修图小组：{{ photoItem.retouchGroupName }}</div>
         </div>
-        <div v-for="i in 4" :key="'empty' + i" class="empty-box" />
+        <div v-for="i in columnCount" :key="'empty' + i" class="empty-box" />
       </div>
+      <no-data v-else />
       <!-- 分页 -->
       <div class="page-box">
         <el-pagination
-          :hide-on-single-page="true"
+          hide-on-single-page
           :current-page.sync="pager.page"
           :page-size="pager.pageSize"
-          layout="total, prev, pager, next, jumper"
+          layout="prev, pager, next, jumper"
           :total="pager.total"
           @current-change="handleCurrentChange"
         />
       </div>
-      <div v-if="!photos.length" class="no-data">暂无数据</div>
     </div>
   </div>
 </template>
@@ -64,13 +60,14 @@ import PhotoBox from '@/components/PhotoBox'
 import StaffSelect from '@SelectBox/StaffSelect'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
+import NoData from '@/components/NoData'
 import { joinTimeSpan } from '@/utils/timespan.js'
 
 import * as GuestPhoto from '@/api/guestPhoto.js'
 
 export default {
   name: 'EvaluatePhoto',
-  components: { DatePicker, PhotoBox, StaffSelect, RetouchKindSelect, ProductSelect },
+  components: { DatePicker, PhotoBox, StaffSelect, RetouchKindSelect, ProductSelect, NoData },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -80,9 +77,12 @@ export default {
       productValue: '', // 产品id
       retouchStandard: '', // 修图类别
       photos: [], // 照片数据
+      columnCount: 4,
+      cachepage: 0,
+      maxPage: 0,
       pager: {
         page: 1,
-        pageSize: 10,
+        pageSize: 2,
         total: 0
       }
     }
@@ -98,7 +98,9 @@ export default {
     }
   },
   methods: {
-    handleCurrentChange () {
+    handleCurrentChange (value) {
+      if (this.maxPage && value > this.maxPage) return
+      this.pager.page = value
       this.getAttitudePhotoList()
     },
     /**
@@ -113,33 +115,54 @@ export default {
       })
     },
     /**
+     * @description 获取参数
+     */
+    getParam () {
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请输入时间')
+        return false
+      }
+      const reqData = {
+        attitude: this.type,
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1),
+        page: this.pager.page,
+        pageSize: this.pager.pageSize
+      }
+      if (this.staffId.length) { reqData.staffIds = this.staffId }
+      if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
+      if (this.productValue) { reqData.productId = this.productValue }
+      return reqData
+    },
+    /**
      * @description 获取优秀客片列表
      */
     async getAttitudePhotoList (page) {
       try {
-        if (!this.timeSpan) {
-          this.$newMessage.warning('请输入时间')
-          return false
+        if (page) {
+          this.cachepage = 0
+          this.maxPage = 0
+          this.pager.page = page
         }
-        this.pager.page = page || this.pager.page
-        const reqData = {
-          attitude: this.type,
-          startAt: joinTimeSpan(this.timeSpan[0]),
-          endAt: joinTimeSpan(this.timeSpan[1], 1),
-          page: this.pager.page,
-          pageSize: this.pager.pageSize
-        }
-        if (this.staffId.length) { reqData.staffIds = this.staffId }
-        if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
-        if (this.productValue) { reqData.productId = this.productValue }
+        const reqData = this.getParam()
+        if (!reqData) return
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getAttitudePhotoList(reqData)
-        this.pager.total = data.total
-        this.photos = data.list
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        if (page && !data.length) { this.photos = [] }
+        if (data.length) {
+          this.photos = data
+          if (this.cachepage < this.pager.page) { this.cachepage++ }
+          const showPage = this.maxPage || (this.cachepage + 1)
+          this.pager.total = showPage * this.pager.pageSize
+        } else {
+          this.maxPage = this.cachepage
+          this.pager.page--
+          this.pager.total = this.cachepage * this.pager.pageSize
+        }
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
   }
@@ -152,6 +175,10 @@ export default {
 .evaluate-photo {
   .search-box {
     margin-bottom: 20px;
+
+    .panel-title {
+      margin-bottom: 12px;
+    }
 
     .product-box {
       .row-title {

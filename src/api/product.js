@@ -42,8 +42,9 @@ export function getAllProduct () {
 
 /**
  * @description 获取产品面板数据
+ * @param {Array} disabledId 禁止移动
  */
-export function getAllProductPanel () {
+export function getAllProductPanel (disabledId = []) {
   return axios({
     url: '/project_cloud/common/getAllProduct',
     method: 'get'
@@ -82,8 +83,9 @@ export function getAllProductPanel () {
           children: [],
           id: productItem.id,
           pid: findTypeId(findType.name),
-          label: productItem.name
+          label: productItem.name || '暂无名称'
         }
+        productInfo.disabled = disabledId.includes(productItem.id)
         findType.children = [...findType.children, productInfo]
       }
     })

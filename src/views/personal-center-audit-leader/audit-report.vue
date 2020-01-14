@@ -10,18 +10,13 @@
             <span>时间</span>
             <date-picker v-model="timeSpan" />
           </div>
-          <div class="staff-box search-item">
-            <span>组员</span>
-            <crew-select v-model="staffId" />
-          </div>
           <div class="button-box">
-            <el-button type="primary" @click="getGroupReviewQuota">查 询</el-button>
+            <el-button type="primary" @click="setTimeSpan">查 询</el-button>
           </div>
         </div>
-        <div class="tabel-content module-panel">
-          <div class="tabel-title panel-title">小组审核报告</div>
-          <list-table key="tableDataCount" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataCount" />
-          <list-table key="tableDataRate" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataRate" />
+        <div v-for="staffItem in staffList" :key="staffItem.value" class="tabel-content module-panel">
+          <div class="tabel-title panel-title">【{{ staffItem.label }}】审核报告</div>
+          <report-box :time-span="childrenTimeSpan" :staff-id="staffItem.value" @showDetail="getShowDetailInfo" />
         </div>
       </div>
       <CrewAuditHistory
@@ -29,7 +24,7 @@
         :search-staff="staffId"
         :search-type.sync="searchType"
         :is-seach-page.sync="isSeachPage"
-        :search-time="timeSpan"
+        :search-time="childrenTimeSpan"
       />
     </transition>
   </div>
@@ -37,122 +32,66 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
-import ListTable from '@/components/ListTable'
 import CrewAuditHistory from './CrewAuditHistory/index'
-import CrewSelect from '@SelectBox/CrewSelect'
-import { joinTimeSpan } from '@/utils/timespan.js'
-
+import ReportBox from './components/ReportBox'
 import { parseTime } from '@/utils/index.js'
-import * as ReviewCheck from '@/api/reviewCheck.js'
+import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'AuditReport',
-  components: { DatePicker, ListTable, CrewAuditHistory, CrewSelect },
+  components: { DatePicker, CrewAuditHistory, ReportBox },
   props: {},
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间戳
       isSeachPage: false,
-      staffId: 0,
       searchType: '',
-      tableDataCount: [
-        {
-          label: '审核单量',
-          value: '-',
-          componentSwitch: false
-        }, {
-          label: '审核张数',
-          value: '-'
-        }, {
-          label: '审核平均用时',
-          value: '-',
-          componentSwitch: false
-        }, {
-          label: '审核种草(张) / 种草率(%)',
-          value: '-',
-          componentSwitch: false
-        }, {
-          label: '审核拔草(张) / 拔草率(%)',
-          value: '-'
-        }, {
-          label: '抽查种草(张) / 种草率(%)',
-          value: '-'
-        }, {
-          label: '抽查拔草(张) / 拔草率(%)',
-          value: '-'
-        }
-      ],
-      tableDataRate: [
-        {
-          label: '纠偏意见不同单位：(张 / %)',
-          value: '- / -',
-          componentSwitch: false
-        }, {
-          label: '纠偏意见不同-种草单位：(张 / %)',
-          value: '- / -',
-          componentSwitch: false
-        }, {
-          label: '纠偏意见不同-拔草单位：(张 / %)',
-          value: '- / -',
-          componentSwitch: false
-        }, {
-          label: '纠偏意见不同-不种不拔单位：(张 / %)',
-          value: '- / -',
-          componentSwitch: false
-        }, {
-          label: '纠偏意见相同单位：(张 / %)',
-          value: '- / -',
-          componentSwitch: false
-        }
-      ]
+      staffList: [],
+      staffId: '',
+      childrenTimeSpan: null // 子组件时间
     }
   },
   created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
-    this.timeSpan = [nowTime, nowTime]
-    this.getGroupReviewQuota()
-  },
-  mounted () {
-    window.removeEventListener('popstate', null, false)
+    this.timeSpan = this.childrenTimeSpan = [nowTime, nowTime]
+    this.getSelfStaffs()
   },
   methods: {
     /**
-     * @description 获取审核指标
+     * @description 获取组员
      */
-    async getGroupReviewQuota () {
+    async getSelfStaffs () {
       try {
-        if (!this.timeSpan) {
-          this.$newMessage.warning('请填写时间')
-          return false
-        }
-        const reqData = {
-          range: 'group',
-          startAt: joinTimeSpan(this.timeSpan[0]),
-          endAt: joinTimeSpan(this.timeSpan[1], 1)
-        }
-        if (this.staffId) { reqData.staffId = this.staffId }
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = await ReviewCheck.getGroupReviewQuota(reqData)
-        data.tableDataCount.forEach(item => {
-          if (item.link) {
-            delete item.link
-            item.componentSwitch = true
-          }
+        this.staffList = await Staff.getSelfStaffs()
+        this.staffList.unshift({
+          label: '全部组员',
+          value: 0
         })
-        data.tableDataRate.forEach(item => {
-          if (item.link) {
-            delete item.link
-            item.componentSwitch = true
-          }
-        })
-        this.tableDataCount = data.tableDataCount
-        this.tableDataRate = data.tableDataRate
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
+    },
+    /**
+     * @description 设置子组件时间
+     */
+    setTimeSpan () {
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请输入时间')
+        return
+      }
+      this.childrenTimeSpan = this.timeSpan
+    },
+    /**
+     * @description 获取修图详情信息
+     */
+    getShowDetailInfo (data) {
+      this.staffId = data.staffId
+      this.searchType = data.searchType
+      this.isSeachPage = true
     }
   }
 }

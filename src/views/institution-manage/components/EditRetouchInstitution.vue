@@ -21,7 +21,6 @@
         <el-form-item label="可接产品：" prop="toData" :show-message="false">
           <product-panel
             :default-checked-keys="defaultCheckedKeys"
-            :is-loading-down.sync="isLoadingDown"
             :to-data.sync="institutionConfig.toData"
           />
         </el-form-item>
@@ -74,7 +73,6 @@ export default {
         ]
       },
       defaultCheckedKeys: [],
-      isLoadingDown: false,
       institutionConfig: {
         name: '', // 机构名称
         code: '', // 机构主账号
@@ -86,8 +84,11 @@ export default {
     }
   },
   watch: {
-    isLoadingDown (value) {
-      if (value && this.retouchInstitutionId) { this.getRetouchOrgInfo() }
+    retouchInstitutionId: {
+      handler (value) {
+        if (value) { this.getRetouchOrgInfo() }
+      },
+      immediate: true
     }
   },
   created () {

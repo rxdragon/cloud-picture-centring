@@ -22,8 +22,8 @@
           </div>
         </div>
         <div class="panel-footer">
-          <div class="footer-left">目标张数：{{ todayData.todayTargetPhotoNum || '暂无数据' }}</div>
-          <div class="footer-right">已完成：{{ todayData.todayFinishPhotoNum || '暂无数据' }}</div>
+          <div class="footer-left">目标张数：{{ todayData.todayTargetPhotoNum || '--' }}</div>
+          <div class="footer-right">已完成：{{ todayData.todayFinishPhotoNum || '--' }}</div>
         </div>
       </div>
       <!-- 个人修图等级 -->
@@ -141,20 +141,7 @@
       </div>
     </div>
     <!-- 修图绩效 -->
-    <div class="module-panel retouch-performance">
-      <div class="panel-title">修图绩效</div>
-      <div class="search-box">
-        <div class="search-item">
-          <span>时间</span>
-          <date-picker v-model="timeSpan" />
-        </div>
-        <el-button type="primary" @click="getRetouchQuota">查 询</el-button>
-      </div>
-      <div class="panel-content">
-        <list-table v-if="performanceData.length" key="performanceData" :listdata="performanceData" />
-        <div v-else class="no-data">暂无数据</div>
-      </div>
-    </div>
+    <retouch-performance />
     <!-- 小蜜蜂奖励记录 -->
     <div class="module-panel bee-award">
       <div class="panel-title">小蜜蜂奖励记录</div>
@@ -214,17 +201,15 @@
 
 <script>
 import ListTable from '@/components/ListTable'
-import DatePicker from '@/components/DatePicker'
 import CountTo from '@/components/CountTo'
 import NoData from '@/components/NoData'
+import RetouchPerformance from './components/RetouchPerformance'
 
-import { joinTimeSpan } from '@/utils/timespan.js'
-import { parseTime } from '@/utils/index.js'
 import * as Retoucher from '@/api/retoucher.js'
 
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, DatePicker, CountTo, NoData },
+  components: { ListTable, CountTo, NoData, RetouchPerformance },
   filters: {
     // 获取小数
     getPoint (value) {
@@ -244,11 +229,9 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      timeSpan: null, // 时间戳
       yearValue: '2019',
       todayData: {}, // 今日指标
       gradeInfo: {},
-      performanceData: [], // 修图绩效
       gradeData: [{
         1: 800,
         2: 1266,
@@ -267,13 +250,10 @@ export default {
     }
   },
   created () {
-    const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
-    this.timeSpan = [nowTime, nowTime]
     this.$store.dispatch('setting/showLoading', this.routeName)
     Promise.all([
       this.getSelfQuota(),
       this.getRankInfo(),
-      this.getRetouchQuota(),
       this.getLittleBeeInfo(),
       this.getProps()
     ]).then(() => {
@@ -300,20 +280,6 @@ export default {
      */
     async getRankInfo () {
       this.gradeInfo = await Retoucher.getRankInfo()
-    },
-    /**
-     * @description 获取修图绩效
-     */
-    async getRetouchQuota () {
-      if (!this.timeSpan) {
-        this.$newMessage.warning('请输入时间')
-        return false
-      }
-      const reqData = {
-        startAt: joinTimeSpan(this.timeSpan[0]),
-        endAt: joinTimeSpan(this.timeSpan[1], 1)
-      }
-      this.performanceData = await Retoucher.getRetouchQuota(reqData)
     },
     /**
      * @description 获取小蜜蜂奖

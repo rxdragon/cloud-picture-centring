@@ -14,7 +14,7 @@ const personalCenterRetoucher = {
       path: 'personal-details',
       name: 'PersonalDetails',
       component: () => import('@/views/personal-center-retoucher/personal-details.vue'),
-      meta: { title: '个人修图概况', icon: '', noCache: true }
+      meta: { title: '个人修图概况', icon: '', noCache: false }
     }
   ]
 }

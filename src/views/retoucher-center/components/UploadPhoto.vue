@@ -60,7 +60,7 @@
           :file-list="uploadPhoto"
           :data="upyunConfig"
         >
-          <div class="avatar-upload" @click="getFiles">
+          <div class="avatar-upload">
             <i class="el-icon-plus" />
             <span>上传照片</span>
           </div>
@@ -68,6 +68,7 @@
       </div>
       <div v-for="i in 4" :key="'empty' + i" class="empty-box list-photo-item" />
     </transition-group>
+    <el-button size="small" class="one-upload" type="primary" @click="getFiles">一键上传</el-button>
   </div>
 </template>
 
@@ -118,7 +119,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['updateDomain', 'showOverTag', 'autoUpload', 'saveFolder']),
+    ...mapGetters(['updateDomain', 'showOverTag', 'saveFolder']),
     // 样式变量
     variables () {
       return variables
@@ -134,6 +135,9 @@ export default {
     photos: {
       handler () {
         this.cachePhoto = []
+        this.uploadPhoto.forEach((photoItem, photoIndex) => {
+          this.deleteUploadPhoto(photoItem, photoIndex)
+        })
         this.uploadPhoto = []
         this.$emit('change', {})
         this.getCachePhoto()
@@ -149,11 +153,11 @@ export default {
      * @description 获取文件自动上传
      */
     getFiles (event) {
-      // 扩展功能
-      if (!this.autoUpload || !this.streamNum) return
+      if (!this.streamNum) return
       event.stopPropagation()
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
+        this.checkHasUploadingPhoto()
         const needUploadPhotos = []
         const finishPhotoArr = Object.values(this.finishPhoto)
         const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
@@ -164,10 +168,11 @@ export default {
         })
         AutoUpload.getFiles(this.streamNum, needUploadPhotos)
       } catch (error) {
-        this.$newMessage.error(error.message)
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        this.$newMessage.error(error.message || error)
         return false
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
@@ -191,71 +196,99 @@ export default {
       this.cachePhoto = data
     },
     /**
+     * @description 检测是否正在上传的照片
+     */
+    checkHasUploadingPhoto () {
+      if (!this.uploadPhoto.every(item => item.response)) {
+        throw new Error('请等待照片上传完成')
+      }
+    },
+    /**
+     * @description 检测正确名字
+     */
+    checkFileName (file) {
+      const fileName = PhotoTool.fileNameFormat(file.name)
+      if (fileName.includes('.')) {
+        throw new Error('请正确命名照片名！')
+      }
+    },
+    /**
+     * @description 检查是否是照片
+     */
+    checkFileType (type) {
+      const canUploadTpye = ['image/jpeg', 'image/png']
+      if (!canUploadTpye.includes(type)) {
+        throw new Error('上传图片只能是 JPG 或 PNG 格式!')
+      }
+    },
+    /**
+     * @description 检查是否和原片名字一样
+     */
+    checkHasSaveName (file) {
+      const fileName = PhotoTool.photoPathExtToLowerCase(file.name)
+      const hasSameName = this.photos.some(item => PhotoTool.photoPathExtToLowerCase(item.path) === fileName)
+      if (!hasSameName) {
+        throw new Error('请上传与原片文件名一致的照片。')
+      }
+    },
+    /**
+     * @description 检查是否已经上传
+     */
+    checkHasUploadedPhoto (file) {
+      const fileName = PhotoTool.fileNameFormat(file.name)
+      const finishPhotoArr = Object.values(this.finishPhoto)
+      const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
+      const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === fileName)
+      if (findPhoto) {
+        this.signRepetitionPhoto(findPhoto)
+        throw new Error('该照片已经上传，请移除该照片' + findPhoto.path + '再上传。')
+      }
+    },
+    /**
+     * @description 检查是否修改
+     * @param {Object} file [文件对象]
+     * @param {String} uploadPhotoMd5 [上传文件的md5]
+     */
+    checkPsPhoto (file, uploadPhotoMd5) {
+      const fileName = PhotoTool.fileNameFormat(file.name)
+      const findOrginPhoto = this.photos.find(item => item.path.includes(fileName))
+      // 最后一次提交文件名
+      const beforeUploadFilePath = findOrginPhoto.isReturnPhoto ? findOrginPhoto.returnPhotoPath : file.name
+      const beforeUploadFileName = PhotoTool.fileNameFormat(beforeUploadFilePath)
+      if (beforeUploadFileName === uploadPhotoMd5) {
+        throw new Error('请修改照片后再进行上传。')
+      }
+    },
+    /**
      * @description 上传前回调
      * @param {*} file
      */
     async beforeUpload (file) {
-      const canUploadTpye = ['image/jpeg', 'image/png']
-      let uploadPhotoMd5
-      let type
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      // 上一次照片是否上传完成
-      if (!this.uploadPhoto.every(item => item.response)) {
-        this.$newMessage.warning('请等待照片上传完成')
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return Promise.reject()
-      }
-      const name = PhotoTool.fileNameFormat(file.name)
-      // 是否正确命名
-      if (name.includes('.')) {
-        this.$newMessage.warning('请正确命名照片名！')
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return Promise.reject()
-      }
       try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.checkHasUploadingPhoto() // 上一次照片是否上传完成
+        this.checkFileName(file) // 是否正确命名
+        // 获取type和md5
         const imgInfo = await PhotoTool.getImgBufferPhoto(file)
-        uploadPhotoMd5 = imgInfo.md5
-        type = imgInfo.typeInfo.mime
+        const uploadPhotoMd5 = imgInfo.md5
+        const type = imgInfo.typeInfo.mime
+        this.checkFileType(type) // 判断是否是图片
+        this.checkHasSaveName(file) // 判断是否与原片名字相同
+        this.checkPsPhoto(file, uploadPhotoMd5) // 判断图片是否修改
+        this.checkHasUploadedPhoto(file) // 判断是否已经上传
+        return Promise.resolve()
       } catch (error) {
         console.error(error)
-        this.$newMessage.error(error)
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        this.$newMessage({
+          dangerouslyUseHTMLString: true,
+          message: error.message || error,
+          type: 'warning',
+          duration: 3000
+        })
         return Promise.reject()
-      }
-      const finishPhotoArr = Object.values(this.finishPhoto)
-      const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
-      const hasSameName = this.photos.some(item => PhotoTool.photoPathExtToLowerCase(item.path) === PhotoTool.photoPathExtToLowerCase(file.name))
-      const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === name)
-      // 判断是否是图片
-      if (!canUploadTpye.includes(type)) {
-        this.$newMessage.warning('上传图片只能是 JPG 或 PNG 格式!')
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return Promise.reject()
       }
-      // 判断是否与原片名字相同
-      if (!hasSameName) {
-        this.$newMessage.warning('请上传与原片文件名一致的照片。')
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return Promise.reject()
-      }
-      // 判断图片是否修改
-      const findOrginPhoto = this.photos.find(item => item.path.includes(name))
-      // 最后一次提交文件名
-      const beforeUploadFileName = findOrginPhoto.isReturnPhoto ? PhotoTool.fileNameFormat(findOrginPhoto.returnPhotoPath) : PhotoTool.fileNameFormat(file.name)
-      if (beforeUploadFileName === uploadPhotoMd5) {
-        this.$newMessage.warning('请修改照片后再进行上传。')
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return Promise.reject()
-      }
-      // 判断是否已经上传
-      if (findPhoto) {
-        this.$newMessage.warning('该照片已经上传，请移除该照片' + findPhoto.path + '再上传。')
-        this.signRepetitionPhoto(findPhoto)
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        return Promise.reject()
-      }
-      this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      return true
     },
     /**
      * @description 文件上传时的钩子
@@ -272,7 +305,7 @@ export default {
     async handleSuccess (response, file, fileList) {
       this.uploadPhoto = fileList
       // 校验数据
-      if (this.autoUpload && file.response && file.response.url) {
+      if (file.response && file.response.url) {
         try {
           const info = await PhotoTool.getImgBufferPhoto(file.raw)
           const selfMd5 = info.md5
@@ -353,6 +386,8 @@ export default {
 @import '~@/styles/variables.less';
 
 .upload-photo {
+  position: relative;
+
   .list-photo {
     margin-right: -24px;
     position: relative;
@@ -485,6 +520,12 @@ export default {
         color: @blue;
       }
     }
+  }
+
+  .one-upload {
+    position: absolute;
+    top: -52px;
+    right: 24px;
   }
 }
 </style>

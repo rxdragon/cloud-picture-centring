@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '../utils'
+import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '@/utils'
+import { isNumber } from '@/utils/validate'
 
 /** 工作指标 */
 
@@ -94,6 +95,8 @@ export function getRetoucherQuota (params) {
     msg.storeReturnPhotoNumForQuality = parseInt(msg.storeReturnPhotoNumForQuality || 0) // 门店退单（非质量问题）张数
     msg.storeReturnStreamNumForNotQuality = parseInt(msg.storeReturnStreamNumForNotQuality || 0) // 门店退单（质量问题）
     msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
+    msg.lekimaStreamNum = parseInt(msg.lichmaStreamNum || 0) // 利奇马张数
+    msg.lekimaPhotoNum = parseInt(msg.lichmaPhotoNum || 0) // 利奇马单数
     return msg
   })
 }
@@ -108,15 +111,33 @@ export function getWholeQuota (params) {
     method: 'GET',
     params
   }).then(data => {
-    for (const key in data) {
-      if (isObj(data[key])) {
-        data[key] = `${data[key].single} / ${data[key].multi}`
-      }
-      if (['reviewPhotoPlantNum', 'reviewPhotoPullNum', 'retouchReworkNum'].includes(key)) {
-        data[key] = `${data[key] * 100}%`
+    const createData = {}
+    function toParseIntName (arg) {
+      for (const key in arg) {
+        const item = arg[key]
+        if (isNumber(item)) {
+          arg[key] = parseInt(item)
+        } else if (isObj(item)) {
+          toParseIntName(item)
+        }
       }
     }
-    return data
+    toParseIntName(data)
+    createData.photographyUploadPhotoNum = data.photographyUploadPhotoNum // 摄影上传张数
+    createData.photographOrgUploadStreamNum = data.photographOrgUploadStreamNum // 摄影上传单数
+    const allRetouchPhoto = {
+      single: data.cloudRetouchPhotoNum.single + data.outerRetouchPhotoNum.single,
+      multi: data.cloudRetouchPhotoNum.multi + data.outerRetouchPhotoNum.multi
+    }
+    createData.allRetouchPhoto = allRetouchPhoto // 总已修张数
+    createData.allRetouchPhotoStream = data.retoucherFinishStreamNum + data.outerRetouchStreamNum
+    createData.cloudRetouchPhotoNum = data.cloudRetouchPhotoNum // 云端已修照片
+    createData.cloudRetouchPhotoStream = data.retoucherFinishStreamNum // 云端已修单量
+    createData.outerRetouchPhotoNum = data.outerRetouchPhotoNum // 外包已修张数
+    createData.outerRetouchStreamNum = data.outerRetouchStreamNum // 外包已修单量
+    createData.templatePhotoNum = data.templatePhotoNum // 模版照
+    createData.reworkRate = getAvg(data.retoucherReworkStreamNum, data.retoucherFinishStreamNum) * 100 // 重修率
+    return createData
   })
 }
 
@@ -163,6 +184,26 @@ export function getStreamTimesQuota (params) {
     url: '/project_cloud/operator/getStreamTimesQuota',
     method: 'GET',
     params
+  }).then(msg => {
+    const data = keyToHump(msg)
+    const createData = {}
+    for (const key in data) {
+      if (key !== 'retouchTimeAvg') {
+        createData[key] = getAvg(data[key].sum * 1000, data[key].count)
+      }
+    }
+    const retouchTime = Number(data.retouchTimeAvg.rebuildTime.sum) + Number(data.retouchTimeAvg.retouchTime.sum)
+    const outerRetouchTime = Number(data.outerRetouchTimeAvg.sum)
+    const allRetouchTime = outerRetouchTime + retouchTime
+    const retouchCount = Number(data.retouchTimeAvg.retouchTime.count)
+    const outerRetouchCount = Number(data.outerRetouchTimeAvg.count)
+    const allRetouchCount = retouchCount + outerRetouchCount
+    createData['retouchTimeAvg'] = getAvg(retouchTime * 1000, retouchCount)
+    createData['retouchAllTimeAvg'] = getAvg(allRetouchTime * 1000, allRetouchCount)
+    const returnCount = Number(data.retouchTimeAvg.rebuildTime.count)
+    const returnTime = Number(data.retouchTimeAvg.rebuildTime.sum)
+    createData['returnToRebuildTime'] = getAvg(returnTime * 1000, returnCount)
+    return createData
   })
 }
 

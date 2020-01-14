@@ -12,7 +12,9 @@
         >
           {{ listItem.value }}
         </el-link>
-        <template v-else-if="!listItem.link">{{ listItem.value }}</template>
+        <template v-else-if="!listItem.link">
+          <div class="content-text" v-html="isTwoData(listItem.value)" />
+        </template>
         <router-link v-else :to="listItem.link">{{ listItem.value }}</router-link>
       </div>
     </div>
@@ -43,6 +45,20 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 判断是否是数组信息
+     */
+    isTwoData (value) {
+      const isArray = Array.isArray(value)
+      if (isArray) {
+        let htmlText = ''
+        value.forEach(item => {
+          htmlText += `<span class="row-item">${item}</span>`
+        })
+        return htmlText
+      }
+      return value
+    },
     /**
      * @description 更改父级组件
      */
@@ -98,6 +114,11 @@ export default {
     height: 58px;
     background-color: #fff;
 
+    .content-text {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
     .el-router-link {
       text-decoration: underline;
     }
@@ -105,6 +126,16 @@ export default {
     a {
       color: @blue;
     }
+  }
+}
+</style>
+
+<style lang="less">
+.list-tabel {
+  .row-item {
+    display: block;
+    width: 100%;
+    transform: translateY(-10px);
   }
 }
 </style>

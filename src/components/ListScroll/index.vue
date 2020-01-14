@@ -19,10 +19,13 @@
     <div
       v-if="hasMoreData"
       :style="{
-        height: distance + 'px'
+        height: distance + 'px',
+        fontSize: distance + 'px'
       }"
       class="load-more-gif"
-    >loading...</div>
+    >
+      <i class="el-icon-loading" />
+    </div>
   </div>
 </template>
 
@@ -89,6 +92,7 @@ export default {
     initData () {
       // init all data
       this.lastScrollTop = null
+      this.canLoadmore = true
       this._rowsInWindow = Math.ceil(this.$el.offsetHeight / this.height) // 显示窗口展示的行数
       this._above = this._rowsInWindow * 2 // 列表上面的元素
       this._below = this._rowsInWindow // 屏幕下面的元素
@@ -122,6 +126,7 @@ export default {
     async loadmore (from, to) {
       if (!this.canLoadmore) return
       this.canLoadmore = false
+      this.hasMoreData = true
       const data = await this.loadMoreData()
       if (!data.length) {
         this.hasMoreData = false
@@ -187,6 +192,8 @@ export default {
 </script>
 
 <style lang="less">
+@import "~@/styles/variables.less";
+
 .list-scroll {
   width: 100%;
   height: 100%;
@@ -213,12 +220,10 @@ export default {
 
   .load-more-gif {
     width: 100%;
-    height: 44px;
     text-align: center;
-    line-height: 44px;
     background: #fff;
     border-top: none;
-    color: #48b884;
+    color: @blue;
   }
 }
 </style>

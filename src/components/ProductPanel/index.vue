@@ -1,7 +1,8 @@
 <template>
   <div v-loading="productLoading" class="product-panel">
     <transfer-extend
-      :default-checked-keys="defaultCheckedKeys"
+      v-if="!productLoading"
+      :default-checked-keys="defaultChecks"
       :from-data="fromData"
       :title="title"
       mode="transfer"
@@ -24,17 +25,40 @@ export default {
   name: 'ProductPanel',
   components: { TransferExtend },
   props: {
-    defaultCheckedKeys: { type: Array, default: () => [] } // 默认选中组员
+    defaultCheckedKeys: { type: Array, default: () => [] }, // 默认选中组员
+    disabledChecked: { type: Array, default: null } // 禁止选中
   },
   data () {
     return {
       fromData: [], // 源数据
       title: ['可选产品', '已选产品'], // 人员选中列表
-      productLoading: true
+      productLoading: true,
+      defaultChecks: []
     }
   },
-  created () {
-    this.getAllProductPanel()
+  watch: {
+    defaultCheckedKeys: {
+      handler (value) {
+        const disabledChecked = this.disabledChecked || []
+        const data = new Set([...this.defaultCheckedKeys, ...disabledChecked])
+        this.defaultChecks = [...data]
+      },
+      immediate: true
+    },
+    disabledChecked: {
+      handler (value) {
+        const data = new Set([...this.defaultCheckedKeys, ...value])
+        this.defaultChecks = [...data]
+        this.getAllProductPanel(value)
+      },
+      immediate: false
+    }
+  },
+  mounted () {
+    if (!this.disabledChecked) {
+      this.defaultChecks = this.defaultCheckedKeys
+      this.getAllProductPanel()
+    }
   },
   methods: {
     /**
@@ -59,10 +83,10 @@ export default {
     /**
      * @description 获取全部产品
      */
-    async getAllProductPanel () {
-      const list = await Product.getAllProductPanel()
+    async getAllProductPanel (disabledId) {
+      this.productLoading = true
+      const list = await Product.getAllProductPanel(disabledId)
       this.fromData = JSON.parse(JSON.stringify(list))
-      this.$emit('update:isLoadingDown', true)
       this.productLoading = false
     }
   }
@@ -70,6 +94,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.product-panel {
+  height: 540px;
+
+  ::-webkit-scrollbar {
+    height: 8px;
+  }
+}
+
 .staff-panel {
   display: flex;
   width: 800px;

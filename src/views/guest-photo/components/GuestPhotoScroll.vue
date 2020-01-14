@@ -49,7 +49,7 @@
       </div>
     </div>
     <div
-      ref="tableBox"
+      id="tableBox"
       class="search-data table-box"
       :style="{
         height: searchDataBox + 'px'
@@ -138,32 +138,25 @@ export default {
       this.resizeWindow(data)
     })
   },
-  destroyed () {
-    this.$ipcRenderer.removeAllListeners('win-resize')
-  },
   methods: {
     /**
      * @description 窗口调整大小后事件
      */
     resizeWindow (data) {
+      if (this.routeName !== this.$route.name) return
       const height = data ? data[1] : null
       const otherHeight = 310
       const paddingWidth = 48
       const photoBoxWidth = 253
       const AppHeight = height || window.innerHeight
-      const searchDataWidth = this.$refs['tableBox'].offsetWidth - paddingWidth
+      const tableBoxDom = document.querySelector('#tableBox')
+      const searchDataWidth = tableBoxDom.offsetWidth - paddingWidth
       this.searchDataBox = AppHeight - otherHeight
       const columnCount = parseInt(searchDataWidth / photoBoxWidth)
       if (this.columnCount === columnCount) return
+      if (!this.timeSpan) return
       this.getPhotoList()
       this.columnCount = columnCount
-      console.log(this.columnCount)
-    },
-    /**
-     * @description 页面变化
-     */
-    handleCurrentChange () {
-      this.getPhotoList()
     },
     /**
      * @description 跳转到客片池详情
@@ -242,10 +235,10 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
         this.photos = this.handleRowData(data) || []
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
@@ -334,10 +327,6 @@ export default {
       display: inline-block;
       cursor: pointer;
       height: 253px;
-    }
-
-    .page-box {
-      width: 100%;
     }
 
     .no-data {

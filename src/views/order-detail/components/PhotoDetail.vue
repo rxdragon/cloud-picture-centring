@@ -45,7 +45,7 @@
     <!-- 图片列表 -->
     <div class="photo-list">
       <div v-for="(photo, photoIndex) in photoData.photoVersion" :key="photoIndex" class="photo-box">
-        <photo-box :tags="photoData.tags" preview photo-name downing :src="photo.path">
+        <photo-box :tags="photoData.tags" :is-lekima="photo.isLekima" preview photo-name downing :src="photo.path">
           <template v-slot:title>
             <span class="lable-title">{{ photo.version | toPhotoVerName }}</span>
           </template>

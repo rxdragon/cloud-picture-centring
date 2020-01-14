@@ -4,7 +4,12 @@
     <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="修图标准">
         <template slot-scope="scope">
-          {{ scope.row.retouchStandard | toRetouchClass }}
+          <div class="standard-box">
+            {{ scope.row.retouchStandard | toRetouchClass }}
+            <div class="standard-icon">
+              <div :class="`iconmap-standard-${scope.row.retouchStandard}`" />
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="baseTime" label="基础时间" />
