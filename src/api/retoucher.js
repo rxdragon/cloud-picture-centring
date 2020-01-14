@@ -104,10 +104,10 @@ export function getRetouchQuota (params) {
       pullNum: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
       overNum: data.overNum,
       retouchIncomeInfo: {
-        getIncome: Number(data.retouchIncome).toFixed(2),
+        getIncome: (Number(data.retouchIncome) - rewardIncome + punishIncome).toFixed(2),
         rewardIncome: rewardIncome.toFixed(2),
         punishIncome: punishIncome.toFixed(2),
-        actualIncome: (Number(data.retouchIncome) + rewardIncome - punishIncome).toFixed(2)
+        actualIncome: Number(data.retouchIncome).toFixed(2)
       },
       exp: data.exp,
       lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),

@@ -59,7 +59,9 @@ export default {
             const multi = this.chartData.rows[p.dataIndex].multi
             return `单人：${single}\n多人：${multi}`
           }
-        }
+        },
+        startAngle: 45,
+        minShowLabelAngle: 1
       }
     }
     return {

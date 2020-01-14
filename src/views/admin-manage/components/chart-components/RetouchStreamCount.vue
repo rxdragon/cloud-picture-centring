@@ -55,7 +55,9 @@ export default {
           formatter: (p) => {
             return p.data.value + '单'
           }
-        }
+        },
+        startAngle: 45,
+        minShowLabelAngle: 1
       }
     }
     return {
