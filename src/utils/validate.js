@@ -1,3 +1,4 @@
+import { isObj } from './index.js'
 /**
  * @description 是否是外部链接
  * @param {string} path
@@ -90,6 +91,22 @@ export function isArray (arg) {
  */
 export function isNumber (arg) {
   return !isNaN(arg)
+}
+
+/**
+ * @description 转换成数字
+ * @param {*} arg
+ */
+export function toNumber (arg) {
+  if (!isObj(arg)) {
+    throw new Error('arg is not Object')
+  }
+  for (const key in arg) {
+    if (isNumber(arg[key])) {
+      arg[key] = Number(arg[key])
+    }
+  }
+  return arg
 }
 
 /**

@@ -278,8 +278,10 @@
  修复 预览错误 | [d7dcba3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d7dcba3)
  修复bug | [5b8516c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5b8516c)
  修复id查询失败 | [540520c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/540520c)
+ 修复个人收益错误 | [cfa868e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cfa868e)
  修复传参 工号为字符串 导致的bug | [79a9014](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79a9014)
  修复传参错误 | [724cd64](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/724cd64)
+ 显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
  修复冲量时间时间问题 | [fca083d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fca083d)
  修复分页问题 | [01a28b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01a28b1)
  修复引入path错误 | [f2e41ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f2e41ad)
@@ -312,7 +314,6 @@
  上传校验文件错误 | 上传完成md5校验错误 | [df15e3a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/df15e3a)
  修复两个订单的时候退单一直弹窗 | 修复门店退单 弹窗问题 | [61a7d4f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61a7d4f)
  修复门店退单不显示 | 修复门店退单不显示 | [0f1d87c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0f1d87c)
- 显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
 
 
 ### 🔙 撤销

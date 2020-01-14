@@ -43,6 +43,10 @@
         <span>审核人员</span>
         <reviewer-select v-model="reviewerId" show-all />
       </div>
+      <div class="product-search search-item">
+        <span>产品名称</span>
+        <product-select v-model="productValue" />
+      </div>
     </div>
     <div v-for="photoItem in photoData" :key="photoItem.businessId" class="photo-data module-panel">
       <GradeBox :photo-info="photoItem" />
@@ -66,13 +70,14 @@ import DatePicker from '@/components/DatePicker'
 import GradeBox from './components/GradeBox'
 import StaffSelect from '@SelectBox/StaffSelect'
 import ReviewerSelect from '@SelectBox/ReviewerSelect'
+import ProductSelect from '@SelectBox/ProductSelect'
 import moment from 'moment'
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import { SearchType } from '@/utils/enumerate'
 import { joinTimeSpan } from '@/utils/timespan.js'
 export default {
   name: 'AssessmentHistory',
-  components: { DatePicker, GradeBox, StaffSelect, ReviewerSelect },
+  components: { DatePicker, GradeBox, StaffSelect, ReviewerSelect, ProductSelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -82,6 +87,7 @@ export default {
       staffIds: '', // 修图师 id
       reviewerId: 0, // 审核人id
       photoData: [], // 照片数据
+      productValue: [],
       pager: {
         page: 1,
         pageSize: 10,
@@ -216,6 +222,18 @@ export default {
 
       .el-cascader {
         width: 400px;
+      }
+    }
+
+    .checker-search {
+      .el-select {
+        width: 120px;
+      }
+    }
+
+    .product-search {
+      .el-cascader {
+        width: 222px;
       }
     }
   }

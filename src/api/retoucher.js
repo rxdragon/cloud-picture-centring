@@ -10,7 +10,10 @@ export function getSelfQuota () {
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
-    const todayIncome = Number(data.todayIncome.retouch) + Number(data.todayIncome.impulse) + Number(data.todayIncome.reward)
+    for (const key in data.todayIncome) {
+      data.todayIncome[key] = Number(data.todayIncome[key])
+    }
+    const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward - data.todayIncome.punish
     data.todayIncome = todayIncome.toFixed(2)
     data.todayExp = Number(data.todayExp).toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
@@ -104,10 +107,10 @@ export function getRetouchQuota (params) {
       pullNum: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
       overNum: data.overNum,
       retouchIncomeInfo: {
-        getIncome: (Number(data.retouchIncome) - rewardIncome + punishIncome).toFixed(2),
+        getIncome: Number(data.retouchIncome).toFixed(2),
         rewardIncome: rewardIncome.toFixed(2),
         punishIncome: punishIncome.toFixed(2),
-        actualIncome: Number(data.retouchIncome).toFixed(2)
+        actualIncome: (Number(data.retouchIncome) + rewardIncome - punishIncome).toFixed(2)
       },
       exp: data.exp,
       lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),

@@ -54,22 +54,24 @@ export default {
     this.getRetouchOrgIncome()
   },
   methods: {
+    /**
+     * @description 获取机构绩效
+     */
     async getRetouchOrgIncome () {
-      if (!this.timeSpan) {
-        return this.$newMessage.warning('请输入时间')
-      }
-      const req = {
-        startAt: joinTimeSpan(this.timeSpan[0]),
-        endAt: joinTimeSpan(this.timeSpan[1], 1)
-      }
       try {
+        if (!this.timeSpan) throw new Error('请输入时间')
+        const req = {
+          startAt: joinTimeSpan(this.timeSpan[0]),
+          endAt: joinTimeSpan(this.timeSpan[1], 1)
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         if (this.instituionType) { req.retoucherOrgId = this.instituionType }
         this.tableData = await Institution.getRetouchOrgIncome(req)
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        this.$newMessage.warning(error.message || error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
   }

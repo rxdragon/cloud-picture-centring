@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump } from '../utils'
+import { keyToHump } from '@/utils'
+import { toNumber } from '@/utils/validate'
 
 /**
  * @description 获取修图机构
@@ -140,14 +141,16 @@ export function getRetouchOrgIncome (params) {
     params
   }).then(msg => {
     const createData = msg.map(listItem => {
+      listItem = toNumber(listItem)
+      const deductMoney = listItem.deductionIncome + listItem.punishIncome
       return {
         instituionName: listItem.name,
         soloNum: listItem.singlePhoto,
         multiplayerNum: listItem.manyPhoto,
         earningsCredit: '¥' + listItem.revenueIncome,
         impulseMoney: '¥' + listItem.impulseIncome,
-        deductMoney: '¥' + listItem.deductionIncome,
-        realityMoney: '¥' + (listItem.revenueIncome + listItem.impulseIncome - listItem.deductionIncome)
+        deductMoney: '¥' + deductMoney,
+        realityMoney: '¥' + (listItem.revenueIncome + listItem.impulseIncome - deductMoney)
       }
     })
     return createData

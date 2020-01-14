@@ -52,7 +52,7 @@ export default {
   props: {},
   data () {
     return {
-      activeName: 'OverallPerformance'
+      activeName: 'PartnerPerformance'
     }
   },
   computed: {

@@ -37,7 +37,10 @@ export function getGroupStaffQuotaInfo (params) {
     const avgTime = data.retouchTimeAvg
     const streamCount = parseInt(data.finishStreamNum)
     const photoCount = parseInt(data.finishPhotoNum)
-    const income = Number(data.income.retouch) + Number(data.income.impulse)
+    for (const key in data.income) {
+      data.income[key] = Number(data.income[key])
+    }
+    const income = data.income.retouch + data.income.impulse - data.income.punish
     data.spotCheckNonePhotoNum = data.spotCheckPhotoNum - data.spotCheckPlantPhotoNum - data.spotCheckPullPhotoNum
     const createData = {}
     createData.finishStreamNum = parseInt(data.finishStreamNum) // 修图单量

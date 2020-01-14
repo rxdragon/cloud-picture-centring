@@ -75,9 +75,12 @@ export function getRetoucherQuota (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.retouchSinglePhotoNum = Number(msg.retouchSinglePhotoNum) // 单人修图张数
-    msg.retouchMultiPhotoNum = Number(msg.retouchMultiPhotoNum) // 多人修图张数
-    msg.income = Number(msg.income.impulse) + Number(msg.income.retouch) + Number(msg.income.reward)// 收益
+    msg.retouchSinglePhotoNum = parseInt(msg.retouchSinglePhotoNum) // 单人修图张数
+    msg.retouchMultiPhotoNum = parseInt(msg.retouchMultiPhotoNum) // 多人修图张数
+    for (const key in msg.income) {
+      msg.income[key] = Number(msg.income[key])
+    }
+    msg.income = msg.income.retouch + msg.income.impulse + msg.income.reward - msg.income.punish// 收益
     const reviewCount = Number(msg.retoucherFinishPhotoNum) // 修图张数
     msg.reviewPlantRate = getAvg(msg.reviewPlant, reviewCount) // 审核种草数量
     msg.reviewPullRate = getAvg(msg.reviewPull, reviewCount) // 审核拔草数量
