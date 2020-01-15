@@ -124,6 +124,7 @@ class Ws {
         chat.onReConnectCallback = e => {
           console.log('重新连接')
           this.state = 'connected'
+          this.initializeSendMessage(store.state.permission.isRetoucher)
         }
         // 连接到远程服务器
         chat.start()
