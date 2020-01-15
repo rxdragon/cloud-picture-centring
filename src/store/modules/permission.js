@@ -101,7 +101,6 @@ const actions = {
       commit('SET_ROLES', newPermissionArr)
       // 如果有修图权限 查询在线状态
       if (newRolesArr.includes('WaitRetoucher')) {
-        store.dispatch('user/getRetoucherLineState')
         window.addEventListener('click', () => {
           store.commit('user/SET_ACTIVE_TIME')
         })

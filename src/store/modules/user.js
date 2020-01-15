@@ -175,6 +175,7 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       try {
         const state = await Retoucher.getOnlineState()
+        console.log(state, 'state')
         dispatch('setUserlineState', state)
         resolve()
       } catch (error) {

@@ -63,6 +63,7 @@ class Ws {
   initializeSendMessage (isRetoucher) {
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
+    store.dispatch('user/getRetoucherLineState')
     for (const type of firstSendType) {
       this.sendMessage({ typeName: type })
     }
