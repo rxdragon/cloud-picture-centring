@@ -103,13 +103,17 @@ export default {
     }
   },
   watch: {
-    chartDatas (value) {
-      if (!value.length) return
-      this.chartData.rows = value
+    chartDatas: {
+      handler (value) {
+        if (!value.length) return
+        this.chartData.rows = value
+      },
+      immediate: true
     }
   },
   created () {
     this.chartData.columns = ['name', this.showKey]
+    console.log('created')
   }
 }
 </script>

@@ -108,7 +108,7 @@ class Ws {
         })
         // 消息到来时触发
         chat.onMessageCallback = data => {
-          handleMessage(data)
+          handleMessage(data, chat)
         }
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
