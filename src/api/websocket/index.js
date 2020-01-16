@@ -109,6 +109,7 @@ class Ws {
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
           this.setState('connected')
+          console.log('连接成功', 'onFirstConnectCallback')
           if (this.sendList.length) {
             this.sendList.map(item => this.sendMessage(item))
             this.sendList = []
