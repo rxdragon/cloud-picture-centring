@@ -113,7 +113,6 @@ export default {
   },
   created () {
     this.chartData.columns = ['name', this.showKey]
-    console.log('created')
   }
 }
 </script>
