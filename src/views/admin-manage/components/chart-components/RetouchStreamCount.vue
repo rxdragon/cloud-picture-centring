@@ -5,7 +5,7 @@
       :legend-visible="false"
       :settings="chartSettings"
       :extend="chartExtend"
-      width="320px"
+      width="380px"
       height="320px"
     />
     <div class="data-num">
