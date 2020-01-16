@@ -77,6 +77,7 @@ export default {
       tableDataRate: {
         reviewPlantInfo: { label: '审核种草 / 种草率', value: '- / -', componentSwitch: true, query: SearchType.CheckPlant },
         reviewPullInfo: { label: '审核拔草 / 拔草率', value: '- / -', componentSwitch: true, query: SearchType.CheckPull },
+        lekimaInfo: { label: '利奇马（单/张）', value: '- / -', componentSwitch: true },
         spotCheckPlantInfo: {
           label: '抽查种草 / 种草率',
           value: '- / -',

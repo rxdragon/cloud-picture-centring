@@ -47,6 +47,7 @@ export function getGroupStaffQuotaInfo (params) {
     createData.finishPhotoNum = parseInt(data.finishPhotoNum) // 修图张数
     createData.reworkStreamNum = parseInt(data.reworkStreamNum) // 重修次数
     createData.overTimeStreamNum = parseInt(data.overTimeStreamNum) // 超时单量
+    createData.lekimaInfo = parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum)
     const retouchTime = Number(avgTime.rebuildTime.sum) + Number(avgTime.retouchTime.sum)
     let avgRetouchTimeStream = getAvg(retouchTime, streamCount)
     let avgRetouchTimePhoto = getAvg(retouchTime, photoCount)
