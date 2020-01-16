@@ -53,8 +53,10 @@ export default {
     })
   },
   methods: {
+    /**
+     * @description 重新链接websocket
+     */
     relink () {
-      console.log(this.$ws)
       this.$ws.chat.start()
     }
   }

@@ -1,7 +1,8 @@
 <template>
   <div class="photo">
     <div class="img-box">
-      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
+      <!-- <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div> -->
+      <div class="joint-label">拼接照A-1</div>
       <el-image v-if="useEleImage" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />

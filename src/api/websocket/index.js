@@ -27,7 +27,6 @@ class Ws {
   sendList = [] // 需要发送的消息列表
 
   constructor () {
-    console.log('web构建')
     this.connect()
   }
   // 创建websocket
@@ -83,15 +82,12 @@ class Ws {
       // 未登录
       const xstreamId = SessionTool.getXStreamId('xStreamId')
       const user = SessionTool.getUserInfo('userInfo')
-      console.log(xstreamId, user)
       if (!xstreamId || !user) return
       try {
         this.setState('connecting')
         const WebSocketSignature = await getWebSocketSignature()
-        console.log(WebSocketSignature)
         // 初始化socket配置
         const chat = new MicroWebSocket()
-        console.log(chat)
         const url = getUrlHost(readConfig('microApi') || process.env.VUE_APP_BASE_API)
         chat.debugMode = false // 是否开启debug模式
         chat.autoReconnect = true // 断线后是否自动链接
@@ -113,7 +109,6 @@ class Ws {
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
           this.setState('connected')
-          console.log(this.state)
           if (this.sendList.length) {
             this.sendList.map(item => this.sendMessage(item))
             this.sendList = []
@@ -121,16 +116,16 @@ class Ws {
         }
         // 错误时触发
         chat.onErrorCallback = () => {
-          console.log('错误时触发')
+          console.error('错误时触发')
           this.setState('unConnect')
         }
         // 断开连接时触发
         chat.onDisconnectCallback = () => {
-          console.log('断开连接时触发')
+          console.error('断开连接时触发')
           this.setState('unConnect')
         }
         chat.onReConnectCallback = e => {
-          console.log('重新连接')
+          console.error('重新连接')
           this.setState('connected')
           this.initializeSendMessage(store.state.permission.isRetoucher)
         }

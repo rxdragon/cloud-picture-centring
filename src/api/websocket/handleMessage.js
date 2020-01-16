@@ -8,7 +8,6 @@ import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default function handleMessage (data) {
   if (!data.typeName) return
-  console.log(data)
   const { typeName, typeMessage } = data
   switch (typeName) {
     // 门店退单

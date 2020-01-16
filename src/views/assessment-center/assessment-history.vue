@@ -170,7 +170,6 @@ export default {
       try {
         this.pager.page = page || this.pager.page
         const req = this.getSearchParams()
-        console.log(req)
         if (!req) return false
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AssessmentCenter.getSearchHistory(req)
