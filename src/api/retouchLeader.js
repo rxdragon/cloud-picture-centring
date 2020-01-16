@@ -80,7 +80,7 @@ export function getStaffQuotaInfoGroupByStaff (params) {
       const createItem = {}
       const retouchAllTime = Number(staffInfoItem.retouchTimeAvg.rebuildTime.sum) + Number(staffInfoItem.retouchTimeAvg.retouchTime.sum)
       const retouchPhotoCount = parseInt(staffInfoItem.finishPhotoNum)
-      createItem.name = staffInfoItem.name
+      createItem.name = staffInfoItem.nickname || staffInfoItem.name || '暂无'
       createItem.finishPhotoNum = retouchPhotoCount // 完成张数
       const retouchAvgTimeSec = getAvg(retouchAllTime, retouchPhotoCount)
       createItem.retouchAvgTime = (retouchAvgTimeSec / 60).toFixed(2) // 平均修图时间
