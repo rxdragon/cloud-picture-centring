@@ -31,6 +31,7 @@ class Ws {
   }
   // 创建websocket
   async createChat () {
+    console.log('createChat', '创建websocket')
     if (!this.chat) {
       await this.connect()
     }
@@ -58,6 +59,8 @@ class Ws {
 
   // 发送消息
   async sendMessage (msg) {
+    console.log(this.state, 'state')
+    console.log(msg, 'msg')
     if (this.state === 'unConnect') { await this.createChat() }
     if (this.state === 'connected') {
       this.chat.send(msg)
@@ -67,6 +70,7 @@ class Ws {
   }
 
   initializeSendMessage (isRetoucher) {
+    console.log('initializeSendMessage')
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
     store.dispatch('user/getRetoucherLineState')
