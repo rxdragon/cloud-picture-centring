@@ -174,6 +174,7 @@ export default {
       try {
         if (!this.isRetoucher) {
           await User.logout()
+          this.$ws.stopLink()
           this.$router.push('/login')
           return
         } else {

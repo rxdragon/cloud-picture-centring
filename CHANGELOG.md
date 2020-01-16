@@ -163,6 +163,7 @@
  修复订单详情在最后是关闭 出现两个标签 | [57ea004](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/57ea004)
  修复轮询暂停问题 | [3f02d97](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3f02d97)
  修复重新连接获取新的信息 | [dacf8da](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/dacf8da)
+ 修复非修图师账号不会连接webscoket | [6d04458](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6d04458)
  修复页面跳转问题 | [c50267b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c50267b)
  删除调试代码 | [2494e20](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2494e20)
  取消默认自动上传 | [4f914c4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f914c4)
