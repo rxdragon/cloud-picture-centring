@@ -44,6 +44,13 @@ class Ws {
     }
   }
 
+  setState (webState) {
+    this.state = webState
+    if (store) {
+      store.commit('user/SET_WEB_SCOKET_STATE', webState)
+    }
+  }
+
   // 获取chat
   async getChat () {
     if (!this.chat) { await this.createChat() }
@@ -79,12 +86,12 @@ class Ws {
       console.log(xstreamId, user)
       if (!xstreamId || !user) return
       try {
-        this.state = 'connecting'
-        console.log(this.state)
+        this.setState('connecting')
         const WebSocketSignature = await getWebSocketSignature()
         console.log(WebSocketSignature)
         // 初始化socket配置
         const chat = new MicroWebSocket()
+        console.log(chat)
         const url = getUrlHost(readConfig('microApi') || process.env.VUE_APP_BASE_API)
         chat.debugMode = false // 是否开启debug模式
         chat.autoReconnect = true // 断线后是否自动链接
@@ -105,8 +112,8 @@ class Ws {
         }
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
-          this.state = 'connected'
-          console.log(store.state.permission.isRetoucher, 'connected')
+          this.setState('connected')
+          console.log(this.state)
           if (this.sendList.length) {
             this.sendList.map(item => this.sendMessage(item))
             this.sendList = []
@@ -115,16 +122,16 @@ class Ws {
         // 错误时触发
         chat.onErrorCallback = () => {
           console.log('错误时触发')
-          this.state = 'unConnect'
+          this.setState('unConnect')
         }
         // 断开连接时触发
         chat.onDisconnectCallback = () => {
           console.log('断开连接时触发')
-          this.state = 'unConnect'
+          this.setState('unConnect')
         }
         chat.onReConnectCallback = e => {
           console.log('重新连接')
-          this.state = 'connected'
+          this.setState('connected')
           this.initializeSendMessage(store.state.permission.isRetoucher)
         }
         // 连接到远程服务器
@@ -137,6 +144,5 @@ class Ws {
     })
   }
 }
-console.log(1)
 const chat = new Ws()
 export default chat

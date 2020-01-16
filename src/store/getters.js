@@ -8,6 +8,7 @@ const defaultGetters = {
   nickname: state => state.user.nickname, // 昵称
   lineState: state => state.user.lineState, // 用户在线状态
   name: state => state.user.name, // 真名
+  webSocketState: state => state.user.webSocketState, // webscoket 状态
   loadRoutes: state => state.setting.loadRoutes, // 加载路由加载表
   showCat: state => state.setting.showCat, // 是否显示猫
   showOverTag: state => state.setting.showOverTag, // 是否已上传照片进行标记

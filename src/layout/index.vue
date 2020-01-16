@@ -12,6 +12,13 @@
       </el-aside>
       <!-- 内容 -->
       <el-main class="main-box">
+        <transition name="app-transform" mode="out-in">
+          <div v-show="webSocketState === 'unConnect'" class="web-state">
+            <i class="el-message__icon el-icon-error" />
+            网络连接已断开
+            <el-button class="refush-button" size="mini" icon="el-icon-refresh-left" circle @click="relink" />
+          </div>
+        </transition>
         <TagsView />
         <AppMain />
       </el-main>
@@ -21,6 +28,7 @@
 
 <script>
 import { AppMain, Navbar, TagsView, Sidebar } from './components'
+import { mapGetters } from 'vuex'
 const { ipcRenderer } = window.require('electron')
 export default {
   name: 'Layout',
@@ -29,6 +37,9 @@ export default {
     Navbar,
     TagsView,
     Sidebar
+  },
+  computed: {
+    ...mapGetters(['webSocketState'])
   },
   mounted () {
     ipcRenderer.on('version:find-new', (event, info) => {
@@ -40,6 +51,12 @@ export default {
         ipcRenderer.send('version:do-upgrade')
       }).catch(() => {})
     })
+  },
+  methods: {
+    relink () {
+      console.log(this.$ws)
+      this.$ws.chat.start()
+    }
   }
 }
 </script>
@@ -94,6 +111,33 @@ export default {
 
 .el-container .main-box {
   overflow: inherit;
+
+  .web-state {
+    height: 36px;
+    position: fixed;
+    top: 42px;
+    width: calc(~'100% - @{sideBarWidth}');
+    z-index: 1000;
+    background-color: #fdeae4;
+    color: #fb602d;
+    line-height: 36px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+    .refush-button {
+      padding: 2px;
+      background-color: #fdeae4;
+      color: #fb602d;
+      border-color: #fb602d;
+      margin-left: 10px;
+
+      &:hover {
+        box-shadow: 4px 4px 2px 0 #d4d4d4;
+      }
+    }
+  }
 }
 
 .container-main {

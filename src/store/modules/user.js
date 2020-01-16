@@ -16,6 +16,7 @@ const state = {
   departmentName: '-',
   avatarImg: '',
   lineState: 'offline',
+  webSocketState: 'connecting',
   nextCheckOnlineTime: null,
   checkInterval: 10 * 60 * 1000,
   confirmationCheckInterval: 3 * 60 * 1000
@@ -50,6 +51,9 @@ const mutations = {
   SET_ACTIVE_TIME: (state) => {
     const nowTime = new Date().getTime()
     state.nextCheckOnlineTime = nowTime + state.checkInterval
+  },
+  SET_WEB_SCOKET_STATE: (state, data) => {
+    state.webSocketState = data
   }
 }
 
