@@ -69,8 +69,9 @@ class Ws {
     }
   }
 
-  initializeSendMessage (isRetoucher) {
+  async initializeSendMessage (isRetoucher) {
     console.log('initializeSendMessage')
+    if (!this.chat) { await this.createChat() }
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
     store.dispatch('user/getRetoucherLineState')
