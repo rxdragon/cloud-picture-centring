@@ -21,6 +21,10 @@
         <span>抽查种拔草</span>
         <spot-grass-select v-model="spotCheckType" />
       </div>
+      <div class="lekima-box search-item">
+        <span>利奇马</span>
+        <lekima-select v-model="isLichmaValue" />
+      </div>
       <div class="button-box">
         <el-button type="primary" @click="getStaffRetouchList(1)">查 询</el-button>
       </div>
@@ -72,6 +76,7 @@
 <script>
 import GrassSelect from '@SelectBox/GrassSelect'
 import SpotGrassSelect from '@SelectBox/SpotGrassSelect'
+import LekimaSelect from '@SelectBox/LekimaSelect'
 import CrewSelect from '@SelectBox/CrewSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
@@ -79,7 +84,7 @@ import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'CrewRetouchHistory',
-  components: { GrassSelect, CrewSelect, SpotGrassSelect },
+  components: { GrassSelect, CrewSelect, SpotGrassSelect, LekimaSelect },
   props: {
     isSeachPage: { type: Boolean },
     searchTime: { type: [Object, Array, String], default: () => {} },
@@ -93,6 +98,7 @@ export default {
       spotCheckType: 0, // 抽片类型
       tableData: [],
       staffId: 0,
+      isLichmaValue: '', // 是否利奇马
       pager: {
         page: 1,
         pageSize: 10,
@@ -117,6 +123,9 @@ export default {
         break
       case SearchType.SpotNone:
         this.spotCheckType = this.searchType
+        break
+      case 'isLichma':
+        this.isLichmaValue = 1
         break
       default:
         break
@@ -159,6 +168,7 @@ export default {
           pageSize: this.pager.pageSize,
           page: this.pager.page
         }
+        String(this.isLichmaValue) && (reqData.isLichma = this.isLichmaValue)
         this.auditType && (reqData.plantPull = this.auditType)
         this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
         this.staffId && (reqData.staffId = this.staffId)

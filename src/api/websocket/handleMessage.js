@@ -6,7 +6,7 @@ import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
-export default function handleMessage (data) {
+export default function handleMessage (data, chat) {
   if (!data.typeName) return
   const { typeName, typeMessage } = data
   switch (typeName) {
@@ -28,6 +28,9 @@ export default function handleMessage (data) {
       break
     case 'StaffOffline':
       setStaffOffline()
+      break
+    case 'PleaseReConnect':
+      refuLink(chat)
       break
     default:
       break
@@ -105,4 +108,13 @@ async function getReviewerReceive () {
  */
 function setStaffOffline () {
   store.dispatch('user/setUserlineState', 'offline')
+}
+
+/**
+ * @description 重新连接
+ */
+function refuLink (chat) {
+  chat.stopLink()
+  chat.createChat()
+  chat.initializeSendMessage()
 }

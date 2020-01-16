@@ -279,13 +279,13 @@ export default {
         this.$newMessage.success('进入排队成功')
         this.queueInfo.inQueue = true
         this.getStreamQueueInfo()
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
         if (error === '离线无法加入队列') {
           this.$store.dispatch('user/setUserlineState', 'offline')
         }
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
