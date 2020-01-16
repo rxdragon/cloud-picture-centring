@@ -58,10 +58,8 @@ const mutations = {
     state.showPartnerPerformance = roles.includes('AdminManage.performanceInquire.retoucherQuota')
     state.showAuditPerformance = roles.includes('AdminManage.performanceInquire.reviewQuota')
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
-    // 调试
-    state.showOverallPerformance = roles.includes('AdminManage.performanceInquire.storeEvaluate')
-    // 调试
-    state.showTimeStatistics = roles.includes('AdminManage.performanceInquire.storeEvaluate')
+    state.showOverallPerformance = roles.includes('AdminManage.performanceInquire.overallperformance')
+    state.showTimeStatistics = roles.includes('AdminManage.performanceInquire.timestatistics')
     state.showFlowInfo = roles.includes('AdminManage.workBoard.flowInfo')
     state.showRetouchStreamList = roles.includes('AdminManage.workBoard.retouchStreamList')
     state.showReviewStreamList = roles.includes('AdminManage.workBoard.reviewStreamList')
