@@ -58,13 +58,10 @@ const mutations = {
     state.showPartnerPerformance = roles.includes('AdminManage.performanceInquire.retoucherQuota')
     state.showAuditPerformance = roles.includes('AdminManage.performanceInquire.reviewQuota')
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
-    // TODO 判断是否显示显示总体绩效
-    // state.showOverallPerformance = roles.includes('retoucherQuota')
     // 调试
-    state.showOverallPerformance = true
-    // TODO 判断是否显示用时统计
+    state.showOverallPerformance = roles.includes('AdminManage.performanceInquire.storeEvaluate')
     // 调试
-    state.showTimeStatistics = true
+    state.showTimeStatistics = roles.includes('AdminManage.performanceInquire.storeEvaluate')
     state.showFlowInfo = roles.includes('AdminManage.workBoard.flowInfo')
     state.showRetouchStreamList = roles.includes('AdminManage.workBoard.retouchStreamList')
     state.showReviewStreamList = roles.includes('AdminManage.workBoard.reviewStreamList')

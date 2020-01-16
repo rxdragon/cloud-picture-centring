@@ -169,7 +169,79 @@ const version_2_2_5 = {
       1. <span class="mark-fix">修复</span>更改流水号产品，再删除模版照，导致的流水号被删除问题`
 }
 
+const version_2_3_0 = {
+  title: '2.3.0',
+  time: '2020-01-16',
+  desc: `> 版本概况
+
+  * 利奇马相关功能
+  * 用时统计模块
+  * 总体绩效模块
+  * 门店满意度相关显示
+  * 更改排队接待技术方案
+  
+  > 综合改动
+  
+  * 修图详情页面
+      1. <span class="mark-new">新增</span>利奇马icon显示
+  * websocket
+      1. <span class="mark-new">新增</span>连接断开显示**网络连接已断开**
+      2. <span class="mark-new">新增</span>重新连接按钮
+  
+  > 修图师
+  
+  * 待修订单页面
+      1. <span class="mark-opt">优化</span>接单方式，通过推送方式获取到订单
+      2. <span class="mark-opt">优化</span>上传照片格式不正确，更改提示文案
+      3. <span class="mark-new">新增</span>上传标记，上传覆盖的照片有对应的标记显示
+      4. <span class="mark-new">新增</span>一键上传按钮（需要一键下载，生成对应流水目录才能生效）
+    
+  * 修图历史记录
+      1. <span class="mark-new">新增</span>利奇马张数显示
+  
+  * 个人修图概况
+      1. <span class="mark-opt">优化</span>收益显示方式
+      2. <span class="mark-new">新增</span>利奇马单量/张数显示
+      3. <span class="mark-new">新增</span>修图平均用时（单/张）
+  
+  > 审核专员
+  
+  * 修图审核页面
+      1. <span class="mark-opt">优化</span>接单方式，通过推送方式获取订单
+      2. <span class="mark-new">新增</span>重修标记选择
+  
+  > 云端运营
+  
+  * 云端绩效查询页面
+      1. <span class="mark-new">新增</span>总体绩效查询模块
+      2. <span class="mark-new">新增</span>用时统计查询模块
+  
+  > 修图主管
+  
+  * 组员修图报告
+     1. <span class="mark-new">新增</span>组员报告详情增加平均用时和利奇马数量显示
+     2. <span class="mark-new">新增</span>组员修图张数，平均用时，利奇马张数，审核种草/拔草数据对比
+     3. <span class="mark-new">新增</span>报告详情，增加利奇马数量，门店评分，顾客满意度
+  
+  > 审核主管
+  
+  * 组员审核报告
+    1. <span class="mark-new">新增</span>审核平均用时
+    2. <span class="mark-new">新增</span>全部组员审核报告
+  
+  > 云学院
+  
+  * 云学院评价中心
+     1. <span class="mark-opt">优化</span>订单显示布局
+  
+  * 评价历史记录
+      1. <span class="mark-opt">优化</span>订单显示布局
+      2. <span class="mark-new">新增</span>订单组长显示
+      3. <span class="mark-new">新增</span>新增产品名称查询`
+}
+
 export default [
+  version_2_3_0,
   version_2_2_5,
   version_2_2_4,
   version_2_2_3,
