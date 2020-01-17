@@ -176,6 +176,7 @@ export default {
     background: @jointLabelColor;
     line-height: 16px;
     color: @blue;
+    -webkit-user-select: none;
   }
 
   .photo-name {
@@ -212,6 +213,7 @@ export default {
 
     img {
       object-position: top;
+      -webkit-user-select: none;
     }
   }
 

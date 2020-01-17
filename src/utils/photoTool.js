@@ -46,7 +46,7 @@ export function handlePicPath (path, type) {
  */
 export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
   const PhotoEnumArr = [NoReturnPhotoEnum, ReturnOnePhotoEnum, PhotoEnum]
-  const createData = []
+  let createData = []
   const PhotoEnums = reworkTimes < 2 ? [...PhotoEnumArr[reworkTimes]] : [...PhotoEnumArr[2]]
   if (storeReturn) {
     const findCompeteIndex = PhotoEnums.findIndex(item => item === 'complete_photo')
@@ -58,8 +58,13 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
     const findFinishPhoto = photoArr.find(photoItem => photoItem.version === 'finish_photo')
     if (version === 'last_retouch_photo' && !findFinishPhoto) break
     if (version === 'store_rework' && !findFinishPhoto) break
-    const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
-    if (findVersionPhoto) { createData.push(findVersionPhoto) }
+    if (version === 'complete_photo') {
+      const findVersionPhotos = photoArr.filter(photoItem => photoItem.version === version)
+      if (findVersionPhotos) { createData = [...createData, ...findVersionPhotos] }
+    } else {
+      const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
+      if (findVersionPhoto) { createData.push(findVersionPhoto) }
+    }
   }
   return createData
 }

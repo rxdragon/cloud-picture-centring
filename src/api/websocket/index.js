@@ -31,14 +31,15 @@ class Ws {
   }
   // 创建websocket
   async createChat () {
-    console.log('createChat', '创建websocket')
     if (!this.chat) {
+      console.log('createChat', '创建websocket')
       await this.connect()
     }
   }
 
   stopLink () {
     if (this.chat) {
+      console.log('关闭chat')
       this.chat.stop()
       this.chat = null
     }
@@ -109,7 +110,7 @@ class Ws {
         })
         // 消息到来时触发
         chat.onMessageCallback = data => {
-          handleMessage(data, chat)
+          handleMessage(data, this)
         }
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {

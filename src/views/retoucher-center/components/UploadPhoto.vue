@@ -57,6 +57,7 @@
           :before-upload="beforeUpload"
           :on-progress="handleProgress"
           :on-success="handleSuccess"
+          :on-error="handleError"
           :file-list="uploadPhoto"
           :data="upyunConfig"
         >
@@ -76,6 +77,7 @@
 import { mapGetters } from 'vuex'
 import variables from '@/styles/variables.less'
 import PhotoBox from '@/components/PhotoBox'
+import { logUpload } from './log'
 import * as Commonality from '@/api/commonality'
 import * as SessionTool from '@/utils/sessionTool'
 import * as PhotoTool from '@/utils/photoTool'
@@ -143,10 +145,22 @@ export default {
         this.getCachePhoto()
       },
       immediate: true
+    },
+    '$route': {
+      handler (value) {
+        console.log(value)
+      }
     }
   },
   created () {
     this.getUpyunSign()
+  },
+  beforeDestroy () {
+    const findUploadingPhotoArr = this.uploadPhoto.filter(item => !item.response)
+    for (const uploadingItem of findUploadingPhotoArr) {
+      this.$refs.uploadButton.abort(uploadingItem)
+      logUpload(uploadingItem, 'refresh')
+    }
   },
   methods: {
     /**
@@ -276,6 +290,8 @@ export default {
         this.checkHasSaveName(file) // 判断是否与原片名字相同
         this.checkPsPhoto(file, uploadPhotoMd5) // 判断图片是否修改
         this.checkHasUploadedPhoto(file) // 判断是否已经上传
+        file.startTime = Date.now() / 1000
+        file.md5Name = uploadPhotoMd5
         return Promise.resolve()
       } catch (error) {
         console.error(error)
@@ -309,6 +325,7 @@ export default {
         try {
           const info = await PhotoTool.getImgBufferPhoto(file.raw)
           const selfMd5 = info.md5
+          logUpload(file)
           if (!file.response.url.includes(selfMd5)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
             if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
@@ -338,6 +355,20 @@ export default {
       }
       if (filePath && !this.finishPhoto[uid].path) { this.$set(this.finishPhoto[uid], 'path', filePath) }
       this.$emit('change', this.finishPhoto)
+    },
+    /**
+     * @description 上传失败钩子
+     * @param {*} err 错误信息
+     * @param {*} file 上传失败单文件
+     * @param {*} fileList 上传文件列表
+     */
+    async handleError (err, file, fileList) {
+      try {
+        console.error(err)
+        logUpload(file, 'error')
+      } catch (error) {
+        console.error(error)
+      }
     },
     /**
      * @description 移除文件

@@ -113,8 +113,8 @@ function setStaffOffline () {
 /**
  * @description 重新连接
  */
-function refuLink (chat) {
+async function refuLink (chat) {
+  console.log(chat, 'refuLink')
   chat.stopLink()
-  chat.createChat()
-  chat.initializeSendMessage()
+  await chat.initializeSendMessage()
 }

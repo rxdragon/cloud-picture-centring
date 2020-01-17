@@ -57,8 +57,7 @@ router.beforeEach(async (to, from, next) => {
       goLogin()
     }
   } else {
-    // 没有xStreamId
-    goLogin()
+    goLogin() // 没有xStreamId
   }
 })
 
