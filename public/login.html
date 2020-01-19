@@ -21,9 +21,17 @@
     height: 100vh;
     -webkit-app-region: drag;
   }
+
+  #bm video {
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
 </style>
 <body>
-  <div id="bm" />
+  <div id="bm">
+    <video id="videoDom" src="./总合成.mp4" autoplay></video>
+  </div>
 </body>
 <script src="./login.js"></script>
 <script>
@@ -40,15 +48,29 @@
     }
   }
   getToken()
-  var animation = bodymovin.loadAnimation({
-    container: document.getElementById('bm'),
-    renderer: 'svg',
-    loop: false,
-    autoplay: true,
-    path: 'demo.json'
-  })
-  animation.onComplete = () => {
-    window.parent.postMessage({type: "animation-finish", msg: 'animationFinish'}, "*")
+  const startTime = 1579536000000
+  const endTime = 1580486400000
+  const nowDate = new Date().getTime()
+  const isNewYear = startTime < nowDate && nowDate < endTime
+  if (isNewYear) {
+    const dom = document.getElementById('bm')
+    const videoDom = document.getElementById('videoDom')
+    videoDom.style.display = 'block'
+    dom.style.backgroundColor = '#CF1D00'
+    setTimeout(() => {
+      window.parent.postMessage({type: "animation-finish", msg: 'animationFinish'}, "*")
+    }, 4000)
+  } else {
+    const animation = bodymovin.loadAnimation({
+      container: document.getElementById('bm'),
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      path: 'demo.json'
+    })
+    animation.onComplete = () => {
+      window.parent.postMessage({type: "animation-finish", msg: 'animationFinish'}, "*")
+    }
   }
 </script>
 </html>
