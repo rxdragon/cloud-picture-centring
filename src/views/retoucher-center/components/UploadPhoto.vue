@@ -145,11 +145,6 @@ export default {
         this.getCachePhoto()
       },
       immediate: true
-    },
-    '$route': {
-      handler (value) {
-        console.log(value)
-      }
     }
   },
   created () {

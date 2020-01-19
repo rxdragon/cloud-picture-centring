@@ -29,9 +29,6 @@ export default function handleMessage (data, chat) {
     case 'StaffOffline':
       setStaffOffline()
       break
-    case 'PleaseReConnect':
-      refuLink(chat)
-      break
     default:
       break
   }
@@ -108,13 +105,4 @@ async function getReviewerReceive () {
  */
 function setStaffOffline () {
   store.dispatch('user/setUserlineState', 'offline')
-}
-
-/**
- * @description 重新连接
- */
-async function refuLink (chat) {
-  console.log(chat, 'refuLink')
-  chat.stopLink()
-  await chat.initializeSendMessage()
 }

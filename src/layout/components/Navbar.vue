@@ -167,22 +167,23 @@ export default {
           this.loading = false
         })
     },
+    async logoutReset () {
+      await User.logout()
+      this.$ws.stopLink()
+      this.$router.push('/login')
+    },
     /**
      * @description 退出登录
      */
     async logout () {
       try {
         if (!this.isRetoucher) {
-          await User.logout()
-          this.$ws.stopLink()
-          this.$router.push('/login')
+          await this.logoutReset()
           return
         } else {
           Retoucher.changeOffline()
             .then(async () => {
-              await User.logout()
-              this.$ws.stopLink()
-              this.$router.push('/login')
+              await this.logoutReset()
             })
             .catch(() => {
               this.$confirm('', '您当前有需要处理的订单暂不可退出系统', {

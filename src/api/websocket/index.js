@@ -33,7 +33,11 @@ class Ws {
   async createChat () {
     if (!this.chat) {
       console.log('createChat', '创建websocket')
-      await this.connect()
+      try {
+        await this.connect()
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 
@@ -71,7 +75,6 @@ class Ws {
   }
 
   async initializeSendMessage (isRetoucher) {
-    console.log('initializeSendMessage')
     if (!this.chat) { await this.createChat() }
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
@@ -83,12 +86,16 @@ class Ws {
 
   // 链接websocket
   connect (options) {
-    return new Promise(async resolve => {
-      if (this.state === 'connecting' || this.state === 'connected') return
+    return new Promise(async (resolve, reject) => {
+      if (this.state === 'connecting' || this.state === 'connected') {
+        return reject('isConnected')
+      }
       // 未登录
       const xstreamId = SessionTool.getXStreamId('xStreamId')
       const user = SessionTool.getUserInfo('userInfo')
-      if (!xstreamId || !user) return
+      if (!xstreamId || !user) {
+        return reject('notLogin')
+      }
       try {
         this.setState('connecting')
         const WebSocketSignature = await getWebSocketSignature()
@@ -146,5 +153,4 @@ class Ws {
     })
   }
 }
-const chat = new Ws()
-export default chat
+export default Ws

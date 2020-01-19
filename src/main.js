@@ -5,7 +5,6 @@ import store from './store' // vuex
 import lottie from 'lottie-web'
 import * as filters from './filters' // 全局过滤器
 import { ipcRenderer } from 'electron'
-import chat from '@/api/websocket'
 import { eventEmitter } from './plugins/eventemitter.js' // ui布局
 import './plugins/element.js' // ui布局
 import './plugins/charts.js' // charts框架
@@ -19,7 +18,6 @@ import '@/directive'
 
 window.bodymovin = lottie
 // 注册websocket
-Vue.prototype.$ws = chat
 Vue.prototype.$eventEmitter = eventEmitter
 
 // 注入全局过滤器
