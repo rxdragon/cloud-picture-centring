@@ -55,7 +55,7 @@ export default {
     }
   },
   mounted () {
-    if (!this.disabledChecked) {
+    if (!this.disabledChecked || !this.disabledChecked.length) {
       this.defaultChecks = this.defaultCheckedKeys
       this.getAllProductPanel()
     }
