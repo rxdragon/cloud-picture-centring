@@ -30,7 +30,7 @@
 </style>
 <body>
   <div id="bm">
-    <video id="videoDom" src="./总合成.mp4" autoplay></video>
+    <video id="videoDom" src="./总合成.mp4"></video>
   </div>
 </body>
 <script src="./login.js"></script>
@@ -55,6 +55,7 @@
   if (isNewYear) {
     const dom = document.getElementById('bm')
     const videoDom = document.getElementById('videoDom')
+    videoDom.autoplay = true
     videoDom.style.display = 'block'
     dom.style.backgroundColor = '#CF1D00'
     setTimeout(() => {
