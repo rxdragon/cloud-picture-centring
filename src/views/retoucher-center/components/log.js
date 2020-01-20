@@ -5,7 +5,7 @@ const logger = new AliyunLog(
   'cn-hangzhou.log.aliyuncs.com',
   process.env.VUE_APP_ALILOG_NAME,
   'web_tracking',
-  'store_photo_upload_result'
+  'cloud_photo_upload_result'
 )
 
 /**
