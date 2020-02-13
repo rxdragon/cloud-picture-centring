@@ -49,24 +49,16 @@
       </div>
     </div>
     <!-- 订单数据 -->
-    <grade-box
+    <grade-preview v-if="gradeInfo && showGradePreview" :show.sync="showGradePreview" :info="gradeInfo" />
+    <el-button @click="showPreview">冲！冲！冲！</el-button>
+    <!-- <grade-box
       v-for="photoItem in photoData"
       :key="photoItem.businessId"
       is-grade
       class="photo-data module-panel"
       :photo-info="photoItem"
       @finsihed="resetPage"
-    />
-    <div class="page-box">
-      <el-pagination
-        :hide-on-single-page="true"
-        :current-page.sync="pager.page"
-        :page-size="pager.pageSize"
-        layout="prev, pager, next"
-        :total="pager.total"
-        @current-change="handlePage"
-      />
-    </div>
+    /> -->
     <el-dialog
       width="300px"
       class="spot-success"
@@ -85,7 +77,8 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import InstitutionType from '@SelectBox/InstitutionType'
-import GradeBox from './components/GradeBox'
+// import GradeBox from './components/GradeBox'
+import GradePreview from './components/GradePreview'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import { PhotoEnumName } from '@/utils/enumerate.js'
@@ -93,7 +86,7 @@ import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
 
 export default {
   name: 'CloudAssessment',
-  components: { DatePicker, InstitutionType, GradeBox },
+  components: { DatePicker, InstitutionType, GradePreview },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -112,13 +105,22 @@ export default {
       headerClass: '', // 顶部class
       isTakePhoto: false, // 是第一次抽取的照片
       todayInfo: {},
+      showGradePreview: false, // 是否显示打分概况
       dialogTableVisible: false // 抽取成功弹框
+    }
+  },
+  computed: {
+    gradeInfo () {
+      return this.photoData[1] || null
     }
   },
   created () {
     this.resetPage()
   },
   methods: {
+    showPreview () {
+      this.showGradePreview = true
+    },
     /**
      * @description 一键下载
      */
@@ -249,12 +251,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
-    },
-    /**
-     * @description 监听页面变更
-     */
-    handlePage () {
-      this.getSpotCheckResult()
     }
   }
 }
@@ -321,11 +317,6 @@ export default {
 
   .photo-data {
     margin-bottom: 24px;
-  }
-
-  .page-box {
-    margin-top: 24px;
-    text-align: center;
   }
 
   .spot-success {
