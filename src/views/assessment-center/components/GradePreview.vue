@@ -11,6 +11,9 @@
         <div class="tool" @click="createCanvas">
           <i class="el-icon-edit" />
         </div>
+        <div class="tool" @click="blowup">
+          <i class="el-icon-search" />
+        </div>
       </div>
       <div class="photo-show">
         <div v-loading="loading" class="orginPhoto" :style="inZoomIn && 'cursor: zoom-out;'">
@@ -24,7 +27,7 @@
             @click="zoom"
           >
           <div id="_magnifier_layer" />
-          <canvas v-show="showCanvas" id="mark-canvas" ref="mark-canvas" />
+          <fabric-canvas v-if="showCanvas" :optionObj="canvasOption" />
         </div>
         <!-- left按钮 -->
         <button
@@ -97,6 +100,7 @@
 import { mapGetters } from 'vuex'
 import OrderInfoModule from './OrderInfoModule'
 import labelMock from './labelMock'
+import FabricCanvas from './FabricCanvas'
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule },
@@ -138,7 +142,11 @@ export default {
       photoZoomStyle: '',
       labelData: labelMock,
       cacheLabel: [], // 缓存标签
-      showCanvas: false
+      showCanvas: false,
+      canvasOption: {
+        width: 200,
+        height: 200
+      }
     }
   },
   computed: {
@@ -341,9 +349,18 @@ export default {
       this.loading = true
     },
     /**
+     * @description 允许放大图片按钮
+     */
+    blowup () {
+      // TODO 允许放大按钮
+      console.dir(this.$refs['orgin-img'])
+    },
+    /**
      * @description 放大
      */
     zoom (e) {
+      // TODO 调试
+      return
       if (this.inZoomIn) {
         this.photoZoomStyle = ''
         this.inZoomIn = false
@@ -381,14 +398,10 @@ export default {
      */
     createCanvas () {
       const orginImgDom = this.$refs['orgin-img']
-      const canvasDom = this.$refs['mark-canvas']
       const canvasWidth = orginImgDom.clientWidth
       const canvasHeight = orginImgDom.clientHeight
-      console.dir(orginImgDom)
-      canvasDom.width = canvasWidth
-      canvasDom.height = canvasHeight
-      console.log(canvasWidth, canvasHeight)
-
+      this.canvasOption.width = canvasWidth
+      this.canvasOption.height = canvasHeight
       this.showCanvas = true
     }
   }
