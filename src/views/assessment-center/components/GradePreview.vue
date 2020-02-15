@@ -7,27 +7,57 @@
       </button>
     </div>
     <div class="photoBox">
+      <!-- 画板工具 -->
       <div class="photo-tool">
-        <div class="tool" @click="createCanvas">
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'move' }" @click.capture="changeDrawType('move')">
+          <i class="el-icon-rank" data-type="move" />
+        </div>
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="createCanvas">
           <i class="el-icon-edit" />
         </div>
-        <div class="tool" @click="blowup">
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'arrow' }" @click="changeDrawType('arrow')">
+          <i class="el-icon-top-right" />
+        </div>
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'ellipse' }" @click="changeDrawType('ellipse')">
+          <i class="el-icon-circle-plus-outline" />
+        </div>
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'line' }" @click="changeDrawType('line')">
+          <i class="el-icon-minus" />
+        </div>
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'blowup' }" @click="changeDrawType('blowup')">
           <i class="el-icon-search" />
+        </div>
+        <div class="tool" @click="changeDrawType('delete')">
+          <i class="el-icon-delete" />
+        </div>
+        <el-popover
+          placement="right"
+          width="200"
+          popper-class="tool-line"
+          trigger="click"
+        >
+          <el-slider v-model="canvasOption.lineWidth" />
+          <div slot="reference" class="tool">
+            <i class="el-icon-s-operation" />
+          </div>
+        </el-popover>
+        <div class="tool tool-color">
+          <el-color-picker v-model="canvasOption.penColor" size="mini" />
         </div>
       </div>
       <div class="photo-show">
-        <div v-loading="loading" class="orginPhoto" :style="inZoomIn && 'cursor: zoom-out;'">
+        <div v-loading="loading" class="orginPhoto">
           <img
             id="orginImg"
             ref="orgin-img"
-            :style="photoZoomStyle"
+            :style="photoZoomStyle + (inZoomIn && 'cursor: zoom-out;')"
             :src="showPhoto.src"
             :alt="showPhoto.title"
             @load="loadingPhoto"
             @click="zoom"
           >
           <div id="_magnifier_layer" />
-          <fabric-canvas v-if="showCanvas" :optionObj="canvasOption" />
+          <fabric-canvas v-if="showCanvas" ref="fabric-canvas" :style="photoZoomStyle" :option-obj="canvasOption" @cancelDeleteLabel="addDeleteLabel" @click.native="zoom" />
         </div>
         <!-- left按钮 -->
         <button
@@ -83,6 +113,7 @@
                   :key="'issue' + issueItem.id"
                   :class="`issue-tag-${labelClassIndex}`"
                   size="medium"
+                  disable-transitions
                   @click="setLabel(issueItem)"
                 >
                   {{ issueItem.label }}
@@ -103,7 +134,7 @@ import labelMock from './labelMock'
 import FabricCanvas from './FabricCanvas'
 export default {
   name: 'GradePreview',
-  components: { OrderInfoModule },
+  components: { OrderInfoModule, FabricCanvas },
   props: {
     info: { type: Object, required: true },
     configs: {
@@ -140,13 +171,16 @@ export default {
       driver: null,
       inZoomIn: false,
       photoZoomStyle: '',
-      labelData: labelMock,
-      cacheLabel: [], // 缓存标签
+      labelData: [],
       showCanvas: false,
       canvasOption: {
         width: 200,
-        height: 200
-      }
+        height: 200,
+        penColor: '#E34F51',
+        lineWidth: 2,
+        drawType: ''
+      },
+      cacheLabel: []
     }
   },
   computed: {
@@ -165,6 +199,7 @@ export default {
   },
   created () {
     console.log(this.info)
+    this.labelData = JSON.parse(JSON.stringify(labelMock))
   },
   mounted () {
     /**
@@ -172,6 +207,7 @@ export default {
      */
     document.onkeydown = e => {
       const key = window.event.keyCode
+      console.log(key)
       switch (key) {
         case 49:
         case 50:
@@ -205,6 +241,9 @@ export default {
           break
         case 16:
           this.isShow = !this.isShow
+          break
+        case 8:
+          this.changeDrawType('delete')
           break
         default:
           break
@@ -349,18 +388,10 @@ export default {
       this.loading = true
     },
     /**
-     * @description 允许放大图片按钮
-     */
-    blowup () {
-      // TODO 允许放大按钮
-      console.dir(this.$refs['orgin-img'])
-    },
-    /**
      * @description 放大
      */
     zoom (e) {
-      // TODO 调试
-      return
+      if (this.canvasOption.drawType !== 'blowup') return
       if (this.inZoomIn) {
         this.photoZoomStyle = ''
         this.inZoomIn = false
@@ -385,11 +416,13 @@ export default {
      * @description 设置标签
      */
     setLabel (issueItem) {
+      if (!this.showCanvas) return
       this.labelData.forEach(classItem => {
         const findIssueLabelIndex = classItem.issueData.findIndex(issueLabel => issueLabel.id === issueItem.id)
         if (findIssueLabelIndex >= 0) {
           const setLabelData = classItem.issueData.splice(findIssueLabelIndex, 1)
-          this.cacheLabel.push(setLabelData)
+          this.cacheLabel.push(...setLabelData)
+          this.$refs['fabric-canvas'].createLabel(...setLabelData)
         }
       })
     },
@@ -397,12 +430,35 @@ export default {
      * @description 创建canvas
      */
     createCanvas () {
-      const orginImgDom = this.$refs['orgin-img']
-      const canvasWidth = orginImgDom.clientWidth
-      const canvasHeight = orginImgDom.clientHeight
-      this.canvasOption.width = canvasWidth
-      this.canvasOption.height = canvasHeight
-      this.showCanvas = true
+      if (!this.showCanvas) {
+        const orginImgDom = this.$refs['orgin-img']
+        const canvasWidth = orginImgDom.clientWidth
+        const canvasHeight = orginImgDom.clientHeight
+        this.canvasOption.width = canvasWidth
+        this.canvasOption.height = canvasHeight
+        this.showCanvas = true
+      }
+      this.changeDrawType('pen')
+    },
+    changeDrawType (drawType) {
+      if (drawType !== 'blowup' && !this.showCanvas) {
+        this.$newMessage.warning('请创建画板')
+        return
+      }
+      if (drawType === 'blowup' && this.inZoomIn) {
+        this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
+      }
+      this.canvasOption.drawType = drawType
+    },
+    /**
+     * @description 撤销删除标签
+     */
+    addDeleteLabel (data) {
+      console.log(data, 'addDeleteLabel')
+      const findIssueClass = this.labelData.find(labelClassItem => labelClassItem.id === data.pid)
+      const findIssueLabelIndex = this.cacheLabel.findIndex(labelItem => labelItem.id === data.id)
+      if (findIssueClass) { findIssueClass.issueData.push(data) }
+      if (findIssueLabelIndex >= 0) { this.cacheLabel.splice(findIssueLabelIndex, 1) }
     }
   }
 }
@@ -481,6 +537,21 @@ export default {
           background-color: #fff;
           color: #9d9d9d;
         }
+
+        &.active {
+          background-color: #fff;
+          color: #9d9d9d;
+        }
+      }
+
+      .tool-color {
+        .el-color-picker__trigger {
+          border: none;
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0);
+        }
       }
     }
 
@@ -494,7 +565,6 @@ export default {
         height: 100%;
         margin: auto;
         overflow: hidden;
-        cursor: zoom-in;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -665,6 +735,8 @@ export default {
             .el-tag {
               margin: 0 8px 8px 0;
               font-size: 14px;
+              cursor: pointer;
+              -webkit-user-select: none;
             }
           }
         }
@@ -678,15 +750,26 @@ export default {
     background: #000;
   }
 
-  #mark-canvas {
-    position: absolute;
-    z-index: 4000;
-  }
-
   .el-loading-mask {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
+  }
+}
+</style>
+
+<style lang="less">
+.grade-preview {
+  .tool-color {
+    .el-color-picker__trigger {
+      border: none;
+    }
+  }
+}
+
+.tool-line {
+  .el-slider__runway {
+    margin: 0;
   }
 }
 </style>
