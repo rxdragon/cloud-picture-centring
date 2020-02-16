@@ -11,8 +11,6 @@ stages:
     key: cache
     paths:
       - node_modules/
-  variables:
-    ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
   artifacts:
     paths:
       - dist_electron
