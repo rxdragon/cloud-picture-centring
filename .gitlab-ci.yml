@@ -50,7 +50,7 @@ deploy-dev:
 deploy-release:
   extends: .deploy
   script:
-    - yarn
+    - yarn install --ignore-optional
     - yarn run build-release
     - yarn run build-background-release
     - yarn run pack-vue
