@@ -1,4 +1,4 @@
-# 2.0.0 (2020-02-15)
+# 2.0.0 (2020-02-16)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -44,6 +44,7 @@
  新增缓存开关 | [7a285fc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7a285fc)
  无限下拉 | [46e876a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/46e876a)
  更改修图历史纪律 海草数 | [652bd21](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/652bd21)
+ 更新fabric版本 | [267d603](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/267d603)
  格式化代码 | [71faa62](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/71faa62)
  测试版本 | [2abc39b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2abc39b)
  添加注视 | [684c7e8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/684c7e8)
