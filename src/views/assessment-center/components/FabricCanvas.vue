@@ -20,7 +20,8 @@ export default {
       doDrawing: false,
       drawingObject: null, // 去除重读的穿件图像
       cacheIssuse: [], // 缓存问题
-      cacheLabelRow: 0
+      cacheLabelRow: 0,
+      zoom: 1 // canvas 比例系数
     }
   },
   watch: {
@@ -82,6 +83,9 @@ export default {
     this.canvasDom.on('mouse:move', this.onMouseMove)
   },
   methods: {
+    /**
+     * @description 监听canvas鼠标按下
+     */
     onMouseDown (options) {
       console.log(options)
       console.log(this.optionObj.drawType)
@@ -90,6 +94,9 @@ export default {
       this.mouseFrom.y = xy.y
       this.doDrawing = true
     },
+    /**
+     * @description 监听canvas鼠标抬起
+     */
     onMouseUp (options) {
       const xy = this.transformMouse(options.e.offsetX, options.e.offsetY)
       this.mouseTo.x = xy.x
@@ -98,6 +105,9 @@ export default {
       this.moveCount = 1
       this.doDrawing = false
     },
+    /**
+     * @description 监听鼠标移动
+     */
     onMouseMove (options) {
       if (this.moveCount % 2 && !this.doDrawing) return
       this.moveCount++
@@ -106,6 +116,9 @@ export default {
       this.mouseTo.y = xy.y
       this.drawing()
     },
+    /**
+     * @description 绘制图片
+     */
     drawing () {
       if (this.drawingObject) {
         this.canvasDom.remove(this.drawingObject)
@@ -129,24 +142,53 @@ export default {
         this.drawingObject = canvasObject
       }
     },
+    /**
+     * @description 重设canvas 宽高度
+     */
+    resetCanvas () {
+      const imgWidth = this.optionObj.width
+      const imgHeight = this.optionObj.height
+      const canvasWidth = this.canvasDom.width
+      const originWidth = canvasWidth / this.zoom
+      this.zoom = imgWidth / originWidth
+      this.canvasDom.setZoom(this.zoom)
+      this.canvasDom.setWidth(imgWidth)
+      this.canvasDom.setHeight(imgHeight)
+      console.log(this.zoom)
+    },
+    /**
+     * @description 返回鼠标在canvas中的坐标系
+     */
     transformMouse (mouseX, mouseY) {
-      const zoom = 1
+      const zoom = this.zoom
       return { x: mouseX / zoom, y: mouseY / zoom }
     },
+    /**
+     * @description 使用拖动
+     */
     changeMove () {
       this.canvasDom.selection = true
       this.canvasDom.skipTargetFind = false
     },
+    /**
+     * @description 使用笔
+     */
     changePen () {
       this.canvasDom.isDrawingMode = true
       this.canvasDom.selection = false
       this.canvasDom.skipTargetFind = true
     },
+    /**
+     * @description 放大
+     */
     changeBlowup () {
       this.canvasDom.selection = false
       this.canvasDom.isDrawingMode = false
       this.canvasDom.skipTargetFind = true
     },
+    /**
+     * @description 删除
+     */
     deletePath () {
       const selectionObj = this.canvasDom.getActiveObjects()
       for (const selectionItem of selectionObj) {
@@ -159,6 +201,18 @@ export default {
       this.canvasDom.discardActiveObject()
       this.optionObj.drawType = 'move'
     },
+    deleteLabel (labelInfo) {
+      console.log(labelInfo)
+      this.canvasDom.forEachObject(pathItem => {
+        if (pathItem.issueData.id === labelInfo.id) {
+          this.$emit('cancelDeleteLabel', pathItem.issueData)
+          this.canvasDom.remove(pathItem)
+        }
+      })
+    },
+    /**
+     * @description 绘制箭头
+     */
     drawArrow (fromX, fromY, toX, toY, theta, headlen) {
       theta = typeof theta !== 'undefined' ? theta : 30
       headlen = typeof theta !== 'undefined' ? headlen : 10
@@ -183,6 +237,9 @@ export default {
       path += ' L ' + arrowX + ' ' + arrowY
       return path
     },
+    /**
+     * @description 创建箭头
+     */
     createArrow () {
       const color = this.optionObj.penColor
       const drawWidth = this.optionObj.lineWidth
@@ -198,6 +255,9 @@ export default {
       this.canvasDom.add(canvasObject)
       this.drawingObject = canvasObject
     },
+    /**
+     * @description 创建椭圆
+     */
     createEllipse () {
       const color = this.optionObj.penColor
       const drawWidth = this.optionObj.lineWidth
@@ -217,6 +277,9 @@ export default {
       })
       return canvasObject
     },
+    /**
+     * @description 创建直线
+     */
     createLine () {
       const color = this.optionObj.penColor
       const drawWidth = this.optionObj.lineWidth
@@ -229,6 +292,9 @@ export default {
       )
       return canvasObject
     },
+    /**
+     * @description 创建标签
+     */
     createLabel (issueData) {
       const textColor = '#4f71fb'
       const canvasHeight = this.canvasDom.getHeight()

@@ -2,33 +2,37 @@
   <div class="grade-preview">
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}
-      <button id="closeImg" type="button" class="button-close" @click="closePreview">
-        <i class="el-icon-close" />
+      <button type="button" class="button-close" @click="closePreview">
+        <i id="closeImg" class="el-icon-close" />
       </button>
     </div>
     <div class="photoBox">
       <!-- 画板工具 -->
       <div class="photo-tool">
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'move' }" @click.capture="changeDrawType('move')">
-          <i class="el-icon-rank" data-type="move" />
+          <i id="move" class="el-icon-rank" data-type="move" />
+          <span class="shortcut">V</span>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="createCanvas">
-          <i class="el-icon-edit" />
+          <i id="pen" class="el-icon-edit" />
+          <span class="shortcut">B</span>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'arrow' }" @click="changeDrawType('arrow')">
-          <i class="el-icon-top-right" />
+          <i id="arrow" class="el-icon-top-right" />
+          <span class="shortcut">C</span>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'ellipse' }" @click="changeDrawType('ellipse')">
-          <i class="el-icon-circle-plus-outline" />
+          <i id="ellipse" class="el-icon-circle-plus-outline" />
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'line' }" @click="changeDrawType('line')">
-          <i class="el-icon-minus" />
+          <i id="line" class="el-icon-minus" />
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'blowup' }" @click="changeDrawType('blowup')">
-          <i class="el-icon-search" />
+          <i id="blowup" class="el-icon-search" />
+          <span class="shortcut">Z</span>
         </div>
         <div class="tool" @click="changeDrawType('delete')">
-          <i class="el-icon-delete" />
+          <i id="delete" class="el-icon-delete" />
         </div>
         <el-popover
           placement="right"
@@ -38,13 +42,14 @@
         >
           <el-slider v-model="canvasOption.lineWidth" />
           <div slot="reference" class="tool">
-            <i class="el-icon-s-operation" />
+            <i id="lineWidth" class="el-icon-s-operation" />
           </div>
         </el-popover>
         <div class="tool tool-color">
           <el-color-picker v-model="canvasOption.penColor" size="mini" />
         </div>
       </div>
+      <!-- 图片 -->
       <div class="photo-show">
         <div v-loading="loading" class="orginPhoto">
           <img
@@ -78,6 +83,7 @@
           <i class="el-icon-arrow-right" />
         </button>
       </div>
+      <!-- 右边栏 -->
       <div class="photo-mark">
         <!-- 缩略图 -->
         <div id="smallImg" v-loading="loading" class="small-img">
@@ -97,11 +103,26 @@
             <div class="contant">
               <el-slider v-model="scaleNum" />
               {{ scaleNum * 4 + 100 }}%
+              <div class="driver-star" @click.stop="guide">?</div>
             </div>
             <div class="down-button">下载</div>
           </div>
         </div>
         <order-info-module :order-info="info" />
+        <div class="issue-label">
+          <el-tag
+            v-for="tag in cacheLabel"
+            :key="tag.id"
+            class="cache-issue"
+            closable
+            disable-transitions
+            size="mini"
+            type="info"
+            @close="tagClose(tag)"
+          >
+            {{ tag.label }}
+          </el-tag>
+        </div>
         <!-- 问题标签 -->
         <div class="order-label">
           <template v-for="(labelClassItem, labelClassIndex) in labelData">
@@ -131,6 +152,9 @@
 import { mapGetters } from 'vuex'
 import OrderInfoModule from './OrderInfoModule'
 import labelMock from './labelMock'
+import guideData from './guideData'
+import Driver from 'driver.js' // 引导框
+import 'driver.js/dist/driver.min.css'
 import FabricCanvas from './FabricCanvas'
 export default {
   name: 'GradePreview',
@@ -200,6 +224,12 @@ export default {
   created () {
     console.log(this.info)
     this.labelData = JSON.parse(JSON.stringify(labelMock))
+    this.driver = new Driver({
+      nextBtnText: '下一个',
+      prevBtnText: '上一个',
+      doneBtnText: '完成',
+      closeBtnText: '关闭'
+    })
   },
   mounted () {
     /**
@@ -207,7 +237,7 @@ export default {
      */
     document.onkeydown = e => {
       const key = window.event.keyCode
-      console.log(key)
+      console.log(key, '键位')
       switch (key) {
         case 49:
         case 50:
@@ -245,12 +275,48 @@ export default {
         case 8:
           this.changeDrawType('delete')
           break
+        case 66:
+          this.createCanvas()
+          break
+        case 86:
+          this.changeDrawType('move')
+          break
+        case 90:
+          this.changeDrawType('blowup')
+          break
+        case 67:
+          this.changeDrawType('arrow')
+          break
         default:
           break
       }
     }
+    this.$ipcRenderer.on('win-resize', (e, item) => {
+      this.getImgInfo()
+      if (this.showCanvas) {
+        this.$refs['fabric-canvas'].resetCanvas()
+      }
+    })
   },
   methods: {
+    /**
+     * @description 提示按钮
+     */
+    guide () {
+      const steps = guideData
+      this.driver.defineSteps(steps)
+      this.driver.start()
+    },
+    /**
+     * @description 获取图片信息
+     */
+    getImgInfo () {
+      const orginImgDom = this.$refs['orgin-img']
+      const canvasWidth = orginImgDom.clientWidth
+      const canvasHeight = orginImgDom.clientHeight
+      this.canvasOption.width = canvasWidth
+      this.canvasOption.height = canvasHeight
+    },
     /**
      * @description 关闭窗口
      */
@@ -416,26 +482,28 @@ export default {
      * @description 设置标签
      */
     setLabel (issueItem) {
-      if (!this.showCanvas) return
-      this.labelData.forEach(classItem => {
-        const findIssueLabelIndex = classItem.issueData.findIndex(issueLabel => issueLabel.id === issueItem.id)
-        if (findIssueLabelIndex >= 0) {
-          const setLabelData = classItem.issueData.splice(findIssueLabelIndex, 1)
-          this.cacheLabel.push(...setLabelData)
-          this.$refs['fabric-canvas'].createLabel(...setLabelData)
-        }
+      if (!this.showCanvas) { this.createCanvas() }
+      this.$nextTick(() => {
+        this.labelData.forEach(classItem => {
+          const findIssueLabelIndex = classItem.issueData.findIndex(issueLabel => issueLabel.id === issueItem.id)
+          if (findIssueLabelIndex >= 0) {
+            const setLabelData = classItem.issueData.splice(findIssueLabelIndex, 1)
+            this.cacheLabel.push(...setLabelData)
+            this.$refs['fabric-canvas'].createLabel(...setLabelData)
+          }
+        })
       })
+    },
+    tagClose (tagInfo) {
+      console.log(tagInfo)
+      this.$refs['fabric-canvas'].deleteLabel(tagInfo)
     },
     /**
      * @description 创建canvas
      */
     createCanvas () {
       if (!this.showCanvas) {
-        const orginImgDom = this.$refs['orgin-img']
-        const canvasWidth = orginImgDom.clientWidth
-        const canvasHeight = orginImgDom.clientHeight
-        this.canvasOption.width = canvasWidth
-        this.canvasOption.height = canvasHeight
+        this.getImgInfo()
         this.showCanvas = true
       }
       this.changeDrawType('pen')
@@ -532,6 +600,14 @@ export default {
         transition: all 0.3s ease;
         cursor: pointer;
         border-radius: 13px;
+        position: relative;
+
+        .shortcut {
+          position: absolute;
+          right: 10px;
+          bottom: 5px;
+          font-size: 10px;
+        }
 
         &:hover {
           background-color: #fff;
@@ -713,6 +789,17 @@ export default {
         }
       }
 
+      .issue-label {
+        padding: 10px;
+        padding-bottom: 0;
+
+        .cache-issue {
+          margin-right: 10px;
+          margin-bottom: 10px;
+          -webkit-user-select: none;
+        }
+      }
+
       .order-label {
         padding: 0 12px 12px 12px;
         color: #eee;
@@ -771,5 +858,9 @@ export default {
   .el-slider__runway {
     margin: 0;
   }
+}
+
+#driver-highlighted-element-stage {
+  opacity: 0.3;
 }
 </style>

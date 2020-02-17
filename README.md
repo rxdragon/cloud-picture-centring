@@ -2,12 +2,12 @@
 
 ## 项目起始
 ```
-yarn install
+yarn install --ignore-optional
 ```
 
 ### 开启服务
 ```
-yarn serve
+yarn eserve-dev
 ```
 
 ### 构建项目
