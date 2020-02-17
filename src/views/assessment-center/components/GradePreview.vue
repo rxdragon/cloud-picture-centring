@@ -105,7 +105,8 @@
               {{ scaleNum * 4 + 100 }}%
               <div class="driver-star" @click.stop="guide">?</div>
             </div>
-            <div class="down-button">下载</div>
+            <div class="down-button" @click="outPut">导出</div>
+
           </div>
         </div>
         <order-info-module :order-info="info" />
@@ -494,6 +495,9 @@ export default {
         })
       })
     },
+    /**
+     * @description 标签关闭
+     */
     tagClose (tagInfo) {
       console.log(tagInfo)
       this.$refs['fabric-canvas'].deleteLabel(tagInfo)
@@ -508,6 +512,9 @@ export default {
       }
       this.changeDrawType('pen')
     },
+    /**
+     * @description 更改画笔类型
+     */
     changeDrawType (drawType) {
       if (drawType !== 'blowup' && !this.showCanvas) {
         this.$newMessage.warning('请创建画板')
@@ -527,6 +534,9 @@ export default {
       const findIssueLabelIndex = this.cacheLabel.findIndex(labelItem => labelItem.id === data.id)
       if (findIssueClass) { findIssueClass.issueData.push(data) }
       if (findIssueLabelIndex >= 0) { this.cacheLabel.splice(findIssueLabelIndex, 1) }
+    },
+    outPut () {
+      this.$refs['fabric-canvas'].outPhoto()
     }
   }
 }

@@ -6,6 +6,8 @@
 
 <script>
 import { fabric } from 'fabric'
+import * as CanvasTool from '@/utils/canvasTool'
+import * as Commonality from '@/api/commonality'
 export default {
   name: 'FabricCanvas',
   props: {
@@ -13,6 +15,7 @@ export default {
   },
   data () {
     return {
+      upyunConfig: {},
       canvasDom: null,
       mouseFrom: {},
       mouseTo: {},
@@ -67,6 +70,9 @@ export default {
       deep: true
     }
   },
+  created () {
+    this.getUpyunSign()
+  },
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
@@ -83,6 +89,13 @@ export default {
     this.canvasDom.on('mouse:move', this.onMouseMove)
   },
   methods: {
+    /**
+     * @description 获取又拍云
+     */
+    async getUpyunSign () {
+      this.upyunConfig = await Commonality.getSignature()
+      console.log(this.upyunConfig)
+    },
     /**
      * @description 监听canvas鼠标按下
      */
@@ -321,8 +334,14 @@ export default {
       })
       this.canvasDom.add(textbox)
       this.cacheIssuse.push(issueData)
-      // textbox.enterEditing()
-      // textbox.hiddenTextarea.focus()
+    },
+    async outPhoto () {
+      // TODO 检测canvas是否空
+      const base64Data = this.canvasDom.toDataURL()
+      const blobData = CanvasTool.convertBase64ToBlob(base64Data)
+      const fileData = CanvasTool.structureFile(blobData)
+      const data = await CanvasTool.uploadTagPhoto(fileData, this.upyunConfig)
+      console.log(data)
     }
   }
 }
