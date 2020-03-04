@@ -52,7 +52,7 @@
           class="upload-crop-button"
           accept="image/*"
           multiple
-          :action="updateDomain + upyunConfig.bucket"
+          :action="updateDomain"
           :show-file-list="false"
           :before-upload="beforeUpload"
           :on-progress="handleProgress"
