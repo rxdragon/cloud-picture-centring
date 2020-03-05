@@ -315,6 +315,7 @@ export default {
      */
     async handleSuccess (response, file, fileList) {
       this.uploadPhoto = fileList
+      console.log(response)
       // 校验数据
       if (file.response && file.response.url) {
         try {

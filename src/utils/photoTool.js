@@ -3,6 +3,7 @@ import * as SessionTool from '@/utils/sessionTool.js'
 import * as mPath from '@/utils/selfPath.js'
 import store from '@/store' // vuex
 import md5 from 'js-md5'
+import Etag from '@/utils/qetag.js'
 const fileType = require('file-type')
 
 /**
@@ -178,6 +179,7 @@ function getMD5 (file, cbProgress) {
  * @param {*} file
  */
 export async function getImgBufferPhoto (file) {
+  const data2 = await new Etag(file).getEtag()
   const data = await getMD5(file)
   if (file.path) {
     const fileExt = mPath.getExtName(file.path).toLowerCase()
