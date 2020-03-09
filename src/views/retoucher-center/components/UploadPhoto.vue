@@ -27,6 +27,7 @@
             v-if="photoItem.status === 'success' && finishPhoto[photoItem.uid]"
             photo-name
             preview-breviary
+            :file-data="finishPhoto[photoItem.uid].file"
             :src="finishPhoto[photoItem.uid].path"
           />
           <div v-else-if="photoItem.status !== 'fail'" class="progress">
@@ -345,7 +346,8 @@ export default {
         const newPhoto = {
           id: findOrginPhoto.id,
           path: filePath,
-          orginPhotoName: uploadedName
+          orginPhotoName: uploadedName,
+          file
         }
         this.$set(this.finishPhoto, uid, newPhoto)
       }

@@ -9,8 +9,9 @@ import QiNiuETag from '@/utils/qetag.js'
  * @param {*} name
  */
 export function fileNameFormat (name) {
-  const indexPoint = name.lastIndexOf('.')
-  const returnName = name
+  const fileName = realName(name)
+  const indexPoint = fileName.lastIndexOf('.')
+  const returnName = fileName
   return returnName.substring(0, indexPoint)
 }
 
@@ -169,8 +170,14 @@ export function renameFirstPhoto (filePath) {
 /**
  * @description 文件后缀名转小写
  */
-export function photoPathExtToLowerCase (filePath) {
+export function photoPathExtToLowerCase (path) {
+  const filePath = realName(path)
   const ext = getFilePostfix(filePath).toLowerCase()
   const name = fileNameFormat(filePath)
   return `${name}${ext}`
+}
+
+export function realName (path) {
+  const pathArr = path.split('/')
+  return pathArr[pathArr.length - 1]
 }
