@@ -1,4 +1,5 @@
 import hash from 'js-sha1'
+const fileType = require('file-type')
 
 const chunkSize = 4 * 1024 * 1024
 const shA1 = hash.digest
@@ -7,14 +8,19 @@ export default class QiNiuETag {
     currentLength = 0
     chunkTime = 0
     sha1String = []
+    type = ''
 
     async updateBlob (blob) {
       let i = 0
       while (i < blob.size) {
         const size = Math.min(chunkSize, blob.size - i, chunkSize - this.currentLength)
         const to = i + size
-        const chunkSha1 = shA1(await this.readBlobToArrayBuffer(blob.slice(i, to)))
+        const chunkData = await this.readBlobToArrayBuffer(blob.slice(i, to))
+        const chunkSha1 = shA1(chunkData)
         this.sha1String.push(chunkSha1)
+        if (this.chunkTime === 0) {
+          this.type = fileType(chunkData)
+        }
         this.currentLength += size
         // 切换到下一个分块
         if (this.currentLength === chunkSize) {
@@ -61,7 +67,7 @@ export default class QiNiuETag {
       return returnData
     }
 
-    getEtag () {
+    get getEtag () {
       const CHUNK_SIZE = 0x8000 // arbitrary number
       const length = this.sha1Buffer.length
       let index = 0
@@ -73,5 +79,16 @@ export default class QiNiuETag {
         index += CHUNK_SIZE
       }
       return btoa(result).replace(/\//g, '_').replace(/\+/g, '-')
+    }
+
+    get typeInfo () {
+      return this.type
+    }
+
+    get fileInfo () {
+      return {
+        sha1: this.getEtag,
+        typeInfo: this.typeInfo
+      }
     }
 }

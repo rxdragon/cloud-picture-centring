@@ -1,4 +1,4 @@
-# 2.0.0 (2020-03-05)
+# 2.0.0 (2020-03-09)
 
 |范围|描述|commitId|
 --|--|--
@@ -143,8 +143,8 @@
 |范围|描述|commitId|
 --|--|--
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
+ test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
  webscoket | [c20df39](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c20df39)
@@ -182,6 +182,7 @@
  基本完成 无限下拉 | [ac1deec](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ac1deec)
  增加qetag | [b04bde8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b04bde8)
  增加websocket | [c98115c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c98115c)
+ 增加上传方式验证 | [fe30f52](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fe30f52)
  增加上传标记 | [5428235](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5428235)
  增加上传预览 | [5a72992](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5a72992)
  增加不种不把查询 | [4f53e0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f53e0b)

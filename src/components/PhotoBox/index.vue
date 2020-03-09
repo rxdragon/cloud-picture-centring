@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['imgDomain', 'cacheImageSwitch']),
+    ...mapGetters(['imgDomain', 'imgCompressDomain', 'cacheImageSwitch']),
     // 拼接信息
     jointLabel () {
       if (this.showJointLabel && this.tags && this.tags.values && this.tags.values.splice_mark) {
@@ -103,7 +103,13 @@ export default {
     },
     // 压缩图片地址
     imageSrc () {
-      return this.imgDomain + this.src + this.breviary
+      const photoFileNam = this.src.split('/')
+      const isOldPath = photoFileNam.length === 1
+      if (isOldPath) {
+        return this.imgDomain + this.src + this.breviary
+      } else {
+        return this.imgCompressDomain + this.src
+      }
     },
     // 展示图片
     getPreviewPhoto () {

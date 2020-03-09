@@ -256,15 +256,15 @@ export default {
     /**
      * @description 检查是否修改
      * @param {Object} file [文件对象]
-     * @param {String} uploadPhotoMd5 [上传文件的md5]
+     * @param {String} uploadPhotoSha1 [上传文件的sha1]
      */
-    checkPsPhoto (file, uploadPhotoMd5) {
+    checkPsPhoto (file, uploadPhotoSha1) {
       const fileName = PhotoTool.fileNameFormat(file.name)
       const findOrginPhoto = this.photos.find(item => item.path.includes(fileName))
       // 最后一次提交文件名
       const beforeUploadFilePath = findOrginPhoto.isReturnPhoto ? findOrginPhoto.returnPhotoPath : file.name
       const beforeUploadFileName = PhotoTool.fileNameFormat(beforeUploadFilePath)
-      if (beforeUploadFileName === uploadPhotoMd5) {
+      if (beforeUploadFileName === uploadPhotoSha1) {
         throw new Error('请修改照片后再进行上传。')
       }
     },
@@ -277,16 +277,16 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.checkHasUploadingPhoto() // 上一次照片是否上传完成
         this.checkFileName(file) // 是否正确命名
-        // 获取type和md5
+        // 获取type和sha1
         const imgInfo = await PhotoTool.getImgBufferPhoto(file)
-        const uploadPhotoMd5 = imgInfo.md5
+        const uploadPhotoSha1 = imgInfo.selfSha1
         const type = imgInfo.typeInfo.mime
         this.checkFileType(type) // 判断是否是图片
         this.checkHasSaveName(file) // 判断是否与原片名字相同
-        this.checkPsPhoto(file, uploadPhotoMd5) // 判断图片是否修改
+        this.checkPsPhoto(file, uploadPhotoSha1) // 判断图片是否修改
         this.checkHasUploadedPhoto(file) // 判断是否已经上传
         file.startTime = Date.now() / 1000
-        file.md5Name = uploadPhotoMd5
+        file.sha1Name = uploadPhotoSha1
         return Promise.resolve()
       } catch (error) {
         console.error(error)
@@ -315,14 +315,13 @@ export default {
      */
     async handleSuccess (response, file, fileList) {
       this.uploadPhoto = fileList
-      console.log(response)
       // 校验数据
       if (file.response && file.response.url) {
         try {
           const info = await PhotoTool.getImgBufferPhoto(file.raw)
-          const selfMd5 = info.md5
+          const selfSha1 = info.sha1
           logUpload(file)
-          if (!file.response.url.includes(selfMd5)) {
+          if (!file.response.url.includes(selfSha1)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
             if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
             this.$newMessage.error('上传文件校验错误')
@@ -340,6 +339,7 @@ export default {
       const uploadedName = PhotoTool.fileNameFormat(file.name)
       // 上传后的照片名字
       const filePath = file.response ? PhotoTool.handlePicPath(file.response.url) : ''
+      console.log(filePath, 'filePath')
       const findOrginPhoto = this.photos.find(photoItem => photoItem.path.includes(uploadedName))
       if (!this.finishPhoto[uid]) {
         const newPhoto = {
