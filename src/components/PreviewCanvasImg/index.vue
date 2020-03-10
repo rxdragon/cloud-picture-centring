@@ -1,5 +1,10 @@
 <template>
-  <img class="preview-canvas-img" :src="src">
+  <el-image class="preview-canvas-img" :src="src" fit="cover">
+    <div slot="error" class="image-slot">
+      <i class="el-icon-picture-outline" />
+      <span>加载失败...</span>
+    </div>
+  </el-image>
 </template>
 
 <script>
