@@ -17,6 +17,7 @@ const defaultGetters = {
   saveFolder: state => state.setting.savePath, // 保存路径
   imgUploadDomain: state => state.setting.imgUploadDomain, // 上传后的照片域名
   imgDomain: state => state.setting.imgDomain, // 上传后的照片域名
+  imgCompressDomain: state => state.setting.imgCompressDomain, // 上传后自动压缩图域名
   updateDomain: state => state.setting.updateDomain, // 上传后的照片域名
   retouchId: state => state.notification.retouchId, // 修图id
   showAnniversary: state => state.notification.showAnniversary, // 显示弹框

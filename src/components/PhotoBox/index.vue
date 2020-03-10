@@ -2,14 +2,15 @@
   <div class="photo">
     <div class="img-box">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-image v-if="useEleImage" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
+      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
         </div>
       </el-image>
+      <preview-canvas-img v-else-if="showCanvas" :file="fileData" />
       <img v-else class="orgin-img" :src="imageSrc" alt="">
-      <span v-if="photoName" class="photo-name" @click.stop="">{{ src }}</span>
+      <span v-if="photoName" class="photo-name" @click.stop="">{{ photoRealName }}</span>
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
@@ -32,8 +33,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
+import PreviewCanvasImg from '@/components/PreviewCanvasImg'
+
 export default {
   name: 'PhotoBox',
+  components: { PreviewCanvasImg },
   filters: {
     filterJointLabel (jointLabel) {
       return jointLabel[1]
@@ -56,16 +60,19 @@ export default {
     streamNum: { type: String, default: '' }, // 流水号
     preloadPhoto: { type: Boolean },
     useEleImage: { type: Boolean, default: true },
-    isLekima: { type: Boolean }
+    isLekima: { type: Boolean },
+    fileData: { type: Object, default: null }
   },
   data () {
     return {
       breviary: '!thumb.small.50',
-      linkTag: null
+      linkTag: null,
+      limitSize: 20 * 1024 * 1024,
+      showCanvas: false
     }
   },
   computed: {
-    ...mapGetters(['imgDomain', 'cacheImageSwitch']),
+    ...mapGetters(['imgDomain', 'imgCompressDomain', 'cacheImageSwitch']),
     // 拼接信息
     jointLabel () {
       if (this.showJointLabel && this.tags && this.tags.values && this.tags.values.splice_mark) {
@@ -103,7 +110,21 @@ export default {
     },
     // 压缩图片地址
     imageSrc () {
-      return this.imgDomain + this.src + this.breviary
+      // 不是上传显示
+      const oldPath = this.imgDomain + this.src + this.breviary
+      if (!this.fileData) {
+        const photoFileNam = this.src.split('/')
+        const isOldPath = photoFileNam.length === 1
+        const newPath = this.imgCompressDomain + this.src
+        return isOldPath ? oldPath : newPath
+      } else {
+        const isGreaterLimitSize = this.fileData.size >= this.limitSize
+        return isGreaterLimitSize ? '' : oldPath
+      }
+    },
+    photoRealName () {
+      const photoFileNam = this.src.split('/')
+      return photoFileNam[photoFileNam.length - 1]
     },
     // 展示图片
     getPreviewPhoto () {
@@ -115,6 +136,10 @@ export default {
         return []
       }
     }
+  },
+  created () {
+    if (!this.fileData) return
+    this.showCanvas = this.fileData.size >= this.limitSize
   },
   mounted () {
     this.preloadImg()
