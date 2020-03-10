@@ -25,14 +25,7 @@ export default {
      * @param {二进制文件流} file
      */
     changeFileToBaseURL (file) {
-      return new Promise((resolve, reject) => {
-        const fileReader = new FileReader()
-        fileReader.onload = (e) => {
-          const imgBase64Data = fileReader.result
-          resolve(imgBase64Data)
-        }
-        fileReader.readAsDataURL(file)
-      })
+      return URL.createObjectURL(file)
     },
     /**
      * @description 压缩图片
@@ -40,9 +33,9 @@ export default {
     async pressImg () {
       // 得到文件类型
       const fileType = this.fileData.type
-      const base64 = await this.changeFileToBaseURL(this.fileData)
+      const imgSrc = this.changeFileToBaseURL(this.fileData)
       const image = new Image()
-      image.src = base64
+      image.src = imgSrc
       image.onload = () => {
         const scale = image.width / image.height
         const canvas = document.createElement('canvas')
@@ -50,8 +43,9 @@ export default {
         canvas.width = this.width
         canvas.height = parseInt(this.width / scale)
         context.drawImage(image, 0, 0, canvas.width, canvas.height)
-        const newImageData = canvas.toDataURL(fileType, this.quality)
-        this.src = newImageData
+        canvas.toBlob((blobData) => {
+          this.src = URL.createObjectURL(blobData)
+        }, fileType, this.quality)
       }
     }
   }
