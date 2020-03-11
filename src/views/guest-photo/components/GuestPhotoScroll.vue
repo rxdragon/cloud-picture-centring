@@ -37,12 +37,12 @@
       <!-- 产品名称 -->
       <div class="product-box search-item">
         <span class="row-title">产品名称</span>
-        <product-select v-model="productValue" :props="{ multiple: false }" />
+        <product-select v-model="productValues" />
       </div>
       <!-- 修图标准 -->
       <div class="search-item">
         <span>修图标准</span>
-        <retouch-kind-select v-model="retouchStandard" />
+        <retouch-kind-select v-model="retouchStandards" multiple />
       </div>
       <div class="button-box search-item">
         <el-button type="primary" @click="getPhotoList(1)">查询</el-button>
@@ -99,8 +99,8 @@ export default {
       orderSearchValue: '', // 订单信息
       checkValue: 0, // 看片评价星数
       staffId: [], // 伙伴id
-      productValue: '', // 产品id
-      retouchStandard: '', // 修图标准
+      productValues: '', // 产品id
+      retouchStandards: '', // 修图标准
       photos: [], // 照片列表
       searchDataBox: 200,
       columnCount: 4, // 照片列数
@@ -220,8 +220,8 @@ export default {
       }
       if (this.staffId.length) { reqData.staffIds = this.staffId }
       if (this.checkValue) { reqData.evaluateStar = this.checkValue }
-      if (this.productValue) { reqData.productId = this.productValue }
-      if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
+      if (this.productValues.length) { reqData.productIds = this.productValues }
+      if (this.retouchStandards.length) { reqData.retouchStandards = this.retouchStandards }
       return reqData
     },
     /**
