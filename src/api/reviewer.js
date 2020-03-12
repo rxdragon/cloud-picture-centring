@@ -52,6 +52,7 @@ export function getReviewInfo () {
     createData.photoNum = msg.photos.filter(item => +item.people_num > 0).length
     createData.waitTime = waitTime(msg.created_at, msg.pass_at)
     createData.retouchRemark = msg.note.retouch_note
+    createData.backgroundColor = msg.note.color_note || ''
     createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
     createData.requireLabel = msg.tags && msg.tags.values && msg.tags.values.retouch_claim || {}
     createData.streamState = msg.state

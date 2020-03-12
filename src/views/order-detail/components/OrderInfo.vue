@@ -70,6 +70,13 @@
           <span class="title">修图备注：</span>
           <span class="content">{{ orderInfo.retouchRemark }}</span>
         </div>
+        <div v-if="orderInfo.backgroundColor" class="panel-main-content">
+          <span class="title">背景图要求：</span>
+          <div class="content require-background-color">
+            <img :src="orderInfo.backgroundColor" alt="">
+            <el-button type="text" @click="downbackground">下载背景图</el-button>
+          </div>
+        </div>
         <div class="panel-main-content panel-last-content">
           <span class="title">审核备注：</span>
           <span class="content">{{ orderInfo.reviewerNote }}</span>
@@ -80,6 +87,8 @@
 </template>
 
 <script>
+import DownIpc from '@electronMain/ipc/DownIpc'
+
 export default {
   name: 'OrderInfo',
   props: {
@@ -89,6 +98,17 @@ export default {
   computed: {
     orderInfo () {
       return this.orderData
+    }
+  },
+  methods: {
+    downbackground () {
+      const savePath = `/${this.orderInfo.streamNum}`
+      const data = {
+        url: this.orderInfo.backgroundColor,
+        path: savePath
+      }
+      this.$newMessage.success('已添加一张照片到下载')
+      DownIpc.addDownloadFile(data)
     }
   }
 }
@@ -161,11 +181,22 @@ export default {
         display: flex;
 
         .title {
-          width: 70px;
+          width: 90px;
         }
 
         .content {
           width: 632px;
+        }
+
+        .require-background-color {
+          display: flex;
+          align-items: center;
+
+          img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+          }
         }
       }
 

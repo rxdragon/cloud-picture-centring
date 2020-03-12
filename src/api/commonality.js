@@ -95,6 +95,7 @@ export function getStreamInfo (params) {
       checkPullNum,
       requireLabel: data.tags && data.tags.values && data.tags.values.retouch_claim || {},
       retouchRemark: data.note.retouch_note || '暂无修图备注',
+      backgroundColor: msg.note.color_note || '',
       reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注'
     }
     createData.photos = data.photos
