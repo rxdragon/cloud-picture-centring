@@ -1,4 +1,4 @@
-# 2.0.0 (2020-03-10)
+# 2.0.0 (2020-03-13)
 
 |范围|描述|commitId|
 --|--|--
@@ -361,21 +361,22 @@
 ### 🚀 性能优化
 |范围|描述|commitId|
 --|--|--
- 优化 | [b5756ee](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b5756ee)
+ 优化 | [2d40bee](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d40bee)
  优化 | [246b7e3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/246b7e3)
+ 优化 | [0d39492](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0d39492)
  优化 | [21c73f8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/21c73f8)
  优化 | [ee4620a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ee4620a)
  优化 | [2f30e3f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2f30e3f)
  优化 | [f5b72c7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f5b72c7)
- 优化 | [2d40bee](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d40bee)
- 优化 | [0d39492](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0d39492)
  优化 | [9992559](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9992559)
+ 优化 | [b5756ee](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b5756ee)
  优化上传代码 | [512bb56](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/512bb56)
  优化上传对大小写后缀不进行判断 | [9553163](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9553163)
  优化下载 | [4e23708](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4e23708)
  优化云学院问题 | [01168a1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01168a1)
  优化代码 | [e7f8dfb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e7f8dfb)
  优化代码修复bug | [c2533c5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c2533c5)
+ 优化压缩图片加载显示 | [3f08ad0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3f08ad0)
  优化压缩效率 | [a2ed1d4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a2ed1d4)
  优化宠物 | [91950b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/91950b1)
  优化文案 | [d33da6b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d33da6b)
