@@ -76,6 +76,7 @@ export function getStreamInfo (params) {
       photoNum: msg.photos.filter(item => +item.people_num > 0).length,
       waitTime: waitTime(msg.created_at, msg.pass_at),
       retouchRemark: msg.note.retouch_note,
+      backgroundColor: msg.note.color_note || '',
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
       streamState: msg.state,
       isCheckReturn: msg.tags && msg.tags.statics && msg.tags.statics.includes('rework'),
