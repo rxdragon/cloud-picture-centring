@@ -1,4 +1,4 @@
-# 2.0.0 (2020-03-12)
+# 2.0.0 (2020-03-19)
 
 |范围|描述|commitId|
 --|--|--
@@ -143,8 +143,8 @@
 |范围|描述|commitId|
 --|--|--
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
+ test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
  webscoket | [c20df39](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c20df39)
@@ -167,7 +167,6 @@
  修复大师拼接海草值 | [bbc45c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bbc45c2)
  修复审核刷新页面获取订单，重构产品面板代码 | [d47ab9a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d47ab9a)
  修复监听多次接到订单 | [657adf3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/657adf3)
- test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  修复门店评分显示错误 | [62147a8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/62147a8)
  修改产品能配置多个产品 | [5727a79](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5727a79)
  修改照片优化删除订单后会立刻生效被删除 | [76219f5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/76219f5)
@@ -175,9 +174,6 @@
  值班主管 | [72300dc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/72300dc)
  值班主管配置页面进入 显示配置 | [eddb660](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eddb660)
  冲量显示 | [9fd05c6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fd05c6)
- ] | 新增个人绩效数据数据接入 | [c7196d9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c7196d9)
- 直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
- 客片池新增产品选择多选 | 客片池新增产品多选，新增修图标准多选 | [7aa8d9c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7aa8d9c)
  初始化websockey | [673fbd2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/673fbd2)
  删除console | [68b445b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/68b445b)
  图片与加载 | [bf6742e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bf6742e)
@@ -206,6 +202,7 @@
  开启服务器 | [c2a46b9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c2a46b9)
  排队中不会弹出是否在线弹框，不会自动下线 | [f09892a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f09892a)
  提交版本 | [47b0857](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/47b0857)
+ 新增修图背景备注 | [0512e32](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0512e32)
  新增利奇马接口链条 | [09e9808](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/09e9808)
  新增惩罚金额显示 | [63bfbb5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/63bfbb5)
  新增更新说明 | [0da7f7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0da7f7c)
@@ -230,12 +227,16 @@
  添加注视 | [684c7e8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/684c7e8)
  照片版本显示利奇马 | [292f122](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/292f122)
  直接审核功能 | [19689bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/19689bc)
+ 直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
  看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
  组员审核报告增加利奇马 | [8363a00](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8363a00)
  联调审核，增加修图标准icon | [cfc3f1e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cfc3f1e)
  获取队列默认值，防止网络错误 | [c4ef67f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4ef67f)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
+ ] | 新增个人绩效数据数据接入 | [c7196d9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c7196d9)
+ 客片池新增产品选择多选 | 客片池新增产品多选，新增修图标准多选 | [7aa8d9c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7aa8d9c)
  更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
  重写自动上传逻辑 | [0342309](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0342309)

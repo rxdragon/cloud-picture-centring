@@ -17,6 +17,9 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
+    <div class="recede-reason">
+      选定特效： <span class="reason-content">樱花贴图</span>
+    </div>
     <div v-if="storeReworkReason" class="recede-reason">
       门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
     </div>
