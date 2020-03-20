@@ -146,19 +146,3 @@ export const StaffLevelEnum = {
   masterCraftsman: '工匠大师',
   chiefCraftsmanMaster: '首席工匠大师'
 }
-
-// 特效枚举值
-export const SpecialEnum = (value) => {
-  switch (value) {
-    case 'cherry blossom stickers':
-      return '樱花'
-    case 'starlight stickers':
-      return '星光'
-    case 'flower stickers':
-      return '花漾'
-    case 'lily of the valley stickers':
-      return '铃兰'
-    default:
-      return ''
-  }
-}
