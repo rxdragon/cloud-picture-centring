@@ -35,7 +35,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
-import { SpecialEnum } from '@/utils/enumerate.js'
 
 export default {
   name: 'PhotoBox',
@@ -123,7 +122,7 @@ export default {
     // 特效字段
     specialEffects () {
       const special = this.tags && this.tags.values && this.tags.values.special_efficacy || ''
-      return SpecialEnum(special)
+      return special
     }
   },
   mounted () {
