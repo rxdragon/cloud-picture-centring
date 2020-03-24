@@ -17,6 +17,9 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
+    <div v-if="specialEffects" class="recede-reason">
+      选定特效： <span class="reason-content">{{ specialEffects }}</span>
+    </div>
     <div v-if="storeReworkReason" class="recede-reason">
       门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
     </div>
@@ -32,6 +35,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
+
 export default {
   name: 'PhotoBox',
   filters: {
@@ -114,6 +118,11 @@ export default {
       } else {
         return []
       }
+    },
+    // 特效字段
+    specialEffects () {
+      const special = this.tags && this.tags.values && this.tags.values.special_efficacy || ''
+      return special
     }
   },
   mounted () {
