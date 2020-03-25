@@ -211,23 +211,23 @@ export default {
     .panel-content {
       .content-title {
         & > span {
+          padding: 17px 20px;
           font-size: 14px;
           font-weight: 500;
-          color: #303133;
           line-height: 22px;
+          color: #303133;
           text-align: left;
-          padding: 17px 20px;
           background-color: #fafafa;
         }
       }
 
       .content-value {
         & > span {
+          padding: 20px 21px;
           font-size: 14px;
           font-weight: 400;
-          color: #606266;
           line-height: 14px;
-          padding: 20px 21px;
+          color: #606266;
           border-bottom: 1px solid #f2f6fc;
         }
       }
@@ -237,10 +237,10 @@ export default {
       }
 
       .panel-main {
-        background-color: #fafafa;
-        border-radius: 4px;
         padding: 20px;
         margin-top: 12px;
+        background-color: #fafafa;
+        border-radius: 4px;
 
         .panel-require-concent {
           padding-bottom: 20px;
@@ -252,13 +252,13 @@ export default {
         }
 
         .panel-main-content {
+          display: flex;
+          padding: 20px 0;
           font-size: 14px;
           font-weight: 400;
-          color: #303133;
           line-height: 22px;
-          padding: 20px 0;
+          color: #303133;
           border-top: 1px solid @borderColor;
-          display: flex;
 
           &:nth-of-type(1) {
             border: none;

@@ -111,8 +111,12 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.staffName) { req.staffName = this.staffName }
-      if (this.roleValue) { req.roleId = this.roleValue }
+      if (this.staffName) {
+        req.staffName = this.staffName
+      }
+      if (this.roleValue) {
+        req.roleId = this.roleValue
+      }
       return req
     },
     /**
@@ -127,7 +131,9 @@ export default {
      */
     async getStaffListByPage (value) {
       try {
-        if (value) { this.pager.page = value }
+        if (value) {
+          this.pager.page = value
+        }
         const req = this.getParams()
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AccountManage.getStaffListByPage(req)
@@ -175,8 +181,8 @@ export default {
   .main {
     .header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
     .search-box {
@@ -188,8 +194,8 @@ export default {
     }
 
     .table-box {
-      box-shadow: @boxShadow;
       margin-top: 20px;
+      box-shadow: @boxShadow;
     }
   }
 }

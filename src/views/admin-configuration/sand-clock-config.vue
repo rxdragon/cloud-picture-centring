@@ -82,7 +82,9 @@ export default {
   },
   watch: {
     editConfig (value) {
-      if (!value) { this.editId = '' }
+      if (!value) {
+        this.editId = ''
+      }
     },
     // 编辑id
     editId (value) {

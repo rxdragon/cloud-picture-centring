@@ -122,43 +122,43 @@ export default {
 .photo-detail {
   .panel-box {
     display: flex;
-    margin-bottom: 16px;
-    border-radius: 4px;
-    border: 1px solid #eee;
     padding: 0;
+    margin-bottom: 16px;
     font-size: 14px;
     font-weight: 400;
-    color: #606266;
     line-height: 22px;
+    color: #606266;
+    border: 1px solid #eee;
+    border-radius: 4px;
     box-shadow: none;
 
     .content-title {
-      width: @panelTitleWidth;
-      text-align: center;
       display: flex;
       flex-direction: column;
-      justify-items: center;
       align-items: center;
+      justify-items: center;
+      width: @panelTitleWidth;
       padding: 13px 14px;
+      text-align: center;
     }
 
     .panel-content {
-      width: calc(~'100% - @{panelTitleWidth}');
-      padding: 13px 14px;
       display: flex;
       align-items: center;
+      width: calc(~'100% - @{panelTitleWidth}');
+      padding: 13px 14px;
     }
   }
 
   .photo-list {
-    margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
+    margin-top: 20px;
 
     .photo-box {
       width: 241px;
-      margin-bottom: 24px;
       margin-right: 24px;
+      margin-bottom: 24px;
     }
 
     .empty {

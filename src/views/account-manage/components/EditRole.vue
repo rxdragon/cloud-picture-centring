@@ -37,7 +37,9 @@ export default {
     }
   },
   created () {
-    if (this.roleId) { this.isNewAdd = false }
+    if (this.roleId) {
+      this.isNewAdd = false
+    }
     this.getRoleInfo()
   },
   methods: {
@@ -156,8 +158,8 @@ export default {
   }
 
   .submit-box {
-    text-align: center;
     margin-top: 20px;
+    text-align: center;
   }
 }
 </style>

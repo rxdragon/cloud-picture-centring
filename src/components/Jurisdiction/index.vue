@@ -64,7 +64,9 @@ export default {
   },
   watch: {
     hasPermission (value) {
-      if (this.firstShow && this.jurisdictionList.length) { this.initializeData() }
+      if (this.firstShow && this.jurisdictionList.length) {
+        this.initializeData()
+      }
     }
   },
   created () {
@@ -77,7 +79,9 @@ export default {
     async getJurisdictionList () {
       const data = await Staff.getJurisdictionList()
       this.jurisdictionList = JSON.parse(JSON.stringify(data))
-      if (this.firstShow) { this.initializeData() }
+      if (this.firstShow) {
+        this.initializeData()
+      }
     },
     /**
      * @description 选中单个权限
@@ -186,7 +190,9 @@ export default {
           })
           menuItem.setAll = menuItem.checkPermission.length === menuItem.permission.length
           menuItem.isIndeterminate = Boolean(menuItem.checkPermission.length && !menuItem.setAll)
-          if (menuItem.setAll) { moduleItem.checkMenu.push(menuItem) }
+          if (menuItem.setAll) {
+            moduleItem.checkMenu.push(menuItem)
+          }
         })
         moduleItem.setAll = moduleItem.checkMenu.length === moduleItem.menu.length
         moduleItem.isIndeterminate = Boolean(moduleItem.checkMenu.length && !moduleItem.setAll)
@@ -204,39 +210,39 @@ export default {
 
   .module-box {
     .module-header {
-      background-color: #eee;
       width: 100%;
       padding: 10px;
+      background-color: #eee;
     }
 
     .menu-box {
-      align-items: center;
       display: grid;
       grid-template-columns: 200px 4fr;
       grid-column-gap: 1px;
+      align-items: center;
       background-color: #333;
       border-bottom: 1px solid #333;
 
       .menu-header {
+        display: flex;
+        height: 100%;
         padding: 10px;
         background-color: #fff;
-        height: 100%;
-        display: flex;
       }
 
       .permission-box {
         display: flex;
-        background-color: #fff;
         flex-wrap: wrap;
         height: 100%;
+        background-color: #fff;
 
         .permission-name {
           padding: 10px;
           margin-right: 10px;
 
           .el-checkbox__input {
-            vertical-align: top;
             margin: 4px;
+            vertical-align: top;
           }
 
           .el-checkbox__label {

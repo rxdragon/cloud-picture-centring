@@ -22,7 +22,9 @@ export function getFiles (streamNum, needUploadPhotos) {
       handlerPath.push(filePath)
     }
   })
-  if (!handlerPath.length) { throw new Error(`${readfilePath}文件夹不存在`) }
+  if (!handlerPath.length) {
+    throw new Error(`${readfilePath}文件夹不存在`)
+  }
   if (noFilePath.length) {
     const errorMessage = `以下文件不存在\n${noFilePath.join(',\n')}`
     Vue.prototype.$newMessage.error(errorMessage)
@@ -48,6 +50,8 @@ export async function filterFiles (readfilePath) {
 export function getFileMime (fileName) {
   let type
   const ext = mPath.getExtName(fileName)
-  if (ext.length > 2) { type = mime.getType(ext.substring(1)) }
+  if (ext.length > 2) {
+    type = mime.getType(ext.substring(1))
+  }
   return type
 }

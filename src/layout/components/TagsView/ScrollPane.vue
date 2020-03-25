@@ -69,10 +69,10 @@ export default {
 
 <style lang="less" scoped>
 .scroll-container {
-  white-space: nowrap;
   position: relative;
-  overflow: hidden;
   width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
 
   .scroll-container {
     .el-scrollbar__bar {

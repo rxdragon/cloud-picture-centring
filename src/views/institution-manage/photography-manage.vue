@@ -64,13 +64,19 @@ export default {
       routeName: this.$route.name, // 路由名字
       rules: {
         name: [
-          { validator: (rule, value, callback) => { this.noSpecialCharacter(rule, value, callback) }, trigger: ['blur', 'change'] }
+          { validator: (rule, value, callback) => {
+            this.noSpecialCharacter(rule, value, callback)
+          }, trigger: ['blur', 'change'] }
         ],
         account: [
-          { validator: (rule, value, callback) => { this.validateInput(rule, value, callback) }, trigger: ['blur', 'change'] }
+          { validator: (rule, value, callback) => {
+            this.validateInput(rule, value, callback)
+          }, trigger: ['blur', 'change'] }
         ],
         code: [
-          { validator: (rule, value, callback) => { this.validateInput(rule, value, callback) }, trigger: ['blur', 'change'] }
+          { validator: (rule, value, callback) => {
+            this.validateInput(rule, value, callback)
+          }, trigger: ['blur', 'change'] }
         ]
       },
       tableData: [], // 列表数据
@@ -167,7 +173,7 @@ export default {
             this.$store.dispatch('setting/hiddenLoading', this.routeName)
             item.state = true
           })
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 禁用摄影机构
@@ -186,15 +192,19 @@ export default {
             this.$store.dispatch('setting/hiddenLoading', this.routeName)
             item.state = false
           })
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 输入验证
      */
     validateInput (rule, value, callback) {
       if (!value) {
-        if (rule.field === 'account') { callback(new Error('请填写机构主账号')) }
-        if (rule.field === 'code') { callback(new Error('机构代号')) }
+        if (rule.field === 'account') {
+          callback(new Error('请填写机构主账号'))
+        }
+        if (rule.field === 'code') {
+          callback(new Error('机构代号'))
+        }
       } else if ((/[^a-zA-Z]/g).test(value)) {
         callback(new Error('只能输入英文'))
       } else {
@@ -224,7 +234,9 @@ export default {
       if (this.institutionConfig.loginType === 2) {
         reqData.account = this.institutionConfig.account
         reqData.code = this.institutionConfig.code
-        if (this.institutionConfig.secret) { reqData.secret = this.institutionConfig.secret }
+        if (this.institutionConfig.secret) {
+          reqData.secret = this.institutionConfig.secret
+        }
       }
       this.$refs['formEdit'].validate()
         .then(() => {
@@ -239,7 +251,7 @@ export default {
               this.$store.dispatch('setting/hiddenLoading', this.routeName)
             })
         })
-        .catch(() => {})
+        .catch()
     },
     /**
      * @description 编辑摄影机构
@@ -252,7 +264,9 @@ export default {
       }
       if (this.institutionConfig.loginType === 2) {
         reqData.account = this.institutionConfig.account
-        if (this.institutionConfig.secret) { reqData.secret = this.institutionConfig.secret }
+        if (this.institutionConfig.secret) {
+          reqData.secret = this.institutionConfig.secret
+        }
       }
       this.$refs['formEdit'].validate()
         .then(() => {
@@ -267,7 +281,7 @@ export default {
               this.$store.dispatch('setting/hiddenLoading', this.routeName)
             })
         })
-        .catch(() => {})
+        .catch()
     },
     /**
      * @description 验证参数

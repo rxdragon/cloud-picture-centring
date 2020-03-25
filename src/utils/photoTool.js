@@ -60,10 +60,14 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
     if (version === 'store_rework' && !findFinishPhoto) break
     if (version === 'complete_photo') {
       const findVersionPhotos = photoArr.filter(photoItem => photoItem.version === version)
-      if (findVersionPhotos) { createData = [...createData, ...findVersionPhotos] }
+      if (findVersionPhotos) {
+        createData = [...createData, ...findVersionPhotos]
+      }
     } else {
       const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
-      if (findVersionPhoto) { createData.push(findVersionPhoto) }
+      if (findVersionPhoto) {
+        createData.push(findVersionPhoto)
+      }
     }
   }
   return createData
@@ -79,10 +83,10 @@ export function readAllPhoto (photoArr) {
   // 判断是否有没加载的id
   cachePhotoArr.length = cacheCount > cachePhotoArr.length ? cachePhotoArr.length : cacheCount
   const loadedPhotoArr = SessionTool.getCloudAssessmentPhotoId()
-  const allLoad = loadedPhotoArr && cachePhotoArr.every(photoItem => loadedPhotoArr.includes(photoItem.id)) || false
+  const allLoad = (loadedPhotoArr && cachePhotoArr.every(photoItem => loadedPhotoArr.includes(photoItem.id))) || false
   // 没有全部加载完成 加载未加载图片
   if (!allLoad) {
-    const notLoadedPhoto = loadedPhotoArr && cachePhotoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.id)) || cachePhotoArr
+    const notLoadedPhoto = (loadedPhotoArr && cachePhotoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.id))) || cachePhotoArr
     const promises = []
     notLoadedPhoto.forEach(item => {
       promises.push(loadPhoto(item.path))
@@ -103,8 +107,12 @@ export function loadPhoto (path) {
   const image = new Image()
   image.src = imgDomain + path
   return new Promise((resolve, reject) => {
-    image.onload = () => { resolve() }
-    image.onerror = () => { resolve() }
+    image.onload = () => {
+      resolve()
+    }
+    image.onerror = () => {
+      resolve()
+    }
   })
 }
 
@@ -118,12 +126,12 @@ function readChunked (file, chunkCallback, endCallback) {
   const fileSize = file.size
   const chunkSize = 4 * 1024 * 1024 // 4MB
   let offset = 0
+  const reader = new FileReader()
   const readNext = () => {
     const fileSlice = file.slice(offset, offset + chunkSize)
     reader.readAsArrayBuffer(fileSlice)
   }
 
-  const reader = new FileReader()
   reader.onload = () => {
     if (reader.error) {
       endCallback(reader.error || {})
@@ -156,7 +164,9 @@ function getMD5 (file, cbProgress) {
     const hash = md5.create()
     readChunked(file, (chunk, offs, total) => {
       hash.update(chunk)
-      if (cbProgress) { cbProgress(offs / total) }
+      if (cbProgress) {
+        cbProgress(offs / total)
+      }
       if (offs - chunk.byteLength === 0) {
         fileInfo = fileType(chunk)
       }

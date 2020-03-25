@@ -121,7 +121,7 @@ export default {
     },
     // 特效字段
     specialEffects () {
-      const special = this.tags && this.tags.values && this.tags.values.special_efficacy || ''
+      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || ''
       return special
     }
   },
@@ -168,36 +168,36 @@ export default {
 @import '../../styles/variables.less';
 
 .img-box {
+  position: relative;
   width: 100%;
   height: 0;
   padding-bottom: 100%;
-  position: relative;
-  border-radius: 4px;
   overflow: hidden;
+  border-radius: 4px;
 
   .joint-label {
     position: absolute;
     top: 0;
     z-index: 100;
     width: 100%;
-    text-align: center;
     font-size: 12px;
-    background: @jointLabelColor;
     line-height: 16px;
     color: @blue;
+    text-align: center;
     -webkit-user-select: none;
+    background: @jointLabelColor;
   }
 
   .photo-name {
     position: absolute;
     bottom: 0;
-    background: @gradualTransparent;
-    color: #fff;
-    font-size: 12px;
-    line-height: 16px;
     width: 100%;
     padding: 10px;
+    font-size: 12px;
+    line-height: 16px;
+    color: #fff;
     word-break: break-all;
+    background: @gradualTransparent;
   }
 
   .lekima-tag {
@@ -206,50 +206,50 @@ export default {
     left: 0;
     width: 56px;
     height: 24px;
-    background: linear-gradient(51deg, rgb(255, 126, 0) 0%, rgb(255, 0, 0) 100%);
-    border-radius: 0 0 6px 0;
-    text-align: center;
     font-size: 12px;
     font-weight: 500;
-    color: #fff;
     line-height: 24px;
+    color: #fff;
+    text-align: center;
+    background: linear-gradient(51deg, rgb(255, 126, 0) 0%, rgb(255, 0, 0) 100%);
+    border-radius: 0 0 6px 0;
   }
 
   .el-image {
+    position: absolute;
     width: 100%;
     height: 100%;
-    position: absolute;
 
     img {
-      object-position: top;
       -webkit-user-select: none;
+      object-position: top;
     }
   }
 
   .image-slot {
-    color: #909399;
-    background-color: #f5f7fa;
-    height: 100%;
-    font-size: 30px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+    height: 100%;
+    font-size: 30px;
+    color: #909399;
+    background-color: #f5f7fa;
 
     span {
-      font-size: 16px;
       margin-top: 20px;
+      font-size: 16px;
     }
   }
 
   .orgin-img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top;
-    position: absolute;
-    top: 0;
-    left: 0;
   }
 }
 
@@ -259,27 +259,27 @@ export default {
   padding: 12px 6px 6px;
 
   .el-button {
-    line-height: 17px;
+    padding: 0;
     font-size: 12px;
     font-weight: 400;
-    padding: 0;
+    line-height: 17px;
   }
 
   .people-num {
     font-size: 12px;
     font-weight: 400;
-    color: #606266;
     line-height: 17px;
+    color: #606266;
   }
 }
 
 .recede-reason {
-  font-size: 12px;
-  color: @red;
-  margin: 0 6px 6px;
   padding-top: 9px;
-  border-top: 1px solid #ebeef5;
+  margin: 0 6px 6px;
+  font-size: 12px;
   line-height: 20px;
+  color: @red;
+  border-top: 1px solid #ebeef5;
 
   .reason-content {
     color: #606266;

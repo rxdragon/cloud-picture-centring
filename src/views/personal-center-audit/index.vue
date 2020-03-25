@@ -135,21 +135,21 @@ export default {
 
   .list-tabel {
     display: grid;
-    text-align: center;
     grid-template-columns: repeat(7, 1fr);
+    text-align: center;
     border-bottom: 1px solid #fafafa;
 
     .title {
-      background-color: #fafafa;
-      padding: 17px 20px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #303133;
       display: flex;
       align-items: center;
       height: 100%;
+      padding: 17px 20px;
+      font-size: 14px;
+      font-weight: 500;
       line-height: 22px;
+      color: #303133;
       text-align: left;
+      background-color: #fafafa;
     }
 
     .content {

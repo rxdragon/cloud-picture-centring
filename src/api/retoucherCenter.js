@@ -18,7 +18,7 @@ export function getRetouchStreams (params) {
     msg.data.forEach(listItem => {
       listItem.streamNum = listItem.stream_num
       listItem.streamId = listItem.id
-      listItem.productName = listItem.product && listItem.product.name || '-'
+      listItem.productName = _.get(listItem, 'product.name', '-')
       listItem.photoNum = listItem.photos_count
       listItem.type = listItem.product.retouch_standard
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
@@ -79,8 +79,8 @@ export function getStreamInfo (params) {
       backgroundColor: msg.note.color_note || '',
       requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
       streamState: msg.state,
-      isCheckReturn: msg.tags && msg.tags.statics && msg.tags.statics.includes('rework'),
-      isStoreReturn: msg.tags && msg.tags.statics && msg.tags.statics.includes('store_rework')
+      isCheckReturn: _.get(msg, 'tags.statics', []).includes('rework'),
+      isStoreReturn: _.get(msg, 'tags.statics', []).includes('store_rework'),
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
@@ -98,7 +98,7 @@ export function getStreamInfo (params) {
     })
     createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
     createData.hourGlass = msg.hour_glass
-    createData.reviewerNote = msg.tags && msg.tags.values && msg.tags.values.review_reason || '暂无审核备注'
+    createData.reviewerNote = _.get(msg, 'tags.values.review_reason', '暂无审核备注')
     return createData
   })
 }
@@ -179,10 +179,10 @@ export function getRetouchQuotaList (params) {
       listItem.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
       listItem.exp = Number(listItem.exp) === 0 ? '-' : parseFloat(listItem.exp)
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
-      listItem.plantNum = listItem.tags && listItem.tags.values && listItem.tags.values.plant_num || 0
-      listItem.pullNum = listItem.tags && listItem.tags.values && listItem.tags.values.pull_num || 0
-      listItem.retoucherNpsAvg = listItem.tags && listItem.tags.values && listItem.tags.values.retoucher_score || '-'
-      listItem.lekimaCount = listItem.tags && listItem.tags.values && listItem.tags.values.lichma_photo_num || '-'
+      listItem.plantNum = _.get(listItem, 'tags.values.plant_num', 0)
+      listItem.pullNum = _.get(listItem, 'tags.values.pull_num', 0)
+      listItem.retoucherNpsAvg = _.get(listItem, 'tags.values.retoucher_score', '-')
+      listItem.lekimaCount = _.get(listItem, 'tags.values.lichma_photo_num', '-')
     })
     createData.list = msg.list
     return createData

@@ -70,8 +70,8 @@ export function getSpotCheckResult (params) {
       }
     }
     data.forEach(item => {
-      item.retouchNote = item.photoData.stream && item.photoData.stream.note.retouch_note || '-'
-      item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('return_photo') || false
+      item.retouchNote = _.get(item, 'photoData.stream.note.retouch_note', '-')
+      item.isReturn = _.get(item, 'photoData.tags.statics', []).includes('return_photo')
       // 照片版本
       item.firstPhoto = item.photoData.first_photo
       item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')
@@ -80,27 +80,19 @@ export function getSpotCheckResult (params) {
       allPhotoPath = [...allPhotoPath, ...item.photoVersion]
       item.retouchStandard = item.retouch_standard
       item.productName = item.photoData.stream && item.photoData.stream.product && item.photoData.stream.product.name
-      item.isPull = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('pull') || false
-      item.isPlant = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('plant') || false
-
+      item.isPull = _.get(item, 'photoData.tags.statics', []).includes('pull')
+      item.isPlant = _.get(item, 'photoData.tags.statics', []).includes('plant')
       item.reworkReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.rework_reason
       item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
       item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason
       // 是否是绿色通道
-      item.isGreen = item.photoData.stream &&
-        item.photoData.stream.tags &&
-        item.photoData.stream.tags.statics &&
-        item.photoData.stream.tags.statics.includes('green_stream') || false
+      item.isGreen = _.get(item, 'photoData.stream.tags.statics').includes('green_stream')
       const retouchRequire = {
         eye: '暂无',
         face: '暂无',
         pimples: false
       }
-      item.retouchRequire = item.photoData.stream &&
-        item.photoData.stream.tags &&
-        item.photoData.stream.tags.values &&
-        item.photoData.stream.tags.values.retouch_claim ||
-        retouchRequire
+      item.retouchRequire = _.get(item, 'photoData.stream.tags.values.retouch_claim', retouchRequire)
     })
     if (!+store.getters.cacheImageSwitch) {
       PhotoTool.readAllPhoto(allPhotoPath)
@@ -139,19 +131,17 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      item.retouchNote = item.photoData.stream && item.photoData.stream.note && item.photoData.stream.note.retouch_note || '暂无修图备注'
-      item.isReturn = item.photoData.tags && item.photoData.tags.statics && item.photoData.tags.statics.includes('return_photo') || false
+      item.retouchNote = _.get(item, 'photoData.stream.note.retouch_note', '暂无修图备注')
+      item.isReturn = _.get(item, 'photoData.tags.statics', []).includes('return_photo')
       // 照片版本
       item.firstPhoto = item.photoData.first_photo
       item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')
       item.completePhoto = item.photoData.other_photo_version.find(item => item.version === 'complete_photo')
       item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
-      item.productName = item.photoData.stream && item.photoData.stream.product && item.photoData.stream.product.name || '-'
-      item.retouchName = item.photoData.stream && item.photoData.stream.retoucher && (item.photoData.stream.retoucher.name || item.photoData.stream.retoucher.real_name) || '暂无信息'
-      item.retouchLeaderName = item.photoData.stream &&
-        item.photoData.stream.retoucher &&
-        item.photoData.stream.retoucher.retoucher_leader &&
-        (item.photoData.stream.retoucher.retoucher_leader.nickname || item.photoData.stream.retoucher.retoucher_leader.name) || '暂无'
+      item.productName = _.get(item, 'photoData.stream.product.name', '-')
+      item.retouchName = _.get(item, 'photoData.stream.retoucher.name') || _.get(item, 'photoData.stream.retoucher.real_name') || '暂无信息'
+      item.retouchLeaderName = _.get(item, 'photoData.stream.retoucher.retoucher_leader.nickname') ||
+        _.get(item, 'photoData.stream.retoucher.retoucher_leader.nickname') || '暂无'
       item.retouchStandard = item.retouch_standard
 
       item.isPull = false
@@ -170,10 +160,7 @@ export function getSearchHistory (params) {
       item.grassReason = item.photoData.tags.values.grass_reason
       item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
 
-      item.isGreen = item.photoData.stream &&
-      item.photoData.stream.tags &&
-      item.photoData.stream.tags.statics &&
-      item.photoData.stream.tags.statics.includes('green_stream') || false
+      item.isGreen = _.get(item, 'photoData.stream.tags.statics', []).includes('green_stream')
 
       const retouchRequire = {
         eye: '暂无',
@@ -181,11 +168,7 @@ export function getSearchHistory (params) {
         pimples: false
       }
 
-      item.retouchRequire = item.photoData.stream &&
-        item.photoData.stream.tags &&
-        item.photoData.stream.tags.values &&
-        item.photoData.stream.tags.values.retouch_claim ||
-        retouchRequire
+      item.retouchRequire = _.get(item, 'photoData.stream.tags.values.retouch_claim', retouchRequire)
       item.streamNum = item.photoData.stream.stream_num
     })
     return {

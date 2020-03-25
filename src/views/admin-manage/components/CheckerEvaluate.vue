@@ -109,8 +109,12 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.staffId) { req.staffId = this.staffId }
-      if (this.storeGrade) { req.star = this.storeGrade }
+      if (this.staffId) {
+        req.staffId = this.staffId
+      }
+      if (this.storeGrade) {
+        req.star = this.storeGrade
+      }
       return req
     },
     /**
@@ -118,7 +122,9 @@ export default {
      */
     async getStoreEvaluate (page) {
       try {
-        if (page) { this.pager.page = page }
+        if (page) {
+          this.pager.page = page
+        }
         const req = this.getParams()
         if (!req) return
         this.loading = true
@@ -128,7 +134,9 @@ export default {
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => { this.loading = false }, 500)
+        setTimeout(() => {
+          this.loading = false
+        }, 500)
       }
     }
   }

@@ -132,7 +132,7 @@ export default {
         try {
           this.$store.dispatch('setting/showLoading', this.routeName)
           const reqData = { configId: listItem.id }
-          await OperationManage.DeleteHourGlass(reqData)
+          await OperationManage.deleteHourGlass(reqData)
           this.$newMessage.success('删除成功')
           this.getHourGlassList()
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -140,7 +140,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 编辑沙漏
@@ -157,8 +157,8 @@ export default {
   .product-name {
     width: 180px;
     overflow: hidden;
-    word-break: keep-all;
     text-overflow: ellipsis;
+    word-break: keep-all;
     white-space: nowrap;
   }
 }

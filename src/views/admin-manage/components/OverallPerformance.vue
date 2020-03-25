@@ -122,14 +122,22 @@ export default {
         this.loading = true
         const data = await WorkManage.getWholeQuota(req)
         for (const key in data) {
-          if (this.photoCountData[key]) { this.photoCountData[key] = data[key] }
-          if (this.streamCountData[key]) { this.streamCountData[key] = data[key] }
-          if (this.otherInfo[key]) { this.otherInfo[key] = data[key] }
+          if (this.photoCountData[key]) {
+            this.photoCountData[key] = data[key]
+          }
+          if (this.streamCountData[key]) {
+            this.streamCountData[key] = data[key]
+          }
+          if (this.otherInfo[key]) {
+            this.otherInfo[key] = data[key]
+          }
         }
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => { this.loading = false }, 500)
+        setTimeout(() => {
+          this.loading = false
+        }, 500)
       }
     }
   }
@@ -143,11 +151,11 @@ export default {
   }
 
   .module-panel {
-    box-shadow: none;
+    display: flex;
     padding: 38px 0 13px;
     border-top: 1px solid #e8e8e8;
     border-radius: 0;
-    display: flex;
+    box-shadow: none;
 
     .data-info-box {
       width: 320px;
@@ -159,12 +167,12 @@ export default {
       .info-flex {
         display: flex;
         flex-direction: column;
-        height: calc(~'100% - 52px');
         justify-content: space-between;
+        height: calc(~'100% - 52px');
 
         .info-line {
-          height: 1px;
           width: 100%;
+          height: 1px;
           background-color: #ebeef5;
         }
       }
@@ -178,23 +186,23 @@ export default {
 
           .info-title {
             font-size: 12px;
-            color: #909399;
             line-height: 17px;
+            color: #909399;
           }
 
           .info-content {
             padding: 8px 0;
             font-size: 24px;
-            color: #303133;
             line-height: 28px;
+            color: #303133;
           }
         }
       }
     }
 
     .chart-box {
-      width: calc(~'100% - 320px');
       display: flex;
+      width: calc(~'100% - 320px');
 
       .photo-chart {
         border-right: 1px solid #ebeef5;

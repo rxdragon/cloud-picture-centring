@@ -54,7 +54,8 @@ export default {
   },
   created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
-    this.timeSpan = this.childrenTimeSpan = [nowTime, nowTime]
+    this.timeSpan = [nowTime, nowTime]
+    this.childrenTimeSpan = [nowTime, nowTime]
     this.getSelfStaffs()
   },
   methods: {
@@ -107,8 +108,8 @@ export default {
     margin-top: 24px;
 
     .tabel-title {
-      font-weight: bold;
       margin-bottom: 20px;
+      font-weight: bold;
     }
   }
 

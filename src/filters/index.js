@@ -23,7 +23,7 @@ export function toPhotoVerName (str) {
  * @param {*} str
  */
 export function toRetouchClass (str) {
-  return RetouchStandard()[str]
+  return RetouchStandard[str]
 }
 
 /**
@@ -31,7 +31,7 @@ export function toRetouchClass (str) {
  * @param {*} state
  */
 export function toStreamState (state) {
-  return StreamState()[state]
+  return StreamState[state]
 }
 
 /**

@@ -10,7 +10,7 @@ const waitDownloadList = [] // 等待下载队列
 const downingLoadList = [] // 正在下载队列
 const downloadList = {} // 队列信息
 
-let onListChange = () => {}
+let onListChange
 
 // 获取文件名
 function getFileNameTool (src) {
@@ -48,7 +48,9 @@ function limitDownCount (uuid) {
   const maxCount = 5
   if (uuid) {
     const findDeleteIndex = downingLoadList.findIndex(item => item.config.uuid === uuid)
-    if (findDeleteIndex >= 0) { downingLoadList.splice(findDeleteIndex, 1) }
+    if (findDeleteIndex >= 0) {
+      downingLoadList.splice(findDeleteIndex, 1)
+    }
   }
   if (downingLoadList.length < maxCount) {
     let takeCount = maxCount - downingLoadList.length
@@ -224,11 +226,15 @@ export function changeSaveName (item) {
   const oldFilePath = item.downInfo.savePath
   const oldDir = mPath.getDirname(oldFilePath)
   let newFileName = item.orginName + item.ext
-  if (item.rename) { newFileName = item.rename }
+  if (item.rename) {
+    newFileName = item.rename
+  }
   let newFilePath = mPath.joinPath(oldDir, newFileName)
   newFilePath = incrementFileName(newFilePath)
   fs.rename(oldFilePath, newFilePath, async (err) => {
-    if (err) { console.error(err) }
+    if (err) {
+      console.error(err)
+    }
     item.savePath = newFilePath
     item.iconSrc = await getFileIcon(newFilePath)
     onListChange()

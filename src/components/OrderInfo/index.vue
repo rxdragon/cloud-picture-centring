@@ -98,7 +98,6 @@ export default {
       return this.orderData.isCheckReturn || this.orderData.isStoreReturn
     }
   },
-  mounted () {},
   methods: {
     downbackground () {
       const savePath = `/${this.orderData.streamNum}`
@@ -118,18 +117,18 @@ export default {
 
 .order-info {
   .table-info {
-    border-radius: 4px;
-    overflow: hidden;
     margin-top: 10px;
+    overflow: hidden;
+    border-radius: 4px;
   }
 
   .panel-require-concent {
-    margin-top: 12px;
     padding: 20px;
+    padding-bottom: 0;
+    margin-top: 12px;
+    overflow: hidden;
     background-color: #fafafa;
     border-radius: 4px;
-    overflow: hidden;
-    padding-bottom: 0;
 
     .require-label {
       padding-bottom: 20px;
@@ -146,14 +145,14 @@ export default {
 
       & > span {
         width: 90px;
-        color: #303133;
         font-size: 14px;
+        color: #303133;
       }
 
       .remark-content {
-        color: #303133;
-        font-size: 14px;
         width: 632px;
+        font-size: 14px;
+        color: #303133;
         white-space: pre-wrap;
       }
 
@@ -191,12 +190,12 @@ export default {
     }
 
     & > div {
-      background-color: #fafafa;
+      box-sizing: border-box;
+      padding: 17px 20px;
       font-size: 14px;
       color: #303133;
       text-align: left;
-      padding: 17px 20px;
-      box-sizing: border-box;
+      background-color: #fafafa;
     }
   }
 
@@ -215,8 +214,8 @@ export default {
   }
 
   .table-panel-concent {
-    border-bottom: 1px solid #fafafa;
     margin-bottom: 40px;
+    border-bottom: 1px solid #fafafa;
 
     & > div {
       background-color: #fff;
@@ -228,8 +227,8 @@ export default {
   }
 
   .panel-remark-concent {
-    background-color: #fff;
     padding: 10px 0;
+    background-color: #fff;
   }
 }
 </style>

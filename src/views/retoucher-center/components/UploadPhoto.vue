@@ -323,14 +323,18 @@ export default {
           logUpload(file)
           if (!file.response.url.includes(selfMd5)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
-            if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
+            if (willDeleteIndex >= 0) {
+              fileList.splice(willDeleteIndex, 1)
+            }
             this.$newMessage.error('上传文件校验错误')
             return false
           }
         } catch (error) {
           console.error(error)
           const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
-          if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
+          if (willDeleteIndex >= 0) {
+            fileList.splice(willDeleteIndex, 1)
+          }
           this.$newMessage.error('上传校验错误')
           return false
         }
@@ -348,7 +352,9 @@ export default {
         }
         this.$set(this.finishPhoto, uid, newPhoto)
       }
-      if (filePath && !this.finishPhoto[uid].path) { this.$set(this.finishPhoto[uid], 'path', filePath) }
+      if (filePath && !this.finishPhoto[uid].path) {
+        this.$set(this.finishPhoto[uid], 'path', filePath)
+      }
       this.$emit('change', this.finishPhoto)
     },
     /**
@@ -370,7 +376,9 @@ export default {
      */
     deleteUploadPhoto (photoItem, index) {
       const isPending = !photoItem.response
-      if (isPending) { this.$refs.uploadButton.abort(this.uploadPhoto[index]) }
+      if (isPending) {
+        this.$refs.uploadButton.abort(this.uploadPhoto[index])
+      }
       this.uploadPhoto.splice(index, 1)
       const uid = photoItem.uid
       this.$delete(this.finishPhoto, uid)
@@ -415,29 +423,29 @@ export default {
   position: relative;
 
   .list-photo {
-    margin-right: -24px;
     position: relative;
+    margin-right: -24px;
   }
 
   .photo-box {
-    width: 253px;
-    margin-bottom: 24px;
-    margin-right: 24px;
     position: relative;
+    width: 253px;
+    margin-right: 24px;
+    margin-bottom: 24px;
     cursor: pointer;
 
     .handle-box {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
     .progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 241px;
       height: 241px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .error-photo {
@@ -446,8 +454,8 @@ export default {
 
     .delete-button {
       position: absolute;
-      right: -14px;
       top: -14px;
+      right: -14px;
       display: none;
       opacity: 0;
       transition: all 10s;
@@ -464,40 +472,40 @@ export default {
   }
 
   .is-repetition {
-    opacity: 1;
     border: 2px solid @red;
+    opacity: 1;
     animation: blink 0.8s ease-in-out  infinite alternate;
   }
 
   .recede-remark {
-    margin-top: 20px;
     display: flex;
     width: 100%;
-    background: rgba(250, 250, 250, 1);
     padding: 20px;
-    border-radius: 4px;
+    margin-top: 20px;
     margin-right: 24px;
+    background: rgba(250, 250, 250, 1);
+    border-radius: 4px;
 
     & > span {
       width: 70px;
-      color: #303133;
       font-size: 14px;
+      color: #303133;
     }
 
     .remark-content {
-      color: #303133;
-      font-size: 14px;
       width: 632px;
+      font-size: 14px;
+      color: #303133;
       white-space: pre-wrap;
     }
   }
 
   .crop-upload-box {
-    overflow: hidden;
     position: relative;
     width: 253px;
-    margin-bottom: 24px;
     margin-right: 24px;
+    margin-bottom: 24px;
+    overflow: hidden;
 
     .progress {
       position: absolute;
@@ -508,10 +516,10 @@ export default {
 
     .upload-crop-button {
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 50% 0;
+      justify-content: center;
       height: 0;
+      padding: 50% 0;
       background-color: #f5f7fa;
       border-radius: 4px;
 
@@ -524,16 +532,16 @@ export default {
       .avatar-upload {
         display: flex;
         flex-direction: column;
-        color: #606266;
-        transition: all 0.3;
+        justify-content: center;
         width: 253px;
         height: 253px;
-        justify-content: center;
+        color: #606266;
         -webkit-user-select: none;
+        transition: all 0.3;
 
         .el-icon-plus {
-          font-size: 28px;
           margin-bottom: 16px;
+          font-size: 28px;
         }
 
         & > span {

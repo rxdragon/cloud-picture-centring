@@ -93,7 +93,9 @@ export default {
   },
   watch: {
     isAddConfig (value) {
-      if (!value) { this.getGoldConfigList() }
+      if (!value) {
+        this.getGoldConfigList()
+      }
     }
   },
   created () {
@@ -133,7 +135,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 提前结束
@@ -156,7 +158,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 获取金币配置列表
@@ -170,8 +172,12 @@ export default {
           page: this.pager.page,
           pageSize: this.pager.pageSize
         }
-        if (this.staffId.length) { reqData.staffIds = this.staffId }
-        if (this.stateType) { reqData.state = this.stateType }
+        if (this.staffId.length) {
+          reqData.staffIds = this.staffId
+        }
+        if (this.stateType) {
+          reqData.state = this.stateType
+        }
         const data = await OperationManage.getStaffCardList(reqData)
         this.tableData = data.list
         this.pager.total = data.total

@@ -218,10 +218,18 @@ export default {
         reqData.startAt = joinTimeSpan(this.timeSpan[0])
         reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.checkValue) { reqData.evaluateStar = this.checkValue }
-      if (this.productValues.length) { reqData.productIds = this.productValues }
-      if (this.retouchStandards.length) { reqData.retouchStandards = this.retouchStandards }
+      if (this.staffId.length) {
+        reqData.staffIds = this.staffId
+      }
+      if (this.checkValue) {
+        reqData.evaluateStar = this.checkValue
+      }
+      if (this.productValues.length) {
+        reqData.productIds = this.productValues
+      }
+      if (this.retouchStandards.length) {
+        reqData.retouchStandards = this.retouchStandards
+      }
       return reqData
     },
     /**
@@ -270,8 +278,8 @@ export default {
     align-items: center;
 
     .search-item {
-      margin-bottom: 20px;
       margin-right: 24px;
+      margin-bottom: 20px;
 
       & > span {
         text-align-last: justify;
@@ -306,16 +314,16 @@ export default {
   }
 
   .search-data {
-    margin-top: 0;
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 0;
 
     .photo-row {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       margin-bottom: 24px;
-      flex-wrap: wrap;
 
       .empty-box {
         width: 253px;
@@ -323,10 +331,10 @@ export default {
     }
 
     .photo-box {
-      width: 253px;
       display: inline-block;
-      cursor: pointer;
+      width: 253px;
       height: 253px;
+      cursor: pointer;
     }
 
     .no-data {

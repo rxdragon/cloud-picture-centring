@@ -119,8 +119,12 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.reviewerValue) { req.reviewId = this.reviewerValue }
-      if (this.retoucherGroupValue) { req.groupId = this.retoucherGroupValue }
+      if (this.reviewerValue) {
+        req.reviewId = this.reviewerValue
+      }
+      if (this.retoucherGroupValue) {
+        req.groupId = this.retoucherGroupValue
+      }
       return req
     },
     /**
@@ -136,12 +140,18 @@ export default {
           this.$newMessage.warning('暂无数据')
           throw new Error('暂无数据')
         }
-        this.listDataOne.forEach(item => { item.value = data[item.key] })
-        this.listDataTwo.forEach(item => { item.value = data[item.key] })
+        this.listDataOne.forEach(item => {
+          item.value = data[item.key]
+        })
+        this.listDataTwo.forEach(item => {
+          item.value = data[item.key]
+        })
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => { this.loading = false }, 500)
+        setTimeout(() => {
+          this.loading = false
+        }, 500)
       }
     }
   }

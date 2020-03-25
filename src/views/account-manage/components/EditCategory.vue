@@ -96,7 +96,9 @@ export default {
         name: this.categoryName,
         productIds: []
       }
-      if (this.isEdit) { req.retoucherClassId = this.editData.id }
+      if (this.isEdit) {
+        req.retoucherClassId = this.editData.id
+      }
       this.toData.forEach(listItem => {
         const childrenIds = listItem.children.map(item => item.id)
         req.productIds = [...req.productIds, ...childrenIds]

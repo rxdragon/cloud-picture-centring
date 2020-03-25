@@ -31,7 +31,9 @@ module.exports = {
       plugins: [
         new StyleLintPlugin({
           configFile: '.stylelintrc',
-          files: ['./src/assets/**/*.less', './src/**/*.vue']
+          files: ['./src/assets/**/*.less', './src/**/*.vue'],
+          formatter: 'verbose',
+          fix: true
         })
       ]
     }

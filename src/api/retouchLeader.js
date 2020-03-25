@@ -104,18 +104,18 @@ export function getStaffRetouchList (params) {
     params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      const reviewPlantPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.plant_num || 0
-      const reviewPullPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.pull_num || 0
-      const spotPlantPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_plant_num || 0
-      const spotPullPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_pull_num || 0
+      const reviewPlantPhotoNum = _.get(listItem, 'tags.values.plant_num', 0)
+      const reviewPullPhotoNum = _.get(listItem, 'tags.values.pull_num', 0)
+      const spotPlantPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_plant_num', 0)
+      const spotPullPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_pull_num', 0)
       const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)
-      listItem.retoucherName = listItem.retoucher && (listItem.retoucher.name || listItem.retoucher.real_name) || '-'
+      listItem.retoucherName = _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-'
       listItem.retouchAllTime = timeFormat(allTime, 'text', true)
       listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
       listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
-      listItem.lekimaInfo = listItem.tags && listItem.tags.values && listItem.tags.values.lichma_photo_num || '-'
-      const storeGrade = listItem.tags && listItem.tags.values && listItem.tags.values.store_star || '-'
-      const npsGrade = listItem.tags && listItem.tags.values && listItem.tags.values.retoucher_score || '-'
+      listItem.lekimaInfo = _.get(listItem, 'tags.values.lichma_photo_num', '-')
+      const storeGrade = _.get(listItem, 'tags.values.store_star', '-')
+      const npsGrade = _.get(listItem, 'tags.values.retoucher_score', '-')
       listItem.gradeInfo = { storeGrade, npsGrade }
     })
     return msg

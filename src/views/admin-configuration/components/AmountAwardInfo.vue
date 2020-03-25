@@ -57,7 +57,9 @@ export default {
     }
   },
   created () {
-    if (this.editId) { this.getImpulseInfo() }
+    if (this.editId) {
+      this.getImpulseInfo()
+    }
   },
   methods: {
     /**
@@ -110,8 +112,8 @@ export default {
     margin-bottom: 20px;
     font-size: 14px;
     font-weight: 400;
-    color: rgba(48, 49, 51, 1);
     line-height: 22px;
+    color: rgba(48, 49, 51, 1);
 
     & > span {
       width: 100px;

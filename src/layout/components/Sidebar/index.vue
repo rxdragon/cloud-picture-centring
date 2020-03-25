@@ -55,7 +55,9 @@ export default {
   methods: {
     activeExperiment () {
       const time = 4 * 1000
-      if (this.experimentCounts === 0) { this.expireTime = new Date().getTime() + time }
+      if (this.experimentCounts === 0) {
+        this.expireTime = new Date().getTime() + time
+      }
       this.experimentCounts++
       if (this.experimentCounts === 7) {
         const nowTime = new Date().getTime()

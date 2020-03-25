@@ -163,10 +163,18 @@ export default {
         reqData.startAt = joinTimeSpan(this.timeSpan[0])
         reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.checkValue) { reqData.evaluateStar = this.checkValue }
-      if (this.productValues.length) { reqData.productIds = this.productValues }
-      if (this.retouchStandards.length) { reqData.retouchStandards = this.retouchStandards }
+      if (this.staffId.length) {
+        reqData.staffIds = this.staffId
+      }
+      if (this.checkValue) {
+        reqData.evaluateStar = this.checkValue
+      }
+      if (this.productValues.length) {
+        reqData.productIds = this.productValues
+      }
+      if (this.retouchStandards.length) {
+        reqData.retouchStandards = this.retouchStandards
+      }
       return reqData
     },
     /**
@@ -183,10 +191,14 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
-        if (page && !data.length) { this.photos = [] }
+        if (page && !data.length) {
+          this.photos = []
+        }
         if (data.length) {
           this.photos = data
-          if (this.cachepage < this.pager.page) { this.cachepage++ }
+          if (this.cachepage < this.pager.page) {
+            this.cachepage++
+          }
           const showPage = this.maxPage || (this.cachepage + 1)
           this.pager.total = showPage * this.pager.pageSize
         } else {
@@ -213,8 +225,8 @@ export default {
     align-items: center;
 
     .search-item {
-      margin-bottom: 20px;
       margin-right: 24px;
+      margin-bottom: 20px;
 
       & > span {
         text-align-last: justify;
@@ -249,15 +261,15 @@ export default {
   }
 
   .search-data {
-    margin-top: 0;
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 0;
 
     .photo-module {
       display: flex;
-      justify-content: space-between;
       flex-wrap: wrap;
+      justify-content: space-between;
       width: 100%;
 
       .photo-box {
@@ -275,18 +287,18 @@ export default {
       width: 100%;
 
       .page-item {
-        padding: 0 4px;
-        background: #fff;
-        vertical-align: top;
+        box-sizing: border-box;
         display: inline-block;
-        font-size: 13px;
         min-width: 28px;
         height: 28px;
-        line-height: 28px;
-        cursor: pointer;
-        box-sizing: border-box;
-        text-align: center;
+        padding: 0 4px;
         margin: 0;
+        font-size: 13px;
+        line-height: 28px;
+        text-align: center;
+        vertical-align: top;
+        cursor: pointer;
+        background: #fff;
       }
 
       .more-page {

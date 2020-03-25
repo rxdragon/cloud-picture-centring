@@ -126,7 +126,9 @@ export function waitTime (time, passTime) {
   const nowTime = new Date().getTime()
   const valueTime = new Date(time).getTime()
   let passAtTime
-  if (passTime) { passAtTime = new Date(passTime).getTime() }
+  if (passTime) {
+    passAtTime = new Date(passTime).getTime()
+  }
   let differ = passTime ? (passAtTime - valueTime) : (nowTime - valueTime)
   differ = (differ / 1000 / 60).toFixed(0) + 'min'
   return differ

@@ -25,7 +25,7 @@ global.config = () => undefined
 console.log(`cache dir: ${global.userDir}`)
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: 'cloud', privileges: { secure: true, standard: true }}])
+protocol.registerSchemesAsPrivileged([{ scheme: 'cloud', privileges: { secure: true, standard: true } }])
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

@@ -329,8 +329,8 @@ export default {
 
 .table-popover {
   .popover-table {
-    width: 100%;
     display: block;
+    width: 100%;
     max-height: 400px;
     overflow: overlay;
     border-collapse: collapse;
@@ -349,8 +349,8 @@ export default {
     }
 
     &::-webkit-scrollbar-button {
-      background: #fff;
       display: none;
+      background: #fff;
     }
 
     &::-webkit-scrollbar-corner {
@@ -362,37 +362,37 @@ export default {
     }
 
     th {
-      padding: 21px 20px;
       width: 50%;
+      padding: 21px 20px;
       font-size: 14px;
       font-weight: 400;
-      color: #606266;
       line-height: 14px;
+      color: #606266;
     }
 
     .popover-table-header {
-      background-color: #fafafa;
-      display: block;
       position: sticky;
       top: 0;
+      display: block;
+      background-color: #fafafa;
       border: none;
 
       & > th {
         padding: 17px 20px;
         font-size: 14px;
         font-weight: 500;
-        color: #303133;
         line-height: 22px;
+        color: #303133;
       }
     }
   }
 }
 
 .flow-board {
-  padding: 0 24px;
-  background-color: #f2f6fc;
   height: @drawerHeight;
+  padding: 0 24px;
   overflow: overlay;
+  background-color: #f2f6fc;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -408,8 +408,8 @@ export default {
   }
 
   &::-webkit-scrollbar-button {
-    background: #fff;
     display: none;
+    background: #fff;
   }
 
   &::-webkit-scrollbar-corner {
@@ -417,23 +417,23 @@ export default {
   }
 
   .flow-header {
-    font-size: 20px;
-    font-weight: 600;
-    color: #303133;
-    line-height: 24px;
-    padding: 24px;
-    margin: 0 -24px;
-    background-color: #f2f6fc;
     position: sticky;
     top: 0;
     z-index: 20;
+    padding: 24px;
+    margin: 0 -24px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    color: #303133;
+    background-color: #f2f6fc;
 
     .count-down {
-      color: #606266;
+      margin-left: 12px;
       font-size: 14px;
       font-weight: 400;
       line-height: 22px;
-      margin-left: 12px;
+      color: #606266;
     }
 
     .close-button {
@@ -449,21 +449,21 @@ export default {
   .flow-body {
     .wait-retouch {
       .panel-left {
-        width: calc(~"100% - 256px");
         display: inline-block;
-        border-right: 1px solid @borderColor;
+        width: calc(~"100% - 256px");
         vertical-align: bottom;
+        border-right: 1px solid @borderColor;
       }
 
       .panel-right {
-        width: 256px;
         display: inline-block;
+        width: 256px;
       }
     }
 
     .module-panel {
-      border-radius: 8px;
       margin-bottom: 24px;
+      border-radius: 8px;
 
       .panel-title {
         padding-left: 10px;
@@ -472,55 +472,55 @@ export default {
     }
 
     .panel-data-box {
+      display: inline-block;
       width: 183px;
       padding: 12px 10px;
-      display: inline-block;
 
       .data-title {
+        padding-bottom: 8px;
         font-size: 12px;
         font-weight: 400;
-        color: #909399;
         line-height: 17px;
-        padding-bottom: 8px;
+        color: #909399;
       }
 
       .data-content {
         font-size: 24px;
         font-weight: 600;
-        color: @blue;
         line-height: 28px;
+        color: @blue;
 
         .data-desc {
+          margin-left: 6px;
           font-size: 12px;
           font-weight: 400;
           line-height: 17px;
-          margin-left: 6px;
-          cursor: pointer;
           text-decoration: underline;
+          cursor: pointer;
         }
       }
     }
 
     .data-table {
-      border-top: 1px solid @borderColor;
       padding-top: 16px;
       margin: 0 10px;
+      border-top: 1px solid @borderColor;
 
       table {
         font-size: 12px;
         font-weight: 600;
-        color: #303133;
         line-height: 20px;
+        color: #303133;
 
         th {
           min-width: 30px;
-          border-right: 1px solid @borderColor;
-          text-align: left;
           padding: 0 24px 12px;
+          text-align: left;
+          border-right: 1px solid @borderColor;
 
           &:nth-of-type(1) {
-            border: none;
             padding: 0 0 12px;
+            border: none;
           }
 
           &:nth-last-of-type(1) {
@@ -541,8 +541,8 @@ export default {
         .table-title {
           font-size: 12px;
           font-weight: 400;
-          color: #909399;
           line-height: 17px;
+          color: #909399;
         }
       }
     }

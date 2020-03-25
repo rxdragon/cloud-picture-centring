@@ -3,8 +3,7 @@ import * as Retoucher from '@/api/retoucher'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import store from '@/store'
-import router from '@/router'
-import { resetRouter } from '@/router'
+import router, { resetRouter } from '@/router'
 import { MessageBox } from 'element-ui'
 
 const state = {
@@ -111,7 +110,9 @@ const actions = {
   },
   // 设置在线状态
   setUserlineState ({ dispatch, commit }, inState) {
-    if (inState === 'online') { dispatch('getNowTime') }
+    if (inState === 'online') {
+      dispatch('getNowTime')
+    }
     commit('SET_LINE_STATE', inState)
   },
   // 轮训是否激活状态
@@ -168,7 +169,7 @@ const actions = {
         window.polling.checkOnline = null
         commit('SET_ACTIVE_TIME')
         dispatch('getNowTime')
-      }).catch(() => {})
+      }).catch()
     } else {
       dispatch('getNowTime')
     }

@@ -49,7 +49,7 @@ export default {
         type: 'warning'
       }).then(() => {
         ipcRenderer.send('version:do-upgrade')
-      }).catch(() => {})
+      }).catch()
     })
   },
   methods: {
@@ -67,26 +67,26 @@ export default {
 @import '../styles/variables.less';
 
 .el-header {
-  background: @gradualGray;
-  padding: 0 !important;
   height: @navbarHeight !important;
+  padding: 0 !important;
+  background: @gradualGray;
 }
 
 .el-aside {
-  background-color: #d3dce6;
-  padding: 0 !important;
   position: relative;
+  width: @sideBarWidth !important;
+  padding: 0 !important;
   margin-bottom: 0;
   line-height: inherit;
-  width: @sideBarWidth !important;
+  background-color: #d3dce6;
 }
 
 .el-main {
+  width: calc(~'100vw - @{sideBarWidth}');
   height: calc(~'100vh - @{navbarHeight}');
   padding: 0 !important;
-  border-radius: 20px 0 0 20px;
   background-color: #f2f6fc;
-  width: calc(~'100vw - @{sideBarWidth}');
+  border-radius: 20px 0 0 20px;
 
   ::-webkit-scrollbar {
     width: 8px;
@@ -102,8 +102,8 @@ export default {
   }
 
   ::-webkit-scrollbar-button {
-    background: #fff;
     display: none;
+    background: #fff;
   }
 
   ::-webkit-scrollbar-corner {
@@ -115,25 +115,25 @@ export default {
   overflow: inherit;
 
   .web-state {
-    height: 36px;
     position: fixed;
     top: 42px;
-    width: calc(~'100% - @{sideBarWidth}');
     z-index: 1000;
-    background-color: #fdeae4;
-    color: #fb602d;
-    line-height: 36px;
     display: flex;
-    text-align: center;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: calc(~'100% - @{sideBarWidth}');
+    height: 36px;
+    line-height: 36px;
+    color: #fb602d;
+    text-align: center;
+    background-color: #fdeae4;
 
     .refush-button {
       padding: 2px;
-      background-color: #fdeae4;
-      color: #fb602d;
-      border-color: #fb602d;
       margin-left: 10px;
+      color: #fb602d;
+      background-color: #fdeae4;
+      border-color: #fb602d;
 
       &:hover {
         box-shadow: 4px 4px 2px 0 #d4d4d4;

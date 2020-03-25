@@ -110,8 +110,12 @@ export default {
       }
       req.startAt = joinTimeSpan(this.timeSpan[0])
       req.endAt = joinTimeSpan(this.timeSpan[1], 1)
-      if (this.retoucherGroupValue) { req.retouchGroup = this.retoucherGroupValue }
-      if (this.retouchType) { req.retouchClass = this.retouchType }
+      if (this.retoucherGroupValue) {
+        req.retouchGroup = this.retoucherGroupValue
+      }
+      if (this.retouchType) {
+        req.retouchClass = this.retouchType
+      }
       return req
     },
     /**
@@ -126,7 +130,9 @@ export default {
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => { this.loading = false }, 500)
+        setTimeout(() => {
+          this.loading = false
+        }, 500)
       }
     }
   }
@@ -138,8 +144,8 @@ export default {
 
 .time-statistics {
   .table-panel {
-    margin-top: 32px;
     position: relative;
+    margin-top: 32px;
     border-bottom: 1px solid #f2f6fc;
 
     .unit {
@@ -172,14 +178,14 @@ export default {
         & > span {
           font-size: 14px;
           font-weight: 500;
-          color: #303133;
           line-height: 22px;
+          color: #303133;
         }
 
         .describe {
           font-weight: 400;
-          color: #909399;
           line-height: 14px;
+          color: #909399;
         }
       }
     }
@@ -190,11 +196,11 @@ export default {
         text-align: center;
 
         & > span {
+          padding: 21px 20px;
           font-size: 14px;
           font-weight: 400;
-          color: #606266;
           line-height: 14px;
-          padding: 21px 20px;
+          color: #606266;
         }
       }
     }

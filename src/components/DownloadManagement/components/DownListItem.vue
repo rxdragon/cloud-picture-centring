@@ -157,10 +157,10 @@ export default {
   }
 
   .filename {
-    color: #848991;
     display: flex;
     align-items: center;
     width: 220px;
+    color: #848991;
 
     .file-icon {
       width: 20px;
@@ -182,8 +182,8 @@ export default {
 
   .handle-button {
     width: auto;
-    text-align: center;
     padding: 10px 0;
+    text-align: center;
   }
 }
 </style>

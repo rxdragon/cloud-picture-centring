@@ -136,34 +136,34 @@ export default {
     padding: 26px 20px;
 
     .tabel-panel {
-      background-color: #fafafa;
-      border-radius: 4px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       align-items: flex-start;
+      background-color: #fafafa;
+      border-radius: 4px;
 
       .tabel-title {
         padding: 17px 20px;
         font-size: 14px;
         font-weight: 500;
-        color: #303133;
         line-height: 22px;
+        color: #303133;
         text-align: left;
       }
 
       .tabel-content {
-        text-align: left;
         padding: 21px 20px;
         font-size: 14px;
         font-weight: 400;
-        color: #606266;
         line-height: 24px;
+        color: #606266;
+        text-align: left;
         background-color: #fff;
       }
 
       .panel-content {
-        border-bottom: 1px solid @borderColor;
         text-align: center;
+        border-bottom: 1px solid @borderColor;
       }
     }
 
