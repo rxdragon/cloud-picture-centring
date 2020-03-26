@@ -52,7 +52,6 @@
     "stylelint-config-standard": "^18.3.0",
     "stylelint-webpack-plugin": "^1.2.3",
     "tui-editor": "^1.4.10",
-    "upyun": "^3.3.11",
     "uuid": "^3.3.3",
     "v-charts": "^1.19.0",
     "vue": "^2.6.10",
@@ -84,20 +83,6 @@
     "vue-cli-plugin-element": "^1.0.1",
     "vue-template-compiler": "^2.6.10"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/standard"
-    ],
-    "rules": "./.eslintrc.js",
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
@@ -114,6 +99,7 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "yarn lint",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
