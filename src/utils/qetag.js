@@ -56,7 +56,7 @@ export default class QiNiuETag {
     get sha1Buffer () {
       let returnData = this.concatArr2Uint8(this.sha1String)
       let prefix
-      if (this.chunkTime > 1) {
+      if (this.chunkTime >= 1) {
         prefix = [0x96]
         returnData = shA1(returnData.buffer)
       } else {
