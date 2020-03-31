@@ -38,8 +38,8 @@ export default class QiNiuETag {
     }
 
     concatArr2Uint8 (s) {
-      var tmp = []
-      for (var i of s) tmp = tmp.concat(i)
+      let tmp = []
+      for (let i of s) tmp = tmp.concat(i)
       return new Uint8Array(tmp)
     }
 
