@@ -114,15 +114,10 @@ export default {
     // 压缩图片地址
     imageSrc () {
       // 不是上传显示
-      const oldPath = this.imgDomain + this.src + this.breviary
       if (!this.fileData) {
-        const photoFileNam = this.src.split('/')
-        const isOldPath = photoFileNam.length === 1
-        const newPath = this.imgCompressDomain + this.src
-        return isOldPath ? oldPath : newPath
+        return this.imgCompressDomain + this.src
       } else {
-        const isGreaterLimitSize = this.fileData.size >= this.limitSize
-        return isGreaterLimitSize ? '' : oldPath
+        return ''
       }
     },
     photoRealName () {
@@ -147,7 +142,7 @@ export default {
   },
   created () {
     if (!this.fileData) return
-    this.showCanvas = this.fileData.size >= this.limitSize
+    this.showCanvas = true
   },
   mounted () {
     this.preloadImg()
