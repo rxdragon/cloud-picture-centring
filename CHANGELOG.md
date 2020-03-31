@@ -357,6 +357,12 @@
  页码修复 | [f7880c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f7880c1)
 
 
+### 📝 文档
+|范围|描述|commitId|
+--|--|--
+ 更改前端环境变量 | [ad31ff9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ad31ff9)
+
+
 ### 🔙 撤销
 |范围|描述|commitId|
 --|--|--

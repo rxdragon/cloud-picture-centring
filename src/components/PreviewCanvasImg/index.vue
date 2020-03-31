@@ -60,10 +60,10 @@ export default {
 
 <style lang="less" scoped>
 .preview-canvas-img {
+  position: absolute;
   width: 100%;
   height: 100%;
   object-position: top;
   object-fit: cover;
-  position: absolute;
 }
 </style>
