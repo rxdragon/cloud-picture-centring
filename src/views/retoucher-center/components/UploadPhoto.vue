@@ -173,7 +173,9 @@ export default {
         const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
         this.photos.forEach(photoItem => {
           if (!allFinishPhoto.find(finishItem => finishItem.id === photoItem.id)) {
-            needUploadPhotos.push(photoItem.path)
+            let photoFileNam = photoItem.path.split('/')
+            photoFileNam = photoFileNam[photoFileNam.length - 1]
+            needUploadPhotos.push(photoFileNam)
           }
         })
         AutoUpload.getFiles(this.streamNum, needUploadPhotos)

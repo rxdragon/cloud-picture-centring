@@ -17,7 +17,7 @@ export default {
     return {
       fileData: null,
       quality: 0.8,
-      width: 300,
+      width: 700,
       src: ''
     }
   },
