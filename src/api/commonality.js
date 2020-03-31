@@ -115,15 +115,18 @@ export function getStreamInfo (params) {
 }
 
 /**
- * @description 获取又拍云接口
+ * @description 获取七牛云接口
  * @param {*} params
  */
 export function getSignature (params) {
   return axios({
-    url: '/project_cloud/photoManager/getSignature',
+    url: '/project_cloud/photoManager/getUploadToken',
     method: 'GET'
   }).then(msg => {
-    return msg
+    const createData = {
+      token: msg
+    }
+    return createData
   })
 }
 

@@ -18,7 +18,7 @@ export function logUpload (file, type) {
   const endTime = type ? nowTime : file.response.time
   const status = type === 'refresh' ? 'incomplete' : file.status
   const data = {
-    md5Name: file.raw.md5Name,
+    sha1Name: file.raw.sha1Name,
     startTime: file.raw.startTime,
     endTime,
     status,

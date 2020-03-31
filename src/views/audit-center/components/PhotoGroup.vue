@@ -13,6 +13,7 @@
         :show-recede-reason="photoItem.version === 'first_photo'"
         :photo-name="photoItem.version === 'first_photo'"
         :tags="photos.tags"
+        :file-data="photoItem.fileData"
         @click.native="showPriviewPhoto(photoIndex)"
       />
       <div class="button-box">
@@ -21,7 +22,7 @@
           v-if="photoItem.version === 'first_photo'"
           class="upload-crop-button"
           accept="image/*"
-          :action="updateDomain + upyunConfigComputed.bucket"
+          :action="updateDomain"
           :show-file-list="false"
           :before-upload="beforeUpload"
           :on-success="handleSuccess"
@@ -152,12 +153,12 @@ export default {
      */
     handleSuccess (response, file, fileList) {
       const path = PhotoTool.handlePicPath(response.url)
-      this.createPhotoVersion(path)
+      this.createPhotoVersion(path, file)
     },
     /**
      * @description 覆盖上传
      */
-    createPhotoVersion (path) {
+    createPhotoVersion (path, file) {
       this.$store.dispatch('setting/showLoading', this.routeName)
       const req = {
         version: 'first_photo',
@@ -168,6 +169,7 @@ export default {
         .then(() => {
           this.$newMessage.success('覆盖成功')
           this.photos.priviewPhotoData[1].path = path
+          this.photos.priviewPhotoData[1].fileData = file
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
     },

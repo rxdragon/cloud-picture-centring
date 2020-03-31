@@ -236,6 +236,7 @@ export default {
       const uploadData = [...cachePhoto, ...finishPhotoArr]
       uploadData.forEach(item => {
         delete item.orginPhotoName
+        delete item.file
       })
       if (uploadData.length > this.photos.length) {
         return this.$newMessage.warning('上传照片数量超过限制，请重新上传。')

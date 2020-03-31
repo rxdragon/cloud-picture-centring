@@ -20,7 +20,7 @@ export function getRetouchStreams (params) {
       listItem.streamId = listItem.id
       listItem.productName = _.get(listItem, 'product.name', '-')
       listItem.photoNum = listItem.photos_count
-      listItem.type = listItem.product.retouch_standard
+      listItem.type = listItem.product && listItem.product.retouch_standard || '-'
       listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
       listItem.waitTime = waitTime(listItem.created_at, listItem.pass_at)
       listItem.photographerUpdate = listItem.created_at || '-'
