@@ -41,6 +41,10 @@
               <span class="title">修图备注：</span>
               <span class="content">{{ retouchMark }}</span>
             </div>
+            <div class="panel-main-content" v-if="specialEfficacy">
+              <span class="title">选定特效：</span>
+              <span class="content">{{ specialEfficacy }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -113,6 +117,7 @@ export default {
       photoVersion: [], // 照片版本
       gradeInfo: {}, // 打分数据
       attitudeValue: '',
+      specialEfficacy: '', // 特效
       headerClass: '' // 导航栏样式
     }
   },
@@ -142,6 +147,7 @@ export default {
         this.productName = data.productName
         this.customeName = data.customeName
         this.labelTag = data.labelTag
+        this.specialEfficacy = data.specialEfficacy
         this.photographerRemark = data.photographerRemark
         this.retouchMark = data.retouchMark
         this.orderMark = data.orderMark

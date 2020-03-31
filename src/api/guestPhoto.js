@@ -38,9 +38,10 @@ export function getPhotoInfo (params) {
     createData.streamNum = createData.stream.stream_num
     createData.productName = _.get(createData, 'stream.product.name', '-')
     createData.customeName = _.get(createData, 'stream.order.tags.values.customer_name', '-')
+    createData.specialEfficacy = _.get(createData, 'tags.values.special_efficacy')
     createData.labelTag = _.get(createData, 'stream.tags.values.retouch_claim', {})
     createData.orderMark = _.get(createData, 'stream.order.note.orderNote', '-')
-    createData.dresserMark = _.get(createData, 'stream.order.note.dresserNote', '-')
+    createData.dresserMark = _.get(createData, 'stream.order.note.dresserNote', '-') || '-'
     createData.photographerRemark = _.get(createData, 'stream.note.photography_note', '-')
     createData.retouchMark = _.get(createData, 'stream.note.retouch_note', '-')
     createData.isPass = Boolean(createData.stream.pass_at)

@@ -425,4 +425,5 @@
 --|--|--
  删除又拍云模块 | [7983d9b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7983d9b)
  增加commit验证 | [d804efc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d804efc)
+ 增加upyun上传 | [eafd6d3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eafd6d3)
 
