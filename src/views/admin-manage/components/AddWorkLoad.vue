@@ -94,7 +94,9 @@ export default {
         this.$newMessage.warning('请填写建议工作量')
         return false
       }
-      if (this.groupId) { req.retouchClassId = this.groupId }
+      if (this.groupId) {
+        req.retouchClassId = this.groupId
+      }
       return req
     },
     /**

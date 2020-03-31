@@ -216,21 +216,21 @@ export default {
   -webkit-app-region: drag;
 
   .navbar-main {
-    margin-left: var(--navbarMainLeft);
-    height: 100%;
-    width: calc(100% - var(--navbarMainLeft));
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    width: calc(100% - var(--navbarMainLeft));
+    height: 100%;
+    margin-left: var(--navbarMainLeft);
     transition: all 0.3s;
 
     .nav-left {
       -webkit-app-region: no-drag;
 
       .icon-button {
-        padding: 0;
         width: 24px;
         height: 24px;
+        padding: 0;
       }
 
       .refresh {
@@ -241,8 +241,8 @@ export default {
     .nav-right {
       display: flex;
       align-items: center;
-      -webkit-app-region: no-drag;
       -webkit-user-select: none;
+      -webkit-app-region: no-drag;
 
       .download-management {
         margin-right: 20px;
@@ -251,9 +251,9 @@ export default {
       .el-avatar {
         width: 24px;
         height: 24px;
-        border: 1px solid #fff;
         margin-right: 6px;
         cursor: pointer;
+        border: 1px solid #fff;
         outline: none;
       }
 
@@ -267,28 +267,28 @@ export default {
         }
 
         &::after {
-          content: '';
+          position: absolute;
+          right: -2px;
+          bottom: -2px;
           display: block;
           width: 8px;
           height: 8px;
+          content: '';
           background-color: #909399;
-          position: absolute;
-          bottom: -2px;
-          right: -2px;
           border-radius: 50%;
         }
 
         &::before {
-          content: '';
-          display: block;
           position: absolute;
-          width: 100%;
-          height: 100%;
           top: 0;
           left: 0;
+          display: block;
+          width: 100%;
+          height: 100%;
+          content: '';
           background-color: #fff;
-          opacity: 0;
           border-radius: 50%;
+          opacity: 0;
           transition: all 0.3s;
         }
       }
@@ -310,16 +310,16 @@ export default {
       }
 
       .online-state {
-        font-size: 14px;
         margin-right: 8px;
+        font-size: 14px;
         font-weight: 500;
         color: #909399;
         transition: color 0.3s;
       }
 
       .user-name {
-        font-size: 14px;
         margin-right: 8px;
+        font-size: 14px;
       }
 
       .label {
@@ -327,24 +327,24 @@ export default {
       }
 
       .icon-button {
-        background-color: transparent;
-        padding: 0;
         width: 24px;
         height: 24px;
+        padding: 0;
+        background-color: transparent;
       }
     }
 
     .nav-main {
-      text-align: center;
-      line-height: @navbarHeight;
-      height: 100%;
       width: 50%;
+      height: 100%;
+      line-height: @navbarHeight;
+      text-align: center;
       cursor: pointer;
       -webkit-user-select: none;
 
       .test-title {
-        color: red;
         font-size: 40px;
+        color: red;
         vertical-align: middle;
       }
     }
@@ -353,35 +353,35 @@ export default {
 
 .change-state {
   ul {
+    padding: 0 12px;
     margin: 0;
     list-style: none;
-    padding: 0 12px;
 
     li {
-      line-height: 34px;
       height: 34px;
+      line-height: 34px;
       cursor: pointer;
 
       .change-point {
+        display: inline-block;
         width: 8px;
         height: 8px;
-        border-radius: 50%;
-        background-color: @green;
-        display: inline-block;
         margin-right: 12px;
+        background-color: @green;
+        border-radius: 50%;
       }
 
       .li-check {
-        font-size: 16px;
-        color: @blue;
-        font-weight: 600;
-        margin-top: 9px;
         float: right;
+        margin-top: 9px;
+        font-size: 16px;
+        font-weight: 600;
+        color: @blue;
       }
 
       .change-text {
-        font-weight: 500;
         font-size: 14px;
+        font-weight: 500;
         color: #606266;
 
         &.active {

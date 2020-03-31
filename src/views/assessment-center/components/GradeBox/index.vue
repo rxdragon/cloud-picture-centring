@@ -262,12 +262,18 @@ export default {
         const glassArray = ['plant', 'pull', 'none']
         req.auditGlass = this.sameOpinion === 'same' ? glassArray[this.checkPlantState - 1] : this.weedOpinion
       }
-      if (this.correctRemark) { req.auditNote = this.correctRemark }
-      if (this.issueRemark) { req.evaluationNote = this.issueRemark }
+      if (this.correctRemark) {
+        req.auditNote = this.correctRemark
+      }
+      if (this.issueRemark) {
+        req.evaluationNote = this.issueRemark
+      }
       if (!this.photoInfoData.isReturn && !this.photoInfoData.isGreen) {
         req.evaluationNote = this.correctRemark || this.issueRemark
       }
-      if (this.issueLabel.length && this.flakinessEvaluate === 'pull') { req.filmTag = this.issueLabel }
+      if (this.issueLabel.length && this.flakinessEvaluate === 'pull') {
+        req.filmTag = this.issueLabel
+      }
       return req
     },
     /**
@@ -315,10 +321,10 @@ export default {
     }
 
     .panel-content {
+      height: calc(~'100% - 44px');
+      padding: 0 20px;
       background-color: #fafafa;
       border-radius: 4px;
-      padding: 0 20px;
-      height: calc(~'100% - 44px');
 
       .base-info {
         display: grid;
@@ -328,8 +334,8 @@ export default {
       .panel-row {
         padding: 20px 0;
         font-size: 14px;
-        color: #303133;
         line-height: 22px;
+        color: #303133;
         border-bottom: 1px solid @borderColor;
 
         .order-info {
@@ -385,9 +391,9 @@ export default {
       display: flex;
 
       .el-tag {
-        font-weight: bold;
-        margin-right: 12px;
         display: inline-block;
+        margin-right: 12px;
+        font-weight: bold;
       }
 
       .retouch-remark {
@@ -448,10 +454,10 @@ export default {
       }
 
       .audit-remark {
-        font-size: 14px;
-        color: #303133;
-        line-height: 22px;
         margin-top: 10px;
+        font-size: 14px;
+        line-height: 22px;
+        color: #303133;
       }
     }
   }
@@ -485,8 +491,8 @@ export default {
       margin-top: 10px;
       font-size: 14px;
       font-weight: 400;
-      color: #303133;
       line-height: 22px;
+      color: #303133;
     }
   }
 

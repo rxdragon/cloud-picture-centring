@@ -124,15 +124,15 @@ export function getReviewList (params) {
     params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      const reviewPlantPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.plant_num || 0
-      const reviewPullPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.pull_num || 0
-      const spotPlantPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_plant_num || 0
-      const spotPullPhotoNum = listItem.tags && listItem.tags.values && listItem.tags.values.film_evaluation_photo_pull_num || 0
-      const spotSameNum = listItem.tags && listItem.tags.values && listItem.tags.values.rectify_same_photo_num || 0
-      const spotDifferentNum = listItem.tags && listItem.tags.values && listItem.tags.values.rectify_different_photo_num || 0
+      const reviewPlantPhotoNum = _.get(listItem, 'tags.values.plant_num', 0)
+      const reviewPullPhotoNum = _.get(listItem, 'tags.values.pull_num', 0)
+      const spotPlantPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_plant_num', 0)
+      const spotPullPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_pull_num', 0)
+      const spotSameNum = _.get(listItem, 'tags.values.rectify_same_photo_num', 0)
+      const spotDifferentNum = _.get(listItem, 'tags.values.rectify_different_photo_num', 0)
       const allTime = (listItem.review_time + listItem.review_return_rebuild_time)
       listItem.reviewAllTime = timeFormat(allTime, 'text', true)
-      listItem.staffName = listItem.reviewers && (listItem.reviewers.name || listItem.reviewers.real_name) || '-'
+      listItem.staffName = _.get(listItem, 'reviewers.name') || _.get(listItem, 'reviewers.real_name') || '-'
       listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
       listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
       listItem.spotSameNum = spotSameNum

@@ -63,10 +63,7 @@ export default {
       'showTimeStatistics',
       'showCheckerEvaluate'
     ])
-  },
-  created () {},
-  mounted () {},
-  methods: {}
+  }
 }
 </script>
 

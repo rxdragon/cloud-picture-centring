@@ -32,16 +32,16 @@ export default {
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  text-align: center;
-  overflow: hidden;
   height: 157px;
+  overflow: hidden;
+  text-align: center;
 
   .sidebar-logo-link {
-    height: 100%;
-    width: 100%;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    width: 100%;
+    height: 100%;
 
     .sidebar-logo {
       width: 174px;
@@ -52,11 +52,11 @@ export default {
     .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      font-size: 14px;
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      color: #fff;
       vertical-align: middle;
     }
   }

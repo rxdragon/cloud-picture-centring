@@ -41,27 +41,27 @@ export default {
 
 .domain-switch-box {
   .radio-group {
-    width: 132px;
-    background-color: @blue;
-    padding: 2px;
-    border-radius: 4px;
     position: relative;
+    width: 132px;
+    padding: 2px;
+    background-color: @blue;
+    border-radius: 4px;
 
     .back-button,
     .radio-button {
-      width: 64px;
-      line-height: 28px;
-      display: inline-block;
-      font-size: 14px;
-      text-align: center;
-      font-weight: 500;
-      color: #7d96fc;
-      -webkit-appearance: none;
-      -webkit-user-select: none;
       position: relative;
       z-index: 2;
+      display: inline-block;
+      width: 64px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 28px;
+      color: #7d96fc;
+      text-align: center;
       cursor: pointer;
+      -webkit-user-select: none;
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      -webkit-appearance: none;
 
       &.is-active {
         color: @blue;
@@ -69,13 +69,13 @@ export default {
     }
 
     .back-button {
-      background-color: #fff;
-      height: 28px;
       position: absolute;
       top: 2px;
       left: 2px;
-      border-radius: 4px;
       z-index: 1;
+      height: 28px;
+      background-color: #fff;
+      border-radius: 4px;
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 
       &.al-active {

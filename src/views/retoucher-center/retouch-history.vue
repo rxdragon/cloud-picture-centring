@@ -144,7 +144,9 @@ export default {
      */
     async getRetouchList (page) {
       try {
-        if (page) { this.pager.page = page }
+        if (page) {
+          this.pager.page = page
+        }
         const reqData = {
           page: this.pager.page,
           pageSize: this.pager.pageSize
@@ -153,8 +155,12 @@ export default {
           reqData.startAt = joinTimeSpan(this.timeSpan[0])
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.searchType) { reqData.grass = this.searchType }
-        if (this.streamNum) { reqData.streamNum = this.streamNum }
+        if (this.searchType) {
+          reqData.grass = this.searchType
+        }
+        if (this.streamNum) {
+          reqData.streamNum = this.streamNum
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total
@@ -196,9 +202,9 @@ export default {
 <style lang="less">
 .people-table {
   .el-table {
+    position: relative;
     max-height: 400px;
     overflow: overlay;
-    position: relative;
 
     &::-webkit-scrollbar {
       width: 5px;
@@ -214,8 +220,8 @@ export default {
     }
 
     &::-webkit-scrollbar-button {
-      background: #fff;
       display: none;
+      background: #fff;
     }
 
     &::-webkit-scrollbar-corner {

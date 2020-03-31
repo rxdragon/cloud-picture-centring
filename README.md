@@ -7,17 +7,43 @@ yarn install
 
 ### 开启服务
 ```
-yarn serve
+yarn eserve-dev // 预发环境
+yarn eserve-release // release环境
 ```
 
 ### 构建项目
 ```
-yarn run build
+yarn build // 打包vue文件
+yarn build-dev // 打包vue文件-预发
+yarn build-release // 打包vue文件-release
+
+yarn build-background // 打包electron 入口文件
+yarn build-background-dev // 打包electron-预发 入口文件
+yarn build-background-release // 打包electron-release 入口文件
 ```
+
+> 打包asar文件
+- pack-vue
+
+> 项目生成执行逻辑
+
+1. yarn build // 构建vue项目
+2. yarn build-background // 构建electron项目文件 放入 `dist_vue`文件中
+3. yarn pack-vue // 打包压缩生成vue
 
 ### eslint
 ```
 yarn run lint
+```
+
+### stylelint
+```
+yarn run stylelint
+```
+
+### commitlint
+```
+yarn run cz
 ```
 
 ### 项目结构
@@ -135,3 +161,8 @@ yarn run lint
 ├── favicon.ico                // favicon图标
 └── package.json               // package.json
 ```
+
+日期|版本号|描述|开发人员|链接
+:--:|:--:|:--:|:--:|:--:|
+2020-03-30 |2.3.11|前端项目规范|崔佛|[前端规范](https://fed.dev.hzmantu.com/fed/mainto-fed-doc/)
+2020-03-26 |2.3.09|迁移七牛云|崔佛|

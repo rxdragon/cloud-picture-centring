@@ -114,15 +114,15 @@ export default {
     }
 
     .el-tag {
-      max-width: 100px;
       display: flex;
       align-items: center;
+      max-width: 100px;
 
       .el-select__tags-text {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 50px;
         display: block;
+        max-width: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
       }
     }

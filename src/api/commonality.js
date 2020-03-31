@@ -36,11 +36,11 @@ export function getStreamInfo (params) {
   }).then(msg => {
     const data = keyToHump(msg)
     const createData = {}
-    const plantNum = data.tags && data.tags.values && data.tags.values.plant_num || 0 // 审核种草
-    const pullNum = data.tags && data.tags.values && data.tags.values.pull_num || 0 // 审核拔草
+    const plantNum = _.get(data, 'tags.values.plant_num', 0) // 审核种草
+    const pullNum = _.get(data, 'tags.values.pull_num', 0) // 审核拔草
     let checkPlantNum = 0
     let checkPullNum = 0
-    const reworkNum = data.tags && data.tags.values && data.tags.values.rework_num || 0
+    const reworkNum = _.get(data, 'tags.values.rework_num', 0)
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
@@ -52,12 +52,16 @@ export function getStreamInfo (params) {
       if (photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes('pull')) {
         photoItem.grass = 'pull'
       }
-      const filmEvaluation = photoItem.tags && photoItem.tags.values && photoItem.tags.values.film_evaluation || ''
-      const spotGrass = photoItem.tags && photoItem.tags.values && photoItem.tags.values.audit_glass || ''
+      const filmEvaluation = _.get(photoItem, 'tags.values.film_evaluation', '')
+      const spotGrass = _.get(photoItem, 'tags.values.audit_glass', '')
       photoItem.spotGrass = spotGrass
       photoItem.filmEvaluation = filmEvaluation
-      if (filmEvaluation && filmEvaluation === 'plant') { checkPlantNum++ }
-      if (filmEvaluation && filmEvaluation === 'pull') { checkPullNum++ }
+      if (filmEvaluation && filmEvaluation === 'plant') {
+        checkPlantNum++
+      }
+      if (filmEvaluation && filmEvaluation === 'pull') {
+        checkPullNum++
+      }
       photoItem.reworkNum = reworkNum
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -82,9 +86,9 @@ export function getStreamInfo (params) {
     createData.orderData = {
       streamNum: data.streamNum,
       photographerOrg: data.order ? data.order.photographer_org.name : '-',
-      productName: data.product && data.product.name || '-',
+      productName: _.get(data, 'product.name', '-'),
       photoNum: data.photos.filter(item => +item.people_num > 0).length,
-      photographerName: data.order && data.order.tags && data.order.tags.values && data.order.tags.values.photographer || '-',
+      photographerName: _.get(data, 'order.tags.values.photographer', '-'),
       reworkNum,
       plantNum,
       pullNum,
@@ -93,17 +97,17 @@ export function getStreamInfo (params) {
       overTime: data.hourGlass ? data.hourGlass.over_time : '-',
       checkPlantNum,
       checkPullNum,
-      requireLabel: data.tags && data.tags.values && data.tags.values.retouch_claim || {},
+      requireLabel: _.get(data, 'tags.values.retouch_claim', {}),
       retouchRemark: data.note.retouch_note || '暂无修图备注',
       backgroundColor: msg.note.color_note || '',
-      reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注'
+      reviewerNote: _.get(data, 'tags.values.review_reason', '暂无审核备注')
     }
     createData.photos = data.photos
     if (data.storeEvaluateStream) {
       data.storeEvaluateStream.store_evaluate_star = data.storeEvaluateStream.store_evaluate_star > 5 ? 5 : data.storeEvaluateStream.store_evaluate_star
     }
     createData.storeEvaluateStream = data.storeEvaluateStream
-    const retoucherNpsAvg = data.tags && data.tags.values && data.tags.values.retoucher_score || '-'
+    const retoucherNpsAvg = _.get(data, 'tags.values.retoucher_score', '-')
     const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
     createData.retoucherNpsAvg = npsAvgEnum[+retoucherNpsAvg] || `${retoucherNpsAvg}分`
     return createData
@@ -111,15 +115,18 @@ export function getStreamInfo (params) {
 }
 
 /**
- * @description 获取又拍云接口
+ * @description 获取七牛云接口
  * @param {*} params
  */
 export function getSignature (params) {
   return axios({
-    url: '/project_cloud/photoManager/getSignature',
+    url: '/project_cloud/photoManager/getUploadToken',
     method: 'GET'
   }).then(msg => {
-    return msg
+    const createData = {
+      token: msg
+    }
+    return createData
   })
 }
 

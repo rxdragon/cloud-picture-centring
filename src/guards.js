@@ -21,7 +21,9 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      if (whiteList.includes(to.path)) { next() }
+      if (whiteList.includes(to.path)) {
+        next()
+      }
       const name = store.getters.name
       if (name) {
         next()

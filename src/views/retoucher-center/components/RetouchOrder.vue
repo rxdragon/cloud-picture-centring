@@ -131,7 +131,9 @@ export default {
     }
   },
   created () {
-    if (!this.retouchId) { this.$emit('update:showDetail', false) }
+    if (!this.retouchId) {
+      this.$emit('update:showDetail', false)
+    }
   },
   methods: {
     /**
@@ -213,7 +215,9 @@ export default {
     uploadDown (finishPhoto) {
       // 实验功能
       if (this.showOverTag) {
-        this.photos.forEach(item => { item.isCover = false })
+        this.photos.forEach(item => {
+          item.isCover = false
+        })
         for (const uid in finishPhoto) {
           const findOrignPhoto = this.photos.find(item => item.id === finishPhoto[uid].id)
           findOrignPhoto && (findOrignPhoto.isCover = true)
@@ -230,7 +234,10 @@ export default {
       }
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
       const uploadData = [...cachePhoto, ...finishPhotoArr]
-      uploadData.forEach(item => { delete item.orginPhotoName })
+      uploadData.forEach(item => {
+        delete item.orginPhotoName
+        delete item.file
+      })
       if (uploadData.length > this.photos.length) {
         return this.$newMessage.warning('上传照片数量超过限制，请重新上传。')
       }
@@ -279,26 +286,26 @@ export default {
       }
 
       .sand-clock {
-        height: 44px;
-        width: 146px;
         position: relative;
         box-sizing: content-box;
-        background: url(~@/assets/sand_clock/sand_bg.png);
         display: flex;
         align-items: center;
+        width: 146px;
+        height: 44px;
+        background: url(~@/assets/sand_clock/sand_bg.png);
 
         .time {
-          color: white;
-          width: 115px;
-          height: 100%;
           position: absolute;
           top: 0;
           right: 0;
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 115px;
+          height: 100%;
           font-size: 16px;
           font-weight: 500;
+          color: white;
         }
       }
     }
@@ -316,10 +323,10 @@ export default {
     margin-top: 20px;
 
     .photo-panel-title {
-      margin-bottom: 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
 
       .button-box {
         display: flex;
@@ -339,22 +346,22 @@ export default {
 
       .photo-box {
         width: 253px;
-        margin-bottom: 24px;
         margin-right: 24px;
+        margin-bottom: 24px;
         transition: all 0.3s;
 
         .handle-box {
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          justify-content: space-between;
         }
 
         .progress {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           width: 241px;
           height: 241px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
         }
 
         .error-photo {
@@ -363,52 +370,52 @@ export default {
       }
 
       .over-success {
-        border: 1px solid @green;
-        font-family: @elementIcons !important;
         position: relative;
         overflow: hidden;
+        font-family: @elementIcons !important;
+        border: 1px solid @green;
 
         &::after {
-          content: "\e6da";
-          display: block;
           position: absolute;
           right: 0;
           bottom: 0;
+          display: block;
           color: #fff;
+          content: "\e6da";
         }
 
         &::before {
-          content: "";
+          position: absolute;
+          right: -20px;
+          bottom: -20px;
           display: block;
           width: 40px;
           height: 40px;
+          content: "";
           background-color: @green;
-          position: absolute;
           transform: rotate(45deg);
-          right: -20px;
-          bottom: -20px;
         }
       }
 
       .recede-remark {
-        margin-top: 20px;
         display: flex;
         width: 100%;
-        background: rgba(250, 250, 250, 1);
         padding: 20px;
-        border-radius: 4px;
+        margin-top: 20px;
         margin-right: 24px;
+        background: rgba(250, 250, 250, 1);
+        border-radius: 4px;
 
         & > span {
           width: 70px;
-          color: #303133;
           font-size: 14px;
+          color: #303133;
         }
 
         .remark-content {
-          color: #303133;
-          font-size: 14px;
           width: 632px;
+          font-size: 14px;
+          color: #303133;
           white-space: pre-wrap;
         }
       }

@@ -44,7 +44,7 @@ export default {
     height: { type: Number, default: 44 },
     listHeight: { type: Number, default: 200 },
     canScroll: { type: Boolean, default: true },
-    dispatchData: { type: Function, default: () => {} },
+    dispatchData: { type: Function, default: () => ({}) },
     loadMoreData: { type: Function, required: true },
     page: { type: Number, default: 1 }
   },
@@ -97,7 +97,9 @@ export default {
       this._above = this._rowsInWindow * 2 // 列表上面的元素
       this._below = this._rowsInWindow // 屏幕下面的元素
       this._max = this._rowsInWindow * this.height // 显示区域最大高度
-      if (!this.list.length) { this.hasMoreData = false }
+      if (!this.list.length) {
+        this.hasMoreData = false
+      }
     },
     handleScroll () {
       const _scrollTop = this.$el.scrollTop // 滚动条高度
@@ -116,9 +118,13 @@ export default {
       this.getFromAndToIndex()
       this.setPadding()
       // 发送信息
-      if (typeof this.dispatchData === 'function') { this.dispatchData(this) }
+      if (typeof this.dispatchData === 'function') {
+        this.dispatchData(this)
+      }
       this.resetPreviewList(this.from, this.to)
-      this.$nextTick(() => { this.judgeLoadMore() })
+      this.$nextTick(() => {
+        this.judgeLoadMore()
+      })
     },
     /**
      * @description 异步加载
@@ -160,7 +166,9 @@ export default {
       const isScollFinish = this.to === this.list.length
       const scollApartBottom = _height - _scrollTop - _contentHeight // 滚动元素距离底部的距离
       const isArriveArea = scollApartBottom < this.distance
-      if (isScollFinish && isArriveArea && this.canScroll) { this.loadmore(this.from, this.to) }
+      if (isScollFinish && isArriveArea && this.canScroll) {
+        this.loadmore(this.from, this.to)
+      }
     },
     /**
      * @description 获取隐藏的加载元素
@@ -181,9 +189,13 @@ export default {
      */
     getFromAndToIndex () {
       let _from = this.displayCount - this._above
-      if (_from < 0) { _from = 0 }
+      if (_from < 0) {
+        _from = 0
+      }
       let _to = _from + this._above + this._below + this._rowsInWindow
-      if (_to > this.list.length) { _to = this.list.length }
+      if (_to > this.list.length) {
+        _to = this.list.length
+      }
       this.from = _from
       this.to = _to
     }
@@ -200,15 +212,15 @@ export default {
   overflow-y: auto;
 
   ul {
-    margin: 0;
     padding: 0;
+    margin: 0;
 
     li {
-      text-decoration: none;
+      box-sizing: border-box;
       font-size: 14px;
       line-height: 3;
       text-align: left;
-      box-sizing: border-box;
+      text-decoration: none;
       background: #fff;
 
       &.line-top,
@@ -220,10 +232,10 @@ export default {
 
   .load-more-gif {
     width: 100%;
+    color: @blue;
     text-align: center;
     background: #fff;
     border-top: none;
-    color: @blue;
   }
 }
 </style>

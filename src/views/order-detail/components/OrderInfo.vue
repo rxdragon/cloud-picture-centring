@@ -132,23 +132,23 @@ export default {
   }
 
   .content-title {
-    padding: 17px 20px;
     width: 100%;
-    background-color: #fafafa;
+    padding: 17px 20px;
     font-size: 14px;
     font-weight: 500;
-    color: #303133;
     line-height: 22px;
+    color: #303133;
     text-align: left;
+    background-color: #fafafa;
   }
 
   .panel-content {
-    padding: 21px 20px;
     width: 100%;
+    padding: 21px 20px;
     font-size: 14px;
     font-weight: 400;
-    color: #606266;
     line-height: 14px;
+    color: #606266;
     text-align: left;
     border-bottom: 1px solid #f2f6fc;
   }
@@ -157,10 +157,10 @@ export default {
     margin-top: 24px;
 
     .panel-main {
-      background-color: #fafafa;
-      border-radius: 4px;
       padding: 20px;
       margin-top: 12px;
+      background-color: #fafafa;
+      border-radius: 4px;
 
       .panel-require-concent {
         padding-bottom: 20px;
@@ -172,13 +172,13 @@ export default {
       }
 
       .panel-main-content {
+        display: flex;
+        padding: 20px 0;
         font-size: 14px;
         font-weight: 400;
-        color: #303133;
         line-height: 22px;
-        padding: 20px 0;
+        color: #303133;
         border-bottom: 1px solid @borderColor;
-        display: flex;
 
         .title {
           width: 90px;

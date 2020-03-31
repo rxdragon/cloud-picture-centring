@@ -6,7 +6,9 @@ const exec = require('child_process').exec
  * @param {*} callback
  */
 function execute (command, callback) {
-  exec(command, function (error, stdout, stderr) { callback(error, stdout, stderr) })
+  exec(command, function (error, stdout, stderr) {
+    callback(error, stdout, stderr)
+  })
 }
 
 function initExecIncident (win, ipcMain) {

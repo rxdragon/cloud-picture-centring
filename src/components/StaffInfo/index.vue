@@ -47,8 +47,8 @@ export default {
 
 <style lang="less" scoped>
 .staff-info {
-  border: 1px solid #eee;
   width: 300px;
+  border: 1px solid #eee;
 
   .staff-header {
     padding: 10px;

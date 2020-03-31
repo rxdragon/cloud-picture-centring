@@ -251,8 +251,8 @@ export default {
   color: @red;
 
   &:hover {
-    background-color: @bgRed !important;
     color: #ff1b5b !important;
+    background-color: @bgRed !important;
   }
 }
 
@@ -260,8 +260,8 @@ export default {
   color: #f7a741;
 
   &:hover {
-    background-color: @bgOrange !important;
     color: @orange !important;
+    background-color: @bgOrange !important;
   }
 }
 </style>

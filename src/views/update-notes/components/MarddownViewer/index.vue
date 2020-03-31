@@ -90,13 +90,13 @@ export default {
 <style lang="less">
 .markdown-editor {
   blockquote {
-    font-weight: 900;
-    font-size: 16px;
-    border-color: #42b983;
-    border-left-width: 4px;
-    border-left-style: solid;
-    background-color: #efeeee;
     padding: 5px 15px;
+    font-size: 16px;
+    font-weight: 900;
+    background-color: #efeeee;
+    border-color: #42b983;
+    border-left-style: solid;
+    border-left-width: 4px;
 
     p {
       color: #545454;
@@ -104,11 +104,11 @@ export default {
   }
 
   strong {
-    background-color: #fff5f5;
-    color: #ff502c;
-    font-size: 11px;
-    vertical-align: baseline;
     padding: 1px 5px;
+    font-size: 11px;
+    color: #ff502c;
+    vertical-align: baseline;
+    background-color: #fff5f5;
     border-radius: 3px;
   }
 

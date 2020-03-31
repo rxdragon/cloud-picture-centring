@@ -101,8 +101,8 @@ export default {
 
 .guest-photo-details {
   .module-panel {
-    margin-bottom: 24px;
     padding-bottom: 0;
+    margin-bottom: 24px;
 
     .panel-title {
       margin-bottom: 20px;
@@ -121,24 +121,24 @@ export default {
         border-bottom: 1px solid @borderColor;
 
         & > span {
+          padding: 17px 20px;
           font-size: 14px;
           font-weight: 500;
-          color: #303133;
           line-height: 22px;
+          color: #303133;
           text-align: left;
-          padding: 17px 20px;
           background-color: #fafafa;
         }
       }
 
       .tabel-value {
         & > span {
+          display: flex;
+          align-items: center;
+          padding: 20px 21px;
           font-size: 14px;
           font-weight: 400;
           color: #606266;
-          padding: 20px 21px;
-          display: flex;
-          align-items: center;
           border-bottom: 1px solid #f2f6fc;
         }
 
@@ -151,12 +151,12 @@ export default {
     }
 
     .evaluate-info {
-      margin-top: 20px;
       padding-bottom: 24px;
+      margin-top: 20px;
       font-size: 14px;
       font-weight: 500;
-      color: #303133;
       line-height: 22px;
+      color: #303133;
       text-align: left;
 
       .good-photo {
@@ -168,18 +168,18 @@ export default {
       }
 
       .iconfont {
-        font-size: 23px;
         margin-right: 12px;
+        font-size: 23px;
       }
 
       .panel-content {
         display: flex;
         align-items: center;
-        font-size: 14px;
         font-family: @pingFang;
+        font-size: 14px;
         font-weight: 400;
-        color: #303133;
         line-height: 22px;
+        color: #303133;
       }
     }
   }

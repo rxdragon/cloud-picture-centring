@@ -114,13 +114,17 @@ export default {
      */
     initial () {
       const { searchTimeSpan, searchType, sendStaff } = this.$route.query
-      const routerTimeSpan = searchTimeSpan && searchTimeSpan.split(',') || []
+      const routerTimeSpan = (searchTimeSpan && searchTimeSpan.split(',')) || []
       const sameTimeSpan = (routerTimeSpan[0] === this.cacheTimeSpan[0] && routerTimeSpan[1] === this.cacheTimeSpan[1])
       const sameSearchType = searchType === this.cacheSearchType
       const sameSendStaff = sendStaff === this.cacheSendStaff
       if (sameTimeSpan && sameSearchType && sameSendStaff) return false
-      if (searchTimeSpan) { this.timeSpan = searchTimeSpan.split(',') }
-      if (sendStaff) { this.staffIds = sendStaff.split(',') }
+      if (searchTimeSpan) {
+        this.timeSpan = searchTimeSpan.split(',')
+      }
+      if (sendStaff) {
+        this.staffIds = sendStaff.split(',')
+      }
       switch (searchType) {
         case SearchType.SpotPlant:
           this.spotType = 'plant'
@@ -150,14 +154,22 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.correctType) { req.correctionType = this.correctType }
-      if (this.spotType) { req.grassType = this.spotType }
+      if (this.correctType) {
+        req.correctionType = this.correctType
+      }
+      if (this.spotType) {
+        req.grassType = this.spotType
+      }
       if (this.staffIds) {
         req.retoucherIds = this.staffIds.map(item => Number(item))
         this.cacheSendStaff = this.staffIds.join(',')
       }
-      if (this.reviewerId) { req.reviewerId = this.reviewerId }
-      if (this.productValue.length) { req.productIds = this.productValue }
+      if (this.reviewerId) {
+        req.reviewerId = this.reviewerId
+      }
+      if (this.productValue.length) {
+        req.productIds = this.productValue
+      }
       this.cacheTimeSpan = this.timeSpan
       this.cacheSearchType = this.spotType
       return req

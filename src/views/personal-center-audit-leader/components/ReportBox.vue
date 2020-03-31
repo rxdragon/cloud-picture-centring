@@ -92,7 +92,9 @@ export default {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.staffId) { reqData.staffId = this.staffId }
+        if (this.staffId) {
+          reqData.staffId = this.staffId
+        }
         this.loading = true
         const data = await ReviewCheck.getGroupReviewQuotaBySelf(reqData)
         for (const key in data) {
@@ -144,25 +146,25 @@ export default {
   }
 
   .title {
-    background-color: #fafafa;
-    font-size: 14px;
-    font-family: @pingFang;
-    font-weight: 500;
-    color: #303133;
-    line-height: 22px;
-    padding: 17px 20px;
-    text-align: left;
-    height: 100%;
-    max-height: 78px;
     display: flex;
     align-items: center;
+    height: 100%;
+    max-height: 78px;
+    padding: 17px 20px;
+    font-family: @pingFang;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    color: #303133;
+    text-align: left;
+    background-color: #fafafa;
   }
 
   .content {
+    height: 58px;
     padding: 21px 20px;
     font-size: 14px;
     text-align: left;
-    height: 58px;
     background-color: #fff;
 
     .el-router-link {

@@ -79,7 +79,9 @@ export default {
   components: { GrassSelect, CheckGrassSelect, CrewSelect, SpotGrassSelect },
   props: {
     isSeachPage: { type: Boolean },
-    searchTime: { type: [Object, Array, String], default: () => {} },
+    searchTime: { type: [Object, Array, String], default: () => {
+      return {}
+    } },
     searchStaff: { type: [Number, String], default: '' },
     searchType: { type: String, default: '' } // 搜索类型
   },
@@ -228,9 +230,9 @@ export default {
       .search-time-panel {
         margin-left: 20px;
         font-size: 14px;
-        color: #303133;
         font-weight: 400;
         line-height: 22px;
+        color: #303133;
       }
     }
   }

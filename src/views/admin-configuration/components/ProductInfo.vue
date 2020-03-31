@@ -252,8 +252,12 @@ export default {
   },
   created () {
     this.resetData()
-    if (!this.isPending) { this.checkPass = 1 }
-    if (this.editId) { this.getProductInfo() }
+    if (!this.isPending) {
+      this.checkPass = 1
+    }
+    if (this.editId) {
+      this.getProductInfo()
+    }
   },
   methods: {
     /**
@@ -506,8 +510,8 @@ export default {
 .product-info {
   .module-panel {
     .panel-content {
-      color: #606266;
       font-size: 14px;
+      color: #606266;
     }
   }
 
@@ -543,23 +547,23 @@ export default {
     }
 
     .photo-list {
-      width: calc(~'100% - 100px');
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
+      width: calc(~'100% - 100px');
       margin-right: -24px;
 
       .photo-box {
         width: 253px;
-        margin-bottom: 24px;
         margin-right: 24px;
+        margin-bottom: 24px;
       }
     }
   }
 
   .check-box {
-    text-align: left;
     padding-left: 100px;
+    text-align: left;
   }
 
   .reject-box {
@@ -602,11 +606,11 @@ export default {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       grid-gap: 1px;
-      background-color: @borderColor;
-      border: 1px solid @borderColor;
       font-size: 14px;
       color: #303133;
       text-align: center;
+      background-color: @borderColor;
+      border: 1px solid @borderColor;
 
       .panel {
         text-align: center;
@@ -636,17 +640,17 @@ export default {
   }
 
   .blue-list-data {
-    border: 1px solid @borderColor;
     display: flex;
-    border-top: 1px solid @borderColor;
     font-size: 14px;
     color: #303133;
     text-align: center;
+    border: 1px solid @borderColor;
+    border-top: 1px solid @borderColor;
 
     .list-title {
-      width: 100px;
       display: flex;
       flex-direction: column;
+      width: 100px;
       background-color: #fafafa;
       border-right: 1px solid @borderColor;
 
@@ -661,9 +665,9 @@ export default {
 
     .list-content {
       display: flex;
+      flex-direction: column;
       width: calc(100% - 100px);
       overflow: auto;
-      flex-direction: column;
 
       .item-row {
         display: -webkit-box;

@@ -118,20 +118,20 @@ export default {
   position: relative;
 
   .title-row {
+    position: relative;
     display: grid;
     grid-template-columns: 2fr 2fr 1fr;
-    position: relative;
 
     .delete-all {
       position: absolute;
-      right: 10px;
       top: 10px;
+      right: 10px;
 
       button {
-        border: none;
+        padding: 0;
         cursor: pointer;
         background-color: transparent;
-        padding: 0;
+        border: none;
       }
     }
 
@@ -139,30 +139,30 @@ export default {
       padding: 10px 21px;
       font-size: 14px;
       font-weight: 500;
-      color: #bbc1c8;
       line-height: 22px;
+      color: #bbc1c8;
       background-color: #f5f7fb;
     }
   }
 
   .no-data {
-    margin-bottom: 0;
     height: 48px;
     padding: 0;
+    margin-bottom: 0;
     line-height: 48px;
     color: #8e939a;
   }
 
   .save-path {
-    border-top: 1px solid @borderColor;
-    padding: 7px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 7px;
+    border-top: 1px solid @borderColor;
 
     & > span {
-      color: @blue;
       font-size: 12px;
+      color: @blue;
     }
 
     .el-icon-setting {

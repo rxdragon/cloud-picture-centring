@@ -18,7 +18,9 @@ export default {
   },
   async created () {
     // 判断是否已经登录
-    if (sessionStorage.getItem('xStreamId')) { this.$router.push({ path: '/' }) }
+    if (sessionStorage.getItem('xStreamId')) {
+      this.$router.push({ path: '/' })
+    }
     this.getLoginSsoUrl()
   },
   mounted () {

@@ -109,7 +109,7 @@ export default {
             this.$store.dispatch('setting/hiddenLoading', this.routeName)
             item.state = true
           })
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 禁用机构
@@ -128,7 +128,7 @@ export default {
             this.$store.dispatch('setting/hiddenLoading', this.routeName)
             item.state = false
           })
-      }).catch(() => {})
+      }).catch()
     }
   }
 }

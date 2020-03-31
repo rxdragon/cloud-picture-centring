@@ -97,7 +97,9 @@ export default {
   },
   watch: {
     isAddConfig (value) {
-      if (!value) { this.getExperienceConfigList() }
+      if (!value) {
+        this.getExperienceConfigList()
+      }
     }
   },
   created () {
@@ -136,7 +138,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 提前结束
@@ -159,7 +161,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 获取经验配置列表
@@ -171,8 +173,12 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.stateType) { reqData.state = this.stateType }
+      if (this.staffId.length) {
+        reqData.staffIds = this.staffId
+      }
+      if (this.stateType) {
+        reqData.state = this.stateType
+      }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getStaffCardList(reqData)
@@ -193,12 +199,12 @@ export default {
 
 .experience-config {
   .no-data {
-    text-align: center;
+    padding: 40px 0;
+    margin-top: 20px;
     font-size: 20px;
     font-weight: bold;
-    padding: 40px 0;
+    text-align: center;
     box-shadow: @boxShadow;
-    margin-top: 20px;
   }
 }
 </style>

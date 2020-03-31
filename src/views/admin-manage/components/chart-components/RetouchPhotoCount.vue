@@ -106,24 +106,24 @@ export default {
   position: relative;
 
   .ve-ring {
-    margin: -56px auto -30px;
     position: relative;
     z-index: 11;
+    margin: -56px auto -30px;
   }
 
   .data-num {
     position: absolute;
-    margin: auto;
-    z-index: 1;
-    text-align: center;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    z-index: 1;
+    margin: auto;
+    margin-top: 4.5px;
     font-size: 22px;
     font-weight: 600;
-    color: @blue;
     line-height: 40px;
-    margin-top: 4.5px;
+    color: @blue;
+    text-align: center;
+    transform: translateX(-50%) translateY(-50%);
 
     .data-sum {
       small {
@@ -134,30 +134,30 @@ export default {
     .data-desc {
       font-size: 12px;
       font-weight: 400;
-      color: #45454d;
       line-height: 17px;
+      color: #45454d;
     }
   }
 
   .legend {
     display: flex;
-    height: 23px;
     justify-content: space-around;
+    height: 23px;
     padding: 0 60px;
 
     .legend-item {
       font-size: 12px;
       font-weight: 400;
-      color: #606266;
       line-height: 20px;
+      color: #606266;
       text-align: center;
 
       .point-color {
         display: inline-block;
         width: 8px;
         height: 8px;
-        border-radius: 50%;
         margin-right: 4px;
+        border-radius: 50%;
       }
 
       .in-retoucher {

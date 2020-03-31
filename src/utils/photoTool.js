@@ -2,16 +2,16 @@ import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } fr
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as mPath from '@/utils/selfPath.js'
 import store from '@/store' // vuex
-import md5 from 'js-md5'
-const fileType = require('file-type')
+import QiNiuETag from '@/utils/qetag.js'
 
 /**
  * @description 截取文件名
  * @param {*} name
  */
 export function fileNameFormat (name) {
-  const indexPoint = name.lastIndexOf('.')
-  const returnName = name
+  const fileName = realName(name)
+  const indexPoint = fileName.lastIndexOf('.')
+  const returnName = fileName
   return returnName.substring(0, indexPoint)
 }
 
@@ -32,9 +32,9 @@ export function getFilePostfix (name) {
 export function handlePicPath (path, type) {
   let resPath = ''
   // 线上环境存储目录
-  const prodFilePath = '/upload/'
+  const prodFilePath = 'upload/'
   // 开发环境存储目录
-  const devFilePath = '/upload_dev/'
+  const devFilePath = 'upload_dev/'
   resPath = (path.replace(devFilePath, '')).replace(prodFilePath, '')
   return resPath
 }
@@ -60,10 +60,14 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
     if (version === 'store_rework' && !findFinishPhoto) break
     if (version === 'complete_photo') {
       const findVersionPhotos = photoArr.filter(photoItem => photoItem.version === version)
-      if (findVersionPhotos) { createData = [...createData, ...findVersionPhotos] }
+      if (findVersionPhotos) {
+        createData = [...createData, ...findVersionPhotos]
+      }
     } else {
       const findVersionPhoto = photoArr.find(photoItem => photoItem.version === version)
-      if (findVersionPhoto) { createData.push(findVersionPhoto) }
+      if (findVersionPhoto) {
+        createData.push(findVersionPhoto)
+      }
     }
   }
   return createData
@@ -79,10 +83,10 @@ export function readAllPhoto (photoArr) {
   // 判断是否有没加载的id
   cachePhotoArr.length = cacheCount > cachePhotoArr.length ? cachePhotoArr.length : cacheCount
   const loadedPhotoArr = SessionTool.getCloudAssessmentPhotoId()
-  const allLoad = loadedPhotoArr && cachePhotoArr.every(photoItem => loadedPhotoArr.includes(photoItem.id)) || false
+  const allLoad = (loadedPhotoArr && cachePhotoArr.every(photoItem => loadedPhotoArr.includes(photoItem.id))) || false
   // 没有全部加载完成 加载未加载图片
   if (!allLoad) {
-    const notLoadedPhoto = loadedPhotoArr && cachePhotoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.id)) || cachePhotoArr
+    const notLoadedPhoto = (loadedPhotoArr && cachePhotoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.id))) || cachePhotoArr
     const promises = []
     notLoadedPhoto.forEach(item => {
       promises.push(loadPhoto(item.path))
@@ -103,73 +107,12 @@ export function loadPhoto (path) {
   const image = new Image()
   image.src = imgDomain + path
   return new Promise((resolve, reject) => {
-    image.onload = () => { resolve() }
-    image.onerror = () => { resolve() }
-  })
-}
-
-/**
- * @description 分区读取文件
- * @param {*} file
- * @param {*} chunkCallback
- * @param {*} endCallback 结束回调用
- */
-function readChunked (file, chunkCallback, endCallback) {
-  const fileSize = file.size
-  const chunkSize = 4 * 1024 * 1024 // 4MB
-  let offset = 0
-  const readNext = () => {
-    const fileSlice = file.slice(offset, offset + chunkSize)
-    reader.readAsArrayBuffer(fileSlice)
-  }
-
-  const reader = new FileReader()
-  reader.onload = () => {
-    if (reader.error) {
-      endCallback(reader.error || {})
-      return
+    image.onload = () => {
+      resolve()
     }
-    offset += reader.result.byteLength
-    chunkCallback(reader.result, offset, fileSize)
-    if (offset >= fileSize) {
-      endCallback(null)
-      return
+    image.onerror = () => {
+      resolve()
     }
-    readNext()
-  }
-
-  reader.onerror = (err) => {
-    endCallback(err || {})
-  }
-
-  readNext()
-}
-
-/**
- * @description 获取文件md5
- * @param {*} file
- * @param {*} cbProgress
- */
-function getMD5 (file, cbProgress) {
-  let fileInfo = null
-  return new Promise((resolve, reject) => {
-    const hash = md5.create()
-    readChunked(file, (chunk, offs, total) => {
-      hash.update(chunk)
-      if (cbProgress) { cbProgress(offs / total) }
-      if (offs - chunk.byteLength === 0) {
-        fileInfo = fileType(chunk)
-      }
-    }, err => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve({
-          md5: hash.hex(),
-          typeInfo: fileInfo
-        })
-      }
-    })
   })
 }
 
@@ -178,7 +121,10 @@ function getMD5 (file, cbProgress) {
  * @param {*} file
  */
 export async function getImgBufferPhoto (file) {
-  const data = await getMD5(file)
+  const reader = new QiNiuETag()
+  await reader.updateBlob(file)
+  const data = reader.fileInfo
+  console.log(data, 'data')
   if (file.path) {
     const fileExt = mPath.getExtName(file.path).toLowerCase()
     const originalExt = data.typeInfo.ext.toLowerCase()
@@ -232,8 +178,14 @@ export function renameFirstPhoto (filePath) {
 /**
  * @description 文件后缀名转小写
  */
-export function photoPathExtToLowerCase (filePath) {
+export function photoPathExtToLowerCase (path) {
+  const filePath = realName(path)
   const ext = getFilePostfix(filePath).toLowerCase()
   const name = fileNameFormat(filePath)
   return `${name}${ext}`
+}
+
+export function realName (path) {
+  const pathArr = path.split('/')
+  return pathArr[pathArr.length - 1]
 }

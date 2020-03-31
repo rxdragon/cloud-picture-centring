@@ -104,7 +104,9 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.staffIds.length) { req.staffIds = this.staffIds }
+      if (this.staffIds.length) {
+        req.staffIds = this.staffIds
+      }
       return req
     },
     /**
@@ -117,14 +119,22 @@ export default {
         this.loading = true
         const data = await WorkManage.getRetoucherQuota(req)
         for (const key in data) {
-          if (this.otherData[key]) { this.otherData[key].value = data[key] }
-          if (this.orderStatisticsData[key]) { this.orderStatisticsData[key].value = parseInt(data[key]) }
-          if (this.performanceData[key]) { this.performanceData[key].value = data[key] }
+          if (this.otherData[key]) {
+            this.otherData[key].value = data[key]
+          }
+          if (this.orderStatisticsData[key]) {
+            this.orderStatisticsData[key].value = parseInt(data[key])
+          }
+          if (this.performanceData[key]) {
+            this.performanceData[key].value = data[key]
+          }
         }
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => { this.loading = false }, 500)
+        setTimeout(() => {
+          this.loading = false
+        }, 500)
       }
     }
   }
@@ -156,22 +166,22 @@ export default {
   }
 
   .table-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0;
     margin-top: 32px;
     border-top: 1px solid #e8e8e8;
     border-bottom: 1px solid #e8e8e8;
-    padding: 32px 0;
-    display: flex;
-    justify-content: space-between;
 
     .retouch-order-statistics {
+      position: relative;
       width: calc(~'50% - 11px');
       border-right: 1px solid #ebeef5;
-      position: relative;
     }
 
     .performance-statistics {
-      width: calc(~'50% - 11px');
       position: relative;
+      width: calc(~'50% - 11px');
     }
 
     .panel-title {
@@ -190,22 +200,22 @@ export default {
     .num-box {
       display: inline-block;
       padding-right: 49px;
-      border-right: 1px solid #ebeef5;
       padding-left: 80px;
+      border-right: 1px solid #ebeef5;
 
       .num {
-        font-size: 36px;
         font-family: @DINAlternate;
+        font-size: 36px;
         font-weight: bold;
-        color: #303133;
         line-height: 42px;
+        color: #303133;
       }
 
       .desc {
-        font-size: 12px;
         font-family: @pingFang;
-        color: #909399;
+        font-size: 12px;
         line-height: 22px;
+        color: #909399;
       }
 
       &:nth-last-of-type(1) {

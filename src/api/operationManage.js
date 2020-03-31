@@ -14,8 +14,8 @@ export function getStaffCardList (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.staffName = listItem.staff && (listItem.staff.name || listItem.staff.real_name) || '-'
-      listItem.groupName = listItem.staff ? listItem.staff.retouch_group.name : '-'
+      listItem.staffName = _.get(listItem, 'staff.name') || _.get(listItem, 'staff.real_name') || '-'
+      listItem.groupName = _.get(listItem, 'staff.retouch_group.name', '-')
       listItem.multiple = listItem.card.multiple
       listItem.createTime = listItem.card.created_at
       listItem.createStaff = listItem.card.founder_info ? listItem.card.founder_info.name : '-'
@@ -232,7 +232,7 @@ export function getHourGlassList (params) {
     msg.list.forEach(listItem => {
       let productNameArr = []
       listItem.hour_glass_setting_products.forEach(productItem => {
-        const pushData = productItem.product && productItem.product.name || '-'
+        const pushData = _.get(productItem, 'product.name', '-')
         productNameArr = [...productNameArr, pushData]
       })
       listItem.productName = productNameArr.join(',')
@@ -262,7 +262,7 @@ export function getBaseHourGlassSetting () {
       listItem.deleteId = listItem.id
       listItem.superimposedTime = listItem.superimposed_time + 'min / 人'
       listItem.range = listItem.hour_glass_setting_staff_entry_tags.map(item => item.entry_tag)
-      listItem.retouchStandard = listItem.hour_glass_setting_product_retouch_standard && listItem.hour_glass_setting_product_retouch_standard.retouch_standard || ''
+      listItem.retouchStandard = _.get(listItem, 'hour_glass_setting_product_retouch_standard.retouch_standard', '')
     })
     return msg
   })
@@ -272,7 +272,7 @@ export function getBaseHourGlassSetting () {
  * @description 删除沙漏
  * @param {*} params
  */
-export function DeleteHourGlass (params) {
+export function deleteHourGlass (params) {
   return axios({
     url: '/project_cloud/config/DeleteHourGlass',
     method: 'DELETE',

@@ -194,13 +194,17 @@ export default {
      * @description 全部重修
      */
     allRework () {
-      this.orderData.photos.forEach(photoItem => { photoItem.reworkMark = true })
+      this.orderData.photos.forEach(photoItem => {
+        photoItem.reworkMark = true
+      })
     },
     /**
      * @description 取消全部重修
      */
     allCleanRework () {
-      this.orderData.photos.forEach(photoItem => { photoItem.reworkMark = false })
+      this.orderData.photos.forEach(photoItem => {
+        photoItem.reworkMark = false
+      })
     },
     /**
      * @description 获取审核信息
@@ -263,7 +267,9 @@ export default {
         this.getReviewQueueInfo()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        if (error === '存在在审流水') { this.getReviewInfo() }
+        if (error === '存在在审流水') {
+          this.getReviewInfo()
+        }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
@@ -301,7 +307,9 @@ export default {
           })
         }
       })
-      if (submitData.length) { req.photoData = submitData }
+      if (submitData.length) {
+        req.photoData = submitData
+      }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.passStream(req)
@@ -322,7 +330,9 @@ export default {
       const req = {
         streamId: this.orderData.streamId
       }
-      if (this.reviewMark) { req.reviewNote = this.reviewMark }
+      if (this.reviewMark) {
+        req.reviewNote = this.reviewMark
+      }
       this.orderData.photos.forEach(photoItem => {
         const photoItemInfo = {
           id: photoItem.id,
@@ -331,13 +341,17 @@ export default {
           reworkMark: photoItem.reworkMark,
           reworkMarkReason: photoItem.reworkMarkReason
         }
-        if (photoItem.reworkLabel.length) { photoItemInfo.tags = photoItem.reworkLabel }
+        if (photoItem.reworkLabel.length) {
+          photoItemInfo.tags = photoItem.reworkLabel
+        }
         submitData.push(photoItemInfo)
       })
       submitData.forEach(photoItem => {
         for (const key in photoItem) {
           const value = photoItem[key]
-          if (!value) { delete photoItem[key] }
+          if (!value) {
+            delete photoItem[key]
+          }
         }
       })
       const reworkDataHasRemark = submitData.every(photoItem => {
@@ -351,7 +365,9 @@ export default {
       if (!req.reviewNote && !reworkDataHasRemark) {
         return this.$newMessage.warning('请填写退单理由或者审核备注')
       }
-      if (this.unbundle) { req.isUntied = true }
+      if (this.unbundle) {
+        req.isUntied = true
+      }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Reviewer.refuseStream(req)
@@ -385,15 +401,15 @@ export default {
 .audit-center {
   .header {
     .el-button {
-      border-radius: 8px;
       margin-left: 14px;
+      border-radius: 8px;
     }
 
     .header-desc,
     .queue-info {
       font-size: 14px;
-      color: #606266;
       line-height: 22px;
+      color: #606266;
     }
   }
 
@@ -402,27 +418,27 @@ export default {
     margin-bottom: 24px;
 
     .panel-content {
-      margin-top: 20px;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       width: 600px;
-      border-radius: 4px;
+      margin-top: 20px;
       border-bottom: 1px solid @borderColor;
+      border-radius: 4px;
 
       .label-list-title {
         padding: 17px 20px;
         font-size: 14px;
         font-weight: 500;
-        color: #303133;
         line-height: 22px;
+        color: #303133;
         background-color: #fafafa;
       }
 
       .label-list-content {
         padding: 20px 21px;
         font-size: 14px;
-        color: #606266;
         line-height: 14px;
+        color: #606266;
       }
     }
   }
@@ -432,13 +448,13 @@ export default {
 
     .panel-title {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
 
       .button-box {
-        padding: 10px;
         display: flex;
         align-items: center;
+        padding: 10px;
 
         .return-box {
           margin-right: 12px;
@@ -452,8 +468,8 @@ export default {
 
     .fix-return-button {
       position: fixed;
-      bottom: 255px;
       right: 42px;
+      bottom: 255px;
       width: 60px;
       height: 60px;
       padding: 0;
@@ -477,11 +493,11 @@ export default {
   .review-title {
     & > span {
       i {
-        font-style: normal;
-        color: @orange;
         font-size: 16px;
+        font-style: normal;
         font-weight: 600;
         line-height: 24px;
+        color: @orange;
       }
     }
   }

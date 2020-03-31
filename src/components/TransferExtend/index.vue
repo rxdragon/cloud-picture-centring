@@ -78,7 +78,9 @@ export default {
     // 选中数据
     toData: { type: Array, default: () => [] },
     // el-tree 配置项
-    defaultProps: { type: Object, default: () => { return { label: 'label', children: 'children' } } },
+    defaultProps: { type: Object, default: () => {
+      return { label: 'label', children: 'children' }
+    } },
     // el-tree node-key 必须唯一
     nodeKey: { type: String, default: 'id' },
     // 自定义 pid参数名
@@ -569,9 +571,9 @@ export default {
   overflow: hidden;
 
   .el-tree {
+    display: inline-block !important;
     width: 100%;
     max-height: calc(~'100% - 45px');
-    display: inline-block !important;
     overflow: auto;
 
     .el-tree-node {
@@ -591,19 +593,19 @@ export default {
   .transfer-right {
     position: absolute;
     top: 0;
-    border: 1px solid @borderColor;
+    box-sizing: border-box;
     width: 40%;
     height: 100%;
-    box-sizing: border-box;
-    border-radius: 5px;
     vertical-align: middle;
     background-color: #fff;
+    border: 1px solid @borderColor;
+    border-radius: 5px;
   }
 
   .transfer-main {
-    padding: 10px;
-    height: calc(~'100% - 41px');
     box-sizing: border-box;
+    height: calc(~'100% - 41px');
+    padding: 10px;
 
     .el-input {
       width: 100% !important;
@@ -620,12 +622,12 @@ export default {
     top: 50%;
     left: 40%;
     width: 20%;
-    transform: translateY(-50%);
     text-align: center;
+    transform: translateY(-50%);
 
     .disable-box {
-      background-color: #f5f7fa;
       color: #c0c4cc;
+      background-color: #f5f7fa;
       border: 1px solid #dcdfe6;
     }
   }
@@ -636,15 +638,15 @@ export default {
   }
 
   .transfer-title {
-    border-bottom: 1px solid @borderColor;
+    width: 100%;
     height: 40px;
+    padding-left: 10px;
+    margin: 0 !important;
+    font-size: 16px !important;
     line-height: 40px;
     color: #333;
-    font-size: 16px !important;
     background-color: #f5f7fa;
-    width: 100%;
-    margin: 0 !important;
-    padding-left: 10px;
+    border-bottom: 1px solid @borderColor;
 
     .el-checkbox {
       margin-right: 10px;

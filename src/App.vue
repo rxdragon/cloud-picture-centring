@@ -63,8 +63,8 @@ html {
 }
 
 body {
-  margin: 0;
   padding: 0;
+  margin: 0;
   overflow: hidden;
 
   --menuBg: @menuBg;

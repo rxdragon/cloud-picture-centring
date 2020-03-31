@@ -129,8 +129,12 @@ export default {
     '$route.query': {
       handler: function (query) {
         const { isCheckPass, photographerOrgId } = this.$route.query
-        if (isCheckPass) { this.activeName = 'checked' }
-        if (photographerOrgId) { this.institutionType = +photographerOrgId }
+        if (isCheckPass) {
+          this.activeName = 'checked'
+        }
+        if (photographerOrgId) {
+          this.institutionType = +photographerOrgId
+        }
         this.getProductList()
       },
       immediate: true
@@ -167,9 +171,15 @@ export default {
           page: this.pager.page,
           pageSize: this.pager.pageSize
         }
-        if (this.institutionType) { reqData.photographerOrgId = this.institutionType }
-        if (!this.isPending && this.productValue.length) { reqData.productId = this.productValue }
-        if (!this.isPending && this.weightType) { reqData.weightLevel = this.weightType }
+        if (this.institutionType) {
+          reqData.photographerOrgId = this.institutionType
+        }
+        if (!this.isPending && this.productValue.length) {
+          reqData.productId = this.productValue
+        }
+        if (!this.isPending && this.weightType) {
+          reqData.weightLevel = this.weightType
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getProductList(reqData)
         this.tableData = data.item
@@ -202,7 +212,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     }
   }
 }

@@ -115,7 +115,8 @@ export default {
      * @description 是否初始化tag
      */
     initTags () {
-      const affixTags = this.affixTags = this.filterAffixTags(this.routes)
+      this.affixTags = this.filterAffixTags(this.routes)
+      const affixTags = this.filterAffixTags(this.routes)
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
@@ -247,11 +248,11 @@ export default {
 @import "~@/styles/variables.less";
 
 .tags-view-container {
-  height: @tagsHeight;
   width: 100%;
   min-width: @minWidth;
-  background: #fff;
+  height: @tagsHeight;
   overflow: hidden;
+  background: #fff;
   border-top-left-radius: 20px;
 
   &::-webkit-scrollbar {
@@ -262,33 +263,33 @@ export default {
     background: #e4e7ed;
 
     .tags-view-item {
-      display: inline-block;
-      background-color: #f2f6fc;
-      height: @tagsHeight;
       position: relative;
+      display: inline-block;
+      height: @tagsHeight;
+      background-color: #f2f6fc;
 
       &::before {
-        content: '';
+        position: absolute;
+        top: 10px;
+        left: 0;
+        z-index: 20;
         display: inline-block;
         width: 1px;
         height: 16px;
+        content: '';
         background-color: #c0c4cc;
-        position: absolute;
-        left: 0;
-        top: 10px;
-        z-index: 20;
       }
 
       .tab-box {
-        display: inline-block;
         position: relative;
-        cursor: pointer;
-        line-height: @tagsHeight;
-        color: #45454d;
-        background: #e4e7ed;
+        display: inline-block;
         padding: 0 20px;
         font-size: 12px;
+        line-height: @tagsHeight;
+        color: #45454d;
+        cursor: pointer;
         -webkit-user-select: none;
+        background: #e4e7ed;
       }
 
       &:first-of-type {
@@ -305,8 +306,8 @@ export default {
         background-color: #e4e7ed;
 
         .tab-box {
-          background-color: #f2f6fc;
           color: #45454d;
+          background-color: #f2f6fc;
           border-radius: 6px 6px 0 0;
         }
 
@@ -334,21 +335,21 @@ export default {
   }
 
   .contextmenu {
-    margin: 0;
-    background: #fff;
-    z-index: 3000;
     position: absolute;
-    list-style-type: none;
+    z-index: 3000;
     padding: 5px 0;
-    border-radius: 4px;
+    margin: 0;
     font-size: 12px;
     font-weight: 400;
     color: #333;
+    list-style-type: none;
+    background: #fff;
+    border-radius: 4px;
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
 
     li {
-      margin: 0;
       padding: 7px 16px;
+      margin: 0;
       cursor: pointer;
 
       &:hover {
@@ -368,9 +369,9 @@ export default {
     .el-icon-close {
       width: 16px;
       height: 16px;
+      text-align: center;
       vertical-align: 2px;
       border-radius: 50%;
-      text-align: center;
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
 
@@ -380,8 +381,8 @@ export default {
       }
 
       &:hover {
-        background-color: #b4bccc;
         color: #fff;
+        background-color: #b4bccc;
       }
     }
   }

@@ -183,7 +183,7 @@
                   width="160"
                 >
                   <p>确认使用道具卡吗？</p>
-                  <div style="text-align: right; margin: 10px;">
+                  <div style=" margin: 10px; text-align: right;">
                     <el-button size="mini" type="text" @click="propItem.showProp = false">取消</el-button>
                     <el-button type="primary" size="mini" @click="useProp(propItem)">确定</el-button>
                   </div>
@@ -333,21 +333,21 @@ export default {
     margin-right: 24px;
 
     .panel-main {
-      text-align: center;
       position: relative;
+      text-align: center;
 
       .progress-num {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translateX(-50%) translateY(-50%);
         display: flex;
         flex-direction: column;
         color: #606266;
+        transform: translateX(-50%) translateY(-50%);
 
         .num {
-          font-size: 44px;
           font-family: @DINAlternate;
+          font-size: 44px;
           font-weight: bold;
           color: @blue;
         }
@@ -356,22 +356,22 @@ export default {
 
     .panel-footer {
       display: flex;
-      margin-top: 15px;
       justify-content: space-between;
-      color: #606266;
+      margin-top: 15px;
       font-family: @pingFang;
       font-size: 12px;
       line-height: 20px;
+      color: #606266;
 
       & > div {
         &::before {
-          content: '';
           display: inline-block;
           width: 8px;
           height: 8px;
+          margin-right: 4px;
+          content: '';
           background: @borderColor;
           border-radius: 50%;
-          margin-right: 4px;
         }
       }
 
@@ -384,18 +384,18 @@ export default {
   }
 
   .level-info {
-    height: 282px;
     width: calc(~'100% - 289px');
+    height: 282px;
 
     .panel-title {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
 
       .tip {
-        color: @blue;
         font-size: 12px;
         font-weight: 400;
+        color: @blue;
 
         .el-icon-warning-outline {
           margin-right: 4px;
@@ -416,13 +416,13 @@ export default {
       border-bottom: 1px solid @borderColor;
 
       .main-content {
-        font-size: 12px;
         display: flex;
         flex-direction: column;
-        font-family: @DINAlternate;
-        color: #909399;
-        margin-top: 28px;
         padding-bottom: 18px;
+        margin-top: 28px;
+        font-family: @DINAlternate;
+        font-size: 12px;
+        color: #909399;
 
         .num {
           font-size: 36px;
@@ -438,21 +438,21 @@ export default {
     }
 
     .panel-footer {
-      margin-top: 23px;
       padding-bottom: 5px;
+      margin-top: 23px;
 
       .rote-title {
-        color: #606266;
-        font-size: 12px;
         display: flex;
         justify-content: space-between;
+        font-size: 12px;
+        color: #606266;
 
         .num {
-          font-size: 14px;
           font-family: @DINAlternate;
+          font-size: 14px;
           font-weight: bold;
-          color: #303133;
           line-height: 16px;
+          color: #303133;
         }
       }
 
@@ -489,8 +489,8 @@ export default {
 
   .search-box {
     display: flex;
-    margin-top: 20px;
     align-items: center;
+    margin-top: 20px;
 
     button {
       margin-left: 20px;
@@ -510,36 +510,36 @@ export default {
     }
 
     .panel-main {
-      margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
+      margin-top: 20px;
     }
 
     .prop-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 313px;
       height: 68px;
+      padding: 17px 16px;
+      margin-right: 24px;
+      margin-bottom: 16px;
       border: 1px solid #d8dce6;
       border-radius: 4px;
-      padding: 17px 16px;
-      display: flex;
-      margin-bottom: 16px;
-      margin-right: 24px;
-      justify-content: space-between;
-      align-items: center;
 
       .prop-content {
         .content-title {
           font-size: 14px;
           font-weight: 500;
-          color: #303133;
           line-height: 20px;
+          color: #303133;
         }
 
         .content-describe {
           font-size: 12px;
           font-weight: 400;
-          color: #909399;
           line-height: 20px;
+          color: #909399;
         }
       }
     }

@@ -290,7 +290,9 @@ export default {
      * @description 获取伙伴信息
      */
     async getStaffInfo () {
-      if (!this.jobNumber) { return false }
+      if (!this.jobNumber) {
+        return false
+      }
       const req = { staffNum: this.jobNumber }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
@@ -306,7 +308,9 @@ export default {
      * @description 获取伙伴权限
      */
     async getStaffPermission () {
-      if (!this.jobNumber) { return false }
+      if (!this.jobNumber) {
+        return false
+      }
       const req = { staffNum: this.jobNumber }
       const data = await AccountManage.getStaffPermission(req)
       this.staffPermission = data.map(item => item.id)
@@ -384,9 +388,9 @@ export default {
     }
 
     .button-box {
-      margin-top: 24px;
       width: 856px;
       padding-left: 68px;
+      margin-top: 24px;
       text-align: left;
     }
   }

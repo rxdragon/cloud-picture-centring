@@ -58,7 +58,9 @@ class Ws {
 
   // 获取chat
   async getChat () {
-    if (!this.chat) { await this.createChat() }
+    if (!this.chat) {
+      await this.createChat()
+    }
     return this.chat
   }
 
@@ -66,7 +68,9 @@ class Ws {
   async sendMessage (msg) {
     console.log(this.state, 'state')
     console.log(msg, 'msg')
-    if (this.state === 'unConnect') { await this.createChat() }
+    if (this.state === 'unConnect') {
+      await this.createChat()
+    }
     if (this.state === 'connected') {
       this.chat.send(msg)
     } else {
@@ -75,7 +79,9 @@ class Ws {
   }
 
   async initializeSendMessage (isRetoucher) {
-    if (!this.chat) { await this.createChat() }
+    if (!this.chat) {
+      await this.createChat()
+    }
     if (!isRetoucher) return
     const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
     store.dispatch('user/getRetoucherLineState')

@@ -221,9 +221,9 @@ export function getStoreEvaluate (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.retoucherName = listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
-      listItem.retouchGroupName = listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name || '-'
-      listItem.retoucherNpsAvg = listItem.stream.tags && listItem.stream.tags.values && listItem.stream.tags.values.retoucher_score || '-'
+      listItem.retoucherName = (listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name)) || '-'
+      listItem.retouchGroupName = (listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name) || '-'
+      listItem.retoucherNpsAvg = (listItem.stream.tags && listItem.stream.tags.values && listItem.stream.tags.values.retoucher_score) || '-'
     })
     return msg
   })
@@ -243,7 +243,7 @@ export function getStreamInfo (params) {
       listItem.product = listItem.product || { id: '' }
       listItem.photos.forEach(photoItem => {
         photoItem.isDelete = listItem.isOperatorDeletedStream || false
-        photoItem.isJoint = photoItem.tags && photoItem.tags.values && Boolean(photoItem.tags.values.splice_mark) || false
+        photoItem.isJoint = (photoItem.tags && photoItem.tags.values && Boolean(photoItem.tags.values.splice_mark)) || false
         const findOriginalPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
         photoItem.path = findOriginalPhoto ? findOriginalPhoto.path : ''
         if (photoItem.isJoint) {

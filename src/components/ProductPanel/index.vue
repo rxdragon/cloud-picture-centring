@@ -104,8 +104,8 @@ export default {
 
 .staff-panel {
   display: flex;
-  width: 800px;
   flex-wrap: wrap;
+  width: 800px;
 
   .el-checkbox-group {
     margin-bottom: 10px;
