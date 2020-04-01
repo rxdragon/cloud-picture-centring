@@ -310,6 +310,7 @@
  修复id查询失败 | [540520c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/540520c)
  修复qetag验证问题 | [4a929ac](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4a929ac)
  修复一键上传问题，修复压缩图片不清晰问题 | [fd0b724](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fd0b724)
+ 修复下载 | [08c2dd9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08c2dd9)
  修复下载问题 | [da53a96](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/da53a96)
  修复个人收益错误 | [cfa868e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cfa868e)
  修复传参 工号为字符串 导致的bug | [79a9014](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79a9014)

@@ -9,7 +9,7 @@ const uuidv4 = require('uuid/v4')
 
 const MaxFileCount = 10
 const clearCacheTime = 60 * 60 * 1000
-const cloudPhotoHost = global.env !== 'production' ? 'fed.dev.hzmantu.com/upload_dev/' : 'cloud.cdn.hzmantu.com/upload/'
+const cloudPhotoHost = global.env !== 'production' ? 'cloud-dev.cdn-qn.hzmantu.com/upload_dev/' : 'cloud.cdn-qn.hzmantu.com/upload/'
 console.log(cloudPhotoHost)
 createImageCacheDir()
 clearCache()
