@@ -49,7 +49,6 @@
             <el-button v-else type="info" size="small" @click="allCleanRework">取消重修</el-button>
           </div>
           <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
-          <domain-switch-box />
         </div>
       </div>
       <photo-group
@@ -90,7 +89,6 @@
 <script>
 import OrderInfo from '@/components/OrderInfo'
 import PhotoGroup from './components/PhotoGroup'
-import DomainSwitchBox from '@/components/DomainSwitchBox'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { renameFirstPhoto } from '@/utils/photoTool'
 import * as Commonality from '@/api/commonality'
@@ -98,7 +96,7 @@ import * as Reviewer from '@/api/reviewer.js'
 
 export default {
   name: 'AuditReview',
-  components: { OrderInfo, PhotoGroup, DomainSwitchBox },
+  components: { OrderInfo, PhotoGroup },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
