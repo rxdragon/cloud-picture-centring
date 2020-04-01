@@ -21,7 +21,6 @@
       <div class="photo-panel-title panel-title">
         <span>原片信息</span>
         <div class="button-box">
-          <domain-switch-box />
           <el-button type="primary" size="small" @click="oneAllDownOrign">一键下载原片</el-button>
         </div>
       </div>
@@ -67,7 +66,6 @@
 <script>
 import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
-import DomainSwitchBox from '@/components/DomainSwitchBox'
 import UploadPhoto from './UploadPhoto.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { mapGetters } from 'vuex'
@@ -77,7 +75,7 @@ import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, DomainSwitchBox, UploadPhoto },
+  components: { OrderInfo, PhotoBox, UploadPhoto },
   props: {
     showDetail: { type: Boolean }
   },
