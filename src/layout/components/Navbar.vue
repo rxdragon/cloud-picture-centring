@@ -14,7 +14,7 @@
       </div>
       <span class="nav-main">
         缦图云端 修图中心
-        <span v-if="$isDev" class="test-title">测试</span>
+        <span v-if="$isDev" class="test-title"></span>
       </span>
       <div class="nav-right">
         <download-management />

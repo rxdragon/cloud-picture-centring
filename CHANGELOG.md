@@ -436,4 +436,5 @@
  增加commit验证 | [d804efc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d804efc)
  增加upyun上传 | [eafd6d3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eafd6d3)
  更改环境变量 | [2d512ca](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d512ca)
+ 更改环境变量，更改login | [6874b9b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6874b9b)
 
