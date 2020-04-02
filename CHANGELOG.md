@@ -1,4 +1,4 @@
-# 2.0.0 (2020-04-01)
+# 2.0.0 (2020-04-02)
 
 |范围|描述|commitId|
 --|--|--
@@ -304,17 +304,18 @@
  优化代码 | [05a7ae1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/05a7ae1)
  优化审核历史记录问题 | [2e8607d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2e8607d)
  优化照片上传 读取只需上传 | [82a442c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/82a442c)
+ \ | 优化自动下线，如果有订单不形象判断 | [286b259](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/286b259)
  传递组员id | [08f8212](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08f8212)
  修复 预览错误 | [d7dcba3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d7dcba3)
  修复bug | [5b8516c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5b8516c)
  修复id查询失败 | [540520c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/540520c)
+ 修复lodash引入失败 | [4aa5441](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4aa5441)
  修复qetag验证问题 | [4a929ac](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4a929ac)
  修复一键上传问题，修复压缩图片不清晰问题 | [fd0b724](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fd0b724)
  修复下载 | [08c2dd9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08c2dd9)
  修复下载问题 | [da53a96](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/da53a96)
  修复个人收益错误 | [cfa868e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cfa868e)
  修复传参 工号为字符串 导致的bug | [79a9014](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79a9014)
- \ | 优化自动下线，如果有订单不形象判断 | [286b259](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/286b259)
  修复传参错误 | [724cd64](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/724cd64)
  修复冲量时间时间问题 | [fca083d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fca083d)
  修复分页问题 | [01a28b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01a28b1)
@@ -352,14 +353,14 @@
  照片张数 过滤模版照片 | [f0c4fb9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f0c4fb9)
  细节调整 | [01f846c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01f846c)
  老数据容错 | [ce4a3ce](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ce4a3ce)
+ 修复门店退单不显示 | 修复门店退单不显示 | [0f1d87c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0f1d87c)
  调试代码 | [417142c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/417142c)
- 调试调试 | [81030eb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/81030eb)
  调试调试 | [3d46f7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3d46f7c)
+ 调试调试 | [81030eb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/81030eb)
  重置数据变化 | [29ba78a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/29ba78a)
  页码修复 | [f7880c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f7880c1)
  上传校验文件错误 | 上传完成md5校验错误 | [df15e3a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/df15e3a)
  修复两个订单的时候退单一直弹窗 | 修复门店退单 弹窗问题 | [61a7d4f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61a7d4f)
- 修复门店退单不显示 | 修复门店退单不显示 | [0f1d87c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0f1d87c)
  显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
 
 
@@ -430,6 +431,7 @@
 |范围|描述|commitId|
 --|--|--
  删除又拍云模块 | [7983d9b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7983d9b)
+ 取消webpackstylelint | [e99ac4d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e99ac4d)
  增加commit验证 | [d804efc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d804efc)
  增加upyun上传 | [eafd6d3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eafd6d3)
  更改环境变量 | [2d512ca](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d512ca)
