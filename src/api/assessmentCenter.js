@@ -1,9 +1,10 @@
 // assessmentCenter
 import axios from '@/plugins/axios.js'
+import store from '@/store' // vuex
+import _ from 'lodash'
 import { transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-import store from '@/store' // vuex
 
 /**
  * @description 获取今日抽片指标
