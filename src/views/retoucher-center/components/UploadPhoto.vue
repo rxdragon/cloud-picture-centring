@@ -76,9 +76,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { logUpload } from './log'
 import variables from '@/styles/variables.less'
 import PhotoBox from '@/components/PhotoBox'
-import { logUpload } from './log'
 import * as Commonality from '@/api/commonality'
 import * as SessionTool from '@/utils/sessionTool'
 import * as PhotoTool from '@/utils/photoTool'
@@ -323,6 +323,7 @@ export default {
         try {
           const info = await PhotoTool.getImgBufferPhoto(file.raw)
           const selfSha1 = info.sha1
+          console.log(file, 'file')
           logUpload(file)
           if (!file.response.url.includes(selfSha1)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)

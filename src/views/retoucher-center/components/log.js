@@ -15,12 +15,11 @@ const logger = new AliyunLog(
  */
 export function logUpload (file, type) {
   const nowTime = Date.now() / 1000
-  const endTime = type ? nowTime : file.response.time
   const status = type === 'refresh' ? 'incomplete' : file.status
   const data = {
     sha1Name: file.raw.sha1Name,
     startTime: file.raw.startTime,
-    endTime,
+    endTime: nowTime,
     status,
     fileName: file.name,
     uid: file.uid,
