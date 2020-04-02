@@ -63,8 +63,8 @@ const actions = {
       try {
         const token = await UserAction.login({ token: key })
         commit('SET_TOKEN', token)
-        await UserAction.userExpire()
         SessionTool.setXStreamId(token)
+        await UserAction.userExpire()
         resolve()
       } catch (err) {
         reject(err)

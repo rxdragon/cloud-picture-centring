@@ -16,38 +16,38 @@
 }
 
 .iconmap {
-  &-cloud-logo-small            { .iconmapBaseSet(-219px, 0); }
-  &-experience-icon             { .iconmapBaseSet(-10px, -5px); }
-  &-impulse-icon                { .iconmapBaseSet(-60px, -5px); }
-  &-green-aisle-icon            { .iconmapBaseSet(-110px, -5px); }
-  &-gold-icon                   { .iconmapBaseSet(-160px, -5px); }
-  &-grass-icon                  { .iconmapBaseSet(-4px, -55px); }
-  &-photo-amount-icon           { .iconmapBaseSet(-87px, -55px); }
-  &-money-icon                  { .iconmapBaseSet(-170px, -55px); }
-  &-cloud-logo-big              { .iconmapBaseSet(0, -146px); }
-  &-standard-blue               { .iconmapBaseSet(-296px, -76px); }
-  &-standard-master             { .iconmapBaseSet(-273px, -76px); }
-  &-standard-mainto             { .iconmapBaseSet(-319px, -76px); }
-  &-standard-kids               { .iconmapBaseSet(-339px, -76px); }
+  &-cloud-logo-small { .iconmapBaseSet(-219px, 0); }
+  &-experience-icon { .iconmapBaseSet(-10px, -5px); }
+  &-impulse-icon { .iconmapBaseSet(-60px, -5px); }
+  &-green-aisle-icon { .iconmapBaseSet(-110px, -5px); }
+  &-gold-icon { .iconmapBaseSet(-160px, -5px); }
+  &-grass-icon { .iconmapBaseSet(-4px, -55px); }
+  &-photo-amount-icon { .iconmapBaseSet(-87px, -55px); }
+  &-money-icon { .iconmapBaseSet(-170px, -55px); }
+  &-cloud-logo-big { .iconmapBaseSet(0, -146px); }
+  &-standard-blue { .iconmapBaseSet(-296px, -76px); }
+  &-standard-master { .iconmapBaseSet(-273px, -76px); }
+  &-standard-mainto { .iconmapBaseSet(-319px, -76px); }
+  &-standard-kids { .iconmapBaseSet(-339px, -76px); }
 }
 
 .home-logo {
+  background-image: @logo;
   background-position: 0 0;
   background-size: 568px;
-  background-image: @logo;
 }
 
 .sand {
-  background-position: 0 0;
   width: 28px;
   height: 38px;
   margin-left: 3px;
+  background-position: 0 0;
   animation: gauntlet 2.8s steps(13) infinite;
-  
+
   &-green {
     background: transparent @sandGreen center left no-repeat;
   }
-  
+
   &-red {
     background: transparent @sandRed center left no-repeat;
   }
@@ -58,15 +58,16 @@
 }
 
 .anniversary-img {
+  background-image: @anniversary;
   background-position: 0 0;
   background-size: 860px 633px;
-  background-image: @anniversary;
 }
 
 @keyframes gauntlet {
   0% {
     background-position: 0 0;
   }
+
   100% {
     background-position: -364px 0;
   }

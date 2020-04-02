@@ -1,23 +1,23 @@
 #App {
   .main-container {
-    min-height: 100%;
-    transition: margin-left 0.28s;
-    margin-left: @sideBarWidth;
     position: relative;
+    min-height: 100%;
+    margin-left: @sideBarWidth;
+    transition: margin-left 0.28s;
   }
 
   .sidebar-container {
-    -webkit-user-select: none;
-    transition: width 0.28s;
-    width: @sideBarWidth !important;
-    background-color: var(--menuBg);
     position: absolute;
-    height: 100%;
-    font-size: 0;
     top: 0;
     bottom: 0;
     left: 0;
+    width: @sideBarWidth !important;
+    height: 100%;
     overflow: inherit;
+    font-size: 0;
+    -webkit-user-select: none;
+    background-color: var(--menuBg);
+    transition: width 0.28s;
 
     // reset element-ui css
     .horizontal-collapse-transition {
@@ -57,9 +57,9 @@
     }
 
     .el-menu {
-      border: none;
-      height: 100%;
       width: 100% !important;
+      height: 100%;
+      border: none;
     }
 
     // menu hover
@@ -72,20 +72,20 @@
 
     .is-active.submenu-title-noDropdown,
     .is-active > .el-submenu__title {
+      position: relative;
       color: @subMenuActiveText !important;
       background: @subMenuActiveBg !important;
-      position: relative;
 
       &::before {
-        content: '';
-        display: inline-block;
         position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
         width: 4px;
         height: 100%;
+        content: '';
         background-color: @subMenuLabelActiveBg;
-        border-radius:0 10px 10px 0;
-        left: 0;
-        top: 0;
+        border-radius: 0 10px 10px 0;
       }
     }
 
@@ -96,18 +96,18 @@
 
       span {
         position: relative;
-        
+
         &::before {
-          content: '';
+          position: absolute;
+          top: 50%;
+          left: -10px;
           display: inline-block;
           width: 5px;
           height: 5px;
-          border-radius: 50%;
-          position: absolute;
-          left: -10px;
-          top: 50%;
           margin-top: -2.5px;
+          content: '';
           background-color: rgb(192, 196, 204);
+          border-radius: 50%;
         }
       }
 
@@ -135,8 +135,8 @@
     }
 
     .submenu-title-noDropdown {
-      padding: 0 !important;
       position: relative;
+      padding: 0 !important;
 
       .el-tooltip {
         padding: 0 !important;
@@ -150,7 +150,7 @@
     .el-submenu {
       overflow: hidden;
 
-      &>.el-submenu__title {
+      & > .el-submenu__title {
         padding: 0 !important;
 
         .svg-icon {
@@ -165,13 +165,13 @@
 
     .el-menu--collapse {
       .el-submenu {
-        &>.el-submenu__title {
-          &>span {
-            height: 0;
+        & > .el-submenu__title {
+          & > span {
+            display: inline-block;
             width: 0;
+            height: 0;
             overflow: hidden;
             visibility: hidden;
-            display: inline-block;
           }
         }
       }
@@ -185,12 +185,12 @@
   // mobile responsive
   .mobile {
     .main-container {
-      margin-left: 0px;
+      margin-left: 0;
     }
 
     .sidebar-container {
-      transition: transform .28s;
       width: @sideBarWidth !important;
+      transition: transform 0.28s;
     }
 
     &.hideSidebar {
@@ -203,7 +203,6 @@
   }
 
   .withoutAnimation {
-
     .main-container,
     .sidebar-container {
       transition: none;
@@ -213,13 +212,13 @@
 
 // when menu collapsed
 .el-menu--vertical {
-  &>.el-menu {
+  & > .el-menu {
     .svg-icon {
       margin-right: 16px;
     }
   }
 
-  .nest-menu .el-submenu>.el-submenu__title,
+  .nest-menu .el-submenu > .el-submenu__title,
   .el-menu-item {
     &:hover {
       // you can use @subMenuHover
@@ -228,7 +227,7 @@
   }
 
   // the scroll bar appears when the subMenu is too long
-  >.el-menu--popup {
+  > .el-menu--popup {
     max-height: 100vh;
     overflow-y: auto;
 
@@ -249,32 +248,32 @@
 
 .el-submenu__title {
   .iconfont {
-    font-size: 18px;
-    margin-right: 5px;
     width: 24px;
-    text-align: center;
+    margin-right: 5px;
     font-size: 18px;
+    font-size: 18px;
+    text-align: center;
     vertical-align: middle;
   }
 }
 
 .el-menu-item {
   .iconfont {
-    font-size: 18px;
-    margin-right: 5px;
     width: 24px;
-    text-align: center;
+    margin-right: 5px;
     font-size: 18px;
+    font-size: 18px;
+    text-align: center;
     vertical-align: middle;
   }
 }
 
 .el-submenu [class^=el-icon-] {
-  text-align: left;
   width: 18px;
+  text-align: left;
 }
 
 .el-menu-item [class^=el-icon-] {
-  text-align: left;
   width: 18px;
+  text-align: left;
 }

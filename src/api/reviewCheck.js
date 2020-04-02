@@ -1,4 +1,5 @@
 import axios from '@/plugins/axios.js'
+import _ from 'lodash'
 import { keyToHump, transformPercentage, getAvg, timeFormat } from '../utils/index.js'
 import { revertTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate.js'
