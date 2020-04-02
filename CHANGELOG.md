@@ -1,4 +1,4 @@
-# 2.0.0 (2020-04-01)
+# 2.0.0 (2020-04-02)
 
 |范围|描述|commitId|
 --|--|--
@@ -430,6 +430,7 @@
 |范围|描述|commitId|
 --|--|--
  删除又拍云模块 | [7983d9b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7983d9b)
+ 取消webpackstylelint | [e99ac4d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e99ac4d)
  增加commit验证 | [d804efc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d804efc)
  增加upyun上传 | [eafd6d3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eafd6d3)
  更改环境变量 | [2d512ca](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d512ca)
