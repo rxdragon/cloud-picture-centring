@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import * as Validate from '@/utils/validate.js'
 
 // 流水静态状态资源
@@ -36,7 +35,7 @@ export default class StreamModel {
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
     this.streamState = streamData.state || ''
     this.getNote(streamData.note)
-    this.getPhotoNum()
+    this.photoNum = this.getPhotoNum()
     this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || {}
   }
 
@@ -58,7 +57,7 @@ export default class StreamModel {
 
   // 获取照片数量
   getPhotoNum () {
-    if (!Number(this.baseData.photos_count)) {
+    if (!this.baseData.photos_count) {
       const photos = this.baseData.photos
       if (!photos) return 0
       return photos.filter(item => +item.people_num > 0).length

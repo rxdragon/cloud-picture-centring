@@ -1,6 +1,5 @@
 const path = require('path')
 const ProgressPlugin = require('webpack').ProgressPlugin
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, dir)
@@ -29,7 +28,6 @@ module.exports = {
         'original-fs': 'require("original-fs")'
       },
       plugins: [
-        new LodashModuleReplacementPlugin()
       ]
     }
     if (process.env.CI_COMMIT_SHA) {

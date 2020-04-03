@@ -26,9 +26,9 @@
         <div class="institution">{{ orderData.photographer }}</div>
         <div class="type">
           <div class="standard-box">
-            {{ orderData.type | toRetouchClass }}
+            {{ orderData.type || orderData.productInfo.type | toRetouchClass }}
             <div class="standard-icon">
-              <div :class="`iconmap-standard-${orderData.type}`" />
+              <div :class="`iconmap-standard-${orderData.productInfo.type}`" />
             </div>
           </div>
         </div>
@@ -81,7 +81,8 @@ export default {
           photographerName: '暂无信息',
           productName: '暂无信息',
           photoNum: '暂无信息',
-          waitTime: '暂无信息'
+          waitTime: '暂无信息',
+          productInfo: {}
         }
       }
     },

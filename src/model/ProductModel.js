@@ -4,8 +4,9 @@
  */
 export default class ProductModel {
   baseData = null
-  id = ''
-  productName = ''
+  id = '' // 产品id
+  productName = '' // 产品名字
+  type = '' // 修图标准
 
   constructor (productData) {
     if (!productData) return

@@ -1,8 +1,8 @@
 // retoucherCenter
 import axios from '@/plugins/axios.js'
-import _ from 'lodash'
 import StreamModel from '@/model/StreamModel.js'
 import ProductModel from '@/model/ProductModel.js'
+import OrderModel from '@/model/OrderModel.js'
 import { keyToHump } from '@/utils/index.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
@@ -24,8 +24,7 @@ export function getRetouchStreams (params) {
         ...streamOrder,
         ...listItem,
         ...streamOrder.sandClockInfo,
-        productInfo,
-        photoNum: streamOrder.photoNum
+        productInfo
       }
     })
     return msg
@@ -59,10 +58,11 @@ export function getStreamInfo (params) {
     const createData = {}
     const streamOrder = new StreamModel(msg)
     const productInfo = new ProductModel(msg.product)
-    
+    const orderInfo = new OrderModel(msg.order)
     createData.orderData = {
       ...streamOrder,
-      ...productInfo,
+      productInfo,
+      orderInfo,
       photographerName: _.get(msg, 'order.photographer_org.name') || '-',
       photographer: _.get(msg, 'order.tags.values.photographer') || '-', // 摄影
       photoNum: streamOrder.photoNum

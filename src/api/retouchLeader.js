@@ -1,6 +1,5 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
-import _ from 'lodash'
 import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
 
 /**
