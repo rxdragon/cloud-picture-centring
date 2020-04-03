@@ -323,7 +323,6 @@ export default {
         try {
           const info = await PhotoTool.getImgBufferPhoto(file.raw)
           const selfSha1 = info.sha1
-          console.log(file, 'file')
           logUpload(file)
           if (!file.response.url.includes(selfSha1)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
@@ -347,7 +346,6 @@ export default {
       const uploadedName = PhotoTool.fileNameFormat(file.name)
       // 上传后的照片名字
       const filePath = file.response ? PhotoTool.handlePicPath(file.response.url) : ''
-      console.log(filePath, 'filePath')
       const findOrginPhoto = this.photos.find(photoItem => photoItem.path.includes(uploadedName))
       if (!this.finishPhoto[uid]) {
         const newPhoto = {

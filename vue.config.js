@@ -26,9 +26,7 @@ module.exports = {
         'electron': 'require("electron")',
         'fs': 'require("fs")',
         'original-fs': 'require("original-fs")'
-      },
-      plugins: [
-      ]
+      }
     }
     if (process.env.CI_COMMIT_SHA) {
       c.plugins = c.plugins.filter(pluginItem => !(pluginItem instanceof ProgressPlugin))
