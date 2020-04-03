@@ -1,6 +1,5 @@
 // commonality
 import axios from '@/plugins/axios.js'
-import _ from 'lodash'
 import { keyToHump } from '@/utils/index.js'
 import { settlePhoto } from '@/utils/photoTool.js'
 import { PhotoStatics } from '@/utils/enumerate.js'

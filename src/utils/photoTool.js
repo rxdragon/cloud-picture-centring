@@ -124,7 +124,6 @@ export async function getImgBufferPhoto (file) {
   const reader = new QiNiuETag()
   await reader.updateBlob(file)
   const data = reader.fileInfo
-  console.log(data, 'data')
   if (file.path) {
     const fileExt = mPath.getExtName(file.path).toLowerCase()
     const originalExt = data.typeInfo.ext.toLowerCase()

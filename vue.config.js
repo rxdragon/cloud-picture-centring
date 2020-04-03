@@ -1,6 +1,5 @@
 const path = require('path')
 const ProgressPlugin = require('webpack').ProgressPlugin
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, dir)
@@ -27,10 +26,7 @@ module.exports = {
         'electron': 'require("electron")',
         'fs': 'require("fs")',
         'original-fs': 'require("original-fs")'
-      },
-      plugins: [
-        new LodashModuleReplacementPlugin()
-      ]
+      }
     }
     if (process.env.CI_COMMIT_SHA) {
       c.plugins = c.plugins.filter(pluginItem => !(pluginItem instanceof ProgressPlugin))

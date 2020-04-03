@@ -1,6 +1,5 @@
 import axios from '@/plugins/axios.js'
 import store from '@/store' // vuex
-import _ from 'lodash'
 import { keyToHump } from '@/utils'
 import { settlePhoto } from '@/utils/photoTool.js'
 import { PhotoStatics } from '@/utils/enumerate.js'

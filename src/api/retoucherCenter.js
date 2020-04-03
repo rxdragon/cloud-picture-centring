@@ -1,6 +1,5 @@
 // retoucherCenter
 import axios from '@/plugins/axios.js'
-import _ from 'lodash'
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
 import { StreamStatics } from '@/utils/enumerate.js'
