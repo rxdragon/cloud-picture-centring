@@ -19,7 +19,7 @@
     "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "slint": "stylelint 'src/**/*.less' --config '.stylelintrc' --fix",
+    "slint": "stylelint 'src/**/*.less' 'src/**/*.vue' --config '.stylelintrc' --fix",
     "cz": "yarn log && git add . && git cz",
     "log": "conventional-changelog --config ./node_modules/vue-cli-plugin-commitlint/lib/log -i CHANGELOG.md -s -r 0"
   },

@@ -11,7 +11,7 @@
       </div>
       <div class="button-box">
         <el-button v-if="orderData.type === 'mainto'" type="primary" plain @click="hangUp">挂起订单</el-button>
-        <el-button type="primary" @click="submitOrder">提交审核</el-button>
+        <el-button type="primary" @click="setIssueLabel">提交审核</el-button>
       </div>
     </div>
     <!-- 照片信息 -->
@@ -60,6 +60,8 @@
         @change="uploadDown"
       />
     </div>
+    <!-- 问题标签 -->
+    <issue-label :issue-data="issueData" :visible.sync="dialogVisible" @submit="submitOrder" />
   </div>
 </template>
 
@@ -67,6 +69,7 @@
 import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
 import UploadPhoto from './UploadPhoto.vue'
+import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
@@ -75,7 +78,7 @@ import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto },
+  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel },
   props: {
     showDetail: { type: Boolean }
   },
@@ -107,7 +110,30 @@ export default {
       overTime: 0, // 超时时间
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
-      realAid: ''
+      realAid: '',
+      dialogVisible: false,
+      issueData: [
+        {
+          id: 1,
+          label: '光影',
+          select: false
+        },
+        {
+          id: 2,
+          label: '眉毛',
+          select: false
+        },
+        {
+          id: 3,
+          label: '身型',
+          select: false
+        },
+        {
+          id: 4,
+          label: '丑',
+          select: false
+        }
+      ]
     }
   },
   computed: {
@@ -225,7 +251,8 @@ export default {
     /**
      * @description 提交审核
      */
-    async submitOrder () {
+    async submitOrder (id) {
+      console.log(id)
       const finishPhotoArr = Object.values(this.finishPhoto)
       if (!finishPhotoArr.every(item => Boolean(item.path))) {
         return this.$newMessage.warning('请等待照片上传完成')
@@ -265,6 +292,12 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    /**
+     * @description 设置问题标签
+     */
+    setIssueLabel () {
+      this.dialogVisible = true
     }
   }
 }
