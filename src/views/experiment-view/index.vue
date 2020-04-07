@@ -93,7 +93,6 @@ export default {
      */
     async openImageCacheFile () {
       const res = ipcRenderer.sendSync('utils:OpenFile')
-      console.log(res)
       if (res !== 'success') {
         this.$newMessage.error('找不到文件夹')
       }
@@ -102,7 +101,6 @@ export default {
      * @description 清除图片缓存
      */
     async cleanImageCache () {
-      console.log('cleanImageCache')
       const res = ipcRenderer.sendSync('utils:clean-image-cache')
       if (res !== 'success') {
         this.$newMessage.error(res)
@@ -120,6 +118,9 @@ export default {
         this.imageCatchCount = res
       }
     },
+    /**
+     * @description 清零画布
+     */
     update () {
       this.particleCanvas = document.querySelector('#buttonCanvas')
       this.particleCtx = this.particleCanvas.getContext("2d")
