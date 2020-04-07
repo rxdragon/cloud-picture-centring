@@ -18,17 +18,33 @@
           <el-switch :value="cacheGuestInfiniteScroll" @change="setCacheGuestInfiniteScroll" />
         </el-form-item>
       </el-form>
+      <div class="clean-cache-box">
+        <particle-button class="experiment-button" @click="cleanImageCache">清除预加载图片缓存</particle-button>
+        <span class="image-catch-count">
+          {{ imageCatchCount }}
+        </span>
+      </div>
+      <div class="open-cache-box">
+        <particle-button class="experiment-button" @click="openImageCacheFile">打开预加载图片文件夹</particle-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+const { ipcRenderer } = window.require('electron')
 import { mapGetters } from 'vuex'
+import ParticleButton from '@/components/ParticleButton/index'
 import * as Setting from '@/indexDB/getSetting.js'
+
 export default {
   name: 'ExperimentView',
+  components: { ParticleButton },
   data () {
-    return {}
+    return {
+      imageCatchCount: 0,
+      particleAnimationId: null
+    }
   },
   computed: {
     ...mapGetters([
@@ -43,6 +59,13 @@ export default {
     cacheGuestInfiniteScroll () {
       return Boolean(Number(this.guestInfiniteScroll))
     }
+  },
+  created () {
+    this.getImageCachePhotoCount()
+    this.particleAnimationId = window.requestAnimationFrame(this.update)
+  },
+  beforeDestroy () {
+    window.cancelAnimationFrame(this.particleAnimationId)
   },
   methods: {
     setCatShow (value) {
@@ -64,7 +87,66 @@ export default {
           const data = value ? 1 : 0
           Setting.updateSetting('guestInfiniteScroll', data)
         })
+    },
+    /**
+     * @description 打开图片缓存地址
+     */
+    async openImageCacheFile () {
+      const res = ipcRenderer.sendSync('utils:OpenFile')
+      console.log(res)
+      if (res !== 'success') {
+        this.$newMessage.error('找不到文件夹')
+      }
+    },
+    /**
+     * @description 清除图片缓存
+     */
+    async cleanImageCache () {
+      console.log('cleanImageCache')
+      const res = ipcRenderer.sendSync('utils:clean-image-cache')
+      if (res !== 'success') {
+        this.$newMessage.error(res)
+      }
+      this.getImageCachePhotoCount()
+    },
+    /**
+     * @description 获取缓存文件数量
+     */
+    async getImageCachePhotoCount () {
+      const res = ipcRenderer.sendSync('utils:get-image-cache')
+      if (res === 'fail') {
+        this.$newMessage.error('获取文件数量失败')
+      } else {
+        this.imageCatchCount = res
+      }
+    },
+    update () {
+      this.particleCanvas = document.querySelector('#buttonCanvas')
+      this.particleCtx = this.particleCanvas.getContext("2d")
+      if (typeof this.particleCtx !== "undefined") {
+        this.particleCtx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+      }
+      this.particleAnimationId = window.requestAnimationFrame(this.update)
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.clean-cache-box {
+  margin-bottom: 22px;
+}
+
+.experiment-button {
+  width: 200px;
+}
+
+.image-catch-count {
+  display: inline-block;
+  width: 40px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #606266;
+  text-align: center;
+}
+</style>
