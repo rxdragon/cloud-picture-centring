@@ -211,6 +211,7 @@ export function getPhotoProblemTagSets () {
         })
       })
     }
+    createData.sort(() => Math.random() - 0.5)
     return createData
   })
 }
