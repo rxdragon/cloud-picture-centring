@@ -59,6 +59,8 @@ module.exports = {
         balanced: true
       }
     }],
+    "no-console": ["error", { allow: ["warn", "error"] }],
+    'semi': [2, 'never'],
     "no-var": 2, // 禁止使用 var，必须用 let 或 const
     "no-unused-vars": [2, // 禁止定义不使用的变量
       {
