@@ -19,7 +19,7 @@
         </el-form-item>
       </el-form>
       <div class="clean-cache-box">
-        <particle-button class="experiment-button" @click="cleanImageCache">清除预加载图片缓存</particle-button>
+        <particle-button class="clean-cache-button experiment-button" @click="cleanImageCache">清除预加载图片缓存</particle-button>
         <span class="image-catch-count">
           {{ imageCatchCount }}
         </span>
@@ -149,5 +149,9 @@ export default {
   font-weight: 600;
   color: #606266;
   text-align: center;
+}
+
+.clean-cache-button {
+  background: linear-gradient(to right, #ee0979, #ff6a00);
 }
 </style>

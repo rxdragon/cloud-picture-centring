@@ -1,4 +1,4 @@
-# 2.0.0 (2020-04-07)
+# 2.0.0 (2020-04-08)
 
 |范围|描述|commitId|
 --|--|--
@@ -274,9 +274,10 @@
  前端项目规范 | [08abce1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08abce1)
  去除console | [e867487](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e867487)
  去除console | [3399ad4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3399ad4)
+ 去除console | [de61c4e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/de61c4e)
  去除console.log | [eae5792](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eae5792)
- 去除console.log | [e749ff5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e749ff5)
  去除console.log | [80a214e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/80a214e)
+ 去除console.log | [e749ff5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e749ff5)
  去除测试样式文字 | [ffaccc0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ffaccc0)
  去除自动上传扩展功能 | [09f8234](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/09f8234)
  完成云学院ui布局 | [6c9e12c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c9e12c)
@@ -284,12 +285,12 @@
  更改样式 | [a021d75](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a021d75)
  更改结束时间 | [919032a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/919032a)
  更改错误显示数据名字 | [8096dd7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8096dd7)
- ' | 优化样式 | [0fad9a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0fad9a5)
- 格式化代码 | [e2ab9b0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2ab9b0)
  格式化代码 | [d71a32c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d71a32c)
+ 格式化代码 | [e2ab9b0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2ab9b0)
  滚动条样式优化，流量看板样式优化 | [6c61941](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c61941)
  默认不启动播放，不开启音乐 | [8eec25d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8eec25d)
  默认值处理 | [0aa4c73](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0aa4c73)
+ ' | 优化样式 | [0fad9a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0fad9a5)
 
 
 ### 🐛 Bug 修复

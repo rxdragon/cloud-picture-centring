@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express')
 const fs = require('fs')
 const path = require('path')
@@ -27,9 +28,9 @@ exp.all('*', function (req, res, next) {
 })
 
 exp.get('/image/*', (req, res, next) => {
-  const imageName = path.basename(req.originalUrl) // 不带日期请求地址
+  const imageName = path.basename(req.originalUrl)
   const onlineImageUrl = req.originalUrl.replace('/image/', '') // 网络请求地址
-  const imageLocalPath = path.join(imageCachePath, imageName) // 本地图片地址
+  const imageLocalPath = path.join(imageCachePath, imageName) // 本地
   const imageOnlinePath = 'https://' + path.join(cloudPhotoHost, onlineImageUrl)
   // 是否有本地图片
   if (!hasImageCache(imageLocalPath)) {
@@ -41,9 +42,9 @@ exp.get('/image/*', (req, res, next) => {
 
 /**
  * @description 流式写入照片
- * @param {*} url 网络地址
- * @param {*} imageName 本地文件地址
- * @param {*} callback 请求返回
+ * @param {*} url
+ * @param {*} savePath
+ * @param {*} callback
  */
 function downloadFile (url, imageName, res) {
   const uuid = uuidv4()
