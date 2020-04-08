@@ -111,29 +111,9 @@ export default {
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
       realAid: '',
-      dialogVisible: false,
-      issueData: [
-        {
-          id: 1,
-          label: '光影',
-          select: false
-        },
-        {
-          id: 2,
-          label: '眉毛',
-          select: false
-        },
-        {
-          id: 3,
-          label: '身型',
-          select: false
-        },
-        {
-          id: 4,
-          label: '丑',
-          select: false
-        }
-      ]
+      dialogVisible: false, // 显示问题标签
+      issueData: [], // 问题数据
+      needPunchLabel: false // 是否需要标记问题
     }
   },
   computed: {
@@ -207,6 +187,7 @@ export default {
         }
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
+        this.needPunchLabel = data.needPunchLabel
         LogStream.retoucherSee(+this.realAid)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
@@ -251,8 +232,7 @@ export default {
     /**
      * @description 提交审核
      */
-    async submitOrder (id) {
-      // console.log(id)
+    async submitOrder (issue) {
       const finishPhotoArr = Object.values(this.finishPhoto)
       if (!finishPhotoArr.every(item => Boolean(item.path))) {
         return this.$newMessage.warning('请等待照片上传完成')
@@ -279,6 +259,10 @@ export default {
         streamId: this.realAid,
         photoData: uploadData
       }
+      // 设置问题标签
+      if (issue) {
+        reqData.streamTagData = issue
+      }
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         await RetoucherCenter.submitStream(reqData)
@@ -297,7 +281,19 @@ export default {
      * @description 设置问题标签
      */
     setIssueLabel () {
-      this.dialogVisible = true
+      if (this.needPunchLabel) {
+        this.getPhotoProblemTagSets()
+        this.dialogVisible = true
+      } else {
+        this.submitOrder()
+      }
+    },
+    /**
+     * @description 获取标签
+     */
+    async getPhotoProblemTagSets () {
+      const res = await RetoucherCenter.getPhotoProblemTagSets()
+      this.issueData = res
     }
   }
 }

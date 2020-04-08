@@ -42,13 +42,18 @@ export default {
      * @description 提交
      */
     submitData () {
-      const selectId = []
-      this.issueData.forEach(item => {
-        if (item.select) {
-          selectId.push(item.id)
+      const problemTagPhotography = []
+      const problemTagMakeup = []
+      const selectIssue = this.issueData.filter(item => item.select)
+      selectIssue.forEach(item => {
+        if (item.type === 'problemTagPhotography') {
+          problemTagPhotography.push(item.label)
+        } else {
+          problemTagMakeup.push(item.label)
         }
       })
-      this.$emit('submit', selectId)
+      const issue = { problemTagPhotography, problemTagMakeup }
+      this.$emit('submit', issue)
     }
   }
 }
