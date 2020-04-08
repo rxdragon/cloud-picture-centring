@@ -16,7 +16,7 @@ function initUtils (win, ipcMain) {
     try {
       wc.debugger.attach('1.1')
     } catch (err) {
-      console.log('Debugger attach failed : ', err)
+      console.error('Debugger attach failed : ', err)
     }
     wc.debugger.sendCommand('DOM.getDocument', {}, (err, res) => {
       console.error(err)

@@ -1,5 +1,5 @@
 <template>
-  <button ref="particle" @click="anmClick" class="particle-button">
+  <button :disabled="isLoading" ref="particle" @click="anmClick" class="particle-button">
     <slot></slot>
   </button>
 </template>
@@ -20,15 +20,17 @@ export default {
       height: 0,
       btnLeft: 0,
       btnTop: 0,
-      particleAnimationId: null
+      particleAnimationId: null,
+      isLoading: true
     }
   },
   created () {
     this.createParticleCanvas()
   },
   mounted () {
-    this.getButtonInfo()
-    this.particleAnimationId = window.requestAnimationFrame(this.update)
+    setTimeout(() => {
+      this.getButtonInfo()
+    }, 200)
   },
   beforeDestroy () {
     window.cancelAnimationFrame(this.particleAnimationId)
@@ -79,6 +81,7 @@ export default {
       html2canvas(btn).then(canvas => {
         const ctx = canvas.getContext("2d")
         this.colorData = ctx.getImageData(0, 0, this.width, this.height).data
+        this.isLoading = false
       })
     },
     /**
@@ -96,6 +99,8 @@ export default {
      * @description 动画处罚事件
      */
     anmClick () {
+      window.cancelAnimationFrame(this.particleAnimationId)
+      this.particleAnimationId = window.requestAnimationFrame(this.update)
       let count = 0
       let reductionFactor = 17
       for (let localX = 0; localX < this.width; localX++) {
@@ -129,6 +134,7 @@ export default {
           let percent = (Date.now() - this.particles[i].startTime) / this.particles[i].animationDuration
           if (percent > 1) {
             this.particles = []
+            window.cancelAnimationFrame(this.particleAnimationId)
           }
         }
       }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express')
 const fs = require('fs')
 const path = require('path')
@@ -9,7 +10,10 @@ const uuidv4 = require('uuid/v4')
 
 const MaxFileCount = 10
 const clearCacheTime = 60 * 60 * 1000
-const cloudPhotoHost = global.env !== 'production' ? 'cloud-dev.cdn-qn.hzmantu.com/upload_dev/' : 'cloud.cdn-qn.hzmantu.com/upload/'
+const isProduction =
+  global.config('microApi') === 'https://mantu-tech-micro-api-proxy.api.hzmantu.com' ||
+  global.config('microApi') === 'https://api-gateway.hzmantu.com'
+const cloudPhotoHost = isProduction ? 'cloud.cdn-qn.hzmantu.com/upload/' : 'cloud-dev.cdn-qn.hzmantu.com/upload_dev/'
 console.log(cloudPhotoHost)
 createImageCacheDir()
 clearCache()
@@ -27,9 +31,9 @@ exp.all('*', function (req, res, next) {
 })
 
 exp.get('/image/*', (req, res, next) => {
-  const imageName = path.basename(req.originalUrl) // 不带日期请求地址
+  const imageName = path.basename(req.originalUrl)
   const onlineImageUrl = req.originalUrl.replace('/image/', '') // 网络请求地址
-  const imageLocalPath = path.join(imageCachePath, imageName) // 本地图片地址
+  const imageLocalPath = path.join(imageCachePath, imageName) // 本地
   const imageOnlinePath = 'https://' + path.join(cloudPhotoHost, onlineImageUrl)
   // 是否有本地图片
   if (!hasImageCache(imageLocalPath)) {
@@ -41,9 +45,9 @@ exp.get('/image/*', (req, res, next) => {
 
 /**
  * @description 流式写入照片
- * @param {*} url 网络地址
- * @param {*} imageName 本地文件地址
- * @param {*} callback 请求返回
+ * @param {*} url
+ * @param {*} savePath
+ * @param {*} callback
  */
 function downloadFile (url, imageName, res) {
   const uuid = uuidv4()
