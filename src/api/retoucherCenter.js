@@ -1,8 +1,9 @@
 // retoucherCenter
 import axios from '@/plugins/axios.js'
+import StreamModel from '@/model/StreamModel.js'
+import ProductModel from '@/model/ProductModel.js'
+import OrderModel from '@/model/OrderModel.js'
 import { keyToHump } from '@/utils/index.js'
-import { waitTime } from '@/utils/validate.js'
-import { StreamStatics } from '@/utils/enumerate.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
 /**
@@ -15,27 +16,15 @@ export function getRetouchStreams (params) {
     method: 'get',
     params
   }).then(msg => {
-    msg.data.forEach(listItem => {
-      listItem.streamNum = listItem.stream_num
-      listItem.streamId = listItem.id
-      listItem.productName = _.get(listItem, 'product.name', '-')
-      listItem.photoNum = listItem.photos_count
-      listItem.type = _.get(listItem, 'product.retouch_standard') || '-'
-      listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
-      listItem.waitTime = waitTime(listItem.created_at, listItem.pass_at)
-      listItem.photographerUpdate = listItem.created_at || '-'
-      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.CheckReturn)
-      listItem.isStoreReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.StoreReturn)
-      if (params.state === 'hanging') {
-        listItem.hangTime = waitTime(listItem.last_hang_at)
-      } else {
-        listItem.isGreen = false
-        listItem.isOrange = false
-        listItem.isOver = false
-        listItem.isRework = false
-        if (listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework')) {
-          listItem.isRework = true
-        }
+    msg.data = msg.data.map(listItem => {
+      const streamOrder = new StreamModel(listItem)
+      const productInfo = new ProductModel(listItem.product)
+      listItem.photographerName = _.get(listItem, 'order.photographer_org.name') || '-'
+      return {
+        ...streamOrder,
+        ...listItem,
+        ...streamOrder.sandClockInfo,
+        productInfo
       }
     })
     return msg
@@ -67,20 +56,16 @@ export function getStreamInfo (params) {
     params
   }).then(msg => {
     const createData = {}
+    const streamOrder = new StreamModel(msg)
+    const productInfo = new ProductModel(msg.product)
+    const orderInfo = new OrderModel(msg.order)
     createData.orderData = {
-      streamNum: msg.stream_num,
-      type: msg.product && msg.product.retouch_standard,
-      photographerName: msg.order.photographer_org ? msg.order.photographer_org.name : '-',
-      photographer: msg.order.tags ? msg.order.tags.values.photographer : '-', // 摄影
-      productName: msg.product && msg.product.name,
-      photoNum: msg.photos.filter(item => +item.people_num > 0).length,
-      waitTime: waitTime(msg.created_at, msg.pass_at),
-      retouchRemark: msg.note.retouch_note,
-      backgroundColor: msg.note.color_note || '',
-      requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
-      streamState: msg.state,
-      isCheckReturn: _.get(msg, 'tags.statics', []).includes('rework'),
-      isStoreReturn: _.get(msg, 'tags.statics', []).includes('store_rework'),
+      ...streamOrder,
+      productInfo,
+      orderInfo,
+      photographerName: _.get(msg, 'order.photographer_org.name') || '-',
+      photographer: _.get(msg, 'order.tags.values.photographer') || '-', // 摄影
+      photoNum: streamOrder.photoNum
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
