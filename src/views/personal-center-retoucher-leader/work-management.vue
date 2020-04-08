@@ -80,7 +80,6 @@ export default {
     this.getTodayQuota()
     this.getGroupStaffTodayQuotaList()
   },
-  mounted () {},
   methods: {
     /**
      * @description 打开调整工作量
@@ -143,8 +142,8 @@ export default {
     margin-right: 24px;
 
     .panel-main {
-      text-align: center;
       position: relative;
+      text-align: center;
 
       .el-progress__text {
         display: none;
@@ -154,14 +153,14 @@ export default {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translateX(-50%) translateY(-50%);
         display: flex;
         flex-direction: column;
         color: #606266;
+        transform: translateX(-50%) translateY(-50%);
 
         .num {
-          font-size: 44px;
           font-family: @DINAlternate;
+          font-size: 44px;
           font-weight: bold;
           color: @blue;
         }
@@ -170,22 +169,22 @@ export default {
 
     .panel-footer {
       display: flex;
-      margin-top: 15px;
       justify-content: space-between;
-      color: #606266;
+      margin-top: 15px;
       font-family: @pingFang;
       font-size: 12px;
       line-height: 20px;
+      color: #606266;
 
       & > div {
         &::before {
-          content: '';
           display: inline-block;
           width: 8px;
           height: 8px;
+          margin-right: 4px;
+          content: '';
           background: @borderColor;
           border-radius: 50%;
-          margin-right: 4px;
         }
       }
 
@@ -201,15 +200,15 @@ export default {
     margin-bottom: 20px;
 
     .panel-title {
-      font-weight: bold;
       display: flex;
       justify-content: space-between;
+      font-weight: bold;
     }
 
     .search-box {
       display: flex;
-      margin-top: 20px;
       align-items: center;
+      margin-top: 20px;
 
       button {
         margin-left: 20px;

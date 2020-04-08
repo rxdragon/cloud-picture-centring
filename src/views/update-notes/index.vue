@@ -45,15 +45,15 @@ export default {
   font-weight: 400;
 
   time {
+    margin-left: 20px;
     font-size: 14px;
     color: #989898;
-    margin-left: 20px;
   }
 }
 
 .content-main {
-  margin-right: -24px;
   padding-right: 24px;
+  margin-right: -24px;
 
   .module-panel {
     margin-bottom: 24px;

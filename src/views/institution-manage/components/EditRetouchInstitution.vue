@@ -57,19 +57,29 @@ export default {
       routeName: this.$route.name, // 路由名字
       rules: {
         name: [
-          { validator: (rule, value, callback) => { this.noSpecialCharacter(rule, value, callback) }, trigger: ['blur', 'change'] }
+          { validator: (rule, value, callback) => {
+            this.noSpecialCharacter(rule, value, callback)
+          }, trigger: ['blur', 'change'] }
         ],
         account: [
-          { validator: (rule, value, callback) => { this.validateInput(rule, value, callback) }, trigger: ['blur', 'change'] }
+          { validator: (rule, value, callback) => {
+            this.validateInput(rule, value, callback)
+          }, trigger: ['blur', 'change'] }
         ],
         code: [
-          { validator: (rule, value, callback) => { this.validateInput(rule, value, callback) }, trigger: ['blur', 'change'] }
+          { validator: (rule, value, callback) => {
+            this.validateInput(rule, value, callback)
+          }, trigger: ['blur', 'change'] }
         ],
         toData: [
-          { validator: (rule, value, callback) => { this.validateToData(rule, value, callback) }, trigger: 'blur' }
+          { validator: (rule, value, callback) => {
+            this.validateToData(rule, value, callback)
+          }, trigger: 'blur' }
         ],
         incomeConfig: [
-          { validator: (rule, value, callback) => { this.validateIncomeConfig(rule, value, callback) }, trigger: 'blur' }
+          { validator: (rule, value, callback) => {
+            this.validateIncomeConfig(rule, value, callback)
+          }, trigger: 'blur' }
         ]
       },
       defaultCheckedKeys: [],
@@ -86,7 +96,9 @@ export default {
   watch: {
     retouchInstitutionId: {
       handler (value) {
-        if (value) { this.getRetouchOrgInfo() }
+        if (value) {
+          this.getRetouchOrgInfo()
+        }
       },
       immediate: true
     }
@@ -158,15 +170,19 @@ export default {
               })
           }
         })
-        .catch(() => {})
+        .catch()
     },
     /**
      * @description 输入验证
      */
     validateInput (rule, value, callback) {
       if (!value) {
-        if (rule.field === 'account') { callback(new Error('请填写机构主账号')) }
-        if (rule.field === 'code') { callback(new Error('机构代号')) }
+        if (rule.field === 'account') {
+          callback(new Error('请填写机构主账号'))
+        }
+        if (rule.field === 'code') {
+          callback(new Error('机构代号'))
+        }
       } else if ((/[^a-zA-Z]/g).test(value)) {
         callback(new Error('只能输入英文'))
       } else {

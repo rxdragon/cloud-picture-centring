@@ -108,7 +108,9 @@ export default {
   watch: {
     isAddShow: {
       handler: function (value) {
-        if (!value) { this.getCloudRetoucherQuota() }
+        if (!value) {
+          this.getCloudRetoucherQuota()
+        }
       }
     }
   },
@@ -186,8 +188,8 @@ export default {
 
 .work-target {
   .list-table-box {
-    margin-top: 20px;
     width: 80%;
+    margin-top: 20px;
   }
 }
 </style>

@@ -6,12 +6,14 @@ function assertPath (path) {
 
 function posix (path) {
   assertPath(path)
-  if (path.length === 0) { return '.' }
-  var code = path.charCodeAt(0)
-  var hasRoot = (code === 47/* /*/)
-  var end = -1
-  var matchedSlash = true
-  for (var i = path.length - 1; i >= 1; --i) {
+  if (path.length === 0) {
+    return '.'
+  }
+  let code = path.charCodeAt(0)
+  let hasRoot = (code === 47/* /*/)
+  let end = -1
+  let matchedSlash = true
+  for (let i = path.length - 1; i >= 1; --i) {
     code = path.charCodeAt(i)
     if (code === 47/* /*/) {
       if (!matchedSlash) {
@@ -24,37 +26,45 @@ function posix (path) {
     }
   }
 
-  if (end === -1) { return hasRoot ? '/' : '.' }
-  if (hasRoot && end === 1) { return '//' }
+  if (end === -1) {
+    return hasRoot ? '/' : '.'
+  }
+  if (hasRoot && end === 1) {
+    return '//'
+  }
   return path.slice(0, end)
 }
 
 function win32 (path) {
   assertPath(path)
-  var len = path.length
-  if (len === 0) { return '.' }
-  var rootEnd = -1
-  var end = -1
-  var matchedSlash = true
-  var offset = 0
-  var code = path.charCodeAt(0)
+  let len = path.length
+  if (len === 0) {
+    return '.'
+  }
+  let rootEnd = -1
+  let end = -1
+  let matchedSlash = true
+  let offset = 0
+  let code = path.charCodeAt(0)
 
   // Try to match a root
   if (len > 1) {
     if (code === 47/* /*/ || code === 92/* \*/) {
       // Possible UNC root
-
-      rootEnd = offset = 1
+      offset = 1
+      rootEnd = 1
 
       code = path.charCodeAt(1)
       if (code === 47/* /*/ || code === 92/* \*/) {
         // Matched double path separator at beginning
-        var j = 2
-        var last = j
+        let j = 2
+        let last = j
         // Match 1 or more non-path separators
         for (; j < len; ++j) {
           code = path.charCodeAt(j)
-          if (code === 47/* /*/ || code === 92/* \*/) { break }
+          if (code === 47/* /*/ || code === 92/* \*/) {
+            break
+          }
         }
         if (j < len && j !== last) {
           // Matched!
@@ -62,7 +72,9 @@ function win32 (path) {
           // Match 1 or more path separators
           for (; j < len; ++j) {
             code = path.charCodeAt(j)
-            if (code !== 47/* /*/ && code !== 92/* \*/) { break }
+            if (code !== 47/* /*/ && code !== 92/* \*/) {
+              break
+            }
           }
           if (j < len && j !== last) {
             // Matched!
@@ -70,7 +82,9 @@ function win32 (path) {
             // Match 1 or more non-path separators
             for (; j < len; ++j) {
               code = path.charCodeAt(j)
-              if (code === 47/* /*/ || code === 92/* \*/) { break }
+              if (code === 47/* /*/ || code === 92/* \*/) {
+                break
+              }
             }
             if (j === len) {
               // We matched a UNC root only
@@ -81,7 +95,8 @@ function win32 (path) {
 
               // Offset by 1 to include the separator after the UNC root to
               // treat it as a "normal root" on top of a (UNC) root
-              rootEnd = offset = j + 1
+              rootEnd = j + 1
+              offset = j + 1
             }
           }
         }
@@ -92,10 +107,14 @@ function win32 (path) {
 
       code = path.charCodeAt(1)
       if (path.charCodeAt(1) === 58/* :*/) {
-        rootEnd = offset = 2
+        rootEnd = 2
+        offset = 2
         if (len > 2) {
           code = path.charCodeAt(2)
-          if (code === 47/* /*/ || code === 92/* \*/) { rootEnd = offset = 3 }
+          if (code === 47/* /*/ || code === 92/* \*/) {
+            rootEnd = 3
+            offset = 3
+          }
         }
       }
     }
@@ -103,7 +122,7 @@ function win32 (path) {
     return path[0]
   }
 
-  for (var i = len - 1; i >= offset; --i) {
+  for (let i = len - 1; i >= offset; --i) {
     code = path.charCodeAt(i)
     if (code === 47/* /*/ || code === 92/* \*/) {
       if (!matchedSlash) {
@@ -117,7 +136,11 @@ function win32 (path) {
   }
 
   if (end === -1) {
-    if (rootEnd === -1) { return '.' } else { end = rootEnd }
+    if (rootEnd === -1) {
+      return '.'
+    } else {
+      end = rootEnd
+    }
   }
   return path.slice(0, end)
 }
@@ -161,7 +184,11 @@ export function getExtName (path) {
     }
     if (code === 46 /* .*/) {
       // If this is our first dot, mark it as the start of our extension
-      if (startDot === -1) { startDot = i } else if (preDotState !== 1) { preDotState = 1 }
+      if (startDot === -1) {
+        startDot = i
+      } else if (preDotState !== 1) {
+        preDotState = 1
+      }
     } else if (startDot !== -1) {
       // We saw a non-dot and non-path separator before our dot, so we should
       // have a good chance at having a non-empty extension
@@ -169,11 +196,11 @@ export function getExtName (path) {
     }
   }
 
-  if (startDot === -1 || end === -1 ||
+  if ((startDot === -1 || end === -1) ||
       // We saw a non-dot character immediately before the dot
-      preDotState === 0 ||
+      (preDotState === 0) ||
       // The (right-most) trimmed path component is exactly '..'
-      preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+      (preDotState === 1 && startDot === end - 1 && startDot === startPart + 1)) {
     return ''
   }
   return path.slice(startDot, end)
@@ -251,7 +278,9 @@ function normalizeArray (parts, allowAboveRoot) {
 
 // String.prototype.substr - negative index don't work in IE8
 const substr = 'ab'.substr(-1) === 'b'
-  ? function (str, start, len) { return str.substr(start, len) }
+  ? function (str, start, len) {
+    return str.substr(start, len)
+  }
   : function (str, start, len) {
     if (start < 0) start = str.length + start
     return str.substr(start, len)

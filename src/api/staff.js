@@ -66,7 +66,9 @@ export function getStaffList () {
         createData[0].children = staffInfo
       }
     })
-    if (!createData[0].children.length) { createData.shift(1) }
+    if (!createData[0].children.length) {
+      createData.shift(1)
+    }
     return createData
   }
   const data = SessionTool.getStaffList()
@@ -108,7 +110,7 @@ export function getStaffSelectList () {
         } else {
           createData.push({
             value: staff.department_id,
-            label: groudInfo && groudInfo.name || '-',
+            label: (groudInfo && groudInfo.name) || '-',
             children: [staffInfo]
           })
         }
@@ -116,7 +118,9 @@ export function getStaffSelectList () {
         createData[0].children = staffInfo
       }
     })
-    if (!createData[0].children.length) { createData.shift(1) }
+    if (!createData[0].children.length) {
+      createData.shift(1)
+    }
     return createData
   }
   const data = SessionTool.getStaffList()

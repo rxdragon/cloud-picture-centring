@@ -100,10 +100,18 @@ export default {
   watch: {
     'gradeInfo.attitude': {
       handler: function (value) {
-        if (!value) { this.gradeType = 0 }
-        if (value === 'good') { this.gradeType = 1 }
-        if (value === 'bad') { this.gradeType = 2 }
-        if (value === 'none') { this.gradeType = 0 }
+        if (!value) {
+          this.gradeType = 0
+        }
+        if (value === 'good') {
+          this.gradeType = 1
+        }
+        if (value === 'bad') {
+          this.gradeType = 2
+        }
+        if (value === 'none') {
+          this.gradeType = 0
+        }
       },
       deep: true,
       immediate: true
@@ -129,8 +137,12 @@ export default {
      */
     sendMessage () {
       let sendData = ''
-      if (+this.gradeType === 1) { sendData = 'good' }
-      if (+this.gradeType === 2) { sendData = 'bad' }
+      if (+this.gradeType === 1) {
+        sendData = 'good'
+      }
+      if (+this.gradeType === 2) {
+        sendData = 'bad'
+      }
       this.$emit('gradeChange', sendData)
     },
     /**
@@ -164,17 +176,17 @@ export default {
     .show-info {
       display: flex;
       justify-content: space-between;
-      color: #606266;
-      font-family: @pingFang;
-      line-height: 22px;
-      font-size: 14px;
       padding: 12px 6px 6px;
+      font-family: @pingFang;
+      font-size: 14px;
+      line-height: 22px;
+      color: #606266;
       border-top: 1px solid @borderColor;
 
       .icon-box {
         display: flex;
-        cursor: pointer;
         align-items: center;
+        cursor: pointer;
 
         .iconfont {
           margin-right: 9px;

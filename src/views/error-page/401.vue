@@ -53,28 +53,28 @@ export default {
   }
 
   .errPage-container {
-    -webkit-app-region: drag;
     width: 800px;
     max-width: 100%;
-    margin: 0 auto;
     padding: 100px 0;
+    margin: 0 auto;
     background-color: #fff;
+    -webkit-app-region: drag;
 
     .pan-back-btn {
-      background: #008489;
       color: #fff;
+      background: #008489;
       border: none !important;
     }
 
     .pan-gif {
-      margin: 0 auto;
       display: block;
+      margin: 0 auto;
     }
 
     .pan-img {
       display: block;
-      margin: 0 auto;
       width: 100%;
+      margin: 0 auto;
     }
 
     .text-jumbo {

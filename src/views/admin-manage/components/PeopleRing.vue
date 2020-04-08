@@ -87,24 +87,24 @@ export default {
   position: relative;
 
   .ve-ring {
-    margin: auto;
     position: relative;
     z-index: 11;
+    margin: auto;
   }
 
   .people-num {
     position: absolute;
-    margin: auto;
-    z-index: 1;
-    text-align: center;
     top: 50%;
     left: 50%;
+    z-index: 1;
+    margin: auto;
     margin-top: -12.5px;
-    transform: translateX(-50%) translateY(-50%);
     font-size: 28px;
     font-weight: 600;
-    color: @blue;
     line-height: 40px;
+    color: @blue;
+    text-align: center;
+    transform: translateX(-50%) translateY(-50%);
 
     .people-sum {
       small {
@@ -115,8 +115,8 @@ export default {
     .people-desc {
       font-size: 12px;
       font-weight: 400;
-      color: #45454d;
       line-height: 17px;
+      color: #45454d;
     }
   }
 
@@ -128,16 +128,16 @@ export default {
       width: 50%;
       font-size: 12px;
       font-weight: 400;
-      color: #606266;
       line-height: 20px;
+      color: #606266;
       text-align: center;
 
       .point-color {
         display: inline-block;
         width: 8px;
         height: 8px;
-        border-radius: 50%;
         margin-right: 4px;
+        border-radius: 50%;
       }
 
       .in-retoucher {

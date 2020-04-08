@@ -179,9 +179,15 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
-      if (this.productValue) { reqData.productId = this.productValue }
+      if (this.staffId.length) {
+        reqData.staffIds = this.staffId
+      }
+      if (this.retouchStandard) {
+        reqData.retouchStandard = this.retouchStandard
+      }
+      if (this.productValue) {
+        reqData.productId = this.productValue
+      }
       return reqData
     },
     /**
@@ -255,9 +261,9 @@ export default {
 
     .photo-row {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       margin-bottom: 24px;
-      flex-wrap: wrap;
 
       .empty-box {
         width: 253px;
@@ -265,16 +271,16 @@ export default {
     }
 
     .photo-box {
-      width: 253px;
       display: inline-block;
+      width: 253px;
       height: 330px;
       cursor: pointer;
 
       .group-name,
       .staff-name {
         font-size: 12px;
-        color: #606266;
         line-height: 17px;
+        color: #606266;
       }
 
       .staff-name {

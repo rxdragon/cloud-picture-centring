@@ -36,7 +36,9 @@ export default {
   },
   watch: {
     isLoadingDown (value) {
-      if (value) { this.getGreenChannelInfo() }
+      if (value) {
+        this.getGreenChannelInfo()
+      }
     }
   },
   methods: {
@@ -88,8 +90,8 @@ export default {
   }
 
   .button-box {
-    text-align: left;
     margin: 20px 0;
+    text-align: left;
   }
 }
 </style>

@@ -1,5 +1,6 @@
 const state = {
   imgDomain: process.env.VUE_APP_DOMAIN,
+  imgCompressDomain: process.env.VUE_APP_COMPRESS_DOMAIN,
   imgUploadDomain: process.env.VUE_APP_IMG_UPLOAD_DOMAIN,
   updateDomain: process.env.VUE_APP_UPDATE_DOMAIN,
   loadRoutes: [],
@@ -23,19 +24,6 @@ const mutations = {
   },
   SET_CAT: (state, data) => {
     state.showCat = data
-  },
-  /**
-   * @deprecated 更改域名
-   * @param domainType // 1 又拍云 2 阿里云
-   */
-  SET_DOMAIN: (state, domainType) => {
-    if (+domainType === 1) {
-      state.imgDomain = state.imgDomain.replace('.cdn2.', '.cdn.')
-      state.imgUploadDomain = state.imgUploadDomain.replace('.cdn2.', '.cdn.')
-    } else {
-      state.imgDomain = state.imgDomain.replace('.cdn.', '.cdn2.')
-      state.imgUploadDomain = state.imgUploadDomain.replace('.cdn.', '.cdn2.')
-    }
   },
   SET_OVER_TAG: (state, data) => {
     state.showOverTag = data
@@ -67,10 +55,6 @@ const actions = {
   },
   setShowOverTag ({ commit }, data) {
     commit('SET_OVER_TAG', data)
-  },
-  // 更换域名
-  changeDomain ({ commit }, domainType) {
-    commit('SET_DOMAIN', domainType)
   },
   setSavePath ({ commit }, path) {
     commit('SET_SAVE_PATH', path)

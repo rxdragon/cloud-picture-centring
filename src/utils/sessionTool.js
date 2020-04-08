@@ -51,7 +51,7 @@ export function getUserPermission () {
 }
 
 /**
- * @description 设置沙漏过期时间
+ * @description 设置登录过期时间
  * @param {*} time
  */
 export function setXStreamIdExpireTime (time) {
@@ -59,7 +59,7 @@ export function setXStreamIdExpireTime (time) {
 }
 
 /**
- * @description 设置沙漏过期时间
+ * @description 获取登录过期时间
  * @param {*} time
  */
 export function getStreamIdExpireTime (time) {

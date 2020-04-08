@@ -113,7 +113,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     },
     /**
      * @description 获取列表参数
@@ -123,7 +123,9 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.retouchClassId) { req.retouchClassId = this.retouchClassId }
+      if (this.retouchClassId) {
+        req.retouchClassId = this.retouchClassId
+      }
       return req
     },
     /**
@@ -137,7 +139,9 @@ export default {
      * @param {*} value
      */
     getList (value) {
-      if (value) { this.pager.page = value }
+      if (value) {
+        this.pager.page = value
+      }
       this.$store.dispatch('setting/showLoading', this.routeName)
       const req = this.getParams()
       AccountManage.getRetoucherClassList(req)

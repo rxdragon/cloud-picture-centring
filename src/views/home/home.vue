@@ -49,10 +49,10 @@ export default {
   margin-top: -88px;
 
   .logo-tip {
-    width: min-content;
     position: absolute;
     top: 50%;
     left: 50%;
+    width: min-content;
     transform: translateX(-50%) translateY(-50%);
 
     .logo-img {
@@ -61,13 +61,13 @@ export default {
     }
 
     .logo-desc {
-      font-size: 30px;
-      font-family: @pingFang;
-      font-weight: 600;
-      color: #131923;
-      line-height: 38px;
-      text-align: center;
       margin-top: 26px;
+      font-family: @pingFang;
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 38px;
+      color: #131923;
+      text-align: center;
 
       .desc {
         color: @blue;

@@ -129,9 +129,15 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.staffId.length) { reqData.staffIds = this.staffId }
-      if (this.retouchStandard) { reqData.retouchStandard = this.retouchStandard }
-      if (this.productValue) { reqData.productId = this.productValue }
+      if (this.staffId.length) {
+        reqData.staffIds = this.staffId
+      }
+      if (this.retouchStandard) {
+        reqData.retouchStandard = this.retouchStandard
+      }
+      if (this.productValue) {
+        reqData.productId = this.productValue
+      }
       return reqData
     },
     /**
@@ -148,10 +154,14 @@ export default {
         if (!reqData) return
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getAttitudePhotoList(reqData)
-        if (page && !data.length) { this.photos = [] }
+        if (page && !data.length) {
+          this.photos = []
+        }
         if (data.length) {
           this.photos = data
-          if (this.cachepage < this.pager.page) { this.cachepage++ }
+          if (this.cachepage < this.pager.page) {
+            this.cachepage++
+          }
           const showPage = this.maxPage || (this.cachepage + 1)
           this.pager.total = showPage * this.pager.pageSize
         } else {
@@ -198,11 +208,11 @@ export default {
   }
 
   .search-data {
-    margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     padding-bottom: 0;
+    margin-top: 20px;
 
     .photo-box {
       width: 24%;
@@ -212,8 +222,8 @@ export default {
       .group-name,
       .staff-name {
         font-size: 12px;
-        color: #606266;
         line-height: 17px;
+        color: #606266;
       }
 
       .staff-name {

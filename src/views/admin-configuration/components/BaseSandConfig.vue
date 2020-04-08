@@ -112,7 +112,7 @@ export default {
         try {
           this.$store.dispatch('setting/showLoading', this.routeName)
           const reqData = { configId: listItem.deleteId }
-          await OperationManage.DeleteHourGlass(reqData)
+          await OperationManage.deleteHourGlass(reqData)
           this.$newMessage.success('删除成功')
           this.getBaseHourGlassSetting()
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -120,7 +120,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     }
   }
 }

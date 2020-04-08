@@ -152,12 +152,16 @@ export default {
           break
         case 187:
         case 69:
-          if (this.scaleNum < 100) { this.scaleNum++ }
+          if (this.scaleNum < 100) {
+            this.scaleNum++
+          }
           this.judgeHasZoom(e)
           break
         case 189:
         case 81:
-          if (this.scaleNum > 0) { this.scaleNum-- }
+          if (this.scaleNum > 0) {
+            this.scaleNum--
+          }
           this.judgeHasZoom(e)
           break
         case 18:
@@ -166,11 +170,15 @@ export default {
           break
         case 65:
         case 37:
-          if (this.photoArray.length > 1) { this.prePhoto() }
+          if (this.photoArray.length > 1) {
+            this.prePhoto()
+          }
           break
         case 39:
         case 68:
-          if (this.photoArray.length > 1) { this.nextPhoto() }
+          if (this.photoArray.length > 1) {
+            this.nextPhoto()
+          }
           break
         case 16:
           this.isShow = !this.isShow
@@ -245,8 +253,8 @@ export default {
       const objX = e.clientX - this.imgRect.left
       const objY = e.clientY - this.imgRect.top
       // 判断是否超出界限
-      var _maskX = objX - this.mouseMask.offsetHeight / 2
-      var _maskY = objY - this.mouseMask.offsetWidth / 2
+      let _maskX = objX - this.mouseMask.offsetHeight / 2
+      let _maskY = objY - this.mouseMask.offsetWidth / 2
       if (_maskY <= 0) {
         _maskY = 0
       }
@@ -405,7 +413,9 @@ export default {
      */
     judgeHasZoom (e) {
       const isOverIn = Boolean(this.imgLayer.style.width)
-      if (isOverIn) { this.handOver(e) }
+      if (isOverIn) {
+        this.handOver(e)
+      }
     }
   }
 }

@@ -43,7 +43,7 @@ export function getStreamList (params) {
     method: 'GET',
     params
   }).then(msg => {
-    const streamState = StreamState()
+    const streamState = StreamState
     msg.list = msg.list.map(item => {
       let retouchLeader = '-'
       if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.name) {
@@ -53,16 +53,16 @@ export function getStreamList (params) {
         retouchLeader = item.retoucher.retoucher_leader.nickname
       }
       if (item.retoucher_org) {
-        item.retoucherOrgName = item.retoucher_org && item.retoucher_org.name || null
-        item.retoucherOrgRetouchName = item.tags && item.tags.values && item.tags.values.retoucher_name || '-'
+        item.retoucherOrgName = _.get(item, 'retoucher_org.name', '-')
+        item.retoucherOrgRetouchName = _.get(item, 'tags.values.retoucher_name', '-')
       }
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.retoucher && (item.retoucher.name || item.retoucher.real_name) || '-',
+        retoucherName: _.get(item, 'retoucher.name') || _.get(item, 'retoucher.real_name') || '-',
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
-        reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
+        reviewerName: _.get(item, 'reviewer.name') || _.get(item, 'reviewer.real_name') || '-',
         waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
@@ -82,7 +82,7 @@ export function getRetouchStreamList (params) {
     method: 'GET',
     params
   }).then(msg => {
-    const streamState = StreamState()
+    const streamState = StreamState
     msg.list = msg.list.map(item => {
       let retouchLeader = '-'
       if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.name) {
@@ -94,10 +94,10 @@ export function getRetouchStreamList (params) {
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.retoucher && (item.retoucher.name || item.retoucher.real_name) || '-',
+        retoucherName: _.get(item, 'retoucher.name') || _.get(item, 'retoucher.real_name') || '-',
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
-        reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
+        reviewerName: _.get(item, 'reviewer.name') || _.get(item, 'reviewer.real_name') || '-',
         waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
@@ -129,7 +129,7 @@ export function getQueueStreamList (params) {
     method: 'GET',
     params
   }).then(msg => {
-    const streamState = StreamState()
+    const streamState = StreamState
     msg.list = msg.list.map(item => {
       let retouchLeader = '-'
       if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.name) {
@@ -141,10 +141,10 @@ export function getQueueStreamList (params) {
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
-        retoucherName: item.retoucher && (item.retoucher.name || item.retoucher.real_name) || '-',
+        retoucherName: _.get(item, 'retoucher.name') || _.get(item, 'retoucher.real_name') || '-',
         retouchLeader,
         retouchType: item.product && item.product.retouch_standard,
-        reviewerName: item.reviewer && (item.reviewer.name || item.reviewer.real_name) || '-',
+        reviewerName: _.get(item, 'reviewer.name') || _.get(item, 'reviewer.real_name') || '-',
         waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
         photoNum: item.photos.filter(item => +item.people_num > 0).length
@@ -188,17 +188,17 @@ export function getStreamInfo (params) {
     })
     createData.orderData = {
       streamNum: data.streamNum,
-      photographerOrg: data.order.photographer_org && data.order.photographer_org.name || '-',
+      photographerOrg: _.get(data, 'order.photographer_org.name', '-'),
       productName: data.product.name,
       photoNum: data.photos.length,
-      requireLabel: data.tags && data.tags.values && data.tags.values.retouch_claim || {},
+      requireLabel: _.get(data, 'tags.values.retouch_claim', {}),
       retouchRemark: data.note.retouch_note || '暂无修图备注',
-      reviewerNote: data.tags && data.tags.values && data.tags.values.review_reason || '暂无审核备注',
+      reviewerNote: _.get(data, 'tags.values.review_reason', '暂无审核备注'),
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,
-      retoucherName: data.retoucher && (data.retoucher.name || data.retoucher.real_name) || '-',
-      reviewerName: data.reviewer && data.reviewer.name || '',
-      photographerName: data.order.tags && data.order.tags.values.photographer || '-'
+      retoucherName: _.get(data, 'retoucher.name') || _.get(data, 'retoucher.real_name') || '-',
+      reviewerName: _.get(data, 'reviewer.name', ''),
+      photographerName: _.get(data, 'order.tags.values.photographer', '-')
     }
     createData.photos = data.photos
     return createData

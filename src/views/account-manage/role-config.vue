@@ -69,7 +69,9 @@ export default {
   watch: {
     showEdit: {
       handler: function (show) {
-        if (!show) { this.roleId = '' }
+        if (!show) {
+          this.roleId = ''
+        }
       }
     }
   },
@@ -106,7 +108,9 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.roleName) { reqData.title = this.roleName }
+      if (this.roleName) {
+        reqData.title = this.roleName
+      }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AccountManage.getRoleList(reqData)
@@ -137,7 +141,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch(() => {})
+      }).catch()
     }
   }
 }

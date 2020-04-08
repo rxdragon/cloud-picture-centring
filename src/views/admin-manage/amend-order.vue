@@ -111,8 +111,12 @@ export default {
     async getStreamInfo () {
       try {
         const req = {}
-        if (this.id) { req.externalNum = this.id }
-        if (this.caid) { req.streamNum = this.caid }
+        if (this.id) {
+          req.externalNum = this.id
+        }
+        if (this.caid) {
+          req.streamNum = this.caid
+        }
         if (!Object.keys(req).length) {
           return this.$newMessage.warning('请输入订单号或流水号')
         }
@@ -147,7 +151,9 @@ export default {
           createdData.spliceMark = photoItem.jointClass
           createdData.splicePosition = photoItem.jointClassNum
         }
-        if (photoItem.isDelete) { createdData.isDelete = true }
+        if (photoItem.isDelete) {
+          createdData.isDelete = true
+        }
         return createdData
       })
       const req = {
@@ -212,18 +218,18 @@ export default {
         justify-content: space-between;
 
         .photo-box {
+          position: relative;
           width: 303px;
           margin-right: 24px;
           margin-bottom: 24px;
-          position: relative;
 
           .change-num {
             display: flex;
             align-items: center;
-            width: 90%;
-            margin: auto;
             justify-content: space-between;
+            width: 90%;
             padding: 10px 0;
+            margin: auto;
             font-size: 12px;
 
             .el-input {
@@ -248,9 +254,9 @@ export default {
             font-size: 12px;
 
             .joint-type {
-              width: 50%;
               display: flex;
               align-items: center;
+              width: 50%;
 
               .el-select {
                 width: 80px;
@@ -258,9 +264,9 @@ export default {
             }
 
             .joint-sequence {
-              width: 50%;
               display: flex;
               align-items: center;
+              width: 50%;
 
               .el-input {
                 width: 80px;
@@ -270,11 +276,11 @@ export default {
 
           .delete-button {
             position: absolute;
-            right: -14px;
             top: -14px;
+            right: -14px;
             display: none;
-            transition: all 0.3s;
             cursor: pointer;
+            transition: all 0.3s;
 
             .el-icon-error {
               font-size: 28px;
@@ -292,12 +298,12 @@ export default {
       }
 
       .delete-all {
-        color: @red;
         margin-bottom: 20px;
+        color: @red;
 
         i {
-          color: #9f9fa0;
           font-size: 24px;
+          color: #9f9fa0;
         }
       }
     }

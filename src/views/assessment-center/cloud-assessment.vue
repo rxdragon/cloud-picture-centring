@@ -170,7 +170,9 @@ export default {
         passStartAt: joinTimeSpan(this.timeSpan[0]),
         passEndAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.institutionType) { req.retouchStandard = this.institutionType }
+      if (this.institutionType) {
+        req.retouchStandard = this.institutionType
+      }
       return req
     },
     /**
@@ -286,8 +288,8 @@ export default {
     margin: 20px 0;
 
     .list-table {
-      margin-top: 20px;
       width: 800px;
+      margin-top: 20px;
 
       .list-content,
       .list-title {
@@ -299,8 +301,8 @@ export default {
         padding: 17px 20px;
         font-size: 14px;
         font-weight: 500;
-        color: #303133;
         line-height: 22px;
+        color: #303133;
         background-color: #fafafa;
       }
 
@@ -308,8 +310,8 @@ export default {
         padding: 21px 20px;
         font-size: 14px;
         font-weight: 400;
-        color: #606266;
         line-height: 14px;
+        color: #606266;
         border-bottom: 1px solid #f2f6fc;
       }
     }
@@ -323,19 +325,19 @@ export default {
     text-align: center;
 
     .icon-box {
-      text-align: center;
-      color: @green;
       font-size: 60px;
+      color: @green;
+      text-align: center;
     }
 
     .content {
-      text-align: center;
       color: #303133;
+      text-align: center;
     }
 
     .description {
-      text-align: center;
       font-size: 12px;
+      text-align: center;
     }
 
     .el-dialog__header {

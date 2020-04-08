@@ -33,7 +33,9 @@ export function parseTime (time, cFormat) {
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value ]
+    }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -94,14 +96,14 @@ export function timeFormat (seconds, type, showZero = false) {
   const isShowText = type === 'text'
   const isEnText = type === 'en'
   // 计算
-  var i = 0
-  var s = parseInt(seconds)
+  let i = 0
+  let s = parseInt(seconds)
   if (s > 60) {
     i = parseInt(s / 60)
     s = parseInt(s % 60)
   }
   // 补零
-  var zero = function (v) {
+  let zero = function (v) {
     if (showZero) {
       return (v >> 0) < 10 ? '0' + v : v
     } else {
@@ -123,10 +125,10 @@ export function timeFormat (seconds, type, showZero = false) {
  * @param {*} mss
  */
 export function formatDuring (mss) {
-  var days = parseInt(mss / (1000 * 60 * 60 * 24))
-  var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
-  var seconds = parseInt((mss % (1000 * 60)) / 1000)
+  let days = parseInt(mss / (1000 * 60 * 60 * 24))
+  let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
+  let seconds = parseInt((mss % (1000 * 60)) / 1000)
   let str = ''
   function isNull (t, v) {
     if (t) str += t + v

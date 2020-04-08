@@ -65,7 +65,9 @@ export default {
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
-        if (this.instituionType) { req.retoucherOrgId = this.instituionType }
+        if (this.instituionType) {
+          req.retoucherOrgId = this.instituionType
+        }
         this.tableData = await Institution.getRetouchOrgIncome(req)
       } catch (error) {
         console.error(error)

@@ -1,27 +1,23 @@
 // enumerate
 
 // 修图标准
-export function RetouchStandard () {
-  return {
-    blue: '蓝标',
-    master: '大师',
-    kids: 'kids',
-    mainto: '缦图'
-  }
+export const RetouchStandard = {
+  blue: '蓝标',
+  master: '大师',
+  kids: 'kids',
+  mainto: '缦图'
 }
 
 // 流水状态
-export function StreamState () {
-  return {
-    wait_retouch: '待修图',
-    retouching: '修图中',
-    review_return_retouch: '审核退回修图中',
-    wait_review: '等待审核',
-    reviewing: '审核中',
-    finish: '审核完成',
-    store_return_retouch: '门店退回',
-    hanging: '挂起中'
-  }
+export const StreamState = {
+  wait_retouch: '待修图',
+  retouching: '修图中',
+  review_return_retouch: '审核退回修图中',
+  wait_review: '等待审核',
+  reviewing: '审核中',
+  finish: '审核完成',
+  store_return_retouch: '门店退回',
+  hanging: '挂起中'
 }
 
 export const StreamStateEnum = {

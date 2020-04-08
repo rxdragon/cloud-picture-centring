@@ -240,7 +240,28 @@ const version_2_3_0 = {
       3. <span class="mark-new">新增</span>新增产品名称查询`
 }
 
+const version_2_3_11 = {
+  title: '2.3.11',
+  time: '2020-4-1',
+  desc: `> 版本概况
+
+* 数据迁移至七牛云
+* 取消域名切换
+
+> 综合改动
+
+* 客片池
+		1. <span class="mark-opt">优化</span>查询页面报错，系统繁忙
+		2. <span class="mark-new">新增</span>订单号查询
+
+> 修图师
+
+* 待修订单页面
+			1. <span class="mark-opt">优化</span>取消节点切换，统一使用七牛云`
+}
+
 export default [
+  version_2_3_11,
   version_2_3_0,
   version_2_2_5,
   version_2_2_4,

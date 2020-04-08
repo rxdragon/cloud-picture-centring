@@ -263,7 +263,7 @@ export default {
           this.queueInfo.inQueue = false
           this.getStreamQueueInfo()
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        }).catch(() => {})
+        })
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
@@ -314,10 +314,10 @@ export default {
 .header {
   .header-left {
     .queue-info {
-      color: @blue;
+      margin-right: 14px;
       font-size: 14px;
       font-weight: 500;
-      margin-right: 14px;
+      color: @blue;
     }
 
     .queue-length {
@@ -336,22 +336,22 @@ export default {
   -webkit-user-select: none;
 
   .today-info {
-    width: 32%;
-    padding: 18px 21px 12px 24px;
     display: flex;
     flex-wrap: wrap;
+    width: 32%;
+    padding: 18px 21px 12px 24px;
     background-color: #fff;
-    box-shadow: @boxShadow;
     border-radius: 16px;
+    box-shadow: @boxShadow;
 
     .box-left {
-      margin-top: 6px;
       width: calc(~'100% - 76px');
+      margin-top: 6px;
 
       .title {
         margin-bottom: 4px;
-        color: #606266;
         font-size: 16px;
+        color: #606266;
       }
 
       .data-info {
@@ -384,8 +384,8 @@ export default {
           }
 
           .symbol {
-            font-size: 20px;
             margin-right: 2px;
+            font-size: 20px;
             vertical-align: 1px;
           }
         }

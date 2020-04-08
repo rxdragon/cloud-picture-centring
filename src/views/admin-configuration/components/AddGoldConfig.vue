@@ -95,8 +95,8 @@ export default {
 <style lang="less">
 .add-gold-config {
   .search-item {
-    margin-bottom: 24px;
     align-items: flex-start;
+    margin-bottom: 24px;
 
     & > span {
       width: 80px;
@@ -113,8 +113,8 @@ export default {
 
   .sure-button {
     width: 880px;
-    text-align: left;
     padding-left: 92px;
+    text-align: left;
   }
 }
 </style>

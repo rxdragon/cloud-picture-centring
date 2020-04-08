@@ -1,198 +1,110 @@
 module.exports = {
-  root: true,
-  parserOptions: {
-    parser: 'babel-eslint',
-    sourceType: 'module'
+  // 指定解析器选项 (默认与parserOptions同级)
+  // "parser": "babel-eslint",
+  "parserOptions": {
+    // 当使用自定义解析器时, 将parser移入parserOptions
+    "parser": "babel-eslint",
+    // 启用ES6语法支持
+    "ecmaVersion": 2015,
+    // module表示ECMAScript模块
+    "sourceType": "module"
   },
-  env: {
-    browser: true,
-    node: true,
-    es6: true,
+  "extends": [
+    "plugin:vue/essential"
+  ],
+  "plugins": [
+    "vue"
+  ],
+  // 指定脚本的运行环境
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "es6": true,
   },
-  extends: ['plugin:vue/recommended', 'eslint:recommended'],
-
-  // add your custom rules here
-  //it is base on https://github.com/vuejs/eslint-config-vue
-  rules: {
-    "vue/max-attributes-per-line": [2, {
-      "singleline": 10,
-      "multiline": {
-        "max": 1,
-        "allowFirstLine": false
+  // 别人可以直接使用你配置好的ESLint
+  "root": true,
+  // 脚本在执行期间访问的额外的全局变量
+  "globals": {
+    "Vue": true,
+    "VueRouter": true,
+    "_": true
+  },
+  // 启用的规则及其各自的错误级别
+  "rules": {
+    "array-bracket-spacing": 2, // 强制数组方括号中使用一致的空格
+    "no-debugger": process.env.NODE_ENV === "production" ? 2 : 0, // 生产环境禁止打印
+    "indent": [2, 2, { 'SwitchCase': 1 }], // 两个空格缩进
+    "brace-style": [2, "1tbs"], // if else 的花括号换行规则
+    "block-spacing": 2, // 代码块中开括号前和闭括号后有空格
+    "eqeqeq": [2, "always", { "null": "ignore" }], // 必须使用 === 和 !== ，和 null 对比时除外
+    "eol-last": 2, // 要求文件末尾存在空行
+    "lines-around-comment": 0, // 要求在注释周围有空行
+    "no-multiple-empty-lines": [2, { // 禁止出现多行空行
+      max: 3, // 文件内最多连续 3 个
+      maxEOF: 1, // 文件末尾最多连续 1 个
+      maxBOF: 1 // 文件头最多连续 1 个
+    }],
+    "multiline-ternary": [2, "always-multiline"], // 如果表达式跨越多个行，则在三元表达式的操作数之间强制换行
+    "no-trailing-spaces": [2, { // 禁止行尾空格
+      "skipBlankLines": true, // 不检查空行
+      "ignoreComments": true // 不检查注释
+    }],
+    "key-spacing": 2, // 象键值对值之前留有空格
+    "camelcase": 0, // 骆峰命名法
+    "new-cap": 2, // 构造函数首字母大写
+    "spaced-comment": [2, "always", { // 注释的斜线和星号后要加空格
+      "block": {
+        exceptions: ["*"],
+        balanced: true
       }
     }],
-    "vue/singleline-html-element-content-newline": "off",
-    "vue/multiline-html-element-content-newline":"off",
-    "vue/name-property-casing": ["error", "PascalCase"],
-    "vue/no-v-html": "off",
-    'accessor-pairs': 2,
-    'arrow-spacing': [2, {
-      'before': true,
-      'after': true
-    }],
-    'block-spacing': [2, 'always'],
-    'brace-style': [2, '1tbs', {
-      'allowSingleLine': true
-    }],
-    'camelcase': [0, {
-      'properties': 'always'
-    }],
-    'comma-dangle': [2, 'never'],
-    'comma-spacing': [2, {
-      'before': false,
-      'after': true
-    }],
-    'comma-style': [2, 'last'],
-    'constructor-super': 2,
-    'curly': [2, 'multi-line'],
-    'dot-location': [2, 'property'],
-    'eol-last': 2,
-    'eqeqeq': ["error", "always", {"null": "ignore"}],
-    'generator-star-spacing': [2, {
-      'before': true,
-      'after': true
-    }],
-    'handle-callback-err': [2, '^(err|error)$'],
-    'indent': [2, 2, {
-      'SwitchCase': 1
-    }],
-    'jsx-quotes': [2, 'prefer-single'],
-    'key-spacing': [2, {
-      'beforeColon': false,
-      'afterColon': true
-    }],
-    'keyword-spacing': [2, {
-      'before': true,
-      'after': true
-    }],
-    'new-cap': [2, {
-      'newIsCap': true,
-      'capIsNew': false
-    }],
-    'new-parens': 2,
-    'no-array-constructor': 2,
-    'no-caller': 2,
-    'no-console': 'off',
-    'no-class-assign': 2,
-    'no-cond-assign': 2,
-    'no-const-assign': 2,
-    'no-control-regex': 0,
-    'no-delete-var': 2,
-    'no-dupe-args': 2,
-    'no-dupe-class-members': 2,
-    'no-dupe-keys': 2,
-    'no-duplicate-case': 2,
-    'no-empty-character-class': 2,
-    'no-empty-pattern': 2,
-    'no-eval': 2,
-    'no-ex-assign': 2,
-    'no-extend-native': 2,
-    'no-extra-bind': 2,
-    'no-extra-boolean-cast': 2,
-    'no-extra-parens': [2, 'functions'],
-    'no-fallthrough': 2,
-    'no-floating-decimal': 2,
-    'no-func-assign': 2,
-    'no-implied-eval': 2,
-    'no-inner-declarations': [2, 'functions'],
-    'no-invalid-regexp': 2,
-    'no-irregular-whitespace': 2,
-    'no-iterator': 2,
-    'no-label-var': 2,
-    'no-labels': [2, {
-      'allowLoop': false,
-      'allowSwitch': false
-    }],
-    'no-lone-blocks': 2,
-    'no-mixed-spaces-and-tabs': 2,
-    'no-multi-spaces': 2,
-    'no-multi-str': 2,
-    'no-multiple-empty-lines': [2, {
-      'max': 1
-    }],
-    'no-native-reassign': 2,
-    'no-negated-in-lhs': 2,
-    'no-new-object': 2,
-    'no-new-require': 2,
-    'no-new-symbol': 2,
-    'no-new-wrappers': 2,
-    'no-obj-calls': 2,
-    'no-octal': 2,
-    'no-octal-escape': 2,
-    'no-path-concat': 2,
-    'no-proto': 2,
-    'no-redeclare': 2,
-    'no-regex-spaces': 2,
-    'no-return-assign': [2, 'except-parens'],
-    'no-self-assign': 2,
-    'no-self-compare': 2,
-    'no-sequences': 2,
-    'no-shadow-restricted-names': 2,
-    'no-spaced-func': 2,
-    'no-sparse-arrays': 2,
-    'no-this-before-super': 2,
-    'no-throw-literal': 2,
-    'no-trailing-spaces': 2,
-    'no-undef': 2,
-    'no-undef-init': 2,
-    'no-unexpected-multiline': 2,
-    'no-unmodified-loop-condition': 2,
-    'no-unneeded-ternary': [2, {
-      'defaultAssignment': false
-    }],
-    'no-unreachable': 2,
-    'no-unsafe-finally': 2,
-    'no-unused-vars': [2, {
-      'vars': 'all',
-      'args': 'none'
-    }],
-    'no-useless-call': 2,
-    'no-useless-computed-key': 2,
-    'no-useless-constructor': 2,
-    'no-useless-escape': 0,
-    'no-whitespace-before-property': 2,
-    'no-with': 2,
-    'one-var': [2, {
-      'initialized': 'never'
-    }],
-    'operator-linebreak': [2, 'after', {
-      'overrides': {
-        '?': 'before',
-        ':': 'before'
-      }
-    }],
-    'padded-blocks': [2, 'never'],
-    'quotes': [2, 'single', {
-      'avoidEscape': true,
-      'allowTemplateLiterals': true
-    }],
+    "no-console": ["error", { allow: ["warn", "error"] }],
     'semi': [2, 'never'],
-    'semi-spacing': [2, {
-      'before': false,
-      'after': true
+    "no-var": 2, // 禁止使用 var，必须用 let 或 const
+    "no-unused-vars": [2, // 禁止定义不使用的变量
+      {
+        "vars": "all", // 变量定义必须被使用
+        "args": "none", // 对于函数形参不检测
+        "ignoreRestSiblings": true, // 忽略剩余子项 fn(...args)，{a, b, ...coords}
+        "caughtErrors": "none", // 忽略 catch 语句的参数使用
+      }
+    ],
+    "no-use-before-define": [2, // 禁止在变量被定义之前使用它
+      {
+        "functions": false, // 允许函数在定义之前被调用
+        "classes": false, // 允许类在定义之前被引用
+      }
+    ],
+    "no-undef-init": 2, // 禁止将 undefined 赋值给变量
+    "no-undef": 2, // 禁止访问未定义的变量或方法
+    "no-sparse-arrays": 2, // 禁止数组中出现连续逗号
+    "no-redeclare": 2, // 禁止重复声明
+    "no-regex-spaces": 2, // 禁止在正则表达式中出现连续空格
+    "no-multi-assign": 2, // 禁止连等赋值
+    "no-multi-spaces": 2, // 禁止使用连续的空格
+    "no-mixed-operators": [2, { // 禁止使用混合的逻辑判断，必须把不同的逻辑用圆括号括起来
+      "groups": [
+        ["&&", "||"]
+      ]
     }],
-    'space-before-blocks': [2, 'always'],
-    'space-before-function-paren': [2, 'always'],
-    'space-in-parens': [2, 'never'],
-    'space-infix-ops': 2,
-    'space-unary-ops': [2, {
-      'words': true,
-      'nonwords': false
-    }],
-    'spaced-comment': [2, 'always', {
-      'markers': ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!', ',']
-    }],
-    'template-curly-spacing': [2, 'never'],
-    'use-isnan': 2,
-    'valid-typeof': 2,
-    'wrap-iife': [2, 'any'],
-    'yield-star-spacing': [2, 'both'],
-    'yoda': [2, 'never'],
-    'prefer-const': 2,
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'object-curly-spacing': [2, 'always', {
-      objectsInObjects: false
-    }],
-    'array-bracket-spacing': [2, 'never']
+    "no-mixed-requires": 2, // 相同类型的 require 必须放在一起
+    "no-mixed-spaces-and-tabs": 2,// 禁止混用空格和 tab 来做缩进，必须统一
+    "no-lone-blocks": 2, // 禁止使用无效的块作用域
+    "no-extra-semi": 2, // 禁止额外的分号
+    "no-eval": 2, // 禁止使用 eval
+    "no-empty-function": 2, // 禁止空的 function, 包含注释的情况下允许
+    "no-empty-pattern": 2, // 禁止解构中出现空 {} 或 []
+    "no-empty": [2, { "allowEmptyCatch": true }], // 禁止出现空代码块
+    "no-dupe-keys": 2, // 禁止对象出现重名键值
+    "no-dupe-class-members": 2, // 类方法禁止重名
+    "no-duplicate-case": 2, // 禁止 switch 中出现相同的 case\
+    "no-duplicate-imports": 2, // 禁止重复 import
+    "keyword-spacing": 2,// 关键字前后必须有空格
+    "object-curly-spacing": ["error", "always"], // 对象内的空格
+    "space-before-function-paren": 2, // 方法前的空格
+    "space-infix-ops": 2, // 要求操作符周围有空格
+    "space-unary-ops": 2, // 强制在一元操作符前后使用一致的空格
+    "spaced-comment": 2, // 强制在注释中 // 或 /* 使用一致的空格
   }
 }

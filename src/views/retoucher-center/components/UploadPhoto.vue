@@ -27,6 +27,7 @@
             v-if="photoItem.status === 'success' && finishPhoto[photoItem.uid]"
             photo-name
             preview-breviary
+            :file-data="finishPhoto[photoItem.uid].file"
             :src="finishPhoto[photoItem.uid].path"
           />
           <div v-else-if="photoItem.status !== 'fail'" class="progress">
@@ -52,7 +53,7 @@
           class="upload-crop-button"
           accept="image/*"
           multiple
-          :action="updateDomain + upyunConfig.bucket"
+          :action="updateDomain"
           :show-file-list="false"
           :before-upload="beforeUpload"
           :on-progress="handleProgress"
@@ -75,9 +76,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { logUpload } from './log'
 import variables from '@/styles/variables.less'
 import PhotoBox from '@/components/PhotoBox'
-import { logUpload } from './log'
 import * as Commonality from '@/api/commonality'
 import * as SessionTool from '@/utils/sessionTool'
 import * as PhotoTool from '@/utils/photoTool'
@@ -172,7 +173,9 @@ export default {
         const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
         this.photos.forEach(photoItem => {
           if (!allFinishPhoto.find(finishItem => finishItem.id === photoItem.id)) {
-            needUploadPhotos.push(photoItem.path)
+            let photoFileNam = photoItem.path.split('/')
+            photoFileNam = photoFileNam[photoFileNam.length - 1]
+            needUploadPhotos.push(photoFileNam)
           }
         })
         AutoUpload.getFiles(this.streamNum, needUploadPhotos)
@@ -256,15 +259,15 @@ export default {
     /**
      * @description 检查是否修改
      * @param {Object} file [文件对象]
-     * @param {String} uploadPhotoMd5 [上传文件的md5]
+     * @param {String} uploadPhotoSha1 [上传文件的sha1]
      */
-    checkPsPhoto (file, uploadPhotoMd5) {
+    checkPsPhoto (file, uploadPhotoSha1) {
       const fileName = PhotoTool.fileNameFormat(file.name)
       const findOrginPhoto = this.photos.find(item => item.path.includes(fileName))
       // 最后一次提交文件名
       const beforeUploadFilePath = findOrginPhoto.isReturnPhoto ? findOrginPhoto.returnPhotoPath : file.name
       const beforeUploadFileName = PhotoTool.fileNameFormat(beforeUploadFilePath)
-      if (beforeUploadFileName === uploadPhotoMd5) {
+      if (beforeUploadFileName === uploadPhotoSha1) {
         throw new Error('请修改照片后再进行上传。')
       }
     },
@@ -277,16 +280,16 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.checkHasUploadingPhoto() // 上一次照片是否上传完成
         this.checkFileName(file) // 是否正确命名
-        // 获取type和md5
+        // 获取type和sha1
         const imgInfo = await PhotoTool.getImgBufferPhoto(file)
-        const uploadPhotoMd5 = imgInfo.md5
+        const uploadPhotoSha1 = imgInfo.selfSha1
         const type = imgInfo.typeInfo.mime
         this.checkFileType(type) // 判断是否是图片
         this.checkHasSaveName(file) // 判断是否与原片名字相同
-        this.checkPsPhoto(file, uploadPhotoMd5) // 判断图片是否修改
+        this.checkPsPhoto(file, uploadPhotoSha1) // 判断图片是否修改
         this.checkHasUploadedPhoto(file) // 判断是否已经上传
         file.startTime = Date.now() / 1000
-        file.md5Name = uploadPhotoMd5
+        file.sha1Name = uploadPhotoSha1
         return Promise.resolve()
       } catch (error) {
         console.error(error)
@@ -319,18 +322,22 @@ export default {
       if (file.response && file.response.url) {
         try {
           const info = await PhotoTool.getImgBufferPhoto(file.raw)
-          const selfMd5 = info.md5
+          const selfSha1 = info.sha1
           logUpload(file)
-          if (!file.response.url.includes(selfMd5)) {
+          if (!file.response.url.includes(selfSha1)) {
             const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
-            if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
+            if (willDeleteIndex >= 0) {
+              fileList.splice(willDeleteIndex, 1)
+            }
             this.$newMessage.error('上传文件校验错误')
             return false
           }
         } catch (error) {
           console.error(error)
           const willDeleteIndex = fileList.findIndex(fileItem => fileItem.uid === file.uid)
-          if (willDeleteIndex >= 0) { fileList.splice(willDeleteIndex, 1) }
+          if (willDeleteIndex >= 0) {
+            fileList.splice(willDeleteIndex, 1)
+          }
           this.$newMessage.error('上传校验错误')
           return false
         }
@@ -344,11 +351,14 @@ export default {
         const newPhoto = {
           id: findOrginPhoto.id,
           path: filePath,
-          orginPhotoName: uploadedName
+          orginPhotoName: uploadedName,
+          file
         }
         this.$set(this.finishPhoto, uid, newPhoto)
       }
-      if (filePath && !this.finishPhoto[uid].path) { this.$set(this.finishPhoto[uid], 'path', filePath) }
+      if (filePath && !this.finishPhoto[uid].path) {
+        this.$set(this.finishPhoto[uid], 'path', filePath)
+      }
       this.$emit('change', this.finishPhoto)
     },
     /**
@@ -370,7 +380,9 @@ export default {
      */
     deleteUploadPhoto (photoItem, index) {
       const isPending = !photoItem.response
-      if (isPending) { this.$refs.uploadButton.abort(this.uploadPhoto[index]) }
+      if (isPending) {
+        this.$refs.uploadButton.abort(this.uploadPhoto[index])
+      }
       this.uploadPhoto.splice(index, 1)
       const uid = photoItem.uid
       this.$delete(this.finishPhoto, uid)
@@ -415,29 +427,29 @@ export default {
   position: relative;
 
   .list-photo {
-    margin-right: -24px;
     position: relative;
+    margin-right: -24px;
   }
 
   .photo-box {
-    width: 253px;
-    margin-bottom: 24px;
-    margin-right: 24px;
     position: relative;
+    width: 253px;
+    margin-right: 24px;
+    margin-bottom: 24px;
     cursor: pointer;
 
     .handle-box {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
     .progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 241px;
       height: 241px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .error-photo {
@@ -446,8 +458,8 @@ export default {
 
     .delete-button {
       position: absolute;
-      right: -14px;
       top: -14px;
+      right: -14px;
       display: none;
       opacity: 0;
       transition: all 10s;
@@ -464,40 +476,40 @@ export default {
   }
 
   .is-repetition {
-    opacity: 1;
     border: 2px solid @red;
+    opacity: 1;
     animation: blink 0.8s ease-in-out  infinite alternate;
   }
 
   .recede-remark {
-    margin-top: 20px;
     display: flex;
     width: 100%;
-    background: rgba(250, 250, 250, 1);
     padding: 20px;
-    border-radius: 4px;
+    margin-top: 20px;
     margin-right: 24px;
+    background: rgba(250, 250, 250, 1);
+    border-radius: 4px;
 
     & > span {
       width: 70px;
-      color: #303133;
       font-size: 14px;
+      color: #303133;
     }
 
     .remark-content {
-      color: #303133;
-      font-size: 14px;
       width: 632px;
+      font-size: 14px;
+      color: #303133;
       white-space: pre-wrap;
     }
   }
 
   .crop-upload-box {
-    overflow: hidden;
     position: relative;
     width: 253px;
-    margin-bottom: 24px;
     margin-right: 24px;
+    margin-bottom: 24px;
+    overflow: hidden;
 
     .progress {
       position: absolute;
@@ -508,10 +520,10 @@ export default {
 
     .upload-crop-button {
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 50% 0;
+      justify-content: center;
       height: 0;
+      padding: 50% 0;
       background-color: #f5f7fa;
       border-radius: 4px;
 
@@ -524,16 +536,16 @@ export default {
       .avatar-upload {
         display: flex;
         flex-direction: column;
-        color: #606266;
-        transition: all 0.3;
+        justify-content: center;
         width: 253px;
         height: 253px;
-        justify-content: center;
+        color: #606266;
         -webkit-user-select: none;
+        transition: all 0.3;
 
         .el-icon-plus {
-          font-size: 28px;
           margin-bottom: 16px;
+          font-size: 28px;
         }
 
         & > span {

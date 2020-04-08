@@ -248,12 +248,12 @@ export default {
   }
 
   .search-item {
-    margin-bottom: 24px;
     align-items: flex-start;
+    margin-bottom: 24px;
 
     & > span {
-      width: 60px;
       display: inline-block;
+      width: 60px;
     }
 
     .el-input {
@@ -264,9 +264,9 @@ export default {
 
   .product-box,
   .time-panel {
+    position: relative;
     align-items: center;
     width: 500px;
-    position: relative;
   }
 
   .popover-class {
@@ -274,13 +274,13 @@ export default {
     right: 0;
     display: inline !important;
     width: min-content !important;
-    color: #d7d7d7;
     font-size: 20px;
+    color: #d7d7d7;
   }
 
   .button-box {
-    text-align: left;
     padding-left: 72px;
+    text-align: left;
   }
 }
 </style>

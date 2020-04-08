@@ -210,7 +210,9 @@ export default {
           })
         })
       }
-      if (this.institutionId) { reqData.retoucherOrgIds = this.institutionId }
+      if (this.institutionId) {
+        reqData.retoucherOrgIds = this.institutionId
+      }
       this.$store.dispatch('setting/showLoading', this.routeName)
       OperationManage.addImpulse(reqData)
         .then(() => {
@@ -233,10 +235,10 @@ export default {
 
 .add-amount-award {
   .search-item {
-    margin-bottom: 24px;
     display: flex;
-    width: 880px;
     align-items: flex-start;
+    width: 880px;
+    margin-bottom: 24px;
 
     .el-input {
       width: 319px;
@@ -261,8 +263,8 @@ export default {
 
   .sure-button {
     width: 880px;
-    text-align: left;
     padding-left: 82px;
+    text-align: left;
   }
 
   .award-money {
@@ -277,8 +279,8 @@ export default {
         margin-bottom: 10px;
 
         button {
-          color: @red;
           padding: 0;
+          color: @red;
         }
       }
     }

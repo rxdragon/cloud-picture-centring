@@ -22,7 +22,9 @@ export function filterAsyncRoutes (routes, roles) {
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
-      if (tmp.children) { tmp.children = filterAsyncRoutes(tmp.children, roles) }
+      if (tmp.children) {
+        tmp.children = filterAsyncRoutes(tmp.children, roles)
+      }
       res.push(tmp)
     }
   })

@@ -1,8 +1,8 @@
 import axios from '@/plugins/axios.js'
+import store from '@/store' // vuex
 import { keyToHump } from '@/utils'
 import { settlePhoto } from '@/utils/photoTool.js'
 import { PhotoStatics } from '@/utils/enumerate.js'
-import store from '@/store' // vuex
 
 /**
  * @description 获取客片列表
@@ -16,7 +16,7 @@ export function getPhotoList (params) {
   }).then(msg => {
     msg.forEach(listItem => {
       const completePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
-      listItem.src = completePhoto && completePhoto.path || ''
+      listItem.src = _.get(completePhoto, 'path', '')
     })
     msg = msg.filter(listItem => Boolean(listItem.src))
     return msg
@@ -36,18 +36,14 @@ export function getPhotoInfo (params) {
     const createData = keyToHump(msg)
     createData.orderNum = createData.stream.order.external_num
     createData.streamNum = createData.stream.stream_num
-    createData.productName = createData.stream.product && createData.stream.product.name || '-'
-    createData.customeName = createData.stream &&
-      createData.stream.order &&
-      createData.stream.order.tags &&
-      createData.stream.order.tags.values &&
-      createData.stream.order.tags.values.customer_name ||
-      '-'
-    createData.labelTag = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.retouch_claim || {}
-    createData.orderMark = createData.stream.order.note.orderNote || '-'
-    createData.dresserMark = createData.stream.order.note.dresserNote || '-'
-    createData.photographerRemark = createData.stream.note && createData.stream.note.photography_note || '-'
-    createData.retouchMark = createData.stream.note && createData.stream.note.retouch_note || '-'
+    createData.productName = _.get(createData, 'stream.product.name', '-')
+    createData.customeName = _.get(createData, 'stream.order.tags.values.customer_name', '-')
+    createData.specialEfficacy = _.get(createData, 'tags.values.special_efficacy')
+    createData.labelTag = _.get(createData, 'stream.tags.values.retouch_claim', {})
+    createData.orderMark = _.get(createData, 'stream.order.note.orderNote', '-')
+    createData.dresserMark = _.get(createData, 'stream.order.note.dresserNote', '-') || '-'
+    createData.photographerRemark = _.get(createData, 'stream.note.photography_note', '-')
+    createData.retouchMark = _.get(createData, 'stream.note.retouch_note', '-')
     createData.isPass = Boolean(createData.stream.pass_at)
     // 判断能否打分
     createData.canAttitude = false
@@ -60,9 +56,9 @@ export function getPhotoInfo (params) {
       createData.canAttitude = createData.isAttitudeBySelf || !isAttitude
     }
     if (createData.isPass) {
-      const reworkNum = createData.stream.tags && createData.stream.tags.values && createData.stream.tags.values.rework_num || 0
-      const isReturnPhoto = createData.tags && createData.tags.statics && createData.tags.statics.includes(PhotoStatics.CheckReturn)
-      const isStoreReturn = createData.tags && createData.tags.statics && createData.tags.statics.includes(PhotoStatics.StoreReturn)
+      const reworkNum = _.get(createData, 'stream.tags.values.rework_num', 0)
+      const isReturnPhoto = _.get(createData, 'tags.statics', []).includes(PhotoStatics.CheckReturn)
+      const isStoreReturn = _.get(createData, 'tags.statics', []).includes(PhotoStatics.StoreReturn)
       createData.photoVersion = createData.lastFirstPhoto && isReturnPhoto
         ? settlePhoto([...createData.otherPhotoVersion, createData.lastFirstPhoto], reworkNum, isStoreReturn)
         : settlePhoto([...createData.otherPhotoVersion], reworkNum, isStoreReturn)
@@ -71,26 +67,15 @@ export function getPhotoInfo (params) {
       createData.photoVersion = [originPhoto]
     }
     createData.workerInfo = {
-      storeName: createData.stream.order &&
-        createData.stream.order.tags &&
-        createData.stream.order.tags.values &&
-        createData.stream.order.tags.values.store_name || '-',
-      photographer: createData.stream.order &&
-        createData.stream.order.tags &&
-        createData.stream.order.tags.values &&
-        createData.stream.order.tags.values.photographer || '-',
-      retoucher: createData.stream.retoucher && (createData.stream.retoucher.name || createData.stream.retoucher.real_name) || '-',
-      retouchGroup: createData.stream.retoucher && createData.stream.retoucher.retouch_group && createData.stream.retoucher.retouch_group.name || '-',
-      reviewer: createData.stream.reviewer && (createData.stream.reviewer.name || createData.stream.reviewer.real_name) || '-',
-      dresser: createData.stream &&
-        createData.stream.order &&
-        createData.stream.order.tags &&
-        createData.stream.order.tags.values &&
-        createData.stream.order.tags.values.dresser ||
-        '-',
-      watcherName: createData.stream.tags.values && createData.stream.tags.values.watcher_name || '-',
+      storeName: _.get(createData, 'stream.order.tags.values.store_name', '-'),
+      photographer: _.get(createData, 'stream.order.tags.values.photographer', '-'),
+      retoucher: _.get(createData, 'stream.retoucher.name') || _.get(createData, 'stream.retoucher.real_name') || '-',
+      retouchGroup: _.get(createData, 'stream.retoucher.retouch_group.name', '-'),
+      reviewer: _.get(createData, 'stream.reviewer.name') || _.get(createData, 'stream.reviewer.real_name') || '-',
+      dresser: _.get(createData, 'stream.order.tags.values.dresser', '-'),
+      watcherName: _.get(createData, 'stream.tags.values.watcher_name', '-'),
       storeEvaluateStar: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_star,
-      storeEvaluateReason: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_reason || '-'
+      storeEvaluateReason: _.get(createData, 'stream.store_evaluate_stream.store_evaluate_reason', '-')
     }
     return createData
   })
@@ -120,15 +105,9 @@ export function getAttitudePhotoList (params) {
   }).then(msg => {
     msg.forEach(listItem => {
       const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
-      listItem.src = findCompletePhoto && findCompletePhoto.path || ''
-      listItem.retoucherName = listItem.stream &&
-        listItem.stream.retoucher &&
-        (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name) || '-'
-      listItem.retouchGroupName = listItem.stream &&
-        listItem.stream.retoucher &&
-        listItem.stream.retoucher.retouch_group &&
-        listItem.stream.retoucher.retouch_group.name ||
-        '-'
+      listItem.src = _.get(findCompletePhoto, 'path', '')
+      listItem.retoucherName = _.get(listItem, 'stream.retoucher.name') || _.get(listItem, 'stream.retoucher.real_name') || '-'
+      listItem.retouchGroupName = _.get(listItem, 'stream.retoucher.retouch_group.name', '-')
     })
     msg = msg.filter(listItem => Boolean(listItem.src))
     return msg
@@ -146,15 +125,15 @@ export function getAttitudePhotoInfo (params) {
     params
   }).then(msg => {
     const createData = msg
-    const isReturnPhoto = createData.tags && createData.tags.statics && createData.tags.statics.includes(PhotoStatics.CheckReturn)
-    const isStoreReturn = createData.tags && createData.tags.statics && createData.tags.statics.includes(PhotoStatics.StoreReturn)
+    const isReturnPhoto = _.get(createData, 'tags.statics', []).includes(PhotoStatics.CheckReturn)
+    const isStoreReturn = _.get(createData, 'tags.statics', []).includes(PhotoStatics.StoreReturn)
     createData.photoVersion = createData.last_first_photo && isReturnPhoto
       ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1, isStoreReturn)
       : settlePhoto([...createData.other_photo_version], 2, isStoreReturn)
     createData.productName = createData.stream.product.name
-    createData.retoucher = createData.stream.retoucher && (createData.stream.retoucher.name || createData.stream.retoucher.real_name) || '-'
-    createData.retoucherLeader = createData.stream.retoucher.retoucher_leader.nickname || createData.stream.retoucher.retoucher_leader.name || '-'
-    createData.retouchGroup = createData.stream.retoucher && createData.stream.retoucher.retouch_group && createData.stream.retoucher.retouch_group.name
+    createData.retoucher = _.get(createData, 'stream.retoucher.name') || _.get(createData, 'stream.retoucher.real_name') || '-'
+    createData.retoucherLeader = _.get(createData, 'stream.retoucher.retoucher_leader.nickname') || _.get(createData, 'stream.retoucher.retoucher_leader.name') || '-'
+    createData.retouchGroup = _.get(createData, 'stream.retoucher.retouch_group.name', '')
     return createData
   })
 }

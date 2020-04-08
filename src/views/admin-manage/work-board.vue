@@ -211,7 +211,9 @@ export default {
         pageSize: this.pager.pageSize,
         streamState: this.activeName
       }
-      if (this.retouchType) { req.retoucherStandard = this.retouchType }
+      if (this.retouchType) {
+        req.retoucherStandard = this.retouchType
+      }
       return req
     },
     /**
@@ -238,7 +240,9 @@ export default {
      */
     async getRetouchStreamList (page) {
       try {
-        if (page) { this.pager.page = page }
+        if (page) {
+          this.pager.page = page
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = this.getParams()
         const data = await AdminManage.getRetouchStreamList(req)
@@ -256,7 +260,9 @@ export default {
      */
     async getQueueStreamList (page) {
       try {
-        if (page) { this.pager.page = page }
+        if (page) {
+          this.pager.page = page
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = this.getParams()
         const data = await AdminManage.getQueueStreamList(req)
@@ -274,11 +280,19 @@ export default {
      */
     async getStreamList (page) {
       try {
-        if (page) { this.urgentPager.page = page }
+        if (page) {
+          this.urgentPager.page = page
+        }
         const req = {}
-        if (this.urgentSearch.name) { req.customerName = this.urgentSearch.name }
-        if (this.urgentSearch.id) { req.orderNum = this.urgentSearch.id }
-        if (this.urgentSearch.caid) { req.streamNum = this.urgentSearch.caid }
+        if (this.urgentSearch.name) {
+          req.customerName = this.urgentSearch.name
+        }
+        if (this.urgentSearch.id) {
+          req.orderNum = this.urgentSearch.id
+        }
+        if (this.urgentSearch.caid) {
+          req.streamNum = this.urgentSearch.caid
+        }
         if (!Object.keys(req).length) {
           this.$newMessage.warning('请填写参数')
           return false
@@ -305,8 +319,8 @@ export default {
 
 .WorkBoard {
   .search-box {
-    margin: 24px 0;
     width: 100%;
+    margin: 24px 0;
 
     .el-input {
       width: 220px;
@@ -329,8 +343,8 @@ export default {
 }
 
 .el-drawer__header {
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
 body > .el-dialog__wrapper {

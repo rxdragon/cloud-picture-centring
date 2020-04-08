@@ -133,7 +133,9 @@ export default {
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => { this.loading = false }, 500)
+        setTimeout(() => {
+          this.loading = false
+        }, 500)
       }
     }
   }

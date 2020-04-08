@@ -50,6 +50,13 @@
           <span>修图备注：</span>
           <div class="remark-content">{{ orderData.retouchRemark }}</div>
         </div>
+        <div v-if="orderData.backgroundColor" class="require-remark">
+          <span>背景图要求：</span>
+          <div class="remark-content require-background-color">
+            <img :src="orderData.backgroundColor" alt="">
+            <el-button type="text" @click="downbackground">下载背景图</el-button>
+          </div>
+        </div>
         <div v-if="orderData.reviewerNote" class="require-remark">
           <span>审核备注：</span>
           <div class="remark-content">{{ orderData.reviewerNote }}</div>
@@ -60,6 +67,8 @@
 </template>
 
 <script>
+import DownIpc from '@electronMain/ipc/DownIpc'
+
 export default {
   name: 'OrderInfo',
   props: {
@@ -89,8 +98,17 @@ export default {
       return this.orderData.isCheckReturn || this.orderData.isStoreReturn
     }
   },
-  mounted () {},
-  methods: {}
+  methods: {
+    downbackground () {
+      const savePath = `/${this.orderData.streamNum}`
+      const data = {
+        url: this.orderData.backgroundColor,
+        path: savePath
+      }
+      this.$newMessage.success('已添加一张照片到下载')
+      DownIpc.addDownloadFile(data)
+    }
+  }
 }
 </script>
 
@@ -99,18 +117,18 @@ export default {
 
 .order-info {
   .table-info {
-    border-radius: 4px;
-    overflow: hidden;
     margin-top: 10px;
+    overflow: hidden;
+    border-radius: 4px;
   }
 
   .panel-require-concent {
-    margin-top: 12px;
     padding: 20px;
+    padding-bottom: 0;
+    margin-top: 12px;
+    overflow: hidden;
     background-color: #fafafa;
     border-radius: 4px;
-    overflow: hidden;
-    padding-bottom: 0;
 
     .require-label {
       padding-bottom: 20px;
@@ -126,16 +144,27 @@ export default {
       border-top: 1px solid #dddfe6;
 
       & > span {
-        width: 70px;
-        color: #303133;
+        width: 90px;
         font-size: 14px;
+        color: #303133;
       }
 
       .remark-content {
-        color: #303133;
-        font-size: 14px;
         width: 632px;
+        font-size: 14px;
+        color: #303133;
         white-space: pre-wrap;
+      }
+
+      .require-background-color {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 50px;
+          height: 50px;
+          margin-right: 10px;
+        }
       }
     }
   }
@@ -161,12 +190,12 @@ export default {
     }
 
     & > div {
-      background-color: #fafafa;
+      box-sizing: border-box;
+      padding: 17px 20px;
       font-size: 14px;
       color: #303133;
       text-align: left;
-      padding: 17px 20px;
-      box-sizing: border-box;
+      background-color: #fafafa;
     }
   }
 
@@ -185,8 +214,8 @@ export default {
   }
 
   .table-panel-concent {
-    border-bottom: 1px solid #fafafa;
     margin-bottom: 40px;
+    border-bottom: 1px solid #fafafa;
 
     & > div {
       background-color: #fff;
@@ -198,8 +227,8 @@ export default {
   }
 
   .panel-remark-concent {
-    background-color: #fff;
     padding: 10px 0;
+    background-color: #fff;
   }
 }
 </style>

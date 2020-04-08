@@ -29,10 +29,10 @@ export default {
 
 <style lang="less">
 .no-data-components {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   color: #909399;
 
   .svgAnimPanel {
@@ -41,8 +41,8 @@ export default {
     .icon-nosql .water,
     .icon-nosql #disk_border_top {
       opacity: 1;
-      transform-origin: center center;
       transform: translate(0, 0);
+      transform-origin: center center;
     }
 
     .icon-nosql #fill_wall_top {
@@ -85,8 +85,8 @@ export default {
   }
 
   35% {
-    transform: translate(0, 14px);
     opacity: 1;
+    transform: translate(0, 14px);
   }
 
   36% {
@@ -94,8 +94,8 @@ export default {
   }
 
   100% {
-    transform: translate(0, 14px);
     opacity: 0;
+    transform: translate(0, 14px);
   }
 }
 
@@ -109,8 +109,8 @@ export default {
   }
 
   35% {
-    transform: translate(0, 17px);
     opacity: 1;
+    transform: translate(0, 17px);
   }
 
   36% {
@@ -118,8 +118,8 @@ export default {
   }
 
   100% {
-    transform: translate(0, 16px);
     opacity: 0;
+    transform: translate(0, 16px);
   }
 }
 
@@ -130,8 +130,8 @@ export default {
   }
 
   75% {
-    transform: translate(0, 14px);
     opacity: 1;
+    transform: translate(0, 14px);
   }
 
   76% {
@@ -139,8 +139,8 @@ export default {
   }
 
   100% {
-    transform: translate(0, 14px);
     opacity: 0;
+    transform: translate(0, 14px);
   }
 }
 
@@ -155,8 +155,8 @@ export default {
   }
 
   75% {
-    transform: translate(0, 16px);
     opacity: 1;
+    transform: translate(0, 16px);
   }
 
   76% {
@@ -164,8 +164,8 @@ export default {
   }
 
   100% {
-    transform: translate(0, 16px);
     opacity: 0;
+    transform: translate(0, 16px);
   }
 }
 

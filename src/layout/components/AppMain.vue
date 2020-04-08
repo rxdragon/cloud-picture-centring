@@ -53,15 +53,15 @@ export default {
 @import "~@/styles/variables.less";
 
 .app-main {
-  width: 100%;
   position: relative;
-  padding: @appMainPadding;
-  margin-top: @headerHeight;
   box-sizing: border-box;
+  width: 100%;
   min-width: @minWidth;
   height: @appMainHeight;
-  overflow-y: overlay;
+  padding: @appMainPadding;
+  margin-top: @headerHeight;
   overflow-x: hidden;
+  overflow-y: overlay;
   scroll-behavior: smooth;
 }
 
@@ -84,9 +84,9 @@ export default {
 }
 
 .main-loading {
+  position: fixed !important;
   top: 78px !important;
   left: @sideBarWidth !important;
-  position: fixed !important;
   width: calc(~'100vw - @{sideBarWidth}');
 }
 </style>
