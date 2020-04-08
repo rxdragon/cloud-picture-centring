@@ -32,7 +32,7 @@ class Ws {
   // 创建websocket
   async createChat () {
     if (!this.chat) {
-      console.log('createChat', '创建websocket')
+      console.warn('createChat', '创建websocket')
       try {
         await this.connect()
       } catch (error) {
@@ -43,7 +43,7 @@ class Ws {
 
   stopLink () {
     if (this.chat) {
-      console.log('关闭chat')
+      console.warn('关闭chat')
       this.chat.stop()
       this.chat = null
     }
@@ -66,8 +66,8 @@ class Ws {
 
   // 发送消息
   async sendMessage (msg) {
-    console.log(this.state, 'state')
-    console.log(msg, 'msg')
+    console.warn(this.state, 'state')
+    console.warn(msg, 'msg')
     if (this.state === 'unConnect') {
       await this.createChat()
     }
@@ -128,7 +128,7 @@ class Ws {
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
           this.setState('connected')
-          console.log('连接成功', 'onFirstConnectCallback')
+          console.warn('连接成功', 'onFirstConnectCallback')
           if (this.sendList.length) {
             this.sendList.map(item => this.sendMessage(item))
             this.sendList = []

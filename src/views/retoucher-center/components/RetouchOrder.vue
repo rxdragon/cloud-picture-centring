@@ -252,7 +252,7 @@ export default {
      * @description 提交审核
      */
     async submitOrder (id) {
-      console.log(id)
+      // console.log(id)
       const finishPhotoArr = Object.values(this.finishPhoto)
       if (!finishPhotoArr.every(item => Boolean(item.path))) {
         return this.$newMessage.warning('请等待照片上传完成')
