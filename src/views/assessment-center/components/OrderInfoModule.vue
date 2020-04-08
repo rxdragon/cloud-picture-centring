@@ -41,8 +41,8 @@ export default {
 <style lang="less" scoped>
 .order-info-module {
   padding: 12px;
-  color: #eee;
   font-size: 12px;
+  color: #eee;
 
   .panel-title {
     font-size: 14px;

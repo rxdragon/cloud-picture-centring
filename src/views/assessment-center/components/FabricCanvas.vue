@@ -46,7 +46,7 @@ export default {
     },
     'optionObj.drawType': {
       handler (drawType) {
-        console.log(drawType)
+        console.warn(drawType)
         this.canvasDom.selection = false
         this.canvasDom.skipTargetFind = true
         this.canvasDom.isDrawingMode = false
@@ -76,7 +76,7 @@ export default {
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
-    console.log(fabric)
+    console.warn(fabric)
     this.canvasDom = new fabric.Canvas('mark-canvas', {
       isDrawingMode: true,
       selection: true,
@@ -94,14 +94,14 @@ export default {
      */
     async getUpyunSign () {
       this.upyunConfig = await Commonality.getSignature()
-      console.log(this.upyunConfig)
+      console.warn(this.upyunConfig)
     },
     /**
      * @description 监听canvas鼠标按下
      */
     onMouseDown (options) {
-      console.log(options)
-      console.log(this.optionObj.drawType)
+      console.warn(options)
+      console.warn(this.optionObj.drawType)
       const xy = this.transformMouse(options.e.offsetX, options.e.offsetY)
       this.mouseFrom.x = xy.x
       this.mouseFrom.y = xy.y
@@ -167,7 +167,7 @@ export default {
       this.canvasDom.setZoom(this.zoom)
       this.canvasDom.setWidth(imgWidth)
       this.canvasDom.setHeight(imgHeight)
-      console.log(this.zoom)
+      console.warn(this.zoom)
     },
     /**
      * @description 返回鼠标在canvas中的坐标系
@@ -215,7 +215,7 @@ export default {
       this.optionObj.drawType = 'move'
     },
     deleteLabel (labelInfo) {
-      console.log(labelInfo)
+      console.warn(labelInfo)
       this.canvasDom.forEachObject(pathItem => {
         if (pathItem.issueData.id === labelInfo.id) {
           this.$emit('cancelDeleteLabel', pathItem.issueData)
@@ -237,9 +237,9 @@ export default {
       const topY = headlen * Math.sin(angle1)
       const botX = headlen * Math.cos(angle2)
       const botY = headlen * Math.sin(angle2)
-      var arrowX = fromX - topX
-      var arrowY = fromY - topY
-      var path = ' M ' + fromX + ' ' + fromY
+      let arrowX = fromX - topX
+      let arrowY = fromY - topY
+      let path = ' M ' + fromX + ' ' + fromY
       path += ' L ' + toX + ' ' + toY
       arrowX = toX + topX
       arrowY = toY + topY
@@ -341,7 +341,7 @@ export default {
       const blobData = CanvasTool.convertBase64ToBlob(base64Data)
       const fileData = CanvasTool.structureFile(blobData)
       const data = await CanvasTool.uploadTagPhoto(fileData, this.upyunConfig)
-      console.log(data)
+      console.warn(data)
     }
   }
 }

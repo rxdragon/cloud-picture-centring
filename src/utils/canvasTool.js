@@ -29,7 +29,7 @@ export function convertBase64ToBlob (base64) {
   // 转换为类型化数组
   const byteArray = new Uint8Array(bytesCode)
   // 将base64转换为ascii码
-  for (var i = 0; i < bytes.length; i++) {
+  for (let i = 0; i < bytes.length; i++) {
     byteArray[i] = bytes.charCodeAt(i)
   }
   // 生成Blob对象（文件对象）

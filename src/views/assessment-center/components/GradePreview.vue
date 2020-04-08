@@ -223,7 +223,7 @@ export default {
     }
   },
   created () {
-    console.log(this.info)
+    console.warn(this.info)
     this.labelData = JSON.parse(JSON.stringify(labelMock))
     this.driver = new Driver({
       nextBtnText: '下一个',
@@ -238,7 +238,7 @@ export default {
      */
     document.onkeydown = e => {
       const key = window.event.keyCode
-      console.log(key, '键位')
+      console.warn(key, '键位')
       switch (key) {
         case 49:
         case 50:
@@ -250,12 +250,16 @@ export default {
           break
         case 187:
         case 69:
-          if (this.scaleNum < 100) { this.scaleNum++ }
+          if (this.scaleNum < 100) {
+            this.scaleNum++
+          }
           this.judgeHasZoom(e)
           break
         case 189:
         case 81:
-          if (this.scaleNum > 0) { this.scaleNum-- }
+          if (this.scaleNum > 0) {
+            this.scaleNum--
+          }
           this.judgeHasZoom(e)
           break
         case 18:
@@ -264,11 +268,15 @@ export default {
           break
         case 65:
         case 37:
-          if (this.photoArray.length > 1) { this.prePhoto() }
+          if (this.photoArray.length > 1) {
+            this.prePhoto()
+          }
           break
         case 39:
         case 68:
-          if (this.photoArray.length > 1) { this.nextPhoto() }
+          if (this.photoArray.length > 1) {
+            this.nextPhoto()
+          }
           break
         case 16:
           this.isShow = !this.isShow
@@ -338,8 +346,8 @@ export default {
       const objX = e.clientX - this.imgRect.left
       const objY = e.clientY - this.imgRect.top
       // 判断是否超出界限
-      var _maskX = objX - this.mouseMask.offsetHeight / 2
-      var _maskY = objY - this.mouseMask.offsetWidth / 2
+      let _maskX = objX - this.mouseMask.offsetHeight / 2
+      let _maskY = objY - this.mouseMask.offsetWidth / 2
       if (_maskY <= 0) {
         _maskY = 0
       }
@@ -477,13 +485,17 @@ export default {
      */
     judgeHasZoom (e) {
       const isOverIn = Boolean(this.imgLayer.style.width)
-      if (isOverIn) { this.handOver(e) }
+      if (isOverIn) {
+        this.handOver(e)
+      }
     },
     /**
      * @description 设置标签
      */
     setLabel (issueItem) {
-      if (!this.showCanvas) { this.createCanvas() }
+      if (!this.showCanvas) {
+        this.createCanvas()
+      }
       this.$nextTick(() => {
         this.labelData.forEach(classItem => {
           const findIssueLabelIndex = classItem.issueData.findIndex(issueLabel => issueLabel.id === issueItem.id)
@@ -499,7 +511,7 @@ export default {
      * @description 标签关闭
      */
     tagClose (tagInfo) {
-      console.log(tagInfo)
+      console.warn(tagInfo)
       this.$refs['fabric-canvas'].deleteLabel(tagInfo)
     },
     /**
@@ -529,11 +541,15 @@ export default {
      * @description 撤销删除标签
      */
     addDeleteLabel (data) {
-      console.log(data, 'addDeleteLabel')
+      console.warn(data, 'addDeleteLabel')
       const findIssueClass = this.labelData.find(labelClassItem => labelClassItem.id === data.pid)
       const findIssueLabelIndex = this.cacheLabel.findIndex(labelItem => labelItem.id === data.id)
-      if (findIssueClass) { findIssueClass.issueData.push(data) }
-      if (findIssueLabelIndex >= 0) { this.cacheLabel.splice(findIssueLabelIndex, 1) }
+      if (findIssueClass) {
+        findIssueClass.issueData.push(data)
+      }
+      if (findIssueLabelIndex >= 0) {
+        this.cacheLabel.splice(findIssueLabelIndex, 1)
+      }
     },
     outPut () {
       this.$refs['fabric-canvas'].outPhoto()
@@ -544,37 +560,37 @@ export default {
 
 <style lang="less" scoped>
 .grade-preview {
-  width: 100vw;
-  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1900 !important;
+  width: 100vw;
+  height: 100vh;
   background-color: #424242;
 
   .title {
+    position: relative;
+    box-sizing: border-box;
     width: 100%;
     height: 40px;
-    box-sizing: border-box;
-    position: relative;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     font-size: 22px;
     line-height: 40px;
     color: #ddd;
-    background-color: #535353;
     text-align: center;
+    background-color: #535353;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
     .button-close {
       position: absolute;
+      top: 5px;
+      right: 10px;
       width: 30px;
       height: 30px;
-      border: none;
-      right: 10px;
       padding: 0;
-      top: 5px;
-      background-color: #535353;
-      outline: none;
       cursor: pointer;
+      background-color: #535353;
+      border: none;
+      outline: none;
 
       .el-icon-close {
         font-size: 20px;
@@ -590,27 +606,27 @@ export default {
   }
 
   .photoBox {
-    height: calc(100% - 40px);
     position: relative;
     display: flex;
+    height: calc(100% - 40px);
 
     .photo-tool {
       width: 50px;
       background-color: #535353;
 
       .tool {
+        position: relative;
         width: 50px;
         height: 50px;
-        font-size: 16px;
-        color: #eee;
         padding: 10px;
-        text-align: center;
+        font-size: 16px;
         line-height: 30px;
-        background-clip: content-box;
-        transition: all 0.3s ease;
+        color: #eee;
+        text-align: center;
         cursor: pointer;
+        background-clip: content-box;
         border-radius: 13px;
-        position: relative;
+        transition: all 0.3s ease;
 
         .shortcut {
           position: absolute;
@@ -620,13 +636,13 @@ export default {
         }
 
         &:hover {
-          background-color: #fff;
           color: #9d9d9d;
+          background-color: #fff;
         }
 
         &.active {
-          background-color: #fff;
           color: #9d9d9d;
+          background-color: #fff;
         }
       }
 
@@ -642,18 +658,18 @@ export default {
     }
 
     .photo-show {
-      width: calc(100% - 300px);
       position: relative;
+      width: calc(100% - 300px);
 
       .orginPhoto {
-        background-color: #282828;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 100%;
         margin: auto;
         overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        background-color: #282828;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
         img {
           max-width: 100%;
@@ -663,17 +679,17 @@ export default {
 
       .button-left {
         position: absolute;
-        width: 50px;
-        height: 50px;
-        border: none;
-        border-radius: 50%;
         top: calc(50% - 25px);
         left: 10px;
         z-index: 4020;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        background-color: #383838;
+        border: none;
+        border-radius: 50%;
         outline: none;
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-        background-color: #383838;
-        cursor: pointer;
 
         i {
           font-size: 20px;
@@ -691,17 +707,17 @@ export default {
 
       .button-right {
         position: absolute;
-        width: 50px;
-        height: 50px;
-        border: none;
-        z-index: 4020;
-        border-radius: 50%;
         top: calc(50% - 25px);
         right: 10px;
+        z-index: 4020;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        background-color: #383838;
+        border: none;
+        border-radius: 50%;
         outline: none;
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-        background-color: #383838;
-        cursor: pointer;
 
         .el-icon-arrow-right {
           font-size: 20px;
@@ -719,26 +735,26 @@ export default {
     }
 
     .photo-mark {
-      width: 250px;
       position: relative;
+      width: 250px;
       overflow: overlay;
       background-color: #535353;
 
       .small-img {
-        width: 250px;
-        box-sizing: border-box;
-        z-index: 4001;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-        background-color: #535353;
         position: sticky;
         top: 0;
+        z-index: 4001;
+        box-sizing: border-box;
+        width: 250px;
+        background-color: #535353;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
         .smallPhoto {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           width: 100%;
           height: 250px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
 
           ._magnifier_zoom {
             position: absolute;
@@ -769,17 +785,17 @@ export default {
 
           .driver-star {
             display: inline-block;
-            border-radius: 50%;
-            height: 22px;
             width: 22px;
+            height: 22px;
             margin-left: 10px;
-            background-color: #fff;
-            color: #333;
             line-height: 22px;
+            color: #333;
+            text-align: center;
             cursor: pointer;
+            background-color: #fff;
+            border-radius: 50%;
             box-shadow: inset 0 -5px 6px 0 rgba(46, 61, 73, 0.7);
             transition: all 0.5s;
-            text-align: center;
 
             &:hover {
               box-shadow: inset -4px -4px 6px 0 rgba(46, 61, 73, 0.2);
@@ -788,10 +804,10 @@ export default {
         }
 
         .down-button {
-          color: #ddd;
           padding: 10px 0;
-          cursor: pointer;
+          color: #ddd;
           text-align: center;
+          cursor: pointer;
 
           &:hover {
             color: #409eff;
@@ -812,8 +828,8 @@ export default {
 
       .order-label {
         padding: 0 12px 12px 12px;
-        color: #eee;
         font-size: 12px;
+        color: #eee;
 
         .panel-title {
           font-size: 14px;
@@ -824,8 +840,8 @@ export default {
           margin-bottom: 12px;
 
           .label-class-title {
-            font-size: 14px;
             padding: 8px 0;
+            font-size: 14px;
           }
 
           .label-content {
