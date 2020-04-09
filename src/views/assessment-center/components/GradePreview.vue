@@ -639,6 +639,7 @@ export default {
 
   .title {
     position: relative;
+    z-index: 5000;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -651,7 +652,6 @@ export default {
     text-align: center;
     background-color: #535353;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-    z-index: 5000;
 
     .driver-star {
       display: inline-block;
@@ -698,10 +698,10 @@ export default {
     height: calc(100% - 42px);
 
     .photo-tool {
-      width: 48px;
-      background-color: #535353;
       position: relative;
       z-index: 5000;
+      width: 48px;
+      background-color: #535353;
 
       .tool {
         position: relative;
@@ -825,10 +825,10 @@ export default {
 
     .photo-mark {
       position: relative;
+      z-index: 5000;
       width: 280px;
       overflow: overlay;
       background-color: #535353;
-      z-index: 5000;
 
       .small-img {
         position: sticky;
@@ -1043,25 +1043,25 @@ export default {
 }
 
 .pen-weight {
-  background-color: #535353;
-  border-color: #535353;
-  margin-left: 16px !important;
   min-width: 30px;
   padding: 0;
+  margin-left: 16px !important;
+  background-color: #535353;
+  border-color: #535353;
 
   .pen-list {
-    height: 78px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    height: 78px;
 
     .pen-item {
-      height: 26px;
-      width: 100%;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 26px;
       cursor: pointer;
 
       .pen-box {
@@ -1072,7 +1072,7 @@ export default {
           background-color: #eee;
         }
       }
-      
+
       .min {
         width: 2px;
         height: 2px;
