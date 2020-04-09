@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { fabric } from 'fabric'
+import { fabric } from '@/assets/fabric.js'
 import * as CanvasTool from '@/utils/canvasTool'
 import * as Commonality from '@/api/commonality'
 export default {

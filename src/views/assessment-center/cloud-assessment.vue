@@ -36,21 +36,21 @@
       <div class="list-table">
         <div class="list-title">
           <span>今日已评价照片</span>
-          <span>今日抽查种草率</span>
-          <span>今日抽查拔草率</span>
-          <span>本次抽取总单量</span>
+          <span>今日评价平均分</span>
         </div>
         <div class="list-content">
           <span>{{ todayInfo.evaluationNum || '-' }}</span>
-          <span>{{ todayInfo.plantPercent || '-' }}</span>
-          <span>{{ todayInfo.pullPercent || '-' }}</span>
           <span>{{ spotAllNum }}</span>
         </div>
       </div>
     </div>
     <!-- 订单数据 -->
     <grade-preview v-if="gradeInfo && showGradePreview" :show.sync="showGradePreview" :info="gradeInfo" />
-    <el-button @click="showPreview">冲！冲！冲！</el-button>
+    <div class="photo-grade-list">
+      <photo-grade-box
+        v-for="photoItem in photoData"
+        :key="photoItem.businessId"/>
+    </div>
     <!-- <grade-box
       v-for="photoItem in photoData"
       :key="photoItem.businessId"
@@ -77,8 +77,8 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import InstitutionType from '@SelectBox/InstitutionType'
-// import GradeBox from './components/GradeBox'
 import GradePreview from './components/GradePreview'
+import PhotoGradeBox from './components/PhotoGradeBox'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import { PhotoEnumName } from '@/utils/enumerate.js'
@@ -86,7 +86,7 @@ import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
 
 export default {
   name: 'CloudAssessment',
-  components: { DatePicker, InstitutionType, GradePreview },
+  components: { DatePicker, InstitutionType, GradePreview, PhotoGradeBox },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -118,9 +118,6 @@ export default {
     this.resetPage()
   },
   methods: {
-    showPreview () {
-      this.showGradePreview = true
-    },
     /**
      * @description 一键下载
      */
@@ -288,13 +285,13 @@ export default {
     margin: 20px 0;
 
     .list-table {
-      width: 800px;
+      width: 400px;
       margin-top: 20px;
 
       .list-content,
       .list-title {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .list-title {
@@ -315,6 +312,11 @@ export default {
         border-bottom: 1px solid #f2f6fc;
       }
     }
+  }
+
+  .photo-grade-list {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .photo-data {

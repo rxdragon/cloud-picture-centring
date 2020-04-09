@@ -86,7 +86,7 @@ export function getSpotCheckResult (params) {
       item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
       item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason
       // 是否是绿色通道
-      item.isGreen = _.get(item, 'photoData.stream.tags.statics').includes('green_stream')
+      item.isGreen = _.get(item, 'photoData.stream.tags.statics', []).includes('green_stream')
       const retouchRequire = {
         eye: '暂无',
         face: '暂无',
