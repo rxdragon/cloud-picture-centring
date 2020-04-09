@@ -22,8 +22,10 @@ export default class StreamModel {
   retouchRemark = '' // 修图备注
   backgroundColor = '' // 背景备注
   photographyNote = '' // 摄影备注
+  reviewerNote = '' // 审核备注
   requireLabel = {} // 修图要求
   photoNum = 0 // 照片数据
+  isGreen = false // 是否是绿色通道
 
   constructor (streamData) {
     this.baseData = streamData
@@ -35,8 +37,15 @@ export default class StreamModel {
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
     this.streamState = streamData.state || ''
     this.getNote(streamData.note)
+    this.reviewerNote = _.get(streamData, 'reviewer_note') || ''
+    const retouchRequire = {
+      eye: '暂无',
+      face: '暂无',
+      pimples: false
+    }
+    this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || retouchRequire
     this.photoNum = this.getPhotoNum()
-    this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || {}
+    this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
   }
 
   // 获取沙漏相关信息

@@ -45,11 +45,12 @@
       </div>
     </div>
     <!-- 订单数据 -->
-    <grade-preview v-if="gradeInfo && showGradePreview" :show.sync="showGradePreview" :info="gradeInfo" />
     <div class="photo-grade-list">
       <photo-grade-box
         v-for="photoItem in photoData"
-        :key="photoItem.businessId"/>
+        @startGrade="showGrade"
+        :key="photoItem.businessId"
+        :photo-info="photoItem"/>
     </div>
     <!-- <grade-box
       v-for="photoItem in photoData"
@@ -59,6 +60,17 @@
       :photo-info="photoItem"
       @finsihed="resetPage"
     /> -->
+    <div class="page-box">
+      <el-pagination
+        :hide-on-single-page="true"
+        :current-page.sync="pager.page"
+        :page-size="pager.pageSize"
+        layout="prev, pager, next"
+        :total="pager.total"
+        @current-change="handlePage"
+      />
+    </div>
+    <!-- 抽片提示 -->
     <el-dialog
       width="300px"
       class="spot-success"
@@ -71,6 +83,7 @@
       <div class="content">抽取成功</div>
       <div class="description">共：{{ spotAllNum }}张</div>
     </el-dialog>
+    <grade-preview v-if="gradeInfo && showGradePreview" :show.sync="showGradePreview" :info="gradeInfo" />
   </div>
 </template>
 
@@ -80,9 +93,9 @@ import InstitutionType from '@SelectBox/InstitutionType'
 import GradePreview from './components/GradePreview'
 import PhotoGradeBox from './components/PhotoGradeBox'
 import DownIpc from '@electronMain/ipc/DownIpc'
-import * as AssessmentCenter from '@/api/assessmentCenter'
 import { PhotoEnumName } from '@/utils/enumerate.js'
 import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
+import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'CloudAssessment',
@@ -105,13 +118,15 @@ export default {
       headerClass: '', // 顶部class
       isTakePhoto: false, // 是第一次抽取的照片
       todayInfo: {},
+      gradeUUid: '', // 正在打分uuid
       showGradePreview: false, // 是否显示打分概况
       dialogTableVisible: false // 抽取成功弹框
     }
   },
   computed: {
     gradeInfo () {
-      return this.photoData[1] || null
+      const findGradePhoto = this.photoData.find(item => item.batchUUId === this.gradeUUid)
+      return findGradePhoto || null
     }
   },
   created () {
@@ -245,11 +260,26 @@ export default {
         this.allPhotoPath = data.allPhotoPath
         this.photoData = []
         this.photoData = data.list
+        // TODO 调试
+        this.showGrade('d82999e7-1f49-48a0-9c06-d6362144148e')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    /**
+     * @description 页面更换
+     */
+    handlePage () {
+      this.getSpotCheckResult()
+    },
+    /**
+     * @description 展示数据
+     */
+    showGrade (batchUUId) {
+      this.gradeUUid = batchUUId
+      this.showGradePreview = true
     }
   }
 }

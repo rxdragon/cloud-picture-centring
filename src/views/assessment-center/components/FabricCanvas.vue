@@ -76,7 +76,7 @@ export default {
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
-    console.warn(fabric)
+    console.log(fabric)
     this.canvasDom = new fabric.Canvas('mark-canvas', {
       isDrawingMode: true,
       selection: true,
@@ -94,7 +94,7 @@ export default {
      */
     async getUpyunSign () {
       this.upyunConfig = await Commonality.getSignature()
-      console.warn(this.upyunConfig)
+      console.log(this.upyunConfig)
     },
     /**
      * @description 监听canvas鼠标按下
@@ -214,14 +214,19 @@ export default {
       this.canvasDom.discardActiveObject()
       this.optionObj.drawType = 'move'
     },
+    /**
+     * @description 删除标签
+     */
     deleteLabel (labelInfo) {
-      console.warn(labelInfo)
+      console.log(labelInfo)
       this.canvasDom.forEachObject(pathItem => {
         if (pathItem.issueData.id === labelInfo.id) {
           this.$emit('cancelDeleteLabel', pathItem.issueData)
           this.canvasDom.remove(pathItem)
         }
       })
+      const findCacheIssuesIndex = this.cacheIssuse.findIndex(item => item.id === labelInfo.id)
+      this.cacheIssuse.splice(findCacheIssuesIndex, 1)
     },
     /**
      * @description 绘制箭头
@@ -276,7 +281,6 @@ export default {
       const drawWidth = this.optionObj.lineWidth
       const left = this.mouseFrom.x
       const top = this.mouseFrom.y
-      // const radius = Math.sqrt((this.mouseTo.x - left) * (this.mouseTo.x - left) + (this.mouseTo.y - top) * (this.mouseTo.y - top)) / 2
       const canvasObject = new fabric.Ellipse({
         left: left,
         top: top,
@@ -309,7 +313,7 @@ export default {
      * @description 创建标签
      */
     createLabel (issueData) {
-      const textColor = '#4f71fb'
+      const textColor = '#eee'
       const canvasHeight = this.canvasDom.getHeight()
       let top = this.cacheIssuse.length * 20
       // 判断是否超过边界
@@ -318,17 +322,18 @@ export default {
         top = 0
         this.cacheLabelRow++
       }
-      const left = this.cacheLabelRow * 60
+      const width = issueData.label.length * 14 + 25
+      const left = this.optionObj.width - (this.cacheLabelRow + 1) * width - 10
       const textbox = new fabric.Textbox(issueData.label, {
         left,
         top,
-        width: 50,
+        width,
         fontSize: 14,
-        borderColor: '#dae1fe',
-        backgroundColor: '#edf0ff',
+        backgroundColor: '#000',
+        opacity: 0.6,
         fill: textColor,
         hasControls: true,
-        editable: false,
+        editable: true,
         textAlign: 'center',
         issueData
       })

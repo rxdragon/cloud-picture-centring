@@ -2,6 +2,7 @@
   <div class="grade-preview">
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}
+      <div class="driver-star" @click.stop="guide">?</div>
       <button type="button" class="button-close" @click="closePreview">
         <i id="closeImg" class="el-icon-close" />
       </button>
@@ -101,16 +102,15 @@
               </div>
             </div>
             <div class="contant">
-              <el-slider v-model="scaleNum" />
-              {{ scaleNum * 4 + 100 }}%
-              <div class="driver-star" @click.stop="guide">?</div>
+              <el-slider :show-tooltip="false" v-model="scaleNum" />
+              <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+              <span class="down-button" @click.stop="downing">下载</span>
             </div>
-            <div class="down-button" @click="outPut">导出</div>
-
           </div>
         </div>
         <order-info-module :order-info="info" />
-        <div class="issue-label">
+        <!-- TODO -->
+        <!-- <div class="issue-label">
           <el-tag
             v-for="tag in cacheLabel"
             :key="tag.id"
@@ -123,9 +123,10 @@
           >
             {{ tag.label }}
           </el-tag>
-        </div>
+        </div> -->
         <!-- 问题标签 -->
         <div class="order-label">
+          <div class="label-title">标签栏</div>
           <template v-for="(labelClassItem, labelClassIndex) in labelData">
             <div v-if="labelClassItem.issueData.length" :key="labelClassIndex" class="label-box">
               <div class="label-class-title">{{ labelClassItem.label }}</div>
@@ -144,6 +145,10 @@
             </div>
           </template>
         </div>
+        <div class="submit-box">
+          <el-button type="primary">提交评分</el-button>
+          <el-button type="info" class="out-btn">退出</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -151,12 +156,14 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import 'driver.js/dist/driver.min.css'
+import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from './OrderInfoModule'
 import labelMock from './labelMock'
 import guideData from './guideData'
 import Driver from 'driver.js' // 引导框
-import 'driver.js/dist/driver.min.css'
 import FabricCanvas from './FabricCanvas'
+
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas },
@@ -211,20 +218,26 @@ export default {
   computed: {
     ...mapGetters(['imgDomain']),
     photoArray () {
-      const data = this.info.photoVersion.map(item => {
+      const data = this.info.photoInfo.photoVersion.map(item => {
         // 调试
         item.src = this.imgDomain + item.path
         return item
       })
       return data
     },
+    // 当前展示图片
     showPhoto () {
       return this.photoArray[this.photoIndex]
     }
   },
   created () {
     console.warn(this.info)
-    this.labelData = JSON.parse(JSON.stringify(labelMock))
+    // TODO mock
+    const createData = JSON.parse(JSON.stringify(labelMock))
+    createData.forEach(item => {
+      item.issueData.forEach(issItem => issItem.isSelect = false)
+    })
+    this.labelData = createData
     this.driver = new Driver({
       nextBtnText: '下一个',
       prevBtnText: '上一个',
@@ -500,9 +513,13 @@ export default {
         this.labelData.forEach(classItem => {
           const findIssueLabelIndex = classItem.issueData.findIndex(issueLabel => issueLabel.id === issueItem.id)
           if (findIssueLabelIndex >= 0) {
-            const setLabelData = classItem.issueData.splice(findIssueLabelIndex, 1)
-            this.cacheLabel.push(...setLabelData)
-            this.$refs['fabric-canvas'].createLabel(...setLabelData)
+            const setLabelData = classItem.issueData[findIssueLabelIndex]
+            if (!setLabelData.isSelect) {
+              this.$refs['fabric-canvas'].createLabel(setLabelData)
+            } else {
+              this.tagClose(issueItem)
+            }
+            setLabelData.isSelect = !setLabelData.isSelect
           }
         })
       })
@@ -511,7 +528,6 @@ export default {
      * @description 标签关闭
      */
     tagClose (tagInfo) {
-      console.warn(tagInfo)
       this.$refs['fabric-canvas'].deleteLabel(tagInfo)
     },
     /**
@@ -541,18 +557,30 @@ export default {
      * @description 撤销删除标签
      */
     addDeleteLabel (data) {
-      console.warn(data, 'addDeleteLabel')
-      const findIssueClass = this.labelData.find(labelClassItem => labelClassItem.id === data.pid)
+      console.log(data, 'addDeleteLabel')
       const findIssueLabelIndex = this.cacheLabel.findIndex(labelItem => labelItem.id === data.id)
-      if (findIssueClass) {
-        findIssueClass.issueData.push(data)
-      }
       if (findIssueLabelIndex >= 0) {
         this.cacheLabel.splice(findIssueLabelIndex, 1)
       }
     },
+    /**
+     * @description 导出图片
+     */
     outPut () {
       this.$refs['fabric-canvas'].outPhoto()
+    },
+    /**
+     * @description 下载图片
+     */
+    downing () {
+      const pointIndex = this.showPhoto.src.lastIndexOf('!')
+      let url = this.showPhoto.src
+      if (pointIndex > 0) {
+        url = this.showPhoto.src.substring(0, pointIndex)
+      }
+      const data = { url, path: '' }
+      this.$newMessage.success('已添加一张照片到下载')
+      DownIpc.addDownloadFile(data)
     }
   }
 }
@@ -572,13 +600,30 @@ export default {
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    height: 40px;
+    height: 42px;
     font-size: 22px;
     line-height: 40px;
     color: #ddd;
     text-align: center;
     background-color: #535353;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .driver-star {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-left: 4px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: #666;
+      text-align: center;
+      cursor: pointer;
+      background-color: #999;
+      border-radius: 50%;
+    }
 
     .button-close {
       position: absolute;
@@ -608,16 +653,16 @@ export default {
   .photoBox {
     position: relative;
     display: flex;
-    height: calc(100% - 40px);
+    height: calc(100% - 42px);
 
     .photo-tool {
-      width: 50px;
+      width: 48px;
       background-color: #535353;
 
       .tool {
         position: relative;
-        width: 50px;
-        height: 50px;
+        width: 48px;
+        height: 48px;
         padding: 10px;
         font-size: 16px;
         line-height: 30px;
@@ -659,7 +704,7 @@ export default {
 
     .photo-show {
       position: relative;
-      width: calc(100% - 300px);
+      width: calc(100% - 328px);
 
       .orginPhoto {
         display: flex;
@@ -736,7 +781,7 @@ export default {
 
     .photo-mark {
       position: relative;
-      width: 250px;
+      width: 280px;
       overflow: overlay;
       background-color: #535353;
 
@@ -746,8 +791,10 @@ export default {
         z-index: 4001;
         box-sizing: border-box;
         width: 250px;
+        padding: 0 15px;
+        box-sizing: content-box;
         background-color: #535353;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid #666;
 
         .smallPhoto {
           display: flex;
@@ -755,6 +802,7 @@ export default {
           justify-content: center;
           width: 100%;
           height: 250px;
+          background-color: #282828;
 
           ._magnifier_zoom {
             position: absolute;
@@ -778,79 +826,134 @@ export default {
         }
 
         .contant {
-          width: 80%;
           margin: auto;
           color: #ddd;
-          text-align: center;
+          text-align: left;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
 
-          .driver-star {
+          .el-slider {
+            width: 160px;
             display: inline-block;
-            width: 22px;
-            height: 22px;
-            margin-left: 10px;
-            line-height: 22px;
-            color: #333;
-            text-align: center;
+            margin-right: 8px;
+          }
+
+          .scale-box {
+            font-size: 14px;
+            font-weight: 400;
+            color: #eee;
+            line-height: 20px;
+            margin-right: auto
+          }
+
+          .down-button {
+            font-size: 14px;
+            font-weight: 400;
+            color: #eee;
+            line-height: 20px;
             cursor: pointer;
-            background-color: #fff;
-            border-radius: 50%;
-            box-shadow: inset 0 -5px 6px 0 rgba(46, 61, 73, 0.7);
-            transition: all 0.5s;
 
             &:hover {
-              box-shadow: inset -4px -4px 6px 0 rgba(46, 61, 73, 0.2);
+              color: #ddd;
+            }
+          }
+
+          & /deep/ .el-slider__runway {
+            height: 4px;
+            background-color: #282828;
+            margin: 14px 0;
+
+            .el-slider__bar {
+              height: 4px;
+              background: linear-gradient(33deg,#91f5ff 0%, #71b9fd 45%, #4669fb 100%);
+            }
+
+            .el-slider__button {
+              width: 12px;
+              height: 12px;
+              border: 1px solid #409eff;
             }
           }
         }
-
-        .down-button {
-          padding: 10px 0;
-          color: #ddd;
-          text-align: center;
-          cursor: pointer;
-
-          &:hover {
-            color: #409eff;
-          }
-        }
       }
 
-      .issue-label {
-        padding: 10px;
-        padding-bottom: 0;
+      // .issue-label {
+      //   padding: 10px;
+      //   padding-bottom: 0;
 
-        .cache-issue {
-          margin-right: 10px;
-          margin-bottom: 10px;
-          -webkit-user-select: none;
-        }
-      }
+      //   .cache-issue {
+      //     margin-right: 10px;
+      //     margin-bottom: 10px;
+      //     -webkit-user-select: none;
+      //   }
+      // }
 
       .order-label {
-        padding: 0 12px 12px 12px;
+        padding: 14px 10px;
         font-size: 12px;
         color: #eee;
 
-        .panel-title {
+        .label-title {
           font-size: 14px;
           font-weight: 500;
+          display: flex;
+          align-items: center;
+
+          &::before {
+            content: '';
+            display: inline-block;
+            width: 2px;
+            height: 16px;
+            background-color: #4669fb;
+            margin-right: 6px;
+          }
         }
 
         .label-box {
-          margin-bottom: 12px;
-
           .label-class-title {
-            padding: 8px 0;
+            padding: 10px 0;
             font-size: 14px;
+            font-weight: 600;
+            color: #eee;
+            line-height: 20px;
           }
 
           .label-content {
             .el-tag {
-              margin: 0 8px 8px 0;
-              font-size: 14px;
+              margin: 0 10px 10px 0;
+              font-size: 12px;
               cursor: pointer;
+              border-radius:4px;
+              border: none;
+              background-color: #000;
+              opacity:0.6;
+              color: #eee;
+              font-weight: 400;
               -webkit-user-select: none;
             }
+          }
+        }
+      }
+      
+      .submit-box {
+        width: 100%;
+        height: 60px;
+        background-color: #535353;
+        position: sticky;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top: 1px solid #666;
+
+        .out-btn {
+          background-color: #666;
+          border-color: #666;
+
+          &:hover {
+            background-color: #535353;
           }
         }
       }
