@@ -147,8 +147,8 @@
 --|--|--
  demo 画板功能 | [11c96aa](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/11c96aa)
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
  test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
+ test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
  webscoket | [a474182](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a474182)
@@ -181,6 +181,7 @@
  值班主管配置页面进入 显示配置 | [eddb660](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eddb660)
  冲量显示 | [9fd05c6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fd05c6)
  初始化websockey | [673fbd2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/673fbd2)
+ 初步搭建代码 | [2a8bf9f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2a8bf9f)
  删除console | [68b445b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/68b445b)
  图片与加载 | [bf6742e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bf6742e)
  图片预加载 | [9e9a128](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e9a128)

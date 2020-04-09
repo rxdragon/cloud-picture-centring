@@ -32,11 +32,11 @@ export default {
 .photo-grade-box {
   width: 357px;
   height: 244px;
-  background: #fff;
-  box-shadow: 0 4px 8px 0px rgba(0,0,0,0.06);
-  border-radius: 16px;
-  margin: 0 20px 20px 0;
   padding: 20px 0 20px 20px;
+  margin: 0 20px 20px 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.06);
 
   .info-box {
     display: flex;
@@ -45,15 +45,15 @@ export default {
     .data-label {
       font-size: 14px;
       font-weight: 400;
-      color: #303133;
       line-height: 22px;
+      color: #303133;
     }
   }
 
   .photo-num {
     margin-bottom: 4px;
   }
-  
+
   .product-info {
     display: flex;
 
@@ -61,11 +61,11 @@ export default {
       margin-right: 20px;
     }
   }
-  
+
   .photo-list {
-    background-color: red;
     height: 140px;
     margin-top: 16px;
+    background-color: red;
   }
 }
 </style>
