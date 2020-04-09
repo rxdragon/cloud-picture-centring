@@ -599,6 +599,9 @@ export default {
   .title {
     position: relative;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 42px;
     font-size: 22px;
@@ -607,9 +610,6 @@ export default {
     text-align: center;
     background-color: #535353;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     .driver-star {
       display: inline-block;
@@ -790,9 +790,9 @@ export default {
         top: 0;
         z-index: 4001;
         box-sizing: border-box;
+        box-sizing: content-box;
         width: 250px;
         padding: 0 15px;
-        box-sizing: content-box;
         background-color: #535353;
         border-bottom: 1px solid #666;
 
@@ -826,32 +826,32 @@ export default {
         }
 
         .contant {
-          margin: auto;
-          color: #ddd;
-          text-align: left;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          margin: auto;
+          color: #ddd;
+          text-align: left;
 
           .el-slider {
-            width: 160px;
             display: inline-block;
+            width: 160px;
             margin-right: 8px;
           }
 
           .scale-box {
+            margin-right: auto;
             font-size: 14px;
             font-weight: 400;
-            color: #eee;
             line-height: 20px;
-            margin-right: auto
+            color: #eee;
           }
 
           .down-button {
             font-size: 14px;
             font-weight: 400;
-            color: #eee;
             line-height: 20px;
+            color: #eee;
             cursor: pointer;
 
             &:hover {
@@ -861,12 +861,12 @@ export default {
 
           & /deep/ .el-slider__runway {
             height: 4px;
-            background-color: #282828;
             margin: 14px 0;
+            background-color: #282828;
 
             .el-slider__bar {
               height: 4px;
-              background: linear-gradient(33deg,#91f5ff 0%, #71b9fd 45%, #4669fb 100%);
+              background: linear-gradient(33deg, #91f5ff 0%, #71b9fd 45%, #4669fb 100%);
             }
 
             .el-slider__button {
@@ -895,18 +895,18 @@ export default {
         color: #eee;
 
         .label-title {
-          font-size: 14px;
-          font-weight: 500;
           display: flex;
           align-items: center;
+          font-size: 14px;
+          font-weight: 500;
 
           &::before {
-            content: '';
             display: inline-block;
             width: 2px;
             height: 16px;
-            background-color: #4669fb;
             margin-right: 6px;
+            content: '';
+            background-color: #4669fb;
           }
         }
 
@@ -915,37 +915,37 @@ export default {
             padding: 10px 0;
             font-size: 14px;
             font-weight: 600;
-            color: #eee;
             line-height: 20px;
+            color: #eee;
           }
 
           .label-content {
             .el-tag {
               margin: 0 10px 10px 0;
               font-size: 12px;
-              cursor: pointer;
-              border-radius:4px;
-              border: none;
-              background-color: #000;
-              opacity:0.6;
-              color: #eee;
               font-weight: 400;
+              color: #eee;
+              cursor: pointer;
               -webkit-user-select: none;
+              background-color: #000;
+              border: none;
+              border-radius: 4px;
+              opacity: 0.6;
             }
           }
         }
       }
-      
+
       .submit-box {
-        width: 100%;
-        height: 60px;
-        background-color: #535353;
         position: sticky;
-        left: 0;
         bottom: 0;
+        left: 0;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 100%;
+        height: 60px;
+        background-color: #535353;
         border-top: 1px solid #666;
 
         .out-btn {

@@ -50,19 +50,19 @@ export default {
   border-bottom: 1px solid #666;
 
   .panel-title {
-    font-size: 14px;
-    font-weight: 500;
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
 
     &::before {
-      content: '';
       display: inline-block;
       width: 2px;
       height: 16px;
-      background-color: #4669fb;
       margin-right: 6px;
+      content: '';
+      background-color: #4669fb;
     }
   }
 
@@ -70,8 +70,8 @@ export default {
     display: block;
     font-size: 14px;
     font-weight: 400;
-    color: #eee;
     line-height: 22px;
+    color: #eee;
   }
 
   .retouch-require {
@@ -80,8 +80,8 @@ export default {
     .require-tag {
       font-size: 14px;
       font-weight: 400;
-      color: #eee;
       line-height: 22px;
+      color: #eee;
     }
   }
 

@@ -84,10 +84,10 @@ export default {
     }
 
     .product-name {
-      white-space: nowrap;
+      max-width: 100px;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100px;
+      white-space: nowrap;
     }
   }
 
@@ -104,17 +104,17 @@ export default {
   }
 
   .photo-list {
+    display: flex;
     height: 140px;
     margin-top: 16px;
-    display: flex;
 
     .photo-gulp {
+      position: relative;
       width: 140px;
       height: 140px;
       margin-right: 20px;
-      border-radius:4px;
       overflow: hidden;
-      position: relative;
+      border-radius: 4px;
 
       .photo-version {
         position: absolute;
@@ -123,11 +123,11 @@ export default {
         z-index: 9;
         padding: 0 7px;
         font-size: 12px;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius:1px 1px 4px 1px;
-        color: #eee;
         font-weight: 400;
         line-height: 17px;
+        color: #eee;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 1px 1px 4px 1px;
       }
     }
   }
