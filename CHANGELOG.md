@@ -1,4 +1,4 @@
-# 2.0.0 (2020-04-08)
+# 2.0.0 (2020-04-09)
 
 |范围|描述|commitId|
 --|--|--
@@ -339,6 +339,7 @@
  修复非修片师，重新登陆账号不会重连webscoket | [c6b8606](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c6b8606)
  修复页面跳转问题 | [c50267b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c50267b)
  修复预加载问题 | [3109147](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3109147)
+ 修复默认值问题 | [e95ee8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e95ee8f)
  兼容 win | [c297ce3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c297ce3)
  删除调试代码 | [2494e20](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2494e20)
  取消默认自动上传 | [4f914c4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f914c4)

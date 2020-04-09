@@ -28,7 +28,7 @@ module.exports = {
         'original-fs': 'require("original-fs")'
       }
     }
-    if (process.env.CI_COMMIT_SHA) {
+    if (process.env.CI_RUNNER_ID) {
       c.plugins = c.plugins.filter(pluginItem => !(pluginItem instanceof ProgressPlugin))
     }
     return config
