@@ -14,9 +14,24 @@
           <i id="move" class="el-icon-rank" data-type="move" />
           <span class="shortcut">V</span>
         </div>
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="createCanvas">
-          <i id="pen" class="el-icon-edit" />
-          <span class="shortcut">B</span>
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="changeDrawType('pen')">
+          <el-popover
+            placement="right-start"
+            width="30"
+            popper-class="pen-weight"
+            trigger="click">
+            <div class="pen-list">
+              <div class="pen-item"
+                v-for="penWeightItem in penWeight" :key="penWeightItem.label"
+                @click="changeLineWidth(penWeightItem)">
+                <div class="pen-box" :class="penWeightItem.active ? penWeightItem.label + ' active' :penWeightItem.label "></div>
+              </div>
+            </div>
+            <div slot="reference">
+              <i id="pen" class="el-icon-edit" />
+              <span class="shortcut">B</span>
+            </div>
+          </el-popover>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'arrow' }" @click="changeDrawType('arrow')">
           <i id="arrow" class="el-icon-top-right" />
@@ -35,17 +50,6 @@
         <div class="tool" @click="changeDrawType('delete')">
           <i id="delete" class="el-icon-delete" />
         </div>
-        <el-popover
-          placement="right"
-          width="200"
-          popper-class="tool-line"
-          trigger="click"
-        >
-          <el-slider v-model="canvasOption.lineWidth" />
-          <div slot="reference" class="tool">
-            <i id="lineWidth" class="el-icon-s-operation" />
-          </div>
-        </el-popover>
         <div class="tool tool-color">
           <el-color-picker v-model="canvasOption.penColor" size="mini" />
         </div>
@@ -63,7 +67,10 @@
             @click="zoom"
           >
           <div id="_magnifier_layer" />
-          <fabric-canvas v-if="showCanvas" ref="fabric-canvas" :style="photoZoomStyle" :option-obj="canvasOption" @cancelDeleteLabel="addDeleteLabel" @click.native="zoom" />
+          <fabric-canvas v-if="showCanvas" ref="fabric-canvas"
+            :style="photoZoomStyle" :option-obj="canvasOption"
+            :show-canvas="isFinishPhoto"
+            @cancelDeleteLabel="addDeleteLabel" @click.native="zoom" />
         </div>
         <!-- left按钮 -->
         <button
@@ -134,7 +141,7 @@
                 <el-tag
                   v-for="issueItem in labelClassItem.issueData"
                   :key="'issue' + issueItem.id"
-                  :class="`issue-tag-${labelClassIndex}`"
+                  :class="issueItem.isSelect ? 'active' : ''"
                   size="medium"
                   disable-transitions
                   @click="setLabel(issueItem)"
@@ -212,14 +219,30 @@ export default {
         lineWidth: 2,
         drawType: ''
       },
-      cacheLabel: []
+      cacheLabel: [],
+      penWeight: [ // 画笔宽度数据
+        {
+          label: 'min',
+          size: 2,
+          active: true
+        },
+        {
+          label: 'mid',
+          size: 6,
+          active: false
+        },
+        {
+          label: 'big',
+          size: 10,
+          active: false
+        }
+      ]
     }
   },
   computed: {
     ...mapGetters(['imgDomain']),
     photoArray () {
       const data = this.info.photoInfo.photoVersion.map(item => {
-        // 调试
         item.src = this.imgDomain + item.path
         return item
       })
@@ -228,6 +251,10 @@ export default {
     // 当前展示图片
     showPhoto () {
       return this.photoArray[this.photoIndex]
+    },
+    // 是云端成片
+    isFinishPhoto () {
+      return this.showPhoto.version === 'complete_photo'
     }
   },
   created () {
@@ -298,7 +325,7 @@ export default {
           this.changeDrawType('delete')
           break
         case 66:
-          this.createCanvas()
+          this.changeDrawType('pen')
           break
         case 86:
           this.changeDrawType('move')
@@ -534,6 +561,10 @@ export default {
      * @description 创建canvas
      */
     createCanvas () {
+      if (!this.isFinishPhoto) {
+        this.$newMessage.warning('请在成片上进行评分')
+        return
+      }
       if (!this.showCanvas) {
         this.getImgInfo()
         this.showCanvas = true
@@ -545,7 +576,7 @@ export default {
      */
     changeDrawType (drawType) {
       if (drawType !== 'blowup' && !this.showCanvas) {
-        this.$newMessage.warning('请创建画板')
+        this.createCanvas()
         return
       }
       if (drawType === 'blowup' && this.inZoomIn) {
@@ -556,12 +587,14 @@ export default {
     /**
      * @description 撤销删除标签
      */
-    addDeleteLabel (data) {
-      console.log(data, 'addDeleteLabel')
-      const findIssueLabelIndex = this.cacheLabel.findIndex(labelItem => labelItem.id === data.id)
-      if (findIssueLabelIndex >= 0) {
-        this.cacheLabel.splice(findIssueLabelIndex, 1)
-      }
+    addDeleteLabel (issueItem) {
+      console.log(issueItem, 'addDeleteLabel')
+      this.labelData.forEach(classItem => {
+        const findIssueLabel = classItem.issueData.find(issueLabel => issueLabel.id === issueItem.id)
+        if (findIssueLabel) {
+          findIssueLabel.isSelect = false
+        }
+      })
     },
     /**
      * @description 导出图片
@@ -581,6 +614,14 @@ export default {
       const data = { url, path: '' }
       this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)
+    },
+    /**
+     * @description 更改线宽
+     */
+    changeLineWidth (penWeightItem) {
+      this.penWeight.forEach(item => item.active = false)
+      penWeightItem.active = true
+      this.canvasOption.lineWidth = penWeightItem.size
     }
   }
 }
@@ -610,6 +651,7 @@ export default {
     text-align: center;
     background-color: #535353;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    z-index: 5000;
 
     .driver-star {
       display: inline-block;
@@ -658,6 +700,8 @@ export default {
     .photo-tool {
       width: 48px;
       background-color: #535353;
+      position: relative;
+      z-index: 5000;
 
       .tool {
         position: relative;
@@ -681,13 +725,13 @@ export default {
         }
 
         &:hover {
-          color: #9d9d9d;
-          background-color: #fff;
+          color: #eee;
+          background-color: #282828;
         }
 
         &.active {
-          color: #9d9d9d;
-          background-color: #fff;
+          color: #eee;
+          background-color: #282828;
         }
       }
 
@@ -784,6 +828,7 @@ export default {
       width: 280px;
       overflow: overlay;
       background-color: #535353;
+      z-index: 5000;
 
       .small-img {
         position: sticky;
@@ -931,6 +976,10 @@ export default {
               border: none;
               border-radius: 4px;
               opacity: 0.6;
+
+              &.active {
+                background-color: #808080;
+              }
             }
           }
         }
@@ -991,5 +1040,62 @@ export default {
 
 #driver-highlighted-element-stage {
   opacity: 0.3;
+}
+
+.pen-weight {
+  background-color: #535353;
+  border-color: #535353;
+  margin-left: 16px !important;
+  min-width: 30px;
+  padding: 0;
+
+  .pen-list {
+    height: 78px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    .pen-item {
+      height: 26px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      .pen-box {
+        background-color: #282828;
+        border-radius: 50%;
+
+        &.active {
+          background-color: #eee;
+        }
+      }
+      
+      .min {
+        width: 2px;
+        height: 2px;
+      }
+
+      .mid {
+        width: 6px;
+        height: 6px;
+      }
+
+      .big {
+        width: 10px;
+        height: 10px;
+      }
+    }
+  }
+
+  .popper__arrow {
+    border-right-color: #535353 !important;
+
+    &::after {
+      border-right-color: #535353 !important;
+    }
+  }
 }
 </style>

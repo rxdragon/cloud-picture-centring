@@ -1,5 +1,5 @@
 <template>
-  <div class="fabric-canvas">
+  <div v-show="show" class="fabric-canvas">
     <canvas id="mark-canvas" ref="mark-canvas" />
   </div>
 </template>
@@ -11,7 +11,8 @@ import * as Commonality from '@/api/commonality'
 export default {
   name: 'FabricCanvas',
   props: {
-    optionObj: { type: Object, required: true }
+    optionObj: { type: Object, required: true },
+    showCanvas: { type: Boolean }
   },
   data () {
     return {
@@ -25,6 +26,11 @@ export default {
       cacheIssuse: [], // 缓存问题
       cacheLabelRow: 0,
       zoom: 1 // canvas 比例系数
+    }
+  },
+  computed: {
+    show () {
+      return this.showCanvas
     }
   },
   watch: {
@@ -76,7 +82,6 @@ export default {
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
-    console.log(fabric)
     this.canvasDom = new fabric.Canvas('mark-canvas', {
       isDrawingMode: true,
       selection: true,
@@ -94,14 +99,11 @@ export default {
      */
     async getUpyunSign () {
       this.upyunConfig = await Commonality.getSignature()
-      console.log(this.upyunConfig)
     },
     /**
      * @description 监听canvas鼠标按下
      */
     onMouseDown (options) {
-      console.warn(options)
-      console.warn(this.optionObj.drawType)
       const xy = this.transformMouse(options.e.offsetX, options.e.offsetY)
       this.mouseFrom.x = xy.x
       this.mouseFrom.y = xy.y
@@ -207,6 +209,8 @@ export default {
       for (const selectionItem of selectionObj) {
         if (selectionItem.issueData) {
           this.$emit('cancelDeleteLabel', selectionItem.issueData)
+          const findCacheIssuesIndex = this.cacheIssuse.findIndex(item => item.id === selectionItem.issueData.id)
+          this.cacheIssuse.splice(findCacheIssuesIndex, 1)
         }
         this.canvasDom.remove(selectionItem)
       }
@@ -218,7 +222,6 @@ export default {
      * @description 删除标签
      */
     deleteLabel (labelInfo) {
-      console.log(labelInfo)
       this.canvasDom.forEachObject(pathItem => {
         if (pathItem.issueData.id === labelInfo.id) {
           this.$emit('cancelDeleteLabel', pathItem.issueData)
