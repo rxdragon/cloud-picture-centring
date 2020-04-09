@@ -282,7 +282,7 @@ export default {
         this.checkFileName(file) // 是否正确命名
         // 获取type和sha1
         const imgInfo = await PhotoTool.getImgBufferPhoto(file)
-        const uploadPhotoSha1 = imgInfo.selfSha1
+        const uploadPhotoSha1 = imgInfo.sha1
         const type = imgInfo.typeInfo.mime
         this.checkFileType(type) // 判断是否是图片
         this.checkHasSaveName(file) // 判断是否与原片名字相同
