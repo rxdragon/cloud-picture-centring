@@ -1,4 +1,4 @@
-# 2.0.0 (2020-04-08)
+# 2.0.0 (2020-04-09)
 
 |范围|描述|commitId|
 --|--|--
@@ -379,6 +379,12 @@
 --|--|--
  增加前段代码审核规范 | [390cdf5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/390cdf5)
  更改前端环境变量 | [ad31ff9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ad31ff9)
+
+
+### 📦 持续集成
+|范围|描述|commitId|
+--|--|--
+ 更新gitignore | [a557373](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a557373)
 
 
 ### 🔙 撤销

@@ -204,8 +204,9 @@ export function getPhotoProblemTagSets () {
     for (const key in msg) {
       msg[key].forEach(item => {
         createData.push({
-          id: uuidv4(),
-          label: item,
+          key: uuidv4(),
+          label: item.name,
+          id: item.id,
           type: key === 'photography' ? 'problemTagPhotography' : 'problemTagMakeup',
           select: false
         })

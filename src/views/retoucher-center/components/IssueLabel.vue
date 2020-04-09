@@ -11,9 +11,9 @@
       v-on="$listeners">
       <div class="issue-main">
         <el-tag v-for="issueItem in issueData"
-          :key="issueItem.id"
+          :key="issueItem.key"
           :effect="issueItem.select ? 'light' : 'plain'"
-          @click="selectData(issueItem.id)">
+          @click="selectData(issueItem.key)">
           {{ issueItem.label }}
         </el-tag>
       </div>
@@ -34,8 +34,8 @@ export default {
     /**
      * @description 选中标签
      */
-    selectData (id) {
-      const selectLabel = this.issueData.find(item => item.id === id)
+    selectData (key) {
+      const selectLabel = this.issueData.find(item => item.key === key)
       selectLabel.select = !selectLabel.select
     },
     /**
@@ -47,9 +47,9 @@ export default {
       const selectIssue = this.issueData.filter(item => item.select)
       selectIssue.forEach(item => {
         if (item.type === 'problemTagPhotography') {
-          problemTagPhotography.push(item.label)
+          problemTagPhotography.push(item.id)
         } else {
-          problemTagMakeup.push(item.label)
+          problemTagMakeup.push(item.id)
         }
       })
       const issue = { problemTagPhotography, problemTagMakeup }
