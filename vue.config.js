@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const path = require('path')
 const ProgressPlugin = require('webpack').ProgressPlugin
 
@@ -28,6 +29,7 @@ module.exports = {
         'original-fs': 'require("original-fs")'
       }
     }
+    console.log(process.env)
     if (process.env.CI_RUNNER_ID) {
       c.plugins = c.plugins.filter(pluginItem => !(pluginItem instanceof ProgressPlugin))
     }

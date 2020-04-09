@@ -382,6 +382,7 @@
 |范围|描述|commitId|
 --|--|--
  新增审核配置文件 | [9fe0f13](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fe0f13)
+ 更改判断字段 | [99e512f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/99e512f)
 
 
 ### 🔙 撤销
