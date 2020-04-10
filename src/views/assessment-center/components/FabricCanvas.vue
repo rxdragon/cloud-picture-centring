@@ -52,7 +52,6 @@ export default {
     },
     'optionObj.drawType': {
       handler (drawType) {
-        console.warn(drawType)
         this.canvasDom.selection = false
         this.canvasDom.skipTargetFind = true
         this.canvasDom.isDrawingMode = false
@@ -169,7 +168,6 @@ export default {
       this.canvasDom.setZoom(this.zoom)
       this.canvasDom.setWidth(imgWidth)
       this.canvasDom.setHeight(imgHeight)
-      console.warn(this.zoom)
     },
     /**
      * @description 返回鼠标在canvas中的坐标系

@@ -40,7 +40,7 @@
         </div>
         <div class="list-content">
           <span>{{ todayInfo.evaluationNum || '-' }}</span>
-          <span>{{ spotAllNum }}</span>
+          <span>{{ todayInfo.evaluationScore }}</span>
         </div>
       </div>
     </div>
@@ -170,7 +170,7 @@ export default {
         if (!selectPhoto) throw new Error('找不到对应照片')
         const req = {
           photoId: selectPhoto.photo_id,
-          uuid: selectPhoto.batchUUId,
+          uuid: selectPhoto._id,
           tags: sendData.issuesLabelId,
           picUrl: sendData.markPhotoImg
         }
@@ -179,7 +179,6 @@ export default {
         this.getNextPhoto()
       } catch (error) {
         console.error(error)
-        this.$$newMessage.error('提交失败')
       } finally {
         this.$refs['grade-preview'].allLoading = false
       }

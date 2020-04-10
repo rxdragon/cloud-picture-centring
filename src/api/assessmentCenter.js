@@ -72,7 +72,6 @@ export function getSpotCheckResult (params) {
         pageTotal: msg.total || null
       }
     }
-    console.log(params)
     const total = msg.extend.processInfo[0].totalCount
     data.forEach((item, index) => {
       item.productInfo = new ProductModel(item.photoData.stream.product)

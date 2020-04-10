@@ -240,7 +240,6 @@ export default {
     },
     // 当前展示图片
     showPhoto () {
-      console.log(this.photoIndex, 'showPhoto')
       return this.photoArray[this.photoIndex] || {}
     },
     // 是云端成片
@@ -264,7 +263,6 @@ export default {
      */
     document.onkeydown = e => {
       const key = window.event.keyCode
-      console.warn(key, '键位')
       switch (key) {
         case 49:
         case 50:
@@ -363,11 +361,7 @@ export default {
     getIssuesData () {
       let selectData = []
       this.labelData.forEach(item => {
-        const itemSelectLabel = item.child.filter(issueItem => {
-          console.log(issueItem)
-          return issueItem.isSelect
-        })
-        console.log(itemSelectLabel)
+        const itemSelectLabel = item.child.filter(issueItem => issueItem.isSelect)
         selectData = [...selectData, ...itemSelectLabel]
       })
       return selectData
