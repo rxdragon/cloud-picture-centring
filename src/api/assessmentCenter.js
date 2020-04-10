@@ -169,3 +169,21 @@ export function getSearchHistory (params) {
   })
 }
 
+/**
+ * @description 获取问题标签
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/10
+ * @version @version 2.4.0
+ */
+export function getScoreConfigList () {
+  return axios({
+    url: '/project_cloud/checkPool/getScoreConfigList',
+    method: 'GET'
+  }).then(msg => {
+    msg.forEach(item => {
+      item.child.forEach(issItem => issItem.isSelect = false)
+    })
+    return msg
+  })
+}

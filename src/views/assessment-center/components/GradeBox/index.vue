@@ -168,10 +168,6 @@
         </div>
       </div>
     </div>
-    <!-- 提交按钮 -->
-    <div v-if="isGrade" class="button-box">
-      <el-button type="primary" @click="commitHistory">提交评价</el-button>
-    </div>
   </div>
 </template>
 
@@ -179,7 +175,6 @@
 import PhotoList from '@/components/PhotoList'
 import IssueLabelBox from '@SelectBox/IssueLabelBox'
 
-import * as AssessmentCenter from '@/api/assessmentCenter'
 export default {
   name: 'GradeBox',
   components: { PhotoList, IssueLabelBox },
@@ -235,59 +230,6 @@ export default {
     }
   },
   methods: {
-    /**
-     * @description 获取评价参数
-     */
-    getCommitparams () {
-      if (!this.weedOpinion && !this.sameOpinion && !this.isGreen) {
-        this.$newMessage.warning('请完成纠偏选项')
-        return false
-      }
-      if (!this.weedOpinion && this.sameOpinion === 'different') {
-        this.$newMessage.warning('请完成纠偏选项')
-        return false
-      }
-      if (!this.flakinessEvaluate) {
-        this.$newMessage.warning('请完成成片评价')
-        return false
-      }
-      const req = {
-        uuid: this.photoInfoData._id,
-        photoId: this.photoInfoData.photoData.id,
-        filmEvaluation: this.flakinessEvaluate
-      }
-
-      if (this.sameOpinion) {
-        req.auditCorrection = this.sameOpinion
-        const glassArray = ['plant', 'pull', 'none']
-        req.auditGlass = this.sameOpinion === 'same' ? glassArray[this.checkPlantState - 1] : this.weedOpinion
-      }
-      if (this.correctRemark) {
-        req.auditNote = this.correctRemark
-      }
-      if (this.issueRemark) {
-        req.evaluationNote = this.issueRemark
-      }
-      if (!this.photoInfoData.isReturn && !this.photoInfoData.isGreen) {
-        req.evaluationNote = this.correctRemark || this.issueRemark
-      }
-      if (this.issueLabel.length && this.flakinessEvaluate === 'pull') {
-        req.filmTag = this.issueLabel
-      }
-      return req
-    },
-    /**
-     * @description 提交评价
-     */
-    commitHistory () {
-      const req = this.getCommitparams()
-      if (!req) return
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      AssessmentCenter.commitHistory(req)
-        .then(msg => {
-          this.$emit('finsihed', true)
-        })
-    }
   }
 }
 </script>

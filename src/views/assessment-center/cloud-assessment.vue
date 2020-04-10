@@ -52,14 +52,6 @@
         :key="photoItem.businessId"
         :photo-info="photoItem"/>
     </div>
-    <!-- <grade-box
-      v-for="photoItem in photoData"
-      :key="photoItem.businessId"
-      is-grade
-      class="photo-data module-panel"
-      :photo-info="photoItem"
-      @finsihed="resetPage"
-    /> -->
     <div class="page-box">
       <el-pagination
         :hide-on-single-page="true"
@@ -83,7 +75,12 @@
       <div class="content">抽取成功</div>
       <div class="description">共：{{ spotAllNum }}张</div>
     </el-dialog>
-    <grade-preview v-if="gradeInfo && showGradePreview" :show.sync="showGradePreview" :info="gradeInfo" />
+    <grade-preview
+      v-if="gradeInfo && showGradePreview"
+      :photo-version="showPhotoVersion"
+      @submit="submitData"
+      ref="grade-preview"
+      :show.sync="showGradePreview" :info="gradeInfo" />
   </div>
 </template>
 
@@ -120,19 +117,73 @@ export default {
       todayInfo: {},
       gradeUUid: '', // 正在打分uuid
       showGradePreview: false, // 是否显示打分概况
-      dialogTableVisible: false // 抽取成功弹框
+      dialogTableVisible: false, // 抽取成功弹框
+      showPhotoVersion: '' // 展示图片版本
     }
   },
   computed: {
     gradeInfo () {
-      const findGradePhoto = this.photoData.find(item => item.batchUUId === this.gradeUUid)
-      return findGradePhoto || null
+      const findGradePhoto = this.photoData.find(item => item._id === this.gradeUUid)
+      return findGradePhoto || {}
     }
   },
   created () {
     this.resetPage()
   },
   methods: {
+    /**
+     * @description 获取下一章图片
+     */
+    async getNextPhoto () {
+      try {
+        const findGradePhotoIndex = this.photoData.findIndex(item => item._id === this.gradeUUid)
+        const nowPhotoIndexArr = this.photoData[findGradePhotoIndex].photoIndex.split('-')
+        const isAllLast = nowPhotoIndexArr[0] === nowPhotoIndexArr[1]
+        if (isAllLast && this.photoData.length === 1 && this.pager.page === 1) {
+          this.$newMessage.success('你已经打完全部照片')
+          this.showGradePreview = false
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          await this.getSpotCheckResult()
+        } else if (isAllLast && this.photoData.length === 1 && this.pager.page > 1) {
+          this.$refs['grade-preview'].allLoading = true
+          this.pager.page--
+          await this.getSpotCheckResult()
+          this.gradeUUid = this.photoData[0]._id
+          this.$refs['grade-preview'].allLoading = false
+        } else {
+          this.$refs['grade-preview'].allLoading = true
+          this.gradeUUid = this.photoData[findGradePhotoIndex + 1]._id
+          await this.getSpotCheckResult()
+          this.$refs['grade-preview'].allLoading = false
+        }
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error('更新照片数据失败')
+      }
+    },
+    /**
+     * @description 提交数据
+     */
+    async submitData (sendData) {
+      try {
+        const selectPhoto = this.photoData.find(item => item._id === this.gradeUUid)
+        if (!selectPhoto) throw new Error('找不到对应照片')
+        const req = {
+          photoId: selectPhoto.photo_id,
+          uuid: selectPhoto.batchUUId,
+          tags: sendData.issuesLabelId,
+          picUrl: sendData.markPhotoImg
+        }
+        this.$refs['grade-preview'].allLoading = true
+        await AssessmentCenter.commitHistory(req)
+        this.getNextPhoto()
+      } catch (error) {
+        console.error(error)
+        this.$$newMessage.error('提交失败')
+      } finally {
+        this.$refs['grade-preview'].allLoading = false
+      }
+    },
     /**
      * @description 一键下载
      */
@@ -260,8 +311,6 @@ export default {
         this.allPhotoPath = data.allPhotoPath
         this.photoData = []
         this.photoData = data.list
-        // TODO 调试
-        this.showGrade('d82999e7-1f49-48a0-9c06-d6362144148e')
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -277,8 +326,9 @@ export default {
     /**
      * @description 展示数据
      */
-    showGrade (batchUUId) {
-      this.gradeUUid = batchUUId
+    showGrade (clickData) {
+      this.gradeUUid = clickData.id
+      this.showPhotoVersion = clickData.version
       this.showGradePreview = true
     }
   }

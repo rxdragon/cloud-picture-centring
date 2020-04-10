@@ -16,7 +16,7 @@ export default {
   },
   data () {
     return {
-      upyunConfig: {},
+      qNConfig: {}, // 七牛云token
       canvasDom: null,
       mouseFrom: {},
       mouseTo: {},
@@ -77,7 +77,7 @@ export default {
     }
   },
   created () {
-    this.getUpyunSign()
+    this.getQNSign()
   },
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
@@ -97,8 +97,8 @@ export default {
     /**
      * @description 获取又拍云
      */
-    async getUpyunSign () {
-      this.upyunConfig = await Commonality.getSignature()
+    async getQNSign () {
+      this.qNConfig = await Commonality.getSignature()
     },
     /**
      * @description 监听canvas鼠标按下
@@ -325,9 +325,9 @@ export default {
         top = 0
         this.cacheLabelRow++
       }
-      const width = issueData.label.length * 14 + 25
+      const width = issueData.name.length * 14 + 25
       const left = this.optionObj.width - (this.cacheLabelRow + 1) * width - 10
-      const textbox = new fabric.Textbox(issueData.label, {
+      const textbox = new fabric.Textbox(issueData.name, {
         left,
         top,
         width,
@@ -343,13 +343,19 @@ export default {
       this.canvasDom.add(textbox)
       this.cacheIssuse.push(issueData)
     },
+    /**
+     * @description 上传照片到七牛云
+     */
     async outPhoto () {
       // TODO 检测canvas是否空
       const base64Data = this.canvasDom.toDataURL()
       const blobData = CanvasTool.convertBase64ToBlob(base64Data)
       const fileData = CanvasTool.structureFile(blobData)
-      const data = await CanvasTool.uploadTagPhoto(fileData, this.upyunConfig)
-      console.warn(data)
+      const data = await CanvasTool.uploadTagPhoto(fileData, this.qNConfig)
+      return data
+    },
+    hasDraw () {
+      return !this.canvasDom.isEmpty()
     }
   }
 }

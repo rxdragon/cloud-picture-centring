@@ -25,7 +25,7 @@
     <div class="photo-list">
       <div class="photo-gulp"
         v-for="item in photoData.photoInfo.photoVersion" :key="item.id"
-        @click="startGrade">
+        @click="startGrade(item)">
         <div class="photo-version">{{ item.version | toPhotoVerName }}</div>
         <photo-box :src="item.path" preload-photo />
       </div>
@@ -54,9 +54,15 @@ export default {
     console.log(this.photoInfo)
   },
   methods: {
-    startGrade () {
-      this.$emit('startGrade', this.photoData.batchUUId)
-      console.log(this.data)
+    /**
+     * @description 点击预览
+     */
+    startGrade (photoImage) {
+      const sendData = {
+        id: this.photoData._id,
+        version: photoImage.version
+      }
+      this.$emit('startGrade', sendData)
     }
   }
 }
@@ -114,6 +120,7 @@ export default {
       height: 140px;
       margin-right: 20px;
       overflow: hidden;
+      cursor: pointer;
       border-radius: 4px;
 
       .photo-version {

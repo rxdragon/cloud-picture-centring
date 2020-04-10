@@ -7,7 +7,7 @@
         <i id="closeImg" class="el-icon-close" />
       </button>
     </div>
-    <div class="photoBox">
+    <div class="photoBox" v-loading="allLoading">
       <!-- 画板工具 -->
       <div class="photo-tool">
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'move' }" @click.capture="changeDrawType('move')">
@@ -93,68 +93,55 @@
       </div>
       <!-- 右边栏 -->
       <div class="photo-mark">
-        <!-- 缩略图 -->
-        <div id="smallImg" v-loading="loading" class="small-img">
-          <div v-show="isShow" class="breviary-photo">
-            <div class="smallPhoto">
-              <div id="img-box" style="position: relative;">
-                <img
-                  :src="showPhoto.src"
-                  alt="缩略图"
-                  @mouseout="handOut"
-                  @mousemove="handMove"
-                  @mouseover="handOver"
-                >
-                <div class="_magnifier_zoom" />
+        <div class="scroll-box">
+          <!-- 缩略图 -->
+          <div id="smallImg" v-loading="loading" class="small-img">
+            <div v-show="isShow" class="breviary-photo">
+              <div class="smallPhoto">
+                <div id="img-box" style="position: relative;">
+                  <img
+                    :src="showPhoto.src"
+                    alt="缩略图"
+                    @mouseout="handOut"
+                    @mousemove="handMove"
+                    @mouseover="handOver"
+                  >
+                  <div class="_magnifier_zoom" />
+                </div>
               </div>
-            </div>
-            <div class="contant">
-              <el-slider :show-tooltip="false" v-model="scaleNum" />
-              <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
-              <span class="down-button" @click.stop="downing">下载</span>
+              <div class="contant">
+                <el-slider :show-tooltip="false" v-model="scaleNum" />
+                <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+                <span class="down-button" @click.stop="downing">下载</span>
+              </div>
             </div>
           </div>
-        </div>
-        <order-info-module :order-info="info" />
-        <!-- TODO -->
-        <!-- <div class="issue-label">
-          <el-tag
-            v-for="tag in cacheLabel"
-            :key="tag.id"
-            class="cache-issue"
-            closable
-            disable-transitions
-            size="mini"
-            type="info"
-            @close="tagClose(tag)"
-          >
-            {{ tag.label }}
-          </el-tag>
-        </div> -->
-        <!-- 问题标签 -->
-        <div class="order-label">
-          <div class="label-title">标签栏</div>
-          <template v-for="(labelClassItem, labelClassIndex) in labelData">
-            <div v-if="labelClassItem.issueData.length" :key="labelClassIndex" class="label-box">
-              <div class="label-class-title">{{ labelClassItem.label }}</div>
-              <div class="label-content">
-                <el-tag
-                  v-for="issueItem in labelClassItem.issueData"
-                  :key="'issue' + issueItem.id"
-                  :class="issueItem.isSelect ? 'active' : ''"
-                  size="medium"
-                  disable-transitions
-                  @click="setLabel(issueItem)"
-                >
-                  {{ issueItem.label }}
-                </el-tag>
+          <order-info-module v-if="Object.keys(info).length" :order-info="info" />
+          <!-- 问题标签 -->
+          <div class="order-label">
+            <div class="label-title">标签栏</div>
+            <template v-for="(labelClassItem, labelClassIndex) in labelData">
+              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
+                <div class="label-class-title">{{ labelClassItem.name }}</div>
+                <div class="label-content">
+                  <el-tag
+                    v-for="issueItem in labelClassItem.child"
+                    :key="'issue' + issueItem.id"
+                    :class="issueItem.isSelect ? 'active' : ''"
+                    size="medium"
+                    disable-transitions
+                    @click="setLabel(issueItem)"
+                  >
+                    {{ issueItem.name }}
+                  </el-tag>
+                </div>
               </div>
-            </div>
-          </template>
-        </div>
-        <div class="submit-box">
-          <el-button type="primary">提交评分</el-button>
-          <el-button type="info" class="out-btn">退出</el-button>
+            </template>
+          </div>
+          <div class="submit-box">
+            <el-button type="primary" @click="submitData">提交评分</el-button>
+            <el-button type="info" class="out-btn">退出</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -166,10 +153,10 @@ import { mapGetters } from 'vuex'
 import 'driver.js/dist/driver.min.css'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from './OrderInfoModule'
-import labelMock from './labelMock'
 import guideData from './guideData'
 import Driver from 'driver.js' // 引导框
 import FabricCanvas from './FabricCanvas'
+import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'GradePreview',
@@ -189,37 +176,37 @@ export default {
           scale: 100
         }
       }
-    }
+    },
+    photoVersion: { type: String, required: true }
   },
   data () {
     return {
-      photoIndex: 0,
-      propConfigs: this.configs,
-      imgObj: {},
-      bigImg: {},
-      mouseMask: {},
-      imgLayer: {},
-      imgRect: {},
-      scaleNum: 25,
-      loading: true,
-      isShow: true,
-      maxObj: {
+      photoIndex: 0, // 展示照片索引
+      propConfigs: this.configs, // 参数配置
+      imgObj: {}, // 照片dom
+      bigImg: {}, // 大图dom
+      mouseMask: {}, // 图片标记配置
+      imgLayer: {}, // 照片布局
+      imgRect: {}, // 图片信息
+      scaleNum: 25, // 放大倍数
+      loading: true, // 是否加载
+      isShow: true, // 是否显示
+      maxObj: { // 最大宽高
         height: '',
         width: ''
       },
-      driver: null,
-      inZoomIn: false,
-      photoZoomStyle: '',
-      labelData: [],
+      driver: null, // 引导信息
+      inZoomIn: false, // 是否放大中
+      photoZoomStyle: '', // 图片信息
+      labelData: [], // 标签数据
       showCanvas: false,
-      canvasOption: {
+      canvasOption: { // canvas 信息
         width: 200,
         height: 200,
         penColor: '#E34F51',
         lineWidth: 2,
         drawType: ''
       },
-      cacheLabel: [],
       penWeight: [ // 画笔宽度数据
         {
           label: 'min',
@@ -236,13 +223,16 @@ export default {
           size: 10,
           active: false
         }
-      ]
+      ],
+      allLoading: false // 整个页面loading
     }
   },
   computed: {
     ...mapGetters(['imgDomain']),
+    // 展示照片数据
     photoArray () {
-      const data = this.info.photoInfo.photoVersion.map(item => {
+      const photoVersion = _.get(this.info, 'photoInfo.photoVersion', [])
+      const data = photoVersion.map(item => {
         item.src = this.imgDomain + item.path
         return item
       })
@@ -250,7 +240,8 @@ export default {
     },
     // 当前展示图片
     showPhoto () {
-      return this.photoArray[this.photoIndex]
+      console.log(this.photoIndex, 'showPhoto')
+      return this.photoArray[this.photoIndex] || {}
     },
     // 是云端成片
     isFinishPhoto () {
@@ -258,13 +249,8 @@ export default {
     }
   },
   created () {
-    console.warn(this.info)
-    // TODO mock
-    const createData = JSON.parse(JSON.stringify(labelMock))
-    createData.forEach(item => {
-      item.issueData.forEach(issItem => issItem.isSelect = false)
-    })
-    this.labelData = createData
+    this.initShowPhoto()
+    this.getLabelData()
     this.driver = new Driver({
       nextBtnText: '下一个',
       prevBtnText: '上一个',
@@ -349,6 +335,58 @@ export default {
   },
   methods: {
     /**
+     * @description 提交分数
+     */
+    async submitData () {
+      try {
+        let markPhotoImg = ''
+        if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
+          markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
+        }
+        this.showCanvas = false
+        const issuesLabel = this.getIssuesData()
+        const issuesLabelId = issuesLabel.map(item => ({ id: item.id }))
+        this.resetLabelData()
+        const sendData = {
+          issuesLabelId,
+          markPhotoImg
+        }
+        this.$emit('submit', sendData)
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error('上传标记图失败')
+      }
+    },
+    /**
+     * @description 获取选中标签
+     */
+    getIssuesData () {
+      let selectData = []
+      this.labelData.forEach(item => {
+        const itemSelectLabel = item.child.filter(issueItem => {
+          console.log(issueItem)
+          return issueItem.isSelect
+        })
+        console.log(itemSelectLabel)
+        selectData = [...selectData, ...itemSelectLabel]
+      })
+      return selectData
+    },
+    /**
+     * @description 获取标签数据
+     */
+    async getLabelData () {
+      this.labelData = await AssessmentCenter.getScoreConfigList()
+    },
+    /**
+     * @description 重制标签
+     */
+    resetLabelData () {
+      this.labelData.forEach(item => {
+        item.child.forEach(issItem => issItem.isSelect = false)
+      })
+    },
+    /**
      * @description 提示按钮
      */
     guide () {
@@ -377,6 +415,159 @@ export default {
      */
     loadingPhoto () {
       this.loading = false
+    },
+    /**
+     * @description 滑块滑动改变值
+     * @param {Number} [放大系数]
+     */
+    formatTooltip (val) {
+      return val + 100
+    },
+    /**
+     * @description 上一张图片
+     */
+    prePhoto () {
+      const beforePath = this.photoArray[this.photoIndex].path
+      if (this.photoIndex === 0) {
+        this.photoIndex = this.photoArray.length - 1
+      } else {
+        this.photoIndex--
+      }
+      const nextPath = this.photoArray[this.photoIndex].path
+      if (beforePath === nextPath) return
+      this.loading = true
+    },
+    /**
+     * @description 下一张图片
+     */
+    nextPhoto () {
+      const beforePath = this.photoArray[this.photoIndex].path
+      if (this.photoIndex === this.photoArray.length - 1) {
+        this.photoIndex = 0
+      } else {
+        this.photoIndex++
+      }
+      const nextPath = this.photoArray[this.photoIndex].path
+      if (beforePath === nextPath) return
+      this.loading = true
+    },
+    /**
+     * @description 放大
+     */
+    zoom (e) {
+      if (this.canvasOption.drawType !== 'blowup') return
+      if (this.inZoomIn) {
+        this.photoZoomStyle = ''
+        this.inZoomIn = false
+      } else {
+        const imageWidth = e.target.clientWidth
+        const imageHeight = e.target.clientHeight
+        const clickX = (e.offsetX / imageWidth * 100).toFixed(2) + '%'
+        const clickY = (e.offsetY / imageHeight * 100).toFixed(2) + '%'
+        const zoomScale = (this.scaleNum * 4 + 100) / 100
+        this.photoZoomStyle = `transform-origin: ${clickX} ${clickY}; transform: scale(${zoomScale});`
+        this.inZoomIn = true
+      }
+    },
+    /**
+     * @description 判断是否处于放大中
+     */
+    judgeHasZoom (e) {
+      const isOverIn = Boolean(this.imgLayer.style.width)
+      if (isOverIn) {
+        this.handOver(e)
+      }
+    },
+    /**
+     * @description 设置标签
+     */
+    setLabel (issueItem) {
+      if (!this.createCanvas()) return false
+      this.$nextTick(() => {
+        this.labelData.forEach(classItem => {
+          const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
+          if (findIssueLabel) {
+            if (!findIssueLabel.isSelect) {
+              this.$refs['fabric-canvas'].createLabel(findIssueLabel)
+              findIssueLabel.isSelect = true
+            } else {
+              this.tagClose(issueItem)
+            }
+          }
+        })
+      })
+    },
+    /**
+     * @description 标签关闭
+     */
+    tagClose (tagInfo) {
+      this.$refs['fabric-canvas'].deleteLabel(tagInfo)
+    },
+    /**
+     * @description 创建canvas
+     */
+    createCanvas () {
+      if (!this.isFinishPhoto) {
+        this.$newMessage.warning('请在成片上进行评分')
+        return false
+      }
+      if (!this.showCanvas) {
+        this.getImgInfo()
+        this.showCanvas = true
+      }
+      return true
+    },
+    /**
+     * @description 更改画笔类型
+     */
+    changeDrawType (drawType) {
+      if (drawType !== 'blowup' && !this.showCanvas) {
+        this.createCanvas()
+        return
+      }
+      if (drawType === 'blowup' && this.inZoomIn) {
+        this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
+      }
+      this.canvasOption.drawType = drawType
+    },
+    /**
+     * @description 撤销删除标签
+     */
+    addDeleteLabel (issueItem) {
+      this.labelData.forEach(classItem => {
+        const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
+        if (findIssueLabel) {
+          findIssueLabel.isSelect = false
+        }
+      })
+    },
+    /**
+     * @description 下载图片
+     */
+    downing () {
+      const pointIndex = this.showPhoto.src.lastIndexOf('!')
+      let url = this.showPhoto.src
+      if (pointIndex > 0) {
+        url = this.showPhoto.src.substring(0, pointIndex)
+      }
+      const data = { url, path: '' }
+      this.$newMessage.success('已添加一张照片到下载')
+      DownIpc.addDownloadFile(data)
+    },
+    /**
+     * @description 更改线宽
+     */
+    changeLineWidth (penWeightItem) {
+      this.penWeight.forEach(item => item.active = false)
+      penWeightItem.active = true
+      this.canvasOption.lineWidth = penWeightItem.size
+    },
+    /**
+     * @description 初始化图片版本
+     */
+    initShowPhoto () {
+      const findIndex = this.photoArray.findIndex(item => item.version === this.photoVersion)
+      this.photoIndex = findIndex
     },
     /**
      * @description 鼠标移动
@@ -466,162 +657,6 @@ export default {
       imgLayer.style.backgroundRepeat = 'no-repeat'
       imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
       document.getElementsByClassName('orginPhoto')[0].appendChild(imgLayer)
-    },
-    /**
-     * @description 滑块滑动改变值
-     * @param {Number} [放大系数]
-     */
-    formatTooltip (val) {
-      return val + 100
-    },
-    /**
-     * @description 上一张图片
-     */
-    prePhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === 0) {
-        this.photoIndex = this.photoArray.length - 1
-      } else {
-        this.photoIndex--
-      }
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
-     * @description 下一张图片
-     */
-    nextPhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === this.photoArray.length - 1) {
-        this.photoIndex = 0
-      } else {
-        this.photoIndex++
-      }
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
-     * @description 放大
-     */
-    zoom (e) {
-      if (this.canvasOption.drawType !== 'blowup') return
-      if (this.inZoomIn) {
-        this.photoZoomStyle = ''
-        this.inZoomIn = false
-      } else {
-        const imageWidth = e.target.clientWidth
-        const imageHeight = e.target.clientHeight
-        const clickX = (e.offsetX / imageWidth * 100).toFixed(2) + '%'
-        const clickY = (e.offsetY / imageHeight * 100).toFixed(2) + '%'
-        const zoomScale = (this.scaleNum * 4 + 100) / 100
-        this.photoZoomStyle = `transform-origin: ${clickX} ${clickY}; transform: scale(${zoomScale});`
-        this.inZoomIn = true
-      }
-    },
-    /**
-     * @description 判断是否处于放大中
-     */
-    judgeHasZoom (e) {
-      const isOverIn = Boolean(this.imgLayer.style.width)
-      if (isOverIn) {
-        this.handOver(e)
-      }
-    },
-    /**
-     * @description 设置标签
-     */
-    setLabel (issueItem) {
-      if (!this.showCanvas) {
-        this.createCanvas()
-      }
-      this.$nextTick(() => {
-        this.labelData.forEach(classItem => {
-          const findIssueLabelIndex = classItem.issueData.findIndex(issueLabel => issueLabel.id === issueItem.id)
-          if (findIssueLabelIndex >= 0) {
-            const setLabelData = classItem.issueData[findIssueLabelIndex]
-            if (!setLabelData.isSelect) {
-              this.$refs['fabric-canvas'].createLabel(setLabelData)
-            } else {
-              this.tagClose(issueItem)
-            }
-            setLabelData.isSelect = !setLabelData.isSelect
-          }
-        })
-      })
-    },
-    /**
-     * @description 标签关闭
-     */
-    tagClose (tagInfo) {
-      this.$refs['fabric-canvas'].deleteLabel(tagInfo)
-    },
-    /**
-     * @description 创建canvas
-     */
-    createCanvas () {
-      if (!this.isFinishPhoto) {
-        this.$newMessage.warning('请在成片上进行评分')
-        return
-      }
-      if (!this.showCanvas) {
-        this.getImgInfo()
-        this.showCanvas = true
-      }
-      this.changeDrawType('pen')
-    },
-    /**
-     * @description 更改画笔类型
-     */
-    changeDrawType (drawType) {
-      if (drawType !== 'blowup' && !this.showCanvas) {
-        this.createCanvas()
-        return
-      }
-      if (drawType === 'blowup' && this.inZoomIn) {
-        this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
-      }
-      this.canvasOption.drawType = drawType
-    },
-    /**
-     * @description 撤销删除标签
-     */
-    addDeleteLabel (issueItem) {
-      console.log(issueItem, 'addDeleteLabel')
-      this.labelData.forEach(classItem => {
-        const findIssueLabel = classItem.issueData.find(issueLabel => issueLabel.id === issueItem.id)
-        if (findIssueLabel) {
-          findIssueLabel.isSelect = false
-        }
-      })
-    },
-    /**
-     * @description 导出图片
-     */
-    outPut () {
-      this.$refs['fabric-canvas'].outPhoto()
-    },
-    /**
-     * @description 下载图片
-     */
-    downing () {
-      const pointIndex = this.showPhoto.src.lastIndexOf('!')
-      let url = this.showPhoto.src
-      if (pointIndex > 0) {
-        url = this.showPhoto.src.substring(0, pointIndex)
-      }
-      const data = { url, path: '' }
-      this.$newMessage.success('已添加一张照片到下载')
-      DownIpc.addDownloadFile(data)
-    },
-    /**
-     * @description 更改线宽
-     */
-    changeLineWidth (penWeightItem) {
-      this.penWeight.forEach(item => item.active = false)
-      penWeightItem.active = true
-      this.canvasOption.lineWidth = penWeightItem.size
     }
   }
 }
@@ -757,6 +792,8 @@ export default {
         height: 100%;
         margin: auto;
         overflow: hidden;
+        touch-action: none;
+        user-select: none;
         background-color: #282828;
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
@@ -827,8 +864,13 @@ export default {
       position: relative;
       z-index: 5000;
       width: 280px;
-      overflow: overlay;
       background-color: #535353;
+
+      .scroll-box {
+        width: 100%;
+        height: 100%;
+        overflow: overlay;
+      }
 
       .small-img {
         position: sticky;
@@ -923,19 +965,8 @@ export default {
         }
       }
 
-      // .issue-label {
-      //   padding: 10px;
-      //   padding-bottom: 0;
-
-      //   .cache-issue {
-      //     margin-right: 10px;
-      //     margin-bottom: 10px;
-      //     -webkit-user-select: none;
-      //   }
-      // }
-
       .order-label {
-        padding: 14px 10px;
+        padding: 14px 10px 70px;
         font-size: 12px;
         color: #eee;
 
@@ -986,7 +1017,7 @@ export default {
       }
 
       .submit-box {
-        position: sticky;
+        position: absolute;
         bottom: 0;
         left: 0;
         display: flex;
@@ -1024,6 +1055,10 @@ export default {
 </style>
 
 <style lang="less">
+.el-loading-mask {
+  z-index: 6001;
+}
+
 .grade-preview {
   .tool-color {
     .el-color-picker__trigger {
@@ -1040,6 +1075,19 @@ export default {
 
 #driver-highlighted-element-stage {
   opacity: 0.3;
+}
+
+.el-color-picker__panel {
+  background-color: #535353;
+  border: 1px solid #535353;
+
+  .el-color-dropdown__btns {
+    .el-button--default {
+      color: #eee;
+      background-color: #666;
+      border-color: #666;
+    }
+  }
 }
 
 .pen-weight {
