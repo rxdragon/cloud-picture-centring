@@ -26,6 +26,8 @@ export default class StreamModel {
   requireLabel = {} // 修图要求
   photoNum = 0 // 照片数据
   isGreen = false // 是否是绿色通道
+  retoucher = '' // 修图师
+  retoucherLeader = "" // 修图组长
 
   constructor (streamData) {
     this.baseData = streamData
@@ -46,6 +48,8 @@ export default class StreamModel {
     this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || retouchRequire
     this.photoNum = this.getPhotoNum()
     this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
+    this.retoucher = _.get(streamData, 'retoucher.name') || _.get(streamData, 'retoucher.real_name') || '-'
+    this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.name') || _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
   }
 
   // 获取沙漏相关信息

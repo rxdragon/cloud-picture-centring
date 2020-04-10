@@ -2,30 +2,22 @@
   <div class="assessment-history page-class">
     <div class="header">
       <h3>评价历史记录</h3>
+      <el-button type="primary" @click="showDrawer">查看问题报告</el-button>
     </div>
     <div class="search-box">
       <div class="search-item">
         <span>抽查时间</span>
         <date-picker v-model="timeSpan" />
       </div>
-      <!-- 纠偏类型 -->
-      <div class="correct-type search-item">
-        <span>纠偏类型</span>
-        <el-select v-model="correctType" placeholder="纠偏类型">
-          <el-option label="全部" :value="0" />
-          <el-option label="意见相同" value="same" />
-          <el-option label="意见不同" value="different" />
-        </el-select>
+      <!-- 修图师 -->
+      <div class="staff-search search-item">
+        <span>修图师</span>
+        <staff-select v-model="staffIds" :props="{ multiple: true }" />
       </div>
-      <!-- 抽查类型 -->
-      <div class="spot-type search-item">
-        <span>抽查类型</span>
-        <el-select v-model="spotType" placeholder="抽查类型">
-          <el-option label="全部" :value="0" />
-          <el-option label="种草" value="plant" />
-          <el-option label="拔草" value="pull" />
-          <el-option label="不种不拔" value="none" />
-        </el-select>
+      <!-- 产品名称 -->
+      <div class="product-search search-item">
+        <span>产品名称</span>
+        <product-select v-model="productValue" />
       </div>
       <!-- 查询按钮 -->
       <div class="button-box">
@@ -33,19 +25,10 @@
       </div>
     </div>
     <div class="search-box">
-      <!-- 修图师 -->
-      <div class="staff-search search-item">
-        <span>修图师</span>
-        <staff-select v-model="staffIds" :props="{ multiple: true }" />
-      </div>
-      <!-- 审核人员 -->
-      <div class="checker-search search-item">
-        <span>审核人员</span>
-        <reviewer-select v-model="reviewerId" show-all />
-      </div>
+      <!-- 问题标签 -->
       <div class="product-search search-item">
-        <span>产品名称</span>
-        <product-select v-model="productValue" />
+        <span>问题标签</span>
+        <issue-label-select v-model="issueValue" />
       </div>
     </div>
     <div v-for="photoItem in photoData" :key="photoItem.businessId" class="photo-data module-panel">
@@ -62,6 +45,14 @@
         @current-change="handlePage"
       />
     </div>
+    <!-- 抽屉 -->
+    <el-drawer
+      custom-class="info-drawer"
+      :show-close="false"
+      :visible.sync="drawer"
+      :with-header="false">
+      <report-box :show-draw.sync="drawer" />
+    </el-drawer>
   </div>
 </template>
 
@@ -69,25 +60,24 @@
 import DatePicker from '@/components/DatePicker'
 import GradeBox from './components/GradeBox'
 import StaffSelect from '@SelectBox/StaffSelect'
-import ReviewerSelect from '@SelectBox/ReviewerSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
+import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
+import ReportBox from './components/ReportBox.vue'
 import moment from 'moment'
-import * as AssessmentCenter from '@/api/assessmentCenter'
-import { SearchType } from '@/utils/enumerate'
 import { joinTimeSpan } from '@/utils/timespan.js'
+import * as AssessmentCenter from '@/api/assessmentCenter'
+
 export default {
   name: 'AssessmentHistory',
-  components: { DatePicker, GradeBox, StaffSelect, ReviewerSelect, ProductSelect },
+  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, ReportBox },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
-      correctType: 0, // 抽片类型
-      spotType: 0, // 抽片类型 0 全部 plant 种草 pull 拔草 none 抽查不种不拔
       staffIds: '', // 修图师 id
-      reviewerId: 0, // 审核人id
       photoData: [], // 照片数据
-      productValue: [],
+      productValue: [], // 选中产品
+      issueValue: [], // 问题标签数据
       pager: {
         page: 1,
         pageSize: 10,
@@ -95,8 +85,8 @@ export default {
       },
       uuid: '',
       cacheTimeSpan: [],
-      cacheSearchType: '',
-      cacheSendStaff: ''
+      cacheSendStaff: '',
+      drawer: true
     }
   },
   created () {
@@ -113,30 +103,16 @@ export default {
      * @description 初始化
      */
     initial () {
-      const { searchTimeSpan, searchType, sendStaff } = this.$route.query
+      const { searchTimeSpan, sendStaff } = this.$route.query
       const routerTimeSpan = (searchTimeSpan && searchTimeSpan.split(',')) || []
       const sameTimeSpan = (routerTimeSpan[0] === this.cacheTimeSpan[0] && routerTimeSpan[1] === this.cacheTimeSpan[1])
-      const sameSearchType = searchType === this.cacheSearchType
       const sameSendStaff = sendStaff === this.cacheSendStaff
-      if (sameTimeSpan && sameSearchType && sameSendStaff) return false
+      if (sameTimeSpan && sameSendStaff) return false
       if (searchTimeSpan) {
         this.timeSpan = searchTimeSpan.split(',')
       }
       if (sendStaff) {
         this.staffIds = sendStaff.split(',')
-      }
-      switch (searchType) {
-        case SearchType.SpotPlant:
-          this.spotType = 'plant'
-          break
-        case SearchType.SpotPull:
-          this.spotType = 'pull'
-          break
-        case SearchType.SpotNone:
-          this.spotType = 'none'
-          break
-        default:
-          break
       }
       this.getSearchHistory(1)
     },
@@ -154,24 +130,14 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.correctType) {
-        req.correctionType = this.correctType
-      }
-      if (this.spotType) {
-        req.grassType = this.spotType
-      }
       if (this.staffIds) {
         req.retoucherIds = this.staffIds.map(item => Number(item))
         this.cacheSendStaff = this.staffIds.join(',')
-      }
-      if (this.reviewerId) {
-        req.reviewerId = this.reviewerId
       }
       if (this.productValue.length) {
         req.productIds = this.productValue
       }
       this.cacheTimeSpan = this.timeSpan
-      this.cacheSearchType = this.spotType
       return req
     },
     /**
@@ -199,6 +165,12 @@ export default {
     handlePage () {
       this.$el.parentElement.scrollTop = 0
       this.getSearchHistory()
+    },
+    /**
+     * @description 打开抽屉
+     */
+    showDrawer () {
+      this.drawer = true
     }
   }
 }
@@ -222,10 +194,7 @@ export default {
 
     .button-box {
       margin-bottom: 24px;
-
-      .search-button {
-        margin-right: 12px;
-      }
+      margin-left: auto;
     }
 
     .staff-search {
@@ -234,7 +203,7 @@ export default {
       }
 
       .el-cascader {
-        width: 400px;
+        width: 250px;
       }
     }
 
@@ -246,7 +215,7 @@ export default {
 
     .product-search {
       .el-cascader {
-        width: 222px;
+        width: 250px;
       }
     }
   }
@@ -256,7 +225,11 @@ export default {
   }
 
   .date-picker .el-range-editor.el-input__inner {
-    width: 400px;
+    width: 250px;
+
+    .el-range-separator {
+      width: 10%;
+    }
   }
 
   .page-box {
@@ -272,6 +245,15 @@ export default {
   .el-pagination .btn-prev,
   .el-pager li {
     background-color: transparent;
+  }
+}
+
+.info-drawer {
+  border-radius: 20px 0 0 20px;
+
+  .el-drawer__header {
+    padding: 0;
+    margin-bottom: 0;
   }
 }
 </style>
