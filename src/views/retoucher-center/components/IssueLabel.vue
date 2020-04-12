@@ -10,12 +10,13 @@
       v-bind="$attrs"
       v-on="$listeners">
       <div class="issue-main">
-        <el-tag v-for="issueItem in issueData"
-          :key="issueItem.key"
-          :effect="issueItem.select ? 'light' : 'plain'"
-          @click="selectData(issueItem.key)">
-          {{ issueItem.label }}
-        </el-tag>
+        <el-tooltip v-for="issueItem in issueData" :key="issueItem.key" effect="dark" :content="issueItem.description" placement="top-start">
+          <el-tag
+            :effect="issueItem.select ? 'light' : 'plain'"
+            @click="selectData(issueItem.key)">
+            {{ issueItem.label }}
+          </el-tag>
+        </el-tooltip>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitData">提 交</el-button>
@@ -66,8 +67,10 @@ export default {
   }
 
   .issue-main {
+    margin-bottom: -10px;
+
     .el-tag {
-      margin-right: 20px;
+      margin: 0 10px 10px 0;
       cursor: pointer;
     }
   }

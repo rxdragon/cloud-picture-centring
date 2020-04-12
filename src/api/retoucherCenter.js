@@ -207,6 +207,7 @@ export function getPhotoProblemTagSets () {
           key: uuidv4(),
           label: item.name,
           id: item.id,
+          description: item.description,
           type: key === 'photography' ? 'problemTagPhotography' : 'problemTagMakeup',
           select: false
         })
