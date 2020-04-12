@@ -11,7 +11,7 @@
       </div>
       <div class="button-box">
         <el-button v-if="orderData.type === 'mainto'" type="primary" plain @click="hangUp">挂起订单</el-button>
-        <el-button type="primary" @click="submitOrder">提交审核</el-button>
+        <el-button type="primary" @click="setIssueLabel">提交审核</el-button>
       </div>
     </div>
     <!-- 照片信息 -->
@@ -60,6 +60,8 @@
         @change="uploadDown"
       />
     </div>
+    <!-- 问题标签 -->
+    <issue-label :issue-data="issueData" :visible.sync="dialogVisible" @submit="submitOrder" />
   </div>
 </template>
 
@@ -67,6 +69,7 @@
 import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
 import UploadPhoto from './UploadPhoto.vue'
+import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
@@ -75,7 +78,7 @@ import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto },
+  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel },
   props: {
     showDetail: { type: Boolean }
   },
@@ -107,7 +110,10 @@ export default {
       overTime: 0, // 超时时间
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
-      realAid: ''
+      realAid: '',
+      dialogVisible: false, // 显示问题标签
+      issueData: [], // 问题数据
+      needPunchLabel: false // 是否需要标记问题
     }
   },
   computed: {
@@ -181,6 +187,7 @@ export default {
         }
         this.photos = data.photos
         this.reviewerNote = data.reviewerNote
+        this.needPunchLabel = data.needPunchLabel
         LogStream.retoucherSee(+this.realAid)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
@@ -225,32 +232,21 @@ export default {
     /**
      * @description 提交审核
      */
-    async submitOrder () {
+    async submitOrder (issue) {
       const finishPhotoArr = Object.values(this.finishPhoto)
-      if (!finishPhotoArr.every(item => Boolean(item.path))) {
-        return this.$newMessage.warning('请等待照片上传完成')
-      }
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
       const uploadData = [...cachePhoto, ...finishPhotoArr]
       uploadData.forEach(item => {
         delete item.orginPhotoName
         delete item.file
       })
-      if (uploadData.length > this.photos.length) {
-        return this.$newMessage.warning('上传照片数量超过限制，请重新上传。')
-      }
-      if (uploadData.length < this.photos.length) {
-        return this.$newMessage.warning('请检查照片上传张数后再提交审核。')
-      }
-      if (!uploadData.length) {
-        return this.$newMessage.warning('请检查照片上传张数后再提交审核。')
-      }
-      if (!this.photos.some(item => item.id === uploadData[0].id)) {
-        return this.$newMessage.warning('找不到流水号对应的id，请刷新页面重新上传')
-      }
       const reqData = {
         streamId: this.realAid,
         photoData: uploadData
+      }
+      // 设置问题标签
+      if (issue) {
+        reqData.streamTagData = issue
       }
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
@@ -265,6 +261,52 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    /**
+     * @description 判断是否能上传照片
+     */
+    canUploadPhoto () {
+      const finishPhotoArr = Object.values(this.finishPhoto)
+      if (!finishPhotoArr.every(item => Boolean(item.path))) {
+        throw new Error('请等待照片上传完成')
+      }
+      const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
+      const uploadData = [...cachePhoto, ...finishPhotoArr]
+      if (uploadData.length > this.photos.length) {
+        throw new Error('上传照片数量超过限制，请重新上传。')
+      }
+      if (uploadData.length < this.photos.length) {
+        throw new Error('请检查照片上传张数后再提交审核。')
+      }
+      if (!uploadData.length) {
+        throw new Error('请检查照片上传张数后再提交审核。')
+      }
+      if (!this.photos.some(item => item.id === uploadData[0].id)) {
+        throw new Error('找不到流水号对应的id，请刷新页面重新上传')
+      }
+    },
+    /**
+     * @description 设置问题标签
+     */
+    setIssueLabel () {
+      try {
+        this.canUploadPhoto()
+        if (this.needPunchLabel) {
+          this.getPhotoProblemTagSets()
+          this.dialogVisible = true
+        } else {
+          this.submitOrder()
+        }
+      } catch (error) {
+        this.$newMessage.warning(error.message)
+      }
+    },
+    /**
+     * @description 获取标签
+     */
+    async getPhotoProblemTagSets () {
+      const res = await RetoucherCenter.getPhotoProblemTagSets()
+      this.issueData = res
     }
   }
 }
