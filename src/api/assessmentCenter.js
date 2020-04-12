@@ -253,7 +253,6 @@ export function getCloudProblemReportByGroup (params) {
     method: 'GET',
     params
   }).then(msg => {
-    console.log(msg)
     return msg
   })
 }

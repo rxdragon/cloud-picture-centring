@@ -257,5 +257,9 @@ export default {
     padding: 0;
     margin-bottom: 0;
   }
+
+  .el-drawer__body {
+    overflow: overlay;
+  }
 }
 </style>

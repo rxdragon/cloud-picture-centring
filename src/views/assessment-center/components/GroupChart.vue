@@ -4,10 +4,13 @@
     :legend-visible="false"
     :extend="extend"
     :settings="chartSettings"
-    height="340px" />
+    height="750px" />
 </template>
 
 <script>
+import { joinTimeSpan } from '@/utils/timespan.js'
+import * as AssessmentCenter from '@/api/assessmentCenter'
+
 export default {
   name: 'GroupChart',
   data () {
@@ -49,21 +52,52 @@ export default {
             }
           }
         },
-        yAxis: {
-          
+        tooltip: {
+          formatter: (params) => {
+            const data = params[0]
+            return `${data.name}：${data.value}张`
+          }
         }
       },
       chartData: {
-        columns: ['组名', '张数'],
-        rows: [
-          { '组名': '惊天魔盗团', '张数': 1393 },
-          { '组名': '惊天魔盗团', '张数': 3530 },
-          { '组名': '惊天魔盗团', '张数': 2923 },
-          { '组名': '惊天魔盗团', '张数': 1723 },
-          { '组名': '惊天魔盗团', '张数': 3792 },
-          { '组名': '惊天魔盗团', '张数': 4593 }
-        ]
+        columns: ['name', 'count'],
+        rows: []
       }
+    }
+  },
+  props: {
+    timeSpan: { type: Array, default: () => [] },
+    tags: { type: Array, default: () => [] }
+  },
+  watch: {
+    timeSpan: {
+      handler (value) {
+        if (value.length) {
+          this.getChartData()
+        }
+      },
+      immediate: true
+    },
+    tags: {
+      handler (value) {
+        this.getChartData()
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    /**
+     * @description 获取小组数据
+     */
+    async getChartData () {
+      const req = {
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1)
+      }
+      if (this.tags.length) {
+        req.tagId = this.tags
+      }
+      this.chartData.rows = await AssessmentCenter.getCloudProblemReportByGroup(req)
     }
   }
 }

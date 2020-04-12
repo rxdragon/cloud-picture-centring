@@ -20,7 +20,7 @@
         <issue-label-select v-model="issueValue" />
       </div>
       <div class="issues-detail-main">
-        <group-chart />
+        <group-chart :time-span="timeSpan" :tags="issueValue" />
       </div>
     </div>
   </div>
@@ -54,7 +54,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.report-box {
+  position: relative;
+}
+
 .head-box {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   align-items: flex-end;
   height: 80px;
