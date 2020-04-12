@@ -47,11 +47,13 @@
     </div>
     <!-- 抽屉 -->
     <el-drawer
+      v-if="timeSpan"
       custom-class="info-drawer"
       :show-close="false"
+      size="400"
       :visible.sync="drawer"
       :with-header="false">
-      <report-box :show-draw.sync="drawer" />
+      <report-box :time-span="timeSpan" :show-draw.sync="drawer" />
     </el-drawer>
   </div>
 </template>

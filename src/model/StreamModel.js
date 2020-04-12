@@ -30,6 +30,7 @@ export default class StreamModel {
   retoucherLeader = "" // 修图组长
 
   constructor (streamData) {
+    if (!streamData) return
     this.baseData = streamData
     this.streamId = streamData.id || ''
     this.streamNum = streamData.stream_num || ''

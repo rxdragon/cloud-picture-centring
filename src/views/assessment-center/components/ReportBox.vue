@@ -2,13 +2,15 @@
   <div class="report-box">
     <div class="head-box">
       <div class="title">问题报告</div>
-      <div class="time">时间：2015-10-02 ～ 2015-10-05</div>
+      <div class="time">时间：{{ timeSpan[0] }} ～ {{ timeSpan[1] }}</div>
       <i class="el-icon-close" @click="closeDrawer"></i>
     </div>
     <!-- 整体问题统计 -->
     <div class="issues-report module-panel">
       <div class="panel-title">整体问题统计</div>
-      <div class="issues-main"></div>
+      <div class="issues-main">
+        <sunburst-chart :time-span="timeSpan" />
+      </div>
     </div>
     <!-- 详细问题统计 -->
     <div class="issues-detail-report module-panel">
@@ -17,25 +19,31 @@
         <span>问题标签</span>
         <issue-label-select v-model="issueValue" />
       </div>
-      <div class="issues-detail-main"></div>
+      <div class="issues-detail-main">
+        <group-chart />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
-import echarts from 'echarts'
+import SunburstChart from '@/components/SunburstChart'
+import GroupChart from './GroupChart'
 
 export default {
   name: 'ReportBox',
-  components: { IssueLabelSelect },
+  components: { IssueLabelSelect, SunburstChart, GroupChart },
+  props: {
+    timeSpan: { type: Array, default: () => [] }
+  },
   data () {
     return {
       issueValue: []
     }
   },
   created () {
-    console.log(echarts)
+    console.log(this.timeSpan)
   },
   methods: {
     closeDrawer () {
@@ -77,11 +85,14 @@ export default {
 .issues-report {
   .issues-main {
     height: 300px;
-    background-color: red;
   }
 }
 
 .issues-detail-report {
+  .panel-title {
+    margin-bottom: 20px;
+  }
+
   .search-item {
     margin-right: 0;
 
@@ -94,11 +105,6 @@ export default {
       line-height: 16px;
       color: #303133;
     }
-  }
-
-  .issues-detail-main {
-    height: 300px;
-    background-color: red;
   }
 }
 

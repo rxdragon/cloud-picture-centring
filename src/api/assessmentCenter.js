@@ -7,6 +7,7 @@ import StreamModel from '@/model/StreamModel.js'
 import { transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import * as Colors from "@/utils/colors"
 
 /**
  * @description 获取今日抽片指标
@@ -78,7 +79,7 @@ export function getSpotCheckResult (params) {
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
       // 照片编号
-      const photoIndex = index + params.skip + 1
+      const photoIndex = index + params.skip + 1 + msg.commitNum
       item.photoIndex = `${total}-${photoIndex}`
       // 加载预加载，与业务无关
       const photoVersion = item.photoInfo.photoVersion
@@ -121,7 +122,10 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      item.productInfo = new ProductModel(item.photoData.stream.product)
+      if (!item.photoData.stream) {
+        console.log(item)
+      }
+      item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
       item.score = item.commitInfo.score
@@ -199,5 +203,57 @@ export function getIssueList () {
       }
     })
     return createData
+  })
+}
+
+/**
+ * @description 获取问题标签报告数据
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/12
+ * @version @version 2.4.0
+ */
+export function getCloudProblemReport (params) {
+  return axios({
+    url: '/project_cloud/checkPool/getCloudProblemReport',
+    method: 'GET',
+    params
+  }).then(msg => {
+    let allCount = 0
+    msg.forEach((classItem, classIndex) => {
+      classItem.value = 0
+      allCount += Number(classItem.count)
+      classItem.itemStyle = {
+        color: Colors.getColor(classIndex)
+      },
+      classItem.child.forEach((issueItem, issueIndex) => {
+        issueItem.value = issueItem.count
+        classItem.value += Number(issueItem.count)
+        issueItem.itemStyle = {
+          color: Colors.getColorNear(classIndex, issueIndex)
+        }
+      })
+      classItem.children = classItem.child
+    })
+    if (!allCount) return null
+    return msg
+  })
+}
+
+/**
+ * @description 获取问题标签柱状图
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/12
+ * @version @version 2.4.0
+ */
+export function getCloudProblemReportByGroup (params) {
+  return axios({
+    url: '/project_cloud/checkPool/getCloudProblemReportByGroup',
+    method: 'GET',
+    params
+  }).then(msg => {
+    console.log(msg)
+    return msg
   })
 }

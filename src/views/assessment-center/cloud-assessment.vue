@@ -313,6 +313,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        this.photoData = []
         console.error(error)
       }
     },
