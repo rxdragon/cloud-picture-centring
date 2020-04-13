@@ -99,3 +99,18 @@ export function addScoreConfig (params) {
     data: params
   })
 }
+
+/**
+ * @description 删除问题标签
+ * @method PUT
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/13
+ * @version @version 2.4.0
+ */
+export function delScoreConfig (params) {
+  return axios({
+    url: '/project_cloud/checkPool/delScoreConfig',
+    method: 'PUT',
+    data: params
+  })
+}

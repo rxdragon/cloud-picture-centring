@@ -4,6 +4,7 @@ import store from '@/store' // vuex
 import ProductModel from '@/model/ProductModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import StreamModel from '@/model/StreamModel.js'
+import uuidv4 from 'uuid'
 import { transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
@@ -128,7 +129,7 @@ export function getSearchHistory (params) {
       item.score = item.commitInfo.score
       const parentData = []
       item.tags.forEach(issueItem => {
-        const findClass = parentData.find(classItem => classItem.id === issueItem.parent.id)
+        const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
         if (findClass) {
           findClass.child.push({
             id: issueItem.id,
@@ -136,8 +137,8 @@ export function getSearchHistory (params) {
           })
         } else {
           const newClass = {
-            id: issueItem.parent.id,
-            name: issueItem.parent.name,
+            id: _.get(issueItem, 'parent.id') || uuidv4(),
+            name: _.get(issueItem, 'parent.name') || '-',
             child: [{
               id: issueItem.id,
               name: issueItem.name,

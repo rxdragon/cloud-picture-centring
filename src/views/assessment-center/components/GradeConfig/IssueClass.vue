@@ -27,7 +27,7 @@
           <!-- 编辑 -->
           <i class="el-icon-edit-outline" @click="editClass" v-else></i>
         </div>
-        <div class="tool-box"><i class="el-icon-delete"></i></div>
+        <div class="tool-box" @click="delectClass"><i class="el-icon-delete"></i></div>
       </div>
     </div>
     <div class="issue-table">
@@ -38,6 +38,7 @@
     </div>
     <issue-item v-for="issueItem in issueClassData.child"
       :key="issueItem.key" :issue-item-data="issueItem"
+      @delete="delectItem"
       :class-edit="edit" />
   </div>
 </template>
@@ -99,7 +100,7 @@ export default {
           } else {
             await GradeConfiguration.editScoreConfig(req)
           }
-          this.$emit('getlist')
+          this.$emit('getList')
         } else {
           this.$set(this.issueClassData, 'isEdit', false)
           this.issueClassData.child.forEach(issueItem => issueItem.isEdit = false)
@@ -109,9 +110,15 @@ export default {
         if (error.message) {
           this.$newMessage.warning(error.message)
         } else {
-          this.$emit('getlist')
+          this.$emit('getList')
         }
       }
+    },
+    /**
+     * @description 删除单项
+     */
+    delectItem () {
+      this.$emit('getList')
     },
     /**
      * @description 判断是否有数据
@@ -157,6 +164,18 @@ export default {
       }
       this.editClass()
       this.showAddNewProp = false
+    },
+    /**
+     * @description 删除大类
+     */
+    async delectClass () {
+      try {
+        const req = { id: this.issueClassData.id }
+        await GradeConfiguration.delScoreConfig(req)
+        this.$emit('getList')
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

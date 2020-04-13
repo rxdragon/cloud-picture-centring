@@ -14,7 +14,7 @@
         <span class="issue-operation edit" @click="saveIssueItem" v-if="edit">保存</span>
         <span class="issue-operation edit" @click="editIssueItem" v-else>编辑</span>
       </template>
-      <span class="issue-operation deleted">删除</span>
+      <span class="issue-operation deleted" @click="delectIssueItem">删除</span>
     </div>
   </div>
 </template>
@@ -28,11 +28,11 @@ export default {
     issueItemData: { type: Object, required: true },
     classEdit: { type: Boolean }
   },
+  inject: ['weight'],
   data () {
     return {
       itemName: '',
       itemWeight: 0,
-      weightScore: 5,
       isClassEdit: false
     }
   },
@@ -41,10 +41,16 @@ export default {
     edit () {
       return this.issueItemData.isEdit
     },
+    weightScore () {
+      return this.weight.score
+    },
     // 单项权重分数
     itemWeightScore () {
       return this.issueItemData.weights * this.weightScore
     }
+  },
+  created () {
+    console.log(this.weight)
   },
   methods: {
     // 编辑单项
@@ -78,6 +84,20 @@ export default {
         }
       } else {
         this.$set(this.issueItemData, 'isEdit', false)
+      }
+    },
+    /**
+     * @description 删除数据
+     */
+    async delectIssueItem () {
+      try {
+        const req = {
+          id: this.issueItemData.id
+        }
+        await GradeConfiguration.delScoreConfig(req)
+        this.$emit('delete')
+      } catch (error) {
+        console.log(error)
       }
     }
   }

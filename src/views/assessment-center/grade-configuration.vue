@@ -27,7 +27,7 @@
       </div>
       <div class="configuration-main" v-if="scoreConfigList.length">
         <issue-class v-for="issueClass in scoreConfigList"
-          @getlist="getScoreConfigList"
+          @getList="getScoreConfigList"
           :key="issueClass.key" :issue-class-data="issueClass" />
       </div>
       <div class="no-data-box" v-else>
@@ -66,6 +66,11 @@ import * as GradeConfiguration from '@/api/gradeConfiguration.js'
 export default {
   name: 'GradeConfiguration',
   components: { IssueClass },
+  provide () {
+    return {
+      weight: this.weightObject
+    }
+  },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -74,7 +79,15 @@ export default {
       cacheWeight: '',
       scoreConfigList: [],
       showAddNewClassProp: false,
-      newIssueItem: 1
+      newIssueItem: 1,
+      weightObject: {
+        score: 0
+      }
+    }
+  },
+  watch: {
+    weight () {
+      this.weightObject.score = this.weight
     }
   },
   created () {
@@ -133,7 +146,14 @@ export default {
      * @description 获取云学院评分配置
      */
     async getScoreConfigList () {
-      this.scoreConfigList = await GradeConfiguration.getScoreConfigList()
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.scoreConfigList = await GradeConfiguration.getScoreConfigList()
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 添加大类
