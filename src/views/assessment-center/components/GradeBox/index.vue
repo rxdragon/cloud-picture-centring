@@ -5,10 +5,14 @@
         <span>照片评分</span>
         <span class="score-box">总分：{{ photoInfoData.score }}</span>
       </div>
-      <div class="photo-gulp">
-        <photo-list need-preload :photo-data="photoInfoData.photoInfo.photoVersion" />
-        <div class="photo-label">
-          <div class="issue-class-box" v-for="issueClass in photoInfoData.issueLabel" :key="issueClass.id">
+      <photo-list need-preload :photo-data="photoInfoData.photoInfo.photoVersion" />
+    </div>
+    <div class="info-grid">
+      <!-- 问题标签 -->
+      <div class="panel-info" v-if="photoInfoData.issueLabel.length">
+        <div class="panel-title">问题标签</div>
+        <div class="panel-content">
+          <div class="issue-class-box panel-row" v-for="issueClass in photoInfoData.issueLabel" :key="issueClass.id">
             <div class="label-title">{{ issueClass.name }}</div>
             <div class="label-box">
               <el-tag size="medium" v-for="issueItem in issueClass.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
@@ -16,8 +20,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="info-grid">
       <!-- 订单信息 -->
       <div class="panel-info">
         <div class="panel-title">订单信息</div>
@@ -90,36 +92,6 @@ export default {
       }
     }
 
-    .photo-gulp {
-      display: flex;
-
-      .photo-label {
-        width: calc(100% - 600px);
-
-        .issue-class-box {
-          .label-title {
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 20px;
-            color: #303133;
-          }
-
-          .label-box {
-            .el-tag {
-              margin: 0 10px 20px 0;
-              font-size: 12px;
-              font-weight: 400;
-              color: #fff;
-              background: #000;
-              border-radius: 4px;
-              opacity: 0.6;
-            }
-          }
-        }
-      }
-    }
-
     .photo-box {
       margin-bottom: 20px;
     }
@@ -141,6 +113,33 @@ export default {
       padding: 0 20px;
       background-color: #fafafa;
       border-radius: 4px;
+
+      .issue-class-box {
+        display: flex;
+
+        .label-title {
+          flex-shrink: 0;
+          margin: 0 20px 0 0;
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 28px;
+          color: #303133;
+        }
+
+        .label-box {
+          margin-bottom: -10px;
+
+          .el-tag {
+            margin: 0 10px 10px 0;
+            font-size: 12px;
+            font-weight: 400;
+            color: #fff;
+            background: #000;
+            border-radius: 4px;
+            opacity: 0.6;
+          }
+        }
+      }
 
       .base-info {
         .order-info {

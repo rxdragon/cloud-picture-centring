@@ -122,9 +122,6 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      if (!item.photoData.stream) {
-        console.log(item)
-      }
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)

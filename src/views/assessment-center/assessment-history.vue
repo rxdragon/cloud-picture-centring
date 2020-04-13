@@ -88,7 +88,7 @@ export default {
       uuid: '',
       cacheTimeSpan: [],
       cacheSendStaff: '',
-      drawer: true
+      drawer: false
     }
   },
   created () {
