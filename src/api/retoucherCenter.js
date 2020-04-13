@@ -200,20 +200,16 @@ export function getPhotoProblemTagSets () {
     url: '/project_cloud/common/getPhotoProblemTagSets',
     method: 'GET'
   }).then(msg => {
-    const createData = []
     for (const key in msg) {
       msg[key].forEach(item => {
-        createData.push({
-          key: uuidv4(),
-          label: item.name,
-          id: item.id,
-          description: item.description,
-          type: key === 'photography' ? 'problemTagPhotography' : 'problemTagMakeup',
-          select: false
-        })
+        item.key = uuidv4()
+        item.label = item.name
+        item.id = item.id
+        item.type = key === 'photography' ? 'problemTagPhotography' : 'problemTagMakeup'
+        item.select = false
       })
+      msg[key].sort(() => Math.random() - 0.5)
     }
-    createData.sort(() => Math.random() - 0.5)
-    return createData
+    return msg
   })
 }

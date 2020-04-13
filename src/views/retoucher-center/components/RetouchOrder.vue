@@ -112,7 +112,7 @@ export default {
       sandClass: '', // 沙漏样式
       realAid: '',
       dialogVisible: false, // 显示问题标签
-      issueData: [], // 问题数据
+      issueData: {}, // 问题数据
       needPunchLabel: false // 是否需要标记问题
     }
   },

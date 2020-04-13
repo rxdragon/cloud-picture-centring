@@ -10,13 +10,16 @@
       v-bind="$attrs"
       v-on="$listeners">
       <div class="issue-main">
-        <el-tooltip v-for="issueItem in issueData" :key="issueItem.key" effect="dark" :content="issueItem.description" placement="top-start">
-          <el-tag
-            :effect="issueItem.select ? 'light' : 'plain'"
-            @click="selectData(issueItem.key)">
-            {{ issueItem.label }}
-          </el-tag>
-        </el-tooltip>
+        <div class="issue-box" v-for="(issueClass, issueKey) in issueData" :key="issueKey">
+          <div class="issues-class">{{ issueKey | filterName }}</div>
+          <el-tooltip v-for="issueItem in issueClass" :key="issueItem.key" effect="dark" :content="issueItem.description" placement="top-start">
+            <el-tag
+              :effect="issueItem.select ? 'light' : 'plain'"
+              @click="selectData(issueKey, issueItem.key)">
+              {{ issueItem.label }}
+            </el-tag>
+          </el-tooltip>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitData">提 交</el-button>
@@ -29,14 +32,14 @@
 export default {
   name: 'IssueLabel',
   props: {
-    issueData: { type: Array, default: () => [] }
+    issueData: { type: Object, default: () => ({}) }
   },
   methods: {
     /**
      * @description 选中标签
      */
-    selectData (key) {
-      const selectLabel = this.issueData.find(item => item.key === key)
+    selectData (classKey, key) {
+      const selectLabel = this.issueData[classKey].find(item => item.key === key)
       selectLabel.select = !selectLabel.select
     },
     /**
@@ -45,16 +48,24 @@ export default {
     submitData () {
       const problemTagPhotography = []
       const problemTagMakeup = []
-      const selectIssue = this.issueData.filter(item => item.select)
-      selectIssue.forEach(item => {
-        if (item.type === 'problemTagPhotography') {
-          problemTagPhotography.push(item.id)
-        } else {
-          problemTagMakeup.push(item.id)
-        }
-      })
+      for (const key in this.issueData) {
+        const selectIssue = this.issueData[key]
+        selectIssue.forEach(item => {
+          if (item.select && key === 'photography') {
+            problemTagPhotography.push(item.id)
+          }
+          if (item.select && key === 'makeup') {
+            problemTagMakeup.push(item.id)
+          }
+        })
+      }
       const issue = { problemTagPhotography, problemTagMakeup }
       this.$emit('submit', issue)
+    }
+  },
+  filters: {
+    filterName (value) {
+      return value === 'photography' ? '摄影：' : '化妆：'
     }
   }
 }
@@ -62,6 +73,10 @@ export default {
 
 <style lang="less" scoped>
 .issue-label {
+  & /deep/ .el-dialog__body {
+    padding: 20px 10px;
+  }
+
   & /deep/ .el-dialog__footer {
     text-align: center;
   }
@@ -69,9 +84,15 @@ export default {
   .issue-main {
     margin-bottom: -10px;
 
-    .el-tag {
-      margin: 0 10px 10px 0;
-      cursor: pointer;
+    .issue-box {
+      .issues-class {
+        margin-bottom: 10px;
+      }
+
+      .el-tag {
+        margin: 0 10px 10px 0;
+        cursor: pointer;
+      }
     }
   }
 }
