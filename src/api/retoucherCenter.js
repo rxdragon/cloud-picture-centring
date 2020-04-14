@@ -1,4 +1,5 @@
 // retoucherCenter
+const uuidv4 = require('uuid/v4')
 import axios from '@/plugins/axios.js'
 import { keyToHump } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
@@ -99,6 +100,7 @@ export function getStreamInfo (params) {
     createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
     createData.hourGlass = msg.hour_glass
     createData.reviewerNote = _.get(msg, 'tags.values.review_reason', '暂无审核备注')
+    createData.needPunchLabel = msg.order.photographer_org_id === 1
     return createData
   })
 }
@@ -186,5 +188,28 @@ export function getRetouchQuotaList (params) {
     })
     createData.list = msg.list
     return createData
+  })
+}
+
+/**
+ * @description 获取历史修图报告列表
+ * @param {*} params
+ */
+export function getPhotoProblemTagSets () {
+  return axios({
+    url: '/project_cloud/common/getPhotoProblemTagSets',
+    method: 'GET'
+  }).then(msg => {
+    for (const key in msg) {
+      msg[key].forEach(item => {
+        item.key = uuidv4()
+        item.label = item.name
+        item.id = item.id
+        item.type = key === 'photography' ? 'problemTagPhotography' : 'problemTagMakeup'
+        item.select = false
+      })
+      msg[key].sort(() => Math.random() - 0.5)
+    }
+    return msg
   })
 }
