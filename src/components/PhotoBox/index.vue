@@ -2,7 +2,7 @@
   <div class="photo">
     <div class="img-box">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
+      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto" @click.native="openMask">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
@@ -178,6 +178,12 @@ export default {
         this.linkTag.setAttribute('as', 'image')
         head.appendChild(this.linkTag)
       }
+    },
+    /**
+     * @description 点击查看退单标记
+     */
+    openMask () {
+      this.$emit('openMask')
     }
   }
 }

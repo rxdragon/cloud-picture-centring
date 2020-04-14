@@ -16,12 +16,42 @@
     </div>
     <!-- 照片信息 -->
     <order-info :order-data="orderData" />
-    <!-- 图片信息 -->
+    <!-- 成片信息 -->
+    <div class="photo-module module-panel" v-if="orderData.streamState === 'store_return_retouch'">
+      <div class="photo-panel-title panel-title">
+        <span>云端成片</span>
+        <div class="button-box">
+          <el-button type="primary" size="small" @click="oneAllDownPic(true)">一键下载成片</el-button>
+        </div>
+      </div>
+      <div class="photo-panel">
+        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box" :class="{ 'over-success': photoItem.isCover }">
+          <photo-box
+            downing
+            :stream-num="orderData.streamNum"
+            photo-name
+            preload-photo
+            :tags="photoItem.tags"
+            show-joint-label
+            show-recede-reason
+            :src="photoItem.path"
+            :people-num="photoItem.people_num"
+            :is-original-pre="false"
+            @openMask="operateMask(true,photoItem.id)"
+          />
+        </div>
+        <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
+          <span>备注原因：</span>
+          <div class="remark-content">{{ reviewerNote }}</div>
+        </div>
+      </div>
+    </div>
+     <!-- 原片信息 -->
     <div class="photo-module module-panel">
       <div class="photo-panel-title panel-title">
         <span>原片信息</span>
         <div class="button-box">
-          <el-button type="primary" size="small" @click="oneAllDownOrign">一键下载原片</el-button>
+          <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载原片</el-button>
         </div>
       </div>
       <div class="photo-panel">
@@ -60,6 +90,11 @@
         @change="uploadDown"
       />
     </div>
+    <ReturnImgPre
+      v-if="imgPreMask"
+      :pre-index-photo="preIndexPhoto"
+      @closeMask="operateMask(false)"
+    />
   </div>
 </template>
 
@@ -72,10 +107,11 @@ import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
+import ReturnImgPre from './ReturnImgPre'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto },
+  components: { OrderInfo, PhotoBox, UploadPhoto, ReturnImgPre },
   props: {
     showDetail: { type: Boolean }
   },
@@ -107,7 +143,9 @@ export default {
       overTime: 0, // 超时时间
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
-      realAid: ''
+      realAid: '',
+      preIndexPhoto: {},
+      imgPreMask: false
     }
   },
   computed: {
@@ -265,6 +303,13 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    /**
+     * @description 打开关闭遮盖层
+     */
+    operateMask (type, id) {
+      this.imgPreMask = type
+      this.preIndexPhoto = this.photos.find(item => item.id === id) || {}
     }
   }
 }
