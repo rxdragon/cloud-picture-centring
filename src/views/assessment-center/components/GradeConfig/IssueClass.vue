@@ -67,6 +67,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 编辑标签大类
+     */
     editClass () {
       this.cacheData = JSON.parse(JSON.stringify(this.issueClassData))
       this.$set(this.issueClassData, 'isEdit', true)
@@ -77,34 +80,30 @@ export default {
      */
     async saveClass () {
       try {
-        if (this.hasEditData()) {
-          const req = {
-            mainName: this.issueClassData.name,
-            configData: []
-          }
-          if (this.issueClassData.id) {
-            req.id = this.issueClassData.id
-          }
-          this.issueClassData.child.forEach(item => {
-            const createData = {
-              name: item.name,
-              weights: item.weights
-            }
-            if (item.id) {
-              createData.id = item.id
-            }
-            req.configData.push(createData)
-          })
-          if (this.issueClassData.isNewAdd) {
-            await GradeConfiguration.addScoreConfig(req)
-          } else {
-            await GradeConfiguration.editScoreConfig(req)
-          }
-          this.$emit('getList')
-        } else {
+        if (!this.hasEditData()) {
           this.$set(this.issueClassData, 'isEdit', false)
           this.issueClassData.child.forEach(issueItem => issueItem.isEdit = false)
+          return false
         }
+        const req = {
+          mainName: this.issueClassData.name,
+          configData: []
+        }
+        if (this.issueClassData.id) { req.id = this.issueClassData.id }
+        this.issueClassData.child.forEach(item => {
+          const createData = {
+            name: item.name,
+            weights: item.weights
+          }
+          if (item.id) { createData.id = item.id }
+          req.configData.push(createData)
+        })
+        if (this.issueClassData.isNewAdd) {
+          await GradeConfiguration.addScoreConfig(req)
+        } else {
+          await GradeConfiguration.editScoreConfig(req)
+        }
+        this.$emit('getList')
       } catch (error) {
         console.error(error)
         if (error.message) {

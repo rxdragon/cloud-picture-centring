@@ -10,7 +10,7 @@
     <div class="main module-panel">
       <div class="add-configuration-item">
         <el-popover
-          placement="bottom-end"
+          placement="bottom-start"
           width="462"
           popper-class="add-new-item"
           :offset="20"

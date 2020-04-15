@@ -73,11 +73,8 @@ export default {
           endAt: joinTimeSpan(timeSpan[1], 1)
         }
         const chartData = await AssessmentCenter.getCloudProblemReport(req)
-        if (!chartData) {
-          this.isNoData = true
-          return false
-        }
-        this.isNoData = false
+        this.isNoData = !Boolean(chartData)
+        if (this.isNoData) return false
         const chartOption = option(chartData)
         this.myChart.setOption(chartOption, true)
       } catch (error) {

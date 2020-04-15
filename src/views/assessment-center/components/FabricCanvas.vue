@@ -345,13 +345,14 @@ export default {
      * @description 上传照片到七牛云
      */
     async outPhoto () {
-      // TODO 检测canvas是否空
       const base64Data = this.canvasDom.toDataURL()
       const blobData = CanvasTool.convertBase64ToBlob(base64Data)
       const fileData = CanvasTool.structureFile(blobData)
-      const data = await CanvasTool.uploadTagPhoto(fileData, this.qNConfig)
-      return data
+      return await CanvasTool.uploadTagPhoto(fileData, this.qNConfig)
     },
+    /**
+     * @description 判断canvas是否为空
+     */
     hasDraw () {
       return !this.canvasDom.isEmpty()
     }
