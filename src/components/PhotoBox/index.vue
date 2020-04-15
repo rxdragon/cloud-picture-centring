@@ -2,7 +2,7 @@
   <div class="photo">
     <div class="img-box">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto" @click.native="openMask">
+      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto" @click.native="operateMask(true)">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
@@ -18,18 +18,24 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
-    <div v-if="specialEffects" class="recede-reason">
+    <div v-if="!returnPhoto && specialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
-    <div v-if="storeReworkReason" class="recede-reason">
-      门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
+     <div v-if="returnPhoto" class="return-reason-box">
+      <div v-if="storeReworkReason.length" class="recede-reason">
+        门店退回标记： <span class="return-tag" v-for="(item,index) in storeReworkReason" :key="index">{{ item }}</span>
+      </div>
+      <div v-if="recedeReason" class="recede-reason">
+        审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
+      </div>
     </div>
-    <div v-if="storeReworkNote" class="recede-reason">
-      门店退回备注： <span class="reason-content">{{ storeReworkNote }}</span>
-    </div>
-    <div v-if="recedeReason" class="recede-reason">
-      审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
-    </div>
+    <!-- 退回标记预览 -->
+    <ReturnImgPre
+      v-if="returnPhoto && showReturnPre"
+      :pre-index-photo="photo"
+      :stream-num="streamNum"
+      @closeMask="operateMask(false)"
+    />
   </div>
 </template>
 
@@ -37,10 +43,11 @@
 import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewCanvasImg from '@/components/PreviewCanvasImg'
+import ReturnImgPre from '@/components/ReturnImgPre'
 
 export default {
   name: 'PhotoBox',
-  components: { PreviewCanvasImg },
+  components: { PreviewCanvasImg, ReturnImgPre },
   filters: {
     filterJointLabel (jointLabel) {
       return jointLabel[1]
@@ -49,9 +56,13 @@ export default {
     }
   },
   props: {
+    photo: { type: Object, default: () => {
+      return null
+    } }, // 当前预览图片信息
     src: { type: String, default: '' }, // 地址图片
     photoName: { type: Boolean },
     peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
+    returnPhoto: { type: Boolean },
     downing: { type: Boolean }, // 是够开启下载功能
     preview: { type: Boolean }, // 是否开启单张预览功能
     previewBreviary: { type: Boolean }, // 开启单张缩略预览功能
@@ -64,14 +75,16 @@ export default {
     preloadPhoto: { type: Boolean },
     useEleImage: { type: Boolean, default: true },
     isLekima: { type: Boolean },
-    fileData: { type: Object, default: null }
+    fileData: { type: Object, default: null },
+    imgType: { type: String, default: '' }
   },
   data () {
     return {
       breviary: '!thumb.small.50',
       linkTag: null,
       limitSize: 20 * 1024 * 1024,
-      showCanvas: false
+      showCanvas: false,
+      showReturnPre: false
     }
   },
   computed: {
@@ -97,9 +110,9 @@ export default {
     storeReworkReason () {
       const hasStoreReworkReason = this.tags && this.tags.values && this.tags.values.store_rework_reason
       if (this.showRecedeReason && hasStoreReworkReason) {
-        return this.tags.values.store_rework_reason
+        return this.tags.values.store_rework_reason.split('+')
       } else {
-        return ''
+        return []
       }
     },
     // 门店退回备注
@@ -180,10 +193,10 @@ export default {
       }
     },
     /**
-     * @description 点击查看退单标记
+     * @description 打开关闭遮盖层
      */
-    openMask () {
-      this.$emit('openMask')
+    operateMask (type) {
+      this.showReturnPre = type
     }
   }
 }
@@ -199,6 +212,10 @@ export default {
   padding-bottom: 100%;
   overflow: hidden;
   border-radius: 4px;
+
+  img {
+    cursor: pointer;
+  }
 
   .joint-label {
     position: absolute;
@@ -299,12 +316,27 @@ export default {
 }
 
 .recede-reason {
+  display: flex;
+  flex-wrap: wrap;
   padding-top: 9px;
   margin: 0 6px 6px;
   font-size: 12px;
   line-height: 20px;
   color: @red;
   border-top: 1px solid #ebeef5;
+
+  .return-tag {
+    max-width: 130px;
+    padding: 3px 5px;
+    margin: 0 10px 5px 0;
+    overflow: hidden;
+    font-size: 12px;
+    color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: #535353;
+    border-radius: 5px;
+  }
 
   .reason-content {
     color: #606266;

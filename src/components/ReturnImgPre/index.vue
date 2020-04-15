@@ -1,8 +1,8 @@
 <template>
-  <div class="pre-mask">
+  <div class="pre-mask" v-loading="loading">
     <div class="left-box">
       <div class="title-box">
-        <label>{{preImgType?'云端成片':'原图'}}</label>
+        <label>{{ preImgType ? '云端成片' : '原图' }}</label>
         <el-switch
           class="img-switch"
           v-model="preImgType"
@@ -40,7 +40,7 @@
               <div
                 class="retouch-reason"
               >
-                <div class="reason-tag-list"><span v-for="(itemsub, indexsub) in changeTag(item.reason)" :key="indexsub" class="reason-item">{{itemsub}}</span></div>
+                <div class="reason-tag-list"><span v-for="(itemsub, indexsub) in changeTag(item.reason)" :key="indexsub" class="reason-item">{{ itemsub }}</span></div>
                 <div class="detail-box" v-if="item.note">
                   <p class="triangle-left"></p>
                   <span class="detail-content">{{ item.note }}</span>
@@ -77,8 +77,8 @@
       </div>
       <div class="right-main">
         <p class="tips">照片整体原因</p>
-        <div class="reason-tag-list"><span v-for="(item, index) in changeTag(preIndexPhoto.tags.values.store_rework_reason)" :key="index" class="reason-item">{{item}}</span></div>
-        <p class="reason-note">{{preIndexPhoto.tags.values.store_rework_note}}</p>
+        <div class="reason-tag-list"><span v-for="(item, index) in changeTag(preIndexPhoto.tags.values.store_rework_reason)" :key="index" class="reason-item">{{ item }}</span></div>
+        <p class="reason-note" v-if="preIndexPhoto.tags.values.store_rework_note">{{ preIndexPhoto.tags.values.store_rework_note }}</p>
       </div>
       <el-footer class="operate-box">
         <el-button type="primary" size="medium" @click="download()">下载云端成片</el-button>
@@ -90,13 +90,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import DownIpc from '@electronMain/ipc/DownIpc'
 
 export default {
   name: 'ReturnImgPre',
   props: {
     preIndexPhoto: { type: Object, default: () => {
       return null
-    } }
+    } },
+    streamNum: { type: String, default: '' }
   },
   data () {
     return {
@@ -150,8 +152,15 @@ export default {
       this.$refs['sign-dom'].style.height = this.$refs['retouch-img'].height + 'px'
       this.loading = false
     },
+    /**
+     * @description 下载当前成片
+     */
     download () {
-      //
+      const photoArr = [{
+        url: this.preIndexPhoto.returnPhotoPath,
+        path: `/${this.streamNum}`
+      }]
+      DownIpc.addDownloadFiles(photoArr)
     },
     /**
      * @description 鼠标移动
@@ -258,14 +267,11 @@ export default {
       flex-wrap: wrap;
 
       .reason-item {
-        max-width: 120px;
+        width: max-content;
         padding: 10px;
         margin: 0 10px 10px 0;
-        overflow: hidden;
         font-size: 13px;
         color: #fff;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         background: rgba(0, 0, 0, 0.5);
         border-radius: 5px;
       }

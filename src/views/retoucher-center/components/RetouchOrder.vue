@@ -21,7 +21,7 @@
       <div class="photo-panel-title panel-title">
         <span>云端成片</span>
         <div class="button-box">
-          <el-button type="primary" size="small" @click="oneAllDownPic(true)">一键下载成片</el-button>
+          <el-button type="primary" size="small" @click="oneAllDownOrign(true)">一键下载成片</el-button>
         </div>
       </div>
       <div class="photo-panel">
@@ -31,13 +31,14 @@
             :stream-num="orderData.streamNum"
             photo-name
             preload-photo
+            return-photo
             :tags="photoItem.tags"
             show-joint-label
             show-recede-reason
-            :src="photoItem.path"
+            :photo="photoItem"
+            :src="photoItem.returnPhotoPath"
             :people-num="photoItem.people_num"
             :is-original-pre="false"
-            @openMask="operateMask(true,photoItem.id)"
           />
         </div>
         <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
@@ -63,6 +64,7 @@
             preload-photo
             show-joint-label
             show-recede-reason
+            :photo="photoItem"
             :stream-num="orderData.streamNum"
             :tags="photoItem.tags"
             :src="photoItem.path"
@@ -90,11 +92,6 @@
         @change="uploadDown"
       />
     </div>
-    <ReturnImgPre
-      v-if="imgPreMask"
-      :pre-index-photo="preIndexPhoto"
-      @closeMask="operateMask(false)"
-    />
   </div>
 </template>
 
@@ -107,11 +104,10 @@ import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
-import ReturnImgPre from './ReturnImgPre'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto, ReturnImgPre },
+  components: { OrderInfo, PhotoBox, UploadPhoto },
   props: {
     showDetail: { type: Boolean }
   },
@@ -165,13 +161,13 @@ export default {
   },
   methods: {
     /**
-     * @description 一键下载原片
+     * @description 一键下载照片 true:成片， false:原片
      */
-    oneAllDownOrign () {
+    oneAllDownOrign (type) {
       const savePath = `/${this.orderData.streamNum}`
       const photoArr = this.photos.map(photoItem => {
         return {
-          url: photoItem.path,
+          url: type ? photoItem.returnPhotoPath : photoItem.path,
           path: savePath
         }
       })
@@ -295,13 +291,6 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
-    },
-    /**
-     * @description 打开关闭遮盖层
-     */
-    operateMask (type, id) {
-      this.imgPreMask = type
-      this.preIndexPhoto = this.photos.find(item => item.id === id) || {}
     }
   }
 }
