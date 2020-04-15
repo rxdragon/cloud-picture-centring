@@ -78,7 +78,6 @@
     "commitlint": "^8.2.0",
     "conventional-changelog-cli": "^2.0.28",
     "electron": "^6.0.0",
-    "electron-icon-builder": "^1.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "husky": "^3.0.9",
