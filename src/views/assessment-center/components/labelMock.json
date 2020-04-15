@@ -1,198 +1,198 @@
 [
   {
-    "label": "液化",
+    "name": "液化",
     "id": 1,
-    "issueData": [
+    "child": [
       {
         "id": 1,
         "pid": 1,
-        "label": "发型"
+        "name": "发型"
       },
       {
         "id": 2,
         "pid": 1,
-        "label": "脸型"
+        "name": "脸型"
       },
       {
         "id": 3,
         "pid": 1,
-        "label": "五官"
+        "name": "五官"
       },
       {
         "id": 4,
         "pid": 1,
-        "label": "脖子"
+        "name": "脖子"
       },
       {
         "id": 5,
         "pid": 1,
-        "label": "身型"
+        "name": "身型"
       }
     ]
   },
   {
-    "label": "磨皮",
+    "name": "磨皮",
     "id": 2,
-    "issueData": [
+    "child": [
       {
         "id": 6,
         "pid": 2,
-        "label": "瑕疵"
+        "name": "瑕疵"
       },
       {
         "id": 7,
         "pid": 2,
-        "label": "过度"
+        "name": "过度"
       },
       {
         "id": 8,
         "pid": 2,
-        "label": "均匀"
+        "name": "均匀"
       },
       {
         "id": 9,
         "pid": 2,
-        "label": "结构"
+        "name": "结构"
       },
       {
         "id": 10,
         "pid": 2,
-        "label": "淡化"
+        "name": "淡化"
       },
       {
         "id": 11,
         "pid": 2,
-        "label": "质感"
+        "name": "质感"
       }
     ]
   },
   {
-    "label": "调光",
+    "name": "调光",
     "id": 3,
-    "issueData": [
+    "child": [
       {
         "id": 12,
         "pid": 3,
-        "label": "明暗"
+        "name": "明暗"
       },
       {
         "id": 13,
         "pid": 3,
-        "label": "对比度"
+        "name": "对比度"
       },
       {
         "id": 14,
         "pid": 3,
-        "label": "光影协调"
+        "name": "光影协调"
       }
     ]
   },
   {
-    "label": "调色",
+    "name": "调色",
     "id": 4,
-    "issueData": [
+    "child": [
       {
         "id": 15,
         "pid": 4,
-        "label": "色温"
+        "name": "色温"
       },
       {
         "id": 16,
         "pid": 4,
-        "label": "色相"
+        "name": "色相"
       },
       {
         "id": 17,
         "pid": 4,
-        "label": "饱和度"
+        "name": "饱和度"
       }
     ]
   },
   {
-    "label": "背景",
+    "name": "背景",
     "id": 5,
-    "issueData": [
+    "child": [
       {
         "id": 18,
         "pid": 5,
-        "label": "背景干净"
+        "name": "背景干净"
       },
       {
         "id": 19,
         "pid": 5,
-        "label": "背景色"
+        "name": "背景色"
       },
       {
         "id": 20,
         "pid": 5,
-        "label": "人物边缘"
+        "name": "人物边缘"
       }
     ]
   },
   {
-    "label": "美观度",
+    "name": "美观度",
     "id": 6,
-    "issueData": [
+    "child": [
       {
         "id": 21,
         "pid": 6,
-        "label": "双下巴"
+        "name": "双下巴"
       },
       {
         "id": 22,
         "pid": 6,
-        "label": "法令纹"
+        "name": "法令纹"
       },
       {
         "id": 23,
         "pid": 6,
-        "label": "木偶纹"
+        "name": "木偶纹"
       },
       {
         "id": 24,
         "pid": 6,
-        "label": "笑纹"
+        "name": "笑纹"
       },
       {
         "id": 25,
         "pid": 6,
-        "label": "协调度"
+        "name": "协调度"
       }
     ]
   },
   {
-    "label": "穿帮",
+    "name": "穿帮",
     "id": 7,
-    "issueData": [
+    "child": [
       {
         "id": 26,
         "pid": 7,
-        "label": "工具类"
+        "name": "工具类"
       },
       {
         "id": 27,
         "pid": 7,
-        "label": "调光调色类"
+        "name": "调光调色类"
       },
       {
         "id": 28,
         "pid": 7,
-        "label": "利奇马"
+        "name": "利奇马"
       },
       {
         "id": 29,
         "pid": 7,
-        "label": "抠图类"
+        "name": "抠图类"
       },
       {
         "id": 30,
         "pid": 7,
-        "label": "重影"
+        "name": "重影"
       },
       {
         "id": 31,
         "pid": 7,
-        "label": "边缘"
+        "name": "边缘"
       }
     ]
   }

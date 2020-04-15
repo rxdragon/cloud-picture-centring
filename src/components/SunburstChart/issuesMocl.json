@@ -1,0 +1,59 @@
+[
+  {
+    "count": 11,
+    "name": "液化",
+    "value": 11,
+    "itemStyle": {
+      "color": "hsl(0, 78%, 63%)"
+    },
+    "children": [
+      {
+        "id": 19,
+        "count": 5,
+        "name": "液化不得行啊",
+        "value": 5,
+        "itemStyle": {
+          "color": "hsl(15, 78%, 58%)"
+        }
+      },
+      {
+        "id": 20,
+        "count": 6,
+        "name": "液化太多",
+        "value": 6,
+        "itemStyle": {
+          "color": "hsl(30, 78%, 58%)"
+        }
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "count": 5,
+    "name": "穿帮",
+    "value": 2,
+    "itemStyle": {
+      "color": "hsl(29, 78%, 63%)"
+    },
+    "children": [
+      {
+        "id": 22,
+        "count": 2,
+        "name": "老细类",
+        "value": 2,
+        "itemStyle": {
+          "color": "hsl(44, 78%, 58%)"
+        }
+      },
+      {
+        "id": 23,
+        "count": 0,
+        "name": "新细类",
+        "value": 0,
+        "itemStyle": {
+          "color": "hsl(59, 78%, 58%)"
+        }
+      }
+    ]
+  }
+]

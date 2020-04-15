@@ -1,9 +1,14 @@
 // assessmentCenter
 import axios from '@/plugins/axios.js'
 import store from '@/store' // vuex
+import ProductModel from '@/model/ProductModel.js'
+import PhotoModel from '@/model/PhotoModel.js'
+import StreamModel from '@/model/StreamModel.js'
+import uuidv4 from 'uuid'
 import { transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import * as Colors from "@/utils/colors"
 
 /**
  * @description 获取今日抽片指标
@@ -59,7 +64,7 @@ export function getSpotCheckResult (params) {
     params
   }).then(msg => {
     const data = msg.data
-    let allPhotoPath = []
+    let allPhotoPath = [] // 预加载使用
     if (!data.length) {
       SessionTool.removeCloudAssessmentPhotoId()
       return {
@@ -69,30 +74,17 @@ export function getSpotCheckResult (params) {
         pageTotal: msg.total || null
       }
     }
-    data.forEach(item => {
-      item.retouchNote = _.get(item, 'photoData.stream.note.retouch_note', '-')
-      item.isReturn = _.get(item, 'photoData.tags.statics', []).includes('return_photo')
-      // 照片版本
-      item.firstPhoto = item.photoData.first_photo
-      item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')
-      item.completePhoto = item.photoData.other_photo_version.find(item => item.version === 'complete_photo')
-      item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
-      allPhotoPath = [...allPhotoPath, ...item.photoVersion]
-      item.retouchStandard = item.retouch_standard
-      item.productName = item.photoData.stream && item.photoData.stream.product && item.photoData.stream.product.name
-      item.isPull = _.get(item, 'photoData.tags.statics', []).includes('pull')
-      item.isPlant = _.get(item, 'photoData.tags.statics', []).includes('plant')
-      item.reworkReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.rework_reason
-      item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
-      item.grassReason = item.photoData.tags && item.photoData.tags.values && item.photoData.tags.values.grass_reason
-      // 是否是绿色通道
-      item.isGreen = _.get(item, 'photoData.stream.tags.statics').includes('green_stream')
-      const retouchRequire = {
-        eye: '暂无',
-        face: '暂无',
-        pimples: false
-      }
-      item.retouchRequire = _.get(item, 'photoData.stream.tags.values.retouch_claim', retouchRequire)
+    const total = msg.extend.processInfo[0].totalCount
+    data.forEach((item, index) => {
+      item.productInfo = new ProductModel(item.photoData.stream.product)
+      item.photoInfo = new PhotoModel(item.photoData)
+      item.streamInfo = new StreamModel(item.photoData.stream)
+      // 照片编号
+      const photoIndex = index + params.skip + 1 + msg.commitNum
+      item.photoIndex = `${total}-${photoIndex}`
+      // 加载预加载，与业务无关
+      const photoVersion = item.photoInfo.photoVersion
+      allPhotoPath = [...allPhotoPath, ...photoVersion]
     })
     if (!+store.getters.cacheImageSwitch) {
       PhotoTool.readAllPhoto(allPhotoPath)
@@ -100,7 +92,7 @@ export function getSpotCheckResult (params) {
     const createData = {
       list: data,
       allPhotoPath,
-      total: msg.extend.processInfo[0].totalCount,
+      total,
       pageTotal: msg.total || null
     }
     return createData
@@ -131,45 +123,31 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      item.retouchNote = _.get(item, 'photoData.stream.note.retouch_note', '暂无修图备注')
-      item.isReturn = _.get(item, 'photoData.tags.statics', []).includes('return_photo')
-      // 照片版本
-      item.firstPhoto = item.photoData.first_photo
-      item.originalPhoto = item.photoData.other_photo_version.find(item => item.version === 'original_photo')
-      item.completePhoto = item.photoData.other_photo_version.find(item => item.version === 'complete_photo')
-      item.photoVersion = item.isReturn ? [item.originalPhoto, item.firstPhoto, item.completePhoto] : [item.originalPhoto, item.completePhoto]
-      item.productName = _.get(item, 'photoData.stream.product.name', '-')
-      item.retouchName = _.get(item, 'photoData.stream.retoucher.name') || _.get(item, 'photoData.stream.retoucher.real_name') || '暂无信息'
-      item.retouchLeaderName = _.get(item, 'photoData.stream.retoucher.retoucher_leader.nickname') ||
-        _.get(item, 'photoData.stream.retoucher.retoucher_leader.nickname') || '暂无'
-      item.retouchStandard = item.retouch_standard
-
-      item.isPull = false
-      item.isPlant = false
-      if (item.photoData.tags && item.photoData.tags.statics) {
-        item.isPull = item.photoData.tags.statics.includes('pull')
-        item.isPlant = item.photoData.tags.statics.includes('plant')
-      }
-
-      item.storeName = '暂无信息'
-      if (item.photoData.stream.order.tags) {
-        item.storeName = item.photoData.stream.order.tags.values.store_name
-      }
-
-      item.reworkReason = item.photoData.tags.values.rework_reason
-      item.grassReason = item.photoData.tags.values.grass_reason
-      item.reviewerNote = item.photoData.stream && item.photoData.stream.reviewer_note
-
-      item.isGreen = _.get(item, 'photoData.stream.tags.statics', []).includes('green_stream')
-
-      const retouchRequire = {
-        eye: '暂无',
-        face: '暂无',
-        pimples: false
-      }
-
-      item.retouchRequire = _.get(item, 'photoData.stream.tags.values.retouch_claim', retouchRequire)
-      item.streamNum = item.photoData.stream.stream_num
+      item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
+      item.photoInfo = new PhotoModel(item.photoData)
+      item.streamInfo = new StreamModel(item.photoData.stream)
+      item.score = item.commitInfo.score
+      const parentData = []
+      item.tags.forEach(issueItem => {
+        const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
+        if (findClass) {
+          findClass.child.push({
+            id: issueItem.id,
+            name: issueItem.name
+          })
+        } else {
+          const newClass = {
+            id: _.get(issueItem, 'parent.id') || uuidv4(),
+            name: _.get(issueItem, 'parent.name') || '-',
+            child: [{
+              id: issueItem.id,
+              name: issueItem.name,
+            }]
+          }
+          parentData.push(newClass)
+        }
+      })
+      item.issueLabel = parentData
     })
     return {
       list: data,
@@ -178,3 +156,101 @@ export function getSearchHistory (params) {
   })
 }
 
+/**
+ * @description 获取问题标签
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/10
+ * @version @version 2.4.0
+ */
+export function getScoreConfigList () {
+  return axios({
+    url: '/project_cloud/checkPool/getScoreConfigList',
+    method: 'GET'
+  }).then(msg => {
+    msg.forEach(item => {
+      item.child.forEach(issItem => issItem.isSelect = false)
+    })
+    return msg
+  })
+}
+
+/**
+ * @description 获取问题标签筛选框
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/10
+ * @version @version 2.4.0
+ */
+export function getIssueList () {
+  return axios({
+    url: '/project_cloud/checkPool/getScoreConfigList',
+    method: 'GET'
+  }).then(msg => {
+    const createData = msg.map(item => {
+      item.children = item.child.map(issueItem => {
+        return {
+          value: issueItem.id,
+          label: issueItem.name
+        }
+      })
+      return {
+        value: item.id,
+        label: item.name,
+        children: item.children
+      }
+    })
+    return createData
+  })
+}
+
+/**
+ * @description 获取问题标签报告数据
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/12
+ * @version @version 2.4.0
+ */
+export function getCloudProblemReport (params) {
+  return axios({
+    url: '/project_cloud/checkPool/getCloudProblemReport',
+    method: 'GET',
+    params
+  }).then(msg => {
+    let allCount = 0
+    msg.forEach((classItem, classIndex) => {
+      classItem.value = 0
+      allCount += Number(classItem.count)
+      classItem.itemStyle = {
+        color: Colors.getColor(classIndex)
+      },
+      classItem.child.forEach((issueItem, issueIndex) => {
+        issueItem.value = issueItem.count
+        classItem.value += Number(issueItem.count)
+        issueItem.itemStyle = {
+          color: Colors.getColorNear(classIndex, issueIndex)
+        }
+      })
+      classItem.children = classItem.child
+    })
+    if (!allCount) return null
+    return msg
+  })
+}
+
+/**
+ * @description 获取问题标签柱状图
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/12
+ * @version @version 2.4.0
+ */
+export function getCloudProblemReportByGroup (params) {
+  return axios({
+    url: '/project_cloud/checkPool/getCloudProblemReportByGroup',
+    method: 'GET',
+    params
+  }).then(msg => {
+    return msg
+  })
+}

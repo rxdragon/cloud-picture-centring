@@ -57,7 +57,7 @@ export function uploadTagPhoto (fileData, upyunConfig) {
     params.append(key, upyunConfig[key])
   }
   return instanceAxios({
-    url: store.getters.updateDomain + upyunConfig.bucket,
+    url: store.getters.updateDomain,
     method: 'POST',
     data: params
   }).then(res => {

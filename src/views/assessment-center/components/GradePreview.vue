@@ -2,20 +2,36 @@
   <div class="grade-preview">
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}
+      <div class="driver-star" @click.stop="guide">?</div>
       <button type="button" class="button-close" @click="closePreview">
         <i id="closeImg" class="el-icon-close" />
       </button>
     </div>
-    <div class="photoBox">
+    <div class="photoBox" v-loading="allLoading">
       <!-- 画板工具 -->
       <div class="photo-tool">
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'move' }" @click.capture="changeDrawType('move')">
           <i id="move" class="el-icon-rank" data-type="move" />
           <span class="shortcut">V</span>
         </div>
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="createCanvas">
-          <i id="pen" class="el-icon-edit" />
-          <span class="shortcut">B</span>
+        <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="changeDrawType('pen')">
+          <el-popover
+            placement="right-start"
+            width="30"
+            popper-class="pen-weight"
+            trigger="click">
+            <div class="pen-list">
+              <div class="pen-item"
+                v-for="penWeightItem in penWeight" :key="penWeightItem.label"
+                @click="changeLineWidth(penWeightItem)">
+                <div class="pen-box" :class="penWeightItem.active ? penWeightItem.label + ' active' :penWeightItem.label "></div>
+              </div>
+            </div>
+            <div slot="reference">
+              <i id="pen" class="el-icon-edit" />
+              <span class="shortcut">B</span>
+            </div>
+          </el-popover>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'arrow' }" @click="changeDrawType('arrow')">
           <i id="arrow" class="el-icon-top-right" />
@@ -34,17 +50,6 @@
         <div class="tool" @click="changeDrawType('delete')">
           <i id="delete" class="el-icon-delete" />
         </div>
-        <el-popover
-          placement="right"
-          width="200"
-          popper-class="tool-line"
-          trigger="click"
-        >
-          <el-slider v-model="canvasOption.lineWidth" />
-          <div slot="reference" class="tool">
-            <i id="lineWidth" class="el-icon-s-operation" />
-          </div>
-        </el-popover>
         <div class="tool tool-color">
           <el-color-picker v-model="canvasOption.penColor" size="mini" />
         </div>
@@ -62,7 +67,10 @@
             @click="zoom"
           >
           <div id="_magnifier_layer" />
-          <fabric-canvas v-if="showCanvas" ref="fabric-canvas" :style="photoZoomStyle" :option-obj="canvasOption" @cancelDeleteLabel="addDeleteLabel" @click.native="zoom" />
+          <fabric-canvas v-if="showCanvas" ref="fabric-canvas"
+            :style="photoZoomStyle" :option-obj="canvasOption"
+            :show-canvas="isFinishPhoto"
+            @cancelDeleteLabel="addDeleteLabel" @click.native="zoom" />
         </div>
         <!-- left按钮 -->
         <button
@@ -85,64 +93,55 @@
       </div>
       <!-- 右边栏 -->
       <div class="photo-mark">
-        <!-- 缩略图 -->
-        <div id="smallImg" v-loading="loading" class="small-img">
-          <div v-show="isShow" class="breviary-photo">
-            <div class="smallPhoto">
-              <div id="img-box" style="position: relative;">
-                <img
-                  :src="showPhoto.src"
-                  alt="缩略图"
-                  @mouseout="handOut"
-                  @mousemove="handMove"
-                  @mouseover="handOver"
-                >
-                <div class="_magnifier_zoom" />
+        <div class="scroll-box">
+          <!-- 缩略图 -->
+          <div id="smallImg" v-loading="loading" class="small-img">
+            <div v-show="isShow" class="breviary-photo">
+              <div class="smallPhoto">
+                <div id="img-box" style="position: relative;">
+                  <img
+                    :src="showPhoto.src"
+                    alt="缩略图"
+                    @mouseout="handOut"
+                    @mousemove="handMove"
+                    @mouseover="handOver"
+                  >
+                  <div class="_magnifier_zoom" />
+                </div>
+              </div>
+              <div class="contant">
+                <el-slider :show-tooltip="false" v-model="scaleNum" />
+                <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+                <span class="down-button" @click.stop="downing">下载</span>
               </div>
             </div>
-            <div class="contant">
-              <el-slider v-model="scaleNum" />
-              {{ scaleNum * 4 + 100 }}%
-              <div class="driver-star" @click.stop="guide">?</div>
-            </div>
-            <div class="down-button" @click="outPut">导出</div>
-
           </div>
-        </div>
-        <order-info-module :order-info="info" />
-        <div class="issue-label">
-          <el-tag
-            v-for="tag in cacheLabel"
-            :key="tag.id"
-            class="cache-issue"
-            closable
-            disable-transitions
-            size="mini"
-            type="info"
-            @close="tagClose(tag)"
-          >
-            {{ tag.label }}
-          </el-tag>
-        </div>
-        <!-- 问题标签 -->
-        <div class="order-label">
-          <template v-for="(labelClassItem, labelClassIndex) in labelData">
-            <div v-if="labelClassItem.issueData.length" :key="labelClassIndex" class="label-box">
-              <div class="label-class-title">{{ labelClassItem.label }}</div>
-              <div class="label-content">
-                <el-tag
-                  v-for="issueItem in labelClassItem.issueData"
-                  :key="'issue' + issueItem.id"
-                  :class="`issue-tag-${labelClassIndex}`"
-                  size="medium"
-                  disable-transitions
-                  @click="setLabel(issueItem)"
-                >
-                  {{ issueItem.label }}
-                </el-tag>
+          <order-info-module v-if="Object.keys(info).length" :order-info="info" />
+          <!-- 问题标签 -->
+          <div class="order-label">
+            <div class="label-title">标签栏</div>
+            <template v-for="(labelClassItem, labelClassIndex) in labelData">
+              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
+                <div class="label-class-title">{{ labelClassItem.name }}</div>
+                <div class="label-content">
+                  <el-tag
+                    v-for="issueItem in labelClassItem.child"
+                    :key="'issue' + issueItem.id"
+                    :class="issueItem.isSelect ? 'active' : ''"
+                    size="medium"
+                    disable-transitions
+                    @click="setLabel(issueItem)"
+                  >
+                    {{ issueItem.name }}
+                  </el-tag>
+                </div>
               </div>
-            </div>
-          </template>
+            </template>
+          </div>
+          <div class="submit-box">
+            <el-button type="primary" @click="submitData">提交评分</el-button>
+            <el-button type="info" class="out-btn">退出</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -151,12 +150,14 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import 'driver.js/dist/driver.min.css'
+import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from './OrderInfoModule'
-import labelMock from './labelMock'
 import guideData from './guideData'
 import Driver from 'driver.js' // 引导框
-import 'driver.js/dist/driver.min.css'
 import FabricCanvas from './FabricCanvas'
+import * as AssessmentCenter from '@/api/assessmentCenter'
+
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas },
@@ -175,56 +176,80 @@ export default {
           scale: 100
         }
       }
-    }
+    },
+    photoVersion: { type: String, required: true }
   },
   data () {
     return {
-      photoIndex: 0,
-      propConfigs: this.configs,
-      imgObj: {},
-      bigImg: {},
-      mouseMask: {},
-      imgLayer: {},
-      imgRect: {},
-      scaleNum: 25,
-      loading: true,
-      isShow: true,
-      maxObj: {
+      photoIndex: 0, // 展示照片索引
+      propConfigs: this.configs, // 参数配置
+      imgObj: {}, // 照片dom
+      bigImg: {}, // 大图dom
+      mouseMask: {}, // 图片标记配置
+      imgLayer: {}, // 照片布局
+      imgRect: {}, // 图片信息
+      scaleNum: 25, // 放大倍数
+      loading: true, // 是否加载
+      isShow: true, // 是否显示
+      maxObj: { // 最大宽高
         height: '',
         width: ''
       },
-      driver: null,
-      inZoomIn: false,
-      photoZoomStyle: '',
-      labelData: [],
+      driver: null, // 引导信息
+      inZoomIn: false, // 是否放大中
+      photoZoomStyle: '', // 图片信息
+      labelData: [], // 标签数据
       showCanvas: false,
-      canvasOption: {
+      canvasOption: { // canvas 信息
         width: 200,
         height: 200,
         penColor: '#E34F51',
         lineWidth: 2,
         drawType: ''
       },
-      cacheLabel: []
+      penWeight: [ // 画笔宽度数据
+        {
+          label: 'min',
+          size: 2,
+          active: true
+        },
+        {
+          label: 'mid',
+          size: 6,
+          active: false
+        },
+        {
+          label: 'big',
+          size: 10,
+          active: false
+        }
+      ],
+      allLoading: false // 整个页面loading
     }
   },
   computed: {
     ...mapGetters(['imgDomain']),
+    // 展示照片数据
     photoArray () {
-      const data = this.info.photoVersion.map(item => {
-        // 调试
+      const photoVersion = _.get(this.info, 'photoInfo.photoVersion', [])
+      const data = photoVersion.map(item => {
         item.src = this.imgDomain + item.path
         return item
       })
       return data
     },
+    // 当前展示图片
     showPhoto () {
-      return this.photoArray[this.photoIndex]
+      return this.photoArray[this.photoIndex] || {}
+    },
+    // 是云端成片
+    isFinishPhoto () {
+      return this.showPhoto.version === 'complete_photo'
     }
   },
   created () {
-    console.warn(this.info)
-    this.labelData = JSON.parse(JSON.stringify(labelMock))
+    this.initShowPhoto()
+    this.getLabelData()
     this.driver = new Driver({
       nextBtnText: '下一个',
       prevBtnText: '上一个',
@@ -238,7 +263,6 @@ export default {
      */
     document.onkeydown = e => {
       const key = window.event.keyCode
-      console.warn(key, '键位')
       switch (key) {
         case 49:
         case 50:
@@ -285,7 +309,7 @@ export default {
           this.changeDrawType('delete')
           break
         case 66:
-          this.createCanvas()
+          this.changeDrawType('pen')
           break
         case 86:
           this.changeDrawType('move')
@@ -308,6 +332,54 @@ export default {
     })
   },
   methods: {
+    /**
+     * @description 提交分数
+     */
+    async submitData () {
+      try {
+        let markPhotoImg = ''
+        if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
+          markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
+        }
+        this.showCanvas = false
+        const issuesLabel = this.getIssuesData()
+        const issuesLabelId = issuesLabel.map(item => ({ id: item.id }))
+        this.resetLabelData()
+        const sendData = {
+          issuesLabelId,
+          markPhotoImg
+        }
+        this.$emit('submit', sendData)
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error('上传标记图失败')
+      }
+    },
+    /**
+     * @description 获取选中标签
+     */
+    getIssuesData () {
+      let selectData = []
+      this.labelData.forEach(item => {
+        const itemSelectLabel = item.child.filter(issueItem => issueItem.isSelect)
+        selectData = [...selectData, ...itemSelectLabel]
+      })
+      return selectData
+    },
+    /**
+     * @description 获取标签数据
+     */
+    async getLabelData () {
+      this.labelData = await AssessmentCenter.getScoreConfigList()
+    },
+    /**
+     * @description 重制标签
+     */
+    resetLabelData () {
+      this.labelData.forEach(item => {
+        item.child.forEach(issItem => issItem.isSelect = false)
+      })
+    },
     /**
      * @description 提示按钮
      */
@@ -337,6 +409,159 @@ export default {
      */
     loadingPhoto () {
       this.loading = false
+    },
+    /**
+     * @description 滑块滑动改变值
+     * @param {Number} [放大系数]
+     */
+    formatTooltip (val) {
+      return val + 100
+    },
+    /**
+     * @description 上一张图片
+     */
+    prePhoto () {
+      const beforePath = this.photoArray[this.photoIndex].path
+      if (this.photoIndex === 0) {
+        this.photoIndex = this.photoArray.length - 1
+      } else {
+        this.photoIndex--
+      }
+      const nextPath = this.photoArray[this.photoIndex].path
+      if (beforePath === nextPath) return
+      this.loading = true
+    },
+    /**
+     * @description 下一张图片
+     */
+    nextPhoto () {
+      const beforePath = this.photoArray[this.photoIndex].path
+      if (this.photoIndex === this.photoArray.length - 1) {
+        this.photoIndex = 0
+      } else {
+        this.photoIndex++
+      }
+      const nextPath = this.photoArray[this.photoIndex].path
+      if (beforePath === nextPath) return
+      this.loading = true
+    },
+    /**
+     * @description 放大
+     */
+    zoom (e) {
+      if (this.canvasOption.drawType !== 'blowup') return
+      if (this.inZoomIn) {
+        this.photoZoomStyle = ''
+        this.inZoomIn = false
+      } else {
+        const imageWidth = e.target.clientWidth
+        const imageHeight = e.target.clientHeight
+        const clickX = (e.offsetX / imageWidth * 100).toFixed(2) + '%'
+        const clickY = (e.offsetY / imageHeight * 100).toFixed(2) + '%'
+        const zoomScale = (this.scaleNum * 4 + 100) / 100
+        this.photoZoomStyle = `transform-origin: ${clickX} ${clickY}; transform: scale(${zoomScale});`
+        this.inZoomIn = true
+      }
+    },
+    /**
+     * @description 判断是否处于放大中
+     */
+    judgeHasZoom (e) {
+      const isOverIn = Boolean(this.imgLayer.style.width)
+      if (isOverIn) {
+        this.handOver(e)
+      }
+    },
+    /**
+     * @description 设置标签
+     */
+    setLabel (issueItem) {
+      if (!this.createCanvas()) return false
+      this.$nextTick(() => {
+        this.labelData.forEach(classItem => {
+          const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
+          if (findIssueLabel) {
+            if (!findIssueLabel.isSelect) {
+              this.$refs['fabric-canvas'].createLabel(findIssueLabel)
+              findIssueLabel.isSelect = true
+            } else {
+              this.tagClose(issueItem)
+            }
+          }
+        })
+      })
+    },
+    /**
+     * @description 标签关闭
+     */
+    tagClose (tagInfo) {
+      this.$refs['fabric-canvas'].deleteLabel(tagInfo)
+    },
+    /**
+     * @description 创建canvas
+     */
+    createCanvas () {
+      if (!this.isFinishPhoto) {
+        this.$newMessage.warning('请在成片上进行评分')
+        return false
+      }
+      if (!this.showCanvas) {
+        this.getImgInfo()
+        this.showCanvas = true
+      }
+      return true
+    },
+    /**
+     * @description 更改画笔类型
+     */
+    changeDrawType (drawType) {
+      if (drawType !== 'blowup' && !this.showCanvas) {
+        this.createCanvas()
+        return
+      }
+      if (drawType === 'blowup' && this.inZoomIn) {
+        this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
+      }
+      this.canvasOption.drawType = drawType
+    },
+    /**
+     * @description 撤销删除标签
+     */
+    addDeleteLabel (issueItem) {
+      this.labelData.forEach(classItem => {
+        const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
+        if (findIssueLabel) {
+          findIssueLabel.isSelect = false
+        }
+      })
+    },
+    /**
+     * @description 下载图片
+     */
+    downing () {
+      const pointIndex = this.showPhoto.src.lastIndexOf('!')
+      let url = this.showPhoto.src
+      if (pointIndex > 0) {
+        url = this.showPhoto.src.substring(0, pointIndex)
+      }
+      const data = { url, path: '' }
+      this.$newMessage.success('已添加一张照片到下载')
+      DownIpc.addDownloadFile(data)
+    },
+    /**
+     * @description 更改线宽
+     */
+    changeLineWidth (penWeightItem) {
+      this.penWeight.forEach(item => item.active = false)
+      penWeightItem.active = true
+      this.canvasOption.lineWidth = penWeightItem.size
+    },
+    /**
+     * @description 初始化图片版本
+     */
+    initShowPhoto () {
+      const findIndex = this.photoArray.findIndex(item => item.version === this.photoVersion)
+      this.photoIndex = findIndex
     },
     /**
      * @description 鼠标移动
@@ -426,133 +651,6 @@ export default {
       imgLayer.style.backgroundRepeat = 'no-repeat'
       imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
       document.getElementsByClassName('orginPhoto')[0].appendChild(imgLayer)
-    },
-    /**
-     * @description 滑块滑动改变值
-     * @param {Number} [放大系数]
-     */
-    formatTooltip (val) {
-      return val + 100
-    },
-    /**
-     * @description 上一张图片
-     */
-    prePhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === 0) {
-        this.photoIndex = this.photoArray.length - 1
-      } else {
-        this.photoIndex--
-      }
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
-     * @description 下一张图片
-     */
-    nextPhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === this.photoArray.length - 1) {
-        this.photoIndex = 0
-      } else {
-        this.photoIndex++
-      }
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
-     * @description 放大
-     */
-    zoom (e) {
-      if (this.canvasOption.drawType !== 'blowup') return
-      if (this.inZoomIn) {
-        this.photoZoomStyle = ''
-        this.inZoomIn = false
-      } else {
-        const imageWidth = e.target.clientWidth
-        const imageHeight = e.target.clientHeight
-        const clickX = (e.offsetX / imageWidth * 100).toFixed(2) + '%'
-        const clickY = (e.offsetY / imageHeight * 100).toFixed(2) + '%'
-        const zoomScale = (this.scaleNum * 4 + 100) / 100
-        this.photoZoomStyle = `transform-origin: ${clickX} ${clickY}; transform: scale(${zoomScale});`
-        this.inZoomIn = true
-      }
-    },
-    /**
-     * @description 判断是否处于放大中
-     */
-    judgeHasZoom (e) {
-      const isOverIn = Boolean(this.imgLayer.style.width)
-      if (isOverIn) {
-        this.handOver(e)
-      }
-    },
-    /**
-     * @description 设置标签
-     */
-    setLabel (issueItem) {
-      if (!this.showCanvas) {
-        this.createCanvas()
-      }
-      this.$nextTick(() => {
-        this.labelData.forEach(classItem => {
-          const findIssueLabelIndex = classItem.issueData.findIndex(issueLabel => issueLabel.id === issueItem.id)
-          if (findIssueLabelIndex >= 0) {
-            const setLabelData = classItem.issueData.splice(findIssueLabelIndex, 1)
-            this.cacheLabel.push(...setLabelData)
-            this.$refs['fabric-canvas'].createLabel(...setLabelData)
-          }
-        })
-      })
-    },
-    /**
-     * @description 标签关闭
-     */
-    tagClose (tagInfo) {
-      console.warn(tagInfo)
-      this.$refs['fabric-canvas'].deleteLabel(tagInfo)
-    },
-    /**
-     * @description 创建canvas
-     */
-    createCanvas () {
-      if (!this.showCanvas) {
-        this.getImgInfo()
-        this.showCanvas = true
-      }
-      this.changeDrawType('pen')
-    },
-    /**
-     * @description 更改画笔类型
-     */
-    changeDrawType (drawType) {
-      if (drawType !== 'blowup' && !this.showCanvas) {
-        this.$newMessage.warning('请创建画板')
-        return
-      }
-      if (drawType === 'blowup' && this.inZoomIn) {
-        this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
-      }
-      this.canvasOption.drawType = drawType
-    },
-    /**
-     * @description 撤销删除标签
-     */
-    addDeleteLabel (data) {
-      console.warn(data, 'addDeleteLabel')
-      const findIssueClass = this.labelData.find(labelClassItem => labelClassItem.id === data.pid)
-      const findIssueLabelIndex = this.cacheLabel.findIndex(labelItem => labelItem.id === data.id)
-      if (findIssueClass) {
-        findIssueClass.issueData.push(data)
-      }
-      if (findIssueLabelIndex >= 0) {
-        this.cacheLabel.splice(findIssueLabelIndex, 1)
-      }
-    },
-    outPut () {
-      this.$refs['fabric-canvas'].outPhoto()
     }
   }
 }
@@ -570,15 +668,33 @@ export default {
 
   .title {
     position: relative;
+    z-index: 5000;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    height: 40px;
+    height: 42px;
     font-size: 22px;
     line-height: 40px;
     color: #ddd;
     text-align: center;
     background-color: #535353;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+
+    .driver-star {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-left: 4px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: #666;
+      text-align: center;
+      cursor: pointer;
+      background-color: #999;
+      border-radius: 50%;
+    }
 
     .button-close {
       position: absolute;
@@ -608,16 +724,18 @@ export default {
   .photoBox {
     position: relative;
     display: flex;
-    height: calc(100% - 40px);
+    height: calc(100% - 42px);
 
     .photo-tool {
-      width: 50px;
+      position: relative;
+      z-index: 5000;
+      width: 48px;
       background-color: #535353;
 
       .tool {
         position: relative;
-        width: 50px;
-        height: 50px;
+        width: 48px;
+        height: 48px;
         padding: 10px;
         font-size: 16px;
         line-height: 30px;
@@ -636,13 +754,13 @@ export default {
         }
 
         &:hover {
-          color: #9d9d9d;
-          background-color: #fff;
+          color: #eee;
+          background-color: #282828;
         }
 
         &.active {
-          color: #9d9d9d;
-          background-color: #fff;
+          color: #eee;
+          background-color: #282828;
         }
       }
 
@@ -659,7 +777,7 @@ export default {
 
     .photo-show {
       position: relative;
-      width: calc(100% - 300px);
+      width: calc(100% - 328px);
 
       .orginPhoto {
         display: flex;
@@ -668,6 +786,8 @@ export default {
         height: 100%;
         margin: auto;
         overflow: hidden;
+        touch-action: none;
+        user-select: none;
         background-color: #282828;
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
@@ -736,18 +856,26 @@ export default {
 
     .photo-mark {
       position: relative;
-      width: 250px;
-      overflow: overlay;
+      z-index: 5000;
+      width: 280px;
       background-color: #535353;
+
+      .scroll-box {
+        width: 100%;
+        height: 100%;
+        overflow: overlay;
+      }
 
       .small-img {
         position: sticky;
         top: 0;
         z-index: 4001;
         box-sizing: border-box;
+        box-sizing: content-box;
         width: 250px;
+        padding: 0 15px;
         background-color: #535353;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid #666;
 
         .smallPhoto {
           display: flex;
@@ -755,6 +883,7 @@ export default {
           justify-content: center;
           width: 100%;
           height: 250px;
+          background-color: #282828;
 
           ._magnifier_zoom {
             position: absolute;
@@ -778,79 +907,127 @@ export default {
         }
 
         .contant {
-          width: 80%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           margin: auto;
           color: #ddd;
-          text-align: center;
+          text-align: left;
 
-          .driver-star {
+          .el-slider {
             display: inline-block;
-            width: 22px;
-            height: 22px;
-            margin-left: 10px;
-            line-height: 22px;
-            color: #333;
-            text-align: center;
+            width: 160px;
+            margin-right: 8px;
+          }
+
+          .scale-box {
+            margin-right: auto;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            color: #eee;
+          }
+
+          .down-button {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            color: #eee;
             cursor: pointer;
-            background-color: #fff;
-            border-radius: 50%;
-            box-shadow: inset 0 -5px 6px 0 rgba(46, 61, 73, 0.7);
-            transition: all 0.5s;
 
             &:hover {
-              box-shadow: inset -4px -4px 6px 0 rgba(46, 61, 73, 0.2);
+              color: #ddd;
             }
           }
-        }
 
-        .down-button {
-          padding: 10px 0;
-          color: #ddd;
-          text-align: center;
-          cursor: pointer;
+          & /deep/ .el-slider__runway {
+            height: 4px;
+            margin: 14px 0;
+            background-color: #282828;
 
-          &:hover {
-            color: #409eff;
+            .el-slider__bar {
+              height: 4px;
+              background: linear-gradient(33deg, #91f5ff 0%, #71b9fd 45%, #4669fb 100%);
+            }
+
+            .el-slider__button {
+              width: 12px;
+              height: 12px;
+              border: 1px solid #409eff;
+            }
           }
-        }
-      }
-
-      .issue-label {
-        padding: 10px;
-        padding-bottom: 0;
-
-        .cache-issue {
-          margin-right: 10px;
-          margin-bottom: 10px;
-          -webkit-user-select: none;
         }
       }
 
       .order-label {
-        padding: 0 12px 12px 12px;
+        padding: 14px 10px 70px;
         font-size: 12px;
         color: #eee;
 
-        .panel-title {
+        .label-title {
+          display: flex;
+          align-items: center;
           font-size: 14px;
           font-weight: 500;
+
+          &::before {
+            display: inline-block;
+            width: 2px;
+            height: 16px;
+            margin-right: 6px;
+            content: '';
+            background-color: #4669fb;
+          }
         }
 
         .label-box {
-          margin-bottom: 12px;
-
           .label-class-title {
-            padding: 8px 0;
+            padding: 10px 0;
             font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            color: #eee;
           }
 
           .label-content {
             .el-tag {
-              margin: 0 8px 8px 0;
-              font-size: 14px;
+              margin: 0 10px 10px 0;
+              font-size: 12px;
+              font-weight: 400;
+              color: #eee;
               cursor: pointer;
               -webkit-user-select: none;
+              background-color: #000;
+              border: none;
+              border-radius: 4px;
+              opacity: 0.6;
+
+              &.active {
+                background-color: #808080;
+              }
             }
+          }
+        }
+      }
+
+      .submit-box {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 60px;
+        background-color: #535353;
+        border-top: 1px solid #666;
+
+        .out-btn {
+          background-color: #666;
+          border-color: #666;
+
+          &:hover {
+            background-color: #535353;
           }
         }
       }
@@ -872,6 +1049,10 @@ export default {
 </style>
 
 <style lang="less">
+.el-loading-mask {
+  z-index: 6001;
+}
+
 .grade-preview {
   .tool-color {
     .el-color-picker__trigger {
@@ -888,5 +1069,75 @@ export default {
 
 #driver-highlighted-element-stage {
   opacity: 0.3;
+}
+
+.el-color-picker__panel {
+  background-color: #535353;
+  border: 1px solid #535353;
+
+  .el-color-dropdown__btns {
+    .el-button--default {
+      color: #eee;
+      background-color: #666;
+      border-color: #666;
+    }
+  }
+}
+
+.pen-weight {
+  min-width: 30px;
+  padding: 0;
+  margin-left: 16px !important;
+  background-color: #535353;
+  border-color: #535353;
+
+  .pen-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 78px;
+
+    .pen-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 26px;
+      cursor: pointer;
+
+      .pen-box {
+        background-color: #282828;
+        border-radius: 50%;
+
+        &.active {
+          background-color: #eee;
+        }
+      }
+
+      .min {
+        width: 2px;
+        height: 2px;
+      }
+
+      .mid {
+        width: 6px;
+        height: 6px;
+      }
+
+      .big {
+        width: 10px;
+        height: 10px;
+      }
+    }
+  }
+
+  .popper__arrow {
+    border-right-color: #535353 !important;
+
+    &::after {
+      border-right-color: #535353 !important;
+    }
+  }
 }
 </style>

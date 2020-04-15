@@ -50,7 +50,7 @@ export default {
   },
   props: {
     src: { type: String, default: '' }, // 地址图片
-    photoName: { type: Boolean },
+    photoName: { type: Boolean }, // 是否显示照片名字
     peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
     downing: { type: Boolean }, // 是够开启下载功能
     preview: { type: Boolean }, // 是否开启单张预览功能
@@ -61,10 +61,10 @@ export default {
       return null
     } }, // 标记信息
     streamNum: { type: String, default: '' }, // 流水号
-    preloadPhoto: { type: Boolean },
-    useEleImage: { type: Boolean, default: true },
-    isLekima: { type: Boolean },
-    fileData: { type: Object, default: null }
+    preloadPhoto: { type: Boolean }, // 预加载照片
+    useEleImage: { type: Boolean, default: true }, // 使用ele图片
+    isLekima: { type: Boolean }, // 是否是利奇马
+    fileData: { type: Object, default: null } // 上传照片地址
   },
   data () {
     return {
