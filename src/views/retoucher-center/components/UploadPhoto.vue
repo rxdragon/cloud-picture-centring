@@ -238,7 +238,11 @@ export default {
      */
     checkHasSaveName (file) {
       const fileName = PhotoTool.photoPathExtToLowerCase(file.name)
-      const hasSameName = this.photos.some(item => PhotoTool.photoPathExtToLowerCase(item.path) === fileName)
+      const hasSameName = this.photos.some(item => {
+        const orginPhotoName = PhotoTool.photoPathExtToLowerCase(item.path)
+        const orginPhotoNameForJpeg = orginPhotoName.replace('jpeg', 'jpg')
+        return orginPhotoName === fileName || orginPhotoNameForJpeg === fileName
+      })
       if (!hasSameName) {
         throw new Error('请上传与原片文件名一致的照片。')
       }
@@ -282,7 +286,7 @@ export default {
         this.checkFileName(file) // 是否正确命名
         // 获取type和sha1
         const imgInfo = await PhotoTool.getImgBufferPhoto(file)
-        const uploadPhotoSha1 = imgInfo.selfSha1
+        const uploadPhotoSha1 = imgInfo.sha1
         const type = imgInfo.typeInfo.mime
         this.checkFileType(type) // 判断是否是图片
         this.checkHasSaveName(file) // 判断是否与原片名字相同
