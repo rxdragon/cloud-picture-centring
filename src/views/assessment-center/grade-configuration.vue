@@ -97,7 +97,6 @@ export default {
   methods: {
     resetIssue (sendData) {
       const findClassIndex = this.scoreConfigList.findIndex(item => item.key === sendData.key)
-      console.log(findClassIndex, 'findClassIndex')
       if (findClassIndex >= 0) {
         this.$set(this.scoreConfigList, findClassIndex, sendData.cacheData)
       }

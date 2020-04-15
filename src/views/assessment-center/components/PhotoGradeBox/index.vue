@@ -46,12 +46,10 @@ export default {
     return {}
   },
   computed: {
+    // 照片数据
     photoData () {
       return this.photoInfo
     }
-  },
-  created () {
-    console.log(this.photoInfo)
   },
   methods: {
     /**

@@ -42,9 +42,6 @@ export default {
       issueValue: []
     }
   },
-  created () {
-    console.log(this.timeSpan)
-  },
   methods: {
     closeDrawer () {
       this.$emit('update:show-draw', false)

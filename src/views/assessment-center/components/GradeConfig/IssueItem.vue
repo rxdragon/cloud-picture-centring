@@ -49,9 +49,6 @@ export default {
       return this.issueItemData.weights * this.weightScore
     }
   },
-  created () {
-    console.log(this.weight)
-  },
   methods: {
     // 编辑单项
     editIssueItem () {
@@ -97,7 +94,7 @@ export default {
         await GradeConfiguration.delScoreConfig(req)
         this.$emit('delete')
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }

@@ -1,4 +1,4 @@
-# 2.0.0 (2020-04-13)
+# 2.0.0 (2020-04-15)
 
 |范围|描述|commitId|
 --|--|--
@@ -147,8 +147,8 @@
 --|--|--
  demo 画板功能 | [11c96aa](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/11c96aa)
  ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
- test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
+ test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
  testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
  ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
  webscoket | [a474182](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a474182)
@@ -197,6 +197,7 @@
  增加不种不把查询 | [4f53e0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f53e0b)
  增加修图机构绩效权限 | [2e87fb3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2e87fb3)
  增加修图特效 | [313723b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/313723b)
+ 增加删除功能 | [a82d725](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a82d725)
  增加压缩图片上传显示压缩图 | [4919852](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4919852)
  增加审核权限管理 | [9a76716](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a76716)
  增加布局ui | [08ef4cd](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08ef4cd)
@@ -265,16 +266,16 @@
  获取队列默认值，防止网络错误 | [c4ef67f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4ef67f)
  退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
  退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
- 客片池新增产品选择多选 | 客片池新增产品多选，新增修图标准多选 | [7aa8d9c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7aa8d9c)
+ 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
+ ] | 新增个人绩效数据数据接入 | [c7196d9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c7196d9)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
  重写自动上传逻辑 | [0342309](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0342309)
+ 完成云学院柱状图联调整 | 完成云学院柱转图联调 | [ffd8ab6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ffd8ab6)
  重建webscoket | [7990034](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7990034)
  重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
  验证照片后最名字，增加产品配置，新增模版照片格式选项 | [73b95b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/73b95b8)
- ] | 新增个人绩效数据数据接入 | [c7196d9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c7196d9)
- test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
- 完成云学院柱状图联调整 | 完成云学院柱转图联调 | [ffd8ab6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ffd8ab6)
- 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
+ 客片池新增产品选择多选 | 客片池新增产品多选，新增修图标准多选 | [7aa8d9c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7aa8d9c)
 
 
 ### 🎨 代码样式
