@@ -76,13 +76,15 @@ export default {
           this.getChartData()
         }
       },
-      immediate: true
+      immediate: true,
+      deep: true
     },
     tags: {
       handler (value) {
         this.getChartData()
       },
-      immediate: true
+      immediate: true,
+      deep: true
     }
   },
   methods: {

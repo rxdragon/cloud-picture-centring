@@ -51,7 +51,7 @@ export default {
     timeSpan: {
       handler (value) {
         if (value.length) {
-          this.drawChart(value)
+          this.handleData(value)
         }
       }
     }

@@ -53,7 +53,7 @@
       size="400"
       :visible.sync="drawer"
       :with-header="false">
-      <report-box :time-span="timeSpan" :show-draw.sync="drawer" />
+      <report-box :time-span="searchTimeSpan" :show-draw.sync="drawer" />
     </el-drawer>
   </div>
 </template>
@@ -76,6 +76,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
+      searchTimeSpan: null, // 查询时间
       staffIds: '', // 修图师 id
       photoData: [], // 照片数据
       productValue: [], // 选中产品
@@ -151,6 +152,7 @@ export default {
         this.pager.page = page || this.pager.page
         const req = this.getSearchParams()
         if (!req) return false
+        this.searchTimeSpan = this.timeSpan
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AssessmentCenter.getSearchHistory(req)
         this.photoData = data.list

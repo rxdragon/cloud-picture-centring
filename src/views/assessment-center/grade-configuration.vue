@@ -95,6 +95,9 @@ export default {
     this.getScoreConfigList()
   },
   methods: {
+    /**
+     * @description 重制标签
+     */
     resetIssue (sendData) {
       const findClassIndex = this.scoreConfigList.findIndex(item => item.key === sendData.key)
       if (findClassIndex >= 0) {
