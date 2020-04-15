@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="button-box">
-        <el-button v-if="orderData.type === 'mainto'" type="primary" plain @click="hangUp">挂起订单</el-button>
+        <el-button v-if="orderData.productInfo.type === 'mainto'" type="primary" plain @click="hangUp">挂起订单</el-button>
         <el-button type="primary" @click="submitOrder">提交审核</el-button>
       </div>
     </div>
@@ -59,12 +59,12 @@
           <photo-box
             downing
             preview
-            :stream-num="orderData.streamNum"
             photo-name
             preload-photo
-            :tags="photoItem.tags"
             show-joint-label
             show-recede-reason
+            :stream-num="orderData.streamNum"
+            :tags="photoItem.tags"
             :src="photoItem.path"
             :people-num="photoItem.people_num"
           />
@@ -120,17 +120,9 @@ export default {
       routeName: this.$route.name, // 路由名字
       headerClass: '', // 固定header所用class
       orderData: {
-        streamNum: '',
-        streamId: '',
-        type: '',
-        photographerName: '',
-        photographer: '',
-        productName: '',
-        photoNum: 0,
-        waitTime: '',
-        retouchRemark: '',
-        requireLabel: {},
-        streamState: ''
+        productInfo: {},
+        orderInfo: {},
+        requireLabel: {}
       },
       photos: [], // 照片数组
       reviewerNote: '', // 审核备注
