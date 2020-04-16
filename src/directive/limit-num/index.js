@@ -9,8 +9,28 @@ Vue.directive('numberOnly', {
         const regArr = reg2.exec(event.target.value)
         const trueText = regArr ? regArr[0] : ''
         event.target.value = trueText
+        getMinMaxNumer(event.target)
         event.target.dispatchEvent(new Event('input'))
+      } else {
+        if (getMinMaxNumer(event.target)) {
+          event.target.dispatchEvent(new Event('input'))
+        }
       }
     })
   }
 })
+
+function getMinMaxNumer (dom) {
+  const min = Number(dom.min)
+  const max = Number(dom.max)
+  if (!dom.value) return false
+  if (min && dom.value < min) {
+    dom.value = min
+    return true
+  }
+  if (max && dom.value > max) {
+    dom.value = max
+    return true
+  }
+  return false
+}

@@ -63,7 +63,7 @@ export default {
     } }, // 当前预览图片列表
     preIndex: { type: Number, default: 0 }, // 当前预览图片索引
     src: { type: String, default: '' }, // 地址图片
-    photoName: { type: Boolean },
+    photoName: { type: Boolean }, // 是否显示照片名字
     peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
     showStoreMark: { type: Boolean }, // 是否展示门店退单标记
     downing: { type: Boolean }, // 是够开启下载功能

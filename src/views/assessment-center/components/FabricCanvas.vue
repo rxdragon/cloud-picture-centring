@@ -1,21 +1,22 @@
 <template>
-  <div class="fabric-canvas">
+  <div v-show="show" class="fabric-canvas">
     <canvas id="mark-canvas" ref="mark-canvas" />
   </div>
 </template>
 
 <script>
-import { fabric } from 'fabric'
+import { fabric } from '@/assets/fabric.js'
 import * as CanvasTool from '@/utils/canvasTool'
 import * as Commonality from '@/api/commonality'
 export default {
   name: 'FabricCanvas',
   props: {
-    optionObj: { type: Object, required: true }
+    optionObj: { type: Object, required: true },
+    showCanvas: { type: Boolean }
   },
   data () {
     return {
-      upyunConfig: {},
+      qNConfig: {}, // 七牛云token
       canvasDom: null,
       mouseFrom: {},
       mouseTo: {},
@@ -25,6 +26,11 @@ export default {
       cacheIssuse: [], // 缓存问题
       cacheLabelRow: 0,
       zoom: 1 // canvas 比例系数
+    }
+  },
+  computed: {
+    show () {
+      return this.showCanvas
     }
   },
   watch: {
@@ -46,7 +52,6 @@ export default {
     },
     'optionObj.drawType': {
       handler (drawType) {
-        console.warn(drawType)
         this.canvasDom.selection = false
         this.canvasDom.skipTargetFind = true
         this.canvasDom.isDrawingMode = false
@@ -71,12 +76,11 @@ export default {
     }
   },
   created () {
-    this.getUpyunSign()
+    this.getQNSign()
   },
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
-    console.warn(fabric)
     this.canvasDom = new fabric.Canvas('mark-canvas', {
       isDrawingMode: true,
       selection: true,
@@ -92,16 +96,13 @@ export default {
     /**
      * @description 获取又拍云
      */
-    async getUpyunSign () {
-      this.upyunConfig = await Commonality.getSignature()
-      console.warn(this.upyunConfig)
+    async getQNSign () {
+      this.qNConfig = await Commonality.getSignature()
     },
     /**
      * @description 监听canvas鼠标按下
      */
     onMouseDown (options) {
-      console.warn(options)
-      console.warn(this.optionObj.drawType)
       const xy = this.transformMouse(options.e.offsetX, options.e.offsetY)
       this.mouseFrom.x = xy.x
       this.mouseFrom.y = xy.y
@@ -167,7 +168,6 @@ export default {
       this.canvasDom.setZoom(this.zoom)
       this.canvasDom.setWidth(imgWidth)
       this.canvasDom.setHeight(imgHeight)
-      console.warn(this.zoom)
     },
     /**
      * @description 返回鼠标在canvas中的坐标系
@@ -207,6 +207,8 @@ export default {
       for (const selectionItem of selectionObj) {
         if (selectionItem.issueData) {
           this.$emit('cancelDeleteLabel', selectionItem.issueData)
+          const findCacheIssuesIndex = this.cacheIssuse.findIndex(item => item.id === selectionItem.issueData.id)
+          this.cacheIssuse.splice(findCacheIssuesIndex, 1)
         }
         this.canvasDom.remove(selectionItem)
       }
@@ -214,14 +216,18 @@ export default {
       this.canvasDom.discardActiveObject()
       this.optionObj.drawType = 'move'
     },
+    /**
+     * @description 删除标签
+     */
     deleteLabel (labelInfo) {
-      console.warn(labelInfo)
       this.canvasDom.forEachObject(pathItem => {
         if (pathItem.issueData.id === labelInfo.id) {
           this.$emit('cancelDeleteLabel', pathItem.issueData)
           this.canvasDom.remove(pathItem)
         }
       })
+      const findCacheIssuesIndex = this.cacheIssuse.findIndex(item => item.id === labelInfo.id)
+      this.cacheIssuse.splice(findCacheIssuesIndex, 1)
     },
     /**
      * @description 绘制箭头
@@ -276,7 +282,6 @@ export default {
       const drawWidth = this.optionObj.lineWidth
       const left = this.mouseFrom.x
       const top = this.mouseFrom.y
-      // const radius = Math.sqrt((this.mouseTo.x - left) * (this.mouseTo.x - left) + (this.mouseTo.y - top) * (this.mouseTo.y - top)) / 2
       const canvasObject = new fabric.Ellipse({
         left: left,
         top: top,
@@ -309,7 +314,7 @@ export default {
      * @description 创建标签
      */
     createLabel (issueData) {
-      const textColor = '#4f71fb'
+      const textColor = '#eee'
       const canvasHeight = this.canvasDom.getHeight()
       let top = this.cacheIssuse.length * 20
       // 判断是否超过边界
@@ -318,30 +323,38 @@ export default {
         top = 0
         this.cacheLabelRow++
       }
-      const left = this.cacheLabelRow * 60
-      const textbox = new fabric.Textbox(issueData.label, {
+      const width = issueData.name.length * 14 + 25
+      const left = this.optionObj.width - (this.cacheLabelRow + 1) * width - 10
+      const textbox = new fabric.Textbox(issueData.name, {
         left,
         top,
-        width: 50,
+        width,
         fontSize: 14,
-        borderColor: '#dae1fe',
-        backgroundColor: '#edf0ff',
+        backgroundColor: '#000',
+        opacity: 0.6,
         fill: textColor,
         hasControls: true,
-        editable: false,
+        editable: true,
         textAlign: 'center',
         issueData
       })
       this.canvasDom.add(textbox)
       this.cacheIssuse.push(issueData)
     },
+    /**
+     * @description 上传照片到七牛云
+     */
     async outPhoto () {
-      // TODO 检测canvas是否空
       const base64Data = this.canvasDom.toDataURL()
       const blobData = CanvasTool.convertBase64ToBlob(base64Data)
       const fileData = CanvasTool.structureFile(blobData)
-      const data = await CanvasTool.uploadTagPhoto(fileData, this.upyunConfig)
-      console.warn(data)
+      return await CanvasTool.uploadTagPhoto(fileData, this.qNConfig)
+    },
+    /**
+     * @description 判断canvas是否为空
+     */
+    hasDraw () {
+      return !this.canvasDom.isEmpty()
     }
   }
 }

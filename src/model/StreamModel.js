@@ -22,10 +22,15 @@ export default class StreamModel {
   retouchRemark = '' // 修图备注
   backgroundColor = '' // 背景备注
   photographyNote = '' // 摄影备注
+  reviewerNote = '' // 审核备注
   requireLabel = {} // 修图要求
   photoNum = 0 // 照片数据
+  isGreen = false // 是否是绿色通道
+  retoucher = '' // 修图师
+  retoucherLeader = "" // 修图组长
 
   constructor (streamData) {
+    if (!streamData) return
     this.baseData = streamData
     this.streamId = streamData.id || ''
     this.streamNum = streamData.stream_num || ''
@@ -35,8 +40,17 @@ export default class StreamModel {
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
     this.streamState = streamData.state || ''
     this.getNote(streamData.note)
+    this.reviewerNote = _.get(streamData, 'reviewer_note') || ''
+    const retouchRequire = {
+      eye: '暂无',
+      face: '暂无',
+      pimples: false
+    }
+    this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || retouchRequire
     this.photoNum = this.getPhotoNum()
-    this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || {}
+    this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
+    this.retoucher = _.get(streamData, 'retoucher.name') || _.get(streamData, 'retoucher.real_name') || '-'
+    this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.name') || _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
   }
 
   // 获取沙漏相关信息

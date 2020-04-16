@@ -28,7 +28,7 @@
           <div class="standard-box">
             {{ orderData.type || orderData.productInfo.type | toRetouchClass }}
             <div class="standard-icon">
-              <div :class="`iconmap-standard-${orderData.productInfo.type}`" />
+              <div :class="`iconmap-standard-${orderData.type || orderData.productInfo.type}`" />
             </div>
           </div>
         </div>

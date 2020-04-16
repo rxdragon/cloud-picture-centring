@@ -131,6 +131,7 @@
 ### 🎨 代码样式
 |范围|描述|commitId|
 --|--|--
+ css样式搭建 | [48bab17](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/48bab17)
  代码格式优化 | [860b6c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/860b6c1)
  格式化代码 | [e2ab9b0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2ab9b0)
  格式化代码 | [d71a32c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d71a32c)
@@ -253,6 +254,19 @@
  更改前端环境变量 | [ad31ff9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ad31ff9)
 
 
+### 📦 持续集成
+|范围|描述|commitId|
+--|--|--
+ 新增审核配置文件 | [9fe0f13](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fe0f13)
+ 更改ci相关配置 | [22884fe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22884fe)
+ 更改下载依赖 | [9399065](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9399065)
+ 更改判断字段 | [99e512f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/99e512f)
+ 更改环境变量 | [2023600](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2023600)
+ 更新gitignore | [a557373](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a557373)
+ 更新项目依赖 | [118078e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/118078e)
+ 调试ci | [525fd62](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/525fd62)
+
+
 ### 🔙 撤销
 |范围|描述|commitId|
 --|--|--
@@ -278,6 +292,8 @@
  修改浏览看板 | [23899e0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/23899e0)
  优化 | [0d39492](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0d39492)
  优化 | [9992559](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9992559)
+ 优化 | [f5b72c7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f5b72c7)
+ 优化 | [21c73f8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/21c73f8)
  优化 | [b5756ee](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b5756ee)
  优化 | [2d40bee](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d40bee)
  优化 | [f5b72c7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f5b72c7)
