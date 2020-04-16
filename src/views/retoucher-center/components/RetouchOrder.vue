@@ -16,12 +16,44 @@
     </div>
     <!-- 照片信息 -->
     <order-info :order-data="orderData" />
-    <!-- 图片信息 -->
+    <!-- 成片信息 -->
+    <div class="photo-module module-panel" v-if="orderData.streamState === 'store_return_retouch'">
+      <div class="photo-panel-title panel-title">
+        <span>云端成片</span>
+        <div class="button-box">
+          <el-button type="primary" size="small" @click="oneAllDownOrign(true)">一键下载成片</el-button>
+        </div>
+      </div>
+      <div class="photo-panel">
+        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box" :class="{ 'over-success': photoItem.isCover }">
+          <photo-box
+            downing
+            :stream-num="orderData.streamNum"
+            photo-name
+            preload-photo
+            show-store-mark
+            show-joint-label
+            show-recede-reason
+            :tags="photoItem.tags"
+            :pre-list="photos"
+            :pre-index="photoIndex"
+            :src="photoItem.returnPhotoPath"
+            :people-num="photoItem.people_num"
+            :is-original-pre="false"
+          />
+        </div>
+        <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
+          <span>备注原因：</span>
+          <div class="remark-content">{{ reviewerNote }}</div>
+        </div>
+      </div>
+    </div>
+     <!-- 原片信息 -->
     <div class="photo-module module-panel">
       <div class="photo-panel-title panel-title">
         <span>原片信息</span>
         <div class="button-box">
-          <el-button type="primary" size="small" @click="oneAllDownOrign">一键下载原片</el-button>
+          <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载原片</el-button>
         </div>
       </div>
       <div class="photo-panel">
@@ -103,9 +135,8 @@ export default {
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
       realAid: '',
-      dialogVisible: false, // 显示问题标签
-      issueData: {}, // 问题数据
-      needPunchLabel: false // 是否需要标记问题
+      preIndexPhoto: {},
+      imgPreMask: false
     }
   },
   computed: {
@@ -133,13 +164,13 @@ export default {
   },
   methods: {
     /**
-     * @description 一键下载原片
+     * @description 一键下载照片 true:成片， false:原片
      */
-    oneAllDownOrign () {
+    oneAllDownOrign (type) {
       const savePath = `/${this.orderData.streamNum}`
       const photoArr = this.photos.map(photoItem => {
         return {
-          url: photoItem.path,
+          url: type ? photoItem.returnPhotoPath : photoItem.path,
           path: savePath
         }
       })
