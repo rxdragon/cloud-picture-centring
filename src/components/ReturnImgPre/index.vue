@@ -14,6 +14,7 @@
         />
       </div>
       <div class="middle-box">
+        <i class="el-icon-arrow-left arrow" @click="switchImg('last')"></i>
         <div class="content">
           <img ref="retouch-img" id="orginImg" :src="url" @load="getImgSize">
           <!-- 大图预览框 -->
@@ -40,7 +41,7 @@
               <div
                 class="retouch-reason"
               >
-                <div class="reason-tag-list"><span v-for="(itemsub, indexsub) in changeTag(item.reason)" :key="indexsub" class="reason-item">{{ itemsub }}</span></div>
+                <div class="part-reason-list"><span v-for="(itemsub, indexsub) in changeTag(item.reason)" :key="indexsub" class="reason-tag-common part-tag">{{ itemsub }}</span></div>
                 <div class="detail-box" v-if="item.note">
                   <p class="triangle-left"></p>
                   <span class="detail-content">{{ item.note }}</span>
@@ -49,6 +50,7 @@
             </div>
           </div>
         </div>
+        <i class="el-icon-arrow-right arrow" @click="switchImg('next')"></i>
       </div>
     </div>
     <el-container class="right-box">
@@ -71,14 +73,17 @@
         </div>
         <div class="scale-slider">
           <el-slider v-model="scaleNum" style="width: 70%;"/>
-          <span>{{ scaleNum * 4 + 100 }}%</span>
+          <span class="scale-num">{{ scaleNum * 4 + 100 }}%</span>
         </div>
-        <el-button :type="showSign?'primary':'info'" @click="() => {showSign = !showSign}">{{ showSign ? '隐藏标记' : '显示标记' }}</el-button>
+        <el-button :type="changeShowTag?'primary':'info'" @click="() => {changeShowTag = !changeShowTag}">{{ changeShowTag ? '隐藏标记' : '显示标记' }}</el-button>
       </div>
       <div class="right-main">
-        <p class="tips">照片整体原因</p>
-        <div class="reason-tag-list"><span v-for="(item, index) in changeTag(preIndexPhoto.tags.values.store_rework_reason)" :key="index" class="reason-item">{{ item }}</span></div>
-        <p class="reason-note" v-if="preIndexPhoto.tags.values.store_rework_note">{{ preIndexPhoto.tags.values.store_rework_note }}</p>
+        <p class="tips border-tips">照片整体原因</p>
+        <div class="reason-contain">
+          <div class="whole-reason-list"><span v-for="(item, index) in changeTag(preIndexPhoto.tags.values.store_rework_reason)" :key="index" class="reason-tag-common whole-tag">{{ item }}</span></div>
+          <p class="tips">整体原因备注：</p>
+          <p class="reason-note" v-if="preIndexPhoto.tags.values.store_rework_note">{{ preIndexPhoto.tags.values.store_rework_note }}</p>
+        </div>
       </div>
       <el-footer class="operate-box">
         <el-button type="primary" size="medium" @click="download()">下载云端成片</el-button>
@@ -104,7 +109,6 @@ export default {
     return {
       loading: true,
       preImgType: true, // 初始化展示云端成片
-      showSign: true,
       propConfigs: {
         width: 100,
         height: 100,
@@ -114,6 +118,8 @@ export default {
         maskOpacity: 0.5,
         scale: 100
       },
+      preDetail: false, // 标记是否在进行细节预览
+      changeShowTag: true,
       imgObj: {},
       bigImg: {},
       mouseMask: {},
@@ -135,6 +141,10 @@ export default {
         return tagString.split('+') || []
       }
     },
+    // 非原图+非鼠标预览时+点击显示标记时
+    showSign () {
+      return this.preImgType && !this.preDetail && this.changeShowTag
+    }
   },
   methods: {
     /**
@@ -145,7 +155,6 @@ export default {
     },
     changeOrigin () {
       this.getImgSize()
-      this.showSign = this.preImgType
     },
     getImgSize () {
       this.$refs['sign-dom'].style.width = this.$refs['retouch-img'].width + 'px'
@@ -161,6 +170,12 @@ export default {
         path: `/${this.streamNum}`
       }]
       DownIpc.addDownloadFiles(photoArr)
+    },
+    /**
+     * @description 切换图片
+     */
+    switchImg (type) {
+      this.$emit('switchImg', type)
     },
     /**
      * @description 鼠标移动
@@ -202,6 +217,7 @@ export default {
      * @description 鼠标移出
      */
     handOut (e) {
+      this.preDetail = false
       this.imgLayer.removeAttribute('style')
       this.mouseMask.removeAttribute('style')
     },
@@ -209,6 +225,7 @@ export default {
      * @description 鼠标移进
      */
     handOver (e) {
+      this.preDetail = true
       // 获取大图尺寸
       this.imgObj = this.$el.getElementsByTagName('img')[1]
       this.imgBigObj = this.$el.getElementsByTagName('img')[0]
@@ -253,35 +270,29 @@ export default {
 <style lang="less">
   .pre-mask {
     position: fixed;
-    top: 0;
+    top: 42px;
     left: 0;
     z-index: 1000;
     box-sizing: border-box;
     display: flex;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 42px);
     background-color: rgba(0, 0, 0, 0.8);
 
-    .reason-tag-list {
-      display: flex;
-      flex-wrap: wrap;
-
-      .reason-item {
-        width: max-content;
-        padding: 10px;
-        margin: 0 10px 10px 0;
-        font-size: 13px;
-        color: #fff;
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 5px;
-      }
+    .reason-tag-common {
+      padding: 10px;
+      margin: 0 10px 10px 0;
+      font-size: 12px;
+      color: #eee;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
     }
 
     .left-box {
       position: relative;
       display: flex;
       flex-direction: column;
-      width: calc(100% - 300px);
+      width: calc(100% - 280px);
       height: 100%;
       overflow: hidden;
 
@@ -292,12 +303,12 @@ export default {
         align-items: center;
         justify-content: center;
         width: 100%;
-        height: 10vh;
+        height: 42px;
         padding: 5px 10px;
 
         .img-switch {
           position: absolute;
-          top: 40%;
+          top: 10px;
           right: 10px;
         }
 
@@ -307,20 +318,45 @@ export default {
       }
 
       .middle-box {
+        position: relative;
         display: flex;
         align-items: center;
         width: 100%;
-        height: 90vh;
+        height: calc(100vh - 84px);
+
+        .arrow {
+          z-index: 4000;
+          width: 50px;
+          height: 50px;
+          font-size: 25px;
+          line-height: 50px;
+          color: #fff;
+          text-align: center;
+          cursor: pointer;
+          background-color: rgba(0, 0, 0, 0.3);
+          border-radius: 100%;
+        }
+
+        .el-icon-arrow-left {
+          position: relative;
+          left: 20px;
+        }
+
+        .el-icon-arrow-right {
+          position: relative;
+          right: 20px;
+        }
 
         .content {
           position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 100%;
-          height: 80%;
+          width: 90%;
+          height: 90%;
+          margin: auto;
 
-          img {
+          #orginImg {
             z-index: 1001;
             max-width: 100%;
             max-height: 100%;
@@ -382,6 +418,16 @@ export default {
             top: 30%;
             left: 100%;
             display: flex;
+
+            .part-reason-list {
+              display: flex;
+              flex-direction: column;
+
+              .part-tag {
+                width: max-content;
+                max-width: 140px;
+              }
+            }
           }
         }
       }
@@ -396,7 +442,7 @@ export default {
       width: 280px;
       height: 100%;
       background-color: #535353;
-      border-left: 1px solid #dcdde0f0;
+      border-left: 1px solid #666;
 
       .right-header {
         display: flex;
@@ -404,7 +450,7 @@ export default {
         align-items: center;
         width: 100%;
         padding: 0 15px 15px 15px;
-        border-bottom: 1px solid #8a8a8a;
+        border-bottom: 1px solid #666;
 
         .close-box {
           width: 100%;
@@ -414,7 +460,15 @@ export default {
           i {
             float: right;
             font-size: 20px;
+            cursor: pointer;
           }
+        }
+
+        #small-img {
+          width: 260px;
+          height: 260px;
+          margin: 0 10px;
+          background-color: #282828;
         }
 
         .small-photo {
@@ -422,6 +476,7 @@ export default {
           align-items: center;
           justify-content: center;
           width: 100%;
+          height: 100%;
 
           .magnifier-zoom {
             position: absolute;
@@ -442,29 +497,71 @@ export default {
           display: flex;
           align-items: center;
           justify-content: space-around;
-          width: 80%;
+          width: 90%;
           margin: auto;
-          color: #fff;
+
+          .el-slider__runway {
+            height: 4px;
+          }
+          /* stylelint-disable */
+          .el-slider__bar {
+            height: 4px;
+            background-image: linear-gradient(right, #91f5ff, #4669fb);
+          }
+
+          .el-slider__button-wrapper {
+            top: -13px;
+            width: 30px;
+            height: 30px;
+
+            .el-slider__button {
+              width: 12px;
+              height: 12px;
+            }
+          }
+
+          .scale-num {
+            font-size: 13px;
+            color: #eee;
+          }
         }
 
         .el-button {
-          padding: 10px 50px;
+          padding: 10px 85px;
+          font-display: 12px;
         }
       }
 
       .right-main {
         box-sizing: border-box;
-        flex: 1;
+        flex-grow: 1;
         width: 100%;
         padding: 20px;
+        color: #eee;
         background-color: #535353;
 
         .tips {
-          padding-left: 10px;
           margin-bottom: 15px;
-          font-size: 15px;
-          color: #fff;
+          font-size: 14px;
           text-align: left;
+        }
+
+        .reason-contain {
+          max-height: 400px;
+          overflow-y: auto;
+
+          .whole-reason-list {
+            display: flex;
+            flex-wrap: wrap;
+
+            .whole-tag {
+              width: max-content;
+            }
+          }
+        }
+
+        .border-tips {
+          padding-left: 10px;
           border-left: 2px solid #4669fb;
         }
 
@@ -473,10 +570,18 @@ export default {
           min-height: 90px;
           padding: 5px 10px;
           font-size: 13px;
-          color: #fff;
           background-color: #282828;
           border-radius: 5px;
         }
+      }
+
+      .operate-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        padding: 0;
+        border-top: 1px solid #666;
       }
     }
   }

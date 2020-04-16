@@ -31,11 +31,12 @@
             :stream-num="orderData.streamNum"
             photo-name
             preload-photo
-            return-photo
-            :tags="photoItem.tags"
+            show-store-mark
             show-joint-label
             show-recede-reason
-            :photo="photoItem"
+            :tags="photoItem.tags"
+            :pre-list="photos"
+            :pre-index="photoIndex"
             :src="photoItem.returnPhotoPath"
             :people-num="photoItem.people_num"
             :is-original-pre="false"
@@ -64,7 +65,6 @@
             preload-photo
             show-joint-label
             show-recede-reason
-            :photo="photoItem"
             :stream-num="orderData.streamNum"
             :tags="photoItem.tags"
             :src="photoItem.path"

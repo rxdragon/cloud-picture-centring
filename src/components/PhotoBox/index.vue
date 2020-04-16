@@ -18,12 +18,13 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
-    <div v-if="!returnPhoto && specialEffects" class="recede-reason">
+    <div v-if="showSpecialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
-     <div v-if="returnPhoto" class="return-reason-box">
+     <div v-if="showStoreMark" class="return-reason-box">
       <div v-if="storeReworkReason.length" class="recede-reason">
-        门店退回标记： <span class="return-tag" v-for="(item,index) in storeReworkReason" :key="index">{{ item }}</span>
+        <p>门店退回标记：</p>
+        <span class="return-tag" v-for="(item,index) in storeReworkReason" :key="index">{{ item }}</span>
       </div>
       <div v-if="recedeReason" class="recede-reason">
         审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
@@ -31,10 +32,11 @@
     </div>
     <!-- 退回标记预览 -->
     <ReturnImgPre
-      v-if="returnPhoto && showReturnPre"
-      :pre-index-photo="photo"
+      v-if="showStoreMark && showReturnPre"
+      :pre-index-photo="prePhoto"
       :stream-num="streamNum"
       @closeMask="operateMask(false)"
+      @switchImg="switchImg"
     />
   </div>
 </template>
@@ -56,13 +58,14 @@ export default {
     }
   },
   props: {
-    photo: { type: Object, default: () => {
-      return null
-    } }, // 当前预览图片信息
+    preList: { type: Array, default: () => {
+      return []
+    } }, // 当前预览图片列表
+    preIndex: { type: Number, default: 0 }, // 当前预览图片索引
     src: { type: String, default: '' }, // 地址图片
     photoName: { type: Boolean },
     peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
-    returnPhoto: { type: Boolean },
+    showStoreMark: { type: Boolean }, // 是否展示门店退单标记
     downing: { type: Boolean }, // 是够开启下载功能
     preview: { type: Boolean }, // 是否开启单张预览功能
     previewBreviary: { type: Boolean }, // 开启单张缩略预览功能
@@ -89,37 +92,42 @@ export default {
   },
   computed: {
     ...mapGetters(['imgDomain', 'imgCompressDomain', 'cacheImageSwitch']),
+    // 当前预览图片
+    prePhoto () {
+      return this.preList[this.preIndex] || {}
+    },
     // 拼接信息
     jointLabel () {
-      if (this.showJointLabel && this.tags && this.tags.values && this.tags.values.splice_mark) {
-        return [this.tags.values.splice_mark, this.tags.values.splice_position]
+      if (this.showJointLabel && this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.splice_mark) {
+        return [this.prePhoto.tags.values.splice_mark, this.prePhoto.tags.values.splice_position]
       } else {
         return null
       }
     },
+
     // 重修理由
     recedeReason () {
-      const hasReworkReason = this.tags && this.tags.values && this.tags.values.rework_reason
+      const hasReworkReason = this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.rework_reason
       if (this.showRecedeReason && hasReworkReason) {
-        return this.tags.values.rework_reason
+        return this.prePhoto.tags.values.rework_reason
       } else {
         return ''
       }
     },
     // 门店退回理由
     storeReworkReason () {
-      const hasStoreReworkReason = this.tags && this.tags.values && this.tags.values.store_rework_reason
+      const hasStoreReworkReason = this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.store_rework_reason
       if (this.showRecedeReason && hasStoreReworkReason) {
-        return this.tags.values.store_rework_reason.split('+')
+        return this.prePhoto.tags.values.store_rework_reason.split('+')
       } else {
         return []
       }
     },
     // 门店退回备注
     storeReworkNote () {
-      const hasStoreReworkNote = this.tags && this.tags.values && this.tags.values.store_rework_note
+      const hasStoreReworkNote = this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.store_rework_note
       if (this.showRecedeReason && hasStoreReworkNote) {
-        return this.tags.values.store_rework_note
+        return this.prePhoto.tags.values.store_rework_note
       } else {
         return ''
       }
@@ -149,8 +157,12 @@ export default {
     },
     // 特效字段
     specialEffects () {
-      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || ''
+      const special = (this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.special_efficacy) || ''
       return special
+    },
+    // 是否显示特效
+    showSpecialEffects () {
+      return !this.showStoreMark && this.specialEffects
     }
   },
   created () {
@@ -197,6 +209,24 @@ export default {
      */
     operateMask (type) {
       this.showReturnPre = type
+    },
+    switchImg (type) {
+      let listLen = this.preList.length
+      if (listLen < 2) {
+        return
+      } else {
+        switch (type) {
+          case 'next':
+            this.preIndex = listLen - 1 > this.preIndex ? this.preIndex + 1 : 0
+            break
+          case 'last':
+            this.preIndex = this.preIndex !== 0 ? this.preIndex - 1 : 0
+            break
+          default:
+            break
+
+        }
+      }
     }
   }
 }
@@ -326,14 +356,10 @@ export default {
   border-top: 1px solid #ebeef5;
 
   .return-tag {
-    max-width: 130px;
     padding: 3px 5px;
-    margin: 0 10px 5px 0;
-    overflow: hidden;
+    margin: 5px 10px 0 0;
     font-size: 12px;
     color: #fff;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     background-color: #535353;
     border-radius: 5px;
   }
