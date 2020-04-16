@@ -14,21 +14,19 @@
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
-      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">下载照片</el-button>
+      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">{{ showStoreMark ? '下载云端成片' : '下载原片' }}</el-button>
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
-    <div v-if="showSpecialEffects" class="recede-reason">
+    <div v-if="specialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
-     <div v-if="showStoreMark" class="return-reason-box">
-      <div v-if="storeReworkReason.length" class="recede-reason">
-        <p>门店退回标记：</p>
-        <span class="return-tag" v-for="(item,index) in storeReworkReason" :key="index">{{ item }}</span>
-      </div>
-      <div v-if="recedeReason" class="recede-reason">
-        审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
-      </div>
+    <div v-if="storeReworkReason.length" class="recede-reason">
+      <p>门店退回标记：</p>
+      <span class="return-tag" v-for="(item,index) in storeReworkReason" :key="index">{{ item }}</span>
+    </div>
+    <div v-if="recedeReason" class="recede-reason">
+      审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
     </div>
     <!-- 退回标记预览 -->
     <ReturnImgPre
@@ -104,7 +102,6 @@ export default {
         return null
       }
     },
-
     // 重修理由
     recedeReason () {
       const hasReworkReason = this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.rework_reason
@@ -116,7 +113,7 @@ export default {
     },
     // 门店退回理由
     storeReworkReason () {
-      const hasStoreReworkReason = this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.store_rework_reason
+      const hasStoreReworkReason = _.get(this.prePhoto, 'tags.values.store_rework_reason')
       if (this.showRecedeReason && hasStoreReworkReason) {
         return this.prePhoto.tags.values.store_rework_reason.split('+')
       } else {
@@ -125,7 +122,7 @@ export default {
     },
     // 门店退回备注
     storeReworkNote () {
-      const hasStoreReworkNote = this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.store_rework_note
+      const hasStoreReworkNote = _.get(this.prePhoto, 'tags.values.store_rework_note')
       if (this.showRecedeReason && hasStoreReworkNote) {
         return this.prePhoto.tags.values.store_rework_note
       } else {
@@ -159,10 +156,6 @@ export default {
     specialEffects () {
       const special = (this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.special_efficacy) || ''
       return special
-    },
-    // 是否显示特效
-    showSpecialEffects () {
-      return !this.showStoreMark && this.specialEffects
     }
   },
   created () {
