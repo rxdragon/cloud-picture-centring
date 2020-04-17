@@ -148,6 +148,10 @@ export function getSearchHistory (params) {
         }
       })
       item.issueLabel = parentData
+      item.commitInfo = {
+        ...item.commitInfo,
+        issueLabel: item.issueLabel
+      }
     })
     return {
       list: data,

@@ -52,9 +52,10 @@ export default {
   .panel-title {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 10px !important;
     font-size: 14px;
     font-weight: 500;
+    color: #eee;
 
     &::before {
       display: inline-block;
