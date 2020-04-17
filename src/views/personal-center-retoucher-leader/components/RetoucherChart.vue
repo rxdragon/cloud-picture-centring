@@ -17,15 +17,17 @@ const DataType = {
   finishPhotoNum: '修图张数',
   retouchAvgTime: '平均时长（张）/ 分钟',
   lekimaCount: '利奇马张数',
-  reviewPlantPhotoNum: '审核种草',
-  reviewPullPhotoNum: '审核拔草'
+  goodStreamNum: '点赞单量',
+  storeReturnStreamNum: '门店退单',
+  averageScore: '平均分'
 }
 const DataColor = {
   finishPhotoNum: ['#4669FB', '#71B9FD'],
   retouchAvgTime: ['#6B46FB', '#DCD3FF'],
   lekimaCount: ['#4669FB', '#71B9FD'],
-  reviewPlantPhotoNum: ['#38BC7F', '#B7FF8F'],
-  reviewPullPhotoNum: ['#FF3974', '#FFB4CA']
+  goodStreamNum: ['#4669FB', '#91F5FF'],
+  storeReturnStreamNum: ['#FF3974', '#FFB4CA'],
+  averageScore: ['#4669FB', '#71B9FD']
 }
 export default {
   name: 'RetoucherChart',

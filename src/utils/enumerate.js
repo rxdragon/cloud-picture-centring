@@ -100,7 +100,13 @@ export const SearchType = {
   RectifyPull: 'rectifyPull', // 意见不同纠偏拔草
   RectifyNone: 'rectifyNone', // 不中不拔
   RectifySame: 'rectifySame', // 意见相同
-  RectifyDifferent: 'rectifyDifferent' // 意见不同
+  RectifyDifferent: 'rectifyDifferent', // 意见不同
+  GoodEvaluation: 'goodEvaluation', // 点赞数
+  ReworkStream: 'reworkStream', // 退单量
+  ReworkPhoto: 'qeworkPhoto', // 退单张数
+  QualityRework: 'qualityRework', // 质量退单
+  NotQualityRework: 'notQualityRework', // 非质量退单
+
 }
 
 export const CardEnum = {

@@ -61,6 +61,11 @@ export function getGroupStaffQuotaInfo (params) {
     createData.spotCheckPlantInfo = getRateInfo(data.spotCheckPlantPhotoNum, data.spotCheckPhotoNum) // 抽查种草 / 种草率
     createData.spotCheckPullInfo = getRateInfo(data.spotCheckPullPhotoNum, data.spotCheckPhotoNum) // 抽查拔草 / 拔草率
     createData.spotCheckNoneInfo = getRateInfo(data.spotCheckNonePhotoNum, data.spotCheckPhotoNum) // 抽查通过 / 直接通过率
+    createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, streamCount) // 点赞数 / 点赞率
+    createData.reworkStreamInfo = getRateInfo(data.reworkStreamNum, streamCount) // 退单量 / 退单率
+    createData.reworkPhotoInfo = getRateInfo(data.reworkStreamNum, photoCount) // 退单张数 / 退张率
+    createData.qualityPhotoInfo = getRateInfo(data.storeReturnPhotoNumForQuality, photoCount) // 质量退单 / 张
+    createData.notQualityPhotoInfo = getRateInfo(data.storeReturnPhotoNumForNotQuality, photoCount) // 非质量退单 / 张
     return createData
   })
 }
@@ -87,6 +92,8 @@ export function getStaffQuotaInfoGroupByStaff (params) {
       createItem.lekimaCount = parseInt(staffInfoItem.lichmaPhotoNum) // 利奇马张数
       createItem.reviewPlantPhotoNum = parseInt(staffInfoItem.reviewPlantPhotoNum) // 审核种草数
       createItem.reviewPullPhotoNum = parseInt(staffInfoItem.reviewPullPhotoNum) // 审核报草数
+      createItem.goodStreamNum = parseInt(staffInfoItem.goodStreamNum) // 点赞单量
+      createItem.storeReturnStreamNum = parseInt(staffInfoItem.storeReturnStreamNum) // 门店退单
       createData.push(createItem)
     }
     return createData
@@ -145,6 +152,73 @@ export function getGroupStaffTodayQuotaList (params) {
       })
     })
     return createData
+  })
+}
+
+/**
+ * @description 获取云学院报告问题照片
+ * @param {*} params
+ */
+export function getStaffTProblemsPhotoList (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getStaffTProblemsPhotoList',
+    method: 'GET',
+    params
+  }).then(msg => {
+    const createData = {}
+    return createData
+  }).catch(() => {
+    const createData = {}
+    createData.evaluatePhotosNum = parseInt(100)
+    createData.waterhotosNum = parseInt(20)
+    createData.skinPhotosNum = parseInt(100)
+    createData.otherPhotosNum = parseInt(100)
+    createData.evaluateAverageScore = 80
+    return createData
+  })
+}
+
+/**
+ * @description 获取云学院问题照片饼图
+ * @param {*} params
+ */
+export function getStaffProblemReport (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getGroupStaffQuotaForCloudSchoolInfoByStaff',
+    method: 'GET',
+    params
+  }).then(data => {
+    const createData = []
+    data.forEach(item => {
+      createData.push({
+        name: item.name,
+        value: item.count
+      })
+    })
+    return createData
+  }).catch(() => {
+    return []
+  })
+}
+
+/**
+ * @description 获取学员平均分柱状图
+ * @param {*} params
+ */
+export function getStaffAverageScore (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getGroupStaffScoreForCloudSchoolInfoByStaff',
+    method: 'GET',
+    params
+  }).then(msg => {
+    return msg.data
+  }).catch(() => {
+    return [
+      {
+        name: 'sss',
+        finishPhotoNum: 80
+      }
+    ]
   })
 }
 
