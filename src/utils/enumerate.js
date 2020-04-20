@@ -78,15 +78,15 @@ export const PhotoEnumName = {
   OriginalPhoto: '原片',
   FirstPhoto: '一次成片',
   ReturnPhoto: '退回照片',
-  CompletePhoto: '审核成片',
+  CompletePhoto: '云端成片',
   FinishPhoto: '顾客满意片',
   original_photo: '原片',
   first_photo: '一次成片',
   return_photo: '退回照片',
-  complete_photo: '审核成片',
+  complete_photo: '云端成片',
   finish_photo: '顾客满意片',
   store_rework: '门店退回',
-  last_retouch_photo: '最新修后照片'
+  last_retouch_photo: '最新成片'
 }
 
 // 搜索类型
@@ -103,7 +103,7 @@ export const SearchType = {
   RectifyDifferent: 'rectifyDifferent', // 意见不同
   GoodEvaluation: 'goodEvaluation', // 点赞数
   ReworkStream: 'reworkStream', // 退单量
-  ReworkPhoto: 'qeworkPhoto', // 退单张数
+  ReworkPhoto: 'reworkPhoto', // 退单张数
   QualityRework: 'qualityRework', // 质量退单
   NotQualityRework: 'notQualityRework', // 非质量退单
 

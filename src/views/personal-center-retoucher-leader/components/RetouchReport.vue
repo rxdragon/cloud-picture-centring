@@ -71,7 +71,7 @@ export default {
       },
       tableDataRate: {
         goodEvaluationInfo: { label: '点赞数 / 点赞率', value: '- / -', componentSwitch: true, query: SearchType.GoodEvaluation },
-        reworkStreamInfo: { label: '退单量 / 退单率', value: '- / -', componentSwitch: true, query: SearchType.ReworkStream },
+        reworkStreamInfo: { label: '退单量 / 退单率', value: '- / -', componentSwitch: true, query: SearchType.ReworkPhoto },
         reworkPhotoInfo: {
           label: '退单张数 / 退张率',
           value: '- / -',
@@ -84,14 +84,14 @@ export default {
           value: '- / -',
           componentSwitch: true,
           link: '',
-          query: SearchType.QualityRework
+          query: SearchType.ReworkPhoto
         },
         notQualityPhotoInfo: {
           label: '非质量退单（单/张）',
           value: '- / -',
           componentSwitch: true,
           link: '',
-          query: SearchType.NotQualityRework
+          query: SearchType.ReworkPhoto
         },
         lekimaInfo: { label: '利奇马（单/张）', value: '- / -', componentSwitch: true, query: 'isLichma' }
       },

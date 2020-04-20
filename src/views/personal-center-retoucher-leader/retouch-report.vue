@@ -1,15 +1,17 @@
 <template>
-  <div class="retouch-repor">
+  <div>
     <div class="header">
       <h3>组员修图报告</h3>
     </div>
-    <el-tabs v-model="activeName">
-      <el-tab-pane v-for="(item,index) in tabList" :key="index" :label="item.label" :name="item.value" />
-    </el-tabs>
+     <transition name="fade" mode="out-in">
+      <el-tabs v-model="activeName">
+        <el-tab-pane v-for="(item,index) in tabList" :key="index" :label="item.label" :name="item.value" />
+      </el-tabs>
+    </transition>
     <transition name="fade" mode="out-in">
       <keep-alive>
           <component :is="activeName" />
-        </keep-alive>
+      </keep-alive>
     </transition>
   </div>
 </template>

@@ -1,5 +1,6 @@
 <template>
   <div class="sunburst-chart">
+     <div class="panel-title">{{ configOption.title }}</div>
     <div class="sunburst-no-data" v-show="!chartData.length">
       <no-data />
     </div>
@@ -14,7 +15,7 @@ const option = data => {
   return {
     tooltip: {},
     series: {
-      radius: ["15%", "90%"],
+      radius: ["30%", "60%"],
       type: "pie",
       highlightPolicy: "ancestor",
       data,
@@ -32,7 +33,8 @@ export default {
   name: "PieChart",
   components: { NoData },
   props: {
-    chartData: { type: Array, default: () => [] }
+    chartData: { type: Array, default: () => [] },
+    configOption: { type: Object, default: () => { return {} } }
   },
   data () {
     return {

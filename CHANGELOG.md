@@ -1,12 +1,12 @@
-# 2.0.0 (2020-04-17)
+# 2.0.0 (2020-04-20)
 
 ### 🌟 新功能
 |范围|描述|commitId|
 --|--|--
+ 个人中心组长新增云学院报告页面 | 个人中心组长新增云学院报告页面 | [78f7109](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/78f7109)
+ 初步搭建代码 | [2a8bf9f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2a8bf9f)
  门店退回标记云端查看UI调整 | [9270f93](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9270f93)
  门店退回标记云端查看及接口联调 | 门店退回标记云端查看及接口联调 | [af69b75](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/af69b75)
- 不添加可选依赖 | [d999c0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d999c0b)
- 初步搭建代码 | [2a8bf9f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2a8bf9f)
  打乱标签顺序 | [4b569c7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4b569c7)
  更改标签显示方式 | [d76d98c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d76d98c)
  更改审核覆盖上传显示方式 | [702b931](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/702b931)
@@ -33,8 +33,8 @@
  增加删除功能 | [a82d725](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a82d725)
  客片池新增产品选择多选 | 客片池新增产品多选，新增修图标准多选 | [7aa8d9c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7aa8d9c)
  完成云学院柱状图联调整 | 完成云学院柱转图联调 | [ffd8ab6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ffd8ab6)
+ 不添加可选依赖 | [d999c0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d999c0b)
  测试版本 | [2abc39b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2abc39b)
- 初始化websockey | [673fbd2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/673fbd2)
  更新fabric版本 | [267d603](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/267d603)
  获取队列默认值，防止网络错误 | [c4ef67f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4ef67f)
  联调审核，增加修图标准icon | [cfc3f1e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cfc3f1e)
@@ -75,6 +75,7 @@
  保存路径 | [1c4d95f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1c4d95f)
  测试自动下线时间改为10s | [c96287e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c96287e)
  冲量显示 | [9fd05c6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fd05c6)
+ 初始化websockey | [673fbd2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/673fbd2)
  格式化代码 | [71faa62](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/71faa62)
  更改成片种草显示逻辑 | [579efe7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/579efe7)
  更改调试轮询参数 | [dab85ba](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/dab85ba)

@@ -22,10 +22,10 @@
       </div>
       <div class="module-panel charts-box">
         <div class="chart-item">
-           <retoucher-chart v-for="keyItem in chartShowKeys" :key="keyItem" :show-key="keyItem" :chart-datas="barData" />
+          <retoucher-chart v-for="keyItem in chartShowKeys" :key="keyItem" :show-key="keyItem" :chart-datas="barData" />
         </div>
         <div class="chart-item">
-            <pie-chart :chart-data="pieData"></pie-chart>
+          <pie-chart :chart-data="pieData" :config-option="configOption"></pie-chart>
         </div>
       </div>
     </div>
@@ -69,11 +69,14 @@ export default {
         waterhotosNum: { label: '液化问题照片', value: '-', componentSwitch: true },
         skinPhotosNum: { label: '磨皮问题照片', value: '-', componentSwitch: true },
         otherPhotosNum: { label: '其他问题照片', value: '-', componentSwitch: true },
-        evaluateAverageScore: { label: '评价平均分', value: '-' },
+        retoucherScoreAvg: { label: '评价平均分', value: '-' },
       },
       pieData: [],
       barData: [],
-      chartShowKeys: ['finishPhotoNum']
+      chartShowKeys: ['avgScore'],
+      configOption: {
+        title: '问题详情'
+      }
     }
   },
   computed: {

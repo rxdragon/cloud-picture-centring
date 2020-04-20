@@ -161,20 +161,19 @@ export function getGroupStaffTodayQuotaList (params) {
  */
 export function getStaffTProblemsPhotoList (params) {
   return axios({
-    url: '/project_cloud/retouchLeader/getStaffTProblemsPhotoList',
-    method: 'GET',
+    url: '/project_cloud/retouchLeader/getGroupStaffQuotaForCloudSchoolInfo',
+    method: 'POST',
     params
-  }).then(msg => {
+  }).then(data => {
     const createData = {}
+    createData.evaluatePhotosNum = parseInt(data.evaluationPhotoNum)
+    createData.waterhotosNum = parseInt(data.retoucherTagNum[0].count)
+    createData.skinPhotosNum = parseInt(data.retoucherTagNum[1].count)
+    createData.otherPhotosNum = parseInt(data.retoucherTagNum[2].count)
+    createData.retoucherScoreAvg = getAvg(_.get(data, 'retoucherScoreAvg.sum', 0), _.get(data, 'retoucherScoreAvg.count', 0))
     return createData
   }).catch(() => {
-    const createData = {}
-    createData.evaluatePhotosNum = parseInt(100)
-    createData.waterhotosNum = parseInt(20)
-    createData.skinPhotosNum = parseInt(100)
-    createData.otherPhotosNum = parseInt(100)
-    createData.evaluateAverageScore = 80
-    return createData
+    return {}
   })
 }
 
@@ -185,7 +184,7 @@ export function getStaffTProblemsPhotoList (params) {
 export function getStaffProblemReport (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getGroupStaffQuotaForCloudSchoolInfoByStaff',
-    method: 'GET',
+    method: 'POST',
     params
   }).then(data => {
     const createData = []
@@ -208,17 +207,12 @@ export function getStaffProblemReport (params) {
 export function getStaffAverageScore (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getGroupStaffScoreForCloudSchoolInfoByStaff',
-    method: 'GET',
+    method: 'POST',
     params
-  }).then(msg => {
-    return msg.data
+  }).then(data => {
+    return data
   }).catch(() => {
-    return [
-      {
-        name: 'sss',
-        finishPhotoNum: 80
-      }
-    ]
+    return []
   })
 }
 

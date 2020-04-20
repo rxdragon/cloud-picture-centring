@@ -19,7 +19,7 @@ const DataType = {
   lekimaCount: '利奇马张数',
   goodStreamNum: '点赞单量',
   storeReturnStreamNum: '门店退单',
-  averageScore: '平均分'
+  avgScore: '平均分'
 }
 const DataColor = {
   finishPhotoNum: ['#4669FB', '#71B9FD'],
@@ -27,7 +27,7 @@ const DataColor = {
   lekimaCount: ['#4669FB', '#71B9FD'],
   goodStreamNum: ['#4669FB', '#91F5FF'],
   storeReturnStreamNum: ['#FF3974', '#FFB4CA'],
-  averageScore: ['#4669FB', '#71B9FD']
+  avgScore: ['#4669FB', '#71B9FD']
 }
 export default {
   name: 'RetoucherChart',

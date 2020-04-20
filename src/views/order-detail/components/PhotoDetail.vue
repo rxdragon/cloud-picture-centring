@@ -1,21 +1,13 @@
 <template>
   <div class="photo-detail">
-    <!-- 重修 -->
-    <div v-if="rework" class="return-data">
-      <div class="panel-box danger-box">
-        <div class="content-title">重修{{ photoData.reworkNum }}次</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values && photoData.tags.values.rework_reason || '暂无重修理由' }}</div>
-      </div>
-    </div>
-    <!-- 审核 -->
-    <div class="check-data">
-      <div v-if="photoData.grass === 'plant'" class="panel-box plant-box">
-        <div class="content-title">审核种草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核种草理由' }}</div>
-      </div>
-      <div v-if="photoData.grass === 'pull'" class="panel-box danger-box">
-        <div class="content-title">审核拔草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核拔草理由' }}</div>
+    <!-- 图片列表 -->
+    <div class="photo-list">
+      <div v-for="(photo, photoIndex) in photoData.other_photo_version" :key="photoIndex" class="photo-box">
+        <photo-box :tags="photoData.tags" :is-lekima="photo.isLekima" preview photo-name downing :src="photo.path">
+          <template v-slot:title>
+            <span class="lable-title">{{ photo.version | toPhotoVerName }}</span>
+          </template>
+        </photo-box>
       </div>
     </div>
     <div v-if="storeRework" class="store-return">
@@ -29,27 +21,6 @@
       <div class="panel-box primary-box">
         <div class="content-title">{{ [photoData.tags.values.audit_correction, photoData.spotGrass] | toAuditChange }}</div>
         <div class="panel-content">{{ photoData.tags.values.audit_note || '暂无纠偏理由' }}</div>
-      </div>
-    </div>
-    <!-- 抽查 -->
-    <div class="spot-data">
-      <div v-if="photoData.filmEvaluation === 'plant'" class="panel-box plant-box">
-        <div class="content-title">抽查种草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values.evaluation_note || '暂无抽查理由' }}</div>
-      </div>
-      <div v-if="photoData.filmEvaluation === 'pull'" class="panel-box danger-box">
-        <div class="content-title">抽查拔草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values.evaluation_note || '暂无抽查理由' }}</div>
-      </div>
-    </div>
-    <!-- 图片列表 -->
-    <div class="photo-list">
-      <div v-for="(photo, photoIndex) in photoData.photoVersion" :key="photoIndex" class="photo-box">
-        <photo-box :tags="photoData.tags" :is-lekima="photo.isLekima" preview photo-name downing :src="photo.path">
-          <template v-slot:title>
-            <span class="lable-title">{{ photo.version | toPhotoVerName }}</span>
-          </template>
-        </photo-box>
       </div>
     </div>
   </div>
