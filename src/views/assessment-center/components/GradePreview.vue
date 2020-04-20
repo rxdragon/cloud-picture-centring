@@ -140,7 +140,7 @@
           </div>
           <div class="submit-box">
             <el-button type="primary" @click="submitData">提交评分</el-button>
-            <el-button type="info" class="out-btn">退出</el-button>
+            <el-button type="info" @click="closePreview" class="out-btn">退出</el-button>
           </div>
         </div>
       </div>
@@ -657,13 +657,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@navTop: 42px;
+
 .grade-preview {
   position: fixed;
-  top: 0;
+  top: @navTop;
   left: 0;
   z-index: 1900 !important;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - @navTop);
   background-color: #424242;
 
   .title {

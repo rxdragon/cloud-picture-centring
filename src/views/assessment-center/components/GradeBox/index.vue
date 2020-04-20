@@ -5,7 +5,7 @@
         <span>照片评分</span>
         <span class="score-box">总分：{{ photoInfoData.score }}</span>
       </div>
-      <photo-list need-preload :photo-data="photoInfoData.photoInfo.photoVersion" />
+      <photo-list need-preload :photo-data="photoInfoData.photoInfo.photoVersion" :photo-info="photoInfoData" />
     </div>
     <div class="info-grid">
       <!-- 问题标签 -->

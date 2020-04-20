@@ -134,8 +134,10 @@ export default {
       overTime: 0, // 超时时间
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
+      issueData: {},
       realAid: '',
       preIndexPhoto: {},
+      dialogVisible: false,
       imgPreMask: false
     }
   },

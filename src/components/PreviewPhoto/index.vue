@@ -2,57 +2,101 @@
   <div id="photoShow">
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}
+      <div class="driver-star" @click.stop="guide">?</div>
       <button id="closeImg" type="button" class="button-close" @click="closeShowPhoto">
         <i class="el-icon-close" />
       </button>
     </div>
-    <div class="photoBox">
-      <div v-loading="loading" class="orginPhoto" :style="inZoomIn && 'cursor: zoom-out;'">
-        <img
-          id="orginImg"
-          :style="photoZoomStyle"
-          :src="showPhoto.src"
-          :alt="showPhoto.title"
-          @load="loadingPhoto"
-          @click="zoom"
-        >
-        <div id="_magnifier_layer" />
+    <div class="photoBox" v-loading="loading">
+      <!-- 图片 -->
+      <div class="photo-show">
+        <div v-loading="loading" class="orginPhoto" :style="inZoomIn && 'cursor: zoom-out;'">
+          <img
+            id="orginImg"
+            :style="photoZoomStyle"
+            :src="showPhoto.src"
+            :alt="showPhoto.title"
+            @load="loadingPhoto"
+            @click="zoom"
+          >
+          <div class="mask-photo" v-if="hasCommitInfo" v-show="isCompletePhoto && showMark">
+            <img :src="markPhoto" alt="">
+          </div>
+          <div id="_magnifier_layer" />
+        </div>
+        <button
+          v-if="photoArray.length !== 1"
+          type="button"
+          class="button-left"
+          @click.stop="prePhoto">
+          <i class="el-icon-arrow-left" />
+        </button>
+        <button
+          v-if="photoArray.length !== 1"
+          type="button"
+          class="button-right"
+          @click.stop="nextPhoto">
+          <i class="el-icon-arrow-right" />
+        </button>
       </div>
-      <button
-        v-if="photoArray.length !== 1"
-        type="button"
-        class="button-left"
-        @click.stop="prePhoto"
-      >
-        <i class="el-icon-arrow-left" />
-      </button>
-      <button
-        v-if="photoArray.length !== 1"
-        type="button"
-        class="button-right"
-        @click.stop="nextPhoto"
-      >
-        <i class="el-icon-arrow-right" />
-      </button>
-      <div v-show="isShow" id="smallImg" v-loading="loading" class="right">
-        <div class="smallPhoto">
-          <div id="img-box" style="position: relative;">
-            <img
-              :src="showPhoto.src"
-              alt="缩略图"
-              @mouseout="handOut"
-              @mousemove="handMove"
-              @mouseover="handOver"
-            >
-            <div class="_magnifier_zoom" />
+      <!-- 右边栏 -->
+      <div class="photo-mark">
+        <div class="scroll-box">
+          <!-- 缩略图 -->
+          <div id="smallImg" v-loading="loading" class="small-img">
+            <div v-show="isShow" class="breviary-photo">
+              <div class="smallPhoto">
+                <div id="img-box" style="position: relative;">
+                  <img
+                    :src="showPhoto.src"
+                    alt="缩略图"
+                    @mouseout="handOut"
+                    @mousemove="handMove"
+                    @mouseover="handOver"
+                  >
+                  <div class="_magnifier_zoom" />
+                </div>
+              </div>
+              <div class="contant">
+                <el-slider :show-tooltip="false" v-model="scaleNum" />
+                <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+                <span class="down-button" @click.stop="downing">下载</span>
+              </div>
+              <div class="mark-show-btn" v-if="hasCommitInfo">
+                <el-button class="tag-btn"
+                  id="tagShowBtn"
+                  @click="showMarkPhoto"
+                  :class="!showMark && 'tag-show-btn'" type="info">
+                  {{ showMark ? '隐藏标记' : '显示标记' }}
+                </el-button>
+              </div>
+            </div>
+          </div>
+          <order-info-module v-if="hasCommitInfo" :order-info="photoInfo" />
+          <!-- 问题标签 -->
+          <div class="order-label" v-if="hasCommitInfo">
+            <div class="label-title">已打问题标签</div>
+            <template v-for="(labelClassItem, labelClassIndex) in labelData">
+              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
+                <div class="label-class-title">{{ labelClassItem.name }}</div>
+                <div class="label-content">
+                  <el-tag
+                    v-for="issueItem in labelClassItem.child"
+                    :key="'issue' + issueItem.id"
+                    :class="issueItem.isSelect ? 'active' : ''"
+                    size="medium"
+                    disable-transitions
+                  >
+                    {{ issueItem.name }}
+                  </el-tag>
+                </div>
+              </div>
+            </template>
+          </div>
+          <div class="submit-box">
+            <el-button type="info" @click="closeShowPhoto" class="out-btn">退出</el-button>
           </div>
         </div>
-        <div class="contant">
-          <el-slider v-model="scaleNum" />
-          {{ scaleNum * 4 + 100 }}%
-          <div class="driver-star" @click.stop="guide">?</div>
-        </div>
-        <div class="down-button" @click.stop="downing">下载</div>
       </div>
     </div>
   </div>
@@ -61,9 +105,13 @@
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
 import Driver from 'driver.js' // 引导框
+import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
+import { mapGetters } from 'vuex'
 import 'driver.js/dist/driver.min.css'
+
 export default {
   name: 'PreviewPhoto',
+  components: { OrderInfoModule },
   props: {
     configs: {
       type: Object,
@@ -90,12 +138,9 @@ export default {
         ]
       }
     },
-    orderindex: {
-      type: Number,
-      default () {
-        return 0
-      }
-    }
+    orderindex: { type: Number, default: 0 },
+    // 打分信息
+    photoInfo: { type: Object, default: () => ({}) } // 打分信息
   },
   data () {
     return {
@@ -115,12 +160,30 @@ export default {
       },
       driver: null,
       inZoomIn: false,
-      photoZoomStyle: ''
+      photoZoomStyle: '',
+      showMark: true // mark图显示
     }
   },
   computed: {
+    ...mapGetters(['imgDomain']),
     showPhoto () {
       return this.photoArray[this.photoIndex]
+    },
+    // 是否有评分
+    hasCommitInfo () {
+      return Object.keys(this.photoInfo).length
+    },
+    // 标签数据
+    labelData () {
+      return _.get(this.photoInfo, 'commitInfo.issueLabel')
+    },
+    // 标记图片
+    markPhoto () {
+      return this.imgDomain + this.photoInfo.commitInfo.picUrl
+    },
+    // 是否是成片
+    isCompletePhoto () {
+      return this.showPhoto.version === 'complete_photo'
     }
   },
   watch: {
@@ -183,6 +246,9 @@ export default {
         case 16:
           this.isShow = !this.isShow
           break
+        case 88:
+          this.showMarkPhoto()
+          break
         default:
           break
       }
@@ -220,6 +286,14 @@ export default {
           }
         },
         {
+          element: '#tagShowBtn',
+          popover: {
+            title: '标记显示按钮',
+            description: '按x键可以快速隐藏或开启标记图',
+            position: 'bottom'
+          }
+        },
+        {
           element: '.contant',
           popover: {
             title: '放大镜放大效果，默认200%',
@@ -238,6 +312,12 @@ export default {
       ]
       this.driver.defineSteps(steps)
       this.driver.start()
+    },
+    /**
+     * @description 显示标记
+     */
+    showMarkPhoto () {
+      this.showMark = !this.showMark
     },
     /**
      * @description 取消加载

@@ -503,10 +503,10 @@ export default {
           .el-slider__runway {
             height: 4px;
           }
-          /* stylelint-disable */
+
           .el-slider__bar {
             height: 4px;
-            background-image: linear-gradient(right, #91f5ff, #4669fb);
+            background: linear-gradient(33deg, #91f5ff 0%, #71b9fd 45%, #4669fb 100%);
           }
 
           .el-slider__button-wrapper {
