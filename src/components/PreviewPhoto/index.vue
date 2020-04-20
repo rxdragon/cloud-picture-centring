@@ -64,6 +64,7 @@
               </div>
               <div class="mark-show-btn" v-if="hasCommitInfo">
                 <el-button class="tag-btn"
+                  id="tagShowBtn"
                   @click="showMarkPhoto"
                   :class="!showMark && 'tag-show-btn'" type="info">
                   {{ showMark ? '隐藏标记' : '显示标记' }}
@@ -73,7 +74,7 @@
           </div>
           <order-info-module v-if="hasCommitInfo" :order-info="photoInfo" />
           <!-- 问题标签 -->
-          <div class="order-label">
+          <div class="order-label" v-if="hasCommitInfo">
             <div class="label-title">已打问题标签</div>
             <template v-for="(labelClassItem, labelClassIndex) in labelData">
               <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
@@ -172,8 +173,9 @@ export default {
     hasCommitInfo () {
       return Object.keys(this.photoInfo).length
     },
+    // 标签数据
     labelData () {
-      return this.photoInfo.commitInfo.issueLabel
+      return _.get(this.photoInfo, 'commitInfo.issueLabel')
     },
     // 标记图片
     markPhoto () {
@@ -244,6 +246,9 @@ export default {
         case 16:
           this.isShow = !this.isShow
           break
+        case 88:
+          this.showMarkPhoto()
+          break
         default:
           break
       }
@@ -278,6 +283,14 @@ export default {
             title: '缩略图的隐藏',
             description: '按右下角的shift键可以快速隐藏或开启缩略图',
             position: 'left'
+          }
+        },
+        {
+          element: '#tagShowBtn',
+          popover: {
+            title: '标记显示按钮',
+            description: '按x键可以快速隐藏或开启标记图',
+            position: 'bottom'
           }
         },
         {

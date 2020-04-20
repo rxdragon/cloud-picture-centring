@@ -164,5 +164,6 @@ yarn run cz
 
 日期|版本号|描述|开发人员|链接
 :--:|:--:|:--:|:--:|:--:|
+2020-04-20 |2.4.0|门店退单，云学院标记|崔佛|[prd](https://lanhuapp.com/web/#/item/project/product?pid=0b6e0d32-504f-4220-aae3-f185e1fc9685&docId=10e337d7-1778-49e7-9af9-47d739aaf8d7&docType=axure&pageId=0e6dc06305bc45d99eed8d11ee2d137e&image_id=10e337d7-1778-49e7-9af9-47d739aaf8d7&parentId=eaa2abff-5805-43a8-bae5-dcc5fdfc1696)
 2020-03-30 |2.3.11|前端项目规范|崔佛|[前端规范](https://fed.dev.hzmantu.com/fed/mainto-fed-doc/)
 2020-03-26 |2.3.09|迁移七牛云|崔佛|
