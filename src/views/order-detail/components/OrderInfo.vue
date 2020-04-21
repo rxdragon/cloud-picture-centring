@@ -16,24 +16,25 @@
     </div>
     <template v-if="!isWorkBoardInfo">
       <div class="table-panel panel-grade">
-        <div class="content-title">重修次数</div>
-        <div class="content-title">审核种草</div>
-        <div class="content-title">审核拔草</div>
-        <div class="content-title">抽查种草</div>
-        <div class="content-title">抽查拔草</div>
-        <div class="content-title">修图用时</div>
+        <div class="content-title">修图总时长</div>
         <div class="content-title">超时</div>
+        <div class="content-title">重修次数</div>
+        <div class="content-title">门店退回次数</div>
         <div class="content-title">审核用时</div>
+        <div class="content-title">门店评价</div>
+        <div class="content-title">顾客满意度</div>
       </div>
       <div class="table-panel panel-grade">
-        <div class="panel-content">{{ orderInfo.reworkNum }}</div>
-        <div class="panel-content">{{ orderInfo.plantNum }}</div>
-        <div class="panel-content">{{ orderInfo.pullNum }}</div>
-        <div class="panel-content">{{ orderInfo.checkPlantNum }}</div>
-        <div class="panel-content">{{ orderInfo.checkPullNum }}</div>
         <div class="panel-content">{{ orderInfo.retouchAllTime }}</div>
         <div class="panel-content">{{ orderInfo.overTime }}</div>
+        <div class="panel-content">{{ orderInfo.reworkNum }}</div>
+        <div class="panel-content">{{ orderInfo.storeReworkNum }}</div>
         <div class="panel-content">{{ orderInfo.reviewTime }}</div>
+        <div class="panel-content">
+          <i class="el-icon-thumb evaluate-active" :class="orderInfo.store_evaluate==='bad'?'icon-reverse':''" v-if="orderInfo.store_evaluate!=='-'"/>
+          <span v-else>-</span>
+        </div>
+        <div class="panel-content">{{ orderInfo.retoucherNpsAvg }}</div>
       </div>
     </template>
     <template v-else>
@@ -76,10 +77,6 @@
             <img :src="orderInfo.backgroundColor" alt="">
             <el-button type="text" @click="downbackground">下载背景图</el-button>
           </div>
-        </div>
-        <div class="panel-main-content panel-last-content">
-          <span class="title">审核备注：</span>
-          <span class="content">{{ orderInfo.reviewerNote }}</span>
         </div>
       </div>
     </div>
@@ -151,6 +148,18 @@ export default {
     color: #606266;
     text-align: left;
     border-bottom: 1px solid #f2f6fc;
+
+    i {
+      font-size: 20px;
+    }
+
+    .evaluate-active {
+      color: #ff7a00;
+    }
+
+    .icon-reverse {
+      transform: rotate(180deg);
+    }
   }
 
   .panel-require {

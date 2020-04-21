@@ -8,22 +8,28 @@
       <el-button type="primary" plain @click="goBack">返回</el-button>
     </div>
     <!-- 搜索盒子 -->
-    <div class="search-box">
+    <div class="search-box two-rows">
       <div class="staff-box search-item">
         <span>组员</span>
         <crew-select v-model="staffId" />
       </div>
       <div class="audit-box search-item">
-        <span>审核种拔草</span>
-        <grass-select v-model="auditType" />
+        <span>问题标签</span>
+        <issue-select v-model="issueId" />
       </div>
-      <div class="spot-check-box search-item">
-        <span>抽查种拔草</span>
-        <spot-grass-select v-model="spotCheckType" />
-      </div>
+    </div>
+    <div class="search-box two-rows">
       <div class="lekima-box search-item">
         <span>利奇马</span>
         <lekima-select v-model="isLichmaValue" />
+      </div>
+      <div class="audit-box search-item">
+        <span>门店退回</span>
+        <return-select v-model="isReturn" />
+      </div>
+      <div class="spot-check-box search-item">
+        <span>门店点赞</span>
+        <evaluate-select v-model="isGood" />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStaffRetouchList(1)">查 询</el-button>
@@ -35,9 +41,8 @@
         <el-table-column prop="stream_num" label="流水号" />
         <el-table-column prop="pass_at" label="审核通过时间" />
         <el-table-column prop="retouchAllTime" label="修图总时长" />
-        <el-table-column prop="reviewPhoto" label="审核种 / 拔草" />
-        <el-table-column prop="checkPhoto" label="抽查种 / 拔草" />
-        <el-table-column prop="lekimaInfo" label="利奇马" />
+        <el-table-column prop="lekimaInfo" label="利奇马（张）" />
+        <el-table-column prop="reviewPhoto" label="门店退回（张）" />
         <el-table-column prop="checkPhoto" label="评分">
           <template slot-scope="{row}">
             <div class="grade-box">
@@ -51,6 +56,8 @@
               </span>
             </div>
           </template>
+        </el-table-column>
+         <el-table-column label="云学院标签">
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -74,9 +81,10 @@
 </template>
 
 <script>
-import GrassSelect from '@SelectBox/GrassSelect'
-import SpotGrassSelect from '@SelectBox/SpotGrassSelect'
+import ReturnSelect from '@SelectBox/ReturnStateSelect'
+import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import LekimaSelect from '@SelectBox/LekimaSelect'
+import IssueSelect from '@SelectBox/IssueLabelSelect'
 import CrewSelect from '@SelectBox/CrewSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
@@ -84,7 +92,7 @@ import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'CrewRetouchHistory',
-  components: { GrassSelect, CrewSelect, SpotGrassSelect, LekimaSelect },
+  components: { ReturnSelect, CrewSelect, EvaluateSelect, LekimaSelect, IssueSelect },
   props: {
     isSeachPage: { type: Boolean },
     searchTime: { type: [Object, Array, String], default: () => {
@@ -96,10 +104,11 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      auditType: 0,
-      spotCheckType: 0, // 抽片类型
       tableData: [],
       staffId: 0,
+      issueId: 0,
+      isReturn: 'all',
+      isGood: 'all', // 是否门店点赞
       isLichmaValue: '', // 是否利奇马
       pager: {
         page: 1,
@@ -111,20 +120,11 @@ export default {
   created () {
     this.searchStaff && (this.staffId = this.searchStaff)
     switch (this.searchType) {
-      case SearchType.CheckPlant:
-        this.auditType = 'plant'
+      case SearchType.GoodEvaluation:
+        this.isGood = true
         break
-      case SearchType.CheckPull:
-        this.auditType = 'pull'
-        break
-      case SearchType.SpotPlant:
-        this.spotCheckType = this.searchType
-        break
-      case SearchType.SpotPull:
-        this.spotCheckType = this.searchType
-        break
-      case SearchType.SpotNone:
-        this.spotCheckType = this.searchType
+      case SearchType.ReworkPhoto:
+        this.isReturn = true
         break
       case 'isLichma':
         this.isLichmaValue = 1
@@ -164,16 +164,16 @@ export default {
       try {
         this.pager.page = page || this.pager.page
         const reqData = {
-          range: 'group',
           startAt: joinTimeSpan(this.searchTime[0]),
           endAt: joinTimeSpan(this.searchTime[1], 1),
           pageSize: this.pager.pageSize,
           page: this.pager.page
         }
         String(this.isLichmaValue) && (reqData.isLichma = this.isLichmaValue)
-        this.auditType && (reqData.plantPull = this.auditType)
-        this.spotCheckType && (reqData.spotCheckPlantPull = this.spotCheckType)
         this.staffId && (reqData.staffId = this.staffId)
+        this.issueId && (reqData.tagIds = this.issueId)
+        this.isReturn !== 'all' && (reqData.isStoreReturn = this.isReturn)
+        this.isGood !== 'all' && (reqData.storeEvaluate = this.isGood ? 'good' : 'bad')
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetouchLeader.getStaffRetouchList(reqData)
         this.tableData = data.list
@@ -208,6 +208,10 @@ export default {
         color: #303133;
       }
     }
+  }
+
+  .two-rows {
+    margin-bottom: 20px;
   }
 
   .table-box {

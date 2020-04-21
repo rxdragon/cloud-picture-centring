@@ -8,51 +8,29 @@
       <order-info :is-work-board-info="isWorkBoardInfo" :order-data="orderData" />
     </div>
     <!-- 照片列表 -->
-    <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
+     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
       <div class="panel-title">照片{{ photoIndex + 1 }}</div>
       <photo-detail :photo-item="photoItem" />
-    </div>
-    <!-- 看片师评价 -->
-    <div v-if="storeEvaluateStream" class="check-evaluate module-panel">
-      <div class="panel-title">门店评价</div>
-      <div class="tabel-panel">
-        <div class="tabel-title">顾客满意度评价</div>
-        <div class="tabel-title">看片师评价</div>
-        <div class="tabel-title">看片师评语</div>
-      </div>
-      <div class="tabel-panel content-box">
-        <div class="tabel-content">{{ retoucherNpsAvg }}</div>
-        <div class="tabel-content">
-          <el-rate
-            v-model="storeEvaluateStream.store_evaluate_star"
-            disabled
-            :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-          />
-        </div>
-        <div class="tabel-content">{{ storeEvaluateStream.store_evaluate_reason || '暂无评语' }}</div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import OrderInfo from './components/OrderInfo'
 import PhotoDetail from './components/PhotoDetail'
+import OrderInfo from './components/OrderInfo'
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
 
 export default {
   name: 'OrderDetail',
-  components: { OrderInfo, PhotoDetail },
+  components: { PhotoDetail, OrderInfo },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       streamId: '', // 流水id
       orderId: '', // 订单id
       orderData: {}, // 订单信息
-      photos: [],
-      storeEvaluateStream: null, // 看片评分
-      retoucherNpsAvg: '-分'
+      photos: []
     }
   },
   computed: {
@@ -88,8 +66,6 @@ export default {
         const data = await Commonality.getStreamInfo(req)
         this.orderData = data.orderData
         this.photos = data.photos
-        this.storeEvaluateStream = data.storeEvaluateStream
-        this.retoucherNpsAvg = data.retoucherNpsAvg
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

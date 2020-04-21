@@ -506,7 +506,7 @@ export default {
 
           .el-slider__bar {
             height: 4px;
-            background: linear-gradient(33deg, #91f5ff 0%, #71b9fd 45%, #4669fb 100%);
+            background-image: linear-gradient(33deg, #91f5ff 0%, #71b9fd 45%, #4669fb 100%);
           }
 
           .el-slider__button-wrapper {

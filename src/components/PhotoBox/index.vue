@@ -14,7 +14,7 @@
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
-      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">{{ showStoreMark ? '下载云端成片' : '下载原片' }}</el-button>
+      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">下载照片</el-button>
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
