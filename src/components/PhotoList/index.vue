@@ -35,6 +35,7 @@
     </div>
     <preview-photo
       v-if="showPreview"
+      :photo-info="photoInfo"
       :imgarray="priviewPhotoData"
       :orderindex="imgIndex"
       :show-preview.sync="showPreview"
@@ -54,9 +55,8 @@ export default {
     needPreload: { type: Boolean },
     photoData: { type: Array, default: () => [] }, // 照片数据
     needGrade: { type: Boolean },
-    gradeInfo: { type: Object, default: () => {
-      return {}
-    } } // 是否打分
+    gradeInfo: { type: Object, default: () => ({}) }, // 是否打分
+    photoInfo: { type: Object, default: () => ({}) } // 打分信息
   },
   data () {
     return {
@@ -90,9 +90,11 @@ export default {
       const isAttitudeBySelf = this.gradeInfo.staff_id === this.staffId
       return isAttitudeBySelf || !isAttitude
     },
+    // 种草照片
     goodPhoto () {
       return +this.gradeType === 1
     },
+    // 踩照片
     badPhoto () {
       return +this.gradeType === 2
     }
