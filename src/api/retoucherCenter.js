@@ -166,8 +166,8 @@ export function getRetouchQuotaList (params) {
       listItem.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
       listItem.exp = Number(listItem.exp) === 0 ? '-' : parseFloat(listItem.exp)
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
-      listItem.plantNum = _.get(listItem, 'tags.values.plant_num', 0)
-      listItem.pullNum = _.get(listItem, 'tags.values.pull_num', 0)
+      listItem.storeReturnNum = _.get(listItem, 'tags.values.store_return_num', 0)
+      listItem.goodEvaluate = _.get(listItem, 'tags.values.good_evaluate', '-')
       listItem.retoucherNpsAvg = _.get(listItem, 'tags.values.retoucher_score', '-')
       listItem.lekimaCount = _.get(listItem, 'tags.values.lichma_photo_num', '-')
     })

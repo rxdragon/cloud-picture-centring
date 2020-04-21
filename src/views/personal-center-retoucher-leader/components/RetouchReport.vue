@@ -51,7 +51,6 @@ import * as Staff from '@/api/staff.js'
 export default {
   name: 'RetouchReport',
   components: { DatePicker, ListTable, CrewRetouchHistory, CrewSelect, RetoucherChart },
-  props: {},
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -112,6 +111,11 @@ export default {
     this.timeSpan = [nowTime, nowTime]
     await this.getSelfStaffs()
     this.searchData()
+  },
+  watch: {
+    isSeachPage (val) {
+      this.$emit('changeShowTab',val)
+    }
   },
   methods: {
     /**

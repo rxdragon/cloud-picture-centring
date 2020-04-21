@@ -12,9 +12,13 @@
         <span>流水号</span>
         <el-input v-model="streamNum" clearable placeholder="请输入流水号" />
       </div>
-      <div class="search-type search-item">
-        <span>种拔草</span>
-        <grass-select v-model="searchType" />
+      <div class="audit-box search-item">
+        <span>门店退回</span>
+        <return-select v-model="isReturn" />
+      </div>
+      <div class="spot-check-box search-item">
+        <span>门店点赞</span>
+        <evaluate-select v-model="isGood" />
       </div>
       <div class="search-button-box">
         <el-button type="primary" @click="getRetouchList(1)">查询</el-button>
@@ -34,8 +38,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="retouchAllTime" label="修图总时长" />
-        <el-table-column prop="plantNum" label="种草" width="60" />
-        <el-table-column prop="pullNum" label="拔草" width="60" />
+        <el-table-column prop="storeReturnNum" label="退单张数" width="60" />
+        <el-table-column prop="lekimaCount" label="利奇马" />
         <el-table-column prop="exp" label="海草值">
           <template slot-scope="scope">
             <el-popover
@@ -56,7 +60,12 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="lekimaCount" label="利奇马" />
+        <el-table-column prop="goodEvaluate" label="门店评价">
+          <template slot-scope="scope">
+            <i class="el-icon-thumb" v-if="scope.row.goodEvaluate!=='-'" :class="scope.row.goodEvaluate==='bad'?'icon-reverse':''" />
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="retoucherNpsAvg" label="顾客满意度" />
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -80,7 +89,8 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
-import GrassSelect from '@SelectBox/GrassSelect'
+import ReturnSelect from '@SelectBox/ReturnStateSelect'
+import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
 
@@ -88,7 +98,7 @@ import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, GrassSelect },
+  components: { DatePicker, ReturnSelect, EvaluateSelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -96,6 +106,8 @@ export default {
       streamNum: '', // 流水号
       searchType: 0, // 搜索标准
       tableData: [], // 列表数据
+      isReturn: 'all', // 门店退回
+      isGood: 'all', // 是否门店点赞
       pager: {
         page: 1,
         pageSize: 10,
@@ -112,14 +124,11 @@ export default {
         }
         if (retouchHistorySearchType) {
           switch (retouchHistorySearchType) {
-            case SearchType.CheckPlant:
-              this.searchType = 'plant'
+            case SearchType.GoodEvaluation:
+              this.isGood = true
               break
-            case SearchType.CheckPull:
-              this.searchType = 'pull'
-              break
-            default:
-              this.searchType = 0
+            case SearchType.ReworkPhoto:
+              this.isReturn = true
               break
           }
         }
@@ -155,9 +164,8 @@ export default {
           reqData.startAt = joinTimeSpan(this.timeSpan[0])
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.searchType) {
-          reqData.grass = this.searchType
-        }
+        this.isReturn !== 'all' && (reqData.isStoreReturn = this.isReturn)
+        this.isGood !== 'all' && (reqData.storeEvaluate = this.isGood ? 'good' : 'bad')
         if (this.streamNum) {
           reqData.streamNum = this.streamNum
         }
@@ -189,6 +197,15 @@ export default {
 .retouch-history {
   .table-box {
     margin-top: 20px;
+
+    i {
+      font-size: 28px;
+      color: #ff7a00;
+    }
+
+    .icon-reverse {
+      transform: rotate(180deg);
+    }
   }
 
   .stream-search {

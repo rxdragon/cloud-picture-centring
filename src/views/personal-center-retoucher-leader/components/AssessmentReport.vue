@@ -93,6 +93,11 @@ export default {
     await this.getSelfStaffs()
     this.searchData()
   },
+  watch: {
+    isSeachPage (val) {
+      this.$emit('changeShowTab',val)
+    }
+  },
   methods: {
     /**
      * @description 获取组员

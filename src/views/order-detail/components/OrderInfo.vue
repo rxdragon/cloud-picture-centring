@@ -31,7 +31,7 @@
         <div class="panel-content">{{ orderInfo.storeReworkNum }}</div>
         <div class="panel-content">{{ orderInfo.reviewTime }}</div>
         <div class="panel-content">
-          <i class="el-icon-thumb evaluate-active" :class="orderInfo.store_evaluate==='bad'?'icon-reverse':''" v-if="orderInfo.store_evaluate!=='-'"/>
+          <i class="el-icon-thumb" :class="orderInfo.store_evaluate==='bad'?'icon-reverse':''" v-if="orderInfo.store_evaluate!=='-'"/>
           <span v-else>-</span>
         </div>
         <div class="panel-content">{{ orderInfo.retoucherNpsAvg }}</div>
@@ -150,10 +150,7 @@ export default {
     border-bottom: 1px solid #f2f6fc;
 
     i {
-      font-size: 20px;
-    }
-
-    .evaluate-active {
+      font-size: 28px;
       color: #ff7a00;
     }
 

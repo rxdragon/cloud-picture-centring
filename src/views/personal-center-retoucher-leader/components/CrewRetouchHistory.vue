@@ -106,8 +106,8 @@ export default {
       routeName: this.$route.name, // 路由名字
       tableData: [],
       staffId: 0,
-      issueId: 0,
-      isReturn: 'all',
+      issueId: 0, // 问题标签
+      isReturn: 'all', // 是否门店退回
       isGood: 'all', // 是否门店点赞
       isLichmaValue: '', // 是否利奇马
       pager: {

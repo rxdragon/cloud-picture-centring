@@ -68,6 +68,11 @@ export function getRankInfo () {
     method: 'GET'
   }).then(msg => {
     const createData = keyToHump(msg)
+    createData.nearly30DaysGoodNum = createData.nearly30DaysGoodNum
+    createData.nearly30DaysReturnNum = createData.nearly30DaysReturnNum
+    createData.nearly30DaysGoodRate = (createData.nearly30DaysGoodRate * 100).toFixed(2)
+    createData.nearly30DaysReturnRate = (createData.nearly30DaysReturnRate * 100).toFixed(2)
+    createData.needLevelUpExp = (createData.retouchPhotoNumTimeSum / createData.retouchFinishPhotoNumCount).toFixed(2)
     createData.nearly30DaysPlantRate = (createData.nearly30DaysPlantRate * 100).toFixed(2)
     createData.nearlyPlantRate = Math.floor(createData.nearly30DaysPlantRate)
     createData.nearly30DaysPullRate = (createData.nearly30DaysPullRate * 100).toFixed(2)
@@ -103,8 +108,8 @@ export function getRetouchQuota (params) {
       retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
       avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
       avgRetouchTimePhoto: timeFormat(avgRetouchTimePhoto, 'text', true),
-      plantNum: data.plantNum + ' / ' + transformPercentage(data.plantNum, data.retouchPhotoNum),
-      pullNum: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
+      goodNum: data.goodNum + ' / ' + transformPercentage(data.goodNum, data.retouchStreamNum),
+      storeReturnNum: data.storeReturnNum + ' / ' + transformPercentage(data.storeReturnNum, data.retouchStreamNum),
       overNum: data.overNum,
       retouchIncomeInfo: {
         getIncome: Number(data.retouchIncome).toFixed(2),
