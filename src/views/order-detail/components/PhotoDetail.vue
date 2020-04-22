@@ -59,19 +59,19 @@ export default {
     },
     // 判断是否有退单标记
     hasStoreReturnReason () {
-      return _.get(this.photoData, 'tags.values.store_rework_reason', false) || _.get(this.photoData, 'tags.values.store_part_rework_reason', false)
+      return _.get(this.photoData, 'tags.values.store_rework_reason') || _.get(this.photoData, 'tags.values.store_part_rework_reason') || false
     },
     // 是否云学院打分
     hcsCheckTags () {
-      return _.get(this.photoData, 'tags.values.score', false) || _.get(this.photoData, 'tags.values.check_pool_tags', false)
+      return _.get(this.photoData, 'tags.values.score') || _.get(this.photoData, 'tags.values.check_pool_tags') || false
     },
     // 云学院评分
     checkScore () {
-      return _.get(this.photoData, 'tags.values.score', 0)
+      return _.get(this.photoData, 'tags.values.score') || 0
     },
     // 云学院标记
     checkTag () {
-      const tagArr = _.get( this.photoData, 'tags.values.check_pool_tags', [])
+      const tagArr = _.get( this.photoData, 'tags.values.check_pool_tags') || []
       const tagFilter = tagArr.map(item => {
         return item.name
       })
@@ -79,12 +79,12 @@ export default {
     },
     // 整体备注
     wholeNote () {
-      return _.get( this.photoData, 'tags.values.store_rework_note', '')
+      return _.get( this.photoData, 'tags.values.store_rework_note') || ''
     },
     // 局部备注数组
     partNote () {
       let note = ''
-      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason', [])
+      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
       partArr.forEach(item => {
         note += item.note + ' '
       })
@@ -93,7 +93,7 @@ export default {
     // 退单标记 包括整体标记和局部标记
     StoreReturnReason () {
       const wholeReason = _.get( this.photoData, 'tags.values.store_rework_reason', '').split('+')
-      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason', [])
+      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
       let partReason = []
       partArr.forEach(item => {
         partReason = [...item.reason.split('+'),...partReason]
@@ -106,7 +106,7 @@ export default {
     },
     // 门店退回标记与照片封装
     preList () {
-      if (_.get( this.photoData, 'tags.values', []) === []) {
+      if (_.get( this.photoData, 'tags.values') || {} === {}) {
         return []
       }
       let completePhoto = this.photoData.otherPhotoVersion.find(item => item.version === 'complete_photo')

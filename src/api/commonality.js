@@ -35,10 +35,10 @@ export function getStreamInfo (params) {
   }).then(msg => {
     const data = keyToHump(msg)
     const createData = {}
-    const reworkNum = _.get(data, 'tags.values.rework_num', 0)
-    const storeReworkNum = _.get(data, 'tags.values.store_rework_num', 0)
-    const store_evaluate = _.get(data, 'storeEvaluateStream.store_evaluate', '-')
-    let retoucherNpsAvg = _.get(data, 'tags.values.retoucher_score', '-')
+    const reworkNum = _.get(data, 'tags.values.rework_num') || 0
+    const storeReworkNum = _.get(data, 'tags.values.store_rework_num') || 0
+    const store_evaluate = _.get(data, 'storeEvaluateStream.store_evaluate') || '-'
+    let retoucherNpsAvg = _.get(data, 'tags.values.retoucher_score') || '-'
     const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
     retoucherNpsAvg = npsAvgEnum[+retoucherNpsAvg] || `${retoucherNpsAvg}`
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
@@ -46,7 +46,7 @@ export function getStreamInfo (params) {
     data.photos.forEach(photoItem => {
       const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.CheckReturn)
       const isStoreReturn = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.StoreReturn)
-      const filmEvaluation = _.get(photoItem, 'tags.values.film_evaluation', '')
+      const filmEvaluation = _.get(photoItem, 'tags.values.film_evaluation') || ''
       photoItem.filmEvaluation = filmEvaluation
       photoItem.reworkNum = reworkNum
       // 照片版本
@@ -75,7 +75,7 @@ export function getStreamInfo (params) {
       photographerOrg: data.order ? data.order.photographer_org.name : '-',
       productName: _.get(data, 'product.name', '-'),
       photoNum: data.photos.filter(item => +item.people_num > 0).length,
-      photographerName: _.get(data, 'order.tags.values.photographer', '-'),
+      photographerName: _.get(data, 'order.tags.values.photographer') || '-',
       reworkNum,
       storeReworkNum,
       retouchAllTime,
