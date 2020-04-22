@@ -19,15 +19,20 @@
         <retouch-order-chart :chart-datas="orderStatisticsData" />
       </div>
       <div class="performance-statistics">
-        <div class="panel-title">种拔草统计</div>
-        <performance-chart :chart-datas="performanceData" />
+        <div class="title-box">
+          <div class="panel-title">云学院抽查统计</div>
+          <div class="check-avg">抽查平均分：{{ checkData.checkAvgScore }}</div>
+        </div>
+        <div class="chart-box">
+          <pie-chart :chart-data="checkData.checkTags" />
+        </div>
       </div>
     </div>
     <div class="other-data">
       <div class="panel-title">其他数据</div>
       <div v-for="(itemData, itemIndex) in otherData" :key="itemIndex" class="num-box">
         <span class="num">
-          <count-to :end-value="itemData.value" show-point />{{ itemIndex === 'storeEvaluateScoreAvg' ? '星' : '' }}
+          <count-to :end-value="itemData.value" show-point />{{ itemIndex === 'goodRate' ? '%' : '' }}
         </span>
         <div class="desc">{{ itemData.label }}</div>
       </div>
@@ -39,7 +44,7 @@
 import DatePicker from '@/components/DatePicker'
 import StaffSelect from '@SelectBox/StaffSelect'
 import RetouchOrderChart from './chart-components/RetouchOrderChart'
-import PerformanceChart from './chart-components/PerformanceChart'
+import PieChart from '@/components/charts/PieChart'
 import CountTo from '@/components/CountTo'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
@@ -47,7 +52,7 @@ import * as WorkManage from '@/api/workManage'
 
 export default {
   name: 'PartnerPerformance',
-  components: { DatePicker, StaffSelect, RetouchOrderChart, PerformanceChart, CountTo },
+  components: { DatePicker, StaffSelect, RetouchOrderChart, PieChart, CountTo },
   data () {
     return {
       loading: false,
@@ -56,9 +61,10 @@ export default {
       otherData: {
         exp: { value: '0.00', label: '海草值' },
         income: { value: '0.00', label: '收益' },
-        storeEvaluateScoreAvg: { value: '0.00', label: '门店评分（平均值）' },
+        goodRate: { value: '0.00', label: '门店点赞率' },
         retoucherNpsAvg: { value: '0.00', label: '顾客满意度（平均值）' }
       },
+      checkData: {},
       orderStatisticsData: {
         retoucherFinishStreamNum: { value: 0, label: '总单量' },
         retoucherFinishPhotoNum: { value: 0, label: '总张数' },
@@ -67,22 +73,11 @@ export default {
         storeReturnPhotoNum: { value: 0, label: '门店退单张数' },
         lekimaStreamNum: { value: 0, label: '利奇马单量' },
         lekimaPhotoNum: { value: 0, label: '利奇马张数' },
+        goodStreamNum: { value: 0, label: '点赞单量' },
         storeReturnStreamNumForQuality: { value: 0, label: '门店退单（质量问题）' },
         storeReturnPhotoNumForQuality: { value: 0, label: '门店退单（质量问题）张数' },
         storeReturnStreamNumForNotQuality: { value: 0, label: '门店退单（非质量问题）' },
         storeReturnPhotoNumForNotQuality: { value: 0, label: '门店退单（非质量问题）张数' }
-      },
-      performanceData: {
-        reviewPlant: { value: 0.00, label: '审核种草' },
-        reviewPlantRate: { value: 0, label: '审核种草率' },
-        reviewPull: { value: 0.00, label: '审核拔草' },
-        reviewPullRate: { value: 0.00, label: '审核拔草率' },
-        retoucherEvaluatedPlantNum: { value: 0.00, label: '抽查种草' },
-        retoucherEvaluatedPlantRate: { value: 0, label: '抽查种草率' },
-        retoucherEvaluatedPullNum: { value: 0.00, label: '抽查拔草' },
-        retoucherEvaluatedPullRate: { value: 0.00, label: '抽查拔草率' },
-        retoucherEvaluatedNoPlantNoPullNum: { value: 0.00, label: '直接通过' },
-        retoucherEvaluatedNoPlantNoPullRate: { value: 0.00, label: '直接通过率' }
       }
     }
   },
@@ -118,15 +113,14 @@ export default {
         if (!req) return false
         this.loading = true
         const data = await WorkManage.getRetoucherQuota(req)
+        this.checkData.checkTags = data.retoucherCheckCount
+        this.checkData.checkAvgScore = data.retoucherCheckPoolEvaluationScore
         for (const key in data) {
           if (this.otherData[key]) {
             this.otherData[key].value = data[key]
           }
           if (this.orderStatisticsData[key]) {
             this.orderStatisticsData[key].value = parseInt(data[key])
-          }
-          if (this.performanceData[key]) {
-            this.performanceData[key].value = data[key]
           }
         }
       } catch (error) {
@@ -182,11 +176,25 @@ export default {
     .performance-statistics {
       position: relative;
       width: calc(~'50% - 11px');
+
+      .title-box {
+        .check-avg {
+          float: right;
+          font-size: 13px;
+          color: #45454d;
+        }
+      }
+
+      .chart-box {
+        height: 240px;
+        margin-top: 24px;
+      }
     }
 
     .panel-title {
       position: absolute;
       top: 0;
+      height: 24px;
     }
   }
 

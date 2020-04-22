@@ -20,10 +20,10 @@ export default {
         label: '全部',
         value: 'all'
       }, {
-        label: '是',
+        label: '点赞',
         value: true
       }, {
-        label: '否',
+        label: '点踩',
         value: false
       }]
     }

@@ -62,8 +62,7 @@
         </el-table-column>
         <el-table-column prop="goodEvaluate" label="门店评价">
           <template slot-scope="scope">
-            <i class="el-icon-thumb" v-if="scope.row.goodEvaluate!=='-'" :class="scope.row.goodEvaluate==='bad'?'icon-reverse':''" />
-            <span v-else>-</span>
+            <show-evaluate :evaluate="scope.row.goodEvaluate" />
           </template>
         </el-table-column>
         <el-table-column prop="retoucherNpsAvg" label="顾客满意度" />
@@ -91,6 +90,7 @@
 import DatePicker from '@/components/DatePicker'
 import ReturnSelect from '@SelectBox/ReturnStateSelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
+import ShowEvaluate from '@/components/ShowEvaluate'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
 
@@ -98,7 +98,7 @@ import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -197,15 +197,6 @@ export default {
 .retouch-history {
   .table-box {
     margin-top: 20px;
-
-    i {
-      font-size: 28px;
-      color: #ff7a00;
-    }
-
-    .icon-reverse {
-      transform: rotate(180deg);
-    }
   }
 
   .stream-search {

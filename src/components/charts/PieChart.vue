@@ -1,10 +1,9 @@
 <template>
-  <div class="sunburst-chart">
-     <div class="panel-title">{{ configOption.title }}</div>
-    <div class="sunburst-no-data" v-show="!chartData.length">
+  <div class="pie-chart">
+    <div class="pie-no-data" v-show="!chartData.length">
       <no-data />
     </div>
-    <div class="sunburst-chart-data" ref="sunburst"></div>
+    <div class="pie-chart-data" ref="pie"></div>
   </div>
 </template>
 
@@ -13,18 +12,21 @@ import echarts from "echarts"
 import NoData from '@/components/NoData'
 const option = data => {
   return {
-    tooltip: {},
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b} <br/>{c}'
+    },
     series: {
       radius: ["30%", "60%"],
       type: "pie",
-      highlightPolicy: "ancestor",
       data,
       label: {
-        rotate: "tangential",
+        alignTo: 'labelLine',
         textBorderColor: 'transparent',
+        formatter: '{b}{c}',
         color: '#000'
       },
-      levels: []
+      color: ['#ffdb78', '#b7ff8f', '#91c2ff', '#ffb4ca','#fe9c43']
     }
   }
 }
@@ -34,7 +36,6 @@ export default {
   components: { NoData },
   props: {
     chartData: { type: Array, default: () => [] },
-    configOption: { type: Object, default: () => { return {} } }
   },
   data () {
     return {
@@ -42,7 +43,7 @@ export default {
     }
   },
   mounted () {
-    this.drawChart(this.chartData)
+    this.drawChart()
   },
   watch: {
     chartData: {
@@ -57,7 +58,7 @@ export default {
      * @description 获取dom元素
      */
     drawChart () {
-      const dom = this.$refs['sunburst']
+      const dom = this.$refs['pie']
       this.myChart = echarts.init(dom)
       const chartOption = option(this.chartData)
       this.myChart.setOption(chartOption, true)
@@ -67,18 +68,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.sunburst-chart {
+.pie-chart {
   height: 100%;
   overflow: hidden;
 
-  .sunburst-no-data {
+  .pie-no-data,
+  .pie-chart-data {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-  }
-
-  .sunburst-chart-data {
+    width: 100%;
     height: 100%;
   }
 }

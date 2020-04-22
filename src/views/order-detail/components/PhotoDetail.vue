@@ -6,12 +6,12 @@
         <photo-box
           :tags="photoData.tags"
           :is-lekima="photo.isLekima"
-          :preview="!showMark"
-          :show-store-mark="showMark"
+          :preview="!showMark(photo.version)"
+          :show-store-mark="showMark(photo.version)"
           photo-name
           downing
           :stream-num="photoData.stream_num"
-          :pre-list="preList"
+          :pre-list="preList(photo)"
           :pre-index="0"
           :src="photo.path"
         >
@@ -101,19 +101,23 @@ export default {
       return wholeReason.concat(partReason)
     },
     showMark () {
-      const completePhoto = this.photoData.otherPhotoVersion.find(item => item.version === 'complete_photo')
-      return _.get( completePhoto, 'tags.values', false) ? true : false
+      return function (version) {
+        return version === 'complete_photo'
+      }
     },
     // 门店退回标记与照片封装
     preList () {
-      if (_.get( this.photoData, 'tags.values') || {} === {}) {
-        return []
+      return function (item) {
+        if (item.version !== 'complete_photo') {
+          return []
+        }
+        // 深拷贝
+        let itemCopy = JSON.parse(JSON.stringify(item))
+        const originPhoto = this.photoData.otherPhotoVersion.find(item => item.version === 'original_photo')
+        itemCopy.returnPhotoPath = item.path
+        itemCopy.path = originPhoto.path
+        return [itemCopy]
       }
-      let completePhoto = this.photoData.otherPhotoVersion.find(item => item.version === 'complete_photo')
-      const originPhoto = this.photoData.otherPhotoVersion.find(item => item.version === 'original_photo')
-      completePhoto.returnPhotoPath = completePhoto.path
-      completePhoto.path = originPhoto.path
-      return [completePhoto]
     }
   }
 }

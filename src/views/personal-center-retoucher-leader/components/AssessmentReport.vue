@@ -25,7 +25,8 @@
           <retoucher-chart v-for="keyItem in chartShowKeys" :key="keyItem" :show-key="keyItem" :chart-datas="barData" />
         </div>
         <div class="chart-item">
-          <pie-chart :chart-data="pieData" :config-option="configOption"></pie-chart>
+          <div class="panel-title">问题详情</div>
+          <pie-chart :chart-data="pieData"></pie-chart>
         </div>
       </div>
     </div>
@@ -45,7 +46,7 @@ import ListTable from '@/components/ListTable'
 import CrewRetouchHistory from './CrewRetouchHistory'
 import RetoucherChart from './RetoucherChart'
 import CrewSelect from '@SelectBox/CrewSelect'
-import PieChart from './PieCharts'
+import PieChart from '@/components/charts/PieChart'
 
 import { parseTime } from '@/utils/index.js'
 import { joinTimeSpan } from '@/utils/timespan.js'
@@ -74,9 +75,6 @@ export default {
       pieData: [],
       barData: [],
       chartShowKeys: ['avgScore'],
-      configOption: {
-        title: '问题详情'
-      }
     }
   },
   computed: {

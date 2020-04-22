@@ -113,6 +113,11 @@ export default {
         photoCount: this.chartDatas.lekimaPhotoNum
       },
       {
+        name: '点赞',
+        orderCount: this.chartDatas.goodStreamNum,
+        photoCount: this.chartDatas.goodNum
+      },
+      {
         name: '门店退单',
         orderCount: this.chartDatas.storeReturnStreamNum,
         photoCount: this.chartDatas.storeReturnPhotoNum
