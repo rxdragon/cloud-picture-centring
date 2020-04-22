@@ -13,6 +13,7 @@
         <div v-loading="loading" class="orginPhoto" :style="inZoomIn && 'cursor: zoom-out;'">
           <img
             id="orginImg"
+            ref="orgin-img"
             :style="photoZoomStyle"
             :src="showPhoto.src"
             :alt="showPhoto.title"
@@ -20,7 +21,7 @@
             @click="zoom"
           >
           <div class="mask-photo" v-if="hasCommitInfo" v-show="isCompletePhoto && showMark">
-            <img :src="markPhoto" alt="">
+            <img :style="photoZoomStyle" @click="zoom" :src="markPhoto" alt="">
           </div>
           <div id="_magnifier_layer" />
         </div>
@@ -48,11 +49,12 @@
               <div class="smallPhoto">
                 <div id="img-box" style="position: relative;">
                   <img
+                    ref="compress-img"
                     :src="showPhoto.src"
                     alt="缩略图"
-                    @mouseout="handOut"
                     @mousemove="handMove"
                     @mouseover="handOver"
+                    @mouseout="handOut"
                   >
                   <div class="_magnifier_zoom" />
                 </div>
@@ -372,9 +374,9 @@ export default {
      * @description 鼠标移进
      */
     handOver (e) {
+      this.imgObj = this.$refs['compress-img']
+      this.imgBigObj = this.$refs['orgin-img']
       // 获取大图尺寸
-      this.imgObj = this.$el.getElementsByTagName('img')[1]
-      this.imgBigObj = this.$el.getElementsByTagName('img')[0]
       this.imgRect = this.imgObj.getBoundingClientRect()
       this.imgBigRect = this.imgBigObj.getBoundingClientRect()
       // 马克图宽度计算系数

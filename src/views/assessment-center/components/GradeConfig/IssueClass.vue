@@ -116,8 +116,14 @@ export default {
     /**
      * @description 删除单项
      */
-    delectItem () {
-      this.$emit('getList')
+    delectItem (sendData) {
+      if (this.edit) {
+        const key = sendData.key
+        const findDeleteIssueItemIndex = this.issueClassData.child.findIndex(item => item.key === key)
+        this.issueClassData.child.splice(findDeleteIssueItemIndex, 1)
+      } else {
+        this.$emit('getList')
+      }
     },
     /**
      * @description 判断是否有数据
@@ -132,6 +138,7 @@ export default {
         return hasChange
       }
       const cacheChild = this.cacheData.child
+      if (cacheChild.length !== this.issueClassData.child.length) { hasChange = true }
       this.issueClassData.child.forEach(issueItem => {
         if (!issueItem.name || !issueItem.weights) {
           throw new Error('请填写完整信息')

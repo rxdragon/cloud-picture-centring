@@ -88,6 +88,11 @@ export default {
      */
     async delectIssueItem () {
       try {
+        if (this.classEdit) {
+          const sendData = { key: this.issueItemData.key }
+          this.$emit('delete', sendData)
+          return
+        }
         const req = {
           id: this.issueItemData.id
         }

@@ -331,6 +331,9 @@ export default {
       }
     })
   },
+  beforeDestroy () {
+    document.onkeydown = null
+  },
   methods: {
     /**
      * @description 提交分数
@@ -515,6 +518,7 @@ export default {
      * @description 更改画笔类型
      */
     changeDrawType (drawType) {
+      if (!this.$parent.showGradePreview) return false
       if (drawType !== 'blowup' && !this.showCanvas) {
         this.createCanvas()
         return
