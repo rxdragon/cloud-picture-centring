@@ -40,7 +40,7 @@
         </div>
         <div class="list-content">
           <span>{{ todayInfo.evaluationNum || '-' }}</span>
-          <span>{{ todayInfo.evaluationScore }}</span>
+          <span>{{ todayInfo.avgScore }}</span>
         </div>
       </div>
     </div>
@@ -143,17 +143,26 @@ export default {
           this.$newMessage.success('你已经打完全部照片')
           this.showGradePreview = false
           this.$store.dispatch('setting/showLoading', this.routeName)
-          await this.getSpotCheckResult()
+          await Promise.all([
+            this.getSpotCheckResult(),
+            this.getStatistics()
+          ])
         } else if (isAllLast && this.photoData.length === 1 && this.pager.page > 1) {
           this.$refs['grade-preview'].allLoading = true
           this.pager.page--
-          await this.getSpotCheckResult()
+          await Promise.all([
+            this.getSpotCheckResult(),
+            this.getStatistics()
+          ])
           this.gradeUUid = this.photoData[0]._id
           this.$refs['grade-preview'].allLoading = false
         } else {
           this.$refs['grade-preview'].allLoading = true
           this.gradeUUid = this.photoData[findGradePhotoIndex + 1]._id
-          await this.getSpotCheckResult()
+          await Promise.all([
+            this.getSpotCheckResult(),
+            this.getStatistics()
+          ])
           this.$refs['grade-preview'].allLoading = false
         }
       } catch (error) {
@@ -213,7 +222,11 @@ export default {
      * @description 获取今日评价数据
      */
     async getStatistics () {
-      this.todayInfo = await AssessmentCenter.getStatistics()
+      try {
+        this.todayInfo = await AssessmentCenter.getStatistics()
+      } catch (error) {
+        console.error(error)
+      }
     },
     /**
      * @description 获取抽查数量参数

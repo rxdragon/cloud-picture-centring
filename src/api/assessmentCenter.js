@@ -5,24 +5,22 @@ import ProductModel from '@/model/ProductModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import StreamModel from '@/model/StreamModel.js'
 import uuidv4 from 'uuid'
-import { transformPercentage } from '@/utils/index.js'
+import { getAvg } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import * as Colors from "@/utils/colors"
 
 /**
  * @description 获取今日抽片指标
- * @param {*} params
  */
-export function getStatistics (params) {
+export function getStatistics () {
   return axios({
     url: '/project_cloud/checkPool/getStatistics',
     method: 'GET'
   }).then(msg => {
     const data = msg
     data.evaluationNum = Math.floor(data.evaluationNum)
-    data.plantPercent = transformPercentage(data.plantNum, data.evaluationNum)
-    data.pullPercent = transformPercentage(data.pullNum, data.evaluationNum)
+    data.avgScore = getAvg(data.evaluationScore, data.evaluationNum)
     return data
   })
 }
