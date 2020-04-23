@@ -41,12 +41,12 @@
             >
               <div class="tip-content">
                 <div>修图等级升级规则：</div>
-                <div>1、种草率：近期修图获得的<span class="emphasis">种草数</span>占比，升级条件需<span class="emphasis">达到</span>种草达标率</div>
-                <div>2、拔草率：近期修图获得的<span class="emphasis">拔草数</span>占比，升级条件需<span class="emphasis">低于</span>拔草合格率</div>
+                <div>1、点赞数：近期修图获得的<span class="emphasis">点赞数</span>占比，升级条件需<span class="emphasis">达到</span>点赞达标率</div>
+                <div>2、退单率：近期修图获得的<span class="emphasis">退单数</span>占比，升级条件需<span class="emphasis">低于</span>退单合格率</div>
                 <div>3、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
                 <div>系统按照过去30天内（滚动周期，由当天往前推30天）的
-                  <span class="emphasis">种草数、拔草数</span>
-                  除以等级要求固定分母得出种拔草率</div>
+                  <span class="emphasis">点赞数、退单数</span>
+                  除以等级要求固定分母得出点赞、退单率</div>
                 <div class="grade-box">
                   <el-table :data="gradeData">
                     <el-table-column label="固定分母">
@@ -71,19 +71,19 @@
             <el-col :span="6">
               <div class="main-content">
                 <span class="num plant-color">
-                  <count-to :end-value="gradeInfo.nearly30DaysPlantNum | getInteger" />
-                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysPlantNum | getPoint" /></i>
+                  <count-to :end-value="gradeInfo.nearly30DaysGoodNum | getInteger" />
+                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysGoodNum | getPoint" /></i>
                 </span>
-                <span>近30日种草</span>
+                <span>近30日点赞数</span>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="main-content">
                 <span class="num pull-color">
-                  <count-to :end-value="gradeInfo.nearly30DaysPullNum | getInteger" />
-                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysPullNum | getPoint" /></i>
+                  <count-to :end-value="gradeInfo.nearly30DaysReturnNum | getInteger" />
+                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysReturnNum | getPoint" /></i>
                 </span>
-                <span>近30日拔草</span>
+                <span>近30日退单数</span>
               </div>
             </el-col>
             <el-col :span="6">
@@ -101,7 +101,7 @@
                   <count-to :end-value="gradeInfo.needLevelUpExp | getInteger" />
                   <i>.<count-to decimals :end-value="gradeInfo.needLevelUpExp | getPoint" /></i>
                 </span>
-                <span>达标海草数</span>
+                <span>平均单张修图时长（分钟）</span>
               </div>
             </el-col>
           </el-row>
@@ -110,31 +110,17 @@
           <el-row :gutter="51">
             <el-col :span="12">
               <div class="rote-title">
-                <span>近30日种草率</span>
-                <span class="num">{{ gradeInfo.nearly30DaysPlantRate }}%</span>
+                <span>近30日点赞率</span>
+                <span class="num">{{ gradeInfo.nearly30DaysGoodRate }}%</span>
               </div>
-              <el-progress class="" :percentage="gradeInfo.nearlyPlantRate" :show-text="false" />
+              <el-progress class="" :percentage="gradeInfo.nearly30DaysGoodRate" :show-text="false" />
             </el-col>
             <el-col :span="12" class="pull-box">
               <div class="rote-title">
-                <span>近30日拔草率</span>
-                <span class="num">{{ gradeInfo.nearly30DaysPullRate }}%</span>
+                <span>近30日退单率</span>
+                <span class="num">{{ gradeInfo.nearly30DaysReturnRate }}%</span>
               </div>
-              <el-progress :percentage="gradeInfo.nearlyPullRate" :show-text="false" />
-            </el-col>
-            <el-col :span="12">
-              <div class="rote-title col-two">
-                <span>种草达标率</span>
-                <span class="num">{{ gradeInfo.needLevelUpPhotoPlantRate }}%</span>
-              </div>
-              <el-progress :percentage="gradeInfo.needLevelUpPlantRate" :show-text="false" />
-            </el-col>
-            <el-col :span="12" class="pull-box">
-              <div class="rote-title col-two">
-                <span>拔草合格率</span>
-                <span class="num">{{ gradeInfo.needLevelUpPhotoPullRate }}%</span>
-              </div>
-              <el-progress :percentage="gradeInfo.needLevelUpPullRate" :show-text="false" />
+              <el-progress :percentage="gradeInfo.nearly30DaysReturnRate" :show-text="false" />
             </el-col>
           </el-row>
         </div>
@@ -234,16 +220,16 @@ export default {
       gradeInfo: {},
       gradeData: [{
         1: 800,
-        2: 1266,
-        3: 1514,
-        4: 1798,
-        5: 1798,
-        6: 1798,
-        7: 1812,
-        8: 1812,
-        9: 1812,
-        10: 1900,
-        11: 1900
+        2: 2000,
+        3: 3500,
+        4: 7000,
+        5: 11000,
+        6: 20000,
+        7: 30000,
+        8: 42000,
+        9: 55000,
+        10: 70000,
+        11: '/'
       }],
       awardInfo: [],
       propData: []

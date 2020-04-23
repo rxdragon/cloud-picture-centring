@@ -15,13 +15,13 @@
       </div>
       <div class="middle-box">
         <i class="el-icon-arrow-left arrow" @click="switchImg('last')"></i>
-        <div class="content">
+        <div class="return-pre-content">
           <img ref="retouch-img" id="orginImg" :src="url" @load="getImgSize">
           <!-- 大图预览框 -->
-          <div id="magnifier-layer" />
+          <div id="return-magnifier-layer" />
           <div v-show="showSign" ref="sign-dom" class="sign-dom">
             <div
-              v-for="(item,index) in preIndexPhoto.tags.values.store_part_rework_reason"
+              v-for="(item,index) in storePartReworkReason"
               class="sign-item"
               :key="index"
               :style="{
@@ -80,9 +80,12 @@
       <div class="right-main">
         <p class="tips border-tips">照片整体原因</p>
         <div class="reason-contain">
-          <div class="whole-reason-list"><span v-for="(item, index) in changeTag(preIndexPhoto.tags.values.store_rework_reason)" :key="index" class="reason-tag-common whole-tag">{{ item }}</span></div>
+          <div class="whole-reason-list">
+            <span v-for="(item, index) in changeTag(storeReworkReason)" :key="index" class="reason-tag-common whole-tag">{{ item }}</span>
+            <span v-if="!storeReworkReason" class="reason-note">暂无原因</span>
+          </div>
           <p class="tips">整体原因备注：</p>
-          <p class="reason-note" v-if="preIndexPhoto.tags.values.store_rework_note">{{ preIndexPhoto.tags.values.store_rework_note }}</p>
+          <p class="reason-note">{{ storeReworkNote || '暂无备注' }}</p>
         </div>
       </div>
       <el-footer class="operate-box">
@@ -133,11 +136,23 @@ export default {
     url () {
       return this.preImgType ? this.imgDomain + this.preIndexPhoto.returnPhotoPath : this.imgDomain + this.preIndexPhoto.path
     },
+    storePartReworkReason () {
+      return _.get(this.preIndexPhoto, 'tags.values.store_part_rework_reason') || []
+    },
+    storeReworkReason () {
+      return _.get(this.preIndexPhoto, 'tags.values.store_rework_reason') || ''
+    },
+    storeReworkNote () {
+      return _.get(this.preIndexPhoto, 'tags.values.store_rework_note') || ''
+    },
     /**
      * @description 将字符串标签转换为数组
      */
     changeTag () {
       return function (tagString) {
+        if (!tagString) {
+          return []
+        }
         return tagString.split('+') || []
       }
     },
@@ -199,7 +214,7 @@ export default {
       if (_maskX + this.mouseMask.offsetWidth >= this.imgRect.width) {
         _maskX = this.imgRect.width - this.mouseMask.offsetWidth
       }
-      this.mouseMask.style.webkitTransform = `translate3d(${_maskX}px,${_maskY}px,0)`
+      this.mouseMask.style.webkitTransform = `translate3d(${_maskX + this.imgObj.offsetLeft}px,${_maskY + this.imgObj.offsetTop}px,0)`
       const backgroundX =
         ((_maskX / this.imgRect.width) *
           this.propConfigs.width *
@@ -249,7 +264,7 @@ export default {
       this.mouseMask.style.opacity = this.propConfigs.maskOpacity
       this.imgObj.parentNode.appendChild(this.mouseMask)
       // 创建预览框
-      const imgLayer = document.getElementById('magnifier-layer')
+      const imgLayer = document.getElementById('return-magnifier-layer')
       const orginImg = document.getElementById('orginImg')
       this.propConfigs.width = orginImg.width
       this.propConfigs.height = orginImg.height
@@ -261,7 +276,7 @@ export default {
       imgLayer.style.backgroundImage = `url('${this.url}')`
       imgLayer.style.backgroundRepeat = 'no-repeat'
       imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
-      document.getElementsByClassName('content')[0].appendChild(imgLayer)
+      document.getElementsByClassName('return-pre-content')[0].appendChild(imgLayer)
     }
   }
 }
@@ -347,7 +362,7 @@ export default {
           right: 20px;
         }
 
-        .content {
+        .return-pre-content {
           position: relative;
           display: flex;
           align-items: center;
@@ -363,9 +378,9 @@ export default {
             margin: auto;
           }
 
-          #magnifier-layer {
+          #return-magnifier-layer {
             position: absolute;
-            z-index: 2000;
+            z-index: 5000;
             margin: auto;
           }
 
@@ -472,11 +487,20 @@ export default {
         }
 
         .small-photo {
+          position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
           width: 100%;
           height: 100%;
+
+          #img-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+          }
 
           .magnifier-zoom {
             position: absolute;
@@ -553,6 +577,7 @@ export default {
           .whole-reason-list {
             display: flex;
             flex-wrap: wrap;
+            margin-bottom: 10px;
 
             .whole-tag {
               width: max-content;

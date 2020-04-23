@@ -42,13 +42,13 @@
         <el-table-column prop="pass_at" label="审核通过时间" />
         <el-table-column prop="retouchAllTime" label="修图总时长" />
         <el-table-column prop="lekimaInfo" label="利奇马（张）" />
-        <el-table-column prop="reviewPhoto" label="门店退回（张）" />
-        <el-table-column prop="checkPhoto" label="评分">
+        <el-table-column prop="storeReworkPhotoNum" label="门店退回（张）" />
+        <el-table-column prop="checkPhoto" label="评分" width="120">
           <template slot-scope="{row}">
             <div class="grade-box">
               <span class="span-row">
                 <span class="span-title">门店评分：</span>
-                {{ row.gradeInfo.storeGrade }}
+                <show-evaluate :evaluate="row.gradeInfo.storeEvaluation" />
               </span>
               <span class="span-row">
                 <span class="span-title nps-grade">顾客满意度：</span>
@@ -58,6 +58,11 @@
           </template>
         </el-table-column>
          <el-table-column label="云学院标签">
+          <template slot-scope="{row}">
+            <div class="check-tag-list">
+              <span v-for="(tagItem,tagIndex) in row.checkTags" :key="tagIndex" class="check-tag">{{ tagItem }}</span>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -83,6 +88,7 @@
 <script>
 import ReturnSelect from '@SelectBox/ReturnStateSelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
+import ShowEvaluate from '@/components/ShowEvaluate'
 import LekimaSelect from '@SelectBox/LekimaSelect'
 import IssueSelect from '@SelectBox/IssueLabelSelect'
 import CrewSelect from '@SelectBox/CrewSelect'
@@ -92,7 +98,7 @@ import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'CrewRetouchHistory',
-  components: { ReturnSelect, CrewSelect, EvaluateSelect, LekimaSelect, IssueSelect },
+  components: { ReturnSelect, CrewSelect, EvaluateSelect, LekimaSelect, IssueSelect, ShowEvaluate },
   props: {
     isSeachPage: { type: Boolean },
     searchTime: { type: [Object, Array, String], default: () => {
@@ -106,8 +112,8 @@ export default {
       routeName: this.$route.name, // 路由名字
       tableData: [],
       staffId: 0,
-      issueId: 0,
-      isReturn: 'all',
+      issueId: 0, // 问题标签
+      isReturn: 'all', // 是否门店退回
       isGood: 'all', // 是否门店点赞
       isLichmaValue: '', // 是否利奇马
       pager: {
@@ -233,6 +239,21 @@ export default {
           width: 90px;
         }
       }
+    }
+
+    .check-tag-list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .check-tag {
+      padding: 5px 10px;
+      margin: 0 10px 10px 0;
+      font-size: 12px;
+      line-height: 12px;
+      color: #eee;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
     }
   }
 }

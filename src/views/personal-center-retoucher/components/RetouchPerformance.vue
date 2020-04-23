@@ -23,17 +23,17 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="种草量/种草率" min-width="120">
+        <el-table-column label="点赞数/点赞率" min-width="120">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.CheckPlant">
-              {{ scope.row.plantNum }}
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.GoodEvaluation">
+              {{ scope.row.goodNum }}
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column label="拔草量/拔草率" min-width="120">
+        <el-table-column label="退单数/退单率" min-width="120">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.CheckPull">
-              {{ scope.row.pullNum }}
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.ReworkPhoto">
+              {{ scope.row.storeReturnNum }}
             </router-link>
           </template>
         </el-table-column>

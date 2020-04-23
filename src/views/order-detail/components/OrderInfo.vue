@@ -31,8 +31,7 @@
         <div class="panel-content">{{ orderInfo.storeReworkNum }}</div>
         <div class="panel-content">{{ orderInfo.reviewTime }}</div>
         <div class="panel-content">
-          <i class="el-icon-thumb evaluate-active" :class="orderInfo.store_evaluate==='bad'?'icon-reverse':''" v-if="orderInfo.store_evaluate!=='-'"/>
-          <span v-else>-</span>
+          <show-evaluate :evaluate="orderInfo.store_evaluate" />
         </div>
         <div class="panel-content">{{ orderInfo.retoucherNpsAvg }}</div>
       </div>
@@ -85,9 +84,11 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
+import ShowEvaluate from '@/components/ShowEvaluate'
 
 export default {
   name: 'OrderInfo',
+  components: { ShowEvaluate },
   props: {
     orderData: { type: Object, required: true },
     isWorkBoardInfo: { type: Boolean }
@@ -148,18 +149,6 @@ export default {
     color: #606266;
     text-align: left;
     border-bottom: 1px solid #f2f6fc;
-
-    i {
-      font-size: 20px;
-    }
-
-    .evaluate-active {
-      color: #ff7a00;
-    }
-
-    .icon-reverse {
-      transform: rotate(180deg);
-    }
   }
 
   .panel-require {

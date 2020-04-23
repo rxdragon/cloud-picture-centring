@@ -1,6 +1,5 @@
 import axios from '@/plugins/axios.js'
 import { waitTime } from '@/utils/validate'
-import { settlePhoto } from '../utils/photoTool.js'
 import { keyToHump } from '@/utils/index'
 import { StreamState } from '@/utils/enumerate'
 
@@ -182,9 +181,9 @@ export function getStreamInfo (params) {
     const data = keyToHump(msg)
     const createData = {}
     data.photos.forEach(photoItem => {
-      photoItem.photoVersion = photoItem.first_photo
-        ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo])
-        : settlePhoto([...photoItem.other_photo_version])
+      const photoVersionArr = ['original_photo', 'complete_photo', 'last_retouch_photo', 'finish_photo'] // 过滤掉除原片，云端成片，最新修片，顾客满意片这四个版本以外其他照片
+      photoItem.otherPhotoVersion = photoItem.other_photo_version.filter(versionItem => photoVersionArr.indexOf(versionItem.version) !== -1)
+      photoItem.last_store_rework_photo && (photoItem.otherPhotoVersion = [...photoItem.otherPhotoVersion, photoItem.last_store_rework_photo])
     })
     createData.orderData = {
       streamNum: data.streamNum,

@@ -81,13 +81,6 @@ export function getRetoucherQuota (params) {
       msg.income[key] = Number(msg.income[key])
     }
     msg.income = msg.income.retouch + msg.income.impulse + msg.income.reward - msg.income.punish// 收益
-    const reviewCount = Number(msg.retoucherFinishPhotoNum) // 修图张数
-    msg.reviewPlantRate = getAvg(msg.reviewPlant, reviewCount) // 审核种草数量
-    msg.reviewPullRate = getAvg(msg.reviewPull, reviewCount) // 审核拔草数量
-    const evaluatedCount = Number(msg.retoucherEvaluatedNum) // 抽查总数
-    msg.retoucherEvaluatedPlantRate = getAvg(msg.retoucherEvaluatedPlantNum, evaluatedCount) // 抽查种草率
-    msg.retoucherEvaluatedPullRate = getAvg(msg.retoucherEvaluatedPullNum, evaluatedCount) // 抽查拔草率
-    msg.retoucherEvaluatedNoPlantNoPullRate = getAvg(msg.retoucherEvaluatedNoPlantNoPullNum, evaluatedCount) // 直接通过率
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
     msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.score, retoucherNpsCount) // 顾客满意度
     msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) // 门店评分
@@ -100,6 +93,11 @@ export function getRetoucherQuota (params) {
     msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
     msg.lekimaStreamNum = parseInt(msg.lichmaStreamNum || 0) // 利奇马张数
     msg.lekimaPhotoNum = parseInt(msg.lichmaPhotoNum || 0) // 利奇马单数
+    msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
+    msg.goodRate = parseFloat(msg.goodNum / msg.retoucherFinishStreamNum) * 100 // 门店点赞率
+    msg.retoucherCheckCount.forEach(item => {
+      item.value = item.count
+    })
     return msg
   })
 }

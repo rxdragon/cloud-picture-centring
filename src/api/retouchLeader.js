@@ -56,11 +56,6 @@ export function getGroupStaffQuotaInfo (params) {
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
     createData.income = income.toFixed(2) // 收益
     createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
-    createData.reviewPlantInfo = getRateInfo(data.reviewPlantPhotoNum, photoCount) // 审核种草 / 种草率
-    createData.reviewPullInfo = getRateInfo(data.reviewPullPhotoNum, photoCount) // 审核拔草 / 拔草率
-    createData.spotCheckPlantInfo = getRateInfo(data.spotCheckPlantPhotoNum, data.spotCheckPhotoNum) // 抽查种草 / 种草率
-    createData.spotCheckPullInfo = getRateInfo(data.spotCheckPullPhotoNum, data.spotCheckPhotoNum) // 抽查拔草 / 拔草率
-    createData.spotCheckNoneInfo = getRateInfo(data.spotCheckNonePhotoNum, data.spotCheckPhotoNum) // 抽查通过 / 直接通过率
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, streamCount) // 点赞数 / 点赞率
     createData.reworkStreamInfo = getRateInfo(data.reworkStreamNum, streamCount) // 退单量 / 退单率
     createData.reworkPhotoInfo = getRateInfo(data.reworkStreamNum, photoCount) // 退单张数 / 退张率
@@ -111,19 +106,15 @@ export function getStaffRetouchList (params) {
     params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      const reviewPlantPhotoNum = _.get(listItem, 'tags.values.plant_num', 0)
-      const reviewPullPhotoNum = _.get(listItem, 'tags.values.pull_num', 0)
-      const spotPlantPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_plant_num', 0)
-      const spotPullPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_pull_num', 0)
       const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)
       listItem.retoucherName = _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-'
       listItem.retouchAllTime = timeFormat(allTime, 'text', true)
-      listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
-      listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
+      listItem.storeReworkPhotoNum = _.get(listItem, 'tags.values.store_rework_photo_num') || '-'
       listItem.lekimaInfo = _.get(listItem, 'tags.values.lichma_photo_num', '-')
-      const storeGrade = _.get(listItem, 'tags.values.store_star', '-')
+      listItem.checkTags = _.get(listItem, 'tags.values.config_parent_name') || []
+      const storeEvaluation = listItem.store_evaluation || '-'
       const npsGrade = _.get(listItem, 'tags.values.retoucher_score', '-')
-      listItem.gradeInfo = { storeGrade, npsGrade }
+      listItem.gradeInfo = { storeEvaluation, npsGrade }
     })
     return msg
   })
