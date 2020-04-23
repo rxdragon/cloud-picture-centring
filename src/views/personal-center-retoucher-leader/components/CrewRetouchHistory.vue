@@ -247,12 +247,13 @@ export default {
     }
 
     .check-tag {
-      padding: 10px;
+      padding: 5px 10px;
       margin: 0 10px 10px 0;
       font-size: 12px;
+      line-height: 12px;
       color: #eee;
       background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
+      border-radius: 5px;
     }
   }
 }

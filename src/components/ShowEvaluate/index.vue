@@ -1,7 +1,7 @@
 <template>
   <div class="show-evaluate">
-    <img v-if="evaluate==='good'" src="../../assets/icon/evaluate_good.png" />
-    <img v-else-if="evaluate==='bad'" src="../../assets/icon/evaluate_bad.png" />
+    <i v-if="evaluate==='good'" class="iconfont icon-like-press like-color" />
+    <i v-else-if="evaluate==='bad'" class="iconfont icon-unlike-press unlike-color" />
     <span v-else>-</span>
   </div>
 </template>
@@ -17,9 +17,14 @@ export default {
 
 <style lang="less" scoped>
 .show-evaluate {
-  img {
-    height: 20px;
+  .like-color {
     font-size: 20px;
+    color: coral;
+  }
+
+  .unlike-color {
+    font-size: 20px;
+    color: #909399;
   }
 }
 </style>
