@@ -77,7 +77,7 @@ export default {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       searchTimeSpan: null, // 查询时间
-      staffIds: '', // 修图师 id
+      staffIds: [], // 修图师 id
       photoData: [], // 照片数据
       productValue: [], // 选中产品
       issueValue: [], // 问题标签数据
@@ -133,13 +133,12 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.staffIds) {
+      if (this.staffIds.length) {
         req.retoucherIds = this.staffIds.map(item => Number(item))
         this.cacheSendStaff = this.staffIds.join(',')
       }
-      if (this.productValue.length) {
-        req.productIds = this.productValue
-      }
+      if (this.issueValue.length) { req.tagIds = this.issueValue }
+      if (this.productValue.length) { req.productIds = this.productValue }
       this.cacheTimeSpan = this.timeSpan
       return req
     },
