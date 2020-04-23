@@ -207,6 +207,7 @@
  老数据容错 | [ce4a3ce](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ce4a3ce)
  取消默认自动上传 | [4f914c4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f914c4)
  删除调试代码 | [2494e20](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2494e20)
+ 使用iconfont替换点赞icon | [2fb49b9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2fb49b9)
  下滑组建销毁时，移除监听事件 | [fd64d78](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fd64d78)
  新增console.log 记录 | [90cb43c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/90cb43c)
  修复 预览错误 | [d7dcba3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d7dcba3)

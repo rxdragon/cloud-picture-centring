@@ -21,7 +21,7 @@
           <div id="return-magnifier-layer" />
           <div v-show="showSign" ref="sign-dom" class="sign-dom">
             <div
-              v-for="(item,index) in store_part_rework_reason"
+              v-for="(item,index) in storePartReworkReason"
               class="sign-item"
               :key="index"
               :style="{
@@ -81,11 +81,11 @@
         <p class="tips border-tips">照片整体原因</p>
         <div class="reason-contain">
           <div class="whole-reason-list">
-            <span v-for="(item, index) in changeTag(store_rework_reason)" :key="index" class="reason-tag-common whole-tag">{{ item }}</span>
-            <span v-if="!store_rework_reason" class="reason-note">暂无原因</span>
+            <span v-for="(item, index) in changeTag(storeReworkReason)" :key="index" class="reason-tag-common whole-tag">{{ item }}</span>
+            <span v-if="!storeReworkReason" class="reason-note">暂无原因</span>
           </div>
           <p class="tips">整体原因备注：</p>
-          <p class="reason-note">{{ store_rework_note || '暂无备注' }}</p>
+          <p class="reason-note">{{ storeReworkNote || '暂无备注' }}</p>
         </div>
       </div>
       <el-footer class="operate-box">
@@ -136,13 +136,13 @@ export default {
     url () {
       return this.preImgType ? this.imgDomain + this.preIndexPhoto.returnPhotoPath : this.imgDomain + this.preIndexPhoto.path
     },
-    store_part_rework_reason () {
+    storePartReworkReason () {
       return _.get(this.preIndexPhoto, 'tags.values.store_part_rework_reason') || []
     },
-    store_rework_reason () {
+    storeReworkReason () {
       return _.get(this.preIndexPhoto, 'tags.values.store_rework_reason') || ''
     },
-    store_rework_note () {
+    storeReworkNote () {
       return _.get(this.preIndexPhoto, 'tags.values.store_rework_note') || ''
     },
     /**
