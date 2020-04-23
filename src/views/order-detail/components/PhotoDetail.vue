@@ -6,10 +6,9 @@
         <photo-box
           :tags="photoData.tags"
           :is-lekima="photo.isLekima"
-          :preview="!showMark(photo.version)"
-          :show-store-mark="showMark(photo.version)"
           photo-name
           downing
+          :show-complete-photo="showMark(photo.version)"
           :stream-num="photoData.stream_num"
           :pre-list="preList(photo)"
           :pre-index="0"
@@ -92,13 +91,13 @@ export default {
     },
     // 退单标记 包括整体标记和局部标记
     StoreReturnReason () {
-      const wholeReason = _.get( this.photoData, 'tags.values.store_rework_reason', '').split('+')
+      const wholeReason = _.get( this.photoData, 'tags.values.store_rework_reason', '')
       const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
       let partReason = []
       partArr.forEach(item => {
         partReason = [...item.reason.split('+'),...partReason]
       })
-      return wholeReason.concat(partReason)
+      return partReason.concat(wholeReason ? wholeReason.split('+') : [])
     },
     showMark () {
       return function (version) {
