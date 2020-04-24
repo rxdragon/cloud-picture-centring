@@ -2,13 +2,12 @@
   <div class="photo">
     <div class="img-box">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto" @click.native="operateMask(true)">
+      <el-image v-if="!showCanvas" :src="imageSrc" fit="cover" @click.native="operateMask(true)">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
         </div>
       </el-image>
-      <preview-canvas-img v-else-if="showCanvas" :file="fileData" />
       <img v-else class="orgin-img" :src="imageSrc" alt="">
       <span v-if="photoName" class="photo-name" @click.stop="">{{ photoRealName }}</span>
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
@@ -30,8 +29,10 @@
     </div>
     <!-- 退回标记预览 -->
     <ReturnImgPre
-      v-if="showStoreMark && showReturnPre"
+      v-if="showReturnPre && !showYunCheck"
+      :show-return-mark="showCompletePhoto"
       :pre-index-photo="prePhoto"
+      :show-next-btn="preList.length>1"
       :stream-num="streamNum"
       @closeMask="operateMask(false)"
       @switchImg="switchImg"
@@ -42,12 +43,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
-import PreviewCanvasImg from '@/components/PreviewCanvasImg'
+// import PreviewCanvasImg from '@/components/PreviewCanvasImg'
 import ReturnImgPre from '@/components/ReturnImgPre'
 
 export default {
   name: 'PhotoBox',
-  components: { PreviewCanvasImg, ReturnImgPre },
+  components: { ReturnImgPre },
   filters: {
     filterJointLabel (jointLabel) {
       return jointLabel[1]
@@ -60,24 +61,19 @@ export default {
       return []
     } }, // 当前预览图片列表
     preIndex: { type: Number, default: 0 }, // 当前预览图片索引
-    src: { type: String, default: '' }, // 地址图片
+    src: { type: String, default: '' }, // 封面图地址
     photoName: { type: Boolean }, // 是否显示照片名字
-    peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
-    showStoreMark: { type: Boolean }, // 是否展示门店退单标记
     downing: { type: Boolean }, // 是够开启下载功能
-    preview: { type: Boolean }, // 是否开启单张预览功能
     previewBreviary: { type: Boolean }, // 开启单张缩略预览功能
+    showCompletePhoto: { type: Boolean, default: false }, // 是否展示云端成片 false则只预览原图
+    showYunCheck: { type: Boolean, default: false }, // 是否展示云学院标记
     showRecedeReason: { type: Boolean }, // 是否显示退单理由
     showJointLabel: { type: Boolean }, // 是否显示拼接照信息
-    tags: { type: Object, default: () => {
-      return null
-    } }, // 标记信息
     streamNum: { type: String, default: '' }, // 流水号
     preloadPhoto: { type: Boolean },
     useEleImage: { type: Boolean, default: true },
     isLekima: { type: Boolean },
     fileData: { type: Object, default: null },
-    imgType: { type: String, default: '' }
   },
   data () {
     return {
@@ -85,14 +81,19 @@ export default {
       linkTag: null,
       limitSize: 20 * 1024 * 1024,
       showCanvas: false,
-      showReturnPre: false
+      showReturnPre: false,
+      photoIndex: this.preIndex
     }
   },
   computed: {
     ...mapGetters(['imgDomain', 'imgCompressDomain', 'cacheImageSwitch']),
     // 当前预览图片
     prePhoto () {
-      return this.preList[this.preIndex] || {}
+      return this.preList[this.photoIndex] || { path: this.src }
+    },
+    // 照片人数
+    peopleNum () {
+      return this.prePhoto.people_num || 0
     },
     // 拼接信息
     jointLabel () {
@@ -113,9 +114,13 @@ export default {
     },
     // 门店退回理由
     storeReworkReason () {
-      const hasStoreReworkReason = _.get(this.prePhoto, 'tags.values.store_rework_reason')
-      if (this.showRecedeReason && hasStoreReworkReason) {
-        return this.prePhoto.tags.values.store_rework_reason.split('+')
+      const wholeReason = _.get(this.prePhoto, 'tags.values.store_rework_reason') || ''
+      const partReason = _.get(this.prePhoto, 'tags.values.store_part_rework_reason') || []
+      let reasonArr = partReason.map(item => {
+        return item.reason
+      })
+      if (this.showRecedeReason) {
+        return [...wholeReason ? wholeReason.split('+') : [], ...reasonArr]
       } else {
         return []
       }
@@ -142,16 +147,6 @@ export default {
       const photoFileNam = this.src.split('/')
       return photoFileNam[photoFileNam.length - 1]
     },
-    // 展示图片
-    getPreviewPhoto () {
-      if (this.preview) {
-        return [this.imgDomain + this.src]
-      } else if (this.previewBreviary) {
-        return [this.imgDomain + this.src + this.breviary]
-      } else {
-        return []
-      }
-    },
     // 特效字段
     specialEffects () {
       const special = (this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.special_efficacy) || ''
@@ -177,7 +172,7 @@ export default {
     downingPhoto () {
       const savePath = `/${this.streamNum}`
       const data = {
-        url: this.imgDomain + this.src,
+        url: this.imgDomain + this.coverPath,
         path: savePath
       }
       this.$newMessage.success('已添加一张照片到下载')
@@ -210,10 +205,10 @@ export default {
       } else {
         switch (type) {
           case 'next':
-            this.preIndex = listLen - 1 > this.preIndex ? this.preIndex + 1 : 0
+            this.photoIndex = listLen - 1 > this.photoIndex ? this.photoIndex + 1 : 0
             break
           case 'last':
-            this.preIndex = this.preIndex !== 0 ? this.preIndex - 1 : 0
+            this.photoIndex = this.photoIndex !== 0 ? this.photoIndex - 1 : listLen - 1
             break
           default:
             break

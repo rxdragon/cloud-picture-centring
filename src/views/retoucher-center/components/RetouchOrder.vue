@@ -31,15 +31,12 @@
             :stream-num="orderData.streamNum"
             photo-name
             preload-photo
-            show-store-mark
             show-joint-label
+            show-complete-photo
             show-recede-reason
-            :tags="photoItem.tags"
             :pre-list="photos"
             :pre-index="photoIndex"
             :src="photoItem.returnPhotoPath"
-            :people-num="photoItem.people_num"
-            :is-original-pre="false"
           />
         </div>
         <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
@@ -60,15 +57,13 @@
         <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box" :class="{ 'over-success': photoItem.isCover }">
           <photo-box
             downing
-            preview
             photo-name
             preload-photo
             show-joint-label
-            show-recede-reason
+            :pre-list="photos"
+            :pre-index="photoIndex"
             :stream-num="orderData.streamNum"
-            :tags="photoItem.tags"
             :src="photoItem.path"
-            :people-num="photoItem.people_num"
           />
         </div>
         <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">

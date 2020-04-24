@@ -1,7 +1,7 @@
 <template>
   <div class="photo-list">
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
-      <photo-box downing :preload-photo="needPreload" :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)">
+      <photo-box downing :preload-photo="needPreload" :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)" show-yun-check>
         <template v-slot:title>
           <span class="lable-title">{{ photoItem.version | toPhotoVerName }}</span>
         </template>

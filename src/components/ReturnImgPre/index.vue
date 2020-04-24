@@ -1,7 +1,8 @@
 <template>
   <div class="pre-mask" v-loading="loading">
+    <i v-if="!this.showReturnMark" class="el-icon-close origin-close" @click="closeMask()"/>
     <div class="left-box">
-      <div class="title-box">
+      <div class="title-box" v-if="this.showReturnMark">
         <label>{{ preImgType ? '云端成片' : '原图' }}</label>
         <el-switch
           class="img-switch"
@@ -14,12 +15,12 @@
         />
       </div>
       <div class="middle-box">
-        <i class="el-icon-arrow-left arrow" @click="switchImg('last')"></i>
+        <i class="el-icon-arrow-left arrow" v-if="showNextBtn" @click="switchImg('last')"></i>
         <div class="return-pre-content">
-          <img ref="retouch-img" id="orginImg" :src="url" @load="getImgSize">
+          <img ref="retouch-img" id="orginImg" :src="url" :style="imgScale" v-show="!preDetail" @load="getImgSize">
           <!-- 大图预览框 -->
           <div id="return-magnifier-layer" />
-          <div v-show="showSign" ref="sign-dom" class="sign-dom">
+          <div v-show="showSign" ref="sign-dom" class="sign-dom" :style="imgScale">
             <div
               v-for="(item,index) in storePartReworkReason"
               class="sign-item"
@@ -29,7 +30,7 @@
                 width: `${item.width}%`,
                 height: `${item.height}%`,
                 top: `${item.location[0]}%`,
-                left: `${item.location[1]}%`
+                left: `${item.location[1]}%`,
               }"
             >
               <div
@@ -50,10 +51,10 @@
             </div>
           </div>
         </div>
-        <i class="el-icon-arrow-right arrow" @click="switchImg('next')"></i>
+        <i class="el-icon-arrow-right arrow" v-if="showNextBtn" @click="switchImg('next')"></i>
       </div>
     </div>
-    <el-container class="right-box">
+    <el-container v-if="this.showReturnMark" class="right-box">
       <div class="right-header">
         <div class="close-box"><i class="el-icon-close" @click="closeMask()"/></div>
         <!-- 缩略图 -->
@@ -106,12 +107,14 @@ export default {
     preIndexPhoto: { type: Object, default: () => {
       return null
     } },
-    streamNum: { type: String, default: '' }
+    streamNum: { type: String, default: '' },
+    showReturnMark: { type: Boolean, default: false },
+    showNextBtn: { type: Boolean, default: false },
   },
   data () {
     return {
       loading: true,
-      preImgType: true, // 初始化展示云端成片
+      preImgType: this.showReturnMark, // 初始化展示云端成片
       propConfigs: {
         width: 100,
         height: 100,
@@ -128,8 +131,17 @@ export default {
       mouseMask: {},
       imgLayer: {},
       imgRect: {},
-      scaleNum: 25
+      scaleNum: 25,
+      transform: {
+        scale: 1,
+        offsetX: 0,
+        offsetY: 0,
+      },
     }
+  },
+  mounted () {
+    this.keyBoardListener()
+    window.addEventListener('mousewheel',this.mouseWheelHandler,false)
   },
   computed: {
     ...mapGetters(['imgDomain']),
@@ -159,13 +171,21 @@ export default {
     // 非原图+非鼠标预览时+点击显示标记时
     showSign () {
       return this.preImgType && !this.preDetail && this.changeShowTag
+    },
+    imgScale () {
+      const { scale } = this.transform
+      const style = {
+        transform: `scale(${scale})`,
+        transition: 'transform .5s'
+      }
+      return style
     }
   },
   methods: {
     /**
      * @description 打开关闭遮盖层
      */
-    closeMask (type, ...opts) {
+    closeMask () {
       this.$emit('closeMask')
     },
     changeOrigin () {
@@ -190,6 +210,7 @@ export default {
      * @description 切换图片
      */
     switchImg (type) {
+      this.resetScale()
       this.$emit('switchImg', type)
     },
     /**
@@ -233,6 +254,7 @@ export default {
      */
     handOut (e) {
       this.preDetail = false
+      this.showOriginImg = true
       this.imgLayer.removeAttribute('style')
       this.mouseMask.removeAttribute('style')
     },
@@ -277,6 +299,50 @@ export default {
       imgLayer.style.backgroundRepeat = 'no-repeat'
       imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
       document.getElementsByClassName('return-pre-content')[0].appendChild(imgLayer)
+    },
+    keyBoardListener () {
+    /**
+     * @description 监听键盘事件
+     */
+      document.onkeydown = e => {
+        const key = window.event.keyCode
+        switch (key) {
+          case 8:
+            this.closeMask()
+            break
+          case 65:
+          case 37:
+            this.switchImg('last')
+            break
+          case 39:
+          case 68:
+            this.switchImg('next')
+            break
+          default:
+            break
+        }
+      }
+    },
+    // 监听鼠标滚轮事件
+    mouseWheelHandler (e) {
+      const delta = e.wheelDelta ? e.wheelDelta : -e.detail
+      const rate = 0.05
+      const { transform } = this
+      if (delta > 0) {
+        if (transform.scale > rate) {
+          transform.scale = parseFloat((transform.scale - rate).toFixed(3))
+        }
+      } else {
+        transform.scale = parseFloat((transform.scale + rate).toFixed(3))
+      }
+    },
+    // 图片尺寸缩放重置
+    resetScale () {
+      this.transform = {
+        scale: 1,
+        offsetX: 0,
+        offsetY: 0
+      }
     }
   }
 }
@@ -294,6 +360,22 @@ export default {
     height: calc(100vh - 42px);
     background-color: rgba(0, 0, 0, 0.8);
 
+    .origin-close {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      z-index: 2009;
+      width: 50px;
+      height: 50px;
+      font-size: 30px;
+      line-height: 50px;
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 100%;
+    }
+
     .reason-tag-common {
       padding: 10px;
       margin: 0 10px 10px 0;
@@ -307,7 +389,7 @@ export default {
       position: relative;
       display: flex;
       flex-direction: column;
-      width: calc(100% - 280px);
+      flex-grow: 1;
       height: 100%;
       overflow: hidden;
 
@@ -340,7 +422,7 @@ export default {
         height: calc(100vh - 84px);
 
         .arrow {
-          z-index: 4000;
+          z-index: 2009;
           width: 50px;
           height: 50px;
           font-size: 25px;
@@ -372,16 +454,15 @@ export default {
           margin: auto;
 
           #orginImg {
+            position: absolute;
             z-index: 1001;
             max-width: 100%;
             max-height: 100%;
-            margin: auto;
           }
 
           #return-magnifier-layer {
             position: absolute;
-            z-index: 5000;
-            margin: auto;
+            z-index: 3000;
           }
 
           .sign-dom {
@@ -454,8 +535,11 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      width: 280px;
+      min-width: 280px;
+      max-width: 280px;
       height: 100%;
+      padding: 0;
+      margin: 0;
       background-color: #535353;
       border-left: 1px solid #666;
 
