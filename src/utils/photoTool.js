@@ -74,6 +74,22 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
 }
 
 /**
+ * @description 查找指定version版本
+ * @param {Array} filtePhotoVersion 
+ * @param {Array} needVersion 
+ */
+export function filtePhotoVersion (filtePhotoVersion, needVersion) {
+  const createData = {}
+  needVersion.forEach(versionItem => {
+    const findVersion = filtePhotoVersion.find(verPhotoItem => verPhotoItem.version === versionItem)
+    if (findVersion) {
+      createData[versionItem] = findVersion
+    }
+  })
+  return createData
+}
+
+/**
  * @description 是否预加载完成图片
  * @param {*} photoArr
  */

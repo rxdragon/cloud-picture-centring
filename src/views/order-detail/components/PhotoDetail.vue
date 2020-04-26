@@ -1,25 +1,7 @@
 <template>
   <div class="photo-detail">
     <!-- 图片列表 -->
-    <div class="photo-list">
-      <div v-for="(photo, photoIndex) in photoData.otherPhotoVersion" :key="photoIndex" class="photo-box">
-        <photo-box
-          :tags="photoData.tags"
-          :is-lekima="photo.isLekima"
-          photo-name
-          downing
-          :show-complete-photo="showMark(photo.version)"
-          :stream-num="photoData.stream_num"
-          :pre-list="preList(photo)"
-          :pre-index="0"
-          :src="photo.path"
-        >
-          <template v-slot:title>
-            <span class="lable-title">{{ photo.version | toPhotoVerName }}</span>
-          </template>
-        </photo-box>
-      </div>
-    </div>
+    <photo-list need-preload :photo-data="photoVersionList"  />
     <div v-if="hasStoreReturnReason" class="panel-box">
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
@@ -40,19 +22,22 @@
 </template>
 
 <script>
-import PhotoBox from '@/components/PhotoBox'
+import PhotoList from '@/components/PhotoList'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PhotoDetail',
-  components: { PhotoBox },
+  components: { PhotoList },
   props: {
     photoItem: { type: Object, required: true }
   },
   data () {
     return {
+      photoVersionList: []
     }
   },
   computed: {
+    ...mapGetters(['imgDomain']),
     photoData () {
       return this.photoItem
     },
@@ -117,6 +102,14 @@ export default {
         itemCopy.path = originPhoto.path
         return [itemCopy]
       }
+    }
+  },
+  created () {
+    this.initPhotoList()
+  },
+  methods: {
+    initPhotoList () {
+      this.photoVersionList = this.photoItem.photoVersion
     }
   }
 }

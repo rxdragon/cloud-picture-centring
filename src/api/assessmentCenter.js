@@ -124,7 +124,6 @@ export function getSearchHistory (params) {
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
-      item.score = item.commitInfo.score
       const parentData = []
       item.tags.forEach(issueItem => {
         const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
@@ -150,6 +149,11 @@ export function getSearchHistory (params) {
         ...item.commitInfo,
         issueLabel: item.issueLabel
       }
+      item.score = item.commitInfo.score
+      item.photoInfo.photoVersion.forEach(versionItem => {
+        versionItem.commitInfo = item.commitInfo
+      })
+      
     })
     return {
       list: data,

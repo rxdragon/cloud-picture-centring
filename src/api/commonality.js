@@ -44,8 +44,8 @@ export function getStreamInfo (params) {
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
-      const isReturnPhoto = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.CheckReturn)
-      const isStoreReturn = photoItem.tags && photoItem.tags.statics && photoItem.tags.statics.includes(PhotoStatics.StoreReturn)
+      const isReturnPhoto = _.get(photoItem, 'tags.statics', []).includes(PhotoStatics.CheckReturn)
+      const isStoreReturn = _.get(photoItem, 'tags.statics', []).includes(PhotoStatics.StoreReturn)
       const filmEvaluation = _.get(photoItem, 'tags.values.film_evaluation') || ''
       photoItem.filmEvaluation = filmEvaluation
       photoItem.reworkNum = reworkNum
@@ -54,7 +54,8 @@ export function getStreamInfo (params) {
         // 过滤看片师新增照片
         photoItem.photoVersion = ''
       } else {
-        const photoVersionArr = ['original_photo', 'complete_photo', 'last_retouch_photo', 'finish_photo'] // 过滤掉除原片，云端成片，最新修片，顾客满意片这四个版本以外其他照片
+        // 过滤掉除原片，云端成片，最新修片，顾客满意片这四个版本以外其他照片
+        const photoVersionArr = ['original_photo', 'complete_photo', 'last_retouch_photo', 'finish_photo']
         photoItem.otherPhotoVersion = photoItem.other_photo_version.filter(versionItem => photoVersionArr.indexOf(versionItem.version) !== -1)
         photoItem.last_store_rework_photo && (photoItem.otherPhotoVersion = [...photoItem.otherPhotoVersion, photoItem.last_store_rework_photo])
         photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
@@ -63,9 +64,8 @@ export function getStreamInfo (params) {
       }
       if (photoItem.photoVersion) {
         photoItem.photoVersion.forEach(versionItem => {
-          versionItem.isLekima = versionItem.tags &&
-            versionItem.tags.statics &&
-            versionItem.tags.statics.includes('lichma')
+          versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
+          versionItem.phototag = photoItem.tags
         })
       }
     })

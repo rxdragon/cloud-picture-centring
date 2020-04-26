@@ -31,10 +31,10 @@
         <issue-label-select v-model="issueValue" />
       </div>
     </div>
-    <div v-for="photoItem in photoData" :key="photoItem.businessId" class="photo-data module-panel">
+    <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
       <GradeBox :photo-info="photoItem" />
     </div>
-    <div v-if="!photoData.length" class="module-panel no-data">暂无数据</div>
+    <div v-if="!photoList.length" class="module-panel no-data">暂无数据</div>
     <div class="page-box">
       <el-pagination
         :hide-on-single-page="true"
@@ -78,7 +78,7 @@ export default {
       timeSpan: null, // 时间
       searchTimeSpan: null, // 查询时间
       staffIds: [], // 修图师 id
-      photoData: [], // 照片数据
+      photoList: [], // 照片数据
       productValue: [], // 选中产品
       issueValue: [], // 问题标签数据
       pager: {
@@ -154,7 +154,7 @@ export default {
         this.searchTimeSpan = this.timeSpan
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AssessmentCenter.getSearchHistory(req)
-        this.photoData = data.list
+        this.photoList = data.list
         this.pager.total = data.total
       } catch (error) {
         console.error(error)

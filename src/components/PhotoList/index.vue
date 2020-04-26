@@ -35,9 +35,11 @@
     </div>
     <preview-photo
       v-if="showPreview"
-      :photo-info="photoInfo"
+      :order-info="orderInfo"
       :imgarray="priviewPhotoData"
+      show-return-reson
       :orderindex="imgIndex"
+      :show-order-info="showOrderInfo"
       :show-preview.sync="showPreview"
     />
   </div>
@@ -54,9 +56,10 @@ export default {
   props: {
     needPreload: { type: Boolean },
     photoData: { type: Array, default: () => [] }, // 照片数据
-    needGrade: { type: Boolean },
+    needGrade: { type: Boolean }, // 是否需要打分,
+    showOrderInfo: { type: Boolean }, // 是否显示订单信息
     gradeInfo: { type: Object, default: () => ({}) }, // 是否打分
-    photoInfo: { type: Object, default: () => ({}) } // 打分信息
+    orderInfo: { type: Object, default: () => ({}) } // 打分信息
   },
   data () {
     return {
@@ -69,15 +72,7 @@ export default {
   computed: {
     ...mapGetters(['imgDomain', 'staffId']),
     photos () {
-      const createdData = []
-      const findList = ['original_photo', 'first_photo', 'complete_photo', 'finish_photo']
-      findList.forEach(versionItem => {
-        const findVersionItem = this.photoData.find(photoItem => photoItem.version === versionItem)
-        if (findVersionItem) {
-          createdData.push(findVersionItem)
-        }
-      })
-      return createdData
+      return this.photoData
     },
     /**
      * @description 能否打分
@@ -119,6 +114,9 @@ export default {
       immediate: true
     }
   },
+  created () {
+    this.initPriviewPhoto()
+  },
   methods: {
     /**
      * @description 点赞
@@ -151,12 +149,23 @@ export default {
      * @description 展示搜索框
      */
     showPriviewPhoto (photoIndex) {
-      this.photos.forEach(item => {
-        item.src = this.imgDomain + item.path
-      })
-      this.priviewPhotoData = this.photos
       this.imgIndex = photoIndex
       this.showPreview = true
+    },
+    /**
+     * @description 初始化预览数据
+     */
+    initPriviewPhoto () {
+      this.photos.forEach(item => {
+        item.src = this.imgDomain + item.path
+        // item.mode = 'original'
+        // item.storePartReworkReason = _.get(item, 'tags.values.store_part_rework_reason') || []
+        // item.storeReworkReason = _.get(item, 'tags.values.store_rework_reason') || ''
+        // item.storeReworkReason = item.storeReworkReason ? item.storeReworkReason.split('+') : []
+        // item.storeReworkNote = _.get(item, 'tags.values.store_rework_note') || '-'
+        // item.storePartReworkReason.forEach(labelItem => { labelItem.reason = labelItem.reason.split('+') })
+      })
+      this.priviewPhotoData = this.photos
     }
   }
 }

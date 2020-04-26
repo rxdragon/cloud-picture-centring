@@ -25,10 +25,11 @@
         </div>
       </div>
       <div class="photo-panel">
-        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box" :class="{ 'over-success': photoItem.isCover }">
+        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex"
+          @click="showPriviewPhoto(photoIndex, 'complete')"
+          class="photo-box" :class="{ 'over-success': photoItem.isCover }">
           <photo-box
             downing
-            :stream-num="orderData.streamNum"
             photo-name
             preload-photo
             show-joint-label
@@ -36,6 +37,7 @@
             show-recede-reason
             :pre-list="photos"
             :pre-index="photoIndex"
+            :stream-num="orderData.streamNum"
             :src="photoItem.returnPhotoPath"
           />
         </div>
@@ -54,7 +56,9 @@
         </div>
       </div>
       <div class="photo-panel">
-        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box" :class="{ 'over-success': photoItem.isCover }">
+        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex"
+          @click="showPriviewPhoto(photoIndex, 'original')"
+          class="photo-box" :class="{ 'over-success': photoItem.isCover }">
           <photo-box
             downing
             photo-name
@@ -74,9 +78,7 @@
     </div>
     <!-- 修图上传 -->
     <div class="photo-module module-panel upload-module">
-      <div class="photo-panel-title panel-title">
-        <span>修图上传</span>
-      </div>
+      <div class="photo-panel-title panel-title"><span>修图上传</span></div>
       <upload-photo
         ref="uploadPhoto"
         class="photo-panel"
@@ -89,6 +91,14 @@
     </div>
     <!-- 问题标签 -->
     <issue-label :issue-data="issueData" :visible.sync="dialogVisible" @submit="submitOrder" />
+    <!-- 预览 -->
+    <preview-photo
+      v-if="showPreview"
+      show-return-reson
+      v-model="imgIndex"
+      :imgarray="priviewPhotoData"
+      :show-preview.sync="showPreview"
+    />
   </div>
 </template>
 
@@ -98,6 +108,7 @@ import PhotoBox from '@/components/PhotoBox'
 import UploadPhoto from './UploadPhoto.vue'
 import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
+import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
@@ -105,7 +116,7 @@ import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel },
+  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel, PreviewPhoto },
   props: {
     showDetail: { type: Boolean }
   },
@@ -133,11 +144,14 @@ export default {
       realAid: '',
       preIndexPhoto: {},
       dialogVisible: false,
-      imgPreMask: false
+      imgPreMask: false,
+      showPreview: false,
+      priviewPhotoData: [], // 预览数组
+      imgIndex: 0 // 照片索引
     }
   },
   computed: {
-    ...mapGetters(['retouchId', 'showOverTag']),
+    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain']),
     // 是否开启沙漏
     isSandClockOpen () {
       if (!this.hourGlass) return this.hourGlass
@@ -209,6 +223,7 @@ export default {
         this.reviewerNote = data.reviewerNote
         this.needPunchLabel = data.needPunchLabel
         LogStream.retoucherSee(+this.realAid)
+        this.initPriviewPhoto()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -322,6 +337,34 @@ export default {
       }
     },
     /**
+     * @description 展示搜索框
+     */
+    showPriviewPhoto (photoIndex, mode) {
+      this.photos.forEach(item => {
+        item.src = this.imgDomain + item.path
+        item.version = mode === 'complete' ? 'complete_photo' : 'original_photo'
+        item.mode = mode === 'complete' ? 'complete' : 'original'
+      })
+      this.imgIndex = photoIndex
+      this.showPreview = true
+    },
+    /**
+     * @description 初始化预览数据
+     */
+    initPriviewPhoto () {
+      this.photos.forEach(item => {
+        item.src = this.imgDomain + item.path
+        item.version = 'original_photo'
+        item.mode = 'original'
+        item.storePartReworkReason = _.get(item, 'phototag.values.store_part_rework_reason') || []
+        item.storeReworkReason = _.get(item, 'phototag.values.store_rework_reason') || ''
+        item.storeReworkReason = item.storeReworkReason ? item.storeReworkReason.split('+') : []
+        item.storeReworkNote = _.get(item, 'phototag.values.store_rework_note') || '-'
+        item.storePartReworkReason.forEach(labelItem => { labelItem.reason = labelItem.reason.split('+') })
+      })
+      this.priviewPhotoData = this.photos
+    },
+    /**
      * @description 获取标签
      */
     async getPhotoProblemTagSets () {
@@ -408,6 +451,7 @@ export default {
         width: 253px;
         margin-right: 24px;
         margin-bottom: 24px;
+        cursor: pointer;
         transition: all 0.3s;
 
         .handle-box {

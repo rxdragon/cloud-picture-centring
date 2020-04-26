@@ -71,6 +71,7 @@ export function getStreamInfo (params) {
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
+      photoItem.versionCache = PhotoTool.filtePhotoVersion(photoItem.photo_version, ['original_photo', 'complete_photo'])
       photoItem.isCover = false
     })
     // 最新退回照片
