@@ -200,17 +200,18 @@ export function getCloudProblemReport (params) {
     params
   }).then(msg => {
     let allCount = 0
+    msg = msg.filter(item => item.count)
     msg.forEach((classItem, classIndex) => {
       classItem.value = 0
       allCount += Number(classItem.count)
       classItem.itemStyle = {
-        color: Colors.getColor(classIndex)
-      },
+        color: Colors.getColor(msg.length, classIndex)
+      }
       classItem.child.forEach((issueItem, issueIndex) => {
         issueItem.value = issueItem.count
         classItem.value += Number(issueItem.count)
         issueItem.itemStyle = {
-          color: Colors.getColorNear(classIndex, issueIndex)
+          color: Colors.getColorNear(msg.length, classIndex, issueIndex)
         }
       })
       classItem.children = classItem.child

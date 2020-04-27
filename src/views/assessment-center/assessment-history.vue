@@ -49,6 +49,7 @@
     <el-drawer
       v-if="timeSpan"
       custom-class="info-drawer"
+      append-to-body
       :show-close="false"
       size="400"
       :visible.sync="drawer"
@@ -180,6 +181,8 @@ export default {
 </script>
 
 <style lang="less">
+@import "~@/styles/variables.less";
+
 .assessment-history {
   .search-box {
     flex-wrap: wrap;
@@ -262,5 +265,11 @@ export default {
   .el-drawer__body {
     overflow: overlay;
   }
+}
+
+.info-drawer,
+.v-modal {
+  top: @navbarHeight !important;
+  height: @drawerHeight !important;
 }
 </style>

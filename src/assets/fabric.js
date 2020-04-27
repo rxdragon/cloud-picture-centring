@@ -1596,7 +1596,7 @@ fabric.CommonMethods = {
       }).join(' ') + ')';
     }
   };
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function() {
@@ -4391,7 +4391,7 @@ fabric.warn = console.warn;
     }
   });
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 fabric.ElementsParser = function(elements, callback, options, reviver, parsingOptions, doc) {
@@ -4880,7 +4880,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
     }
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -5054,7 +5054,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
     return result;
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -5692,7 +5692,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
     return oColor;
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function() {
@@ -6607,7 +6607,7 @@ fabric.ElementsParser = function(elements, callback, options, reviver, parsingOp
   // eslint-disable-next-line max-len
   fabric.Shadow.reOffsetsAndBlur = /(?:\s|^)(-?\d+(?:px)?(?:\s?|$))?(-?\d+(?:px)?(?:\s?|$))?(\d+(?:px)?)?(?:\s?|$)(?:$|\s)/;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function () {
@@ -14873,7 +14873,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
    * @type Number
    */
   fabric.Object.__uid = 0;
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function() {
@@ -17245,7 +17245,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
 
   }
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -17454,7 +17454,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     return fabric.Object._fromObject('Circle', object, callback);
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -17564,7 +17564,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     return fabric.Object._fromObject('Triangle', object, callback);
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -17747,7 +17747,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     return fabric.Object._fromObject('Ellipse', object, callback);
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -17955,7 +17955,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     return fabric.Object._fromObject('Rect', object, callback);
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -18216,7 +18216,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     return fabric.Object._fromObject('Polyline', object, callback, 'points');
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -18298,7 +18298,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     return fabric.Object._fromObject('Polygon', object, callback, 'points');
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -19213,7 +19213,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   };
   /* _FROM_SVG_END_ */
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -19808,7 +19808,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     });
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -19968,7 +19968,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
     });
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -20716,7 +20716,7 @@ fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prot
   };
   /* _FROM_SVG_END_ */
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prototype */ {
@@ -21790,7 +21790,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    * @return {fabric.Image.filters.ColorMatrix} Instance of fabric.Image.filters.ColorMatrix
    */
   fabric.Image.filters.ColorMatrix.fromObject = fabric.Image.filters.BaseFilter.fromObject;
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -21905,7 +21905,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Brightness.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -22259,7 +22259,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Convolute.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -22415,7 +22415,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Grayscale.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -22528,7 +22528,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
   fabric.Image.filters.Invert.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -22664,7 +22664,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Noise.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -22803,7 +22803,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Pixelate.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -22978,7 +22978,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.RemoveColor.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -23065,7 +23065,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
     });
     fabric.Image.filters[key].fromObject = fabric.Image.filters.BaseFilter.fromObject;
   }
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -23312,7 +23312,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.BlendColor.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -23560,7 +23560,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
     });
   };
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -24052,7 +24052,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Resize.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -24162,7 +24162,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Contrast.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -24275,7 +24275,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Saturation.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -24492,7 +24492,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   filters.Blur.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -24630,7 +24630,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.Gamma.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -24704,7 +24704,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
     callback && callback(instance);
     return instance;
   };
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -24813,7 +24813,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
    */
   fabric.Image.filters.HueRotation.fromObject = fabric.Image.filters.BaseFilter.fromObject;
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function(global) {
@@ -26280,7 +26280,7 @@ fabric.Image.filters.BaseFilter.fromObject = function(object, callback) {
 
   fabric.util.createAccessors && fabric.util.createAccessors(fabric.Text);
 
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 
 
 (function() {
@@ -29670,5 +29670,5 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
   fabric.Textbox.fromObject = function(object, callback) {
     return fabric.Object._fromObject('Textbox', object, callback, 'text');
   };
-})(typeof exports !== 'undefined' ? exports : this);
+})(typeof exports !== 'undefined' ? exports : window);
 

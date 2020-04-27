@@ -115,7 +115,7 @@ export default {
       {
         name: '点赞',
         orderCount: this.chartDatas.goodStreamNum,
-        photoCount: this.chartDatas.goodNum
+        photoCount: 0
       },
       {
         name: '门店退单',
