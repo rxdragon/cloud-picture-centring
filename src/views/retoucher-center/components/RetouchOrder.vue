@@ -19,9 +19,10 @@
     <!-- 成片信息 -->
     <div class="photo-module module-panel" v-if="orderData.streamState === 'store_return_retouch'">
       <div class="photo-panel-title panel-title">
-        <span>云端成片</span>
+        <span>照片信息</span>
         <div class="button-box">
-          <el-button type="primary" size="small" @click="oneAllDownOrign(true)">一键下载成片</el-button>
+          <el-button v-if="isReturnOrder" type="primary" size="small" @click="oneAllDownOrign(true)">一键下载成片</el-button>
+          <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载原片</el-button>
         </div>
       </div>
       <div class="photo-panel">
@@ -30,42 +31,12 @@
           class="photo-box" :class="{ 'over-success': photoItem.isCover }">
           <photo-box
             downing
+            :down-complete="photoItem.isReturnPhoto"
             photo-name
             preload-photo
             show-joint-label
-            show-complete-photo
             show-recede-reason
-            :pre-list="photos"
-            :pre-index="photoIndex"
-            :stream-num="orderData.streamNum"
-            :src="photoItem.returnPhotoPath"
-          />
-        </div>
-        <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
-          <span>备注原因：</span>
-          <div class="remark-content">{{ reviewerNote }}</div>
-        </div>
-      </div>
-    </div>
-     <!-- 原片信息 -->
-    <div class="photo-module module-panel">
-      <div class="photo-panel-title panel-title">
-        <span>原片信息</span>
-        <div class="button-box">
-          <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载原片</el-button>
-        </div>
-      </div>
-      <div class="photo-panel">
-        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex"
-          @click="showPriviewPhoto(photoIndex, 'original')"
-          class="photo-box" :class="{ 'over-success': photoItem.isCover }">
-          <photo-box
-            downing
-            photo-name
-            preload-photo
-            show-joint-label
-            :pre-list="photos"
-            :pre-index="photoIndex"
+            :tags="photoItem.tags"
             :stream-num="orderData.streamNum"
             :src="photoItem.path"
           />
@@ -103,6 +74,7 @@
 </template>
 
 <script>
+import PreviewModel from '@/model/PreviewModel'
 import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
 import UploadPhoto from './UploadPhoto.vue'
@@ -146,6 +118,7 @@ export default {
       dialogVisible: false,
       imgPreMask: false,
       showPreview: false,
+      isReturnOrder: false, // 是否退单订单
       priviewPhotoData: [], // 预览数组
       imgIndex: 0 // 照片索引
     }
@@ -181,7 +154,7 @@ export default {
       const savePath = `/${this.orderData.streamNum}`
       const photoArr = this.photos.map(photoItem => {
         return {
-          url: type ? photoItem.returnPhotoPath : photoItem.path,
+          url: type ? photoItem.path : photoItem.orginPhotoPath,
           path: savePath
         }
       })
@@ -212,6 +185,7 @@ export default {
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
         this.hourGlass = data.hourGlass
+        this.isReturnOrder = data.isReturnOrder
         if (this.isSandClockOpen) {
           this.overTime = +this.hourGlass.over_time
           const nowDate = Math.ceil(new Date().getTime() / 1000)
@@ -223,7 +197,7 @@ export default {
         this.reviewerNote = data.reviewerNote
         this.needPunchLabel = data.needPunchLabel
         LogStream.retoucherSee(+this.realAid)
-        this.initPriviewPhoto()
+        this.initPreviewPhoto()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -340,29 +314,26 @@ export default {
      * @description 展示搜索框
      */
     showPriviewPhoto (photoIndex, mode) {
-      this.photos.forEach(item => {
-        item.src = this.imgDomain + item.path
-        item.version = mode === 'complete' ? 'complete_photo' : 'original_photo'
-        item.mode = mode === 'complete' ? 'complete' : 'original'
-      })
+      if (mode !== this.priviewPhotoData[0].mode) {
+        this.priviewPhotoData.forEach(item => {
+          item.version = mode === 'complete' ? 'complete_photo' : 'original_photo'
+          item.mode = mode === 'complete' ? 'complete' : 'original'
+        })
+      }
       this.imgIndex = photoIndex
       this.showPreview = true
     },
     /**
      * @description 初始化预览数据
      */
-    initPriviewPhoto () {
-      this.photos.forEach(item => {
-        item.src = this.imgDomain + item.path
-        item.version = 'original_photo'
-        item.mode = 'original'
-        item.storePartReworkReason = _.get(item, 'phototag.values.store_part_rework_reason') || []
-        item.storeReworkReason = _.get(item, 'phototag.values.store_rework_reason') || ''
-        item.storeReworkReason = item.storeReworkReason ? item.storeReworkReason.split('+') : []
-        item.storeReworkNote = _.get(item, 'phototag.values.store_rework_note') || '-'
-        item.storePartReworkReason.forEach(labelItem => { labelItem.reason = labelItem.reason.split('+') })
+    initPreviewPhoto () {
+      const previewData = this.photos.map(item => {
+        const createData = new PreviewModel(item)
+        createData.src = this.imgDomain + createData.path
+        createData.mode = 'original'
+        return createData
       })
-      this.priviewPhotoData = this.photos
+      this.priviewPhotoData = previewData
     },
     /**
      * @description 获取标签

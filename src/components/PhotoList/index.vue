@@ -48,6 +48,7 @@
 <script>
 import PhotoBox from '@/components/PhotoBox'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
+import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
 export default {
@@ -65,14 +66,22 @@ export default {
     return {
       gradeType: 0, // 0 未打分 1 good 2 bad
       showPreview: false,
-      imgIndex: 0,
-      priviewPhotoData: []
+      imgIndex: 0
     }
   },
   computed: {
     ...mapGetters(['imgDomain', 'staffId']),
     photos () {
       return this.photoData
+    },
+    // 预览数组
+    priviewPhotoData () {
+      const previewList = this.photos.map(item => {
+        const createData = new PreviewModel(item)
+        createData.src = this.imgDomain + createData.path
+        return createData
+      })
+      return previewList
     },
     /**
      * @description 能否打分
@@ -114,9 +123,6 @@ export default {
       immediate: true
     }
   },
-  created () {
-    this.initPriviewPhoto()
-  },
   methods: {
     /**
      * @description 点赞
@@ -151,21 +157,6 @@ export default {
     showPriviewPhoto (photoIndex) {
       this.imgIndex = photoIndex
       this.showPreview = true
-    },
-    /**
-     * @description 初始化预览数据
-     */
-    initPriviewPhoto () {
-      this.photos.forEach(item => {
-        item.src = this.imgDomain + item.path
-        // item.mode = 'original'
-        // item.storePartReworkReason = _.get(item, 'tags.values.store_part_rework_reason') || []
-        // item.storeReworkReason = _.get(item, 'tags.values.store_rework_reason') || ''
-        // item.storeReworkReason = item.storeReworkReason ? item.storeReworkReason.split('+') : []
-        // item.storeReworkNote = _.get(item, 'tags.values.store_rework_note') || '-'
-        // item.storePartReworkReason.forEach(labelItem => { labelItem.reason = labelItem.reason.split('+') })
-      })
-      this.priviewPhotoData = this.photos
     }
   }
 }

@@ -83,7 +83,9 @@ export function filtePhotoVersion (filtePhotoVersion, needVersion) {
   needVersion.forEach(versionItem => {
     const findVersion = filtePhotoVersion.find(verPhotoItem => verPhotoItem.version === versionItem)
     if (findVersion) {
-      createData[versionItem] = findVersion
+      createData[versionItem] = {
+        path: findVersion.path
+      }
     }
   })
   return createData

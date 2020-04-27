@@ -88,20 +88,6 @@ export default {
       return function (version) {
         return version === 'complete_photo'
       }
-    },
-    // 门店退回标记与照片封装
-    preList () {
-      return function (item) {
-        if (item.version !== 'complete_photo') {
-          return []
-        }
-        // 深拷贝
-        let itemCopy = JSON.parse(JSON.stringify(item))
-        const originPhoto = this.photoData.otherPhotoVersion.find(item => item.version === 'original_photo')
-        itemCopy.returnPhotoPath = item.path
-        itemCopy.path = originPhoto.path
-        return [itemCopy]
-      }
     }
   },
   created () {

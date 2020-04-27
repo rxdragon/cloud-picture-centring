@@ -1,7 +1,6 @@
 <template>
   <div class="photo">
     <div class="img-box">
-      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
       <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
@@ -14,12 +13,22 @@
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
-      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">下载照片</el-button>
+      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
+      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">{{ downComplete ? '下载云端成片' : '下载照片' }} </el-button>
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
     <div v-if="specialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
+    </div>
+    <div v-if="storePartReworkReason.length" class="recede-reason">
+      <div class="recede-title">门店退回标记：</div>
+      <div class="reason-content">
+        <el-tag size="medium" type="info" class="reason-tag"
+          v-for="(tagItem, tagIndex) in storePartReworkReason" :key="tagIndex">
+          {{ tagItem }}
+        </el-tag>
+      </div>
     </div>
     <div v-if="storeReworkReason" class="recede-reason">
       门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
@@ -57,6 +66,7 @@ export default {
     previewBreviary: { type: Boolean }, // 开启单张缩略预览功能
     showRecedeReason: { type: Boolean }, // 是否显示退单理由
     showJointLabel: { type: Boolean }, // 是否显示拼接照信息
+    downComplete: { type: Boolean },
     tags: { type: Object, default: () => {
       return null
     } }, // 标记信息
@@ -92,6 +102,13 @@ export default {
       } else {
         return ''
       }
+    },
+    // 门店退回标记
+    storePartReworkReason () {
+      const storePartReworkReason = _.get(this.tags, 'values.store_part_rework_reason') || []
+      let allTag = []
+      storePartReworkReason.forEach(item => allTag = new Set([...allTag, ...item.reason]))
+      return [...allTag]
     },
     // 门店退回理由
     storeReworkReason () {
@@ -194,19 +211,6 @@ export default {
   overflow: hidden;
   border-radius: 4px;
 
-  .joint-label {
-    position: absolute;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    font-size: 12px;
-    line-height: 16px;
-    color: @blue;
-    text-align: center;
-    -webkit-user-select: none;
-    background: @jointLabelColor;
-  }
-
   .photo-name {
     position: absolute;
     bottom: 0;
@@ -290,6 +294,13 @@ export default {
     line-height: 17px;
     color: #606266;
   }
+
+  .joint-label {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #606266;
+  }
 }
 
 .recede-reason {
@@ -300,9 +311,25 @@ export default {
   color: @red;
   border-top: 1px solid #ebeef5;
 
+  .recede-title {
+    margin-bottom: 10px;
+  }
+
   .reason-content {
     color: #606266;
     word-break: break-all;
+
+    .reason-tag {
+      height: auto;
+      min-height: 28px;
+      padding: 4px 10px 6px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #fff;
+      white-space: inherit;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 4px;
+    }
   }
 }
 </style>

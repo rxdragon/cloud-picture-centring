@@ -71,6 +71,8 @@ export function getStreamInfo (params) {
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
+      photoItem.orginPhotoPath = photoItem.path
+      photoItem.version = findOriginalPhoto.version
       photoItem.versionCache = PhotoTool.filtePhotoVersion(photoItem.photo_version, ['original_photo', 'complete_photo'])
       photoItem.isCover = false
     })
@@ -79,14 +81,15 @@ export function getStreamInfo (params) {
       const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
       if (findReturnShowPhoto) {
         photoItem.isReturnPhoto = true
-        photoItem.returnPhotoPath = findReturnShowPhoto.path
+        photoItem.path = findReturnShowPhoto.path
       }
       return Boolean(findReturnShowPhoto)
     })
     createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
     createData.hourGlass = msg.hour_glass
     createData.reviewerNote = _.get(msg, 'tags.values.review_reason', '暂无审核备注')
-    createData.needPunchLabel = msg.order.photographer_org_id === 1
+    createData.isReturnOrder = streamOrder.isCheckReturn || streamOrder.isStoreReturn
+    createData.needPunchLabel = msg.order.photographer_org_id === 1 && !createData.isReturnOrder
     return createData
   })
 }

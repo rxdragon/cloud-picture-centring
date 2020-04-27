@@ -219,9 +219,9 @@ export function getStoreEvaluate (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.retoucherName = (listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name)) || '-'
-      listItem.retouchGroupName = (listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name) || '-'
-      listItem.retoucherNpsAvg = (listItem.stream.tags && listItem.stream.tags.values && listItem.stream.tags.values.retoucher_score) || '-'
+      listItem.retoucherName = _.get(listItem, 'stream.retoucher') ? listItem.stream.retoucher.name || listItem.stream.retoucher.real_name : '-'
+      listItem.retouchGroupName = _.get(listItem, 'stream.retoucher') && _.get(listItem, 'stream.retoucher.retouch_group') ? listItem.stream.retoucher.retouch_group.name : '-'
+      listItem.retoucherNpsAvg = _.get(listItem, 'stream.tags') && _.get(listItem, 'stream.tags.values') ? listItem.stream.tags.values.retoucher_score : '-'
     })
     return msg
   })

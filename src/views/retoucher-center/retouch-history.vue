@@ -199,6 +199,12 @@ export default {
     margin-top: 20px;
   }
 
+  .search-box {
+    .search-item {
+      margin-right: 30px;
+    }
+  }
+
   .stream-search {
     span {
       width: 60px;

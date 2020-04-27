@@ -1,5 +1,5 @@
 <template>
-  <div class="issue-label">
+  <div class="issue-label" >
     <el-dialog
       width="30%"
       title="当前照片是否存在以下摄影&化妆问题："
@@ -22,7 +22,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitData">提 交</el-button>
+        <el-button type="primary" @click="submitData" :loading="loading">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -33,6 +33,11 @@ export default {
   name: 'IssueLabel',
   props: {
     issueData: { type: Object, default: () => ({}) }
+  },
+  data () {
+    return {
+      loading: false
+    }
   },
   methods: {
     /**
@@ -46,6 +51,7 @@ export default {
      * @description 提交
      */
     submitData () {
+      this.loading = true
       const problemTagPhotography = []
       const problemTagMakeup = []
       for (const key in this.issueData) {

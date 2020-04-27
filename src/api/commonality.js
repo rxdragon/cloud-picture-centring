@@ -1,7 +1,7 @@
 // commonality
 import axios from '@/plugins/axios.js'
 import { keyToHump } from '@/utils/index.js'
-import { settlePhoto } from '@/utils/photoTool.js'
+import * as PhotoTool from '@/utils/photoTool.js'
 import { PhotoStatics } from '@/utils/enumerate.js'
 
 /**
@@ -59,12 +59,13 @@ export function getStreamInfo (params) {
         photoItem.otherPhotoVersion = photoItem.other_photo_version.filter(versionItem => photoVersionArr.indexOf(versionItem.version) !== -1)
         photoItem.last_store_rework_photo && (photoItem.otherPhotoVersion = [...photoItem.otherPhotoVersion, photoItem.last_store_rework_photo])
         photoItem.photoVersion = photoItem.first_photo && isReturnPhoto
-          ? settlePhoto([...photoItem.otherPhotoVersion, photoItem.first_photo], reworkNum, isStoreReturn)
-          : settlePhoto([...photoItem.otherPhotoVersion], reworkNum, isStoreReturn)
+          ? PhotoTool.settlePhoto([...photoItem.otherPhotoVersion, photoItem.first_photo], reworkNum, isStoreReturn)
+          : PhotoTool.settlePhoto([...photoItem.otherPhotoVersion], reworkNum, isStoreReturn)
       }
       if (photoItem.photoVersion) {
         photoItem.photoVersion.forEach(versionItem => {
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
+          versionItem.versionCache = PhotoTool.filtePhotoVersion(photoItem.photoVersion, ['original_photo', 'complete_photo'])
           versionItem.phototag = photoItem.tags
         })
       }

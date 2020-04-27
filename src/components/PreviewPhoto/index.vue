@@ -9,7 +9,7 @@
         </button>
       </div>
     </div>
-    <mode-switch-box v-model="photoArray[photoIndex].mode" class="mode-switch-box" />
+    <mode-switch-box v-if="showPhoto.versionCache" v-model="photoArray[photoIndex].mode" :show-store-mode="showPhoto.hasStoreReturnTag" :show-cloud-mode="showPhoto.hasCommitInfo" class="mode-switch-box" />
     <div class="photoBox" v-loading="loading">
       <!-- 图片 -->
       <div class="photo-show" ref="photo-show">

@@ -180,7 +180,9 @@ async function onDownloadProcess (event, { uuid, progress, downInfo, status, can
     Vue.prototype.$set(downloadList[uuid], 'status', status)
     Vue.prototype.$set(downloadList[uuid], 'downInfo', downInfo)
     const iconSrc = await getFileIcon(downloadList[uuid].savePath)
-    Vue.prototype.$set(downloadList[uuid], 'iconSrc', iconSrc)
+    if (downloadList[uuid]) {
+      downloadList[uuid].iconSrc = iconSrc
+    }
     onListChange()
   }
 }

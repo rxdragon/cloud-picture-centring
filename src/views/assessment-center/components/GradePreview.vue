@@ -396,10 +396,10 @@ export default {
      */
     getImgInfo () {
       const orginImgDom = this.$refs['orgin-img']
-      const canvasWidth = orginImgDom.clientWidth
-      const canvasHeight = orginImgDom.clientHeight
-      this.canvasOption.width = canvasWidth
-      this.canvasOption.height = canvasHeight
+      if (orginImgDom) {
+        this.canvasOption.width = orginImgDom.clientWidth
+        this.canvasOption.height = orginImgDom.clientHeight
+      }
     },
     /**
      * @description 关闭窗口

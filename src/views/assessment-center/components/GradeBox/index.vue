@@ -55,7 +55,6 @@
 
 <script>
 import PhotoList from '@/components/PhotoList'
-import PreviewModel from '@/model/PreviewModel'
 
 export default {
   name: 'GradeBox',
@@ -80,13 +79,10 @@ export default {
   methods: {
     initPhotoList () {
       const photoVersionInfo = this.photoInfo.photoInfo.photoVersion
-      const photoVersionData = photoVersionInfo.map(versionItem => {
+      photoVersionInfo.forEach(versionItem => {
         versionItem.phototag = this.photoInfo.photoData.tags
-        const createData = new PreviewModel(versionItem)
-        createData.mode = 'cloudLabel'
-        return createData
       })
-      this.photoVersionList = photoVersionData
+      this.photoVersionList = photoVersionInfo
     }
   }
 }
