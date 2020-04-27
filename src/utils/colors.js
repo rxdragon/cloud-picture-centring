@@ -14,3 +14,10 @@ export function getColorNear (paramIndex, selfIndex) {
   const newH = h + 15 * (selfIndex + 1)
   return `hsl(${newH}, 78%, 58%)`
 }
+
+export function getColorHsl () {
+  const createColor = []
+  for (const index in colors) {
+    createColor.push(getColor(index))
+  }
+}

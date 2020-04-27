@@ -17,7 +17,7 @@
     <!-- 照片信息 -->
     <order-info :order-data="orderData" />
     <!-- 成片信息 -->
-    <div class="photo-module module-panel" v-if="orderData.streamState === 'store_return_retouch'">
+    <div class="photo-module module-panel">
       <div class="photo-panel-title panel-title">
         <span>照片信息</span>
         <div class="button-box">

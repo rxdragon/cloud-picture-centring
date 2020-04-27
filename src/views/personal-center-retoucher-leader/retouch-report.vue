@@ -3,16 +3,12 @@
     <div class="header">
       <h3>组员修图报告</h3>
     </div>
-     <transition name="fade" mode="out-in">
-      <el-tabs v-model="activeName" v-show="isShowTab">
-        <el-tab-pane v-for="(item,index) in tabList" :key="index" :label="item.label" :name="item.value" />
-      </el-tabs>
-    </transition>
-    <transition name="fade" mode="out-in">
-      <keep-alive>
-          <component :is="activeName" @changeShowTab="changeShowTab"/>
-      </keep-alive>
-    </transition>
+    <el-tabs v-model="activeName" v-show="isShowTab">
+      <el-tab-pane v-for="(item,index) in tabList" :key="index" :label="item.label" :name="item.value" />
+    </el-tabs>
+    <keep-alive>
+      <component :is="activeName" @changeShowTab="changeShowTab"/>
+    </keep-alive>
   </div>
 </template>
 

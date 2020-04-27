@@ -278,13 +278,13 @@ export default {
         } else if (val === 'complete') {
           this.showStoreReson = true
           if (!this.showPhoto.versionCache) return false
-          const completePhotoPath = this.showPhoto.versionCache.complete_photo.path
+          const completePhotoPath = this.showPhoto.versionCache.store_rework.path
           this.showPhoto.src = this.imgDomain + completePhotoPath
           this.showPhoto.version = 'complete_photo'
         } else {
           this.showMark = true
           if (!this.showPhoto.versionCache) return false
-          const completePhotoPath = this.showPhoto.versionCache.complete_photo.path
+          const completePhotoPath = this.showPhoto.versionCache.store_rework.path
           this.showPhoto.src = this.imgDomain + completePhotoPath
           this.showPhoto.version = 'complete_photo'
         }

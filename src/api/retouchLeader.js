@@ -178,15 +178,21 @@ export function getStaffProblemReport (params) {
     method: 'POST',
     params
   }).then(data => {
-    const createData = []
-    data.forEach(item => {
-      createData.push({
-        name: item.name,
-        value: item.count
-      })
+    let sum = 0
+    const createData = data.map(labelItem => {
+      sum = sum + Number(labelItem.count)
+      return {
+        name: labelItem.name,
+        value: labelItem.count,
+        group: labelItem.group
+      }
+    })
+    createData.forEach(labelItem => {
+      labelItem.rate = transformPercentage(labelItem.value, sum)
     })
     return createData
-  }).catch(() => {
+  }).catch(e => {
+    console.error(e)
     return []
   })
 }

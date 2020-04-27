@@ -4,7 +4,6 @@ import store from '@/store' // vuex
 import ProductModel from '@/model/ProductModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import StreamModel from '@/model/StreamModel.js'
-import uuidv4 from 'uuid'
 import { getAvg } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
@@ -124,31 +123,8 @@ export function getSearchHistory (params) {
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
-      const parentData = []
-      item.tags.forEach(issueItem => {
-        const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
-        if (findClass) {
-          findClass.child.push({
-            id: issueItem.id,
-            name: issueItem.name
-          })
-        } else {
-          const newClass = {
-            id: _.get(issueItem, 'parent.id') || uuidv4(),
-            name: _.get(issueItem, 'parent.name') || '-',
-            child: [{
-              id: issueItem.id,
-              name: issueItem.name,
-            }]
-          }
-          parentData.push(newClass)
-        }
-      })
-      item.issueLabel = parentData
-      item.commitInfo = {
-        ...item.commitInfo,
-        issueLabel: item.issueLabel
-      }
+      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
+      item.issueLabel = item.commitInfo.issueLabel
       item.score = item.commitInfo.score
       item.photoInfo.photoVersion.forEach(versionItem => {
         versionItem.commitInfo = item.commitInfo

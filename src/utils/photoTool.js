@@ -1,6 +1,7 @@
 import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } from '@/utils/enumerate.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as mPath from '@/utils/selfPath.js'
+import uuidv4 from 'uuid'
 import store from '@/store' // vuex
 import QiNiuETag from '@/utils/qetag.js'
 
@@ -71,6 +72,75 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
     }
   }
   return createData
+}
+
+/**
+ * @description 过滤照片版本
+ * @param photoVersion
+ */
+export function settlePhotoVersion (photoVersion) {
+  const photoVersionArr = ['finish_photo', 'store_rework', 'complete_photo', 'original_photo']
+  const timeLine = photoVersion.sort((a, b) => {
+    return Number(b.id) - Number(a.id)
+  })
+  let createData = []
+  timeLine.forEach(versionItem => {
+    if (photoVersionArr.includes(versionItem.version)) {
+      createData.push(versionItem)
+      const findVersionIndex = photoVersionArr.findIndex(item => item === versionItem.version)
+      if (findVersionIndex > -1) {
+        photoVersionArr.splice(findVersionIndex, 1)
+      }
+    }
+  })
+  createData = createData.sort((a, b) => {
+    return Number(a.id) - Number(b.id)
+  })
+  return createData
+}
+
+/**
+ * @description 处理comitInfo数据
+ * @param {*} commitInfo 
+ * @param {*} issueLabel 
+ */
+export function handleCommitInfo (commitInfo, issueLabel) {
+  const parentData = []
+  issueLabel.forEach(issueItem => {
+    const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
+    if (findClass) {
+      findClass.child.push({
+        id: issueItem.id,
+        name: issueItem.name
+      })
+    } else {
+      const newClass = {
+        id: _.get(issueItem, 'parent.id') || uuidv4(),
+        name: _.get(issueItem, 'parent.name') || '-',
+        child: [{
+          id: issueItem.id,
+          name: issueItem.name,
+        }]
+      }
+      parentData.push(newClass)
+    }
+  })
+  return {
+    ...commitInfo,
+    issueLabel: parentData
+  }
+}
+
+/**
+ * @description 查询最后一次门店退回
+ * @param {*} photoVersion 
+ */
+export function findLastReturnPhoto (photoVersion) {
+  const timeLine = photoVersion.sort((a, b) => {
+    return Number(b.id) - Number(a.id)
+  })
+  const findReturnShowPhoto = timeLine.find(versionItem => versionItem.version === 'store_rework')
+  return findReturnShowPhoto
 }
 
 /**

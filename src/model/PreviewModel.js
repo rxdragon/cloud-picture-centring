@@ -25,13 +25,13 @@ export default class PhotoModel {
     let storePartReworkReason = _.get(photoItem, 'tags.values.store_part_rework_reason') || []
     storePartReworkReason = storePartReworkReason.map(labelItem => {
       const createData = labelItem
-      createData.reason = labelItem.reason.split('+')
+      createData.reason = labelItem.reason ? labelItem.reason.split('+') : []
       return createData
     })
     this.storePartReworkReason = storePartReworkReason
     // 整理标签
-    this.storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
-    this.storeReworkReason = photoItem.storeReworkReason ? photoItem.storeReworkReason.split('+') : []
+    const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
+    this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
     // 整体备注
     this.storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note') || '-'
   }
@@ -53,9 +53,9 @@ export default class PhotoModel {
 
   // 获取模式
   getMode () {
-    if (this.hasStoreReturnTag) {
+    if (this.version === 'store_rework' && this.hasStoreReturnTag) {
       this.mode = 'complete'
-    } else if (this.hasCommitInfo) {
+    } else if (this.version === 'complete_photo' && this.hasCommitInfo) {
       this.mode = 'cloudLabel'
     }
   }

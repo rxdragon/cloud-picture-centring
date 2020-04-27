@@ -266,10 +266,8 @@ export default {
      * @param {String} uploadPhotoSha1 [上传文件的sha1]
      */
     checkPsPhoto (file, uploadPhotoSha1) {
-      const fileName = PhotoTool.fileNameFormat(file.name)
-      const findOrginPhoto = this.photos.find(item => item.path.includes(fileName))
       // 最后一次提交文件名
-      const beforeUploadFilePath = findOrginPhoto.isReturnPhoto ? findOrginPhoto.returnPhotoPath : file.name
+      const beforeUploadFilePath = file.name
       const beforeUploadFileName = PhotoTool.fileNameFormat(beforeUploadFilePath)
       if (beforeUploadFileName === uploadPhotoSha1) {
         throw new Error('请修改照片后再进行上传。')

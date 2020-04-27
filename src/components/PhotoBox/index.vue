@@ -14,7 +14,8 @@
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">{{ downComplete ? '下载云端成片' : '下载照片' }} </el-button>
+      <el-button v-if="downComplete" type="text" @click.stop.capture="downingPhoto">下载云端成片</el-button>
+      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto('original')">下载原片</el-button>
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
@@ -172,11 +173,14 @@ export default {
   methods: {
     /**
      * @description 下载成功
+     * @param {String} type [origina]
      */
-    downingPhoto () {
+    downingPhoto (type) {
       const savePath = `/${this.streamNum}`
+      let imgSrc = type === 'origina' ? this.orginPhotoPath : this.src
+      imgSrc = imgSrc || this.src
       const data = {
-        url: this.imgDomain + this.src,
+        url: this.imgDomain + imgSrc,
         path: savePath
       }
       this.$newMessage.success('已添加一张照片到下载')

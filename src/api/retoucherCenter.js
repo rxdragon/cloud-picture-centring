@@ -73,13 +73,20 @@ export function getStreamInfo (params) {
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
       photoItem.orginPhotoPath = photoItem.path
       photoItem.version = findOriginalPhoto.version
-      photoItem.versionCache = PhotoTool.filtePhotoVersion(photoItem.photo_version, ['original_photo', 'complete_photo'])
+      photoItem.versionCache = PhotoTool.filtePhotoVersion(photoItem.photo_version, ['original_photo', 'store_rework'])
       photoItem.isCover = false
     })
     // 最新退回照片
     const returnShowPhotos = msg.photos.filter(photoItem => {
       const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
       if (findReturnShowPhoto) {
+        const isStoreReturn = photoItem.tags.statics.includes('store_rework')
+        if (isStoreReturn) {
+          const findLastStorePhoto = PhotoTool.findLastReturnPhoto(photoItem.photo_version)
+          const tagsValues = _.get(photoItem, 'tags.values') || []
+          findLastStorePhoto.tags.values = { ...findLastStorePhoto.tags.values, ...tagsValues }
+          photoItem.tags = findLastStorePhoto.tags
+        }
         photoItem.isReturnPhoto = true
         photoItem.path = findReturnShowPhoto.path
       }
