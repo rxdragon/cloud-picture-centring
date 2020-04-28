@@ -153,9 +153,7 @@ export default {
      */
     async getRetouchList (page) {
       try {
-        if (page) {
-          this.pager.page = page
-        }
+        if (page) { this.pager.page = page }
         const reqData = {
           page: this.pager.page,
           pageSize: this.pager.pageSize
@@ -164,11 +162,9 @@ export default {
           reqData.startAt = joinTimeSpan(this.timeSpan[0])
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
-        this.isReturn !== 'all' && (reqData.isStoreReturn = this.isReturn)
-        this.isGood !== 'all' && (reqData.storeEvaluate = this.isGood ? 'good' : 'bad')
-        if (this.streamNum) {
-          reqData.streamNum = this.streamNum
-        }
+        if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
+        if (this.isGood !== 'all' ) { reqData.isGood = this.isGood }
+        if (this.streamNum) { reqData.streamNum = this.streamNum }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total
