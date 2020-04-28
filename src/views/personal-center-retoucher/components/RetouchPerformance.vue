@@ -30,7 +30,7 @@
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column label="退单数/退单率" min-width="120">
+        <el-table-column label="退张数/退张率" min-width="120">
           <template slot-scope="scope">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.ReworkPhoto">
               {{ scope.row.storeReturnNum }}
