@@ -82,7 +82,7 @@ export function getRetoucherQuota (params) {
     }
     msg.income = msg.income.retouch + msg.income.impulse + msg.income.reward - msg.income.punish// 收益
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
-    msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.score, retoucherNpsCount) // 顾客满意度
+    msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.sum, retoucherNpsCount) // 顾客满意度
     msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) // 门店评分
     msg.retouchReworkRate = getAvg(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量

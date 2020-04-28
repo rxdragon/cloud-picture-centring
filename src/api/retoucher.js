@@ -109,7 +109,7 @@ export function getRetouchQuota (params) {
       avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
       avgRetouchTimePhoto: timeFormat(avgRetouchTimePhoto, 'text', true),
       goodNum: data.goodNum + ' / ' + transformPercentage(data.goodNum, data.retouchStreamNum),
-      storeReturnNum: data.storeReturnNum + ' / ' + transformPercentage(data.storeReturnNum, data.retouchStreamNum),
+      storeReturnNum: data.storeReturnStreamNum + ' / ' + transformPercentage(data.storeReturnStreamNum, data.retouchStreamNum),
       overNum: data.overNum,
       retouchIncomeInfo: {
         getIncome: Number(data.retouchIncome).toFixed(2),
