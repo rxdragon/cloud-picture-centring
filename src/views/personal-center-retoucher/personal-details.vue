@@ -41,7 +41,7 @@
             >
               <div class="tip-content">
                 <div>修图等级升级规则：</div>
-                <div>1、退单率：近期修图获得的<span class="emphasis">质量问题退单数</span>占比，升级条件需<span class="emphasis">低于</span>退单合格率</div>
+                <div>1、退单率：近期修图获得的<span class="emphasis">质量问题退张数</span>占比，升级条件需<span class="emphasis">低于</span>退张合格率</div>
                 <div>2、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
               </div>
               <span slot="reference" class="tip-title"><i class="el-icon-warning-outline" />升级规则</span>
@@ -99,7 +99,7 @@
             </el-col>
             <el-col :span="12" class="pull-box">
               <div class="rote-title">
-                <span>近30日退单率</span>
+                <span>近30日退张率</span>
                 <span class="num">{{ gradeInfo.nearly30DaysReturnRate }}%</span>
               </div>
               <el-progress :percentage="gradeInfo.nearly30DaysReturnRate" :show-text="false" />
