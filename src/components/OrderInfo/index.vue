@@ -33,7 +33,7 @@
           </div>
         </div>
         <div v-if="isRework" class="retoucher">{{ orderData.retoucherName }}</div>
-        <div class="product">{{ orderData.productName }}</div>
+        <div class="product">{{ orderData.productName || orderData.productInfo.productName }}</div>
         <div class="wait-time">{{ orderData.waitTime }}</div>
         <div class="photo-count">{{ orderData.photoNum }}</div>
       </div>
@@ -215,7 +215,7 @@ export default {
   }
 
   .table-panel-concent {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     border-bottom: 1px solid #fafafa;
 
     & > div {

@@ -139,7 +139,7 @@
             </template>
           </div>
           <div class="submit-box">
-            <el-button type="primary" @click="submitData">提交评分</el-button>
+            <el-button type="primary" @click="submitData" :loading="isSubmit">提交评分</el-button>
             <el-button type="info" @click="closePreview" class="out-btn">退出</el-button>
           </div>
         </div>
@@ -224,6 +224,7 @@ export default {
           active: false
         }
       ],
+      isSubmit: false, // 是否提交
       allLoading: false // 整个页面loading
     }
   },
@@ -340,6 +341,7 @@ export default {
      */
     async submitData () {
       try {
+        this.isSubmit = true
         let markPhotoImg = ''
         if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
           markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
@@ -396,10 +398,10 @@ export default {
      */
     getImgInfo () {
       const orginImgDom = this.$refs['orgin-img']
-      const canvasWidth = orginImgDom.clientWidth
-      const canvasHeight = orginImgDom.clientHeight
-      this.canvasOption.width = canvasWidth
-      this.canvasOption.height = canvasHeight
+      if (orginImgDom) {
+        this.canvasOption.width = orginImgDom.clientWidth
+        this.canvasOption.height = orginImgDom.clientHeight
+      }
     },
     /**
      * @description 关闭窗口

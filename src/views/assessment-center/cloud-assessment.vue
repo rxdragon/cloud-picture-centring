@@ -190,6 +190,7 @@ export default {
         console.error(error)
       } finally {
         this.$refs['grade-preview'].allLoading = false
+        this.$refs['grade-preview'].isSubmit = false
       }
     },
     /**

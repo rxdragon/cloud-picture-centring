@@ -1,54 +1,56 @@
 <template>
   <div class="photo">
     <div class="img-box">
-      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
-      <el-image v-if="!showCanvas" :src="imageSrc" fit="cover" @click.native="operateMask(true)">
+      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
         </div>
       </el-image>
+      <preview-canvas-img v-else-if="showCanvas" :file="fileData" />
       <img v-else class="orgin-img" :src="imageSrc" alt="">
       <span v-if="photoName" class="photo-name" @click.stop="">{{ photoRealName }}</span>
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
-      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto">下载照片</el-button>
+      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
+      <el-button v-if="downComplete" type="text" @click.stop.capture="downingPhoto">下载云端成片</el-button>
+      <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto('original')">下载原片</el-button>
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
     <div v-if="specialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
-    <div v-if="storeReworkReason.length" class="recede-reason">
-      <p>门店退回标记：</p>
-      <span class="return-tag" v-for="(item,index) in storeReworkReason" :key="index">{{ item }}</span>
+    <div v-if="storePartReworkReason.length" class="recede-reason">
+      <div class="recede-title">门店退回标记：</div>
+      <div class="reason-content">
+        <el-tag size="medium" type="info" class="reason-tag"
+          v-for="(tagItem, tagIndex) in storePartReworkReason" :key="tagIndex">
+          {{ tagItem }}
+        </el-tag>
+      </div>
+    </div>
+    <div v-if="storeReworkReason" class="recede-reason">
+      门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
+    </div>
+    <div v-if="storeReworkNote" class="recede-reason">
+      门店退回备注： <span class="reason-content">{{ storeReworkNote }}</span>
     </div>
     <div v-if="recedeReason" class="recede-reason">
       审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
     </div>
-    <!-- 退回标记预览 -->
-    <ReturnImgPre
-      v-if="showReturnPre && !showYunCheck"
-      :show-return-mark="showCompletePhoto"
-      :pre-index-photo="prePhoto"
-      :show-next-btn="preList.length>1"
-      :stream-num="streamNum"
-      @closeMask="operateMask(false)"
-      @switchImg="switchImg"
-    />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
-// import PreviewCanvasImg from '@/components/PreviewCanvasImg'
-import ReturnImgPre from '@/components/ReturnImgPre'
+import PreviewCanvasImg from '@/components/PreviewCanvasImg'
 
 export default {
   name: 'PhotoBox',
-  components: { ReturnImgPre },
+  components: { PreviewCanvasImg },
   filters: {
     filterJointLabel (jointLabel) {
       return jointLabel[1]
@@ -57,79 +59,72 @@ export default {
     }
   },
   props: {
-    preList: { type: Array, default: () => {
-      return []
-    } }, // 当前预览图片列表
-    preIndex: { type: Number, default: 0 }, // 当前预览图片索引
-    src: { type: String, default: '' }, // 封面图地址
-    photoName: { type: Boolean }, // 是否显示照片名字
+    src: { type: String, default: '' }, // 地址图片
+    photoName: { type: Boolean },
+    peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
     downing: { type: Boolean }, // 是够开启下载功能
+    preview: { type: Boolean }, // 是否开启单张预览功能
     previewBreviary: { type: Boolean }, // 开启单张缩略预览功能
-    showCompletePhoto: { type: Boolean, default: false }, // 是否展示云端成片 false则只预览原图
-    showYunCheck: { type: Boolean, default: false }, // 是否展示云学院标记
     showRecedeReason: { type: Boolean }, // 是否显示退单理由
     showJointLabel: { type: Boolean }, // 是否显示拼接照信息
+    downComplete: { type: Boolean },
+    tags: { type: Object, default: () => {
+      return null
+    } }, // 标记信息
     streamNum: { type: String, default: '' }, // 流水号
     preloadPhoto: { type: Boolean },
     useEleImage: { type: Boolean, default: true },
     isLekima: { type: Boolean },
-    fileData: { type: Object, default: null },
+    fileData: { type: Object, default: null }
   },
   data () {
     return {
       breviary: '!thumb.small.50',
       linkTag: null,
       limitSize: 20 * 1024 * 1024,
-      showCanvas: false,
-      showReturnPre: false,
-      photoIndex: this.preIndex
+      showCanvas: false
     }
   },
   computed: {
     ...mapGetters(['imgDomain', 'imgCompressDomain', 'cacheImageSwitch']),
-    // 当前预览图片
-    prePhoto () {
-      return this.preList[this.photoIndex] || { path: this.src }
-    },
-    // 照片人数
-    peopleNum () {
-      return this.prePhoto.people_num || 0
-    },
     // 拼接信息
     jointLabel () {
-      if (this.showJointLabel && this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.splice_mark) {
-        return [this.prePhoto.tags.values.splice_mark, this.prePhoto.tags.values.splice_position]
+      if (this.showJointLabel && this.tags && this.tags.values && this.tags.values.splice_mark) {
+        return [this.tags.values.splice_mark, this.tags.values.splice_position]
       } else {
         return null
       }
     },
     // 重修理由
     recedeReason () {
-      const hasReworkReason = this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.rework_reason
+      const hasReworkReason = this.tags && this.tags.values && this.tags.values.rework_reason
       if (this.showRecedeReason && hasReworkReason) {
-        return this.prePhoto.tags.values.rework_reason
+        return this.tags.values.rework_reason
       } else {
         return ''
       }
     },
+    // 门店退回标记
+    storePartReworkReason () {
+      const storePartReworkReason = _.get(this.tags, 'values.store_part_rework_reason') || []
+      let allTag = []
+      storePartReworkReason.forEach(item => allTag = new Set([...allTag, ...item.reason]))
+      return [...allTag]
+    },
     // 门店退回理由
     storeReworkReason () {
-      const wholeReason = _.get(this.prePhoto, 'tags.values.store_rework_reason') || ''
-      const partReason = _.get(this.prePhoto, 'tags.values.store_part_rework_reason') || []
-      let reasonArr = partReason.map(item => {
-        return item.reason
-      })
-      if (this.showRecedeReason) {
-        return [...wholeReason ? wholeReason.split('+') : [], ...reasonArr]
+      const hasStoreReworkReason = this.tags && this.tags.values && this.tags.values.store_rework_reason
+      if (this.showRecedeReason && hasStoreReworkReason) {
+        return this.tags.values.store_rework_reason
       } else {
-        return []
+        return ''
       }
     },
     // 门店退回备注
     storeReworkNote () {
-      const hasStoreReworkNote = _.get(this.prePhoto, 'tags.values.store_rework_note')
+      const hasStoreReworkNote = this.tags && this.tags.values && this.tags.values.store_rework_note
       if (this.showRecedeReason && hasStoreReworkNote) {
-        return this.prePhoto.tags.values.store_rework_note
+        return this.tags.values.store_rework_note
       } else {
         return ''
       }
@@ -147,9 +142,19 @@ export default {
       const photoFileNam = this.src.split('/')
       return photoFileNam[photoFileNam.length - 1]
     },
+    // 展示图片
+    getPreviewPhoto () {
+      if (this.preview) {
+        return [this.imgDomain + this.src]
+      } else if (this.previewBreviary) {
+        return [this.imgDomain + this.src + this.breviary]
+      } else {
+        return []
+      }
+    },
     // 特效字段
     specialEffects () {
-      const special = (this.prePhoto.tags && this.prePhoto.tags.values && this.prePhoto.tags.values.special_efficacy) || ''
+      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || ''
       return special
     }
   },
@@ -168,11 +173,14 @@ export default {
   methods: {
     /**
      * @description 下载成功
+     * @param {String} type [origina]
      */
-    downingPhoto () {
+    downingPhoto (type) {
       const savePath = `/${this.streamNum}`
+      let imgSrc = type === 'origina' ? this.orginPhotoPath : this.src
+      imgSrc = imgSrc || this.src
       const data = {
-        url: this.imgDomain + this.coverPath,
+        url: this.imgDomain + imgSrc,
         path: savePath
       }
       this.$newMessage.success('已添加一张照片到下载')
@@ -191,30 +199,6 @@ export default {
         this.linkTag.setAttribute('as', 'image')
         head.appendChild(this.linkTag)
       }
-    },
-    /**
-     * @description 打开关闭遮盖层
-     */
-    operateMask (type) {
-      this.showReturnPre = type
-    },
-    switchImg (type) {
-      let listLen = this.preList.length
-      if (listLen < 2) {
-        return
-      } else {
-        switch (type) {
-          case 'next':
-            this.photoIndex = listLen - 1 > this.photoIndex ? this.photoIndex + 1 : 0
-            break
-          case 'last':
-            this.photoIndex = this.photoIndex !== 0 ? this.photoIndex - 1 : listLen - 1
-            break
-          default:
-            break
-
-        }
-      }
     }
   }
 }
@@ -230,23 +214,6 @@ export default {
   padding-bottom: 100%;
   overflow: hidden;
   border-radius: 4px;
-
-  img {
-    cursor: pointer;
-  }
-
-  .joint-label {
-    position: absolute;
-    top: 0;
-    z-index: 100;
-    width: 100%;
-    font-size: 12px;
-    line-height: 16px;
-    color: @blue;
-    text-align: center;
-    -webkit-user-select: none;
-    background: @jointLabelColor;
-  }
 
   .photo-name {
     position: absolute;
@@ -331,11 +298,16 @@ export default {
     line-height: 17px;
     color: #606266;
   }
+
+  .joint-label {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #606266;
+  }
 }
 
 .recede-reason {
-  display: flex;
-  flex-wrap: wrap;
   padding-top: 9px;
   margin: 0 6px 6px;
   font-size: 12px;
@@ -343,18 +315,25 @@ export default {
   color: @red;
   border-top: 1px solid #ebeef5;
 
-  .return-tag {
-    padding: 3px 5px;
-    margin: 5px 10px 0 0;
-    font-size: 12px;
-    color: #fff;
-    background-color: #535353;
-    border-radius: 5px;
+  .recede-title {
+    margin-bottom: 10px;
   }
 
   .reason-content {
     color: #606266;
     word-break: break-all;
+
+    .reason-tag {
+      height: auto;
+      min-height: 28px;
+      padding: 4px 10px 6px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #fff;
+      white-space: inherit;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 4px;
+    }
   }
 }
 </style>

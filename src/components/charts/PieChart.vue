@@ -9,24 +9,48 @@
 
 <script>
 import echarts from "echarts"
+import * as Color from '@/utils/colors.js'
 import NoData from '@/components/NoData'
+
+function filterLabelName (data) {
+  const group = data.data.group
+  let msg = ''
+  group.forEach(item => {
+    const name = item.nickname || item.name
+    msg += `${name}：${item.count}张<br/>`
+  })
+  return msg
+}
+
+const colors = Color.getColorHsl()
+
 const option = data => {
   return {
     tooltip: {
       trigger: 'item',
-      formatter: '{b} <br/>{c}'
+      formatter: (v) => {
+        return filterLabelName(v)
+      }
     },
     series: {
-      radius: ["30%", "60%"],
+      radius: ["30%", "70%"],
       type: "pie",
       data,
       label: {
         alignTo: 'labelLine',
         textBorderColor: 'transparent',
-        formatter: '{b}{c}',
+        formatter: (v) => {
+          const msg = `${v.data.name}：${v.data.rate}`
+          return msg
+        },
         color: '#000'
       },
-      color: ['#ffdb78', '#b7ff8f', '#91c2ff', '#ffb4ca','#fe9c43']
+      labelLine: {
+        lineStyle: {
+          color: colors
+        }
+      },
+      color: colors
     }
   }
 }
@@ -47,8 +71,8 @@ export default {
   },
   watch: {
     chartData: {
-      handler () {
-        this.drawChart()
+      handler (value) {
+        this.drawChart(value)
       },
       deep: true
     }
@@ -57,10 +81,10 @@ export default {
     /**
      * @description 获取dom元素
      */
-    drawChart () {
+    drawChart (chartData) {
       const dom = this.$refs['pie']
       this.myChart = echarts.init(dom)
-      const chartOption = option(this.chartData)
+      const chartOption = option(chartData)
       this.myChart.setOption(chartOption, true)
     }
   }

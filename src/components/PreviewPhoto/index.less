@@ -7,7 +7,6 @@
   z-index: 1900 !important;
   width: 100vw;
   height: calc(100vh - @navtop);
-  background-color: #424242;
   overflow: hidden;
 
   .title {
@@ -22,8 +21,8 @@
     line-height: 40px;
     color: #ddd;
     text-align: center;
-    background-color: #535353;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.8);
     z-index: 9999;
 
     .driver-star {
@@ -40,29 +39,44 @@
       border-radius: 50%;
     }
 
-    .button-close {
-      position: absolute;
-      top: 5px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      cursor: pointer;
+    .btn-right {
       background-color: #535353;
-      border: none;
-      outline: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100%;
+      text-align: right;
 
-      i {
-        font-size: 20px;
-        color: #cdcdcd;
-      }
-
-      &:hover {
+      .button-close {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        padding: 0;
+        cursor: pointer;
+        background-color: #535353;
+        border: none;
+        outline: none;
+  
         i {
-          color: #fff;
+          font-size: 20px;
+          color: #cdcdcd;
+        }
+  
+        &:hover {
+          i {
+            color: #fff;
+          }
         }
       }
     }
+  }
+
+  .mode-switch-box {
+    position: absolute;
+    top: 0;
+    right: 300px;
+    z-index: 9999;
   }
 
   .photoBox {
@@ -83,12 +97,80 @@
         overflow: hidden;
         touch-action: none;
         user-select: none;
-        background-color: #282828;
+        background-color: rgba(0, 0, 0, 0.8);
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
         img {
           max-width: 100%;
           max-height: 100%;
+        }
+
+        .sign-dom {
+          position: absolute;
+          z-index: 1002;
+
+          .sign-item {
+            .circle-box {
+              z-index: 1003;
+              width: 100%;
+              height: 100%;
+              border: 2px solid;
+              border-radius: 50%;
+            }
+
+            .retouch-reason {
+              position: absolute;
+              top: 30%;
+              left: 100%;
+              display: flex;
+  
+              .part-reason-list {
+                display: flex;
+                flex-direction: column;
+  
+                .part-tag {
+                  width: max-content;
+                  max-width: 140px;
+                }
+
+                .reason-tag-common {
+                  padding: 10px;
+                  margin: 0 10px 10px 0;
+                  font-size: 12px;
+                  color: #eee;
+                  background: rgba(0, 0, 0, 0.5);
+                  border-radius: 5px;
+                }
+              }
+              
+              .detail-box {
+                display: flex;
+                align-items: center;
+  
+                .triangle-left {
+                  position: relative;
+                  left: 15px;
+                  width: 0;
+                  height: 0;
+                  border-top: 5px solid transparent;
+                  border-right: 10px solid #fff;
+                  border-bottom: 5px solid transparent;
+                }
+  
+                .detail-content {
+                  position: relative;
+                  left: 10px;
+                  width: max-content;
+                  height: fit-content;
+                  padding: 10px 5px;
+                  font-size: 14px;
+                  color: #303133;
+                  background-color: #fff;
+                  border-radius: 5px;
+                }
+              }
+            }
+          }
         }
 
         .mask-photo {
@@ -325,6 +407,44 @@
               }
             }
           }
+        }
+      }
+
+      .store-return-reson {
+        .reason-contain {
+          overflow-y: auto;
+          margin-top: 20px;
+
+          .whole-reason-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+
+            .whole-tag {
+              width: max-content;
+              padding: 10px;
+              margin: 0 10px 10px 0;
+              font-size: 12px;
+              color: #eee;
+              background: rgba(0, 0, 0, 0.5);
+              border-radius: 5px;
+            }
+          }
+        }
+        
+        .tips {
+          margin-bottom: 15px;
+          font-size: 14px;
+          text-align: left;
+        }
+
+        .reason-note {
+          width: 100%;
+          min-height: 90px;
+          padding: 5px 10px;
+          font-size: 13px;
+          background-color: #282828;
+          border-radius: 5px;
         }
       }
 

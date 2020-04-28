@@ -95,9 +95,21 @@ export function getRetoucherQuota (params) {
     msg.lekimaPhotoNum = parseInt(msg.lichmaPhotoNum || 0) // 利奇马单数
     msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
     msg.goodRate = parseFloat(msg.goodNum / msg.retoucherFinishStreamNum) * 100 // 门店点赞率
-    msg.retoucherCheckCount.forEach(item => {
-      item.value = item.count
+    // 处理饼图
+    msg.checkAvgScore = getAvg(msg.retoucherCheckPoolEvaluationScore, msg.retoucherCheckPoolEvaluationPhotoNum)
+    let sum = 0
+    const checkTags = msg.retoucherCheckCount.map(labelItem => {
+      sum = sum + Number(labelItem.count)
+      return {
+        name: labelItem.name,
+        value: Number(labelItem.count),
+        group: labelItem.child
+      }
     })
+    checkTags.forEach(labelItem => {
+      labelItem.rate = transformPercentage(labelItem.value, sum)
+    })
+    msg.retoucherCheckCount = checkTags
     return msg
   })
 }
@@ -219,9 +231,9 @@ export function getStoreEvaluate (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.retoucherName = (listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name)) || '-'
-      listItem.retouchGroupName = (listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name) || '-'
-      listItem.retoucherNpsAvg = (listItem.stream.tags && listItem.stream.tags.values && listItem.stream.tags.values.retoucher_score) || '-'
+      listItem.retoucherName = _.get(listItem, 'stream.retoucher') ? listItem.stream.retoucher.name || listItem.stream.retoucher.real_name : '-'
+      listItem.retouchGroupName = _.get(listItem, 'stream.retoucher') && _.get(listItem, 'stream.retoucher.retouch_group') ? listItem.stream.retoucher.retouch_group.name : '-'
+      listItem.retoucherNpsAvg = _.get(listItem, 'stream.tags') && _.get(listItem, 'stream.tags.values') ? listItem.stream.tags.values.retoucher_score : '-'
     })
     return msg
   })

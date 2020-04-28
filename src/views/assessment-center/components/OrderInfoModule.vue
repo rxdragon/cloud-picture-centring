@@ -3,7 +3,7 @@
     <div class="panel-title">照片信息</div>
     <div class="panel-content">
       <div class="base-info panel-row">
-        <span class="order-info">
+        <span class="order-info" v-if="infoData.photoIndex">
           <span class="order-info-title">照片编号：</span>
           {{ infoData.photoIndex }}
         </span>

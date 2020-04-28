@@ -5,7 +5,7 @@
         <span>照片评分</span>
         <span class="score-box">总分：{{ photoInfoData.score }}</span>
       </div>
-      <photo-list need-preload :photo-data="photoInfoData.photoInfo.photoVersion" :photo-info="photoInfoData" />
+      <photo-list need-preload :photo-data="photoVersionList" showOrderInfo :order-info="photoInfoData" />
     </div>
     <div class="info-grid">
       <!-- 问题标签 -->
@@ -60,17 +60,29 @@ export default {
   name: 'GradeBox',
   components: { PhotoList },
   props: {
-    isGrade: { type: Boolean }, // 是否是打分使用
     photoInfo: { type: Object, default: () => ({}) } // 照片数据
   },
   data () {
     return {
-      routeName: this.$route.name // 路由名字
+      routeName: this.$route.name, // 路由名字
+      photoVersionList: []
     }
   },
   computed: {
     photoInfoData () {
       return this.photoInfo
+    }
+  },
+  created () {
+    this.initPhotoList()
+  },
+  methods: {
+    initPhotoList () {
+      const photoVersionInfo = this.photoInfo.photoInfo.photoVersion
+      photoVersionInfo.forEach(versionItem => {
+        versionItem.phototag = this.photoInfo.photoData.tags
+      })
+      this.photoVersionList = photoVersionInfo
     }
   }
 }
