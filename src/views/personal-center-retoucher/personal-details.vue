@@ -41,26 +41,8 @@
             >
               <div class="tip-content">
                 <div>修图等级升级规则：</div>
-                <div>1、点赞数：近期修图获得的<span class="emphasis">点赞数</span>占比，升级条件需<span class="emphasis">达到</span>点赞达标率</div>
-                <div>2、退单率：近期修图获得的<span class="emphasis">退单数</span>占比，升级条件需<span class="emphasis">低于</span>退单合格率</div>
-                <div>3、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
-                <div>系统按照过去30天内（滚动周期，由当天往前推30天）的
-                  <span class="emphasis">点赞数、退单数</span>
-                  除以等级要求固定分母得出点赞、退单率</div>
-                <div class="grade-box">
-                  <el-table :data="gradeData">
-                    <el-table-column label="固定分母">
-                      <el-table-column
-                        v-for="(gradeNumber, gradeNumberIndex) in 11"
-                        :key="gradeNumberIndex"
-                        min-width="50"
-                        :label="gradeNumber.toString()"
-                        :prop="gradeNumber.toString()"
-                        align="center"
-                      />
-                    </el-table-column>
-                  </el-table>
-                </div>
+                <div>1、退单率：近期修图获得的<span class="emphasis">质量问题退单数</span>占比，升级条件需<span class="emphasis">低于</span>退单合格率</div>
+                <div>2、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
               </div>
               <span slot="reference" class="tip-title"><i class="el-icon-warning-outline" />升级规则</span>
             </el-popover>
@@ -98,8 +80,8 @@
             <el-col :span="6">
               <div class="main-content">
                 <span class="num">
-                  <count-to :end-value="gradeInfo.needLevelUpExp | getInteger" />
-                  <i>.<count-to decimals :end-value="gradeInfo.needLevelUpExp | getPoint" /></i>
+                  <count-to :end-value="gradeInfo.avgRetouchTime | getInteger" />
+                  <i>.<count-to decimals :end-value="gradeInfo.avgRetouchTime | getPoint" /></i>
                 </span>
                 <span>平均单张修图时长（分钟）</span>
               </div>
@@ -218,19 +200,6 @@ export default {
       yearValue: '2019',
       todayData: {}, // 今日指标
       gradeInfo: {},
-      gradeData: [{
-        1: 800,
-        2: 2000,
-        3: 3500,
-        4: 7000,
-        5: 11000,
-        6: 20000,
-        7: 30000,
-        8: 42000,
-        9: 55000,
-        10: 70000,
-        11: '/'
-      }],
       awardInfo: [],
       propData: []
     }

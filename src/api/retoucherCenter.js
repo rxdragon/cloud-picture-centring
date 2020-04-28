@@ -72,8 +72,8 @@ export function getStreamInfo (params) {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
       photoItem.orginPhotoPath = photoItem.path
+      photoItem.versionCache = { original_photo: findOriginalPhoto }
       photoItem.version = findOriginalPhoto.version
-      photoItem.versionCache = PhotoTool.filtePhotoVersion(photoItem.photo_version, ['original_photo', 'store_rework'])
       photoItem.isCover = false
     })
     // 最新退回照片
@@ -83,6 +83,7 @@ export function getStreamInfo (params) {
         const isStoreReturn = photoItem.tags.statics.includes('store_rework')
         if (isStoreReturn) {
           const findLastStorePhoto = PhotoTool.findLastReturnPhoto(photoItem.photo_version)
+          photoItem.versionCache['store_rework'] = findLastStorePhoto
           const tagsValues = _.get(photoItem, 'tags.values') || []
           findLastStorePhoto.tags.values = { ...findLastStorePhoto.tags.values, ...tagsValues }
           photoItem.tags = findLastStorePhoto.tags
@@ -177,8 +178,8 @@ export function getRetouchQuotaList (params) {
       listItem.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
       listItem.exp = Number(listItem.exp) === 0 ? '-' : parseFloat(listItem.exp)
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
-      listItem.storeReturnNum = _.get(listItem, 'tags.values.store_rework_num') || '-'
-      listItem.goodEvaluate = _.get(listItem, 'tags.values.good_evaluate') || '-'
+      listItem.storeReturnNum = _.get(listItem, 'tags.values.store_rework_photo_num') || '-'
+      listItem.goodEvaluate = _.get(listItem, 'store_evaluate_stream.store_evaluate') || ''
       listItem.retoucherNpsAvg = _.get(listItem, 'tags.values.retoucher_score') || '-'
       listItem.lekimaCount = _.get(listItem, 'tags.values.lichma_photo_num') || '-'
     })

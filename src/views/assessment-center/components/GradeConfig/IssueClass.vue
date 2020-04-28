@@ -3,7 +3,7 @@
     <div class="issue-class-header">
       <div class="class-name">
         <span v-if="!edit">{{ issueClassData.name }}（共{{ issueClassData.child.length }}项）</span>
-        <el-input v-else v-model="issueClassData.name" placeholder="请输入评分大类名称"></el-input>
+        <el-input v-else v-model="issueClassData.name" maxlength="10" show-word-limit placeholder="请输入评分大类名称"></el-input>
       </div>
       <div class="class-tool">
         <el-popover

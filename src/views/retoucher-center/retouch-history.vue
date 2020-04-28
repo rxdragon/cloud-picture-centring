@@ -163,7 +163,7 @@ export default {
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
         if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
-        if (this.isGood !== 'all' ) { reqData.isGood = this.isGood }
+        if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)

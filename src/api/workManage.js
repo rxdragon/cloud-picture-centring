@@ -98,12 +98,13 @@ export function getRetoucherQuota (params) {
     // 处理饼图
     msg.checkAvgScore = getAvg(msg.retoucherCheckPoolEvaluationScore, msg.retoucherCheckPoolEvaluationPhotoNum)
     let sum = 0
+    msg.retoucherCheckCount = msg.retoucherCheckCount.filter(item => item.count)
     const checkTags = msg.retoucherCheckCount.map(labelItem => {
       sum = sum + Number(labelItem.count)
       return {
         name: labelItem.name,
         value: Number(labelItem.count),
-        group: labelItem.child
+        group: labelItem.child,
       }
     })
     checkTags.forEach(labelItem => {

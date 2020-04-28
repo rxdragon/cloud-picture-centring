@@ -2,7 +2,7 @@
   <div class="issue-item">
     <div class="issue-name">
       <span v-if="!edit">{{ issueItemData.name }}</span>
-      <el-input v-else v-model="issueItemData.name" placeholder="请输入评分细类名称"></el-input>
+      <el-input v-else v-model="issueItemData.name" maxlength="10" show-word-limit placeholder="请输入评分细类名称"></el-input>
     </div>
     <div class="issue-weight">
       <span v-if="!edit">{{ issueItemData.weights }}</span>
