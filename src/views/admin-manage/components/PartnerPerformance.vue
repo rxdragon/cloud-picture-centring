@@ -114,6 +114,7 @@ export default {
         this.loading = true
         const data = await WorkManage.getRetoucherQuota(req)
         this.checkData.checkTags = data.retoucherCheckCount
+        this.checkData.childCheckTag = data.childCheckTag
         this.checkData.checkAvgScore = data.checkAvgScore
         for (const key in data) {
           if (this.otherData[key]) {

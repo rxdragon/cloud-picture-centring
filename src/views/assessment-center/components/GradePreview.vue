@@ -1005,10 +1005,9 @@ export default {
               color: #eee;
               cursor: pointer;
               -webkit-user-select: none;
-              background-color: #000;
+              background-color: rgba(0, 0, 0, 0.6);
               border: none;
               border-radius: 4px;
-              opacity: 0.6;
 
               &.active {
                 background-color: #808080;

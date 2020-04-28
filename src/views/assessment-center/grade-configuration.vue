@@ -44,7 +44,7 @@
       :visible.sync="showConfigWeight">
       <div class="config-weight-box">
         <div class="from-box">
-          权重点配置：1点 - <el-input v-model="cacheWeight" v-numberOnly type="number" min="1" max="100" placeholder="请输入分值"></el-input> 分
+          权重点配置：1点 - <el-input v-model="cacheWeight" v-numberOnly type="number" min="1" max="99" placeholder="请输入分值"></el-input> 分
         </div>
         <div class="weight-desc">
           <i class="el-icon-warning"></i> 提示：权重点配置为1个权重点对应的具体分值请填入输入框

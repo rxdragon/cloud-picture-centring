@@ -157,8 +157,14 @@ export default {
           this.gradeUUid = this.photoData[0]._id
           this.$refs['grade-preview'].allLoading = false
         } else {
+          let gradeUUid = ''
+          if (isAllLast && this.photoData.length !== 1) {
+            gradeUUid = this.photoData[findGradePhotoIndex - 1]._id
+          } else {
+            gradeUUid = this.photoData[findGradePhotoIndex + 1]._id
+          }
           this.$refs['grade-preview'].allLoading = true
-          this.gradeUUid = this.photoData[findGradePhotoIndex + 1]._id
+          this.gradeUUid = gradeUUid
           await Promise.all([
             this.getSpotCheckResult(),
             this.getStatistics()

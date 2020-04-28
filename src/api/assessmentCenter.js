@@ -4,10 +4,9 @@ import store from '@/store' // vuex
 import ProductModel from '@/model/ProductModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import StreamModel from '@/model/StreamModel.js'
-import { getAvg } from '@/utils/index.js'
+import { getAvg, transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-import * as Colors from "@/utils/colors"
 
 /**
  * @description 获取今日抽片指标
@@ -199,25 +198,20 @@ export function getCloudProblemReport (params) {
     method: 'GET',
     params
   }).then(msg => {
-    let allCount = 0
     msg = msg.filter(item => item.count)
-    msg.forEach((classItem, classIndex) => {
-      classItem.value = 0
-      allCount += Number(classItem.count)
-      classItem.itemStyle = {
-        color: Colors.getColor(msg.length, classIndex)
+    let sum = 0
+    const checkTags = msg.map(labelItem => {
+      sum = sum + Number(labelItem.count)
+      return {
+        name: labelItem.name,
+        value: Number(labelItem.count),
+        group: labelItem.child
       }
-      classItem.child.forEach((issueItem, issueIndex) => {
-        issueItem.value = issueItem.count
-        classItem.value += Number(issueItem.count)
-        issueItem.itemStyle = {
-          color: Colors.getColorNear(msg.length, classIndex, issueIndex)
-        }
-      })
-      classItem.children = classItem.child
     })
-    if (!allCount) return null
-    return msg
+    checkTags.forEach(labelItem => {
+      labelItem.rate = transformPercentage(labelItem.value, sum)
+    })
+    return checkTags
   })
 }
 

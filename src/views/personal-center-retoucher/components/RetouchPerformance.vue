@@ -74,10 +74,6 @@
           <template slot-scope="scope">
             <div class="grade-box">
               <span class="span-row">
-                <span class="span-title">门店评分：</span>
-                {{ scope.row.gradeInfo.storeGrade }}
-              </span>
-              <span class="span-row">
                 <span class="span-title nps-grade">顾客满意度：</span>
                 {{ scope.row.gradeInfo.npsGrade }}
               </span>

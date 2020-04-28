@@ -9,8 +9,8 @@
 
 <script>
 import echarts from "echarts"
-import * as Color from '@/utils/colors.js'
 import NoData from '@/components/NoData'
+import { pieColors } from '@/utils/colors.js'
 
 function filterLabelName (data) {
   const group = data.data.group
@@ -21,8 +21,6 @@ function filterLabelName (data) {
   })
   return msg
 }
-
-const colors = Color.getColorHsl()
 
 const option = data => {
   return {
@@ -44,14 +42,9 @@ const option = data => {
           return msg
         },
         color: '#000'
-      },
-      labelLine: {
-        lineStyle: {
-          color: colors
-        }
-      },
-      color: colors
-    }
+      }
+    },
+    color: pieColors
   }
 }
 

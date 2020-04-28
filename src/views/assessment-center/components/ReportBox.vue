@@ -9,7 +9,7 @@
     <div class="issues-report module-panel">
       <div class="panel-title">整体问题统计</div>
       <div class="issues-main">
-        <sunburst-chart :time-span="timeSpan" />
+        <pie-chart :chart-data="cloudProblem" />
       </div>
     </div>
     <!-- 详细问题统计 -->
@@ -28,23 +28,39 @@
 
 <script>
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
-import SunburstChart from '@/components/SunburstChart'
+import PieChart from '@/components/charts/PieChart'
 import GroupChart from './GroupChart'
+import { joinTimeSpan } from '@/utils/timespan.js'
+import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'ReportBox',
-  components: { IssueLabelSelect, SunburstChart, GroupChart },
+  components: { IssueLabelSelect, PieChart, GroupChart },
   props: {
     timeSpan: { type: Array, default: () => [] }
   },
   data () {
     return {
-      issueValue: []
+      issueValue: [],
+      cloudProblem: []
     }
+  },
+  created () {
+    this.getCloudProblemReport()
   },
   methods: {
     closeDrawer () {
       this.$emit('update:show-draw', false)
+    },
+    /**
+     * @description 获取订单
+     */
+    async getCloudProblemReport () {
+      const req = {
+        startAt: joinTimeSpan(this.timeSpan[0]),
+        endAt: joinTimeSpan(this.timeSpan[1], 1)
+      }
+      this.cloudProblem = await AssessmentCenter.getCloudProblemReport(req)
     }
   }
 }
