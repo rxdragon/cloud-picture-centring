@@ -49,6 +49,8 @@ export default class StreamModel {
       pimples: false
     }
     this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || retouchRequire
+    const referencePhoto = _.get(streamData, 'tags.values.retouch_claim.referenceImg')
+    this.referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
     this.photoNum = this.getPhotoNum()
     this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
     this.retoucher = _.get(streamData, 'retoucher.name') || _.get(streamData, 'retoucher.real_name') || '-'
@@ -85,7 +87,5 @@ export default class StreamModel {
     this.retouchRemark = streamNote.retouch_note // 修图备注
     this.backgroundColor = streamNote.color_note // 背景备注
     this.photographyNote = streamNote.photography_note // 摄影备注
-    // TODO 更改字段
-    this.referencePhoto = store.getters.imgDomain + '2020/04/29/FiLxqN7CEoT-ZNPoTbmZVf-AOor9.jpg'
   }
 }

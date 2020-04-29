@@ -57,7 +57,7 @@
             <el-button type="text" @click="downPhoto(orderData.backgroundColor)">下载背景图</el-button>
           </div>
         </div>
-        <div class="require-remark">
+        <div v-if="orderData.referencePhoto" class="require-remark">
           <span>参考图：</span>
           <div class="remark-content require-reference-photo">
             <el-image

@@ -1,5 +1,6 @@
 // commonality
 import axios from '@/plugins/axios.js'
+import store from '@/store' // vuex
 import { keyToHump } from '@/utils/index.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
@@ -66,6 +67,8 @@ export function getStreamInfo (params) {
       }
     })
     data.photos = data.photos.filter(photoItem => Boolean(photoItem.photoVersion))
+    let referencePhoto = _.get(data, 'tags.values.retouch_claim.referenceImg')
+    referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
     createData.orderData = {
       streamNum: data.streamNum,
       photographerOrg: data.order ? data.order.photographer_org.name : '-',
@@ -80,6 +83,7 @@ export function getStreamInfo (params) {
       store_evaluate,
       overTime: data.hourGlass ? data.hourGlass.over_time + 'min' : '-',
       requireLabel: _.get(data, 'tags.values.retouch_claim', {}),
+      referencePhoto,
       retouchRemark: data.note.retouch_note || '暂无修图备注',
       backgroundColor: msg.note.color_note || '',
       reviewerNote: _.get(data, 'tags.values.review_reason', '暂无审核备注')

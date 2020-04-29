@@ -74,7 +74,18 @@
           <span class="title">背景图要求：</span>
           <div class="content require-background-color">
             <img :src="orderInfo.backgroundColor" alt="">
-            <el-button type="text" @click="downbackground">下载背景图</el-button>
+            <el-button type="text" @click="downPhoto(orderInfo.backgroundColor)">下载背景图</el-button>
+          </div>
+        </div>
+        <div v-if="orderInfo.referencePhoto" class="panel-main-content">
+          <span class="title">参考图：</span>
+          <div class="content require-reference-photo">
+            <el-image
+              class="reference-img" fit="contain"
+              :src="orderData.referencePhoto"
+              :preview-src-list="[orderData.referencePhoto]">
+            </el-image>
+            <el-button type="text" @click="downPhoto(orderData.referencePhoto)">下载参考图</el-button>
           </div>
         </div>
       </div>
@@ -99,10 +110,10 @@ export default {
     }
   },
   methods: {
-    downbackground () {
+    downPhoto (url) {
       const savePath = `/${this.orderInfo.streamNum}`
       const data = {
-        url: this.orderInfo.backgroundColor,
+        url,
         path: savePath
       }
       this.$newMessage.success('已添加一张照片到下载')
@@ -194,6 +205,16 @@ export default {
             width: 50px;
             height: 50px;
             margin-right: 10px;
+          }
+        }
+
+        .require-reference-photo {
+          display: flex;
+          align-items: flex-end;
+
+          .reference-img {
+            width: 200px;
+            height: 200px;
           }
         }
       }
