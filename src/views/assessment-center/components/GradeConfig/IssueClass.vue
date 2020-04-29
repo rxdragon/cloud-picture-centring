@@ -240,7 +240,7 @@ export default {
 </style>
 
 <style lang="less">
-.el-popper {
+.add-new-item {
   padding: 12px 20px;
 }
 
