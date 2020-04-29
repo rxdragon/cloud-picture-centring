@@ -69,6 +69,7 @@ export default {
 <style lang="less" scoped>
 .report-box {
   position: relative;
+  width: 500px;
 }
 
 .head-box {

@@ -51,7 +51,7 @@
       custom-class="info-drawer"
       append-to-body
       :show-close="false"
-      size="400"
+      size="500"
       :visible.sync="drawer"
       :with-header="false">
       <report-box :time-span="searchTimeSpan" :show-draw.sync="drawer" />

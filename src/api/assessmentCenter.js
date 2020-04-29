@@ -225,7 +225,7 @@ export function getCloudProblemReport (params) {
 export function getCloudProblemReportByGroup (params) {
   return axios({
     url: '/project_cloud/checkPool/getCloudProblemReportByGroup',
-    method: 'GET',
+    method: 'POST',
     params
   }).then(msg => {
     return msg
