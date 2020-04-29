@@ -8,7 +8,7 @@
       <el-button type="primary" plain @click="goBack">返回</el-button>
     </div>
     <!-- 搜索盒子 -->
-    <div class="search-box two-rows">
+    <div class="search-box">
       <div class="staff-box search-item">
         <span>组员</span>
         <crew-select v-model="staffId" />
@@ -17,12 +17,15 @@
         <span>问题标签</span>
         <issue-select v-model="issueId" />
       </div>
-    </div>
-    <div class="search-box two-rows">
       <div class="lekima-box search-item">
         <span>利奇马</span>
         <lekima-select v-model="isLichmaValue" />
       </div>
+      <div class="button-box">
+        <el-button type="primary" @click="getStaffRetouchList(1)">查 询</el-button>
+      </div>
+    </div>
+    <div class="search-box two-rows">
       <div class="audit-box search-item">
         <span>门店退回</span>
         <return-select v-model="isReturn" />
@@ -30,9 +33,6 @@
       <div class="spot-check-box search-item">
         <span>门店点赞</span>
         <evaluate-select v-model="isGood" />
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getStaffRetouchList(1)">查 询</el-button>
       </div>
     </div>
     <div class="table-box">
@@ -216,8 +216,14 @@ export default {
     }
   }
 
+  .search-box {
+    .button-box {
+      margin-left: auto;
+    }
+  }
+
   .two-rows {
-    margin-bottom: 20px;
+    margin: 20px 0 0;
   }
 
   .table-box {

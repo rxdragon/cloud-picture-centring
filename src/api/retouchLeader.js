@@ -102,7 +102,7 @@ export function getStaffQuotaInfoGroupByStaff (params) {
 export function getStaffRetouchList (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getStaffRetouchList',
-    method: 'GET',
+    method: 'POST',
     params
   }).then(msg => {
     msg.list.forEach(listItem => {
@@ -156,12 +156,21 @@ export function getStaffTProblemsPhotoList (params) {
     method: 'POST',
     params
   }).then(data => {
-    const createData = {}
-    createData.evaluatePhotosNum = parseInt(data.evaluationPhotoNum)
-    createData.waterhotosNum = parseInt(data.retoucherTagNum[0].count)
-    createData.skinPhotosNum = parseInt(data.retoucherTagNum[1].count)
-    createData.otherPhotosNum = parseInt(data.retoucherTagNum[2].count)
-    createData.retoucherScoreAvg = getAvg(_.get(data, 'retoucherScoreAvg.sum', 0), _.get(data, 'retoucherScoreAvg.count', 0))
+    const createData = []
+    const evaluatePhotosNum = parseInt(data.evaluationPhotoNum)
+    createData.push({ label: '评价照片量', value: evaluatePhotosNum, componentSwitch: true })
+    const retoucherTagNum = data.retoucherTagNum.filter(item => Number(item.count))
+    retoucherTagNum.forEach(tagItem => {
+      const createTag = {
+        label: `${tagItem.name}问题照片`,
+        value: parseInt(tagItem.count),
+      }
+      createData.push(createTag)
+    })
+    const retouchScoreSum = _.get(data, 'retoucherScoreAvg.sum') || 0
+    const retoucherScoreCount = _.get(data, 'retoucherScoreAvg.count') || 0
+    const retoucherScoreAvg = getAvg(retouchScoreSum, retoucherScoreCount)
+    createData.push({ label: '评价平均分', value: retoucherScoreAvg })
     return createData
   }).catch(() => {
     return {}

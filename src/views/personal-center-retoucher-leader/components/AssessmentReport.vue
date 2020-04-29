@@ -17,7 +17,15 @@
       <div class="module-panel">
         <div class="panel-title">云学院报告</div>
         <div class="table-content">
-          <list-table key="tableDataCount" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataCount" />
+          <div class="list-tabel">
+            <div v-for="(listItem, listIndex) in tableDataCount" :key="listIndex" class="list-box">
+              <div class="title">{{ listItem.label }}</div>
+              <div class="content">
+                <el-link v-if="listItem.componentSwitch" type="primary" class="el-router-link" @click="showDetail"> {{ listItem.value }} </el-link>
+                <div v-else class="content-text">{{ listItem.value }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="module-panel charts-box">
@@ -42,7 +50,6 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
-import ListTable from '@/components/ListTable'
 import CrewRetouchHistory from './CrewRetouchHistory'
 import RetoucherChart from './RetoucherChart'
 import CrewSelect from '@SelectBox/CrewSelect'
@@ -55,7 +62,7 @@ import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'RetouchReport',
-  components: { DatePicker, ListTable, CrewRetouchHistory, CrewSelect, PieChart, RetoucherChart },
+  components: { DatePicker, CrewRetouchHistory, CrewSelect, PieChart, RetoucherChart },
   props: {},
   data () {
     return {
@@ -65,24 +72,13 @@ export default {
       staffId: 0,
       allStaffs: [],
       searchType: '', // 搜索类型
-      tableDataCount: {
-        evaluatePhotosNum: { label: '评价照片量', value: '-', componentSwitch: true },
-        waterhotosNum: { label: '液化问题照片', value: '-', componentSwitch: true },
-        skinPhotosNum: { label: '磨皮问题照片', value: '-', componentSwitch: true },
-        otherPhotosNum: { label: '其他问题照片', value: '-', componentSwitch: true },
-        retoucherScoreAvg: { label: '评价平均分', value: '-' },
-      },
+      tableDataCount: [
+        { label: '评价照片量', value: '-', componentSwitch: true },
+        { label: '评价平均分', value: '-' }
+      ],
       pieData: [],
       barData: [],
       chartShowKeys: ['avgScore'],
-    }
-  },
-  computed: {
-    sendStaff () {
-      return this.staffId ? [this.staffId] : this.allStaffs
-    },
-    linkTime () {
-      return this.timeSpan
     }
   },
   async created () {
@@ -118,15 +114,9 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.staffId) {
-        req.staffId = this.staffId
-      }
+      if (this.staffId) { req.staffId = this.staffId }
       const data = await RetouchLeader.getStaffTProblemsPhotoList(req)
-      for (const key in data) {
-        if (this.tableDataCount[key]) {
-          this.tableDataCount[key].value = data[key]
-        }
-      }
+      this.tableDataCount = data
     },
     /**
      * @description 获取云学院问题照片饼图
@@ -160,6 +150,9 @@ export default {
       }
       this.chartInfo = await RetouchLeader.getStaffQuotaInfoGroupByStaff(req)
     },
+    /**
+     * @description 获取数据
+     */
     searchData () {
       if (!this.timeSpan) {
         this.$newMessage.warning('请输入时间')
@@ -198,6 +191,50 @@ export default {
 
 .module-panel {
   margin-bottom: 20px;
+
+  .list-tabel {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    border-bottom: 1px solid #f2f6fc;
+
+    .list-box {
+      display: flex;
+      flex-direction: column;
+      min-width: 150px;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      max-height: 78px;
+      padding: 17px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 22px;
+      color: #303133;
+      text-align: left;
+      background-color: #fafafa;
+    }
+
+    .content {
+      height: 58px;
+      padding: 21px 20px;
+      font-size: 14px;
+      text-align: left;
+      background-color: #fff;
+
+      .content-text {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .el-router-link {
+        text-decoration: underline;
+      }
+    }
+  }
 
   .retoucher-chart {
     &:last-of-type {

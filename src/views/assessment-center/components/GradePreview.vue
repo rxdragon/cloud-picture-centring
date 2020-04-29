@@ -11,8 +11,12 @@
       <!-- 画板工具 -->
       <div class="photo-tool">
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'move' }" @click.capture="changeDrawType('move')">
-          <i id="move" class="el-icon-rank" data-type="move" />
-          <span class="shortcut">V</span>
+          <el-tooltip class="item" effect="dark" content="移动" placement="right">
+            <div class="tool-dom">
+              <i id="move" class="el-icon-rank" />
+              <span class="shortcut">V</span>
+            </div>
+          </el-tooltip>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="changeDrawType('pen')">
           <el-popover
@@ -28,27 +32,51 @@
               </div>
             </div>
             <div slot="reference">
-              <i id="pen" class="el-icon-edit" />
-              <span class="shortcut">B</span>
+              <el-tooltip class="item" effect="dark" content="画笔" placement="right">
+                <div class="tool-dom">
+                  <i id="pen" class="el-icon-edit" />
+                  <span class="shortcut">B</span>
+                </div>
+              </el-tooltip>
             </div>
           </el-popover>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'arrow' }" @click="changeDrawType('arrow')">
-          <i id="arrow" class="el-icon-top-right" />
-          <span class="shortcut">C</span>
+          <el-tooltip class="item" effect="dark" content="箭头" placement="right">
+            <div class="tool-dom">
+              <i id="arrow" class="el-icon-top-right" />
+              <span class="shortcut">C</span>
+            </div>
+          </el-tooltip>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'ellipse' }" @click="changeDrawType('ellipse')">
-          <i id="ellipse" class="el-icon-circle-plus-outline" />
+          <el-tooltip class="item" effect="dark" content="圆圈" placement="right">
+            <div class="tool-dom">
+              <div class="circle"></div>
+            </div>
+          </el-tooltip>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'line' }" @click="changeDrawType('line')">
-          <i id="line" class="el-icon-minus" />
+          <el-tooltip class="item" effect="dark" content="直线" placement="right">
+            <div class="tool-dom">
+              <i id="line" class="el-icon-minus" />
+            </div>
+          </el-tooltip>
         </div>
         <div class="tool" :class="{ 'active': canvasOption.drawType === 'blowup' }" @click="changeDrawType('blowup')">
-          <i id="blowup" class="el-icon-search" />
-          <span class="shortcut">Z</span>
+          <el-tooltip class="item" effect="dark" content="放大" placement="right">
+            <div class="tool-dom">
+              <i id="blowup" class="el-icon-search" />
+              <span class="shortcut">Z</span>
+            </div>
+          </el-tooltip>
         </div>
         <div class="tool" @click="changeDrawType('delete')">
-          <i id="delete" class="el-icon-delete" />
+          <el-tooltip class="item" effect="dark" content="删除" placement="right">
+            <div class="tool-dom">
+              <i id="delete" class="el-icon-delete" />
+            </div>
+          </el-tooltip>
         </div>
         <div class="tool tool-color">
           <el-color-picker v-model="canvasOption.penColor" size="mini" />
@@ -753,6 +781,14 @@ export default {
         background-clip: content-box;
         border-radius: 13px;
         transition: all 0.3s ease;
+
+        .circle {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border: 1px solid;
+          border-radius: 50%;
+        }
 
         .shortcut {
           position: absolute;

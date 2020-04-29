@@ -1,4 +1,5 @@
 import * as Validate from '@/utils/validate.js'
+import store from '@/store' // vuex
 
 // 流水静态状态资源
 export const StreamStatics = {
@@ -21,6 +22,7 @@ export default class StreamModel {
   streamState = '' // 流水状态
   retouchRemark = '' // 修图备注
   backgroundColor = '' // 背景备注
+  referencePhoto = '' // 参考图
   photographyNote = '' // 摄影备注
   reviewerNote = '' // 审核备注
   requireLabel = {} // 修图要求
@@ -83,5 +85,7 @@ export default class StreamModel {
     this.retouchRemark = streamNote.retouch_note // 修图备注
     this.backgroundColor = streamNote.color_note // 背景备注
     this.photographyNote = streamNote.photography_note // 摄影备注
+    // TODO 更改字段
+    this.referencePhoto = store.getters.imgDomain + '2020/04/29/FiLxqN7CEoT-ZNPoTbmZVf-AOor9.jpg'
   }
 }
