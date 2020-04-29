@@ -103,7 +103,7 @@ export function getStaffRetouchList (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getStaffRetouchList',
     method: 'POST',
-    params
+    data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
       const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)

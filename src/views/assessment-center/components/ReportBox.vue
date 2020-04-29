@@ -49,11 +49,14 @@ export default {
     this.getCloudProblemReport()
   },
   methods: {
+    /**
+     * @description 关闭抽屉
+     */
     closeDrawer () {
       this.$emit('update:show-draw', false)
     },
     /**
-     * @description 获取订单
+     * @description 获取饼图数据
      */
     async getCloudProblemReport () {
       const req = {
