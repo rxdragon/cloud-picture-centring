@@ -1,5 +1,5 @@
 <template>
-  <div v-show="show" class="window.fabric-canvas">
+  <div v-show="show" class="fabric-canvas">
     <canvas id="mark-canvas" ref="mark-canvas" />
   </div>
 </template>
@@ -360,7 +360,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.window.fabric-canvas {
+.fabric-canvas {
   position: absolute;
   z-index: 4000;
 }
