@@ -43,6 +43,7 @@
                 <div>修图等级升级规则：</div>
                 <div>1、退单率：近期修图获得的<span class="emphasis">质量问题退张数</span>占比，升级条件需<span class="emphasis">低于</span>退张合格率</div>
                 <div>2、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
+                <div>3、平均单张修图时长：近期平均单张修图时长不可超过升级规定的平均修图时长。</div>
               </div>
               <span slot="reference" class="tip-title"><i class="el-icon-warning-outline" />升级规则</span>
             </el-popover>

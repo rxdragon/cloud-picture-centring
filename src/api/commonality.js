@@ -62,6 +62,7 @@ export function getStreamInfo (params) {
             picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || ''
           }
           const issueLabel = _.get(versionItem, 'phototag.values.check_pool_tags') || []
+          if (!issueLabel.length && !commitInfo.picUrl) return
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
         })
       }

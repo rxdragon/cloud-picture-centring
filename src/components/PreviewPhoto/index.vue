@@ -356,6 +356,9 @@ export default {
       }
     }
   },
+  beforeDestroy () {
+    document.onkeydown = null
+  },
   methods: {
     /**
      * @description 显示标记
@@ -456,7 +459,7 @@ export default {
      * @description 判断是否处于放大中
      */
     judgeHasZoom (e) {
-      const isOverIn = Boolean(this.imgLayer.style.width)
+      const isOverIn = _.get(this.imgLayer, 'style.width')
       if (isOverIn) {
         this.handOver(e)
       }
