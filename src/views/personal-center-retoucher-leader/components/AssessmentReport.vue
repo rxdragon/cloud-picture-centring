@@ -40,6 +40,7 @@
     </div>
     <CrewRetouchHistory
       v-else
+      is-seach-cloud-spot
       :is-seach-page.sync="isSeachPage"
       :search-staff="staffId"
       :search-type.sync="searchType"

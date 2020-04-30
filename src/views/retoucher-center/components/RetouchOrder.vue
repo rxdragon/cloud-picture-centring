@@ -32,6 +32,7 @@
           <photo-box
             downing
             :down-complete="photoItem.isReturnPhoto"
+            :orgin-photo-path="photoItem.orginPhotoPath"
             photo-name
             preload-photo
             show-joint-label

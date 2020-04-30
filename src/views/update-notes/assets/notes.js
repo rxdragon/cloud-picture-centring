@@ -265,19 +265,42 @@ const version_2_4_0 = {
   time: '2020-4-30',
   desc: `> 版本概况
   
-  * 数据迁移至七牛云
-  * 取消域名切换
+  * 门店退单标记功能
+  * 更改云学院评价方式和规则
+  * 更改升级规则
+  * 修复部分bug
   
   > 综合改动
   
-  * 客片池
-          1. <span class="mark-opt">优化</span>查询页面报错，系统繁忙
-          2. <span class="mark-new">新增</span>订单号查询
+  * 订单详情页
+            1. <span class="mark-new">新增</span>照片增加云学院评价标签
+            2. <span class="mark-new">新增</span>照片增加门店退单标记
+            3. <span class="mark-new">新增</span>增加门店评价点赞点踩显示
   
   > 修图师
   
   * 待修订单页面
-              1. <span class="mark-opt">优化</span>取消节点切换，统一使用七牛云`
+              1. <span class="mark-new">新增</span>门店退单标记显示
+              2. <span class="mark-new">新增</span>更改升级规则
+              3. <span class="mark-opt">优化</span>针对jpeg照片和jpg验证照片名字兼容，不区分jpeg和jpg
+
+* 修图历史记录
+            1. <span class="mark-new">新增</span>门店评价更改为点赞和点踩
+
+* 个人中心（组员）
+             1. <span class="mark-new">新增</span>原有种草更改为点赞数和点赞率，原有拔草更改为退单数和退单率。
+
+> 修图主管
+    
+* 修图主管
+            1. <span class="mark-new">新增</span>云学院组员报告
+            2. <span class="mark-new">新增</span>云学院组员相关绩效查询
+
+> 培训师
+
+* 云学院评价中心
+            1. <span class="mark-new">新增</span>云学院标签打分机制
+            2.  <span class="mark-new">新增</span>标签管理模块`
 }
 
 export default [

@@ -28,11 +28,15 @@
     <div class="search-box two-rows">
       <div class="audit-box search-item">
         <span>门店退回</span>
-        <return-select v-model="isReturn" />
+        <return-state-select v-model="isReturn" />
       </div>
       <div class="spot-check-box search-item">
         <span>门店点赞</span>
         <evaluate-select v-model="isGood" />
+      </div>
+      <div class="audit-box search-item">
+        <span>云学院抽查</span>
+        <return-state-select v-model="isCloudSpot" />
       </div>
     </div>
     <div class="table-box">
@@ -86,7 +90,7 @@
 </template>
 
 <script>
-import ReturnSelect from '@SelectBox/ReturnStateSelect'
+import ReturnStateSelect from '@SelectBox/ReturnStateSelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import LekimaSelect from '@SelectBox/LekimaSelect'
@@ -98,8 +102,9 @@ import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'CrewRetouchHistory',
-  components: { ReturnSelect, CrewSelect, EvaluateSelect, LekimaSelect, IssueSelect, ShowEvaluate },
+  components: { ReturnStateSelect, CrewSelect, EvaluateSelect, LekimaSelect, IssueSelect, ShowEvaluate },
   props: {
+    isSeachCloudSpot: { type: Boolean },
     isSeachPage: { type: Boolean },
     searchTime: { type: [Object, Array, String], default: () => {
       return {}
@@ -112,6 +117,7 @@ export default {
       routeName: this.$route.name, // 路由名字
       tableData: [],
       staffId: 0,
+      isCloudSpot: 'all', // 是否云学院抽查
       issueId: 0, // 问题标签
       isReturn: 'all', // 是否门店退回
       isGood: 'all', // 是否门店点赞
@@ -124,6 +130,7 @@ export default {
     }
   },
   created () {
+    if (this.isSeachCloudSpot) { this.isCloudSpot = true }
     this.searchStaff && (this.staffId = this.searchStaff)
     switch (this.searchType) {
       case SearchType.GoodEvaluation:
@@ -180,6 +187,7 @@ export default {
         this.issueId && (reqData.tagIds = this.issueId)
         this.isReturn !== 'all' && (reqData.isStoreReturn = this.isReturn)
         this.isGood !== 'all' && (reqData.storeEvaluate = this.isGood ? 'good' : 'bad')
+        this.isCloudSpot !== 'all' && (reqData.isCloudEvaluation = this.isCloudSpot)
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetouchLeader.getStaffRetouchList(reqData)
         this.tableData = data.list

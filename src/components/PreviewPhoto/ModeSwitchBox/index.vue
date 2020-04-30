@@ -39,7 +39,7 @@ export default {
       ]
       if (this.showStoreMode) {
         initMode.push({
-          label: '云端成片',
+          label: '门店退回',
           value: 'complete'
         })
       }

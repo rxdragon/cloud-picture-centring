@@ -105,9 +105,7 @@ const actions = {
         })
       }
       newRolesArr = [...new Set(newRolesArr)]
-      // accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
-      // Mock 取消权限判断
-      accessedRoutes = [...asyncRoutes, ...lastBaseRoutes]
+      accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

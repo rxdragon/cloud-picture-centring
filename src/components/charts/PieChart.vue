@@ -64,20 +64,25 @@ export default {
   },
   watch: {
     chartData: {
-      handler (value) {
-        this.drawChart(value)
-      },
-      deep: true
+      handler () {
+        this.handlerData()
+      }
     }
   },
   methods: {
     /**
      * @description 获取dom元素
      */
-    drawChart (chartData) {
+    drawChart () {
       const dom = this.$refs['pie']
       this.myChart = echarts.init(dom)
-      const chartOption = option(chartData)
+      this.handlerData()
+    },
+    /**
+     * @description 处理数据
+     */
+    handlerData () {
+      const chartOption = option(this.chartData)
       this.myChart.setOption(chartOption, true)
     }
   }

@@ -280,7 +280,7 @@ export default {
           if (!this.showPhoto.versionCache) return false
           const completePhotoPath = this.showPhoto.versionCache.store_rework.path
           this.showPhoto.src = this.imgDomain + completePhotoPath
-          this.showPhoto.version = 'complete_photo'
+          this.showPhoto.version = 'store_rework'
         } else {
           this.showMark = true
           if (!this.showPhoto.versionCache) return false
