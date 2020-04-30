@@ -1,11 +1,10 @@
 <template>
-  <div v-show="show" class="fabric-canvas">
+  <div v-show="show" class="window.fabric-canvas">
     <canvas id="mark-canvas" ref="mark-canvas" />
   </div>
 </template>
 
 <script>
-import { fabric } from '@/assets/fabric.js'
 import * as CanvasTool from '@/utils/canvasTool'
 import * as Commonality from '@/api/commonality'
 export default {
@@ -81,7 +80,8 @@ export default {
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
-    this.canvasDom = new fabric.Canvas('mark-canvas', {
+
+    this.canvasDom = new window.fabric.Canvas('mark-canvas', {
       isDrawingMode: true,
       selection: true,
       skipTargetFind: false
@@ -263,7 +263,7 @@ export default {
       const color = this.optionObj.penColor
       const drawWidth = this.optionObj.lineWidth
       const arrowpath = this.drawArrow(this.mouseFrom.x, this.mouseFrom.y, this.mouseTo.x, this.mouseTo.y, 30, 30)
-      const canvasObject = new fabric.Path(
+      const canvasObject = new window.fabric.Path(
         arrowpath,
         {
           stroke: color,
@@ -282,7 +282,7 @@ export default {
       const drawWidth = this.optionObj.lineWidth
       const left = this.mouseFrom.x
       const top = this.mouseFrom.y
-      const canvasObject = new fabric.Ellipse({
+      const canvasObject = new window.fabric.Ellipse({
         left: left,
         top: top,
         stroke: color,
@@ -301,7 +301,7 @@ export default {
     createLine () {
       const color = this.optionObj.penColor
       const drawWidth = this.optionObj.lineWidth
-      const canvasObject = new fabric.Line(
+      const canvasObject = new window.fabric.Line(
         [this.mouseFrom.x, this.mouseFrom.y, this.mouseTo.x, this.mouseTo.y],
         {
           stroke: color,
@@ -325,7 +325,7 @@ export default {
       }
       const width = issueData.name.length * 14 + 25
       const left = this.optionObj.width - (this.cacheLabelRow + 1) * width - 10
-      const textbox = new fabric.Textbox(issueData.name, {
+      const textbox = new window.fabric.Textbox(issueData.name, {
         left,
         top,
         width,
@@ -360,7 +360,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.fabric-canvas {
+.window.fabric-canvas {
   position: absolute;
   z-index: 4000;
 }

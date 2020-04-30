@@ -72,7 +72,8 @@ export function getSpotCheckResult (params) {
     }
     const total = msg.extend.processInfo[0].totalCount
     data.forEach((item, index) => {
-      item.productInfo = new ProductModel(item.photoData.stream.product)
+      const productData = _.get(item, 'photoData.stream.product')
+      item.productInfo = new ProductModel(productData)
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
       // 照片编号
