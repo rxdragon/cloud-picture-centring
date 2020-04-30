@@ -11,3 +11,5 @@ node_modules
 /dist_vue
 
 .output
+yarn-error.log
+.idea

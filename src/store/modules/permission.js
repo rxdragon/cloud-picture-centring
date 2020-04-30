@@ -13,7 +13,7 @@ function hasPermission (roles, route) {
 }
 
 /**
- * Filter asynchronous routing tables by recursion
+ * 过滤含有权限路由
  * @param routes asyncRoutes
  * @param roles
  */
@@ -105,7 +105,9 @@ const actions = {
         })
       }
       newRolesArr = [...new Set(newRolesArr)]
-      accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
+      // accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
+      // Mock 取消权限判断
+      accessedRoutes = [...asyncRoutes, ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

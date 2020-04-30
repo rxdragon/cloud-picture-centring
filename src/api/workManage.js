@@ -81,15 +81,8 @@ export function getRetoucherQuota (params) {
       msg.income[key] = Number(msg.income[key])
     }
     msg.income = msg.income.retouch + msg.income.impulse + msg.income.reward - msg.income.punish// 收益
-    const reviewCount = Number(msg.retoucherFinishPhotoNum) // 修图张数
-    msg.reviewPlantRate = getAvg(msg.reviewPlant, reviewCount) // 审核种草数量
-    msg.reviewPullRate = getAvg(msg.reviewPull, reviewCount) // 审核拔草数量
-    const evaluatedCount = Number(msg.retoucherEvaluatedNum) // 抽查总数
-    msg.retoucherEvaluatedPlantRate = getAvg(msg.retoucherEvaluatedPlantNum, evaluatedCount) // 抽查种草率
-    msg.retoucherEvaluatedPullRate = getAvg(msg.retoucherEvaluatedPullNum, evaluatedCount) // 抽查拔草率
-    msg.retoucherEvaluatedNoPlantNoPullRate = getAvg(msg.retoucherEvaluatedNoPlantNoPullNum, evaluatedCount) // 直接通过率
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
-    msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.score, retoucherNpsCount) // 顾客满意度
+    msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.sum, retoucherNpsCount) // 顾客满意度
     msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) // 门店评分
     msg.retouchReworkRate = getAvg(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
@@ -100,6 +93,24 @@ export function getRetoucherQuota (params) {
     msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
     msg.lekimaStreamNum = parseInt(msg.lichmaStreamNum || 0) // 利奇马张数
     msg.lekimaPhotoNum = parseInt(msg.lichmaPhotoNum || 0) // 利奇马单数
+    msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
+    msg.goodRate = parseFloat(msg.goodNum / msg.retoucherFinishStreamNum) * 100 // 门店点赞率
+    // 处理饼图
+    msg.checkAvgScore = getAvg(msg.retoucherCheckPoolEvaluationScore, msg.retoucherCheckPoolEvaluationPhotoNum)
+    let sum = 0
+    msg.retoucherCheckCount = msg.retoucherCheckCount.filter(item => item.count)
+    const checkTags = msg.retoucherCheckCount.map(labelItem => {
+      sum = sum + Number(labelItem.count)
+      return {
+        name: labelItem.name,
+        value: Number(labelItem.count),
+        group: labelItem.child,
+      }
+    })
+    checkTags.forEach(labelItem => {
+      labelItem.rate = transformPercentage(labelItem.value, sum)
+    })
+    msg.retoucherCheckCount = checkTags
     return msg
   })
 }
@@ -221,9 +232,9 @@ export function getStoreEvaluate (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.retoucherName = (listItem.stream.retoucher && (listItem.stream.retoucher.name || listItem.stream.retoucher.real_name)) || '-'
-      listItem.retouchGroupName = (listItem.stream.retoucher && listItem.stream.retoucher.retouch_group && listItem.stream.retoucher.retouch_group.name) || '-'
-      listItem.retoucherNpsAvg = (listItem.stream.tags && listItem.stream.tags.values && listItem.stream.tags.values.retoucher_score) || '-'
+      listItem.retoucherName = _.get(listItem, 'stream.retoucher') ? listItem.stream.retoucher.name || listItem.stream.retoucher.real_name : '-'
+      listItem.retouchGroupName = _.get(listItem, 'stream.retoucher') && _.get(listItem, 'stream.retoucher.retouch_group') ? listItem.stream.retoucher.retouch_group.name : '-'
+      listItem.retoucherNpsAvg = _.get(listItem, 'stream.tags') && _.get(listItem, 'stream.tags.values') ? listItem.stream.tags.values.retoucher_score : '-'
     })
     return msg
   })

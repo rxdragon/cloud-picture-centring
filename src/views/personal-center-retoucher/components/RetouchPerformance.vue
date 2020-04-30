@@ -23,17 +23,17 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="种草量/种草率" min-width="120">
+        <el-table-column label="点赞数/点赞率" min-width="120">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.CheckPlant">
-              {{ scope.row.plantNum }}
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.GoodEvaluation">
+              {{ scope.row.goodNum }}
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column label="拔草量/拔草率" min-width="120">
+        <el-table-column label="退张数/退张率" min-width="120">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.CheckPull">
-              {{ scope.row.pullNum }}
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.ReworkPhoto">
+              {{ scope.row.storeReturnNum }}
             </router-link>
           </template>
         </el-table-column>
@@ -73,10 +73,6 @@
         <el-table-column label="评分（平均值）" min-width="150" fixed="right">
           <template slot-scope="scope">
             <div class="grade-box">
-              <span class="span-row">
-                <span class="span-title">门店评分：</span>
-                {{ scope.row.gradeInfo.storeGrade }}
-              </span>
               <span class="span-row">
                 <span class="span-title nps-grade">顾客满意度：</span>
                 {{ scope.row.gradeInfo.npsGrade }}

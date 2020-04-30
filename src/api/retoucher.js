@@ -68,6 +68,11 @@ export function getRankInfo () {
     method: 'GET'
   }).then(msg => {
     const createData = keyToHump(msg)
+    createData.nearly30DaysGoodNum = createData.nearly30DaysGoodNum
+    createData.nearly30DaysReturnNum = createData.nearly30DaysReturnNum
+    createData.nearly30DaysGoodRate = Number((createData.nearly30DaysGoodRate * 100).toFixed(2))
+    createData.nearly30DaysReturnRate = Number((createData.nearly30DaysReturnRate * 100).toFixed(2))
+    createData.avgRetouchTime = getAvg(createData.retouchPhotoNumTimeSum, createData.retouchFinishPhotoNumCount * 60)
     createData.nearly30DaysPlantRate = (createData.nearly30DaysPlantRate * 100).toFixed(2)
     createData.nearlyPlantRate = Math.floor(createData.nearly30DaysPlantRate)
     createData.nearly30DaysPullRate = (createData.nearly30DaysPullRate * 100).toFixed(2)
@@ -97,14 +102,13 @@ export function getRetouchQuota (params) {
     const avgRetouchTimePhoto = getAvg(allRetouchTime, avgTime.retouchTimeForPhotoNum.count)
     const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
     const punishIncome = Number(data.rewardIncome.punishIncome)
-    const storeEvaluateAvg = getAvg(data.storeEvaluate.sum, data.storeEvaluate.count).toFixed(2)
     const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count).toFixed(2)
     const createData = [{
       retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
       avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
       avgRetouchTimePhoto: timeFormat(avgRetouchTimePhoto, 'text', true),
-      plantNum: data.plantNum + ' / ' + transformPercentage(data.plantNum, data.retouchPhotoNum),
-      pullNum: data.pullNum + ' / ' + transformPercentage(data.pullNum, data.retouchPhotoNum),
+      goodNum: Number(data.goodNum) + ' / ' + transformPercentage(data.goodNum, data.retouchStreamNum),
+      storeReturnNum: Number(data.storeReturnPhotoNumForQuality) + ' / ' + transformPercentage(data.storeReturnPhotoNumForQuality, data.retouchPhotoNum),
       overNum: data.overNum,
       retouchIncomeInfo: {
         getIncome: Number(data.retouchIncome).toFixed(2),
@@ -115,7 +119,6 @@ export function getRetouchQuota (params) {
       exp: data.exp,
       lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),
       gradeInfo: {
-        storeGrade: storeEvaluateAvg,
         npsGrade: retoucherNpsScoreAvg
       }
     }]

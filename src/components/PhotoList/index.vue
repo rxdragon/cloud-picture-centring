@@ -1,7 +1,7 @@
 <template>
   <div class="photo-list">
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
-      <photo-box downing :preload-photo="needPreload" :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)">
+      <photo-box downing :preload-photo="needPreload" :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)" show-yun-check>
         <template v-slot:title>
           <span class="lable-title">{{ photoItem.version | toPhotoVerName }}</span>
         </template>
@@ -35,8 +35,11 @@
     </div>
     <preview-photo
       v-if="showPreview"
+      :order-info="orderInfo"
       :imgarray="priviewPhotoData"
+      show-return-reson
       :orderindex="imgIndex"
+      :show-order-info="showOrderInfo"
       :show-preview.sync="showPreview"
     />
   </div>
@@ -45,6 +48,7 @@
 <script>
 import PhotoBox from '@/components/PhotoBox'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
+import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
 export default {
@@ -53,31 +57,31 @@ export default {
   props: {
     needPreload: { type: Boolean },
     photoData: { type: Array, default: () => [] }, // 照片数据
-    needGrade: { type: Boolean },
-    gradeInfo: { type: Object, default: () => {
-      return {}
-    } } // 是否打分
+    needGrade: { type: Boolean }, // 是否需要打分,
+    showOrderInfo: { type: Boolean }, // 是否显示订单信息
+    gradeInfo: { type: Object, default: () => ({}) }, // 是否打分
+    orderInfo: { type: Object, default: () => ({}) } // 打分信息
   },
   data () {
     return {
       gradeType: 0, // 0 未打分 1 good 2 bad
       showPreview: false,
-      imgIndex: 0,
-      priviewPhotoData: []
+      imgIndex: 0
     }
   },
   computed: {
     ...mapGetters(['imgDomain', 'staffId']),
     photos () {
-      const createdData = []
-      const findList = ['original_photo', 'first_photo', 'complete_photo', 'finish_photo']
-      findList.forEach(versionItem => {
-        const findVersionItem = this.photoData.find(photoItem => photoItem.version === versionItem)
-        if (findVersionItem) {
-          createdData.push(findVersionItem)
-        }
+      return this.photoData
+    },
+    // 预览数组
+    priviewPhotoData () {
+      const previewList = this.photos.map(item => {
+        const createData = new PreviewModel(item)
+        createData.src = this.imgDomain + createData.path
+        return createData
       })
-      return createdData
+      return previewList
     },
     /**
      * @description 能否打分
@@ -90,9 +94,11 @@ export default {
       const isAttitudeBySelf = this.gradeInfo.staff_id === this.staffId
       return isAttitudeBySelf || !isAttitude
     },
+    // 种草照片
     goodPhoto () {
       return +this.gradeType === 1
     },
+    // 踩照片
     badPhoto () {
       return +this.gradeType === 2
     }
@@ -149,10 +155,6 @@ export default {
      * @description 展示搜索框
      */
     showPriviewPhoto (photoIndex) {
-      this.photos.forEach(item => {
-        item.src = this.imgDomain + item.path
-      })
-      this.priviewPhotoData = this.photos
       this.imgIndex = photoIndex
       this.showPreview = true
     }

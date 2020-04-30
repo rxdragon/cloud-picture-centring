@@ -13,6 +13,7 @@
         :show-recede-reason="photoItem.version === 'first_photo'"
         :photo-name="photoItem.version === 'first_photo'"
         :tags="photos.tags"
+        show-yun-check
         :file-data="photoItem.fileData"
         @click.native="showPriviewPhoto(photoIndex)"
       />

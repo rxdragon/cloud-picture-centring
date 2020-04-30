@@ -1,115 +1,101 @@
 <template>
   <div class="photo-detail">
-    <!-- 重修 -->
-    <div v-if="rework" class="return-data">
-      <div class="panel-box danger-box">
-        <div class="content-title">重修{{ photoData.reworkNum }}次</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values && photoData.tags.values.rework_reason || '暂无重修理由' }}</div>
-      </div>
-    </div>
-    <!-- 审核 -->
-    <div class="check-data">
-      <div v-if="photoData.grass === 'plant'" class="panel-box plant-box">
-        <div class="content-title">审核种草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核种草理由' }}</div>
-      </div>
-      <div v-if="photoData.grass === 'pull'" class="panel-box danger-box">
-        <div class="content-title">审核拔草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values&&photoData.tags.values.grass_reason || '暂无审核拔草理由' }}</div>
-      </div>
-    </div>
-    <div v-if="storeRework" class="store-return">
-      <div class="panel-box danger-box">
-        <div class="content-title">门店退回</div>
-        <div class="panel-content">{{ storeReworkReason || '暂无退回原因' }}</div>
-      </div>
-    </div>
-    <!-- 纠偏 -->
-    <div v-if="photoData.tags && photoData.tags.values && photoData.tags.values.audit_correction" class="correct-data">
-      <div class="panel-box primary-box">
-        <div class="content-title">{{ [photoData.tags.values.audit_correction, photoData.spotGrass] | toAuditChange }}</div>
-        <div class="panel-content">{{ photoData.tags.values.audit_note || '暂无纠偏理由' }}</div>
-      </div>
-    </div>
-    <!-- 抽查 -->
-    <div class="spot-data">
-      <div v-if="photoData.filmEvaluation === 'plant'" class="panel-box plant-box">
-        <div class="content-title">抽查种草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values.evaluation_note || '暂无抽查理由' }}</div>
-      </div>
-      <div v-if="photoData.filmEvaluation === 'pull'" class="panel-box danger-box">
-        <div class="content-title">抽查拔草</div>
-        <div class="panel-content">{{ photoData.tags && photoData.tags.values.evaluation_note || '暂无抽查理由' }}</div>
-      </div>
-    </div>
     <!-- 图片列表 -->
-    <div class="photo-list">
-      <div v-for="(photo, photoIndex) in photoData.photoVersion" :key="photoIndex" class="photo-box">
-        <photo-box :tags="photoData.tags" :is-lekima="photo.isLekima" preview photo-name downing :src="photo.path">
-          <template v-slot:title>
-            <span class="lable-title">{{ photo.version | toPhotoVerName }}</span>
-          </template>
-        </photo-box>
+    <photo-list need-preload :photo-data="photoVersionList"  />
+    <div v-if="hasStoreReturnReason" class="panel-box">
+      <div class="panel-title">门店退回</div>
+      <div class="panel-main">
+        <div class="panel-content content-one">退回标记：<span v-for="(reasonItem, index) in StoreReturnReason" :key="index" class="reason-item">{{ reasonItem }}</span></div>
+        <div class="panel-content">退回备注：{{ wholeNote + ' ' + partNote || '暂无备注' }}</div>
+      </div>
+    </div>
+    <div v-if="hcsCheckTags" class="panel-box">
+      <div class="panel-title">云学院评价</div>
+      <div class="panel-main">
+        <div class="panel-content content-one">总分：{{ checkScore }}</div>
+        <div class="panel-content">问题标记：<span v-for="(tagItem, index) in checkTag" :key="index" class="reason-item">{{ tagItem }}</span>
+        <span v-if="!checkTag.length">暂无标记</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import PhotoBox from '@/components/PhotoBox'
+import PhotoList from '@/components/PhotoList'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PhotoDetail',
-  components: { PhotoBox },
-  filters: {
-    toAuditChange (values) {
-      switch (values[0]) {
-        case 'same':
-          return '纠偏-意见相同'
-        case 'none':
-          return '纠偏-意见不同-不种不拔'
-        case 'different':
-          if (values[1] === 'plant') {
-            return '纠偏-意见不同-种草'
-          } else if (values[1] === 'pull') {
-            return '纠偏-意见不同-拔草'
-          } else {
-            return '异常'
-          }
-        default:
-          return '-'
-      }
-    }
-  },
+  components: { PhotoList },
   props: {
     photoItem: { type: Object, required: true }
   },
   data () {
-    return {}
+    return {
+      photoVersionList: []
+    }
   },
   computed: {
+    ...mapGetters(['imgDomain']),
     photoData () {
       return this.photoItem
     },
-    storeReworkReason () {
-      return this.photoData.tags &&
-        this.photoData.tags.values &&
-        this.photoData.tags.values.store_rework_reason
+    // 判断是否有退单标记
+    hasStoreReturnReason () {
+      return _.get(this.photoData, 'tags.values.store_rework_reason') || _.get(this.photoData, 'tags.values.store_part_rework_reason') || false
     },
-    // 是够重修
-    rework () {
-      if (this.photoData.tags && this.photoData.tags.statics) {
-        const isRework = this.photoData.tags.statics.includes('return_photo')
-        return isRework
-      } else {
-        return false
+    // 是否云学院打分
+    hcsCheckTags () {
+      return _.get(this.photoData, 'tags.values.score') || _.get(this.photoData, 'tags.values.check_pool_tags') || false
+    },
+    // 云学院评分
+    checkScore () {
+      return _.get(this.photoData, 'tags.values.score') || 0
+    },
+    // 云学院标记
+    checkTag () {
+      const tagArr = _.get( this.photoData, 'tags.values.check_pool_tags') || []
+      const tagFilter = tagArr.map(item => {
+        return item.name
+      })
+      return tagFilter
+    },
+    // 整体备注
+    wholeNote () {
+      return _.get( this.photoData, 'tags.values.store_rework_note') || ''
+    },
+    // 局部备注数组
+    partNote () {
+      let note = ''
+      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
+      partArr.forEach(item => {
+        note += item.note + ' '
+      })
+      return note
+    },
+    // 退单标记 包括整体标记和局部标记
+    StoreReturnReason () {
+      const wholeReason = _.get( this.photoData, 'tags.values.store_rework_reason', '')
+      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
+      let partReason = []
+      partArr.forEach(item => {
+        partReason = [...item.reason.split('+'),...partReason]
+      })
+      return partReason.concat(wholeReason ? wholeReason.split('+') : [])
+    },
+    showMark () {
+      return function (version) {
+        return version === 'complete_photo'
       }
-    },
-    // 是否门店退回
-    storeRework () {
-      return this.photoData.tags &&
-        this.photoData.tags.statics &&
-        this.photoData.tags.statics.includes('store_rework')
+    }
+  },
+  created () {
+    this.initPhotoList()
+  },
+  methods: {
+    initPhotoList () {
+      this.photoVersionList = this.photoItem.photoVersion
     }
   }
 }
@@ -121,32 +107,34 @@ export default {
 
 .photo-detail {
   .panel-box {
-    display: flex;
-    padding: 0;
-    margin-bottom: 16px;
+    margin-top: 20px;
     font-size: 14px;
-    font-weight: 400;
-    line-height: 22px;
-    color: #606266;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    box-shadow: none;
+    color: #303133;
 
-    .content-title {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-items: center;
-      width: @panelTitleWidth;
-      padding: 13px 14px;
-      text-align: center;
-    }
+    .panel-main {
+      padding: 20px;
+      margin-top: 12px;
+      background-color: #fafafa;
+      border-radius: 4px;
 
-    .panel-content {
-      display: flex;
-      align-items: center;
-      width: calc(~'100% - @{panelTitleWidth}');
-      padding: 13px 14px;
+      .panel-content {
+        padding: 10px 0;
+
+        .reason-item {
+          padding: 3px 5px;
+          margin: 5px 10px 5px 0;
+          font-size: 12px;
+          color: #fff;
+          background-color: #535353;
+          border-radius: 5px;
+        }
+      }
+
+      .content-one {
+        display: flex;
+        flex-wrap: wrap;
+        border-bottom: 1px solid @borderColor;
+      }
     }
   }
 
@@ -163,45 +151,6 @@ export default {
 
     .empty {
       width: 30%;
-    }
-  }
-
-  .danger-box {
-    border: 1px solid @bdRed;
-
-    .content-title {
-      color: @red;
-      background-color: @bgRed;
-    }
-
-    .panel-content {
-      border-left: 1px solid @bdRed;
-    }
-  }
-
-  .primary-box {
-    border: 1px solid @bdBlue;
-
-    .content-title {
-      color: @blue;
-      background-color: @bgBlue;
-    }
-
-    .panel-content {
-      border-left: 1px solid @bdBlue;
-    }
-  }
-
-  .plant-box {
-    border: 1px solid @bdGreen;
-
-    .content-title {
-      color: @green;
-      background-color: @bgGreen;
-    }
-
-    .panel-content {
-      border-left: 1px solid @bdGreen;
     }
   }
 }
