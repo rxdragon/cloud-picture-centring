@@ -15,7 +15,7 @@
       </div>
       <div class="audit-box search-item">
         <span>问题标签</span>
-        <issue-select v-model="issueId" />
+        <issue-select v-model="issueIds" />
       </div>
       <div class="lekima-box search-item">
         <span>利奇马</span>
@@ -118,7 +118,7 @@ export default {
       tableData: [],
       staffId: 0,
       isCloudSpot: 'all', // 是否云学院抽查
-      issueId: 0, // 问题标签
+      issueIds: [], // 问题标签
       isReturn: 'all', // 是否门店退回
       isGood: 'all', // 是否门店点赞
       isLichmaValue: '', // 是否利奇马
@@ -184,7 +184,7 @@ export default {
         }
         String(this.isLichmaValue) && (reqData.isLichma = this.isLichmaValue)
         this.staffId && (reqData.staffId = this.staffId)
-        this.issueId && (reqData.tagIds = this.issueId)
+        this.issueIds.length && (reqData.tagIds = this.issueIds)
         this.isReturn !== 'all' && (reqData.isStoreReturn = this.isReturn)
         this.isGood !== 'all' && (reqData.storeEvaluate = this.isGood ? 'good' : 'bad')
         this.isCloudSpot !== 'all' && (reqData.isCloudEvaluation = this.isCloudSpot)
