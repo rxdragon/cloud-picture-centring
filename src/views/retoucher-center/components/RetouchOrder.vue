@@ -10,33 +10,36 @@
         </div>
       </div>
       <div class="button-box">
-        <el-button v-if="orderData.type === 'mainto'" type="primary" plain @click="hangUp">挂起订单</el-button>
+        <el-button v-if="orderData.productInfo.type === 'mainto'" type="primary" plain @click="hangUp">挂起订单</el-button>
         <el-button type="primary" @click="setIssueLabel">提交审核</el-button>
       </div>
     </div>
     <!-- 照片信息 -->
     <order-info :order-data="orderData" />
-    <!-- 图片信息 -->
+    <!-- 成片信息 -->
     <div class="photo-module module-panel">
       <div class="photo-panel-title panel-title">
-        <span>原片信息</span>
+        <span>照片信息</span>
         <div class="button-box">
-          <el-button type="primary" size="small" @click="oneAllDownOrign">一键下载原片</el-button>
+          <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载摄影原片</el-button>
+          <el-button v-if="isReturnOrder" type="primary" size="small" @click="oneAllDownOrign(true)">一键下载成片</el-button>
         </div>
       </div>
       <div class="photo-panel">
-        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box" :class="{ 'over-success': photoItem.isCover }">
+        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex"
+          @click="showPriviewPhoto(photoIndex, 'complete')"
+          class="photo-box" :class="{ 'over-success': photoItem.isCover }">
           <photo-box
             downing
-            preview
-            :stream-num="orderData.streamNum"
+            :down-complete="photoItem.isReturnPhoto"
+            :orgin-photo-path="photoItem.orginPhotoPath"
             photo-name
             preload-photo
-            :tags="photoItem.tags"
             show-joint-label
             show-recede-reason
+            :tags="photoItem.tags"
+            :stream-num="orderData.streamNum"
             :src="photoItem.path"
-            :people-num="photoItem.people_num"
           />
         </div>
         <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
@@ -47,9 +50,7 @@
     </div>
     <!-- 修图上传 -->
     <div class="photo-module module-panel upload-module">
-      <div class="photo-panel-title panel-title">
-        <span>修图上传</span>
-      </div>
+      <div class="photo-panel-title panel-title"><span>修图上传</span></div>
       <upload-photo
         ref="uploadPhoto"
         class="photo-panel"
@@ -62,15 +63,25 @@
     </div>
     <!-- 问题标签 -->
     <issue-label :issue-data="issueData" :visible.sync="dialogVisible" @submit="submitOrder" />
+    <!-- 预览 -->
+    <preview-photo
+      v-if="showPreview"
+      show-return-reson
+      v-model="imgIndex"
+      :imgarray="priviewPhotoData"
+      :show-preview.sync="showPreview"
+    />
   </div>
 </template>
 
 <script>
+import PreviewModel from '@/model/PreviewModel'
 import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
 import UploadPhoto from './UploadPhoto.vue'
 import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
+import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
@@ -78,7 +89,7 @@ import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel },
+  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel, PreviewPhoto },
   props: {
     showDetail: { type: Boolean }
   },
@@ -87,17 +98,9 @@ export default {
       routeName: this.$route.name, // 路由名字
       headerClass: '', // 固定header所用class
       orderData: {
-        streamNum: '',
-        streamId: '',
-        type: '',
-        photographerName: '',
-        photographer: '',
-        productName: '',
-        photoNum: 0,
-        waitTime: '',
-        retouchRemark: '',
-        requireLabel: {},
-        streamState: ''
+        productInfo: {},
+        orderInfo: {},
+        requireLabel: {}
       },
       photos: [], // 照片数组
       reviewerNote: '', // 审核备注
@@ -110,14 +113,19 @@ export default {
       overTime: 0, // 超时时间
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
+      issueData: {},
       realAid: '',
-      dialogVisible: false, // 显示问题标签
-      issueData: {}, // 问题数据
-      needPunchLabel: false // 是否需要标记问题
+      preIndexPhoto: {},
+      dialogVisible: false,
+      imgPreMask: false,
+      showPreview: false,
+      isReturnOrder: false, // 是否退单订单
+      priviewPhotoData: [], // 预览数组
+      imgIndex: 0 // 照片索引
     }
   },
   computed: {
-    ...mapGetters(['retouchId', 'showOverTag']),
+    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain']),
     // 是否开启沙漏
     isSandClockOpen () {
       if (!this.hourGlass) return this.hourGlass
@@ -141,13 +149,13 @@ export default {
   },
   methods: {
     /**
-     * @description 一键下载原片
+     * @description 一键下载照片 true:成片， false:原片
      */
-    oneAllDownOrign () {
+    oneAllDownOrign (type) {
       const savePath = `/${this.orderData.streamNum}`
       const photoArr = this.photos.map(photoItem => {
         return {
-          url: photoItem.path,
+          url: type ? photoItem.path : photoItem.orginPhotoPath,
           path: savePath
         }
       })
@@ -178,6 +186,7 @@ export default {
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
         this.hourGlass = data.hourGlass
+        this.isReturnOrder = data.isReturnOrder
         if (this.isSandClockOpen) {
           this.overTime = +this.hourGlass.over_time
           const nowDate = Math.ceil(new Date().getTime() / 1000)
@@ -189,6 +198,7 @@ export default {
         this.reviewerNote = data.reviewerNote
         this.needPunchLabel = data.needPunchLabel
         LogStream.retoucherSee(+this.realAid)
+        this.initPreviewPhoto()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -302,6 +312,31 @@ export default {
       }
     },
     /**
+     * @description 展示搜索框
+     */
+    showPriviewPhoto (photoIndex, mode) {
+      if (mode !== this.priviewPhotoData[0].mode) {
+        this.priviewPhotoData.forEach(item => {
+          item.version = mode === 'complete' ? 'complete_photo' : 'original_photo'
+          item.mode = mode === 'complete' ? 'complete' : 'original'
+        })
+      }
+      this.imgIndex = photoIndex
+      this.showPreview = true
+    },
+    /**
+     * @description 初始化预览数据
+     */
+    initPreviewPhoto () {
+      const previewData = this.photos.map(item => {
+        const createData = new PreviewModel(item)
+        createData.src = this.imgDomain + createData.path
+        createData.mode = 'original'
+        return createData
+      })
+      this.priviewPhotoData = previewData
+    },
+    /**
      * @description 获取标签
      */
     async getPhotoProblemTagSets () {
@@ -388,6 +423,7 @@ export default {
         width: 253px;
         margin-right: 24px;
         margin-bottom: 24px;
+        cursor: pointer;
         transition: all 0.3s;
 
         .handle-box {

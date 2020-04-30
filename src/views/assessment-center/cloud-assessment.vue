@@ -36,27 +36,22 @@
       <div class="list-table">
         <div class="list-title">
           <span>今日已评价照片</span>
-          <span>今日抽查种草率</span>
-          <span>今日抽查拔草率</span>
-          <span>本次抽取总单量</span>
+          <span>今日评价平均分</span>
         </div>
         <div class="list-content">
           <span>{{ todayInfo.evaluationNum || '-' }}</span>
-          <span>{{ todayInfo.plantPercent || '-' }}</span>
-          <span>{{ todayInfo.pullPercent || '-' }}</span>
-          <span>{{ spotAllNum }}</span>
+          <span>{{ todayInfo.avgScore }}</span>
         </div>
       </div>
     </div>
     <!-- 订单数据 -->
-    <grade-box
-      v-for="photoItem in photoData"
-      :key="photoItem.businessId"
-      is-grade
-      class="photo-data module-panel"
-      :photo-info="photoItem"
-      @finsihed="resetPage"
-    />
+    <div class="photo-grade-list">
+      <photo-grade-box
+        v-for="photoItem in photoData"
+        @startGrade="showGrade"
+        :key="photoItem.businessId"
+        :photo-info="photoItem"/>
+    </div>
     <div class="page-box">
       <el-pagination
         :hide-on-single-page="true"
@@ -67,6 +62,7 @@
         @current-change="handlePage"
       />
     </div>
+    <!-- 抽片提示 -->
     <el-dialog
       width="300px"
       class="spot-success"
@@ -79,21 +75,28 @@
       <div class="content">抽取成功</div>
       <div class="description">共：{{ spotAllNum }}张</div>
     </el-dialog>
+    <grade-preview
+      v-if="gradeInfo && showGradePreview"
+      :photo-version="showPhotoVersion"
+      @submit="submitData"
+      ref="grade-preview"
+      :show.sync="showGradePreview" :info="gradeInfo" />
   </div>
 </template>
 
 <script>
 import DatePicker from '@/components/DatePicker'
 import InstitutionType from '@SelectBox/InstitutionType'
-import GradeBox from './components/GradeBox'
+import GradePreview from './components/GradePreview'
+import PhotoGradeBox from './components/PhotoGradeBox'
 import DownIpc from '@electronMain/ipc/DownIpc'
-import * as AssessmentCenter from '@/api/assessmentCenter'
 import { PhotoEnumName } from '@/utils/enumerate.js'
 import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
+import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'CloudAssessment',
-  components: { DatePicker, InstitutionType, GradeBox },
+  components: { DatePicker, InstitutionType, GradePreview, PhotoGradeBox },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -112,13 +115,90 @@ export default {
       headerClass: '', // 顶部class
       isTakePhoto: false, // 是第一次抽取的照片
       todayInfo: {},
-      dialogTableVisible: false // 抽取成功弹框
+      gradeUUid: '', // 正在打分uuid
+      showGradePreview: false, // 是否显示打分概况
+      dialogTableVisible: false, // 抽取成功弹框
+      showPhotoVersion: '' // 展示图片版本
+    }
+  },
+  computed: {
+    gradeInfo () {
+      const findGradePhoto = this.photoData.find(item => item._id === this.gradeUUid)
+      return findGradePhoto || {}
     }
   },
   created () {
     this.resetPage()
   },
   methods: {
+    /**
+     * @description 获取下一章图片
+     */
+    async getNextPhoto () {
+      try {
+        const findGradePhotoIndex = this.photoData.findIndex(item => item._id === this.gradeUUid)
+        const nowPhotoIndexArr = this.photoData[findGradePhotoIndex].photoIndex.split('-')
+        const isAllLast = nowPhotoIndexArr[0] === nowPhotoIndexArr[1]
+        if (isAllLast && this.photoData.length === 1 && this.pager.page === 1) {
+          this.$newMessage.success('你已经打完全部照片')
+          this.showGradePreview = false
+          this.$store.dispatch('setting/showLoading', this.routeName)
+          await Promise.all([
+            this.getSpotCheckResult(),
+            this.getStatistics()
+          ])
+        } else if (isAllLast && this.photoData.length === 1 && this.pager.page > 1) {
+          this.$refs['grade-preview'].allLoading = true
+          this.pager.page--
+          await Promise.all([
+            this.getSpotCheckResult(),
+            this.getStatistics()
+          ])
+          this.gradeUUid = this.photoData[0]._id
+          this.$refs['grade-preview'].allLoading = false
+        } else {
+          let gradeUUid = ''
+          if (isAllLast && this.photoData.length !== 1) {
+            gradeUUid = this.photoData[findGradePhotoIndex - 1]._id
+          } else {
+            gradeUUid = this.photoData[findGradePhotoIndex + 1]._id
+          }
+          this.$refs['grade-preview'].allLoading = true
+          this.gradeUUid = gradeUUid
+          await Promise.all([
+            this.getSpotCheckResult(),
+            this.getStatistics()
+          ])
+          this.$refs['grade-preview'].allLoading = false
+        }
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error('更新照片数据失败')
+      }
+    },
+    /**
+     * @description 提交数据
+     */
+    async submitData (sendData) {
+      try {
+        const selectPhoto = this.photoData.find(item => item._id === this.gradeUUid)
+        if (!selectPhoto) throw new Error('找不到对应照片')
+        const req = {
+          photoId: selectPhoto.photo_id,
+          uuid: selectPhoto._id,
+          tags: sendData.issuesLabelId,
+          picUrl: sendData.markPhotoImg
+        }
+        this.$refs['grade-preview'].allLoading = true
+        await AssessmentCenter.commitHistory(req)
+        this.getNextPhoto()
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$refs['grade-preview'].allLoading = false
+        this.$refs['grade-preview'].isSubmit = false
+      }
+    },
     /**
      * @description 一键下载
      */
@@ -149,7 +229,11 @@ export default {
      * @description 获取今日评价数据
      */
     async getStatistics () {
-      this.todayInfo = await AssessmentCenter.getStatistics()
+      try {
+        this.todayInfo = await AssessmentCenter.getStatistics()
+      } catch (error) {
+        console.error(error)
+      }
     },
     /**
      * @description 获取抽查数量参数
@@ -249,14 +333,23 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        this.photoData = []
         console.error(error)
       }
     },
     /**
-     * @description 监听页面变更
+     * @description 页面更换
      */
     handlePage () {
       this.getSpotCheckResult()
+    },
+    /**
+     * @description 展示数据
+     */
+    showGrade (clickData) {
+      this.gradeUUid = clickData.id
+      this.showPhotoVersion = clickData.version
+      this.showGradePreview = true
     }
   }
 }
@@ -292,13 +385,13 @@ export default {
     margin: 20px 0;
 
     .list-table {
-      width: 800px;
+      width: 400px;
       margin-top: 20px;
 
       .list-content,
       .list-title {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .list-title {
@@ -321,13 +414,13 @@ export default {
     }
   }
 
-  .photo-data {
-    margin-bottom: 24px;
+  .photo-grade-list {
+    display: flex;
+    flex-wrap: wrap;
   }
 
-  .page-box {
-    margin-top: 24px;
-    text-align: center;
+  .photo-data {
+    margin-bottom: 24px;
   }
 
   .spot-success {

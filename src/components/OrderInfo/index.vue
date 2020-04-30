@@ -26,14 +26,14 @@
         <div class="institution">{{ orderData.photographer }}</div>
         <div class="type">
           <div class="standard-box">
-            {{ orderData.type | toRetouchClass }}
+            {{ orderData.type || orderData.productInfo.type | toRetouchClass }}
             <div class="standard-icon">
-              <div :class="`iconmap-standard-${orderData.type}`" />
+              <div :class="`iconmap-standard-${orderData.type || orderData.productInfo.type}`" />
             </div>
           </div>
         </div>
         <div v-if="isRework" class="retoucher">{{ orderData.retoucherName }}</div>
-        <div class="product">{{ orderData.productName }}</div>
+        <div class="product">{{ orderData.productName || orderData.productInfo.productName }}</div>
         <div class="wait-time">{{ orderData.waitTime }}</div>
         <div class="photo-count">{{ orderData.photoNum }}</div>
       </div>
@@ -54,7 +54,18 @@
           <span>背景图要求：</span>
           <div class="remark-content require-background-color">
             <img :src="orderData.backgroundColor" alt="">
-            <el-button type="text" @click="downbackground">下载背景图</el-button>
+            <el-button type="text" @click="downPhoto(orderData.backgroundColor)">下载背景图</el-button>
+          </div>
+        </div>
+        <div v-if="orderData.referencePhoto" class="require-remark">
+          <span>参考图：</span>
+          <div class="remark-content require-reference-photo">
+            <el-image
+              class="reference-img" fit="contain"
+              :src="orderData.referencePhoto"
+              :preview-src-list="[orderData.referencePhoto]">
+            </el-image>
+            <el-button type="text" @click="downPhoto(orderData.referencePhoto)">下载参考图</el-button>
           </div>
         </div>
         <div v-if="orderData.reviewerNote" class="require-remark">
@@ -81,7 +92,8 @@ export default {
           photographerName: '暂无信息',
           productName: '暂无信息',
           photoNum: '暂无信息',
-          waitTime: '暂无信息'
+          waitTime: '暂无信息',
+          productInfo: {}
         }
       }
     },
@@ -99,10 +111,13 @@ export default {
     }
   },
   methods: {
-    downbackground () {
+    /**
+     * @description 下载照片
+     */
+    downPhoto (url) {
       const savePath = `/${this.orderData.streamNum}`
       const data = {
-        url: this.orderData.backgroundColor,
+        url,
         path: savePath
       }
       this.$newMessage.success('已添加一张照片到下载')
@@ -166,6 +181,16 @@ export default {
           margin-right: 10px;
         }
       }
+
+      .require-reference-photo {
+        display: flex;
+        align-items: flex-end;
+
+        .reference-img {
+          width: 200px;
+          height: 200px;
+        }
+      }
     }
   }
 
@@ -214,7 +239,7 @@ export default {
   }
 
   .table-panel-concent {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     border-bottom: 1px solid #fafafa;
 
     & > div {

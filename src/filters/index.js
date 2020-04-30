@@ -23,7 +23,7 @@ export function toPhotoVerName (str) {
  * @param {*} str
  */
 export function toRetouchClass (str) {
-  return RetouchStandard[str]
+  return RetouchStandard[str] || '异常'
 }
 
 /**

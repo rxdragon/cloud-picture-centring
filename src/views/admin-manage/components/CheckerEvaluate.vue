@@ -10,15 +10,8 @@
         <staff-select v-model="staffId" :props="{ multiple: false }" />
       </div>
       <div class="store-grade search-item">
-        <span>门店评分</span>
-        <el-select v-model="storeGrade" placeholder="请选择">
-          <el-option label="全部星级" :value="0" />
-          <el-option label="一星" :value="1" />
-          <el-option label="二星" :value="2" />
-          <el-option label="三星" :value="3" />
-          <el-option label="四星" :value="4" />
-          <el-option label="五星" :value="5" />
-        </el-select>
+        <span>门店评价</span>
+        <evaluate-select v-model="storeEvaluate"/>
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStoreEvaluate(1)">查询</el-button>
@@ -28,13 +21,17 @@
     <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="评价时间" width="180">
         <template slot-scope="scope">
-          {{ scope.row.store_evaluate_at | toTimeSpan }}
+         {{ scope.row.store_evaluate_at | toTimeSpan }}
         </template>
       </el-table-column>
       <el-table-column prop="stream.stream_num" label="流水号" width="200" />
       <el-table-column prop="retoucherName" label="修图师" />
       <el-table-column prop="retouchGroupName" label="修图小组" />
-      <el-table-column prop="store_evaluate_star" label="门店评分" />
+      <el-table-column label="门店评价">
+        <template slot-scope="scope">
+          <show-evaluate :evaluate="scope.row.store_evaluate" />
+        </template>
+      </el-table-column>
       <el-table-column prop="retoucherNpsAvg" label="顾客满意度" />
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -58,18 +55,20 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
+import ShowEvaluate from '@/components/ShowEvaluate'
 import StaffSelect from '@SelectBox/StaffSelect'
+import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as WorkManage from '@/api/workManage'
 
 export default {
   name: 'CheckerEvaluate',
-  components: { DatePicker, StaffSelect },
+  components: { DatePicker, StaffSelect, EvaluateSelect, ShowEvaluate },
   data () {
     return {
       loading: false,
       timeSpan: null, // 时间
-      storeGrade: 0, // 门店评分
+      storeEvaluate: 'all', // 门店评分
       staffId: '', // 伙伴id
       tableData: [], // 列表
       pager: {
@@ -112,8 +111,8 @@ export default {
       if (this.staffId) {
         req.staffId = this.staffId
       }
-      if (this.storeGrade) {
-        req.star = this.storeGrade
+      if (this.storeEvaluate !== 'all') {
+        req.storeEvaluation = this.storeEvaluate ? 'good' : 'bad'
       }
       return req
     },

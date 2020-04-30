@@ -17,8 +17,8 @@ import './guards' // 路由守护
 import './indexDB/index.js'
 import '@/directive'
 
-window._ = { get }
 
+window._ = { get }
 window.bodymovin = lottie
 // 注册websocket
 Vue.prototype.$eventEmitter = eventEmitter

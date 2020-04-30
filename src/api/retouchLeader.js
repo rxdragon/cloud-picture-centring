@@ -31,7 +31,7 @@ export function getGroupStaffQuotaInfo (params) {
     params
   }).then(msg => {
     function getRateInfo (cardinal, sum) {
-      return cardinal + ' / ' + transformPercentage(cardinal, sum)
+      return Number(cardinal) + ' / ' + transformPercentage(cardinal, sum)
     }
     const data = keyToHump(msg)
     const avgTime = data.retouchTimeAvg
@@ -56,11 +56,11 @@ export function getGroupStaffQuotaInfo (params) {
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
     createData.income = income.toFixed(2) // 收益
     createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
-    createData.reviewPlantInfo = getRateInfo(data.reviewPlantPhotoNum, photoCount) // 审核种草 / 种草率
-    createData.reviewPullInfo = getRateInfo(data.reviewPullPhotoNum, photoCount) // 审核拔草 / 拔草率
-    createData.spotCheckPlantInfo = getRateInfo(data.spotCheckPlantPhotoNum, data.spotCheckPhotoNum) // 抽查种草 / 种草率
-    createData.spotCheckPullInfo = getRateInfo(data.spotCheckPullPhotoNum, data.spotCheckPhotoNum) // 抽查拔草 / 拔草率
-    createData.spotCheckNoneInfo = getRateInfo(data.spotCheckNonePhotoNum, data.spotCheckPhotoNum) // 抽查通过 / 直接通过率
+    createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, streamCount) // 点赞数 / 点赞率
+    createData.reworkStreamInfo = getRateInfo(data.storeReturnStreamNumForQuality, streamCount) // 退单量 / 退单率 (质量)
+    createData.reworkPhotoInfo = getRateInfo(data.storeReturnPhotoNumForQuality, photoCount) // 退单张数 / 退张率 （质量）
+    createData.qualityPhotoInfo = Number(data.storeReturnStreamNumForQuality) + '/' + Number(data.storeReturnPhotoNumForQuality) // 质量退单 / 张
+    createData.notQualityPhotoInfo = Number(data.storeReturnStreamNumForNotQuality) + '/' + Number(data.storeReturnPhotoNumForNotQuality) // 非质量退单 / 张
     return createData
   })
 }
@@ -87,6 +87,8 @@ export function getStaffQuotaInfoGroupByStaff (params) {
       createItem.lekimaCount = parseInt(staffInfoItem.lichmaPhotoNum) // 利奇马张数
       createItem.reviewPlantPhotoNum = parseInt(staffInfoItem.reviewPlantPhotoNum) // 审核种草数
       createItem.reviewPullPhotoNum = parseInt(staffInfoItem.reviewPullPhotoNum) // 审核报草数
+      createItem.goodStreamNum = parseInt(staffInfoItem.goodStreamNum) // 点赞单量
+      createItem.storeReturnStreamNum = parseInt(staffInfoItem.storeReturnStreamNum) // 门店退单
       createData.push(createItem)
     }
     return createData
@@ -100,23 +102,19 @@ export function getStaffQuotaInfoGroupByStaff (params) {
 export function getStaffRetouchList (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getStaffRetouchList',
-    method: 'GET',
-    params
+    method: 'POST',
+    data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      const reviewPlantPhotoNum = _.get(listItem, 'tags.values.plant_num', 0)
-      const reviewPullPhotoNum = _.get(listItem, 'tags.values.pull_num', 0)
-      const spotPlantPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_plant_num', 0)
-      const spotPullPhotoNum = _.get(listItem, 'tags.values.film_evaluation_photo_pull_num', 0)
       const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)
       listItem.retoucherName = _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-'
       listItem.retouchAllTime = timeFormat(allTime, 'text', true)
-      listItem.reviewPhoto = reviewPlantPhotoNum + ' / ' + reviewPullPhotoNum
-      listItem.checkPhoto = spotPlantPhotoNum + ' / ' + spotPullPhotoNum
+      listItem.storeReworkPhotoNum = _.get(listItem, 'tags.values.store_rework_photo_num') || '-'
       listItem.lekimaInfo = _.get(listItem, 'tags.values.lichma_photo_num', '-')
-      const storeGrade = _.get(listItem, 'tags.values.store_star', '-')
+      listItem.checkTags = _.get(listItem, 'tags.values.config_parent_name') || []
+      const storeEvaluation = listItem.store_evaluation || '-'
       const npsGrade = _.get(listItem, 'tags.values.retoucher_score', '-')
-      listItem.gradeInfo = { storeGrade, npsGrade }
+      listItem.gradeInfo = { storeEvaluation, npsGrade }
     })
     return msg
   })
@@ -145,6 +143,89 @@ export function getGroupStaffTodayQuotaList (params) {
       })
     })
     return createData
+  })
+}
+
+/**
+ * @description 获取云学院报告问题照片
+ * @param {*} params
+ */
+export function getStaffTProblemsPhotoList (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getGroupStaffQuotaForCloudSchoolInfo',
+    method: 'POST',
+    params
+  }).then(data => {
+    const createData = []
+    const evaluatePhotosNum = parseInt(data.evaluationPhotoNum)
+    createData.push({ label: '评价照片量', value: evaluatePhotosNum, componentSwitch: true })
+    const retoucherTagNum = data.retoucherTagNum.filter(item => Number(item.count))
+    retoucherTagNum.forEach(tagItem => {
+      const createTag = {
+        label: `${tagItem.name}问题照片`,
+        value: parseInt(tagItem.count),
+      }
+      createData.push(createTag)
+    })
+    const retouchScoreSum = _.get(data, 'retoucherScoreAvg.sum') || 0
+    const retoucherScoreCount = _.get(data, 'retoucherScoreAvg.count') || 0
+    const retoucherScoreAvg = getAvg(retouchScoreSum, retoucherScoreCount)
+    createData.push({ label: '评价平均分', value: retoucherScoreAvg })
+    return createData
+  }).catch(() => {
+    return {}
+  })
+}
+
+/**
+ * @description 获取云学院问题照片饼图
+ * @param {*} params
+ */
+export function getStaffProblemReport (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getGroupStaffQuotaForCloudSchoolInfoByStaff',
+    method: 'POST',
+    params
+  }).then(data => {
+    let sum = 0
+    data = data.filter(item => item.count)
+    const createData = data.map(labelItem => {
+      labelItem.group.forEach(childItem => {
+        childItem.count = parseInt(childItem.count)
+      })
+      sum = sum + Number(labelItem.count)
+      return {
+        name: labelItem.name,
+        value: labelItem.count,
+        group: labelItem.group
+      }
+    })
+    createData.forEach(labelItem => {
+      labelItem.rate = transformPercentage(labelItem.value, sum)
+    })
+    return createData
+  }).catch(e => {
+    console.error(e)
+    return []
+  })
+}
+
+/**
+ * @description 获取学员平均分柱状图
+ * @param {*} params
+ */
+export function getStaffAverageScore (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getGroupStaffScoreForCloudSchoolInfoByStaff',
+    method: 'POST',
+    params
+  }).then(data => {
+    data.forEach(item => {
+      item.avgScore = Number(item.avgScore).toFixed(2)
+    })
+    return data
+  }).catch(() => {
+    return []
   })
 }
 

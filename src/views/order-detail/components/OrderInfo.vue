@@ -16,24 +16,24 @@
     </div>
     <template v-if="!isWorkBoardInfo">
       <div class="table-panel panel-grade">
-        <div class="content-title">重修次数</div>
-        <div class="content-title">审核种草</div>
-        <div class="content-title">审核拔草</div>
-        <div class="content-title">抽查种草</div>
-        <div class="content-title">抽查拔草</div>
-        <div class="content-title">修图用时</div>
+        <div class="content-title">修图总时长</div>
         <div class="content-title">超时</div>
+        <div class="content-title">重修次数</div>
+        <div class="content-title">门店退回次数</div>
         <div class="content-title">审核用时</div>
+        <div class="content-title">门店评价</div>
+        <div class="content-title">顾客满意度</div>
       </div>
       <div class="table-panel panel-grade">
-        <div class="panel-content">{{ orderInfo.reworkNum }}</div>
-        <div class="panel-content">{{ orderInfo.plantNum }}</div>
-        <div class="panel-content">{{ orderInfo.pullNum }}</div>
-        <div class="panel-content">{{ orderInfo.checkPlantNum }}</div>
-        <div class="panel-content">{{ orderInfo.checkPullNum }}</div>
         <div class="panel-content">{{ orderInfo.retouchAllTime }}</div>
         <div class="panel-content">{{ orderInfo.overTime }}</div>
+        <div class="panel-content">{{ orderInfo.reworkNum }}</div>
+        <div class="panel-content">{{ orderInfo.storeReworkNum }}</div>
         <div class="panel-content">{{ orderInfo.reviewTime }}</div>
+        <div class="panel-content">
+          <show-evaluate :evaluate="orderInfo.store_evaluate" />
+        </div>
+        <div class="panel-content">{{ orderInfo.retoucherNpsAvg }}</div>
       </div>
     </template>
     <template v-else>
@@ -74,12 +74,19 @@
           <span class="title">背景图要求：</span>
           <div class="content require-background-color">
             <img :src="orderInfo.backgroundColor" alt="">
-            <el-button type="text" @click="downbackground">下载背景图</el-button>
+            <el-button type="text" @click="downPhoto(orderInfo.backgroundColor)">下载背景图</el-button>
           </div>
         </div>
-        <div class="panel-main-content panel-last-content">
-          <span class="title">审核备注：</span>
-          <span class="content">{{ orderInfo.reviewerNote }}</span>
+        <div v-if="orderInfo.referencePhoto" class="panel-main-content">
+          <span class="title">参考图：</span>
+          <div class="content require-reference-photo">
+            <el-image
+              class="reference-img" fit="contain"
+              :src="orderData.referencePhoto"
+              :preview-src-list="[orderData.referencePhoto]">
+            </el-image>
+            <el-button type="text" @click="downPhoto(orderData.referencePhoto)">下载参考图</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -88,9 +95,11 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
+import ShowEvaluate from '@/components/ShowEvaluate'
 
 export default {
   name: 'OrderInfo',
+  components: { ShowEvaluate },
   props: {
     orderData: { type: Object, required: true },
     isWorkBoardInfo: { type: Boolean }
@@ -101,10 +110,10 @@ export default {
     }
   },
   methods: {
-    downbackground () {
+    downPhoto (url) {
       const savePath = `/${this.orderInfo.streamNum}`
       const data = {
-        url: this.orderInfo.backgroundColor,
+        url,
         path: savePath
       }
       this.$newMessage.success('已添加一张照片到下载')
@@ -196,6 +205,16 @@ export default {
             width: 50px;
             height: 50px;
             margin-right: 10px;
+          }
+        }
+
+        .require-reference-photo {
+          display: flex;
+          align-items: flex-end;
+
+          .reference-img {
+            width: 200px;
+            height: 200px;
           }
         }
       }

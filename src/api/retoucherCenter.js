@@ -1,9 +1,10 @@
 // retoucherCenter
 const uuidv4 = require('uuid/v4')
 import axios from '@/plugins/axios.js'
+import StreamModel from '@/model/StreamModel.js'
+import ProductModel from '@/model/ProductModel.js'
+import OrderModel from '@/model/OrderModel.js'
 import { keyToHump } from '@/utils/index.js'
-import { waitTime } from '@/utils/validate.js'
-import { StreamStatics } from '@/utils/enumerate.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
 /**
@@ -16,27 +17,15 @@ export function getRetouchStreams (params) {
     method: 'get',
     params
   }).then(msg => {
-    msg.data.forEach(listItem => {
-      listItem.streamNum = listItem.stream_num
-      listItem.streamId = listItem.id
-      listItem.productName = _.get(listItem, 'product.name', '-')
-      listItem.photoNum = listItem.photos_count
-      listItem.type = _.get(listItem, 'product.retouch_standard') || '-'
-      listItem.photographerName = listItem.order && listItem.order.photographer_org ? listItem.order.photographer_org.name : '-'
-      listItem.waitTime = waitTime(listItem.created_at, listItem.pass_at)
-      listItem.photographerUpdate = listItem.created_at || '-'
-      listItem.isCheckReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.CheckReturn)
-      listItem.isStoreReturn = listItem.tags && listItem.tags.statics && listItem.tags.statics.includes(StreamStatics.StoreReturn)
-      if (params.state === 'hanging') {
-        listItem.hangTime = waitTime(listItem.last_hang_at)
-      } else {
-        listItem.isGreen = false
-        listItem.isOrange = false
-        listItem.isOver = false
-        listItem.isRework = false
-        if (listItem.tags && listItem.tags.statics && listItem.tags.statics.includes('rework')) {
-          listItem.isRework = true
-        }
+    msg.data = msg.data.map(listItem => {
+      const streamOrder = new StreamModel(listItem)
+      const productInfo = new ProductModel(listItem.product)
+      listItem.photographerName = _.get(listItem, 'order.photographer_org.name') || '-'
+      return {
+        ...streamOrder,
+        ...listItem,
+        ...streamOrder.sandClockInfo,
+        productInfo
       }
     })
     return msg
@@ -68,39 +57,47 @@ export function getStreamInfo (params) {
     params
   }).then(msg => {
     const createData = {}
+    const streamOrder = new StreamModel(msg)
+    const productInfo = new ProductModel(msg.product)
+    const orderInfo = new OrderModel(msg.order)
     createData.orderData = {
-      streamNum: msg.stream_num,
-      type: msg.product && msg.product.retouch_standard,
-      photographerName: msg.order.photographer_org ? msg.order.photographer_org.name : '-',
-      photographer: msg.order.tags ? msg.order.tags.values.photographer : '-', // 摄影
-      productName: msg.product && msg.product.name,
-      photoNum: msg.photos.filter(item => +item.people_num > 0).length,
-      waitTime: waitTime(msg.created_at, msg.pass_at),
-      retouchRemark: msg.note.retouch_note,
-      backgroundColor: msg.note.color_note || '',
-      requireLabel: msg.tags ? msg.tags.values.retouch_claim : {},
-      streamState: msg.state,
-      isCheckReturn: _.get(msg, 'tags.statics', []).includes('rework'),
-      isStoreReturn: _.get(msg, 'tags.statics', []).includes('store_rework'),
+      ...streamOrder,
+      productInfo,
+      orderInfo,
+      photographerName: _.get(msg, 'order.photographer_org.name') || '-',
+      photographer: _.get(msg, 'order.tags.values.photographer') || '-', // 摄影
+      photoNum: streamOrder.photoNum
     }
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
+      photoItem.orginPhotoPath = photoItem.path
+      photoItem.versionCache = { original_photo: findOriginalPhoto }
+      photoItem.version = findOriginalPhoto.version
       photoItem.isCover = false
     })
     // 最新退回照片
     const returnShowPhotos = msg.photos.filter(photoItem => {
       const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
       if (findReturnShowPhoto) {
+        const isStoreReturn = photoItem.tags.statics.includes('store_rework')
+        if (isStoreReturn) {
+          const findLastStorePhoto = PhotoTool.findLastReturnPhoto(photoItem.photo_version)
+          photoItem.versionCache['store_rework'] = findLastStorePhoto
+          const tagsValues = _.get(photoItem, 'tags.values') || []
+          findLastStorePhoto.tags.values = { ...findLastStorePhoto.tags.values, ...tagsValues }
+          photoItem.tags = findLastStorePhoto.tags
+        }
         photoItem.isReturnPhoto = true
-        photoItem.returnPhotoPath = findReturnShowPhoto.path
+        photoItem.path = findReturnShowPhoto.path
       }
       return Boolean(findReturnShowPhoto)
     })
     createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
     createData.hourGlass = msg.hour_glass
     createData.reviewerNote = _.get(msg, 'tags.values.review_reason', '暂无审核备注')
-    createData.needPunchLabel = msg.order.photographer_org_id === 1
+    createData.isReturnOrder = streamOrder.isCheckReturn || streamOrder.isStoreReturn
+    createData.needPunchLabel = msg.order.photographer_org_id === 1 && !createData.isReturnOrder
     return createData
   })
 }
@@ -181,10 +178,10 @@ export function getRetouchQuotaList (params) {
       listItem.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
       listItem.exp = Number(listItem.exp) === 0 ? '-' : parseFloat(listItem.exp)
       listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
-      listItem.plantNum = _.get(listItem, 'tags.values.plant_num', 0)
-      listItem.pullNum = _.get(listItem, 'tags.values.pull_num', 0)
-      listItem.retoucherNpsAvg = _.get(listItem, 'tags.values.retoucher_score', '-')
-      listItem.lekimaCount = _.get(listItem, 'tags.values.lichma_photo_num', '-')
+      listItem.storeReturnNum = _.get(listItem, 'tags.values.store_rework_photo_num') || '-'
+      listItem.goodEvaluate = _.get(listItem, 'store_evaluate_stream.store_evaluate') || ''
+      listItem.retoucherNpsAvg = _.get(listItem, 'tags.values.retoucher_score') || '-'
+      listItem.lekimaCount = _.get(listItem, 'tags.values.lichma_photo_num') || '-'
     })
     createData.list = msg.list
     return createData

@@ -1,8 +1,10 @@
 import axios from '@/plugins/axios.js'
+import store from '@/store' // vuex
 import { waitTime } from '@/utils/validate'
-import { settlePhoto } from '../utils/photoTool.js'
 import { keyToHump } from '@/utils/index'
 import { StreamState } from '@/utils/enumerate'
+import * as PhotoTool from '@/utils/photoTool.js'
+
 
 // 获取流水看板数据
 /**
@@ -182,16 +184,17 @@ export function getStreamInfo (params) {
     const data = keyToHump(msg)
     const createData = {}
     data.photos.forEach(photoItem => {
-      photoItem.photoVersion = photoItem.first_photo
-        ? settlePhoto([...photoItem.other_photo_version, photoItem.first_photo])
-        : settlePhoto([...photoItem.other_photo_version])
+      photoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
     })
+    let referencePhoto = _.get(data, 'tags.values.retouch_claim.referenceImg')
+    referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
     createData.orderData = {
       streamNum: data.streamNum,
       photographerOrg: _.get(data, 'order.photographer_org.name', '-'),
       productName: data.product.name,
       photoNum: data.photos.length,
       requireLabel: _.get(data, 'tags.values.retouch_claim', {}),
+      referencePhoto,
       retouchRemark: data.note.retouch_note || '暂无修图备注',
       reviewerNote: _.get(data, 'tags.values.review_reason', '暂无审核备注'),
       retouchStandard: data.product.retouch_standard,

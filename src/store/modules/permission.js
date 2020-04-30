@@ -13,7 +13,7 @@ function hasPermission (roles, route) {
 }
 
 /**
- * Filter asynchronous routing tables by recursion
+ * 过滤含有权限路由
  * @param routes asyncRoutes
  * @param roles
  */

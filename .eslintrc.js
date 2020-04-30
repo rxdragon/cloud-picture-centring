@@ -35,7 +35,6 @@ module.exports = {
     "array-bracket-spacing": 2, // 强制数组方括号中使用一致的空格
     "no-debugger": process.env.NODE_ENV === "production" ? 2 : 0, // 生产环境禁止打印
     "indent": [2, 2, { 'SwitchCase': 1 }], // 两个空格缩进
-    "brace-style": [2, "1tbs"], // if else 的花括号换行规则
     "block-spacing": 2, // 代码块中开括号前和闭括号后有空格
     "eqeqeq": [2, "always", { "null": "ignore" }], // 必须使用 === 和 !== ，和 null 对比时除外
     "eol-last": 2, // 要求文件末尾存在空行

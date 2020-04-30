@@ -228,10 +228,10 @@ export default {
      */
     async getRetouchStreamList () {
       const reqData = { state: this.listActive }
-      const data = await RetoucherCenter.getRetouchStreams(reqData)
-      this.tableData = data.data
-      this.hangingListNum = data.hangingNum
-      this.retouchingListNum = data.retouchingNum
+      const res = await RetoucherCenter.getRetouchStreams(reqData)
+      this.tableData = res.data
+      this.hangingListNum = res.hangingNum
+      this.retouchingListNum = res.retouchingNum
     },
     /**
      * @description 获取排队信息

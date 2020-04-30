@@ -10,14 +10,16 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="productName" label="拍摄产品" />
+      <el-table-column label="拍摄产品">
+        <template slot-scope="scope">{{ scope.row.productInfo.productName }}</template>
+      </el-table-column>
       <el-table-column prop="photoNum" label="照片张数" />
       <el-table-column label="修图标准">
         <template slot-scope="scope">
           <div class="standard-box">
-            {{ scope.row.type | toRetouchClass }}
+            {{ scope.row.productInfo.type | toRetouchClass }}
             <div class="standard-icon">
-              <div :class="`iconmap-standard-${scope.row.type}`" />
+              <div :class="`iconmap-standard-${scope.row.productInfo.type}`" />
             </div>
           </div>
         </template>
