@@ -100,11 +100,14 @@ export function getRetoucherQuota (params) {
     let sum = 0
     msg.retoucherCheckCount = msg.retoucherCheckCount.filter(item => item.count)
     const checkTags = msg.retoucherCheckCount.map(labelItem => {
+      labelItem.child.forEach(childItem => {
+        childItem.count = parseInt(childItem.count)
+      })
       sum = sum + Number(labelItem.count)
       return {
         name: labelItem.name,
         value: Number(labelItem.count),
-        group: labelItem.child,
+        group: labelItem.child
       }
     })
     checkTags.forEach(labelItem => {

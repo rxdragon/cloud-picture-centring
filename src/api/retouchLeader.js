@@ -190,6 +190,9 @@ export function getStaffProblemReport (params) {
     let sum = 0
     data = data.filter(item => item.count)
     const createData = data.map(labelItem => {
+      labelItem.group.forEach(childItem => {
+        childItem.count = parseInt(childItem.count)
+      })
       sum = sum + Number(labelItem.count)
       return {
         name: labelItem.name,
@@ -217,6 +220,9 @@ export function getStaffAverageScore (params) {
     method: 'POST',
     params
   }).then(data => {
+    data.forEach(item => {
+      item.avgScore = Number(item.avgScore).toFixed(2)
+    })
     return data
   }).catch(() => {
     return []
