@@ -21,8 +21,8 @@
       <div class="photo-panel-title panel-title">
         <span>照片信息</span>
         <div class="button-box">
-          <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载原片</el-button>
-          <el-button v-if="isReturnOrder" type="primary" size="small" @click="oneAllDownOrign(true)">一键下载摄影原片</el-button>
+          <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载摄影原片</el-button>
+          <el-button v-if="isReturnOrder" type="primary" size="small" @click="oneAllDownOrign(true)">一键下载摄影成片</el-button>
         </div>
       </div>
       <div class="photo-panel">

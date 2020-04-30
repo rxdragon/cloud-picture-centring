@@ -92,7 +92,7 @@
               </div>
               <div class="contant">
                 <el-slider :show-tooltip="false" v-model="scaleNum" />
-                <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+                <span class="scale-box">{{ scaleNum * 4 + 80 }}%</span>
                 <span class="down-button" @click.stop="downing">下载</span>
               </div>
               <div class="mark-show-btn" v-if="!isOriginalMode">
@@ -447,7 +447,7 @@ export default {
         const _y = e.pageY - 82
         const clickX = (_x / imageWidth * 100).toFixed(2) + '%'
         const clickY = (_y / imageHeight * 100).toFixed(2) + '%'
-        const zoomScale = (this.scaleNum * 4 + 100) / 100
+        const zoomScale = (this.scaleNum * 4 + 80) / 100
         this.photoZoomStyle = `transform-origin: ${clickX} ${clickY}; transform: scale(${zoomScale});`
         this.inZoomIn = true
       }

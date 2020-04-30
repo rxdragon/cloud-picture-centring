@@ -59,7 +59,7 @@ export function getStreamInfo (params) {
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
           versionItem.phototag = photoItem.tags
           const commitInfo = {
-            picUrl: _.get('phototag.values.cloud_pic_url') || ''
+            picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || ''
           }
           const issueLabel = _.get(versionItem, 'phototag.values.check_pool_tags') || []
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
