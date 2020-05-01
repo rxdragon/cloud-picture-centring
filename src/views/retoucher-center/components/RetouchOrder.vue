@@ -33,6 +33,7 @@
             downing
             :down-complete="photoItem.isReturnPhoto"
             :orgin-photo-path="photoItem.orginPhotoPath"
+            :people-num="photoItem.people_num"
             photo-name
             preload-photo
             show-joint-label
