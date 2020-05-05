@@ -210,6 +210,7 @@ export default {
     .add-configuration-item {
       position: sticky;
       top: 0;
+      z-index: 100;
       padding: 19px 0 24px;
       background-color: #fff;
     }
