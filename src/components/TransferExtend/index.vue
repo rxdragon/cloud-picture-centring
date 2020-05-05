@@ -568,6 +568,9 @@ export default {
 
 .transfer {
   position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   overflow: hidden;
 
   .el-tree {
@@ -576,23 +579,13 @@ export default {
     max-height: calc(~'100% - 45px');
     overflow: auto;
 
-    .el-tree-node {
-      width: max-content;
+    .el-tree-node > .el-tree-node__children {
+      overflow: none;
     }
-  }
-
-  .transfer-left {
-    left: 0;
-  }
-
-  .transfer-right {
-    right: 0;
   }
 
   .transfer-left,
   .transfer-right {
-    position: absolute;
-    top: 0;
     box-sizing: border-box;
     width: 40%;
     height: 100%;
@@ -618,9 +611,6 @@ export default {
   }
 
   .transfer-center {
-    position: absolute;
-    top: 50%;
-    left: 40%;
     width: 20%;
     text-align: center;
     transform: translateY(-50%);
