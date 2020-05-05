@@ -580,7 +580,7 @@ export default {
     overflow: auto;
 
     .el-tree-node > .el-tree-node__children {
-      overflow: none;
+      overflow: auto;
     }
   }
 
