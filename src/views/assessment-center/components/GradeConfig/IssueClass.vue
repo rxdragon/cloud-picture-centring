@@ -176,8 +176,10 @@ export default {
      */
     async delectClass () {
       try {
-        const req = { id: this.issueClassData.id }
-        await GradeConfiguration.delScoreConfig(req)
+        if (this.issueClassData.id) {
+          const req = { id: this.issueClassData.id }
+          await GradeConfiguration.delScoreConfig(req)
+        }
         this.$emit('getList')
       } catch (error) {
         console.error(error)
