@@ -11,7 +11,7 @@
       </div>
       <!-- 订单信息 -->
       <div class="order-search search-item">
-        <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" class="input-with-select" @keyup.native.enter="getPhotoList(1)">
+        <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" class="input-with-select">
           <el-select slot="prepend" v-model="orderType" placeholder="请选择">
             <el-option label="云端流水号" :value="1" />
             <el-option label="订单号" :value="2" />
@@ -45,7 +45,7 @@
         <retouch-kind-select v-model="retouchStandards" multiple />
       </div>
       <div class="button-box search-item">
-        <el-button type="primary" @click="getPhotoList(1)">查询</el-button>
+        <el-button type="primary" @click="getPhotoList(true)">查询</el-button>
       </div>
     </div>
     <div class="search-data table-box">
@@ -93,14 +93,14 @@ export default {
       staffId: [], // 伙伴id
       productValues: '', // 产品id
       retouchStandards: '', // 修图标准
-      photos: [], // 照片列表
+      // photos: [], // 照片列表
       columnCount: 4,
       cachepage: 0,
       maxPage: 0,
       pager: {
         page: 1,
-        pageSize: 2,
-        total: 2
+        pageSize: 12,
+        total: 12
       },
       checkOption: [
         {
@@ -122,14 +122,36 @@ export default {
           label: '五星',
           value: 5
         }
-      ]
+      ],
+      allPager: {
+        page: 1,
+        pageSize: 50,
+        hasMore: true,
+      },
+      orinPhotoesPage: 1,
+      orinPhotoes: [] // 存储所有请求到的photoes
+    }
+  },
+  computed: {
+    photos () {
+      const starterIndex = (this.pager.page - 1) * this.pager.pageSize
+      const enderIndex = starterIndex + this.pager.pageSize
+      const truePhotoes = this.orinPhotoes.slice(starterIndex, enderIndex)
+      return truePhotoes
     }
   },
   methods: {
     handleCurrentChange (value) {
-      if (this.maxPage && value > this.maxPage) return
+      this.handleLocalPhoto(value)
+    },
+    handleLocalPhoto (value) {
+      // 先判断后面是否还有两页的量,没有的话,去请求,有的话,直接page+1;
+      const starterIndex = (value - 1) * this.pager.pageSize
+      if (this.orinPhotoes.slice(starterIndex).length < (this.pager.pageSize * 2) && this.allPager.hasMore) {
+        this.allPager.page += 1
+        this.getPhotoList()
+      }
       this.pager.page = value
-      this.getPhotoList()
     },
     /**
      * @description 跳转到客片池详情
@@ -148,8 +170,8 @@ export default {
     getParam () {
       const type = ['streamNum', 'orderNum', 'customerName', 'telephone']
       const reqData = {
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+        page: this.allPager.page,
+        pageSize: this.allPager.pageSize
       }
       if (this.orderSearchValue) {
         const key = type[this.orderType - 1]
@@ -180,36 +202,34 @@ export default {
     /**
      * @description 获取客片池列表
      */
-    async getPhotoList (page) {
-      if (page) {
-        this.cachepage = 0
-        this.maxPage = 0
-        this.pager.page = page
+    async getPhotoList (needRest) {
+      if (needRest) {
+        this.restCondition()
       }
       const reqData = this.getParam()
       if (!reqData) return
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
-        if (page && !data.length) {
-          this.photos = []
+        if (!data.length) {
+          this.allPager.hasMore = false
         }
-        if (data.length) {
-          this.photos = data
-          if (this.cachepage < this.pager.page) {
-            this.cachepage++
-          }
-          const showPage = this.maxPage || (this.cachepage + 1)
-          this.pager.total = showPage * this.pager.pageSize
-        } else {
-          this.maxPage = this.cachepage
-          this.pager.page--
-          this.pager.total = this.cachepage * this.pager.pageSize
-        }
+        this.orinPhotoes = this.orinPhotoes.concat(data)
+        this.pager.total = this.orinPhotoes.length
       } catch (error) {
         console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+    },
+    restCondition () {
+      this.orinPhotoes = []
+      this.allPager.page = 1
+      this.allPager.hasMore = true
+      this.pager = {
+        page: 1,
+        pageSize: 12,
+        total: 12,
       }
     }
   }
