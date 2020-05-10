@@ -52,7 +52,10 @@
             </div>
           </div>
           <div class="mask-photo" v-if="showPhoto.hasCommitInfo" v-show="showMark">
-            <img :src="markPhoto" alt="">
+            <img :src="markPhoto" alt="" :style="{
+              width: `${showImageRect.width}px`,
+              height: `${showImageRect.height}px`
+            }">
           </div>
           <div id="_magnifier_layer" />
         </div>
