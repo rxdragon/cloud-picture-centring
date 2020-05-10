@@ -41,7 +41,7 @@
                 <photo-box :src="photoItem.path" />
                 <div class="change-num">
                   <span>人数：</span>
-                  <input v-model="photoItem.people_num" v-numberOnly class="fake-el-input" min="1" size="mini" placeholder="请输入人数">
+                  <input v-model="photoItem.people_num" v-numberOnly class="fake-el-input" min="0" size="mini" placeholder="请输入人数">
                 </div>
                 <!-- 拼接信息 -->
                 <div v-if="photoItem.isJoint" class="joint-box">
