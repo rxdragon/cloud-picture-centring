@@ -15,7 +15,7 @@
         <retouch-kind-select v-model="retouchStandard" />
       </div>
       <div class="button-box">
-        <el-button type="primary" @click="getAttitudePhotoList(1)">查询</el-button>
+        <el-button type="primary" @click="getAttitudePhotoList(true)">查询</el-button>
       </div>
     </div>
     <div class="search-box">
@@ -43,11 +43,11 @@
       <div class="page-box">
         <el-pagination
           hide-on-single-page
-          :current-page.sync="pager.page"
-          :page-size="pager.pageSize"
+          :current-page.sync="locPager.page"
+          :page-size="locPager.pageSize"
           layout="prev, pager, next, jumper"
-          :total="pager.total"
-          @current-change="handleCurrentChange"
+          :total="locPager.total"
+          @current-change="handleLocalPhoto"
         />
       </div>
     </div>
@@ -76,15 +76,18 @@ export default {
       staffId: [], // 伙伴id
       productValue: '', // 产品id
       retouchStandard: '', // 修图类别
-      photos: [], // 照片数据
       columnCount: 4,
-      cachepage: 0,
-      maxPage: 0,
-      pager: {
+      locPager: {
         page: 1,
-        pageSize: 2,
-        total: 0
-      }
+        pageSize: 12,
+        total: 12
+      },
+      reqPager: {
+        page: 1,
+        pageSize: 50,
+        hasMore: true,
+      },
+      orinPhotoes: [] // 存储所有请求到的photoes
     }
   },
   created () {
@@ -97,11 +100,26 @@ export default {
       this.$router.replace('/404')
     }
   },
+  computed: {
+    photos () { // 展示的照片
+      const starterIndex = (this.locPager.page - 1) * this.locPager.pageSize
+      const enderIndex = starterIndex + this.locPager.pageSize
+      const truePhotoes = this.orinPhotoes.slice(starterIndex, enderIndex)
+      return truePhotoes
+    }
+  },
   methods: {
-    handleCurrentChange (value) {
-      if (this.maxPage && value > this.maxPage) return
-      this.pager.page = value
-      this.getAttitudePhotoList()
+    /**
+     * @description 分页组件页码变动逻辑
+     */
+    handleLocalPhoto (value) {
+      // 先判断后面是否还有两页的量,没有的话,reqPager.page+1,去请求下一页,有的话,直接本地到下一页;
+      const starterIndex = (value - 1) * this.locPager.pageSize
+      if (this.orinPhotoes.slice(starterIndex).length < (this.locPager.pageSize * 2) && this.reqPager.hasMore) {
+        this.reqPager.page += 1
+        this.getAttitudePhotoList()
+      }
+      this.locPager.page = value
     },
     /**
      * @description 调整到详情页面
@@ -126,8 +144,8 @@ export default {
         attitude: this.type,
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1),
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+        page: this.reqPager.page,
+        pageSize: this.reqPager.pageSize
       }
       if (this.staffId.length) {
         reqData.staffIds = this.staffId
@@ -143,36 +161,37 @@ export default {
     /**
      * @description 获取优秀客片列表
      */
-    async getAttitudePhotoList (page) {
+    async getAttitudePhotoList (needRest) {
+      if (needRest) {
+        this.restCondition()
+      }
+      const reqData = this.getParam()
+      if (!reqData) return
       try {
-        if (page) {
-          this.cachepage = 0
-          this.maxPage = 0
-          this.pager.page = page
-        }
-        const reqData = this.getParam()
-        if (!reqData) return
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getAttitudePhotoList(reqData)
-        if (page && !data.length) {
-          this.photos = []
+        if (!data.length) {
+          this.reqPager.hasMore = false
         }
-        if (data.length) {
-          this.photos = data
-          if (this.cachepage < this.pager.page) {
-            this.cachepage++
-          }
-          const showPage = this.maxPage || (this.cachepage + 1)
-          this.pager.total = showPage * this.pager.pageSize
-        } else {
-          this.maxPage = this.cachepage
-          this.pager.page--
-          this.pager.total = this.cachepage * this.pager.pageSize
-        }
+        this.orinPhotoes = this.orinPhotoes.concat(data)
+        this.locPager.total = this.orinPhotoes.length
       } catch (error) {
         console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+    },
+    /**
+     * @description 当条件查询时候,重置列表和分页项
+     */
+    restCondition () {
+      this.orinPhotoes = []
+      this.reqPager.page = 1
+      this.reqPager.hasMore = true
+      this.locPager = {
+        page: 1,
+        pageSize: 12,
+        total: 12,
       }
     }
   }

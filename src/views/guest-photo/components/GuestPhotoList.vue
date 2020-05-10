@@ -11,7 +11,7 @@
       </div>
       <!-- 订单信息 -->
       <div class="order-search search-item">
-        <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" class="input-with-select">
+        <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" @keyup.native.enter="getPhotoList(true)" class="input-with-select">
           <el-select slot="prepend" v-model="orderType" placeholder="请选择">
             <el-option label="云端流水号" :value="1" />
             <el-option label="订单号" :value="2" />
@@ -59,11 +59,11 @@
       <div class="page-box">
         <el-pagination
           hide-on-single-page
-          :current-page="pager.page"
-          :page-size="pager.pageSize"
+          :current-page="locPager.page"
+          :page-size="locPager.pageSize"
           layout="prev, pager, next, jumper"
-          :total="pager.total"
-          @current-change="handleCurrentChange"
+          :total="locPager.total"
+          @current-change="handleLocalPhoto"
         />
       </div>
     </div>
@@ -93,11 +93,8 @@ export default {
       staffId: [], // 伙伴id
       productValues: '', // 产品id
       retouchStandards: '', // 修图标准
-      // photos: [], // 照片列表
       columnCount: 4,
-      cachepage: 0,
-      maxPage: 0,
-      pager: {
+      locPager: {
         page: 1,
         pageSize: 12,
         total: 12
@@ -123,35 +120,34 @@ export default {
           value: 5
         }
       ],
-      allPager: {
+      reqPager: {
         page: 1,
         pageSize: 50,
         hasMore: true,
       },
-      orinPhotoesPage: 1,
       orinPhotoes: [] // 存储所有请求到的photoes
     }
   },
   computed: {
-    photos () {
-      const starterIndex = (this.pager.page - 1) * this.pager.pageSize
-      const enderIndex = starterIndex + this.pager.pageSize
+    photos () { // 展示的照片
+      const starterIndex = (this.locPager.page - 1) * this.locPager.pageSize
+      const enderIndex = starterIndex + this.locPager.pageSize
       const truePhotoes = this.orinPhotoes.slice(starterIndex, enderIndex)
       return truePhotoes
     }
   },
   methods: {
-    handleCurrentChange (value) {
-      this.handleLocalPhoto(value)
-    },
+    /**
+     * @description 分页组件页码变动逻辑
+     */
     handleLocalPhoto (value) {
-      // 先判断后面是否还有两页的量,没有的话,去请求,有的话,直接page+1;
-      const starterIndex = (value - 1) * this.pager.pageSize
-      if (this.orinPhotoes.slice(starterIndex).length < (this.pager.pageSize * 2) && this.allPager.hasMore) {
-        this.allPager.page += 1
+      // 先判断后面是否还有两页的量,没有的话,reqPager.page+1,去请求下一页,有的话,直接本地到下一页;
+      const starterIndex = (value - 1) * this.locPager.pageSize
+      if (this.orinPhotoes.slice(starterIndex).length < (this.locPager.pageSize * 2) && this.reqPager.hasMore) {
+        this.reqPager.page += 1
         this.getPhotoList()
       }
-      this.pager.page = value
+      this.locPager.page = value
     },
     /**
      * @description 跳转到客片池详情
@@ -170,8 +166,8 @@ export default {
     getParam () {
       const type = ['streamNum', 'orderNum', 'customerName', 'telephone']
       const reqData = {
-        page: this.allPager.page,
-        pageSize: this.allPager.pageSize
+        page: this.reqPager.page,
+        pageSize: this.reqPager.pageSize
       }
       if (this.orderSearchValue) {
         const key = type[this.orderType - 1]
@@ -212,21 +208,24 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getPhotoList(reqData)
         if (!data.length) {
-          this.allPager.hasMore = false
+          this.reqPager.hasMore = false
         }
         this.orinPhotoes = this.orinPhotoes.concat(data)
-        this.pager.total = this.orinPhotoes.length
+        this.locPager.total = this.orinPhotoes.length
       } catch (error) {
         console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
+    /**
+     * @description 当条件查询时候,重置列表和分页项
+     */
     restCondition () {
       this.orinPhotoes = []
-      this.allPager.page = 1
-      this.allPager.hasMore = true
-      this.pager = {
+      this.reqPager.page = 1
+      this.reqPager.hasMore = true
+      this.locPager = {
         page: 1,
         pageSize: 12,
         total: 12,
