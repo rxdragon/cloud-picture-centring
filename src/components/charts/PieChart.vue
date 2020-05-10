@@ -92,7 +92,6 @@ export default {
 <style lang="less" scoped>
 .pie-chart {
   height: 100%;
-  overflow: hidden;
 
   .pie-no-data,
   .pie-chart-data {

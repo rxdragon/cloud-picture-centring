@@ -13,20 +13,20 @@
 </template>
 
 <script>
-import RetouchReport from './components/RetouchReport'
+import RetouchStaffReport from './components/RetouchStaffReport'
 import AssessmentReport from './components/AssessmentReport'
 
 export default {
-  name: 'StaffRetouchReport',
-  components: { RetouchReport, AssessmentReport },
+  name: 'RetouchReport',
+  components: { RetouchStaffReport, AssessmentReport },
   data () {
     return {
       isShowTab: true,
       tabList: [
-        { label: '修图报告', value: 'RetouchReport' },
+        { label: '修图报告', value: 'RetouchStaffReport' },
         { label: '云学院报告', value: 'AssessmentReport' }
       ],
-      activeName: 'RetouchReport',//  初始化显示修图报告
+      activeName: 'RetouchStaffReport',//  初始化显示修图报告
     }
   },
   methods: {
