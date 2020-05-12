@@ -375,6 +375,7 @@ export default {
           markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
         }
         this.showCanvas = false
+        this.canvasOption.drawType = ''
         const issuesLabel = this.getIssuesData()
         const issuesLabelId = issuesLabel.map(item => ({ id: item.id }))
         this.resetLabelData()
@@ -533,7 +534,7 @@ export default {
     /**
      * @description 创建canvas
      */
-    createCanvas () {
+    createCanvas (drawType) {
       if (!this.isFinishPhoto) {
         this.$newMessage.warning('请在成片上进行评分')
         return false
@@ -541,6 +542,7 @@ export default {
       if (!this.showCanvas) {
         this.getImgInfo()
         this.showCanvas = true
+        if (drawType) { this.$nextTick(() => { this.changeDrawType(drawType) }) }
       }
       return true
     },
@@ -550,7 +552,7 @@ export default {
     changeDrawType (drawType) {
       if (!this.$parent.showGradePreview) return false
       if (drawType !== 'blowup' && !this.showCanvas) {
-        this.createCanvas()
+        this.createCanvas(drawType)
         return
       }
       if (drawType === 'blowup' && this.inZoomIn) {
@@ -836,6 +838,7 @@ export default {
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
         img {
+          -webkit-user-drag: none;
           max-width: 100%;
           max-height: 100%;
         }

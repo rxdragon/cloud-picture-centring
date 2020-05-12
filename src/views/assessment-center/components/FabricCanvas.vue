@@ -51,25 +51,7 @@ export default {
     },
     'optionObj.drawType': {
       handler (drawType) {
-        this.canvasDom.selection = false
-        this.canvasDom.skipTargetFind = true
-        this.canvasDom.isDrawingMode = false
-        switch (drawType) {
-          case 'pen':
-            this.changePen()
-            break
-          case 'move':
-            this.changeMove()
-            break
-          case 'blowup':
-            this.changeBlowup()
-            break
-          case 'delete':
-            this.deletePath()
-            break
-          default:
-            break
-        }
+        this.changeDrawMode(drawType)
       },
       deep: true
     }
@@ -80,11 +62,10 @@ export default {
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
-
     this.canvasDom = new window.fabric.Canvas('mark-canvas', {
-      isDrawingMode: true,
-      selection: true,
-      skipTargetFind: false
+      isDrawingMode: false,
+      selection: false,
+      skipTargetFind: true
     })
     this.canvasDom.freeDrawingBrush.color = this.optionObj.penColor // 设置自由绘颜色
     this.canvasDom.freeDrawingBrush.width = this.optionObj.lineWidth
@@ -93,6 +74,30 @@ export default {
     this.canvasDom.on('mouse:move', this.onMouseMove)
   },
   methods: {
+    /**
+     * @description 更改绘画模式
+     */
+    changeDrawMode (drawType) {
+      this.canvasDom.selection = false
+      this.canvasDom.skipTargetFind = true
+      this.canvasDom.isDrawingMode = false
+      switch (drawType) {
+        case 'pen':
+          this.changePen()
+          break
+        case 'move':
+          this.changeMove()
+          break
+        case 'blowup':
+          this.changeBlowup()
+          break
+        case 'delete':
+          this.deletePath()
+          break
+        default:
+          break
+      }
+    },
     /**
      * @description 获取又拍云
      */
@@ -187,9 +192,9 @@ export default {
      * @description 使用笔
      */
     changePen () {
-      this.canvasDom.isDrawingMode = true
       this.canvasDom.selection = false
       this.canvasDom.skipTargetFind = true
+      this.canvasDom.isDrawingMode = true
     },
     /**
      * @description 放大
@@ -271,8 +276,7 @@ export default {
           strokeWidth: drawWidth
         }
       )
-      this.canvasDom.add(canvasObject)
-      this.drawingObject = canvasObject
+      return canvasObject
     },
     /**
      * @description 创建椭圆
