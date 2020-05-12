@@ -10,11 +10,10 @@ const uuidv4 = require('uuid/v4')
 
 const MaxFileCount = 10
 const clearCacheTime = 60 * 60 * 1000
-const isProduction = !global.config('microApi')
+const isProduction = !global.config('microApi') && !global.isDevelopment
 console.log(global)
-console.log(global.isDevelopment)
 const cloudPhotoHost = isProduction ? 'cloud.cdn-qn.hzmantu.com/upload/' : 'cloud-dev.cdn-qn.hzmantu.com/upload_dev/'
-console.log(cloudPhotoHost)
+console.log(cloudPhotoHost, 'cloudPhotoHost')
 createImageCacheDir()
 clearCache()
 
