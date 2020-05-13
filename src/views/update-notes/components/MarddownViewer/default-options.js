@@ -1,13 +1,22 @@
 // doc: https://nhnent.github.io/tui.editor/api/latest/ToastUIEditor.html#ToastUIEditor
 export default {
   minHeight: '200px',
+  height: 'auto',
   viewer: true,
-  initialEditType: 'wysiwyg',
+  language: 'zh_CN',
+  initialEditType: 'markdown',
   previewStyle: 'vertical',
   useCommandShortcut: true,
   useDefaultHTMLSanitizer: true,
   usageStatistics: false,
   hideModeSwitch: false,
+  editorEvents: [
+    'load',
+    'change',
+    'stateChange',
+    'focus',
+    'blur',
+  ],
   toolbarItems: [
     'heading',
     'bold',
@@ -28,6 +37,6 @@ export default {
     'link',
     'divider',
     'code',
-    'codeblock'
+    'codeblock',
   ]
 }

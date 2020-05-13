@@ -86,12 +86,19 @@ export const lastBaseRoutes = [
   {
     path: '/update-notes',
     component: Layout,
+    meta: { title: '关于', icon: 'el-icon-s-order' },
     children: [
       {
-        path: 'updateNotes',
-        name: 'updateNotes',
+        path: 'notes-list',
+        name: 'notesList',
         component: () => import('@/views/update-notes/index.vue'),
-        meta: { title: '关于', icon: 'el-icon-s-order' }
+        meta: { title: '版本说明', icon: '' }
+      },
+      {
+        path: 'add-update',
+        name: 'addUpdate',
+        component: () => import('@/views/update-notes/addUpdate.vue'),
+        meta: { title: '新增版本', icon: '' }
       }
     ]
   }
