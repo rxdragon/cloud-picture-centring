@@ -28,7 +28,7 @@ export default {
     issueItemData: { type: Object, required: true },
     classEdit: { type: Boolean }
   },
-  inject: ['weight'],
+  inject: ['weightProvide'],
   data () {
     return {
       itemName: '',
@@ -42,7 +42,7 @@ export default {
       return this.issueItemData.isEdit
     },
     weightScore () {
-      return this.weight.score
+      return this.weightProvide.score
     },
     // 单项权重分数
     itemWeightScore () {
