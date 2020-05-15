@@ -1,10 +1,11 @@
 // doc: https://nhnent.github.io/tui.editor/api/latest/ToastUIEditor.html#ToastUIEditor
 export default {
-  minHeight: '200px',
-  height: '73vh',
+  minHeight: '500px',
+  height: '100%',
   viewer: true,
   language: 'zh_CN',
   initialEditType: 'markdown',
+  initialValue: '',
   previewStyle: 'vertical',
   useCommandShortcut: true,
   useDefaultHTMLSanitizer: true,

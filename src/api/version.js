@@ -21,3 +21,24 @@ export function addVersionInfo (params) {
     data: params
   })
 }
+
+/**
+ * @description 获取所有版本号
+ */
+export function getAllVersionNum () {
+  return axios({
+    url: '/project_cloud/common/getAllVersionNum',
+    method: 'GET'
+  })
+}
+
+/**
+ * @description 获取所有版本号
+ */
+export function updateVersionInfo (params) {
+  return axios({
+    url: '/project_cloud/common/updateVersionInfo',
+    method: 'POST',
+    data: params
+  })
+}
