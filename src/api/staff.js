@@ -31,7 +31,7 @@ export function getStaffInfo (params) {
  * @description 获取伙伴面板数据
  */
 export function getStaffList () {
-  const params = { needGroup: true }
+  const params = { needGroup: true, needDelete: true }
   function handleData (msg) {
     const createData = [{
       id: -1,
@@ -71,19 +71,13 @@ export function getStaffList () {
     }
     return createData
   }
-  const data = SessionTool.getStaffList()
-  if (data) {
-    return handleData(data)
-  } else {
-    return axios({
-      url: '/project_cloud/common/getStaffList',
-      method: 'GET',
-      params
-    }).then(msg => {
-      SessionTool.saveStaffList(msg)
-      return handleData(msg)
-    })
-  }
+  return axios({
+    url: '/project_cloud/common/getStaffList',
+    method: 'GET',
+    params
+  }).then(msg => {
+    return handleData(msg)
+  })
 }
 
 /**
