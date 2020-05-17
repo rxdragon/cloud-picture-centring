@@ -91,13 +91,13 @@ export const lastBaseRoutes = [
       {
         path: 'update-notes-list',
         name: 'updateNotesList',
-        component: () => import('@/views/update-notes/index.vue'),
+        component: () => import('@/views/update-notes/update-notes-list.vue'),
         meta: { title: '版本说明', icon: '' }
       },
       {
         path: 'edit-update-notes',
         name: 'editUpdateNotes',
-        component: () => import('@/views/update-notes/addUpdate.vue'),
+        component: () => import('@/views/update-notes/edit-update-notes.vue'),
         meta: { title: '新增版本', icon: '' }
       }
     ]

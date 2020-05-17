@@ -129,7 +129,7 @@ export default {
               this.loading = false
             }).catch(() => {
               this.loading = false
-              this.$newMessage.error('添加失败')
+              this.$newMessage.error('修改失败')
             })
           } else {
             versionInfo.addVersionInfo(params).then( res => {
