@@ -3,13 +3,13 @@
     <el-form ref="versionform" :model="versionForm" :rules="rules" label-width="80px">
       <div class="header">
         <h3>新增更新</h3>
-        <el-tooltip class="item" effect="dark" placement="left">
+        <el-tooltip class="item" effect="dark" placement="left" popper-class="test-class">
           <div slot="content">
             更改字体颜色或大小将文字置于{{ copyTips[0] }}内
             <p>点击关键字可复制该关键字样式</p>
-            <span style=" margin: 5px 5px 0 0; color: #3bbc7f; cursor: pointer;" @click="copyExample(copyTips[1])">增加</span>
-            <span style="margin: 5px 5px 0 0; color: #ff8f00; cursor: pointer;" @click="copyExample(copyTips[2])">优化</span>
-            <span style="margin: 5px 5px 0 0; color: #ff3974; cursor: pointer;" @click="copyExample(copyTips[3])">修复</span>
+            <span class="mark-new" @click="copyExample(copyTips[1])">增加</span>
+            <span class="mark-opt" @click="copyExample(copyTips[2])">优化</span>
+            <span class="mark-fix" @click="copyExample(copyTips[3])">修复</span>
           </div>
           <div class='copy-icon-box' @click="copyExample(copyTips[0])"><i class="el-icon-question"></i></div>
         </el-tooltip>
@@ -24,10 +24,10 @@
             @change="changeVersion"
           >
             <el-option
-              v-for="item in allVersionNum"
-              :key="item.id"
-              :label="item.version_num"
-              :value="item.version_num">
+              v-for="versionItem in allVersionNum"
+              :key="versionItem.id"
+              :label="versionItem.version_num"
+              :value="versionItem.version_num">
             </el-option>
           </el-select>
         </el-form-item>
@@ -49,41 +49,28 @@
   </div>
 </template>
 <script>
-import Editor from 'tui-editor'
 import 'codemirror/lib/codemirror.css' // codemirror
 import 'tui-editor/dist/tui-editor.css' // editor ui
 import 'tui-editor/dist/tui-editor-contents.css' // editor content
+import Editor from 'tui-editor'
 import defaultOptions from './components/MarddownViewer/default-options'
-import * as versionInfo from '@/api/version.js'
 import { parseTime } from '@/utils/index.js'
+import * as Version from '@/api/version.js'
 
 export default {
   name: 'editUpdateNotes',
-  mixins: [defaultOptions],
-  computed: {
-    editorOptions () {
-      const options = defaultOptions
-      return options
-    },
-    dd () {
-      return this.editor.getHtml()
-    }
-  },
   data () {
     return {
+      rules: {
+        time: [{ required: true, message: '请选择日期', trigger: 'change' }],
+        num: [{ required: true, message: '请输入版本名称', trigger: 'blur' }]
+      },
+      editorOptions: defaultOptions,
       editor: null,
       versionForm: {
         num: '',
         time: '',
         id: 0
-      },
-      rules: {
-        time: [
-          { required: true, message: '请选择日期', trigger: 'change' }
-        ],
-        num: [
-          { required: true, message: '请输入版本名称', trigger: 'blur' },
-        ]
       },
       allVersionNum: [],
       copyTips: [
@@ -95,61 +82,59 @@ export default {
       loading: false
     }
   },
-  mounted () {
-    const options = { ...this.editorOptions, el: this.$refs.toastuiEditor }
-    this.editor = new Editor(options)
+  computed: {
+    dd () {
+      return this.editor.getHtml()
+    }
   },
   created () {
     this.getAllVersionNum()
   },
+  mounted () {
+    const options = { ...this.editorOptions, el: this.$refs.toastuiEditor }
+    this.editor = new Editor(options)
+  },
   methods: {
-    getAllVersionNum () {
-      versionInfo.getAllVersionNum().then(data => {
-        this.allVersionNum = data
-      })
+    /**
+     * @description 获取版本
+     */
+    async getAllVersionNum () {
+      const data = await Version.getAllVersionNum()
+      this.allVersionNum = data
     },
-    save () {
-      this.$refs['versionform'].validate((valid) => {
-        if (valid) {
-          this.loading = true
-          const params = {
-            versionNum: this.versionForm.num.trim(),
-            versionTime: parseTime(this.versionForm.time),
-            info: this.editor.getHtml()
-          }
-          if (this.versionForm.id) {
-            params.id = this.versionForm.id
-            versionInfo.updateVersionInfo(params).then( res => {
-              if (res) {
-                this.$newMessage.success('修改成功')
-                this.editor.setHtml('')
-              } else {
-                this.$newMessage.error('修改失败')
-              }
-              this.loading = false
-            }).catch(() => {
-              this.loading = false
-              this.$newMessage.error('修改失败')
-            })
-          } else {
-            versionInfo.addVersionInfo(params).then( res => {
-              this.loading = false
-              if (res) {
-                this.$newMessage.success('添加成功')
-                this.$router.push({
-                  path: '/update-notes/update-notes-list'
-                })
-              } else {
-                this.$newMessage.error('添加失败')
-              }
-            }).catch(() => {
-              this.loading = false
-              this.$newMessage.error('添加失败')
-            })
-          }
+    /**
+     * @description 保存
+     */
+    async save () {
+      try {
+        this.loading = true
+        await this.$refs['versionform'].validate()
+        const params = {
+          versionNum: this.versionForm.num.trim(),
+          versionTime: parseTime(this.versionForm.time),
+          info: this.editor.getHtml()
         }
-      })
+        if (this.versionForm.id) {
+          params.id = this.versionForm.id
+          await Version.updateVersionInfo(params)
+          this.$newMessage.success('修改成功')
+          this.editor.setHtml('')
+        } else {
+          await Version.addVersionInfo(params)
+          this.$newMessage.success('添加成功')
+          this.$router.push({
+            path: '/update-notes/update-notes-list'
+          })
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
+      }
     },
+    /**
+     * @description 拷贝样式
+     */
     copyExample (val) {
       const tag = document.createElement('input')
       tag.setAttribute('id', 'cp_input')
@@ -159,23 +144,31 @@ export default {
       document.execCommand('copy')
       document.getElementById('cp_input').remove()
     },
-    changeVersion () {
-      const selectVersion = this.allVersionNum.find(item => {
-        return item.version_num === this.versionForm.num
-      })
-      this.versionForm.time = _.get(selectVersion, 'version_time') || ''
-      this.versionForm.id = _.get(selectVersion, 'id') || 0
-      if (selectVersion) {
-        this.loading = true
-        const params = {
-          page: 1,
-          pageSize: 1,
-          versionNum: this.versionForm.num
-        }
-        versionInfo.getVersionInfo(params).then(res => {
+    /**
+     * @description 更改版本
+     */
+    async changeVersion (value) {
+      try {
+        const selectVersion = this.allVersionNum.find(item => item.version_num === this.versionForm.num)
+        if (selectVersion) {
+          this.versionForm.time = _.get(selectVersion, 'version_time') || ''
+          this.versionForm.id = _.get(selectVersion, 'id') || 0
+          this.loading = true
+          const params = {
+            versionNum: this.versionForm.num,
+            page: 1,
+            pageSize: 1
+          }
+          const res = await Version.getVersionInfo(params)
           this.editor.setHtml(res.data[0].info)
-          this.loading = false
-        })
+        } else {
+          this.versionForm.time = ''
+          this.versionForm.id = 0
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
       }
     }
   }
@@ -209,17 +202,35 @@ export default {
   /deep/ .toastui-editor {
     width: 100%;
 
-    h1 {
+    blockquote {
       padding: 5px 15px;
-      margin: 0;
       font-size: 16px;
       font-weight: 900;
       background-color: #efeeee;
       border-color: #42b983;
-      border-bottom: none;
       border-left-style: solid;
       border-left-width: 4px;
+
+      p {
+        color: #545454;
+      }
     }
+  }
+}
+</style>
+
+<style lang="less">
+.test-class {
+  .mark-new {
+    color: #3bbc7f;
+  }
+
+  .mark-opt {
+    color: #ff8f00;
+  }
+
+  .mark-fix {
+    color: #ff3974;
   }
 }
 </style>

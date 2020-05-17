@@ -29,6 +29,9 @@ export function getAllVersionNum () {
   return axios({
     url: '/project_cloud/common/getAllVersionNum',
     method: 'GET'
+  }).then(res => {
+    const createData = res.sort((a, b) => -1)
+    return createData
   })
 }
 

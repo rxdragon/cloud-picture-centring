@@ -6,7 +6,7 @@
     <div class="content-main">
       <div class="module-panel" v-for="(versionItem,index) in versionData" :key="index">
         <h3 class="version-title">版本更新：{{ versionItem.version_num }} <time>{{ formatTime(versionItem.version_time) }}</time></h3>
-        <div v-html="versionItem.info" class="content"></div>
+        <div v-html="versionItem.info" class="tui-editor-contents"></div>
       </div>
       <div ref="no-data-line">
         <el-divider>已经到底部啦</el-divider>
@@ -17,6 +17,7 @@
 
 <script>
 import * as versionInfo from '@/api/version.js'
+import 'tui-editor/dist/tui-editor-contents.css' // editor content
 
 export default {
   name: 'updateNotesList',
@@ -101,57 +102,17 @@ export default {
   padding-right: 24px;
   margin-right: -24px;
 
-  /deep/ .content {
-    margin-top: 10px;
-    font-size: 13px;
+  blockquote {
+    padding: 5px 15px;
+    font-size: 16px;
+    font-weight: 900;
+    background-color: #efeeee;
+    border-color: #42b983;
+    border-left-style: solid;
+    border-left-width: 4px;
 
-    h1 {
-      padding: 5px 15px;
-      margin: 0;
-      font-size: 16px;
-      font-weight: 900;
-      background-color: #efeeee;
-      border-color: #42b983;
-      border-bottom: none;
-      border-left-style: solid;
-      border-left-width: 4px;
-    }
-
-    ul ol {
-      padding-left: 15px;
-    }
-
-    table {
-      width: 60%;
-      padding: 5px;
-      border-collapse: collapse;
-
-      th {
-        padding-top: 6px;
-        font-weight: 300;
-        color: #fff;
-        background-color: #7b8184;
-        border: 1px solid #72777b;
-        border-top: 0;
-      }
-
-      td {
-        height: 32px;
-        padding: 5px 14px 5px 12px;
-        border: 1px solid #eaeaea;
-      }
-    }
-
-    .mark-new {
-      color: #3bbc7f;
-    }
-
-    .mark-opt {
-      color: #ff8f00;
-    }
-
-    .mark-fix {
-      color: #ff3974;
+    p {
+      color: #545454;
     }
   }
 
@@ -167,5 +128,17 @@ export default {
       }
     }
   }
+}
+
+.mark-new {
+  color: #3bbc7f;
+}
+
+.mark-opt {
+  color: #ff8f00;
+}
+
+.mark-fix {
+  color: #ff3974;
 }
 </style>
