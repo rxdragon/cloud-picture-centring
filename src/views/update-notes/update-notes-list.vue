@@ -17,7 +17,7 @@
 
 <script>
 import * as versionInfo from '@/api/version.js'
-import 'tui-editor/dist/tui-editor-contents.css' // editor content
+import '@toast-ui/editor/dist/toastui-editor.css'
 
 export default {
   name: 'updateNotesList',

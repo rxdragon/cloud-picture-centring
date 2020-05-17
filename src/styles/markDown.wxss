@@ -1,0 +1,9 @@
+.mark-new {
+  color: #3bbc7f;
+}
+.mark-opt {
+  color: #ff8f00;
+}
+.mark-fix {
+  color: #ff3974;
+}

@@ -1,59 +1,48 @@
 <template>
   <div class="edit-update" v-loading="loading">
+    <div class="header">
+      <h3>新增更新</h3>
+    </div>
     <el-form ref="versionform" :model="versionForm" :rules="rules" label-width="80px">
-      <div class="header">
-        <h3>新增更新</h3>
-        <el-tooltip class="item" effect="dark" placement="left" popper-class="test-class">
-          <div slot="content">
-            更改字体颜色或大小将文字置于{{ copyTips[0] }}内
-            <p>点击关键字可复制该关键字样式</p>
-            <span class="mark-new" @click="copyExample(copyTips[1])">增加</span>
-            <span class="mark-opt" @click="copyExample(copyTips[2])">优化</span>
-            <span class="mark-fix" @click="copyExample(copyTips[3])">修复</span>
-          </div>
-          <div class='copy-icon-box' @click="copyExample(copyTips[0])"><i class="el-icon-question"></i></div>
-        </el-tooltip>
-      </div>
-      <div class="search-box fix-box">
-        <el-form-item label="版本名称" prop="num">
-          <el-select
-            v-model="versionForm.num"
-            allow-create
-            filterable
-            placeholder="请输入版本名称"
-            @change="changeVersion"
-          >
-            <el-option
-              v-for="versionItem in allVersionNum"
-              :key="versionItem.id"
-              :label="versionItem.version_num"
-              :value="versionItem.version_num">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="更新时间" prop="time">
-          <el-date-picker
-            v-model="versionForm.time"
-            type="date"
-            placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="save">保存</el-button>
-        </el-form-item>
-      </div>
-      <div class="edit-content">
-        <div ref="toastuiEditor" class="toastui-editor"></div>
-      </div>
+      <el-form-item label="版本名称" prop="num">
+        <el-select
+          v-model="versionForm.num"
+          allow-create
+          filterable
+          placeholder="请输入版本名称"
+          @change="changeVersion"
+        >
+          <el-option
+            v-for="versionItem in allVersionNum"
+            :key="versionItem.id"
+            :label="versionItem.version_num"
+            :value="versionItem.version_num">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="更新时间" prop="time">
+        <el-date-picker
+          v-model="versionForm.time"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-button class="save-button" type="primary" @click="save">保存</el-button>
+      <el-button class="save-button" type="info" @click="templateData">模版</el-button>
     </el-form>
+    <div class="edit-content">
+      <div ref="toastuiEditor" class="toastui-editor"></div>
+    </div>
   </div>
 </template>
 <script>
-import 'codemirror/lib/codemirror.css' // codemirror
-import 'tui-editor/dist/tui-editor.css' // editor ui
-import 'tui-editor/dist/tui-editor-contents.css' // editor content
-import Editor from 'tui-editor'
-import defaultOptions from './components/MarddownViewer/default-options'
+import 'codemirror/lib/codemirror.css'
+import '@toast-ui/editor/dist/i18n/zh-cn'
+import '@toast-ui/editor/dist/toastui-editor.css'
+import Editor from '@toast-ui/editor'
+import defaultOptions from './assets/default-options'
+import templateInfo from './assets/template.js'
+import { batchRegisterEvent } from './registerTool.js'
 import { parseTime } from '@/utils/index.js'
 import * as Version from '@/api/version.js'
 
@@ -73,18 +62,7 @@ export default {
         id: 0
       },
       allVersionNum: [],
-      copyTips: [
-        '<font face="黑体" color=green size=2>文字</font>',
-        '<font face="黑体" color=#3bbc7f size=2>增加</font>',
-        '<font face="黑体" color=#ff8f00 size=2>优化</font>',
-        '<font face="黑体" color=#ff3974 size=2>修复</font>'
-      ],
       loading: false
-    }
-  },
-  computed: {
-    dd () {
-      return this.editor.getHtml()
     }
   },
   created () {
@@ -93,6 +71,7 @@ export default {
   mounted () {
     const options = { ...this.editorOptions, el: this.$refs.toastuiEditor }
     this.editor = new Editor(options)
+    batchRegisterEvent(this.editor)
   },
   methods: {
     /**
@@ -133,18 +112,6 @@ export default {
       }
     },
     /**
-     * @description 拷贝样式
-     */
-    copyExample (val) {
-      const tag = document.createElement('input')
-      tag.setAttribute('id', 'cp_input')
-      tag.value = val
-      document.getElementsByTagName('body')[0].appendChild(tag)
-      document.getElementById('cp_input').select()
-      document.execCommand('copy')
-      document.getElementById('cp_input').remove()
-    },
-    /**
      * @description 更改版本
      */
     async changeVersion (value) {
@@ -160,7 +127,8 @@ export default {
             pageSize: 1
           }
           const res = await Version.getVersionInfo(params)
-          this.editor.setHtml(res.data[0].info)
+          const versioncontent = res.data[0].info
+          this.editor.setHtml(versioncontent)
         } else {
           this.versionForm.time = ''
           this.versionForm.id = 0
@@ -170,6 +138,12 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    /**
+     * @description 模版数据
+     */
+    templateData () {
+      this.editor.setMarkdown(templateInfo)
     }
   }
 }
@@ -190,29 +164,37 @@ export default {
     cursor: pointer;
   }
 
-  .el-form-item {
-    margin-right: 25px;
+  .el-form {
+    display: flex;
+
+    .el-form-item {
+      margin-right: 25px;
+    }
+
+    .save-button {
+      margin-bottom: 22px;
+    }
   }
 
   .edit-content {
     display: flex;
     height: calc(@appMainHeight - 88px);
-  }
 
-  /deep/ .toastui-editor {
-    width: 100%;
+    /deep/ .toastui-editor {
+      width: 100%;
 
-    blockquote {
-      padding: 5px 15px;
-      font-size: 16px;
-      font-weight: 900;
-      background-color: #efeeee;
-      border-color: #42b983;
-      border-left-style: solid;
-      border-left-width: 4px;
+      blockquote {
+        padding: 5px 15px;
+        font-size: 16px;
+        font-weight: 900;
+        background-color: #efeeee;
+        border-color: #42b983;
+        border-left-style: solid;
+        border-left-width: 4px;
 
-      p {
-        color: #545454;
+        p {
+          color: #545454;
+        }
       }
     }
   }
