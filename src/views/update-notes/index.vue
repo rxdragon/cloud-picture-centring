@@ -117,6 +117,31 @@ export default {
       border-left-width: 4px;
     }
 
+    ul ol {
+      padding-left: 15px;
+    }
+
+    table {
+      width: 60%;
+      padding: 5px;
+      border-collapse: collapse;
+
+      th {
+        padding-top: 6px;
+        font-weight: 300;
+        color: #fff;
+        background-color: #7b8184;
+        border: 1px solid #72777b;
+        border-top: 0;
+      }
+
+      td {
+        height: 32px;
+        padding: 5px 14px 5px 12px;
+        border: 1px solid #eaeaea;
+      }
+    }
+
     .mark-new {
       color: #3bbc7f;
     }
