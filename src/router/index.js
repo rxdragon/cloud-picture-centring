@@ -92,7 +92,7 @@ export const lastBaseRoutes = [
         path: 'update-notes-list',
         name: 'updateNotesList',
         component: () => import('@/views/update-notes/update-notes-list.vue'),
-        meta: { title: '版本说明', icon: '' }
+        meta: { title: '关于', icon: '' }
       },
       {
         path: 'edit-update-notes',

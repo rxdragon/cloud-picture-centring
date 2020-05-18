@@ -102,7 +102,7 @@ export default {
   padding-right: 24px;
   margin-right: -24px;
 
-  blockquote {
+  /deep/ blockquote {
     padding: 5px 15px;
     font-size: 16px;
     font-weight: 900;
