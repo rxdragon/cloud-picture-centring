@@ -27,10 +27,8 @@
         <!-- 修图类配置 -->
         <div v-show="activeName === 'retouchCategory'" class="retouch-category-box">
           <el-alert title="提示：若非修图伙伴请勿配置可接产品" type="info" show-icon />
-          <div class="retouch-select search-item">
-            <span>修图类别</span>
-            <retouch-type-select v-model="retouchSelectType" import-model />
-          </div>
+          <!-- 修图等级，海草值，修图身份，修图类别选择-->
+          <retouch-detail-select />
           <div class="product-box search-item">
             <span>可接产品</span>
             <product-panel
@@ -67,15 +65,15 @@
 <script>
 import ProductPanel from '@/components/ProductPanel'
 import Jurisdiction from '@/components/Jurisdiction'
-import RetouchTypeSelect from '@SelectBox/RetouchTypeSelect'
 import RoleSelect from '@SelectBox/RoleSelect'
+import RetouchDetailSelect from './RetouchDetailSelect'
 
 import * as AccountManage from '@/api/accountManage.js'
 import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'AddAccount',
-  components: { ProductPanel, Jurisdiction, RetouchTypeSelect, RoleSelect },
+  components: { ProductPanel, Jurisdiction, RoleSelect, RetouchDetailSelect },
   props: {
     editData: {
       type: Object,

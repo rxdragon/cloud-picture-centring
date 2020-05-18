@@ -216,3 +216,15 @@ export function getRetoucherClassInfo (params) {
     params
   })
 }
+
+/**
+ * @description 获取修图等级
+ */
+export function getAllRetouchRank () {
+  return axios({
+    url: '/project_cloud/checkPool/getAllRetouchRank',
+    method: 'GET'
+  }).then(msg => {
+    return msg
+  })
+}

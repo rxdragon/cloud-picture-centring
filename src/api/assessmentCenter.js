@@ -232,3 +232,17 @@ export function getCloudProblemReportByGroup (params) {
     return msg
   })
 }
+
+/**
+ * @description 获取修改分数历史记录
+ * @param {*} params
+ */
+export function getModifyHistory (params) {
+  return axios({
+    url: '/project_cloud/checkPool/getModifyHistory',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
+  })
+}
