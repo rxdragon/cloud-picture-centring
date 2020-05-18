@@ -3,12 +3,86 @@
 ### 🌟 新功能
 |范围|描述|commitId|
 --|--|--
+<<<<<<< HEAD
  版本更新编辑 | [7b5671b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7b5671b)
  版本更新可编辑 | [60c1bc6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/60c1bc6)
+=======
+ demo 画板功能 | [11c96aa](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/11c96aa)
+ ipc 不引用node包 新增selfPath | [e2e91c3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2e91c3)
+ test | [560a5ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/560a5ae)
+ test | [3df90c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3df90c2)
+ testtest | [bdb54c2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bdb54c2)
+ ui 布局 | [c4e2ec5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4e2ec5)
+ webscoket | [a474182](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a474182)
+ webscoket | [c20df39](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c20df39)
+ websocket | [22821d0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22821d0)
+ webSocket | [7d7b973](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7d7b973)
+ 七牛云更改 | [e8e455b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e8e455b)
+ 下载优化 | [63ecdfe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/63ecdfe)
+ 不添加可选依赖 | [d999c0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d999c0b)
+ 云学院历史照片预览 | [ba24757](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ba24757)
+ 云学院历史记录预览 | [ae7f92f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ae7f92f)
+ 云学院抽片，目前缩影有问题 | [caec769](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/caec769)
+ 云学院新增产品查询，webscoket 退出初始化 | [6a4e62f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6a4e62f)
+ 云端环状图 | [0de3be5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0de3be5)
+ 从血预览组件 | [055ac5a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/055ac5a)
+ 优化下拉 | [d3efb06](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d3efb06)
+ 优化代码 | [db9981b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/db9981b)
+ 优化代码 | [54ab0a1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/54ab0a1)
+ 优化全部重修显示逻辑。重写下载 | [dbbdc17](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/dbbdc17)
+ 优化可借产品面板 | [b412a57](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b412a57)
+ 优化客片池 | [105aec9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/105aec9)
+ 优化客片池查询 | [2eed11e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2eed11e)
+ 优化花瓣 | [8db3db5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8db3db5)
+ 伙伴绩效数据可是话 | [dcbf1d5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/dcbf1d5)
+>>>>>>> d73a1ba217bd4837c9d779af246c9926340bd34d
  保存路径 | [1c4d95f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1c4d95f)
  测试版本 | [2abc39b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2abc39b)
  初步搭建代码 | [2a8bf9f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2a8bf9f)
+<<<<<<< HEAD
  从血预览组件 | [055ac5a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/055ac5a)
+=======
+ 删除console | [68b445b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/68b445b)
+ 图片与加载 | [bf6742e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bf6742e)
+ 图片预加载 | [9e9a128](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e9a128)
+ 基本完成 无限下拉 | [ac1deec](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ac1deec)
+ 增加markdowm编辑 | [72462d8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/72462d8)
+ 增加qetag | [b04bde8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b04bde8)
+ 增加websocket | [c98115c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c98115c)
+ 增加上传方式验证 | [fe30f52](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fe30f52)
+ 增加上传标记 | [5428235](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5428235)
+ 增加上传预览 | [5a72992](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5a72992)
+ 增加不种不把查询 | [4f53e0b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f53e0b)
+ 增加修图机构绩效权限 | [2e87fb3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2e87fb3)
+ 增加修图特效 | [313723b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/313723b)
+ 增加删除功能 | [a82d725](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a82d725)
+ 增加判断本地服务判断是否dev环境配置 | [c5307d4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c5307d4)
+ 增加压缩图片上传显示压缩图 | [4919852](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4919852)
+ 增加审核权限管理 | [9a76716](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a76716)
+ 增加布局ui | [08ef4cd](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08ef4cd)
+ 增加新年开屏动画 | [83f62d6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/83f62d6)
+ 增加显示ci | [8e2e4bb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8e2e4bb)
+ 增加更改修复说明 | [81564e6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/81564e6)
+ 增加权限 | [fb561ed](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fb561ed)
+ 增加权限 | [347ab05](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/347ab05)
+ 增加版本更新说明 | [eb7ce67](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eb7ce67)
+ 增加猎奇马显示组员报告 | [ee0fd31](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ee0fd31)
+ 增加花名 | [d68a9fa](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d68a9fa)
+ 增加跳转页面 | [79e4035](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79e4035)
+ 完成bi布局 | [57603cc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/57603cc)
+ 完成历史评价评分 | [778085e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/778085e)
+ 完成基本图表功能 | [f8adf98](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f8adf98)
+ 完成画笔大小切换显示隐藏涂层 | [08fab7e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08fab7e)
+ 完成部分 ui布局 | [8351ad5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8351ad5)
+ 完成部分bi | [e6ddb4e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e6ddb4e)
+ 审核退回增加修片师显示 | [04cc9ad](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/04cc9ad)
+ 客片池列表逻辑优化 | [92631c5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/92631c5)
+ 客片池和优秀客片列表逻辑优化 | [c784ed9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c784ed9)
+ 客片池增加特效显示 | [538fc1a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/538fc1a)
+ 客片池新增订单查询 | [b21aa4b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b21aa4b)
+ 客片池无限下拉 | [ba066bd](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ba066bd)
+ 开启服务器 | [c2a46b9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c2a46b9)
+>>>>>>> d73a1ba217bd4837c9d779af246c9926340bd34d
  打乱标签顺序 | [4b569c7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4b569c7)
  更改标签显示方式 | [d76d98c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d76d98c)
  更改问题标签传参，从name更改为id | [d378c14](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d378c14)
@@ -27,6 +101,25 @@
  完成历史评价评分 | [778085e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/778085e)
  新增参考图 | [dbb1b29](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/dbb1b29)
  新增更新修改与滚动加载 | [1db2561](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1db2561)
+<<<<<<< HEAD
+=======
+ 新增更新说明 | [0da7f7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0da7f7c)
+ ] | 新增个人绩效数据数据接入 | [c7196d9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c7196d9)
+ test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
+ 个人中心组长新增云学院报告页面 | 个人中心组长新增云学院报告页面 | [78f7109](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/78f7109)
+ 完成云学院柱状图联调整 | 完成云学院柱转图联调 | [ffd8ab6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ffd8ab6)
+ 退单修片，退单审核显示最新的退单照片 | [d21a32d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d21a32d)
+ 客片池新增产品选择多选 | 客片池新增产品多选，新增修图标准多选 | [7aa8d9c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7aa8d9c)
+ 新增照片版本 | [30e0531](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/30e0531)
+ 新增照片类型判断 | [07af4c5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/07af4c5)
+ 新增照片缓存 | [206ddf1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/206ddf1)
+ 新增版本说明 | [d52abde](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d52abde)
+ 新增直接审核按钮显示权限 | [ee806b4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ee806b4)
+ 新增窗口大小变更自动处理可是 | [1b5f070](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1b5f070)
+ 新增缓存开关 | [7a285fc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7a285fc)
+ 新增缓存队列 | [26e1ed6](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/26e1ed6)
+ 新增获取值班主管信息 | [e353130](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e353130)
+>>>>>>> d73a1ba217bd4837c9d779af246c9926340bd34d
  新增评分项目 | [8bcbc95](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8bcbc95)
  新增问题标签 | [2e1ac88](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2e1ac88)
  修图记录增加门店退单和云学院标记 | [f3c72dc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f3c72dc)
@@ -137,6 +230,7 @@
  增加websocket | [c98115c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c98115c)
  照片版本显示利奇马 | [292f122](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/292f122)
  直接审核成功，提示绑定成功 | [709a044](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/709a044)
+<<<<<<< HEAD
  直接审核功能 | [19689bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/19689bc)
  值班主管 | [72300dc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/72300dc)
  值班主管配置页面进入 显示配置 | [eddb660](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eddb660)
@@ -157,6 +251,23 @@
  webSocket | [7d7b973](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7d7b973)
  更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
  test | test | [e265821](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e265821)
+=======
+ 看片完成才显示最新修的 | [b254bbe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b254bbe)
+ 看片评价和伙伴绩效修改 | [f86fccb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f86fccb)
+ 组员修图记录新增云学院评价 | [1c4bb18](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1c4bb18)
+ 组员审核报告增加利奇马 | [8363a00](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8363a00)
+ 联调审核，增加修图标准icon | [cfc3f1e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cfc3f1e)
+ 获取队列默认值，防止网络错误 | [c4ef67f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c4ef67f)
+ 退出查看是否有订单 | [95b80b3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/95b80b3)
+ 更改地址 | 更改ui | [9e160b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e160b1)
+ 门店退回标记云端查看及接口联调 | 门店退回标记云端查看及接口联调 | [af69b75](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/af69b75)
+ 重写下载管理器 | [8cbbc8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8cbbc8f)
+ 重写自动上传逻辑 | [0342309](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0342309)
+ 重建webscoket | [7990034](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7990034)
+ 重构下载管理 | [61878b1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61878b1)
+ 门店退回标记云端查看UI调整 | [9270f93](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9270f93)
+ 验证照片后最名字，增加产品配置，新增模版照片格式选项 | [73b95b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/73b95b8)
+>>>>>>> d73a1ba217bd4837c9d779af246c9926340bd34d
 
 
 ### 🎨 代码样式
@@ -175,12 +286,19 @@
  默认不启动播放，不开启音乐 | [8eec25d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8eec25d)
  默认值处理 | [0aa4c73](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0aa4c73)
  前端项目规范 | [08abce1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08abce1)
+<<<<<<< HEAD
  去除测试样式文字 | [ffaccc0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ffaccc0)
  去除自动上传扩展功能 | [09f8234](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/09f8234)
+=======
+>>>>>>> d73a1ba217bd4837c9d779af246c9926340bd34d
  去除console | [72fb1ff](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/72fb1ff)
  去除console | [de61c4e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/de61c4e)
  去除console | [e867487](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e867487)
  去除console | [3399ad4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3399ad4)
+<<<<<<< HEAD
+=======
+ 去除console.log | [eae5792](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eae5792)
+>>>>>>> d73a1ba217bd4837c9d779af246c9926340bd34d
  去除console.log | [e749ff5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e749ff5)
  去除console.log | [80a214e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/80a214e)
  去除console.log | [eae5792](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eae5792)
@@ -193,6 +311,7 @@
  样式变更 | [185154d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/185154d)
  样式更改 | [97b40bc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/97b40bc)
  样式更改、 | [eba88ca](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eba88ca)
+<<<<<<< HEAD
  样式优化 | [68f8bc8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/68f8bc8)
  优化版本更新版本 | [718b176](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/718b176)
  优化代码格式 | [4f300cf](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f300cf)
@@ -205,6 +324,15 @@
  增加文件夹icon | [421c2c7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/421c2c7)
  css样式搭建 | [48bab17](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/48bab17)
  ' | 优化样式 | [0fad9a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0fad9a5)
+=======
+ ' | 优化样式 | [0fad9a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0fad9a5)
+ 格式化代码 | [e2ab9b0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2ab9b0)
+ 格式化代码 | [21235f2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/21235f2)
+ 格式化代码 | [d71a32c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d71a32c)
+ 滚动条样式优化，流量看板样式优化 | [6c61941](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c61941)
+ 默认不启动播放，不开启音乐 | [8eec25d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8eec25d)
+ 默认值处理 | [0aa4c73](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0aa4c73)
+>>>>>>> d73a1ba217bd4837c9d779af246c9926340bd34d
 
 
 ### 🐛 Bug 修复

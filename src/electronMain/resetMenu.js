@@ -17,6 +17,10 @@ const template = [{
     accelerator: 'CmdOrCtrl+A',
     role: 'selectAll'
   }, {
+    label: '剪切',
+    accelerator: 'CmdOrCtrl+X',
+    role: 'cut'
+  }, {
     label: '重新加载',
     accelerator: '',
     click: function (item, focusedWindow) {
