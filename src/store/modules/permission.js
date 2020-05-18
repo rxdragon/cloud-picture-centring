@@ -105,6 +105,25 @@ const actions = {
         })
       }
       newRolesArr = [...new Set(newRolesArr)]
+      // 开发增加新增版本路由
+      const developIds = [605673, 609061, 613495, 612593, 607924, 605268]
+      if (developIds.includes(store.getters.staffId)) {
+        lastBaseRoutes[0].children = [
+          {
+            path: 'update-notes-list',
+            name: 'updateNotesList',
+            component: () => import('@/views/update-notes/update-notes-list.vue'),
+            meta: { title: '关于', icon: '' }
+          },
+          {
+            path: 'edit-update-notes',
+            name: 'editUpdateNotes',
+            component: () => import('@/views/update-notes/edit-update-notes.vue'),
+            meta: { title: '新增版本', icon: '' }
+          }
+        ]
+      }
+      
       accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
