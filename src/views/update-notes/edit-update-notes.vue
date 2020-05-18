@@ -4,9 +4,9 @@
       <h3>新增更新</h3>
     </div>
     <el-form ref="versionform" :model="versionForm" :rules="rules" label-width="80px">
-      <el-form-item label="版本名称" prop="num">
+      <el-form-item label="版本名称" prop="id">
         <el-select
-          v-model="versionForm.num"
+          v-model="versionForm.id"
           allow-create
           filterable
           placeholder="请输入版本名称"
@@ -16,7 +16,7 @@
             v-for="versionItem in allVersionNum"
             :key="versionItem.id"
             :label="versionItem.version_num"
-            :value="versionItem.version_num">
+            :value="versionItem.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -52,14 +52,14 @@ export default {
     return {
       rules: {
         time: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        num: [{ required: true, message: '请输入版本名称', trigger: 'blur' }]
+        id: [{ required: true, message: '请输入版本名称', trigger: 'change' }]
       },
       editorOptions: defaultOptions,
       editor: null,
       versionForm: {
         num: '',
         time: '',
-        id: 0
+        id: ''
       },
       allVersionNum: [],
       loading: false
@@ -97,7 +97,7 @@ export default {
           params.id = this.versionForm.id
           await Version.updateVersionInfo(params)
           this.$newMessage.success('修改成功')
-          this.editor.setHtml('')
+          this.setEmpty()
         } else {
           await Version.addVersionInfo(params)
           this.$newMessage.success('添加成功')
@@ -116,10 +116,10 @@ export default {
      */
     async changeVersion (value) {
       try {
-        const selectVersion = this.allVersionNum.find(item => item.version_num === this.versionForm.num)
+        const selectVersion = this.allVersionNum.find(item => item.id === this.versionForm.id)
         if (selectVersion) {
           this.versionForm.time = _.get(selectVersion, 'version_time') || ''
-          this.versionForm.id = _.get(selectVersion, 'id') || 0
+          this.versionForm.num = _.get(selectVersion, 'version_num') || ''
           this.loading = true
           const params = {
             versionNum: this.versionForm.num,
@@ -131,13 +131,20 @@ export default {
           this.editor.setHtml(versioncontent)
         } else {
           this.versionForm.time = ''
-          this.versionForm.id = 0
+          this.versionForm.num = ''
         }
       } catch (error) {
         console.error(error)
       } finally {
         this.loading = false
       }
+    },
+    /**
+     * @description 清空编辑器
+     */
+    setEmpty () {
+      this.$refs['versionform'].resetFields()
+      this.editor.setHtml('')
     },
     /**
      * @description 模版数据
@@ -201,18 +208,3 @@ export default {
 }
 </style>
 
-<style lang="less">
-.test-class {
-  .mark-new {
-    color: #3bbc7f;
-  }
-
-  .mark-opt {
-    color: #ff8f00;
-  }
-
-  .mark-fix {
-    color: #ff3974;
-  }
-}
-</style>
