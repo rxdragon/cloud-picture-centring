@@ -10,6 +10,9 @@
       v-bind="$attrs"
       v-on="$listeners">
       <div class="issue-main">
+        <div class="issue-box">
+          <div class="issues-class">摄影&化妆备注：{{ }}</div>
+        </div>
         <div class="issue-box" v-for="(issueClass, issueKey) in issueData" :key="issueKey">
           <div class="issues-class">{{ issueKey | filterName }}</div>
           <el-tooltip v-for="issueItem in issueClass" :key="issueItem.key" effect="dark" :content="issueItem.description" placement="top-start">
@@ -22,6 +25,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
+        <span @click="submitData" class="no-issue-btn">没有问题</span>
         <el-button type="primary" @click="submitData" :loading="loading">提 交</el-button>
       </span>
     </el-dialog>
@@ -85,6 +89,20 @@ export default {
 
   & /deep/ .el-dialog__footer {
     text-align: center;
+
+    .dialog-footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+
+      .no-issue-btn {
+        margin-right: 20px;
+        font-size: 15px;
+        color: #aaa;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 
   .issue-main {

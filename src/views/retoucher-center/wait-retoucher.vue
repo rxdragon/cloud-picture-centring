@@ -94,6 +94,32 @@
               <div class="info-icon iconmap-money-icon" />
             </div>
           </div>
+          <!-- 今日负收益 -->
+          <div class="today-info">
+            <div class="box-left">
+              <div class="title">今日负收益</div>
+              <div class="data-info">
+                <div class="num">
+                  <div class="loss-num">
+                    <span class="loss-title">惩罚海草：</span>
+                    <span class="pink-color loss-value">
+                      <count-to :end-value="quotaInfo.todayFinishPhotoNum" />颗
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">惩罚收益：</span>
+                    <span class="pink-color loss-value">
+                      <span>¥</span>
+                      <count-to show-point :end-value="quotaInfo.todayFinishPhotoNum" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="box-right">
+              <div class="info-icon iconmap-photo-amount-icon" />
+            </div>
+          </div>
         </div>
         <!-- 订单列表 -->
         <div class="order-list">
@@ -338,7 +364,7 @@ export default {
   .today-info {
     display: flex;
     flex-wrap: wrap;
-    width: 32%;
+    width: 24%;
     padding: 18px 21px 12px 24px;
     background-color: #fff;
     border-radius: 16px;
@@ -359,7 +385,8 @@ export default {
         align-items: center;
 
         .num {
-          margin-right: 24px;
+          margin-right: 15px;
+          white-space: nowrap;
 
           .actual-num {
             font-size: 34px;
@@ -383,6 +410,10 @@ export default {
             color: @moneyColor;
           }
 
+          .pink-color {
+            color: @pink;
+          }
+
           .symbol {
             margin-right: 2px;
             font-size: 20px;
@@ -397,6 +428,17 @@ export default {
         .no-income {
           .money-color {
             color: #909399 !important;
+          }
+        }
+
+        .loss-num {
+          .loss-title {
+            font-size: 13px;
+            color: #909399;
+          }
+
+          .loss-value {
+            font-size: 13px;
           }
         }
 

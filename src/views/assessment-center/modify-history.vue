@@ -11,7 +11,7 @@
       </div>
       <div class="stream-search search-item">
         <span>流水号</span>
-        <el-input v-model="streamNum" placeholder="请输入流水号"></el-input>
+        <el-input clearable v-model="streamNum" placeholder="请输入流水号"></el-input>
       </div>
       <div class="staff-search search-item">
         <span>修图师</span>
@@ -25,14 +25,14 @@
     <div class="module-panel">
       <div>
         <template>
-        <el-table :data="[]" style="width: 100%;">
-          <el-table-column prop="date" label="操作时间" width="180" />
-          <el-table-column prop="name" label="前次评分" />
-          <el-table-column prop="name" label="更改后评分" />
-          <el-table-column prop="name" label="操作人" />
-          <el-table-column prop="name" label="流水号" width="180" />
-          <el-table-column prop="name" label="修图师" />
-          <el-table-column prop="name" label="修图主管" />
+        <el-table :data="historyList" style="width: 100%;">
+          <el-table-column prop="operate_time" label="操作时间" width="180" />
+          <el-table-column prop="last_score" label="前次评分" />
+          <el-table-column prop="after_score" label="更改后评分" />
+          <el-table-column prop="take_staff" label="操作人" />
+          <el-table-column prop="stream_num" label="流水号" width="180" />
+          <el-table-column prop="retoucher_name" label="修图师" />
+          <el-table-column prop="retoucher_leader" label="修图主管" />
         </el-table>
       </template>
       </div>
@@ -55,7 +55,7 @@ import DatePicker from '@/components/DatePicker'
 import StaffSelect from '@SelectBox/StaffSelect'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
-// import * as AssessmentCenter from '@/api/assessmentCenter'
+import { getUpdateHistoryLog } from '@/api/assessmentCenter'
 
 export default {
   name: 'ModifyHistory',
@@ -64,7 +64,6 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
-      searchTimeSpan: null, // 查询时间
       streamNum: '', // 流水号
       staffIds: [], // 修图师 id
       historyList: [], // 修改记录数据列表
@@ -102,17 +101,15 @@ export default {
       const req = {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1),
-        streamNum: this.streamNum,
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (this.staffIds.length) {
-        req.retoucherIds = this.staffIds.map(item => Number(item))
-      }
+      this.streamNum && (req.streamNum = this.streamNum)
+      this.staffIds.length && (req.retoucherId = this.staffIds.map(item => Number(item)))
       return req
     },
     /**
-     * @description 获取历史抽片数据
+     * @description 获取评分修改列表
      * @param {*} page
      */
     async getSearchHistory (page) {
@@ -120,11 +117,10 @@ export default {
         this.pager.page = page || this.pager.page
         const req = this.getSearchParams()
         if (!req) return false
-        this.searchTimeSpan = this.timeSpan
         this.$store.dispatch('setting/showLoading', this.routeName)
-        // const data = await AssessmentCenter.getModifyHistory(req)
-        this.historyList = []
-        this.pager.total = 0
+        const data = await getUpdateHistoryLog(req)
+        this.historyList = data.list
+        this.pager.total = data.total
       } catch (error) {
         console.error(error)
       } finally {

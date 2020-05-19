@@ -8,7 +8,7 @@
       placeholder="请选择修图等级"
       v-on="$listeners"
     >
-      <el-option v-if="!importModel" label="全部" :value="0" />
+      <el-option v-if="!showAllOption" label="全部" :value="0" />
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -25,7 +25,7 @@
 export default {
   name: 'RetouchRankSelect',
   props: {
-    importModel: { type: Boolean }
+    showAllOption: { type: Boolean } // 是否显示全部选项
   },
   data () {
     return {

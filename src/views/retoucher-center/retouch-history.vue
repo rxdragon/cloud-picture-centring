@@ -32,13 +32,8 @@
             {{ scope.row.receipt_at | toTimeSpan }}
           </template>
         </el-table-column>
-        <el-table-column label="审核通过时间" width="150">
-          <template slot-scope="scope">
-            {{ scope.row.pass_at | toTimeSpan }}
-          </template>
-        </el-table-column>
         <el-table-column prop="retouchAllTime" label="修图总时长" />
-        <el-table-column prop="storeReturnNum" label="退单张数" width="60" />
+        <el-table-column prop="storeReturnNum" label="退单张数" width="80" />
         <el-table-column prop="lekimaCount" label="利奇马" />
         <el-table-column prop="exp" label="海草值">
           <template slot-scope="scope">
@@ -58,6 +53,25 @@
               </el-table>
               <span slot="reference">{{ scope.row.exp }}</span>
             </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="收益">
+          <template slot-scope="scope">
+            <el-popover
+              placement="right"
+              popper-class="income-list"
+              trigger="hover"
+            >
+              <p>修图收益：{{ scope.row.exp }}</p>
+              <p>修图收益：{{ scope.row.exp }}</p>
+              <p>修图收益：{{ scope.row.exp }}</p>
+              <span slot="reference">{{ scope.row.exp }}</span>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="质量问题/非质量问题（张）" width="200">
+          <template slot-scope="scope">
+            {{ scope.row.storeReturnNum }} / {{ scope.row.storeReturnNum }}
           </template>
         </el-table-column>
         <el-table-column prop="goodEvaluate" label="门店评价">
@@ -259,6 +273,14 @@ export default {
         display: block;
       }
     }
+  }
+}
+
+.income-list {
+  p {
+    font-size: 13px;
+    color: #909399;
+    text-align: center;
   }
 }
 </style>

@@ -2,15 +2,16 @@
   <div class="retouch-select-box">
     <div class="search-item">
       <span>修图等级</span>
-      <retouch-rank-select v-model="listParams.retouchRank" import-model />
+      <retouch-rank-select v-model="listParams.retouchRank" showAllOption />
     </div>
-    <div class="search-item">
+    <div class="search-item plant-search">
       <span>海草值</span>
-      <el-input v-model="listParams.retouchRank" placeholder="根据修图等级自动调整" />
+      <el-input v-model="listParams.plantValue" placeholder="根据修图等级自动调整" min=0 type="number"/>
+      <p class="plant-tip" v-show="showPlantTip">账号当前海草值为{{ originPlantNum }}</p>
     </div>
     <div class="search-item">
       <span>修图身份</span>
-      <Retouch-kind-select v-model="listParams.retouchIdentity" />
+      <retouch-kind-select v-model="listParams.retouchIdentity" placeholder="请选择修图身份"/>
     </div>
     <div class="search-item">
       <span>修图类别</span>
@@ -42,7 +43,14 @@ export default {
       },{
         rank: 2,
         plantNum: 200
-      }]
+      }],
+      originPlantNum: 200
+    }
+  },
+  computed: {
+    // 初始海草值是否显示
+    showPlantTip () {
+      return this.originPlantNum !== Number(this.listParams.plantValue)
     }
   },
   watch: {
@@ -69,6 +77,14 @@ export default {
 
     .el-input {
       width: 194px;
+    }
+  }
+
+  .plant-search {
+    .plant-tip {
+      padding: 10px 5px;
+      font-size: 13px;
+      color: red;
     }
   }
 }

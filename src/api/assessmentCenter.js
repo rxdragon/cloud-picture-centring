@@ -237,12 +237,23 @@ export function getCloudProblemReportByGroup (params) {
  * @description 获取修改分数历史记录
  * @param {*} params
  */
-export function getModifyHistory (params) {
+export function getUpdateHistoryLog (params) {
   return axios({
-    url: '/project_cloud/checkPool/getModifyHistory',
+    url: '/project_cloud/checkPool/getUpdateHistoryLog',
     method: 'POST',
     data: params
   }).then(msg => {
-    return msg
+    const UpdateList = msg.list.map(listItem => {
+      return {
+        ...listItem,
+        retoucher_name: _.get(listItem, 'retoucher.name') || '-',
+        retoucher_leader: _.get(listItem, 'retoucher.retoucher_leader.nickname') || _.get(listItem, 'retoucher.retoucher_leader.name') || '-',
+        take_staff: listItem.take_staff.name || '-'
+      }
+    })
+    return {
+      list: UpdateList,
+      total: msg.total
+    }
   })
 }

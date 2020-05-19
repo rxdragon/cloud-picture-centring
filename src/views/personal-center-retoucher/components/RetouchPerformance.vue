@@ -42,7 +42,7 @@
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.overNum }}</router-link>
           </template>
         </el-table-column>
-        <el-table-column label="利奇马单量/张数" min-width="140">
+        <el-table-column label="质量问题单量/张数" min-width="140">
           <template slot-scope="scope">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.lekimaCount }}</router-link>
           </template>
@@ -69,7 +69,24 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="exp" label="获得海草" min-width="110" />
+        <el-table-column label="获得海草" min-width="140">
+         <template slot-scope="scope">
+            <div class="income-box">
+              <span class="span-row">
+                <span class="span-title">修图海草：</span>
+                {{ scope.row.retouchIncomeInfo.getIncome }}
+              </span>
+              <span class="span-row punish-plant">
+                <span class="span-title">惩罚海草：</span>
+                {{ 10000 }}
+              </span>
+              <span class="span-row">
+                <span class="span-title">实获海草：</span>
+                {{ scope.row.retouchIncomeInfo.actualIncome }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="评分（平均值）" min-width="150" fixed="right">
           <template slot-scope="scope">
             <div class="grade-box">
@@ -170,7 +187,6 @@ export default {
     .income-box {
       .span-row {
         display: flex;
-        justify-content: space-between;
 
         .span-title {
           display: inline-block;
@@ -181,6 +197,10 @@ export default {
         .nps-grade {
           width: 90px;
         }
+      }
+
+      .punish-plant {
+        color: #d9001b;
       }
     }
 
