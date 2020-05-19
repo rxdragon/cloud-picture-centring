@@ -93,12 +93,13 @@ export default {
           versionTime: parseTime(this.versionForm.time),
           info: this.editor.getHtml()
         }
-        if (this.versionForm.id) {
+        if (this.versionForm.num) {
           params.id = this.versionForm.id
           await Version.updateVersionInfo(params)
           this.$newMessage.success('修改成功')
           this.setEmpty()
         } else {
+          params.versionNum = this.versionForm.id
           await Version.addVersionInfo(params)
           this.$newMessage.success('添加成功')
           this.$router.push({
