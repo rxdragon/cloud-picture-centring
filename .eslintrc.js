@@ -21,6 +21,7 @@ module.exports = {
     "node": true,
     "commonjs": true,
     "es6": true,
+    "jquery":true
   },
   // 别人可以直接使用你配置好的ESLint
   "root": true,
