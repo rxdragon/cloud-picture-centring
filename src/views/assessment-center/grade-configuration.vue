@@ -68,7 +68,7 @@ export default {
   components: { IssueClass },
   provide () {
     return {
-      weight: this.weightObject
+      weightProvide: this.weightObject
     }
   },
   data () {
