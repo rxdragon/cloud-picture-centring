@@ -32,7 +32,7 @@
       </div>
     </div>
     <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
-      <GradeBox :photo-info="photoItem" />
+      <GradeBox :photo-info="photoItem" @updateList="getSearchHistory" />
     </div>
     <div v-if="!photoList.length" class="module-panel no-data">暂无数据</div>
     <div class="page-box">

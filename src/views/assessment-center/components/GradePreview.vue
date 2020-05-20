@@ -762,7 +762,7 @@ export default {
   .photoBox {
     position: relative;
     display: flex;
-    height: calc(100% - 42px);
+    height: calc(100% - 40px);
 
     .photo-tool {
       position: relative;

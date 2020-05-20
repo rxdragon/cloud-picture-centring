@@ -3,7 +3,11 @@
     <div class="photo-panel">
       <div class="panel-title">
         <span>照片评分</span>
-        <span class="score-box">总分：{{ photoInfoData.score }}</span>
+        <el-tag v-if="photoInfoData.isReevaluatePhoto" class="grade-again-tag" type="danger" size="medium">已重评</el-tag>
+        <div class="score-box">
+          <el-button size="mini" type="primary" @click="afreshGrade">重新评分</el-button>
+          <span>总分：{{ photoInfoData.score }}</span>
+        </div>
       </div>
       <photo-list need-preload :photo-data="photoVersionList" showOrderInfo :order-info="photoInfoData" />
     </div>
@@ -43,6 +47,10 @@
             <el-tag size="medium">瘦脸幅度：{{ photoInfoData.streamInfo.requireLabel.face | toLabelName }}</el-tag>
             <el-tag v-if="photoInfoData.streamInfo.requireLabel.pimples" size="medium">祛痣</el-tag>
           </div>
+          <div class="grade-staff panel-row">
+            <span class="order-info"><span class="order-info-title">评分人：</span>{{ photoInfoData.takeInfo.gradeStaff }}</span>
+            <span class="order-info" v-if="photoInfoData.isReevaluatePhoto"><span class="order-info-title">复评人：</span>{{ photoInfoData.takeInfo.reevaluate }}</span>
+          </div>
           <div class="retouch-remark panel-row">
             <div class="remark-title">修图备注：</div>
             <div class="remark-content">{{ photoInfoData.streamInfo.retouchRemark }}</div>
@@ -50,22 +58,33 @@
         </div>
       </div>
     </div>
+    <grade-preview
+      v-if="gradeInfo && showGradePreview"
+      :photo-version="showPhotoVersion"
+      @submit="submitData"
+      ref="grade-preview"
+      :show.sync="showGradePreview" :info="gradeInfo" />
   </div>
 </template>
 
 <script>
 import PhotoList from '@/components/PhotoList'
+import GradePreview from '../GradePreview.vue'
+import * as AssessmentCenter from '@/api/assessmentCenter.js'
 
 export default {
   name: 'GradeBox',
-  components: { PhotoList },
+  components: { PhotoList, GradePreview },
   props: {
     photoInfo: { type: Object, default: () => ({}) } // 照片数据
   },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      photoVersionList: []
+      photoVersionList: [],
+      gradeInfo: null,
+      showGradePreview: false, // 是否显示大概概览
+      showPhotoVersion: '' // 展示图片版本
     }
   },
   computed: {
@@ -77,12 +96,43 @@ export default {
     this.initPhotoList()
   },
   methods: {
+    /**
+     * @description 初始化照片信息
+     */
     initPhotoList () {
       const photoVersionInfo = this.photoInfo.photoInfo.photoVersion
       photoVersionInfo.forEach(versionItem => {
         versionItem.phototag = this.photoInfo.photoData.tags
       })
       this.photoVersionList = photoVersionInfo
+    },
+    /**
+     * @description 重新评分
+     */
+    async submitData (sendData) {
+      try {
+        const req = {
+          photoId: this.photoInfo.photo_id,
+          uuid: this.photoInfo._id,
+          tags: sendData.issuesLabelId,
+          picUrl: sendData.markPhotoImg
+        }
+        await AssessmentCenter.updateCommitHistory(req)
+        this.$newMessage.success('重新评价成功')
+        this.gradeInfo = null
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$emit('updateList')
+      }
+    },
+    /**
+     * @description 打开重新评价窗口
+     */
+    afreshGrade () {
+      this.showPhotoVersion = 'complete_photo'
+      this.gradeInfo = this.photoInfo
+      this.showGradePreview = true
     }
   }
 }
@@ -97,15 +147,33 @@ export default {
     border-bottom: 1px solid @borderColor;
 
     .panel-title {
+      display: flex;
+      align-items: center;
       margin-bottom: 20px;
 
       .score-box {
-        float: right;
+        margin-left: auto;
+
+        .el-button {
+          margin-right: 12px;
+        }
+      }
+
+      .grade-again-tag {
+        margin-left: 12px;
       }
     }
 
     .photo-box {
       margin-bottom: 20px;
+    }
+
+    .photo-main {
+      display: flex;
+
+      .photo-list {
+        flex-shrink: 0;
+      }
     }
   }
 
@@ -156,6 +224,12 @@ export default {
       .base-info {
         .order-info {
           display: inline-block;
+          margin-right: 32px;
+        }
+      }
+
+      .grade-staff {
+        .order-info {
           margin-right: 32px;
         }
       }

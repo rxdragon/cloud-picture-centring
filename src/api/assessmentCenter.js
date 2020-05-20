@@ -129,7 +129,11 @@ export function getSearchHistory (params) {
       item.photoInfo.photoVersion.forEach(versionItem => {
         versionItem.commitInfo = item.commitInfo
       })
-      
+      item.takeInfo = {
+        gradeStaff: _.get(item, 'takeStaffInfo.name') || _.get(item, 'takeStaffInfo.real_name') || '-',
+        reevaluate: _.get(item, 'reviewStaffInfo.name') || _.get(item, 'reviewStaffInfo.real_name') || '-'
+      }
+      item.isReevaluatePhoto = Boolean(item.reviewStaffInfo)
     })
     return {
       list: data,
@@ -230,5 +234,20 @@ export function getCloudProblemReportByGroup (params) {
     data: params
   }).then(msg => {
     return msg
+  })
+}
+
+/**
+ * @description 重新评价愿学院抽片
+ * @method PUT
+ * @returns {Boolean} 
+ * @author cf 2020/05/20
+ * @version @version 2.6.0
+ */
+export function updateCommitHistory (params) {
+  return axios({
+    url: '/project_cloud/checkPool/updateCommitHistory',
+    method: 'PUT',
+    data: params
   })
 }
