@@ -102,9 +102,7 @@ export default {
           params.versionNum = this.versionForm.id
           await Version.addVersionInfo(params)
           this.$newMessage.success('添加成功')
-          this.$router.push({
-            path: '/update-notes/update-notes-list'
-          })
+          this.setEmpty()
         }
       } catch (error) {
         console.error(error)
@@ -144,6 +142,7 @@ export default {
      * @description 清空编辑器
      */
     setEmpty () {
+      this.getAllVersionNum()
       this.$refs['versionform'].resetFields()
       this.editor.setHtml('')
     },
