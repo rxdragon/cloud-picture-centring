@@ -63,7 +63,7 @@
       />
     </div>
     <!-- 问题标签 -->
-    <issue-label :issue-data="issueData" :visible.sync="dialogVisible" @submit="submitOrder" />
+    <issue-label :issue-data="issueData" :notes="notes" :visible.sync="dialogVisible" @submit="submitOrder" />
     <!-- 预览 -->
     <preview-photo
       v-if="showPreview"
@@ -115,6 +115,7 @@ export default {
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
       issueData: {},
+      notes: {}, // 化妆摄影备注
       realAid: '',
       preIndexPhoto: {},
       dialogVisible: false,
@@ -200,6 +201,7 @@ export default {
         this.needPunchLabel = data.needPunchLabel
         LogStream.retoucherSee(+this.realAid)
         this.initPreviewPhoto()
+        this.getPhotoProblemTagSets()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -303,7 +305,6 @@ export default {
       try {
         this.canUploadPhoto()
         if (this.needPunchLabel) {
-          this.getPhotoProblemTagSets()
           this.dialogVisible = true
         } else {
           this.submitOrder()
@@ -343,6 +344,8 @@ export default {
     async getPhotoProblemTagSets () {
       const res = await RetoucherCenter.getPhotoProblemTagSets()
       this.issueData = res
+      this.notes.dressNote = _.get(this.orderData,'baseData.order.note.dresserNote') || ''
+      this.notes.photographNote = _.get(this.orderData,'baseData.note.photography_note') || ''
     }
   }
 }

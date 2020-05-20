@@ -8,7 +8,7 @@
       <div class="search-item product-box">
         <span>修图标准</span>
         <product-linkage v-if="!baseEdit" v-model="productValue" />
-        <retouch-kind-select v-else v-model="retouchStandard" />
+        <retouch-kind-select v-else v-model="retouchStandard" placeholder="请选择修图标准"/>
       </div>
       <!-- 配置伙伴 -->
       <div class="search-item staff-panel">

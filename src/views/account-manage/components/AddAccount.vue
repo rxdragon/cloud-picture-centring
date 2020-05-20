@@ -28,7 +28,25 @@
         <div v-show="activeName === 'retouchCategory'" class="retouch-category-box">
           <el-alert title="提示：若非修图伙伴请勿配置可接产品" type="info" show-icon />
           <!-- 修图等级，海草值，修图身份，修图类别选择-->
-          <retouch-detail-select />
+          <div class="retouch-select-box">
+            <div class="search-item">
+              <span>修图等级</span>
+              <retouch-rank-select v-model="retouchRank" showAllOption />
+            </div>
+            <div class="search-item plant-search">
+              <span>海草值</span>
+              <el-input v-model="plantValue" placeholder="根据修图等级自动调整" min=0 type="number"/>
+              <p class="plant-tip" v-show="showPlantTip">账号当前海草值为{{ originPlantNum }}</p>
+            </div>
+            <div class="search-item">
+              <span>修图身份</span>
+              <retouch-kind-select v-model="retouchIdentity" placeholder="请选择修图身份"/>
+            </div>
+            <div class="search-item">
+              <span>修图类别</span>
+              <retouch-type-select v-model="retouchType" import-model />
+            </div>
+          </div>
           <div class="product-box search-item">
             <span>可接产品</span>
             <product-panel
@@ -66,14 +84,16 @@
 import ProductPanel from '@/components/ProductPanel'
 import Jurisdiction from '@/components/Jurisdiction'
 import RoleSelect from '@SelectBox/RoleSelect'
-import RetouchDetailSelect from './RetouchDetailSelect'
+import RetouchTypeSelect from '@SelectBox/RetouchTypeSelect'
+import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
+import RetouchRankSelect from '@SelectBox/RetouchRankSelect'
 
 import * as AccountManage from '@/api/accountManage.js'
 import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'AddAccount',
-  components: { ProductPanel, Jurisdiction, RoleSelect, RetouchDetailSelect },
+  components: { ProductPanel, Jurisdiction, RoleSelect, RetouchTypeSelect, RetouchKindSelect, RetouchRankSelect },
   props: {
     editData: {
       type: Object,
@@ -87,7 +107,6 @@ export default {
       routeName: this.$route.name,
       jobNumber: '', // 伙伴工号
       activeName: 'retouchCategory', // retouchCategory 修图类别 role 角色权限配置
-      retouchSelectType: '', // 修图列表选项
       roleValue: '', // 权限值
       toData: [], // 产品选中数据
       defaultCheckedKeys: [], // 默认选中产品
@@ -96,7 +115,13 @@ export default {
       roleList: [], // 权限列表
       staffPermission: [], // 用户个人权限
       rolePermissionArr: [], // 角色id
-      retouchClassProduct: [] // 修图类别的可接产品
+      retouchClassProduct: [], // 修图类别的可接产品
+      retouchRank: '', // 修图等级
+      plantValue: '', // 海草值
+      retouchIdentity: '', // 修图身份
+      retouchType: '', // 修图类别
+      originPlantNum: 0, // 初始海草值
+      allRetouchTypeExp: []
     }
   },
   computed: {
@@ -104,6 +129,10 @@ export default {
     isEdit () {
       const data = this.editData || {}
       return Object.keys(data).length
+    },
+    // 初始海草值是否显示
+    showPlantTip () {
+      return this.originPlantNum !== Number(this.plantValue)
     }
   },
   watch: {
@@ -117,7 +146,7 @@ export default {
       },
       immediate: true
     },
-    retouchSelectType: {
+    retouchType: {
       handler (value) {
         if (!value) {
           this.retouchClassProduct = []
@@ -126,6 +155,14 @@ export default {
         this.getRetoucherClassInfo(value)
       },
       immediate: true
+    },
+    retouchRank: {
+      handler (val) {
+        const selectedRank = this.options.find(rankItem => rankItem.rank === val)
+        if (selectedRank) {
+          this.plantValue = selectedRank.plantNum
+        }
+      }
     }
   },
   async created () {
@@ -133,11 +170,12 @@ export default {
       this.jobNumber = this.editData.id
       await this.getStaffInfo()
       this.roleValue = this.editData.role
-      this.retouchSelectType = this.editData.retoucher_class_id
+      this.retouchType = this.editData.retoucher_class_id
       this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getRoleInfo(this.roleValue),
-        this.getStaffPermission()
+        this.getStaffPermission(),
+        this.getAllLevelExp()
       ]).then(() => {
         this.resetPermission()
       }).catch(() => {
@@ -185,7 +223,7 @@ export default {
         this.$newMessage.warning('请填写工号')
         return false
       }
-      if (!this.retouchSelectType && !this.toData.length) {
+      if (!this.retouchType && !this.toData.length) {
         this.$newMessage.warning('请选择修图类别或产品')
         return false
       }
@@ -209,7 +247,7 @@ export default {
       const req = {
         staffNum: this.jobNumber,
         productIds: [],
-        retoucherClass: this.retouchSelectType,
+        retoucherClass: this.retouchType,
         roleId: this.roleValue,
         permissionIds: this.hasPermission
       }
@@ -261,7 +299,7 @@ export default {
       this.hasPermission = []
       this.rolePermissionArr = []
       this.staffPermission = []
-      this.retouchSelectType = ''
+      this.retouchType = ''
       this.roleValue = ''
     },
     /**
@@ -344,6 +382,13 @@ export default {
       this.staffPermission = []
       await this.getRoleInfo(this.roleValue)
       this.resetPermission()
+    },
+    /**
+     * @description 角色组变化
+     */
+    async getAllLevelExp () {
+      const data = await AccountManage.getAllLevelExp()
+      this.allRetouchTypeExp = data
     }
   }
 }
@@ -372,27 +417,6 @@ export default {
     }
   }
 
-  .retouch-category-box {
-    .retouch-select {
-      margin: 24px 0;
-    }
-
-    .product-box {
-      align-items: flex-start;
-
-      .product-panel {
-        width: 800px;
-      }
-    }
-
-    .button-box {
-      width: 856px;
-      padding-left: 68px;
-      margin-top: 24px;
-      text-align: left;
-    }
-  }
-
   .role-box {
     padding: 20px;
 
@@ -412,6 +436,45 @@ export default {
 
     .role-search {
       align-items: center;
+    }
+  }
+
+  .retouch-category-box {
+    .retouch-select-box {
+      .search-item {
+        margin: 24px 0;
+
+        span {
+          width: 56px;
+        }
+
+        .el-input {
+          width: 194px;
+        }
+      }
+
+      .plant-search {
+        .plant-tip {
+          padding: 10px 5px;
+          font-size: 13px;
+          color: red;
+        }
+      }
+    }
+
+    .product-box {
+      align-items: flex-start;
+
+      .product-panel {
+        width: 800px;
+      }
+    }
+
+    .button-box {
+      width: 856px;
+      padding-left: 68px;
+      margin-top: 24px;
+      text-align: left;
     }
   }
 

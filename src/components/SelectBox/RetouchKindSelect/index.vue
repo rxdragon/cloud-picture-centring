@@ -5,7 +5,6 @@
       filterable
       clearable
       :popper-append-to-body="false"
-      :placeholder="placeholder"
       v-on="$listeners"
     >
       <el-option v-if="allOptision" label="全部" :value="0" />
@@ -23,8 +22,7 @@
 export default {
   name: 'RetouchKindSelect',
   props: {
-    allOptision: { type: Boolean }, // 是否显示全部选项
-    placeholder: { type: String, default: '请选择修图标准' } // 默认placeholder
+    allOptision: { type: Boolean } // 是否显示全部选项
   },
   data () {
     return {

@@ -222,7 +222,19 @@ export function getRetoucherClassInfo (params) {
  */
 export function getAllRetouchRank () {
   return axios({
-    url: '/project_cloud/checkPool/getAllRetouchRank',
+    url: '/project_cloud/staff/getLevelList',
+    method: 'GET'
+  }).then(msg => {
+    return msg
+  })
+}
+
+/**
+ * @description 获取修图等级经验值
+ */
+export function getAllLevelExp () {
+  return axios({
+    url: '/project_cloud/staff/getAllLevelExp',
     method: 'GET'
   }).then(msg => {
     return msg

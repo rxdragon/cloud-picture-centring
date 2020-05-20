@@ -74,7 +74,7 @@
         <!-- 修图标准 -->
         <div class="retouch-type search-item">
           <span>修图标准</span>
-          <Retouch-kind-select v-model="retouchType" all-optision />
+          <Retouch-kind-select v-model="retouchType" all-optision placeholder="请选择修图标准"/>
         </div>
         <div class="button-box">
           <el-button type="primary" @click="getList(1)">查询</el-button>

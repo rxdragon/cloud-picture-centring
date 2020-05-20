@@ -11,7 +11,7 @@
       v-on="$listeners">
       <div class="issue-main">
         <div class="issue-box">
-          <div class="issues-class">摄影&化妆备注：{{ }}</div>
+          <div class="issues-class">摄影&化妆备注：{{ notes.photographNote || notes.dressNote ? notes.photographNote + ' ' + notes.dressNote : '暂无备注' }}</div>
         </div>
         <div class="issue-box" v-for="(issueClass, issueKey) in issueData" :key="issueKey">
           <div class="issues-class">{{ issueKey | filterName }}</div>
@@ -36,7 +36,8 @@
 export default {
   name: 'IssueLabel',
   props: {
-    issueData: { type: Object, default: () => ({}) }
+    issueData: { type: Object, default: () => ({}) },
+    notes: { type: Object, default: () => ({}) }
   },
   data () {
     return {

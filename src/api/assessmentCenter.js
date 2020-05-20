@@ -246,7 +246,7 @@ export function getUpdateHistoryLog (params) {
     const UpdateList = msg.list.map(listItem => {
       return {
         ...listItem,
-        retoucher_name: _.get(listItem, 'retoucher.name') || '-',
+        retoucher_name: _.get(listItem, 'retoucher.nickname') || _.get(listItem, 'retoucher.name') || '-',
         retoucher_leader: _.get(listItem, 'retoucher.retoucher_leader.nickname') || _.get(listItem, 'retoucher.retoucher_leader.name') || '-',
         take_staff: listItem.take_staff.name || '-'
       }

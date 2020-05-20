@@ -42,7 +42,7 @@
       <!-- 修图标准 -->
       <div class="search-item">
         <span>修图标准</span>
-        <retouch-kind-select v-model="retouchStandards" multiple />
+        <retouch-kind-select v-model="retouchStandards" multiple placeholder="请选择修图标准"/>
       </div>
       <div class="button-box search-item">
         <el-button type="primary" @click="getPhotoList(1)">查询</el-button>

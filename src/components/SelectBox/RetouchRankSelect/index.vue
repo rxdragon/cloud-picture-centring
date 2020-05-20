@@ -8,19 +8,19 @@
       placeholder="请选择修图等级"
       v-on="$listeners"
     >
-      <el-option v-if="!showAllOption" label="全部" :value="0" />
+      <el-option v-if="!showAllOption" label="全部" value="" />
       <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
+        v-for="(item, index) in options"
+        :key="index"
+        :label="item"
+        :value="item"
       />
     </el-select>
   </div>
 </template>
 
 <script>
-// import { getAllRetouchRank } from '@/api/accountManage.js'
+import { getAllRetouchRank } from '@/api/accountManage.js'
 
 export default {
   name: 'RetouchRankSelect',
@@ -29,13 +29,7 @@ export default {
   },
   data () {
     return {
-      options: [{
-        label: '修图助理',
-        value: 1
-      },{
-        label: '修图助理(2级)',
-        value: 2
-      }],
+      options: [],
       disableState: true
     }
   },
@@ -47,8 +41,8 @@ export default {
      * @description 获取全部修图等级
      */
     async getAllRetouchRankList () {
-      // const list = await getAllRetouchRank()
-      // this.options = list
+      const data = await getAllRetouchRank()
+      this.options = data
       this.disableState = false
     }
   }
