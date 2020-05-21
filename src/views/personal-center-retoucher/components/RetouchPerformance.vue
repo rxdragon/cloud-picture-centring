@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column label="质量问题单量/张数" min-width="140">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.lekimaCount }}</router-link>
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.QualityRework">{{ scope.row.streamNumForQuality + ' / ' + scope.row.photoNumForQuality }}</router-link>
           </template>
         </el-table-column>
         <el-table-column label="修图获得收益" min-width="150">
@@ -74,15 +74,15 @@
             <div class="income-box">
               <span class="span-row">
                 <span class="span-title">修图海草：</span>
-                {{ scope.row.retouchIncomeInfo.getIncome }}
+                {{ scope.row.exp.retouchExp }}
               </span>
               <span class="span-row punish-plant">
                 <span class="span-title">惩罚海草：</span>
-                {{ 10000 }}
+                {{ scope.row.exp.punishExp }}
               </span>
               <span class="span-row">
                 <span class="span-title">实获海草：</span>
-                {{ scope.row.retouchIncomeInfo.actualIncome }}
+                {{ scope.row.exp.rewordExp }}
               </span>
             </div>
           </template>

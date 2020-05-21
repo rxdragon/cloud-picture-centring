@@ -1,7 +1,7 @@
 <template>
   <div class="add-account">
     <div class="header">
-      <h3>{{ editData ? '编辑账号' : '新增账号' }}</h3>
+      <h3>{{ isEdit ? '编辑账号' : '新增账号' }}</h3>
       <el-button type="primary" plain @click="toBack">返回</el-button>
     </div>
     <el-alert title="提示：请先输入伙伴工号或伙伴姓名进行相关查询后才可配置权限" type="info" show-icon />
@@ -31,12 +31,12 @@
           <div class="retouch-select-box">
             <div class="search-item">
               <span>修图等级</span>
-              <retouch-rank-select v-model="retouchRank" showAllOption />
+              <retouch-rank-select v-model="retouchRank" showAllOption @rankchange="rankchange"/>
             </div>
             <div class="search-item plant-search">
               <span>海草值</span>
-              <el-input v-model="plantValue" placeholder="根据修图等级自动调整" min=0 type="number"/>
-              <p class="plant-tip" v-show="showPlantTip">账号当前海草值为{{ originPlantNum }}</p>
+              <el-input v-model="retouchExp" placeholder="根据修图等级自动调整"/>
+              <p class="plant-tip" v-show="showPlantTip">提示：账号当前海草值为{{ originExp }}</p>
             </div>
             <div class="search-item">
               <span>修图身份</span>
@@ -116,12 +116,13 @@ export default {
       staffPermission: [], // 用户个人权限
       rolePermissionArr: [], // 角色id
       retouchClassProduct: [], // 修图类别的可接产品
-      retouchRank: '', // 修图等级
-      plantValue: '', // 海草值
+      retouchRank: '', // 修图等级 默认为一级
+      retouchExp: 0, // 海草值
       retouchIdentity: '', // 修图身份
       retouchType: '', // 修图类别
-      originPlantNum: 0, // 初始海草值
-      allRetouchTypeExp: []
+      originExp: 0, // 初始海草值
+      allRetouchRankExp: [], // 所有等级海草值列表
+      allRetouchRank: {} // 所有修图师等级列表
     }
   },
   computed: {
@@ -132,7 +133,7 @@ export default {
     },
     // 初始海草值是否显示
     showPlantTip () {
-      return this.originPlantNum !== Number(this.plantValue)
+      return this.originExp !== parseFloat(this.retouchExp)
     }
   },
   watch: {
@@ -155,17 +156,11 @@ export default {
         this.getRetoucherClassInfo(value)
       },
       immediate: true
-    },
-    retouchRank: {
-      handler (val) {
-        const selectedRank = this.options.find(rankItem => rankItem.rank === val)
-        if (selectedRank) {
-          this.plantValue = selectedRank.plantNum
-        }
-      }
     }
   },
   async created () {
+    this.getAllLevelExp()
+    this.getAllRetouchRankList()
     if (this.isEdit) {
       this.jobNumber = this.editData.id
       await this.getStaffInfo()
@@ -174,8 +169,7 @@ export default {
       this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getRoleInfo(this.roleValue),
-        this.getStaffPermission(),
-        this.getAllLevelExp()
+        this.getStaffPermission()
       ]).then(() => {
         this.resetPermission()
       }).catch(() => {
@@ -249,7 +243,10 @@ export default {
         productIds: [],
         retoucherClass: this.retouchType,
         roleId: this.roleValue,
-        permissionIds: this.hasPermission
+        permissionIds: this.hasPermission,
+        level: Number(this.retouchRank),
+        identity: this.retouchIdentity,
+        exp: this.retouchExp
       }
       let productIds = []
       this.toData.forEach(listItem => {
@@ -290,6 +287,8 @@ export default {
       AccountManage.editStaff(req).then(() => {
         this.$newMessage.success('修改成功!')
         this.$emit('finished')
+      }).finally(() => {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       })
     },
     /**
@@ -301,6 +300,19 @@ export default {
       this.staffPermission = []
       this.retouchType = ''
       this.roleValue = ''
+      this.originExp = 0
+      this.retouchIdentity = 'blue'
+      this.retouchRank = '1'
+      this.retouchExp = 0
+    },
+    /**
+     * @description 等级改变联动设置海草值
+     */
+    rankchange (val) {
+      if (val) {
+        const expIndex = Number(val) - 1
+        this.retouchExp = this.allRetouchRankExp[expIndex]
+      }
     },
     /**
      * @description 查询伙伴
@@ -334,6 +346,10 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Staff.getStaffInfo(req)
         this.staffInfo = data
+        this.retouchIdentity = _.get(data, 'info.identity') || ''
+        this.retouchRank = String(_.get(data, 'info.level')) || ''
+        this.retouchExp = parseFloat(_.get(data, 'info.exp') || 0)
+        this.originExp = parseFloat(_.get(data, 'info.exp') || 0)
       } catch (error) {
         console.error(error)
       } finally {
@@ -384,11 +400,18 @@ export default {
       this.resetPermission()
     },
     /**
-     * @description 角色组变化
+     * @description 获取等级海草值
      */
     async getAllLevelExp () {
       const data = await AccountManage.getAllLevelExp()
-      this.allRetouchTypeExp = data
+      this.allRetouchRankExp = data
+    },
+    /**
+     * @description 获取全部修图等级
+     */
+    async getAllRetouchRankList () {
+      const data = await AccountManage.getAllRetouchRank()
+      this.allRetouchRank = data
     }
   }
 }

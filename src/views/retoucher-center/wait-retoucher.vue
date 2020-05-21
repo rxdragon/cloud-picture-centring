@@ -76,7 +76,7 @@
                 <div class="num money-num" :class="{ 'no-income': isNoIncome }">
                   <span class="symbol money-color">¥</span>
                   <span class="actual-num money-color">
-                    <count-to show-point :end-value="quotaInfo.todayIncome" />
+                    <count-to show-point :end-value="quotaInfo.todayRewordIncome" />
                   </span>
                 </div>
                 <div class="prop-icon-box">
@@ -103,14 +103,14 @@
                   <div class="loss-num">
                     <span class="loss-title">惩罚海草：</span>
                     <span class="pink-color loss-value">
-                      <count-to :end-value="quotaInfo.todayFinishPhotoNum" />颗
+                      <count-to :end-value="quotaInfo.punishExp" />颗
                     </span>
                   </div>
                   <div class="loss-num">
                     <span class="loss-title">惩罚收益：</span>
                     <span class="pink-color loss-value">
                       <span>¥</span>
-                      <count-to show-point :end-value="quotaInfo.todayFinishPhotoNum" />
+                      <count-to show-point :end-value="quotaInfo.punishIncome" />
                     </span>
                   </div>
                 </div>
@@ -172,7 +172,9 @@ export default {
       quotaInfo: { // 个人信息
         todayFinishPhotoNum: 0,
         todayExp: 0.00,
-        todayIncome: 0.00
+        todayRewordIncome: 0.00,
+        punishExp: 0,
+        punishIncome: 0.00
       },
       buffInfo: { // buff 信息
         expCard: 0, // 经验卡
@@ -411,7 +413,7 @@ export default {
           }
 
           .pink-color {
-            color: @pink;
+            color: @red;
           }
 
           .symbol {

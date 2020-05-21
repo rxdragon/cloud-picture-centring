@@ -182,6 +182,17 @@ export function getRetouchQuotaList (params) {
       listItem.goodEvaluate = _.get(listItem, 'store_evaluate_stream.store_evaluate') || ''
       listItem.retoucherNpsAvg = _.get(listItem, 'tags.values.retoucher_score') || '-'
       listItem.lekimaCount = _.get(listItem, 'tags.values.lichma_photo_num') || '-'
+      const retouchIncome = parseFloat(listItem.income) || 0
+      const rewordIncome = parseFloat(_.get(listItem, 'tags.values.reword')) || 0
+      const punishIncome = parseFloat(_.get(listItem, 'tags.values.punish')) || 0
+      listItem.income = {
+        retouchIncome: retouchIncome,
+        rewordIncome: rewordIncome,
+        punishIncome: punishIncome,
+        actualIncome: retouchIncome + rewordIncome - punishIncome
+      }
+      listItem.qualityNum = _.get(listItem, 'tags.values.qualityNum') || '-'
+      listItem.notQualityNum = _.get(listItem, 'tags.values.notQualityNum') || '-'
     })
     createData.list = msg.list
     return createData

@@ -7,13 +7,14 @@
       :popper-append-to-body="false"
       placeholder="请选择修图等级"
       v-on="$listeners"
+      @change="getChangeVal"
     >
       <el-option v-if="!showAllOption" label="全部" value="" />
       <el-option
-        v-for="(item, index) in options"
-        :key="index"
-        :label="item"
-        :value="item"
+        v-for="(rankValue, rankKey) in options"
+        :key="rankKey"
+        :label="rankValue"
+        :value="rankKey"
       />
     </el-select>
   </div>
@@ -29,7 +30,7 @@ export default {
   },
   data () {
     return {
-      options: [],
+      options: {},
       disableState: true
     }
   },
@@ -44,6 +45,12 @@ export default {
       const data = await getAllRetouchRank()
       this.options = data
       this.disableState = false
+    },
+    /**
+     * @description 值改变emit父组件
+     */
+    getChangeVal (val) {
+      this.$emit('rankchange', val)
     }
   }
 }
