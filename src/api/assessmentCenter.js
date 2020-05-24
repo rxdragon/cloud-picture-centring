@@ -126,14 +126,20 @@ export function getSearchHistory (params) {
       item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
       item.issueLabel = item.commitInfo.issueLabel
       item.score = item.commitInfo.score
-      item.photoInfo.photoVersion.forEach(versionItem => {
-        versionItem.commitInfo = item.commitInfo
-      })
-      item.takeInfo = {
-        gradeStaff: _.get(item, 'takeStaffInfo.name') || _.get(item, 'takeStaffInfo.real_name') || '-',
-        reevaluate: _.get(item, 'reviewStaffInfo.name') || _.get(item, 'reviewStaffInfo.real_name') || '-'
+      item.photoInfo.photoVersion.forEach(versionItem => versionItem.commitInfo = item.commitInfo)
+      // 是否复评
+      item.isReevaluatePhoto = Boolean(item.oldTakeStaffInfo)
+      // 评价人
+      let gradeStaff = _.get(item, 'takeStaffInfo.name') || _.get(item, 'takeStaffInfo.real_name') || '-'
+      if (item.isReevaluatePhoto) {
+        gradeStaff = _.get(item, 'oldTakeStaffInfo.name') || _.get(item, 'oldTakeStaffInfo.real_name') || '-'
       }
-      item.isReevaluatePhoto = Boolean(item.reviewStaffInfo)
+      // 复评人
+      const reevaluate = _.get(item, 'takeStaffInfo.name') || _.get(item, 'takeStaffInfo.real_name') || '-'
+      item.takeInfo = {
+        gradeStaff,
+        reevaluate
+      }
     })
     return {
       list: data,
@@ -247,7 +253,7 @@ export function getCloudProblemReportByGroup (params) {
 export function updateCommitHistory (params) {
   return axios({
     url: '/project_cloud/checkPool/updateCommitHistory',
-    method: 'PUT',
+    method: 'POST',
     data: params
   })
 }
