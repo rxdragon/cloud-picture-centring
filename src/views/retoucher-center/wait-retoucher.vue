@@ -117,7 +117,7 @@
               </div>
             </div>
             <div class="box-right">
-              <div class="info-icon iconmap-photo-amount-icon" />
+              <div class="info-icon iconmap-loss-income-icon" />
             </div>
           </div>
         </div>

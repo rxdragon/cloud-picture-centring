@@ -297,6 +297,7 @@ export default {
 
 .income-list {
   p {
+    padding: 5px 0;
     font-size: 13px;
     color: #909399;
     text-align: center;

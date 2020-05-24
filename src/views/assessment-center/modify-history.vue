@@ -26,7 +26,7 @@
       <div>
         <template>
         <el-table :data="historyList" style="width: 100%;">
-          <el-table-column prop="operate_time" label="操作时间" width="180" />
+          <el-table-column prop="created_at" label="操作时间" width="180" />
           <el-table-column prop="last_score" label="前次评分" />
           <el-table-column prop="after_score" label="更改后评分" />
           <el-table-column prop="take_staff" label="操作人" />

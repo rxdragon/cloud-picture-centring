@@ -1,11 +1,13 @@
 <template>
   <div class="login">
-    <iframe ref="login" class="login_iframe" :src="ssoUrl" />
+    <iframe ref="login" id="login" class="login_iframe" :src="ssoUrl" />
   </div>
 </template>
 
 <script>
 import { Base64 } from 'js-base64'
+import { MessageBox } from 'element-ui'
+import * as User from '@/api/user.js'
 export default {
   name: 'Login',
   props: {},
@@ -50,13 +52,8 @@ export default {
     async tokenLogin (token) {
       try {
         await this.$store.dispatch('user/login', token)
-        const info = await this.$store.dispatch('user/getUserInfo')
-        if (!info.name) {
-          this.$router.push({ path: '/401' })
-        } else {
-          this.loginFinish = true
-          this.judgeJump()
-        }
+        this.loginFinish = true
+        this.judgeJump()
       } catch (error) {
         this.$router.push({ path: '/401' })
       }
@@ -74,11 +71,31 @@ export default {
     /**
      * @description 判断是否跳转
      */
-    judgeJump () {
+    async judgeJump () {
       if (this.animationFinish && this.loginFinish) {
-        window.removeEventListener('message', this.onMessage)
-        this.$router.push({ path: '/' })
+        const info = await this.$store.dispatch('user/getUserInfo')
+        if (!info || !info.name) {
+          User.logout()
+          this.showLoginError()
+        } else {
+          window.removeEventListener('message', this.onMessage)
+          this.$router.push({ path: '/' })
+        }
       }
+    },
+    /**
+     * @description 登陆异常提示
+     */
+    showLoginError () {
+      MessageBox.confirm('', '您的账号已被禁用，请联系系统管理员', {
+        confirmButtonText: '确定',
+        center: true,
+        type: 'error',
+        showClose: false,
+        showCancelButton: false
+      }).then(() => {
+        location.reload()
+      })
     }
   }
 }
