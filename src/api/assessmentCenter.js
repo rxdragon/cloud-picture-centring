@@ -243,16 +243,16 @@ export function getUpdateHistoryLog (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    const UpdateList = msg.list.map(listItem => {
+    const updateList = msg.list.map(listItem => {
       return {
         ...listItem,
-        retoucher_name: _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-',
-        retoucher_leader: _.get(listItem, 'retoucher.retoucher_leader.nickname') || _.get(listItem, 'retoucher.retoucher_leader.name') || '-',
-        take_staff: listItem.take_staff.name || '-'
+        retoucherName: _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-',
+        retoucherLeader: _.get(listItem, 'retoucher.retoucher_leader.nickname') || _.get(listItem, 'retoucher.retoucher_leader.name') || '-',
+        takeStaff: listItem.take_staff.name || '-'
       }
     })
     return {
-      list: UpdateList,
+      list: updateList,
       total: msg.total
     }
   })

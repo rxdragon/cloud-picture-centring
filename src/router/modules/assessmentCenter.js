@@ -22,7 +22,7 @@ const assessmentCenter = {
       name: 'GradeConfiguration',
       component: () => import('@/views/assessment-center/grade-configuration.vue'),
       meta: { title: '云学院评分配置', icon: '' }
-    },{
+    }, {
       path: 'modify-history',
       name: 'AssessmentHistory',
       component: () => import('@/views/assessment-center/modify-history.vue'),

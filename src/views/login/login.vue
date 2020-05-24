@@ -1,16 +1,14 @@
 <template>
   <div class="login">
-    <iframe ref="login" id="login" class="login_iframe" :src="ssoUrl" />
+    <iframe ref="login" class="login_iframe" :src="ssoUrl" />
   </div>
 </template>
 
 <script>
 import { Base64 } from 'js-base64'
-import { MessageBox } from 'element-ui'
 import * as User from '@/api/user.js'
 export default {
   name: 'Login',
-  props: {},
   data () {
     return {
       ssoUrl: '',
@@ -87,7 +85,7 @@ export default {
      * @description 登陆异常提示
      */
     showLoginError () {
-      MessageBox.confirm('', '您的账号已被禁用，请联系系统管理员', {
+      this.$confirm('', '您的账号已被禁用，请联系系统管理员', {
         confirmButtonText: '确定',
         center: true,
         type: 'error',

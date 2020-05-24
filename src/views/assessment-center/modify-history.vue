@@ -25,15 +25,15 @@
     <div class="module-panel">
       <div>
         <template>
-        <el-table :data="historyList" style="width: 100%;">
-          <el-table-column prop="created_at" label="操作时间" width="180" />
-          <el-table-column prop="last_score" label="前次评分" />
-          <el-table-column prop="after_score" label="更改后评分" />
-          <el-table-column prop="take_staff" label="操作人" />
-          <el-table-column prop="stream_num" label="流水号" width="180" />
-          <el-table-column prop="retoucher_name" label="修图师" />
-          <el-table-column prop="retoucher_leader" label="修图主管" />
-        </el-table>
+          <el-table :data="historyList" style="width: 100%;">
+            <el-table-column prop="created_at" label="操作时间" width="180" />
+            <el-table-column prop="last_score" label="前次评分" />
+            <el-table-column prop="after_score" label="更改后评分" />
+            <el-table-column prop="takeStaff" label="操作人" />
+            <el-table-column prop="stream_num" label="流水号" width="180" />
+            <el-table-column prop="retoucherName" label="修图师" />
+            <el-table-column prop="retoucherLeader" label="修图主管" />
+          </el-table>
       </template>
       </div>
       <div class="page-box">

@@ -31,7 +31,7 @@
           <div class="retouch-select-box">
             <div class="search-item">
               <span>修图等级</span>
-              <retouch-rank-select v-model="retouchRank" showAllOption @rankchange="rankchange"/>
+              <retouch-rank-select v-model="retouchRank" showAllOption @change="onRankChange"/>
             </div>
             <div class="search-item plant-search">
               <span>海草值</span>
@@ -280,16 +280,19 @@ export default {
     /**
      * @description 修改伙伴
      */
-    updateStaff () {
-      const req = this.getParams()
-      if (!req) return
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      AccountManage.editStaff(req).then(() => {
+    async updateStaff () {
+      try {
+        const req = this.getParams()
+        if (!req) return
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await AccountManage.editStaff(req)
         this.$newMessage.success('修改成功!')
         this.$emit('finished')
-      }).finally(() => {
+      } catch (error) {
+        console.error(error)
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      })
+      }
     },
     /**
      * @description 重置未保存配置
@@ -308,7 +311,7 @@ export default {
     /**
      * @description 等级改变联动设置海草值
      */
-    rankchange (val) {
+    onRankChange (val) {
       if (val) {
         const expIndex = Number(val) - 1
         this.retouchExp = this.allRetouchRankExp[expIndex]

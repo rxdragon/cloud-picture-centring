@@ -139,7 +139,7 @@ export default {
         value: 'quality'
       },{
         label: '非质量问题',
-        value: 'notQuality'
+        value: 'not_quality'
       }]
     }
   },

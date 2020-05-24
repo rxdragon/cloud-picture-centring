@@ -1,5 +1,5 @@
 <template>
-  <div class="retouch-type-select">
+  <div class="retouch-rank-select">
     <el-select
       :disabled="disableState"
       v-bind="$attrs"
@@ -7,7 +7,6 @@
       :popper-append-to-body="false"
       placeholder="请选择修图等级"
       v-on="$listeners"
-      @change="getChangeVal"
     >
       <el-option v-if="!showAllOption" label="全部" value="" />
       <el-option
@@ -45,12 +44,6 @@ export default {
       const data = await getAllRetouchRank()
       this.options = data
       this.disableState = false
-    },
-    /**
-     * @description 值改变emit父组件
-     */
-    getChangeVal (val) {
-      this.$emit('rankchange', val)
     }
   }
 }
