@@ -5,7 +5,13 @@
       <el-button type="primary" plain @click="toBack">返回</el-button>
     </div>
     <div class="config-list module-panel">
-      <el-form ref="formEdit" :model="institutionConfig" :rules="rules" label-position="left" label-width="100px">
+      <el-form
+        ref="formEdit"
+        :model="institutionConfig"
+        :rules="rules"
+        label-position="left"
+        label-width="100px"
+      >
         <el-form-item label="机构名称：" prop="name">
           <el-input v-model="institutionConfig.name" />
         </el-form-item>
@@ -16,20 +22,32 @@
           <el-input v-model="institutionConfig.account" maxlength="16" />
         </el-form-item>
         <el-form-item label="机构密码：">
-          <el-input v-model="institutionConfig.secret" v-no-special maxlength="16" type="password" />
+          <el-input
+            v-model="institutionConfig.secret"
+            v-no-special
+            maxlength="16"
+            type="password"
+          />
         </el-form-item>
         <el-form-item label="可接产品：" prop="toData" :show-message="false">
-          <product-panel
-            :default-checked-keys="defaultCheckedKeys"
-            :to-data.sync="institutionConfig.toData"
-          />
+          <product-panel :default-checked-keys="defaultCheckedKeys" :to-data.sync="institutionConfig.toData"/>
         </el-form-item>
         <el-form-item label="收益配置：" prop="incomeConfig">
           <div class="list-data">
-            <div v-for="(incomeItem, incomeIndex) in institutionConfig.incomeConfig" :key="incomeIndex" class="panel">
+            <div
+              v-for="(incomeItem, incomeIndex) in institutionConfig.incomeConfig"
+              :key="incomeIndex"
+              class="panel"
+            >
               <div class="list-title">{{ incomeIndex + 1 }} 人</div>
               <div class="panel-contetn">
-                <input v-model="institutionConfig.incomeConfig[incomeIndex]" v-decimalOnly class="num-input" min="0" placeholder="0">
+                <input
+                  v-model="institutionConfig.incomeConfig[incomeIndex]"
+                  v-decimalOnly
+                  class="num-input"
+                  min="0"
+                  placeholder="0"
+                >
               </div>
             </div>
           </div>

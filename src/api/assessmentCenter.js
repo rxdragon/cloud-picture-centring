@@ -126,7 +126,7 @@ export function getSearchHistory (params) {
       item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
       item.issueLabel = item.commitInfo.issueLabel
       item.score = item.commitInfo.score
-      item.photoInfo.photoVersion.forEach(versionItem => versionItem.commitInfo = item.commitInfo)
+      item.photoInfo.photoVersion.forEach(versionItem => { versionItem.commitInfo = item.commitInfo })
       // 是否复评
       item.isReevaluatePhoto = Boolean(item.oldTakeStaffInfo)
       // 评价人
@@ -161,7 +161,7 @@ export function getScoreConfigList () {
     method: 'GET'
   }).then(msg => {
     msg.forEach(item => {
-      item.child.forEach(issItem => issItem.isSelect = false)
+      item.child.forEach(issItem => { issItem.isSelect = false })
     })
     return msg
   })

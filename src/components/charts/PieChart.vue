@@ -59,15 +59,15 @@ export default {
       myChart: null
     }
   },
-  mounted () {
-    this.drawChart()
-  },
   watch: {
     chartData: {
       handler () {
         this.handlerData()
       }
     }
+  },
+  mounted () {
+    this.drawChart()
   },
   methods: {
     /**

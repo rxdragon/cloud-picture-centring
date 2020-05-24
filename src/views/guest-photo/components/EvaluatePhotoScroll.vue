@@ -42,7 +42,12 @@
       >
         <template v-slot="{ data }">
           <div class="photo-row">
-            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box" @click="goToDetails(photoItem)">
+            <div
+              v-for="photoItem in data"
+              :key="photoItem.id"
+              class="photo-box"
+              @click="goToDetails(photoItem)"
+            >
               <photo-box :use-ele-image="false" :src="photoItem.src" />
               <div class="staff-name">修图师：{{ photoItem.retoucherName }}</div>
               <div class="group-name">修图小组：{{ photoItem.retouchGroupName }}</div>

@@ -9,7 +9,14 @@
         </h3>
         <!-- 内容区 -->
         <div class="transfer-main">
-          <el-input v-if="filter" v-model="filterFrom" prefix-icon="el-icon-search" :placeholder="placeholder" size="small" class="filter-tree" />
+          <el-input
+            v-if="filter"
+            v-model="filterFrom"
+            prefix-icon="el-icon-search"
+            :placeholder="placeholder"
+            size="small"
+            class="filter-tree"
+          />
           <el-tree
             ref="from-tree"
             :data="self_from_data"
@@ -27,10 +34,24 @@
       <!-- 穿梭区 按钮框 -->
       <div class="transfer-center">
         <p class="transfer-center-item">
-          <el-button type="primary" :class="{'disable-box': from_disabled}" icon="el-icon-arrow-right" circle :disabled="from_disabled" @click="addToAims" />
+          <el-button
+            type="primary"
+            :class="{'disable-box': from_disabled}"
+            icon="el-icon-arrow-right"
+            circle
+            :disabled="from_disabled"
+            @click="addToAims"
+          />
         </p>
         <p class="transfer-center-item">
-          <el-button type="primary" :class="{'disable-box': to_disabled}" :disabled="to_disabled" icon="el-icon-arrow-left" circle @click="removeToSource" />
+          <el-button
+            type="primary"
+            :class="{'disable-box': to_disabled}"
+            :disabled="to_disabled"
+            icon="el-icon-arrow-left"
+            circle
+            @click="removeToSource"
+          />
         </p>
       </div>
       <!-- 右侧穿梭框 目标框 -->
@@ -42,7 +63,14 @@
         <!-- 内容区 -->
         <div class="transfer-main">
           <!-- <slot name='to'></slot> -->
-          <el-input v-if="filter" v-model="filterTo" prefix-icon="el-icon-search" :placeholder="placeholder" size="small" class="filter-tree" />
+          <el-input
+            v-if="filter"
+            v-model="filterTo"
+            prefix-icon="el-icon-search"
+            :placeholder="placeholder"
+            size="small"
+            class="filter-tree"
+          />
           <el-tree
             slot="to"
             ref="to-tree"

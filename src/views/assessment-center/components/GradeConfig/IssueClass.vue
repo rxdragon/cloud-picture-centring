@@ -3,7 +3,14 @@
     <div class="issue-class-header">
       <div class="class-name">
         <span v-if="!edit">{{ issueClassData.name }}（共{{ issueClassData.child.length }}项）</span>
-        <el-input v-else v-model="issueClassData.name" maxlength="10" show-word-limit placeholder="请输入评分大类名称"></el-input>
+        <el-input
+          v-else
+          v-model="issueClassData.name"
+          maxlength="10"
+          show-word-limit
+          placeholder="请输入评分大类名称"
+        >
+        </el-input>
       </div>
       <div class="class-tool">
         <el-popover
@@ -12,10 +19,17 @@
           popper-class="add-new-item"
           :offset="20"
           v-model="showAddNewProp"
-          trigger="click">
+          trigger="click"
+        >
           <div class="add-item-main">
             <span class="add-desc">添加细类数量：</span>
-            <el-input-number v-model="newIssueItem" :min="1" :max="10" label="添加数量"></el-input-number>
+            <el-input-number
+              v-model="newIssueItem"
+              :min="1"
+              :max="10"
+              label="添加数量"
+            >
+            </el-input-number>
             <el-button @click="addNewAddItem" size="small" type="primary">确认</el-button>
             <el-button @click="showAddNewProp = false" size="small" type="info">取消</el-button>
           </div>
@@ -36,10 +50,13 @@
       <span>分值</span>
       <span class="operation">操作</span>
     </div>
-    <issue-item v-for="issueItem in issueClassData.child"
-      :key="issueItem.key" :issue-item-data="issueItem"
+    <issue-item
+      v-for="issueItem in issueClassData.child"
+      :key="issueItem.key"
+      :issue-item-data="issueItem"
       @delete="delectItem"
-      :class-edit="edit" />
+      :class-edit="edit"
+    />
   </div>
 </template>
 
@@ -73,7 +90,7 @@ export default {
     editClass () {
       this.cacheData = JSON.parse(JSON.stringify(this.issueClassData))
       this.$set(this.issueClassData, 'isEdit', true)
-      this.issueClassData.child.forEach(issueItem => issueItem.isEdit = true)
+      this.issueClassData.child.forEach(issueItem => { issueItem.isEdit = true })
     },
     /**
      * @description 保存数据
@@ -82,7 +99,7 @@ export default {
       try {
         if (!this.hasEditData()) {
           this.$set(this.issueClassData, 'isEdit', false)
-          this.issueClassData.child.forEach(issueItem => issueItem.isEdit = false)
+          this.issueClassData.child.forEach(issueItem => { issueItem.isEdit = false })
           return false
         }
         const req = {

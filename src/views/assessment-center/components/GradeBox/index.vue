@@ -3,13 +3,25 @@
     <div class="photo-panel">
       <div class="panel-title">
         <span>照片评分</span>
-        <el-tag v-if="photoInfoData.isReevaluatePhoto" class="grade-again-tag" type="danger" size="medium">已重评</el-tag>
+        <el-tag
+          v-if="photoInfoData.isReevaluatePhoto"
+          class="grade-again-tag"
+          type="danger"
+          size="medium"
+        >
+          已重评
+        </el-tag>
         <div class="score-box">
           <el-button size="mini" type="primary" @click="afreshGrade">重新评分</el-button>
           <span>总分：{{ photoInfoData.score }}</span>
         </div>
       </div>
-      <photo-list need-preload :photo-data="photoVersionList" showOrderInfo :order-info="photoInfoData" />
+      <photo-list
+        need-preload
+        :photo-data="photoVersionList"
+        showOrderInfo
+        :order-info="photoInfoData"
+      />
     </div>
     <div class="info-grid">
       <!-- 问题标签 -->
@@ -45,7 +57,12 @@
           <div class="retouch-require panel-row">
             <el-tag size="medium">眼睛增大幅度：{{ photoInfoData.streamInfo.requireLabel.eye | toLabelName }}</el-tag>
             <el-tag size="medium">瘦脸幅度：{{ photoInfoData.streamInfo.requireLabel.face | toLabelName }}</el-tag>
-            <el-tag v-if="photoInfoData.streamInfo.requireLabel.pimples" size="medium">祛痣</el-tag>
+            <el-tag
+              v-if="photoInfoData.streamInfo.requireLabel.pimples"
+              size="medium"
+            >
+              祛痣
+            </el-tag>
           </div>
           <div class="grade-staff panel-row">
             <span class="order-info"><span class="order-info-title">评分人：</span>{{ photoInfoData.takeInfo.gradeStaff }}</span>
@@ -63,7 +80,9 @@
       :photo-version="showPhotoVersion"
       @submit="submitData"
       ref="grade-preview"
-      :show.sync="showGradePreview" :info="gradeInfo" />
+      :show.sync="showGradePreview"
+      :info="gradeInfo"
+    />
   </div>
 </template>
 

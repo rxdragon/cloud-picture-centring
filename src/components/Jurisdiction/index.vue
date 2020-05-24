@@ -1,6 +1,10 @@
 <template>
   <div v-loading="loading" class="jurisdiction">
-    <div v-for="(moduleItem, moduleIndex) in jurisdictionList" :key="moduleIndex" class="module-box">
+    <div
+      v-for="(moduleItem, moduleIndex) in jurisdictionList"
+      :key="moduleIndex"
+      class="module-box"
+    >
       <div class="module-header">
         <el-checkbox
           v-model="moduleItem.setAll"
@@ -23,11 +27,7 @@
           </el-checkbox>
         </div>
         <!-- 菜单盒子 -->
-        <el-checkbox-group
-          v-model="menuItem.checkPermission"
-          class="permission-box"
-          @change="handlePermission(menuItem, moduleItem)"
-        >
+        <el-checkbox-group v-model="menuItem.checkPermission" class="permission-box" @change="handlePermission(menuItem, moduleItem)">
           <el-checkbox
             v-for="(permissionItem, permissionIndex) in menuItem.permission"
             :key="permissionIndex"

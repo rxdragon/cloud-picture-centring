@@ -1,7 +1,7 @@
 <template>
   <div class="show-evaluate">
-    <i v-if="evaluate==='good'" class="iconfont icon-like-press like-color" />
-    <i v-else-if="evaluate==='bad'" class="iconfont icon-unlike-press unlike-color" />
+    <i v-if="evaluate === 'good'" class="iconfont icon-like-press like-color" />
+    <i v-else-if="evaluate === 'bad'" class="iconfont icon-unlike-press unlike-color" />
     <span v-else>-</span>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="edit-role">
     <div class="header">
-      <h3>{{ isNewAdd?'新增角色组':'编辑角色组' }}</h3>
+      <h3>{{ isNewAdd ? '新增角色组' : '编辑角色组' }}</h3>
       <div class="button-box">
         <el-button type="primary" plain @click="toBack">返回</el-button>
         <el-button type="primary" @click="onSubmit">提交</el-button>

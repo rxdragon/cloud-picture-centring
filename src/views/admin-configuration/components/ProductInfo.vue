@@ -68,11 +68,7 @@
               <el-radio :label="1">是</el-radio>
               <el-radio :label="2">否</el-radio>
             </el-radio-group>
-            <el-radio-group
-              v-if="productConfig.needTemplate === 1"
-              v-model="productConfig.templateSuffix"
-              class="template-box"
-            >
+            <el-radio-group v-if="productConfig.needTemplate === 1" v-model="productConfig.templateSuffix" class="template-box">
               <el-radio label="jpg">JPG</el-radio>
               <el-radio label="png">PNG</el-radio>
             </el-radio-group>
@@ -83,10 +79,21 @@
               <el-button type="text" @click="defaultGrass">使用默认海草值</el-button>
             </div>
             <div class="list-data">
-              <div v-for="(grassItem, grassIndex) in productConfig.grassData" :key="grassIndex" class="panel">
+              <div
+                v-for="(grassItem, grassIndex) in productConfig.grassData"
+                :key="grassIndex"
+                class="panel"
+              >
                 <div class="info-title">{{ grassIndex }} 人</div>
                 <div class="panel-contetn">
-                  <input :key="grassIndex" v-model="productConfig.grassData[grassIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
+                  <input
+                    :key="grassIndex"
+                    v-model="productConfig.grassData[grassIndex]"
+                    v-decimalOnly
+                    class="num-input"
+                    type="text"
+                    placeholder="0"
+                  >
                 </div>
               </div>
             </div>
@@ -97,17 +104,31 @@
               <el-button type="text" @click="defaultNotJointMoney">使用默认收益</el-button>
             </div>
             <div v-if="productConfig.standard !== 'blue'" class="list-data">
-              <div v-for="(notJointItem, notJointIndex) in productConfig.notJointMoney" :key="notJointIndex" class="panel">
+              <div
+                v-for="(notJointItem, notJointIndex) in productConfig.notJointMoney"
+                :key="notJointIndex"
+                class="panel"
+              >
                 <div class="info-title">{{ notJointIndex }} 人</div>
                 <div class="panel-contetn">
-                  <input v-model="productConfig.notJointMoney[notJointIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
+                  <input
+                    v-model="productConfig.notJointMoney[notJointIndex]"
+                    v-decimalOnly
+                    class="num-input"
+                    type="text"
+                    placeholder="0"
+                  >
                 </div>
               </div>
             </div>
             <div v-else class="blue-list-data">
               <div class="list-title">
                 <span class="list-item">修图等级</span>
-                <span v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney" :key="blueIndex" class="list-item">
+                <span
+                  v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney"
+                  :key="blueIndex"
+                  class="list-item"
+                >
                   {{ blueIndex | toCnLevel }}
                 </span>
               </div>
@@ -115,9 +136,19 @@
                 <div class="item-row">
                   <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
                 </div>
-                <div v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney" :key="blueIndex" class="item-row">
+                <div
+                  v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney"
+                  :key="blueIndex"
+                  class="item-row"
+                >
                   <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
-                    <input v-model="productConfig.blueNotJointMoney[blueIndex][moneyIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
+                    <input
+                      v-model="productConfig.blueNotJointMoney[blueIndex][moneyIndex]"
+                      v-decimalOnly
+                      class="num-input"
+                      type="text"
+                      placeholder="0"
+                    >
                   </div>
                 </div>
               </div>
@@ -135,10 +166,21 @@
               <el-button type="text" @click="defaultJoinGrass">使用默认拼接海草值</el-button>
             </div>
             <div class="list-data">
-              <div v-for="(grassItem, grassIndex) in productConfig.joinGrassData" :key="grassIndex" class="panel">
+              <div
+                v-for="(grassItem, grassIndex) in productConfig.joinGrassData"
+                :key="grassIndex"
+                class="panel"
+              >
                 <div class="info-title">{{ grassIndex }} 人</div>
                 <div class="panel-contetn">
-                  <input :key="grassIndex" v-model="productConfig.joinGrassData[grassIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
+                  <input
+                    :key="grassIndex"
+                    v-model="productConfig.joinGrassData[grassIndex]"
+                    v-decimalOnly
+                    class="num-input"
+                    type="text"
+                    placeholder="0"
+                  >
                 </div>
               </div>
             </div>
@@ -149,17 +191,31 @@
               <el-button type="text" @click="defaultJointMoney">使用默认拼接收益</el-button>
             </div>
             <div v-if="productConfig.standard !== 'blue'" class="list-data">
-              <div v-for="(jointItem, jointIndex) in productConfig.jointMoney" :key="jointIndex" class="panel">
+              <div
+                v-for="(jointItem, jointIndex) in productConfig.jointMoney"
+                :key="jointIndex"
+                class="panel"
+              >
                 <div class="info-title">{{ jointIndex }} 人</div>
                 <div class="panel-contetn">
-                  <input v-model="productConfig.jointMoney[jointIndex]" v-decimalOnly class="num-input" type="text" placeholder="0">
+                  <input
+                    v-model="productConfig.jointMoney[jointIndex]"
+                    v-decimalOnly
+                    class="num-input"
+                    type="text"
+                    placeholder="0"
+                  >
                 </div>
               </div>
             </div>
             <div v-else class="blue-list-data">
               <div class="list-title">
                 <span class="list-item">修图等级</span>
-                <span v-for="(blueItem, blueIndex) in productConfig.blueJointMoney" :key="blueIndex" class="list-item">
+                <span
+                  v-for="(blueItem, blueIndex) in productConfig.blueJointMoney"
+                  :key="blueIndex"
+                  class="list-item"
+                >
                   {{ blueIndex | toCnLevel }}
                 </span>
               </div>
@@ -167,9 +223,18 @@
                 <div class="item-row">
                   <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
                 </div>
-                <div v-for="(blueItem, blueIndex) in productConfig.blueJointMoney" :key="blueIndex" class="item-row">
+                <div
+                  v-for="(blueItem, blueIndex) in productConfig.blueJointMoney"
+                  :key="blueIndex"
+                  class="item-row"
+                >
                   <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
-                    <input v-model="productConfig.blueJointMoney[blueIndex][moneyIndex]" v-decimalOnly class="num-input" placeholder="0">
+                    <input
+                      v-model="productConfig.blueJointMoney[blueIndex][moneyIndex]"
+                      v-decimalOnly
+                      class="num-input"
+                      placeholder="0"
+                    >
                   </div>
                 </div>
               </div>
@@ -186,7 +251,14 @@
         </el-form>
       </div>
       <div v-if="+checkPass !== 2" class="pass-box">
-        <el-button v-if="+checkPass === 1 && isPending" type="primary" plain @click="cancelCheck">取消</el-button>
+        <el-button
+          v-if="+checkPass === 1 && isPending"
+          type="primary"
+          plain
+          @click="cancelCheck"
+        >
+          取消
+        </el-button>
         <el-button v-if="+checkPass === 1" type="primary" @click="passProductInfo">提交</el-button>
       </div>
     </div>

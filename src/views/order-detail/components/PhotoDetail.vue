@@ -13,8 +13,9 @@
       <div class="panel-title">云学院评价</div>
       <div class="panel-main">
         <div class="panel-content content-one">总分：{{ checkScore }}</div>
-        <div class="panel-content">问题标记：<span v-for="(tagItem, index) in checkTag" :key="index" class="reason-item">{{ tagItem }}</span>
-        <span v-if="!checkTag.length">暂无标记</span>
+        <div class="panel-content">
+          问题标记：<span v-for="(tagItem, index) in checkTag" :key="index" class="reason-item">{{ tagItem }}</span>
+          <span v-if="!checkTag.length">暂无标记</span>
         </div>
       </div>
     </div>

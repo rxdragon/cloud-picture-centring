@@ -10,7 +10,14 @@
         </div>
       </div>
       <div class="button-box">
-        <el-button v-if="orderData.productInfo.type === 'mainto'" type="primary" plain @click="hangUp">挂起订单</el-button>
+        <el-button
+          v-if="orderData.productInfo.type === 'mainto'"
+          type="primary"
+          plain
+          @click="hangUp"
+        >
+          挂起订单
+        </el-button>
         <el-button type="primary" @click="setIssueLabel">提交审核</el-button>
       </div>
     </div>
@@ -22,13 +29,24 @@
         <span>照片信息</span>
         <div class="button-box">
           <el-button type="primary" size="small" @click="oneAllDownOrign(false)">一键下载摄影原片</el-button>
-          <el-button v-if="isReturnOrder" type="primary" size="small" @click="oneAllDownOrign(true)">一键下载成片</el-button>
+          <el-button
+            v-if="isReturnOrder"
+            type="primary"
+            size="small"
+            @click="oneAllDownOrign(true)"
+          >
+            一键下载成片
+          </el-button>
         </div>
       </div>
       <div class="photo-panel">
-        <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex"
+        <div
+          v-for="(photoItem, photoIndex) in photos"
+          :key="photoIndex"
           @click="showPriviewPhoto(photoIndex, 'complete')"
-          class="photo-box" :class="{ 'over-success': photoItem.isCover }">
+          class="photo-box"
+          :class="{ 'over-success': photoItem.isCover }"
+        >
           <photo-box
             downing
             :down-complete="photoItem.isReturnPhoto"
@@ -43,7 +61,10 @@
             :src="photoItem.path"
           />
         </div>
-        <div v-if="orderData.streamState === 'review_return_retouch'" class="recede-remark">
+        <div
+          v-if="orderData.streamState === 'review_return_retouch'"
+          class="recede-remark"
+        >
           <span>备注原因：</span>
           <div class="remark-content">{{ reviewerNote }}</div>
         </div>

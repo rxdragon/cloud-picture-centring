@@ -7,7 +7,8 @@
     <div class="product-info">
       <div class="info-box">
         <label class="data-label">修图标准：</label>
-        <div class="data-value">{{ photoData.productInfo.type | toRetouchClass }}
+        <div class="data-value">
+          {{ photoData.productInfo.type | toRetouchClass }}
           <div class="standard-icon">
             <div :class="`iconmap-standard-${photoData.productInfo.type}`" />
           </div>
@@ -23,9 +24,12 @@
       </div>
     </div>
     <div class="photo-list">
-      <div class="photo-gulp"
-        v-for="item in photoData.photoInfo.photoVersion" :key="item.id"
-        @click="startGrade(item)">
+      <div
+        class="photo-gulp"
+        v-for="item in photoData.photoInfo.photoVersion"
+        :key="item.id"
+        @click="startGrade(item)"
+      >
         <div class="photo-version">{{ item.version | toPhotoVerName }}</div>
         <photo-box :src="item.path" preload-photo />
       </div>

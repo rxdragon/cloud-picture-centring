@@ -10,7 +10,10 @@
       <el-tab-pane v-if="showTimeStatistics" label="用时统计" name="TimeStatistics" />
       <el-tab-pane v-if="showCheckerEvaluate" label="看片评价" name="CheckerEvaluate" />
     </el-tabs>
-    <div class="table-box" :class="{'no-border': activeName === 'PartnerPerformance'}">
+    <div
+      class="table-box"
+      :class="{'no-border': activeName === 'PartnerPerformance'}"
+    >
       <transition name="fade-transform" mode="out-in">
         <keep-alive>
           <component :is="activeName" />

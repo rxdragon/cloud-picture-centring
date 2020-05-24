@@ -1,5 +1,10 @@
 <template>
-  <button :disabled="isLoading" ref="particle" @click="anmClick" class="particle-button">
+  <button
+    :disabled="isLoading"
+    ref="particle"
+    @click="anmClick"
+    class="particle-button"
+  >
     <slot></slot>
   </button>
 </template>

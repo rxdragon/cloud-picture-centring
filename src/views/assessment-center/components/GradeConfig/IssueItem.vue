@@ -2,11 +2,25 @@
   <div class="issue-item">
     <div class="issue-name">
       <span v-if="!edit">{{ issueItemData.name }}</span>
-      <el-input v-else v-model="issueItemData.name" maxlength="10" show-word-limit placeholder="请输入评分细类名称"></el-input>
+      <el-input
+        v-else
+        v-model="issueItemData.name"
+        maxlength="10"
+        show-word-limit
+        placeholder="请输入评分细类名称"
+      >
+      </el-input>
     </div>
     <div class="issue-weight">
       <span v-if="!edit">{{ issueItemData.weights }}</span>
-      <el-input-number v-else v-model="issueItemData.weights" :min="1" :max="99" label="请输入评分细类权重"></el-input-number>
+      <el-input-number
+        v-else
+        v-model="issueItemData.weights"
+        :min="1"
+        :max="99"
+        label="请输入评分细类权重"
+      >
+      </el-input-number>
     </div>
     <div class="issue-score">{{ itemWeightScore }}</div>
     <div class="issue-operation-box">

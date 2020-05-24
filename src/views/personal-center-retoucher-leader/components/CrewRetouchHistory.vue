@@ -61,7 +61,7 @@
             </div>
           </template>
         </el-table-column>
-         <el-table-column label="云学院标签">
+        <el-table-column label="云学院标签">
           <template slot-scope="{row}">
             <div class="check-tag-list">
               <span v-for="(tagItem,tagIndex) in row.checkTags" :key="tagIndex" class="check-tag">{{ tagItem }}</span>
