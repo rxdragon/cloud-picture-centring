@@ -81,7 +81,6 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      photoVersionList: [],
       gradeInfo: null,
       showGradePreview: false, // 是否显示大概概览
       showPhotoVersion: '' // 展示图片版本
@@ -90,22 +89,16 @@ export default {
   computed: {
     photoInfoData () {
       return this.photoInfo
-    }
-  },
-  created () {
-    this.initPhotoList()
-  },
-  methods: {
-    /**
-     * @description 初始化照片信息
-     */
-    initPhotoList () {
+    },
+    photoVersionList () {
       const photoVersionInfo = this.photoInfo.photoInfo.photoVersion
       photoVersionInfo.forEach(versionItem => {
         versionItem.phototag = this.photoInfo.photoData.tags
       })
-      this.photoVersionList = photoVersionInfo
-    },
+      return photoVersionInfo
+    }
+  },
+  methods: {
     /**
      * @description 重新评分
      */
