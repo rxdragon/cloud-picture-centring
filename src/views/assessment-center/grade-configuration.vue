@@ -15,10 +15,17 @@
           popper-class="add-new-item"
           :offset="20"
           v-model="showAddNewClassProp"
-          trigger="click">
+          trigger="click"
+        >
           <div class="add-item-main">
             <span class="add-desc">细类评分项数量：</span>
-            <el-input-number v-model="newIssueItem" :min="1" :max="10" label="添加数量"></el-input-number>
+            <el-input-number
+              v-model="newIssueItem"
+              :min="1"
+              :max="10"
+              label="添加数量"
+            >
+            </el-input-number>
             <el-button @click="addNewAddClass" size="small" type="primary">确认</el-button>
             <el-button @click="showAddNewClassProp = false" size="small" type="info">取消</el-button>
           </div>
@@ -26,9 +33,12 @@
         </el-popover>
       </div>
       <div class="configuration-main" v-if="scoreConfigList.length">
-        <issue-class v-for="issueClass in scoreConfigList"
+        <issue-class
+          v-for="issueClass in scoreConfigList"
           @getList="getScoreConfigList"
-          :key="issueClass.key" :issue-class-data="issueClass" />
+          :key="issueClass.key"
+          :issue-class-data="issueClass"
+        />
       </div>
       <div class="no-data-box" v-else>
         <img src="@/assets/404_images/no-data.png" alt="">
@@ -41,10 +51,19 @@
       title="权重点配置"
       custom-class="weight-dialog"
       center
-      :visible.sync="showConfigWeight">
+      :visible.sync="showConfigWeight"
+    >
       <div class="config-weight-box">
         <div class="from-box">
-          权重点配置：1点 ： <el-input v-model="cacheWeight" v-numberOnly type="number" min="1" max="99" placeholder="请输入分值"></el-input> 分
+          权重点配置：1点 ： <el-input
+            v-model="cacheWeight"
+            v-numberOnly
+            type="number"
+            min="1"
+            max="99"
+            placeholder="请输入分值"
+          >
+          </el-input> 分
         </div>
         <div class="weight-desc">
           <i class="el-icon-warning"></i> 提示：权重点配置为1个权重点对应的具体分值请填入输入框

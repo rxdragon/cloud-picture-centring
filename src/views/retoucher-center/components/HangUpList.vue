@@ -3,7 +3,10 @@
     <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="流水号" width="250">
         <template slot-scope="scope">
-          <div class="stream-state" :class="{'wrap': scope.row.isCheckReturn && scope.row.isStoreReturn}">
+          <div
+            class="stream-state"
+            :class="{'wrap': scope.row.isCheckReturn && scope.row.isStoreReturn}"
+          >
             <div class="stream-num">{{ scope.row.streamNum }}</div>
             <el-tag v-if="scope.row.isCheckReturn" size="mini" type="danger">审核退回</el-tag>
             <el-tag v-if="scope.row.isStoreReturn" size="mini" type="danger">门店退回</el-tag>

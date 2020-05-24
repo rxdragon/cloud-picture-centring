@@ -8,7 +8,12 @@
     <div class="search-box">
       <div class="job-number-box search-item">
         <span>工号</span>
-        <el-input v-model="jobNumber" v-numberOnly type="number" placeholder="请输入伙伴工号" />
+        <el-input
+          v-model="jobNumber"
+          v-numberOnly
+          type="number"
+          placeholder="请输入伙伴工号"
+        />
       </div>
       <div v-if="!isEdit" class="button-box">
         <el-button type="primary" @click="getStaff">查询</el-button>
@@ -23,7 +28,10 @@
         <el-tab-pane label="修图类别配置" name="retouchCategory" />
         <el-tab-pane label="角色权限配置" name="role" />
       </el-tabs>
-      <div class="table-box main-content" :class="{'no-border': activeName === 'retouchCategory'}">
+      <div
+        class="table-box main-content"
+        :class="{'no-border': activeName === 'retouchCategory'}"
+      >
         <!-- 修图类配置 -->
         <div v-show="activeName === 'retouchCategory'" class="retouch-category-box">
           <el-alert title="提示：若非修图伙伴请勿配置可接产品" type="info" show-icon />

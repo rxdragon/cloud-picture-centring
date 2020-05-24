@@ -17,12 +17,27 @@
       <div class="module-panel">
         <div class="panel-title">修图报告</div>
         <div class="table-content">
-          <list-table key="tableDataCount" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataCount" />
-          <list-table key="tableDataRate" :search-type.sync="searchType" :is-seach-page.sync="isSeachPage" :listdata="tableDataRate" />
+          <list-table
+            key="tableDataCount"
+            :search-type.sync="searchType"
+            :is-seach-page.sync="isSeachPage"
+            :listdata="tableDataCount"
+          />
+          <list-table
+            key="tableDataRate"
+            :search-type.sync="searchType"
+            :is-seach-page.sync="isSeachPage"
+            :listdata="tableDataRate"
+          />
         </div>
       </div>
       <div class="module-panel">
-        <retoucher-chart v-for="keyItem in chartShowKeys" :key="keyItem" :show-key="keyItem" :chart-datas="chartInfo" />
+        <retoucher-chart
+          v-for="keyItem in chartShowKeys"
+          :key="keyItem"
+          :show-key="keyItem"
+          :chart-datas="chartInfo"
+        />
       </div>
     </div>
     <CrewRetouchHistory
@@ -106,16 +121,16 @@ export default {
       return this.timeSpan
     }
   },
+  watch: {
+    isSeachPage (val) {
+      this.$emit('changeShowTab',val)
+    }
+  },
   async created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
     this.timeSpan = [nowTime, nowTime]
     await this.getSelfStaffs()
     this.searchData()
-  },
-  watch: {
-    isSeachPage (val) {
-      this.$emit('changeShowTab',val)
-    }
   },
   methods: {
     /**

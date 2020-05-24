@@ -26,7 +26,12 @@
       <!-- 基础时间 -->
       <div class="search-item time-panel">
         <span>基础时间</span>
-        <el-input v-model.number="baseTime" v-numberOnly type="number" placeholder="请填写整数，单位：分钟" />
+        <el-input
+          v-model.number="baseTime"
+          v-numberOnly
+          type="number"
+          placeholder="请填写整数，单位：分钟"
+        />
         <el-popover
           class="popover-class"
           placement="bottom-start"
@@ -40,7 +45,12 @@
       <!-- 叠加时间 -->
       <div class="search-item time-panel">
         <span>叠加时间</span>
-        <el-input v-model.number="addTime" v-numberOnly type="number" placeholder="请填写整数，单位：分钟" />
+        <el-input
+          v-model.number="addTime"
+          v-numberOnly
+          type="number"
+          placeholder="请填写整数，单位：分钟"
+        />
         <span> / 人</span>
         <el-popover
           class="popover-class"

@@ -68,7 +68,11 @@
       <el-tab-pane v-if="showReviewStreamList" :label="`审核中（${reviewCount}）`" name="reviewing" />
     </el-tabs>
     <!-- 列表数据 -->
-    <div v-if="showRetouchStreamList || showReviewStreamList" class="table-box" :class="{'no-border': activeName === 'retouch'}">
+    <div
+      v-if="showRetouchStreamList || showReviewStreamList"
+      class="table-box"
+      :class="{'no-border': activeName === 'retouch'}"
+    >
       <!-- 搜索框 -->
       <div class="search-button search-box">
         <!-- 修图标准 -->

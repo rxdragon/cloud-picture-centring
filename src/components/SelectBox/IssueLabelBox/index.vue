@@ -1,10 +1,6 @@
 <template>
   <div class="issue-label-box">
-    <el-select
-      v-bind="$attrs"
-      :popper-append-to-body="false"
-      v-on="$listeners"
-    >
+    <el-select v-bind="$attrs" :popper-append-to-body="false" v-on="$listeners">
       <el-option
         v-for="(optionItem, optionIndex) in options"
         :key="optionIndex"

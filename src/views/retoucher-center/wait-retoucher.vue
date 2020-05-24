@@ -8,7 +8,14 @@
           <div class="header-left">
             <span v-if="state !== 2" class="queue-info queue-length">修图排队中流水：{{ queueInfo.waitRetouchStream }}</span>
             <span v-else class="queue-info">排队接单中（顺序{{ queueInfo.retouchQueueIndex }}）</span>
-            <el-button v-if="state !== 2" type="primary" :disabled="disabledJoinQueue" @click="joinQueue">接单</el-button>
+            <el-button
+              v-if="state !== 2"
+              type="primary"
+              :disabled="disabledJoinQueue"
+              @click="joinQueue"
+            >
+              接单
+            </el-button>
             <el-button v-else type="info" @click="exitQueue">取消排队</el-button>
           </div>
         </div>
@@ -26,18 +33,15 @@
                   <span class="goal-num">/ 35</span>
                 </div>
                 <div class="prop-icon-box">
-                  <el-popover
-                    placement="bottom"
-                    trigger="hover"
-                    :content="`经验奖励：${buffInfo.expCard}倍`"
-                  >
+                  <el-popover placement="bottom" trigger="hover" :content="`经验奖励：${buffInfo.expCard}倍`">
                     <div v-show="buffInfo.expCard" slot="reference" class="prop-icon iconmap-experience-icon" />
                   </el-popover>
-                  <el-popover
-                    placement="bottom"
-                    trigger="hover"
-                  >
-                    <div v-for="(infoItem, infoIndex) in buffInfo.impulseInfo" :key="infoIndex" class="impulse-info">
+                  <el-popover placement="bottom" trigger="hover">
+                    <div
+                      v-for="(infoItem, infoIndex) in buffInfo.impulseInfo"
+                      :key="infoIndex"
+                      class="impulse-info"
+                    >
                       {{ `当前海草值达到${infoItem.reachExp} 奖励${infoItem.reward}` }}
                     </div>
                     <div v-show="buffInfo.impulseStatus" slot="reference" class="prop-icon iconmap-impulse-icon" />
@@ -80,11 +84,7 @@
                   </span>
                 </div>
                 <div class="prop-icon-box">
-                  <el-popover
-                    placement="bottom"
-                    trigger="hover"
-                    :content="`金币奖励：${buffInfo.goldReward}倍`"
-                  >
+                  <el-popover placement="bottom" trigger="hover" :content="`金币奖励：${buffInfo.goldReward}倍`">
                     <div v-show="buffInfo.goldReward" slot="reference" class="prop-icon iconmap-gold-icon" />
                   </el-popover>
                 </div>
@@ -125,12 +125,18 @@
         <div class="order-list">
           <el-tabs v-model="listActive">
             <el-tab-pane :label="'接单中(' + retouchingListNum + ')'" name="retouching">
-              <div class="table-box" :class="{'no-border': listActive === 'retouching'}">
+              <div
+                class="table-box"
+                :class="{'no-border': listActive === 'retouching'}"
+              >
                 <take-orders-list :show-detail.sync="showDetail" :table-data="tableData" />
               </div>
             </el-tab-pane>
             <el-tab-pane :label="'已挂起(' + hangingListNum + ')'" name="hanging">
-              <div class="table-box" :class="{'no-border': listActive === 'retouching'}">
+              <div
+                class="table-box"
+                :class="{'no-border': listActive === 'retouching'}"
+              >
                 <hang-up-list :show-detail.sync="showDetail" :table-data="tableData" />
               </div>
             </el-tab-pane>

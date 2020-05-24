@@ -16,8 +16,22 @@
         </el-table-column>
         <el-table-column label="操作" width="250">
           <template slot-scope="scope">
-            <el-button v-if="!scope.row.state" type="success" size="mini" @click="enablePhotographerOrg(scope.row)">启用</el-button>
-            <el-button v-else type="danger" size="mini" @click="disablePhotographerOrg(scope.row)">禁用</el-button>
+            <el-button
+              v-if="!scope.row.state"
+              type="success"
+              size="mini"
+              @click="enablePhotographerOrg(scope.row)"
+            >
+              启用
+            </el-button>
+            <el-button
+              v-else
+              type="danger"
+              size="mini"
+              @click="disablePhotographerOrg(scope.row)"
+            >
+              禁用
+            </el-button>
             <el-button type="primary" size="mini" @click="editNewInstitution(scope.row)">修改</el-button>
             <el-button type="primary" size="mini" @click="checkProduct(scope.row)">查看产品</el-button>
           </template>
@@ -25,8 +39,19 @@
       </el-table>
     </div>
     <!-- 弹出框 -->
-    <el-dialog :title="editInstitutionId ? '编辑摄影机构' : '新增摄影机构'" width="500px" :before-close="hiddenDialog" :visible.sync="dialogTableVisible">
-      <el-form ref="formEdit" :model="institutionConfig" :rules="rules" label-position="left" label-width="108px">
+    <el-dialog
+      :title="editInstitutionId ? '编辑摄影机构' : '新增摄影机构'"
+      width="500px"
+      :before-close="hiddenDialog"
+      :visible.sync="dialogTableVisible"
+    >
+      <el-form
+        ref="formEdit"
+        :model="institutionConfig"
+        :rules="rules"
+        label-position="left"
+        label-width="108px"
+      >
         <el-form-item label="机构名：" required prop="name">
           <el-input v-model="institutionConfig.name" maxlength="32" placeholder="请填写摄影机构名称" />
         </el-form-item>
@@ -36,14 +61,39 @@
             <el-radio :label="2">密码登录</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="institutionConfig.loginType === 2" prop="account" required label="机构主账号：">
-          <el-input v-model="institutionConfig.account" maxlength="16" placeholder="请填写摄影机构主账号，请勿使用特殊字符" class="accountInput" />
+        <el-form-item
+          v-if="institutionConfig.loginType === 2"
+          prop="account"
+          required
+          label="机构主账号："
+        >
+          <el-input
+            v-model="institutionConfig.account"
+            maxlength="16"
+            placeholder="请填写摄影机构主账号，请勿使用特殊字符"
+            class="accountInput"
+          />
         </el-form-item>
         <el-form-item v-if="institutionConfig.loginType === 2" label="机构密码：">
-          <el-input v-model="institutionConfig.secret" maxlength="16" type="password" placeholder="未有特殊密码要求可不用填写" />
+          <el-input
+            v-model="institutionConfig.secret"
+            maxlength="16"
+            type="password"
+            placeholder="未有特殊密码要求可不用填写"
+          />
         </el-form-item>
-        <el-form-item v-if="institutionConfig.loginType === 2" prop="code" required label="机构代号：">
-          <el-input v-model="institutionConfig.code" :disabled="Boolean(editInstitutionId)" maxlength="16" placeholder="请填写摄影机构代号" />
+        <el-form-item
+          v-if="institutionConfig.loginType === 2"
+          prop="code"
+          required
+          label="机构代号："
+        >
+          <el-input
+            v-model="institutionConfig.code"
+            :disabled="Boolean(editInstitutionId)"
+            maxlength="16"
+            placeholder="请填写摄影机构代号"
+          />
         </el-form-item>
         <el-form-item>
           <el-button type="info" @click="hiddenDialog">取消</el-button>

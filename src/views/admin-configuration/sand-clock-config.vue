@@ -51,7 +51,6 @@
         :edit-config.sync="editConfig"
       />
     </transition>
-
   </div>
 </template>
 

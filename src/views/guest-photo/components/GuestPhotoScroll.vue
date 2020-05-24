@@ -11,7 +11,12 @@
       </div>
       <!-- 订单信息 -->
       <div class="order-search search-item">
-        <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" class="input-with-select" @keyup.native.enter="getPhotoList(1)">
+        <el-input
+          v-model.trim="orderSearchValue"
+          placeholder="请输入内容"
+          class="input-with-select"
+          @keyup.native.enter="getPhotoList(1)"
+        >
           <el-select slot="prepend" v-model="orderType" placeholder="请选择">
             <el-option label="云端流水号" :value="1" />
             <el-option label="订单号" :value="2" />
@@ -65,7 +70,12 @@
       >
         <template v-slot="{ data }">
           <div class="photo-row">
-            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box" @click="goGuestInfo(photoItem)">
+            <div
+              v-for="photoItem in data"
+              :key="photoItem.id"
+              class="photo-box"
+              @click="goGuestInfo(photoItem)"
+            >
               <photo-box :use-ele-image="false" :src="photoItem.src" />
             </div>
             <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
