@@ -7,11 +7,7 @@
       placeholder="请选择权重等级"
       v-on="$listeners"
     >
-      <el-option
-        v-if="!importData"
-        label="全部等级"
-        :value="0"
-      />
+      <el-option v-if="!importData" label="全部等级" :value="0"/>
       <el-option
         v-for="item in options"
         :key="item.value"

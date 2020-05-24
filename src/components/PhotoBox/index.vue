@@ -1,14 +1,24 @@
 <template>
   <div class="photo">
     <div class="img-box">
-      <el-image v-if="useEleImage && !showCanvas" :src="imageSrc" fit="cover" :preview-src-list="getPreviewPhoto">
+      <el-image
+        v-if="useEleImage && !showCanvas"
+        :src="imageSrc"
+        fit="cover"
+        :preview-src-list="getPreviewPhoto"
+      >
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
           <span>加载失败...</span>
         </div>
       </el-image>
       <preview-canvas-img v-else-if="showCanvas" :file="fileData" />
-      <img v-else class="orgin-img" :src="imageSrc" alt="">
+      <img
+        v-else
+        class="orgin-img"
+        :src="imageSrc"
+        alt=""
+      >
       <span v-if="photoName" class="photo-name" @click.stop="">{{ photoRealName }}</span>
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
@@ -25,8 +35,13 @@
     <div v-if="storePartReworkReason.length" class="recede-reason">
       <div class="recede-title">门店退回标记：</div>
       <div class="reason-content">
-        <el-tag size="medium" type="info" class="reason-tag"
-          v-for="(tagItem, tagIndex) in storePartReworkReason" :key="tagIndex">
+        <el-tag
+          size="medium"
+          type="info"
+          class="reason-tag"
+          v-for="(tagItem, tagIndex) in storePartReworkReason"
+          :key="tagIndex"
+        >
           {{ tagItem }}
         </el-tag>
       </div>
@@ -109,7 +124,7 @@ export default {
     storePartReworkReason () {
       const storePartReworkReason = _.get(this.tags, 'values.store_part_rework_reason') || []
       let allTag = []
-      storePartReworkReason.forEach(item => allTag = new Set([...allTag, ...item.reason]))
+      storePartReworkReason.forEach(item => { allTag = new Set([...allTag, ...item.reason]) })
       return [...allTag]
     },
     // 门店退回理由

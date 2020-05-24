@@ -10,7 +10,14 @@
         <template v-if="!isChecking">
           <span v-if="state !== 2" class="queue-info queue-length">审核排队中的流水：{{ queueInfo.reviewQueueStreamNums }}</span>
           <span v-if="state === 2" class="queue-info">排队接单中（顺序{{ queueInfo.reviewQueueIndex }}）</span>
-          <el-button v-if="state === 1" type="primary" :disabled="state === 3" @click="joinReviewQueue">接单</el-button>
+          <el-button
+            v-if="state === 1"
+            type="primary"
+            :disabled="state === 3"
+            @click="joinReviewQueue"
+          >
+            接单
+          </el-button>
           <el-button v-if="state === 2" type="info" @click="exitQueue">取消排队</el-button>
         </template>
         <template v-else>
@@ -45,8 +52,22 @@
         <span>照片审核</span>
         <div class="button-box">
           <div v-if="orderData.photos.length > 1" ref="returnBox" class="return-box">
-            <el-button v-if="!isAllReturnOrder" type="warning" size="small" @click="allRework">全部重修</el-button>
-            <el-button v-else type="info" size="small" @click="allCleanRework">取消重修</el-button>
+            <el-button
+              v-if="!isAllReturnOrder"
+              type="warning"
+              size="small"
+              @click="allRework"
+            >
+              全部重修
+            </el-button>
+            <el-button
+              v-else
+              type="info"
+              size="small"
+              @click="allCleanRework"
+            >
+              取消重修
+            </el-button>
           </div>
           <el-button size="small" type="primary" @click="oneAllDownOrign">一键下载原片</el-button>
         </div>
@@ -60,7 +81,10 @@
         :photos="photoItem"
       />
       <!-- 本单审核备注 -->
-      <div v-if="isReturnOrder && orderData.photos.length > 1" class="review-panel">
+      <div
+        v-if="isReturnOrder && orderData.photos.length > 1"
+        class="review-panel"
+      >
         <div class="panel-title review-title">
           <span>
             本单审核备注
@@ -78,8 +102,24 @@
       </div>
       <transition name="box-right">
         <template v-if="showFixReturnBox">
-          <el-button v-if="!isAllReturnOrder" class="fix-return-button" type="warning" size="small" @click="allRework">全部重修</el-button>
-          <el-button v-else class="fix-return-button fix-return-button-cancel" type="info" size="small" @click="allCleanRework">取消重修</el-button>
+          <el-button
+            v-if="!isAllReturnOrder"
+            class="fix-return-button"
+            type="warning"
+            size="small"
+            @click="allRework"
+          >
+            全部重修
+          </el-button>
+          <el-button
+            v-else
+            class="fix-return-button fix-return-button-cancel"
+            type="info"
+            size="small"
+            @click="allCleanRework"
+          >
+            取消重修
+          </el-button>
         </template>
       </transition>
     </div>

@@ -21,7 +21,14 @@
             <div v-for="(listItem, listIndex) in tableDataCount" :key="listIndex" class="list-box">
               <div class="title">{{ listItem.label }}</div>
               <div class="content">
-                <el-link v-if="listItem.componentSwitch" type="primary" class="el-router-link" @click="showDetail"> {{ listItem.value }} </el-link>
+                <el-link
+                  v-if="listItem.componentSwitch"
+                  type="primary"
+                  class="el-router-link"
+                  @click="showDetail"
+                >
+                  {{ listItem.value }}
+                </el-link>
                 <div v-else class="content-text">{{ listItem.value }}</div>
               </div>
             </div>
@@ -30,7 +37,12 @@
       </div>
       <div class="module-panel charts-box">
         <div class="chart-item">
-          <retoucher-chart v-for="keyItem in chartShowKeys" :key="keyItem" :show-key="keyItem" :chart-datas="barData" />
+          <retoucher-chart
+            v-for="keyItem in chartShowKeys"
+            :key="keyItem"
+            :show-key="keyItem"
+            :chart-datas="barData"
+          />
         </div>
         <div class="chart-item">
           <div class="panel-title">问题详情</div>
@@ -82,16 +94,16 @@ export default {
       chartShowKeys: ['avgScore'],
     }
   },
+  watch: {
+    isSeachPage (val) {
+      this.$emit('changeShowTab',val)
+    }
+  },
   async created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
     this.timeSpan = [nowTime, nowTime]
     await this.getSelfStaffs()
     this.searchData()
-  },
-  watch: {
-    isSeachPage (val) {
-      this.$emit('changeShowTab',val)
-    }
   },
   methods: {
     /**

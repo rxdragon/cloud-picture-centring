@@ -14,7 +14,12 @@
         <i class="el-icon-warning-outline">下载中断</i>
       </div>
       <div v-if="state === 'progressing'" class="down-progressing">
-        <el-progress :show-text="false" :text-inside="true" :stroke-width="8" :percentage="listItem.process.progress | toPercentageNum" />
+        <el-progress
+          :show-text="false"
+          :text-inside="true"
+          :stroke-width="8"
+          :percentage="listItem.process.progress | toPercentageNum"
+        />
         <div class="description">{{ listItem.process.speed }}</div>
       </div>
       <div v-if="state === 'waitdown'" class="down-completed">
@@ -31,15 +36,45 @@
     </div>
     <div class="panel-content handle-button">
       <!-- 暂停 -->
-      <el-button v-if="state === 'progressing' && !listItem.isUserPause" size="mini" class="icon-button" icon="el-icon-video-pause" @click="pauseItem" />
+      <el-button
+        v-if="state === 'progressing' && !listItem.isUserPause"
+        size="mini"
+        class="icon-button"
+        icon="el-icon-video-pause"
+        @click="pauseItem"
+      />
       <!-- 回复 -->
-      <el-button v-if="canResume" size="mini" class="icon-button" icon="el-icon-video-play" @click="resumeDownItem" />
+      <el-button
+        v-if="canResume"
+        size="mini"
+        class="icon-button"
+        icon="el-icon-video-play"
+        @click="resumeDownItem"
+      />
       <!-- 查看本地文件 -->
-      <el-button v-if="state === 'completed' && hasFile" size="mini" class="icon-button" icon="el-icon-search" @click="downOpenFileFolder" />
+      <el-button
+        v-if="state === 'completed' && hasFile"
+        size="mini"
+        class="icon-button"
+        icon="el-icon-search"
+        @click="downOpenFileFolder"
+      />
       <!-- 取消 -->
-      <el-button v-if="state === 'progressing'" size="mini" class="icon-button" icon="el-icon-delete" @click="cancelItem" />
+      <el-button
+        v-if="state === 'progressing'"
+        size="mini"
+        class="icon-button"
+        icon="el-icon-delete"
+        @click="cancelItem"
+      />
       <!-- 删除记录 -->
-      <el-button v-if="state !== 'progressing'" size="mini" class="icon-button" icon="el-icon-delete" @click="deleteDownItem" />
+      <el-button
+        v-if="state !== 'progressing'"
+        size="mini"
+        class="icon-button"
+        icon="el-icon-delete"
+        @click="deleteDownItem"
+      />
     </div>
   </div>
 </template>

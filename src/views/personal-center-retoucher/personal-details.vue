@@ -34,11 +34,7 @@
             <el-tag size="medium">{{ gradeInfo.levelName }}</el-tag>
           </span>
           <div class="tip">
-            <el-popover
-              placement="bottom-end"
-              width="700"
-              trigger="hover"
-            >
+            <el-popover placement="bottom-end" width="700" trigger="hover">
               <div class="tip-content">
                 <div>修图等级升级规则：</div>
                 <div>1、退单率：近期修图获得的<span class="emphasis">质量问题退张数</span>占比，升级条件需<span class="emphasis">低于</span>退张合格率</div>
@@ -55,7 +51,10 @@
               <div class="main-content">
                 <span class="num plant-color">
                   <count-to :end-value="gradeInfo.nearly30DaysGoodNum | getInteger" />
-                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysGoodNum | getPoint" /></i>
+                  <i>.<count-to
+                    decimals
+                    :end-value="gradeInfo.nearly30DaysGoodNum | getPoint"
+                  /></i>
                 </span>
                 <span>近30日点赞数</span>
               </div>
@@ -64,7 +63,10 @@
               <div class="main-content">
                 <span class="num pull-color">
                   <count-to :end-value="gradeInfo.nearly30DaysReturnNum | getInteger" />
-                  <i>.<count-to decimals :end-value="gradeInfo.nearly30DaysReturnNum | getPoint" /></i>
+                  <i>.<count-to
+                    decimals
+                    :end-value="gradeInfo.nearly30DaysReturnNum | getPoint"
+                  /></i>
                 </span>
                 <span>近30日退单数</span>
               </div>
@@ -127,7 +129,12 @@
         <el-button type="primary" @click="getLittleBeeInfo">查 询</el-button>
       </div>
       <div class="panel-content">
-        <list-table v-if="awardInfo.length" key="awardInfo" :listdata="awardInfo" width="500px" />
+        <list-table
+          v-if="awardInfo.length"
+          key="awardInfo"
+          :listdata="awardInfo"
+          width="500px"
+        />
         <div v-else class="no-data">暂无数据</div>
       </div>
     </div>
@@ -136,7 +143,12 @@
       <div class="panel-title">我的道具</div>
       <div class="panel-main">
         <template v-if="Object.keys(propData).length">
-          <el-badge v-for="(propItem, propIndex) in propData" :key="propIndex" :value="propItem.count" class="prop-badge">
+          <el-badge
+            v-for="(propItem, propIndex) in propData"
+            :key="propIndex"
+            :value="propItem.count"
+            class="prop-badge"
+          >
             <div class="prop-box">
               <div class="prop-left">
                 <div class="prop-icon" :class="propItem.className" />
@@ -146,17 +158,20 @@
                 <div class="content-describe">24小时内仅可用1次</div>
               </div>
               <div class="prop-right">
-                <el-popover
-                  v-model="propItem.showProp"
-                  placement="top"
-                  width="160"
-                >
+                <el-popover v-model="propItem.showProp" placement="top" width="160">
                   <p>确认使用道具卡吗？</p>
                   <div style=" margin: 10px; text-align: right;">
                     <el-button size="mini" type="text" @click="propItem.showProp = false">取消</el-button>
                     <el-button type="primary" size="mini" @click="useProp(propItem)">确定</el-button>
                   </div>
-                  <el-button slot="reference" type="primary" size="mini" @click="showPropSureBox(propItem)">使用</el-button>
+                  <el-button
+                    slot="reference"
+                    type="primary"
+                    size="mini"
+                    @click="showPropSureBox(propItem)"
+                  >
+                    使用
+                  </el-button>
                 </el-popover>
               </div>
             </div>

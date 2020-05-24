@@ -351,7 +351,8 @@ export default {
       const base64Data = this.canvasDom.toDataURL()
       const blobData = CanvasTool.convertBase64ToBlob(base64Data)
       const fileData = CanvasTool.structureFile(blobData)
-      return await CanvasTool.uploadTagPhoto(fileData, this.qNConfig)
+      const fileDataUploadUrl = await CanvasTool.uploadTagPhoto(fileData, this.qNConfig)
+      return fileDataUploadUrl
     },
     /**
      * @description 判断canvas是否为空

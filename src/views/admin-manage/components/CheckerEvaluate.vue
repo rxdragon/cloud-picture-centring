@@ -21,7 +21,7 @@
     <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="评价时间" width="180">
         <template slot-scope="scope">
-         {{ scope.row.store_evaluate_at | toTimeSpan }}
+          {{ scope.row.store_evaluate_at | toTimeSpan }}
         </template>
       </el-table-column>
       <el-table-column prop="stream.stream_num" label="流水号" width="200" />

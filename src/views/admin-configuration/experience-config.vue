@@ -39,8 +39,22 @@
               <el-table-column prop="createStaff" label="创建人" />
               <el-table-column label="操作" width="190">
                 <template slot-scope="scope">
-                  <el-button v-if="scope.row.state === 'using'" type="primary" size="mini" @click="closeCard(scope.row)">提前结束</el-button>
-                  <el-button v-if="scope.row.state === 'unused'" type="danger" size="mini" @click="deleteData(scope.row)">删除</el-button>
+                  <el-button
+                    v-if="scope.row.state === 'using'"
+                    type="primary"
+                    size="mini"
+                    @click="closeCard(scope.row)"
+                  >
+                    提前结束
+                  </el-button>
+                  <el-button
+                    v-if="scope.row.state === 'unused'"
+                    type="danger"
+                    size="mini"
+                    @click="deleteData(scope.row)"
+                  >
+                    删除
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>

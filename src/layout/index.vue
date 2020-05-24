@@ -16,7 +16,13 @@
           <div v-show="webSocketState === 'unConnect'" class="web-state">
             <i class="el-message__icon el-icon-error" />
             网络连接已断开
-            <el-button class="refush-button" size="mini" icon="el-icon-refresh-left" circle @click="relink" />
+            <el-button
+              class="refush-button"
+              size="mini"
+              icon="el-icon-refresh-left"
+              circle
+              @click="relink"
+            />
           </div>
         </transition>
         <TagsView />

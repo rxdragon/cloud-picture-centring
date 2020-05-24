@@ -8,14 +8,19 @@
       :close-on-press-escape="false"
       top="25vh"
       v-bind="$attrs"
-      v-on="$listeners">
+      v-on="$listeners"
+    >
       <div class="issue-main">
         <div class="issue-box" v-for="(issueClass, issueKey) in issueData" :key="issueKey">
           <div class="issues-class">{{ issueKey | filterName }}</div>
-          <el-tooltip v-for="issueItem in issueClass" :key="issueItem.key" effect="dark" :content="issueItem.description" placement="top-start">
-            <el-tag
-              :effect="issueItem.select ? 'light' : 'plain'"
-              @click="selectData(issueKey, issueItem.key)">
+          <el-tooltip
+            v-for="issueItem in issueClass"
+            :key="issueItem.key"
+            effect="dark"
+            :content="issueItem.description"
+            placement="top-start"
+          >
+            <el-tag :effect="issueItem.select ? 'light' : 'plain'" @click="selectData(issueKey, issueItem.key)">
               {{ issueItem.label }}
             </el-tag>
           </el-tooltip>
@@ -31,6 +36,11 @@
 <script>
 export default {
   name: 'IssueLabel',
+  filters: {
+    filterName (value) {
+      return value === 'photography' ? '摄影：' : '化妆：'
+    }
+  },
   props: {
     issueData: { type: Object, default: () => ({}) }
   },
@@ -67,11 +77,6 @@ export default {
       }
       const issue = { problemTagPhotography, problemTagMakeup }
       this.$emit('submit', issue)
-    }
-  },
-  filters: {
-    filterName (value) {
-      return value === 'photography' ? '摄影：' : '化妆：'
     }
   }
 }

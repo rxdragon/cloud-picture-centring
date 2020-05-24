@@ -61,9 +61,11 @@
           <span>参考图：</span>
           <div class="remark-content require-reference-photo">
             <el-image
-              class="reference-img" fit="contain"
+              class="reference-img"
+              fit="contain"
               :src="orderData.referencePhoto"
-              :preview-src-list="[orderData.referencePhoto]">
+              :preview-src-list="[orderData.referencePhoto]"
+            >
             </el-image>
             <el-button type="text" @click="downPhoto(orderData.referencePhoto)">下载参考图</el-button>
           </div>

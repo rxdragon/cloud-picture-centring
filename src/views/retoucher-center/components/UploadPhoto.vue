@@ -7,11 +7,7 @@
         class="photo-box list-photo-item"
         :class="photoItem.isRepetition ? 'is-repetition' : ''"
       >
-        <photo-box
-          photo-name
-          preview-breviary
-          :src="photoItem.path"
-        />
+        <photo-box photo-name preview-breviary :src="photoItem.path"/>
         <span class="delete-button" @click="deleteCachePhoto(photoIndex)">
           <i class="el-icon-error" />
         </span>
@@ -70,7 +66,14 @@
       </div>
       <div v-for="i in 4" :key="'empty' + i" class="empty-box list-photo-item" />
     </transition-group>
-    <el-button size="small" class="one-upload" type="primary" @click="getFiles">一键上传</el-button>
+    <el-button
+      size="small"
+      class="one-upload"
+      type="primary"
+      @click="getFiles"
+    >
+      一键上传
+    </el-button>
   </div>
 </template>
 

@@ -4,7 +4,8 @@
     :legend-visible="false"
     :extend="extend"
     :settings="chartSettings"
-    height="750px" />
+    height="750px"
+  />
 </template>
 
 <script>
@@ -13,6 +14,10 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'GroupChart',
+  props: {
+    timeSpan: { type: Array, default: () => [] },
+    tags: { type: Array, default: () => [] }
+  },
   data () {
     return {
       chartSettings: {},
@@ -64,10 +69,6 @@ export default {
         rows: []
       }
     }
-  },
-  props: {
-    timeSpan: { type: Array, default: () => [] },
-    tags: { type: Array, default: () => [] }
   },
   watch: {
     timeSpan: {

@@ -8,7 +8,7 @@
       <order-info :is-work-board-info="isWorkBoardInfo" :order-data="orderData" />
     </div>
     <!-- 照片列表 -->
-     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
+    <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
       <div class="panel-title">照片{{ photoIndex + 1 }}</div>
       <photo-detail :photo-item="photoItem" />
     </div>
