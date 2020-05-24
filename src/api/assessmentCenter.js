@@ -244,16 +244,26 @@ export function getCloudProblemReportByGroup (params) {
 }
 
 /**
- * @description 重新评价愿学院抽片
- * @method PUT
- * @returns {Boolean} 
- * @author cf 2020/05/20
- * @version @version 2.6.0
+ * @description 获取修改分数历史记录
+ * @param {*} params
  */
-export function updateCommitHistory (params) {
+export function getUpdateHistoryLog (params) {
   return axios({
-    url: '/project_cloud/checkPool/updateCommitHistory',
+    url: '/project_cloud/checkPool/getUpdateHistoryLog',
     method: 'POST',
     data: params
+  }).then(msg => {
+    const updateList = msg.list.map(listItem => {
+      return {
+        ...listItem,
+        retoucherName: _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-',
+        retoucherLeader: _.get(listItem, 'retoucher.retoucher_leader.nickname') || _.get(listItem, 'retoucher.retoucher_leader.name') || '-',
+        takeStaff: listItem.take_staff.name || '-'
+      }
+    })
+    return {
+      list: updateList,
+      total: msg.total
+    }
   })
 }

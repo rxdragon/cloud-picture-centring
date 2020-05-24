@@ -80,7 +80,7 @@
                 <div class="num money-num" :class="{ 'no-income': isNoIncome }">
                   <span class="symbol money-color">¥</span>
                   <span class="actual-num money-color">
-                    <count-to show-point :end-value="quotaInfo.todayIncome" />
+                    <count-to show-point :end-value="quotaInfo.todayRewordIncome" />
                   </span>
                 </div>
                 <div class="prop-icon-box">
@@ -92,6 +92,32 @@
             </div>
             <div class="box-right">
               <div class="info-icon iconmap-money-icon" />
+            </div>
+          </div>
+          <!-- 今日负收益 -->
+          <div class="today-info">
+            <div class="box-left">
+              <div class="title">今日负收益</div>
+              <div class="data-info">
+                <div class="num">
+                  <div class="loss-num">
+                    <span class="loss-title">惩罚海草：</span>
+                    <span class="pink-color loss-value">
+                      <count-to :end-value="quotaInfo.punishExp" />颗
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">惩罚收益：</span>
+                    <span class="pink-color loss-value">
+                      <span>¥</span>
+                      <count-to show-point :end-value="quotaInfo.punishIncome" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="box-right">
+              <div class="info-icon iconmap-loss-income-icon" />
             </div>
           </div>
         </div>
@@ -152,7 +178,9 @@ export default {
       quotaInfo: { // 个人信息
         todayFinishPhotoNum: 0,
         todayExp: 0.00,
-        todayIncome: 0.00
+        todayRewordIncome: 0.00,
+        punishExp: 0,
+        punishIncome: 0.00
       },
       buffInfo: { // buff 信息
         expCard: 0, // 经验卡
@@ -344,7 +372,7 @@ export default {
   .today-info {
     display: flex;
     flex-wrap: wrap;
-    width: 32%;
+    width: 24%;
     padding: 18px 21px 12px 24px;
     background-color: #fff;
     border-radius: 16px;
@@ -365,7 +393,8 @@ export default {
         align-items: center;
 
         .num {
-          margin-right: 24px;
+          margin-right: 15px;
+          white-space: nowrap;
 
           .actual-num {
             font-size: 34px;
@@ -389,6 +418,10 @@ export default {
             color: @moneyColor;
           }
 
+          .pink-color {
+            color: @red;
+          }
+
           .symbol {
             margin-right: 2px;
             font-size: 20px;
@@ -403,6 +436,17 @@ export default {
         .no-income {
           .money-color {
             color: #909399 !important;
+          }
+        }
+
+        .loss-num {
+          .loss-title {
+            font-size: 13px;
+            color: #909399;
+          }
+
+          .loss-value {
+            font-size: 13px;
           }
         }
 

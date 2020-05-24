@@ -16,6 +16,10 @@
         <span>门店退回</span>
         <return-select v-model="isReturn" />
       </div>
+      <div class="audit-box search-item">
+        <span>退单类型</span>
+        <quality-select placeholder="请选择退单类型" :options="returnOptions" showAllOption v-model="returnType"/>
+      </div>
       <div class="spot-check-box search-item">
         <span>门店点赞</span>
         <evaluate-select v-model="isGood" />
@@ -32,13 +36,8 @@
             {{ scope.row.receipt_at | toTimeSpan }}
           </template>
         </el-table-column>
-        <el-table-column label="审核通过时间" width="150">
-          <template slot-scope="scope">
-            {{ scope.row.pass_at | toTimeSpan }}
-          </template>
-        </el-table-column>
         <el-table-column prop="retouchAllTime" label="修图总时长" />
-        <el-table-column prop="storeReturnNum" label="退单张数" width="60" />
+        <el-table-column prop="storeReturnNum" label="退单张数" width="80" />
         <el-table-column prop="lekimaCount" label="利奇马" />
         <el-table-column prop="exp" label="海草值">
           <template slot-scope="scope">
@@ -58,6 +57,26 @@
               </el-table>
               <span slot="reference">{{ scope.row.exp }}</span>
             </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="收益">
+          <template slot-scope="scope">
+            <el-popover
+              placement="right"
+              popper-class="income-list"
+              trigger="hover"
+            >
+              <p>修图收益：{{ scope.row.income.retouchIncome }}</p>
+              <p>奖励收益：{{ scope.row.income.rewordIncome }}</p>
+              <p>惩罚收益：{{ scope.row.income.punishIncome }}</p>
+              <p>实获收益：{{ scope.row.income.actualIncome }}</p>
+              <span slot="reference">{{ scope.row.income.actualIncome }}</span>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="质量问题/非质量问题（张）" width="200">
+          <template slot-scope="scope">
+            {{ scope.row.qualityNum }} / {{ scope.row.notQualityNum }}
           </template>
         </el-table-column>
         <el-table-column prop="goodEvaluate" label="门店评价">
@@ -89,6 +108,7 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import ReturnSelect from '@SelectBox/ReturnStateSelect'
+import QualitySelect from '@SelectBox/WhetherSelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import { joinTimeSpan } from '@/utils/timespan.js'
@@ -98,7 +118,7 @@ import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -108,11 +128,19 @@ export default {
       tableData: [], // 列表数据
       isReturn: 'all', // 门店退回
       isGood: 'all', // 是否门店点赞
+      returnType: 'all', // 退单类型
       pager: {
         page: 1,
         pageSize: 10,
         total: 10
-      }
+      },
+      returnOptions: [{
+        label: '质量问题',
+        value: 'quality'
+      },{
+        label: '非质量问题',
+        value: 'not_quality'
+      }]
     }
   },
   watch: {
@@ -129,6 +157,10 @@ export default {
               break
             case SearchType.ReworkPhoto:
               this.isReturn = true
+              break
+            case SearchType.QualityRework:
+              this.isReturn = true
+              this.returnType = 'quality'
               break
           }
         }
@@ -164,6 +196,7 @@ export default {
         }
         if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
+        if (this.returnType !== 'all' ) { reqData.returnType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
@@ -259,6 +292,15 @@ export default {
         display: block;
       }
     }
+  }
+}
+
+.income-list {
+  p {
+    padding: 5px 0;
+    font-size: 13px;
+    color: #909399;
+    text-align: center;
   }
 }
 </style>
