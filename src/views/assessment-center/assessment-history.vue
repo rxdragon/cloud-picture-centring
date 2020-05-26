@@ -189,7 +189,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .assessment-history {
   .search-box {

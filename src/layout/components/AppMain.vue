@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .app-main {
   position: relative;
@@ -71,7 +71,7 @@ export default {
 </style>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 // fix css style bug in open el-dialog
 .el-popup-parent--hidden {
   .fixed-header {

@@ -359,7 +359,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .cloud-assessment {
   .search-box {

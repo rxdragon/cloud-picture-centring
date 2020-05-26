@@ -105,7 +105,9 @@ const actions = {
         })
       }
       newRolesArr = [...new Set(newRolesArr)]
-      accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
+      // accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
+      // TODO 调试
+      accessedRoutes = [...asyncRoutes, ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

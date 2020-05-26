@@ -260,7 +260,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .amount-award {
   .button-box {

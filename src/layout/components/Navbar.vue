@@ -221,7 +221,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .Navbar {
   width: 100%;

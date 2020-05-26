@@ -209,7 +209,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .experience-config {
   .no-data {

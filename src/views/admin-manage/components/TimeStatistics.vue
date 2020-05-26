@@ -140,7 +140,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .time-statistics {
   .table-panel {

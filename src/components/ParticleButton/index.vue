@@ -151,7 +151,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .particle-button {
   box-sizing: border-box;

@@ -213,7 +213,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .amend-order {
   .search-box {

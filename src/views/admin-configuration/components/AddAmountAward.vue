@@ -240,7 +240,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .add-amount-award {
   .search-item {

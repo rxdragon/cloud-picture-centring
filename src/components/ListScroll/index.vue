@@ -204,7 +204,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .list-scroll {
   width: 100%;

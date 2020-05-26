@@ -39,7 +39,7 @@
           <div class="retouch-select-box">
             <div class="search-item">
               <span>修图等级</span>
-              <retouch-rank-select v-model="retouchRank" showAllOption @change="onRankChange"/>
+              <retouch-rank-select v-model="retouchRank" show-all-option @change="onRankChange"/>
             </div>
             <div class="search-item plant-search">
               <span>海草值</span>
@@ -429,7 +429,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .add-account {
   .search-box {

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { getAllRetouchRank } from '@/api/accountManage.js'
+import * as AccountManage from '@/api/accountManage.js'
 
 export default {
   name: 'RetouchRankSelect',
@@ -41,7 +41,7 @@ export default {
      * @description 获取全部修图等级
      */
     async getAllRetouchRankList () {
-      const data = await getAllRetouchRank()
+      const data = await AccountManage.getAllRetouchRank()
       this.options = data
       this.disableState = false
     }

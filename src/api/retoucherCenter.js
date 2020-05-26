@@ -172,27 +172,12 @@ export function getRetouchQuotaList (params) {
       total: msg.total,
       list: []
     }
-    msg.list.forEach(listItem => {
-      const allTime = listItem.retouch_time + listItem.review_return_rebuild_time
-      listItem.pass_at = listItem.pass_at || '-'
-      listItem.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
-      listItem.exp = Number(listItem.exp) === 0 ? '-' : parseFloat(listItem.exp)
-      listItem.peopleTable = PhotoTool.getPhotoPeopleTabel(listItem.photos)
-      listItem.storeReturnNum = _.get(listItem, 'tags.values.store_rework_photo_num') || '-'
-      listItem.goodEvaluate = _.get(listItem, 'store_evaluate_stream.store_evaluate') || ''
-      listItem.retoucherNpsAvg = _.get(listItem, 'tags.values.retoucher_score') || '-'
-      listItem.lekimaCount = _.get(listItem, 'tags.values.lichma_photo_num') || '-'
-      const retouchIncome = parseFloat(listItem.income).toFixed(2) || 0.00
-      const rewordIncome = parseFloat(_.get(listItem, 'tags.values.reword')).toFixed(2) || 0.00
-      const punishIncome = parseFloat(_.get(listItem, 'tags.values.punish')).toFixed(2) || 0.00
-      listItem.income = {
-        retouchIncome: retouchIncome,
-        rewordIncome: rewordIncome,
-        punishIncome: punishIncome,
-        actualIncome: retouchIncome + rewordIncome - punishIncome
+    msg.list = msg.list.map(listItem => {
+      const streamInfo = new StreamModel(listItem)
+      return {
+        ...streamInfo,
+        peopleTable: PhotoTool.getPhotoPeopleTabel(listItem.photos)
       }
-      listItem.qualityNum = _.get(listItem, 'tags.values.qualityNum') || 0
-      listItem.notQualityNum = _.get(listItem, 'tags.values.notQualityNum') || 0
     })
     createData.list = msg.list
     return createData

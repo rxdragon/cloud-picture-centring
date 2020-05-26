@@ -12,7 +12,12 @@
     >
       <div class="issue-main">
         <div class="issue-box">
-          <div class="issues-class">摄影&化妆备注：{{ notes.photographNote || notes.dressNote ? notes.photographNote + ' ' + notes.dressNote : '暂无备注' }}</div>
+          <div class="issues-class">
+            摄影备注：{{ notes.photographNote }}
+          </div>
+          <div class="issues-class">
+            化妆备注：{{ notes.dressNote }}
+          </div>
         </div>
         <div class="issue-box" v-for="(issueClass, issueKey) in issueData" :key="issueKey">
           <div class="issues-class">{{ issueKey | filterName }}</div>
@@ -30,8 +35,8 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <span @click="submitData" class="no-issue-btn">没有问题</span>
-        <el-button type="primary" @click="submitData" :loading="loading">提 交</el-button>
+        <span @click="submitData(false)" class="no-issue-btn">没有问题</span>
+        <el-button type="primary" @click="submitData(true)" :loading="loading">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -64,9 +69,9 @@ export default {
     },
     /**
      * @description 提交
+     * @param {Boolean} true： 提交 false：没有问题
      */
-    submitData () {
-      this.loading = true
+    submitData (hasIssue) {
       const problemTagPhotography = []
       const problemTagMakeup = []
       for (const key in this.issueData) {
@@ -80,7 +85,11 @@ export default {
           }
         })
       }
-      const issue = { problemTagPhotography, problemTagMakeup }
+      const hasIssuelength = Boolean(problemTagPhotography.length + problemTagMakeup.length)
+      if (hasIssue && !hasIssuelength) return this.$newMessage.warning('请选择问题标签')
+      let issue = { problemTagPhotography, problemTagMakeup }
+      if (!hasIssue) { issue = null }
+      this.loading = true
       this.$emit('submit', issue)
     }
   }

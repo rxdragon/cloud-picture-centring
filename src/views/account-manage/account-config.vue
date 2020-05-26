@@ -190,7 +190,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .account-config {
   .main {

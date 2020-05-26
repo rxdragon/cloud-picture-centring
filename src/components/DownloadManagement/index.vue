@@ -113,8 +113,6 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
-
 .down-scrollbar-wrapper {
   max-height: 500px;
   overflow: hidden;

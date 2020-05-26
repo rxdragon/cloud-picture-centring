@@ -178,7 +178,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .photo-list {
   display: flex;

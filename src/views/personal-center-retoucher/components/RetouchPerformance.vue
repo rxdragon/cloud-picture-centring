@@ -70,19 +70,19 @@
           </template>
         </el-table-column>
         <el-table-column label="获得海草" min-width="140">
-         <template slot-scope="scope">
+          <template slot-scope="scope">
             <div class="income-box">
               <span class="span-row">
                 <span class="span-title">修图海草：</span>
-                {{ scope.row.exp.retouchExp }}
+                {{ scope.row.exp.retouchExp | toFixedString }}
               </span>
-              <span class="span-row punish-plant">
+              <span class="span-row text-red">
                 <span class="span-title">惩罚海草：</span>
-                {{ scope.row.exp.punishExp }}
+                {{ scope.row.exp.punishExp | toFixedString }}
               </span>
               <span class="span-row">
                 <span class="span-title">实获海草：</span>
-                {{ scope.row.exp.rewordExp }}
+                {{ scope.row.exp.rewordExp | toFixedString }}
               </span>
             </div>
           </template>
@@ -156,7 +156,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .retouch-performance {
   .text-red {
@@ -197,10 +197,6 @@ export default {
         .nps-grade {
           width: 90px;
         }
-      }
-
-      .punish-plant {
-        color: #d9001b;
       }
     }
 

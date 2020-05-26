@@ -58,9 +58,8 @@ export function getStreamInfo (params) {
         photoItem.photoVersion.forEach(versionItem => {
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
           versionItem.phototag = photoItem.tags
-          const commitInfo = {
-            picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || ''
-          }
+          // 获取云学院评价
+          const commitInfo = { picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || '' }
           const issueLabel = _.get(versionItem, 'phototag.values.check_pool_tags') || []
           if (!issueLabel.length && !commitInfo.picUrl) return
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)

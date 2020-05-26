@@ -267,3 +267,18 @@ export function getUpdateHistoryLog (params) {
     }
   })
 }
+
+/**
+ * @description 重新评价愿学院抽片
+ * @method PUT
+ * @returns {Boolean} 
+ * @author cf 2020/05/20
+ * @version @version 2.6.0
+ */
+export function updateCommitHistory (params) {
+  return axios({
+    url: '/project_cloud/checkPool/updateCommitHistory',
+    method: 'POST',
+    data: params
+  })
+}

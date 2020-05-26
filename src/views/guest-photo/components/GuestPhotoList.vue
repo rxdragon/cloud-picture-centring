@@ -246,7 +246,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .guest-photo-list {
   .search-box {

@@ -93,7 +93,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .order-detail {
   .panel-title {

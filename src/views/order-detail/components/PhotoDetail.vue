@@ -103,7 +103,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 @panelTitleWidth: 185px;
 
 .photo-detail {

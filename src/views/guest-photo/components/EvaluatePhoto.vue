@@ -195,7 +195,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .evaluate-photo {
   .search-box {

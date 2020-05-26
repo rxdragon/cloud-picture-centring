@@ -184,7 +184,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .work-target {
   .list-table-box {

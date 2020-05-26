@@ -225,6 +225,9 @@ export function getAllRetouchRank () {
     url: '/project_cloud/staff/getLevelList',
     method: 'GET'
   }).then(msg => {
+    for (const key in msg) {
+      msg[key] += `(${key}级)`
+    }
     return msg
   })
 }

@@ -434,7 +434,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .audit-center {
   .header {

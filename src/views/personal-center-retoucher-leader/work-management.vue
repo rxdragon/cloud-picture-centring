@@ -139,7 +139,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .work-management {
   .today-info {

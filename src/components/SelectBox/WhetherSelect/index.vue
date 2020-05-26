@@ -1,10 +1,6 @@
 <template>
   <div class="whether-select">
-    <el-select
-      v-bind="$attrs"
-      :popper-append-to-body="false"
-      v-on="$listeners"
-    >
+    <el-select v-bind="$attrs" :popper-append-to-body="false" v-on="$listeners">
       <el-option v-if="showAllOption" label="全部" value="all" />
       <el-option
         v-for="(item, index) in options"

@@ -6,12 +6,17 @@
     <div class="search-box">
       <!-- 查询条件 -->
       <div class="search-item">
-        <span>时间</span>
+        <span>操作时间</span>
         <date-picker v-model="timeSpan" />
       </div>
       <div class="stream-search search-item">
         <span>流水号</span>
-        <el-input clearable v-model="streamNum" placeholder="请输入流水号"></el-input>
+        <el-input
+          clearable
+          v-model.trim="streamNum"
+          @keyup.native.enter="getSearchHistory(1)"
+          placeholder="请输入流水号"
+        />
       </div>
       <div class="staff-search search-item">
         <span>修图师</span>
@@ -19,7 +24,14 @@
       </div>
       <!-- 查询按钮 -->
       <div class="button-box">
-        <el-button :disabled="!Boolean(timeSpan)" type="primary" class="search-button" @click="getSearchHistory(1)">查询</el-button>
+        <el-button
+          :disabled="!Boolean(timeSpan)"
+          type="primary"
+          class="search-button"
+          @click="getSearchHistory(1)"
+        >
+          查询
+        </el-button>
       </div>
     </div>
     <div class="module-panel">
@@ -34,7 +46,7 @@
             <el-table-column prop="retoucherName" label="修图师" />
             <el-table-column prop="retoucherLeader" label="修图主管" />
           </el-table>
-      </template>
+        </template>
       </div>
       <div class="page-box">
         <el-pagination
@@ -78,18 +90,9 @@ export default {
     const startAt = moment().subtract('day', 28).locale('zh-cn').format('YYYY-MM-DD')
     const endAt = moment().locale('zh-cn').format('YYYY-MM-DD')
     this.timeSpan = [startAt, endAt]
-    this.initial()
-  },
-  activated () {
-    this.initial()
+    this.getSearchHistory(1)
   },
   methods: {
-    /**
-     * @description 初始化
-     */
-    initial () {
-      this.getSearchHistory(1)
-    },
     /**
      * @description 获取搜索数据
      */
@@ -130,8 +133,7 @@ export default {
     /**
      * @description 监听页面变化
      */
-    handlePage (page) {
-      this.$el.parentElement.scrollTop = 0
+    handlePage () {
       this.getSearchHistory()
     }
   }
@@ -139,7 +141,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .modify-history {
   .search-box {

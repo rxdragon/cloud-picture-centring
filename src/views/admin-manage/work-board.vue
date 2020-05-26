@@ -319,7 +319,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .WorkBoard {
   .search-box {
