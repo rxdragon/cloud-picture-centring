@@ -1,7 +1,7 @@
 <template>
   <div id="photoShow">
     <div class="title">
-      {{ showPhoto.version | toPhotoVerName }}
+      {{ showPhoto.version | toPhotoVerName }}{{ showPhoto.storeReturnCount || '' }}
       <div class="driver-star" @click.stop="guide">?</div>
       <div class="btn-right">
         <button

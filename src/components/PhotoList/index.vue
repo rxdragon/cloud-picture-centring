@@ -9,7 +9,7 @@
         show-yun-check
       >
         <template v-slot:title>
-          <span class="lable-title">{{ photoItem.version | toPhotoVerName }}</span>
+          <span class="lable-title">{{ photoItem.version | toPhotoVerName }}{{ photoItem.storeReturnCount || '' }}</span>
         </template>
       </photo-box>
       <div
@@ -93,6 +93,7 @@ export default {
     priviewPhotoData () {
       const previewList = this.photos.map(item => {
         const createData = new PreviewModel(item)
+        createData.storeReturnCount = item.storeReturnCount
         createData.src = this.imgDomain + createData.path
         return createData
       })
