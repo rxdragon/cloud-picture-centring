@@ -131,7 +131,9 @@ export default class StreamModel {
     this.receiptAt = this.baseData.receipt_at || '-'
     this.passAt = this.baseData.pass_at || '-'
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
-    const allTime = this.baseData.retouch_time + this.baseData.review_return_rebuild_time
+    const retouchTime = _.get(this.baseData, 'retouch_time') || 0
+    const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
+    const allTime = retouchTime + reviewReturnRebuildTime
     this.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
   }
 

@@ -185,6 +185,64 @@ export function getRetouchQuotaList (params) {
 }
 
 /**
+ * @description 查询修改他人记录
+ * @param {*} params 
+ */
+export function getModifyRetouchQuotaList (params) {
+  return axios({
+    url: '/project_cloud/retoucher/getModifyRetouchQuotaList',
+    method: 'GET',
+    params
+  }).then(msg => {
+    // TODO mock
+    msg.data = [
+      {
+        "id": 33,
+        "stream_id": 28211,
+        "state": "finish",
+        "retoucher_id": 640803,
+        "money": 1,
+        "exp": 1,
+        "retouch_time": 100,
+        "receipt_at": "1998-01-01 12:00:00",
+        "pass_at": "1998-02-01 12:00:00",
+        "deleted_at": null,
+        "created_at": "1998-01-01 12:00:00",
+        "updated_at": "1998-01-01 12:00:00",
+        "rework_photo": [
+          {
+            "id": 15,
+            "rework_photo_id": 71088,
+            "rework_photo_type": "quality",
+            "rework_stream_id": 33,
+            "money": 1,
+            "exp": 1,
+            "retoucher_id": 640803,
+            "created_at": "1998-01-01 12:00:00",
+            "updated_at": "1998-01-01 12:00:00",
+            "photo": {
+              "id": 71088,
+              "uuid": "c6d2df2d-78fc-41e4-a6eb-70c9b67ff8fb",
+              "stream_id": 28211,
+              "people_num": 201,
+              "type": "splice"
+            }
+          }
+        ]
+      }
+    ]
+    msg.list = msg.data.map(listItem => {
+      const streamInfo = new StreamModel(listItem)
+      return {
+        ...streamInfo,
+        peopleTable: PhotoTool.getPhotoPeopleTabel(listItem.rework_photo)
+      }
+    })
+    return msg
+  })
+}
+
+/**
  * @description 获取历史修图报告列表
  * @param {*} params
  */

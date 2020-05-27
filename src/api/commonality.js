@@ -94,6 +94,21 @@ export function getStreamInfo (params) {
 }
 
 /**
+ * @description 获取修改他人记录
+ * @param {*} params 
+ */
+export function getModifyRetouchQuotaInfo (params) {
+  return axios({
+    url: '/project_cloud/retoucher/getModifyRetouchQuotaInfo',
+    method: 'GET',
+    params
+  }).then(msg => {
+    // TODO 链条
+    return msg
+  })
+}
+
+/**
  * @description 获取七牛云接口
  * @param {*} params
  */

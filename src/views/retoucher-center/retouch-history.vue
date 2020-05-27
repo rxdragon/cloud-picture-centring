@@ -152,7 +152,7 @@ export default {
       isReturn: 'all', // 门店退回
       isGood: 'all', // 是否门店点赞
       returnType: 'all', // 退单类型
-      listActive: 'self',
+      listActive: 'self', // self 个人 others // 他人
       pager: {
         page: 1,
         pageSize: 10,
@@ -192,6 +192,12 @@ export default {
         this.searchList(1)
       },
       immediate: true
+    },
+    listActive: {
+      handler () {
+        this.searchList(1)
+      },
+      immediate: false
     }
   },
   methods: {
@@ -199,17 +205,24 @@ export default {
      * @description 跳转链接
      */
     linkto (streamId) {
+      const query = { streamId }
+      if (this.active === 'others') {
+        query.searchOther = 1
+      }
       this.$router.push({
         path: '/order-detail',
-        query: { streamId }
+        query
       })
     },
+    /**
+     * @description 搜索历史修图记录
+     */
     searchList (page) {
       if (page) { this.pager.page = page }
       if (this.listActive === 'self') {
         this.getRetouchList()
       } else {
-        this.getotherRetouchList()
+        this.getOtherRetouchList()
       }
     },
     /**
@@ -246,18 +259,28 @@ export default {
      * @description 获取修改他退单记录
      * @param 页码 如果通过按搜索框搜索,传输1 到第一页
      */
-    async getotherRetouchList () {
-      const reqData = {
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+    async getOtherRetouchList () {
+      try {
+        const reqData = {
+          page: this.pager.page,
+          pageSize: this.pager.pageSize
+        }
+        if (this.timeSpan) {
+          reqData.startAt = joinTimeSpan(this.timeSpan[0])
+          reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
+        }
+        if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
+        if (this.streamNum) { reqData.streamNum = this.streamNum }
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.tableData = []
+        const data = await RetoucherCenter.getModifyRetouchQuotaList(reqData)
+        this.pager.total = data.total
+        this.tableData = data.list
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
-      if (this.timeSpan) {
-        reqData.startAt = joinTimeSpan(this.timeSpan[0])
-        reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
-      }
-      if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
-      if (this.streamNum) { reqData.streamNum = this.streamNum }
-      // TODO
     },
     /**
      * @description 页码改变
