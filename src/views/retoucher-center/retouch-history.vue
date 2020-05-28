@@ -3,13 +3,8 @@
     <div class="header">
       <h3>修图历史记录</h3>
     </div>
-    <!-- 列表切换 -->
-    <el-tabs v-model="listActive">
-      <el-tab-pane label="本人修图历史记录" name="self"></el-tab-pane>
-      <el-tab-pane label="修改他人退单记录" name="others"></el-tab-pane>
-    </el-tabs>
     <!-- 列表主要内容 -->
-    <div class="history-main table-box" :class="{'no-border': listActive === 'self'}">
+    <div class="history-main table-box">
       <div class="search-box">
         <!-- 修图完成时间 -->
         <div class="date-search search-item">
@@ -27,7 +22,7 @@
           <return-select v-model="isReturn" />
         </div>
         <!-- 退单类型 -->
-        <div class="audit-box search-item" v-if="listActive === 'self'">
+        <div class="audit-box search-item">
           <span>退单类型</span>
           <quality-select
             placeholder="请选择退单类型"
@@ -36,7 +31,7 @@
             v-model="returnType"
           />
         </div>
-        <div v-if="listActive === 'self'" class="spot-check-box search-item">
+        <div class="spot-check-box search-item">
           <span>门店点赞</span>
           <evaluate-select v-model="isGood" />
         </div>
@@ -96,17 +91,12 @@
               {{ row.qualityNum }} / {{ row.notQualityNum }}
             </template>
           </el-table-column>
-          <el-table-column prop="goodEvaluate" label="门店评价" v-if="listActive === 'self'">
+          <el-table-column prop="goodEvaluate" label="门店评价">
             <template slot-scope="scope">
               <show-evaluate :evaluate="scope.row.goodEvaluate" />
             </template>
           </el-table-column>
-          <el-table-column
-            prop="retoucherNpsAvg"
-            label="顾客满意度"
-            width="100"
-            v-if="listActive === 'self'"
-          />
+          <el-table-column prop="retoucherNpsAvg" label="顾客满意度" width="100" />
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="linkto(scope.row.streamId)">详情</el-button>
@@ -152,7 +142,6 @@ export default {
       isReturn: 'all', // 门店退回
       isGood: 'all', // 是否门店点赞
       returnType: 'all', // 退单类型
-      listActive: 'self', // self 个人 others // 他人
       pager: {
         page: 1,
         pageSize: 10,
@@ -188,16 +177,9 @@ export default {
               break
           }
         }
-        this.listActive = 'self'
         this.searchList(1)
       },
       immediate: true
-    },
-    listActive: {
-      handler () {
-        this.searchList(1)
-      },
-      immediate: false
     }
   },
   methods: {
@@ -218,12 +200,8 @@ export default {
      * @description 搜索历史修图记录
      */
     searchList (page) {
-      if (page) { this.pager.page = page }
-      if (this.listActive === 'self') {
-        this.getRetouchList()
-      } else {
-        this.getOtherRetouchList()
-      }
+      this.pager.page = page ? page : this.pager.page
+      this.getRetouchList()
     },
     /**
      * @description 获取历史列表
@@ -249,33 +227,6 @@ export default {
         this.tableData = data.list
         delete this.$route.query.retouchHistoryTimeSpan
         delete this.$route.query.retouchHistorySearchType
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      }
-    },
-    /**
-     * @description 获取修改他退单记录
-     * @param 页码 如果通过按搜索框搜索,传输1 到第一页
-     */
-    async getOtherRetouchList () {
-      try {
-        const reqData = {
-          page: this.pager.page,
-          pageSize: this.pager.pageSize
-        }
-        if (this.timeSpan) {
-          reqData.startAt = joinTimeSpan(this.timeSpan[0])
-          reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
-        }
-        if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
-        if (this.streamNum) { reqData.streamNum = this.streamNum }
-        this.$store.dispatch('setting/showLoading', this.routeName)
-        this.tableData = []
-        const data = await RetoucherCenter.getModifyRetouchQuotaList(reqData)
-        this.pager.total = data.total
-        this.tableData = data.list
       } catch (error) {
         console.error(error)
       } finally {
@@ -321,10 +272,6 @@ export default {
         width: 60px;
       }
     }
-  }
-
-  .no-border {
-    border-top-left-radius: 0;
   }
 }
 </style>
