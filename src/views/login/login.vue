@@ -72,7 +72,7 @@ export default {
     async judgeJump () {
       if (this.animationFinish && this.loginFinish) {
         const info = await this.$store.dispatch('user/getUserInfo')
-        if (!info || !info.name) {
+        if (info.disable) {
           User.logout()
           this.showLoginError()
         } else {
@@ -90,6 +90,7 @@ export default {
         center: true,
         type: 'error',
         showClose: false,
+        closeOnClickModal: false,
         showCancelButton: false
       }).then(() => {
         location.reload()

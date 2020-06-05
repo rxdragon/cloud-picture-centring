@@ -320,8 +320,9 @@ export default {
      * @description 等级改变联动设置海草值
      */
     onRankChange (val) {
-      if (val) {
-        const expIndex = Number(val) - 1
+      const expIndex = Number(val) - 1
+      const newRxp = this.allRetouchRankExp[expIndex]
+      if (newRxp >= this.originExp) {
         this.retouchExp = this.allRetouchRankExp[expIndex]
       }
     },

@@ -103,7 +103,7 @@
                   <div class="loss-num">
                     <span class="loss-title">惩罚海草：</span>
                     <span class="pink-color loss-value">
-                      <count-to :end-value="quotaInfo.punishExp" />颗
+                      <count-to show-point :end-value="quotaInfo.punishExp" />颗
                     </span>
                   </div>
                   <div class="loss-num">
