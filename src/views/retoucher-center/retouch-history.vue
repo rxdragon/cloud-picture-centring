@@ -54,7 +54,6 @@
           </el-table-column>
           <el-table-column prop="retouchAllTime" label="修图总时长" width="100" />
           <el-table-column prop="storeReturnNum" label="退单张数" width="80" />
-          <el-table-column prop="lekimaCount" label="利奇马" />
           <el-table-column prop="exp" label="海草值">
             <template slot-scope="{ row }">
               <el-popover
@@ -219,7 +218,7 @@ export default {
         }
         if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
-        if (this.returnType !== 'all' ) { reqData.returnType = this.returnType }
+        if (this.returnType !== 'all' ) { reqData.storeReworkType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
