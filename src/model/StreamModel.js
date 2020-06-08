@@ -86,8 +86,8 @@ export default class StreamModel {
 
     this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(StreamStatics.STORERETURN)
     this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_photo_num') || '-'
-    this.qualityNum = _.get(streamData, 'tags.values.qualityNum') || 0
-    this.notQualityNum = _.get(streamData, 'tags.values.notQualityNum') || 0
+    this.qualityNum = _.get(streamData, 'tags.values.quality_num') || 0
+    this.notQualityNum = _.get(streamData, 'tags.values.not_quality_num') || 0
 
     this.lekimaCount = _.get(streamData, 'tags.values.lichma_photo_num') || '-'
     this.goodEvaluate = _.get(streamData, 'store_evaluate_stream.store_evaluate') || '-'
@@ -114,10 +114,9 @@ export default class StreamModel {
 
   // 获取收益
   getIncome () {
-    // TODO 接口联调
     const retouchIncome = parseFloat(this.baseData.income) || 0 // 原始收益
-    const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword_income')) || 0
-    const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish_income')) || 0
+    const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword')) || 0
+    const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish')) || 0
     const actualIncome = retouchIncome + rewordIncome - punishIncome
     this.retouchIncome = retouchIncome
     this.rewordIncome = rewordIncome

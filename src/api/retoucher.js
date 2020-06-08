@@ -13,11 +13,11 @@ export function getSelfQuota () {
     for (const key in data.todayIncome) {
       data.todayIncome[key] = Number(data.todayIncome[key])
     }
-    data.punishExp = Number(data.todayIncome.punishExp)
-    data.todayExp = Number(data.todayExp)
+    data.punishExp = (data.todayIncome.punishExp || 0).toFixed(2)
+    data.todayExp = (Number(data.todayExp) || 0).toFixed(2)
     const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward - data.todayIncome.punish
-    data.todayRewordIncome = todayIncome.toFixed(2)
-    data.punishIncome = Number(data.todayIncome.punish).toFixed(2)
+    data.todayRewordIncome = (todayIncome || 0).toFixed(2)
+    data.punishIncome = (data.todayIncome.punish || 0).toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
       data.todayFinishPhotoNumProgress = 0
     } else {
