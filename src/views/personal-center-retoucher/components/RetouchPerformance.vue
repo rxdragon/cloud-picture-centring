@@ -69,7 +69,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="获得海草" min-width="140">
+        <el-table-column label="获得海草" min-width="150">
           <template slot-scope="scope">
             <div class="income-box">
               <span class="span-row">
@@ -190,7 +190,6 @@ export default {
 
         .span-title {
           display: inline-block;
-          width: 80px;
           text-align: left;
         }
 

@@ -1,4 +1,4 @@
-# 2.0.0 (2020-06-05)
+# 2.0.0 (2020-06-08)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -235,6 +235,7 @@
  兼容 win | [c297ce3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c297ce3)
  兼容jpeg和jpg对应版本' | [6dee0a1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6dee0a1)
  老数据容错 | [ce4a3ce](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ce4a3ce)
+ 联调修复 | [f68b6e4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f68b6e4)
  平均分保留两位，张数处理整型 | [85027ae](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/85027ae)
  取消默认自动上传 | [4f914c4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f914c4)
  去除修改他人记录表格 | [f365048](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f365048)
