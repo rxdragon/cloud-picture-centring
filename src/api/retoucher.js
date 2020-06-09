@@ -15,7 +15,7 @@ export function getSelfQuota () {
     }
     data.punishExp = Number(data.todayExp.punish || 0).toFixed(2)
     data.todayExp = Number(data.todayExp.retouch || 0).toFixed(2)
-    const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward - data.todayIncome.punish
+    const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward
     data.todayRewordIncome = (todayIncome || 0).toFixed(2)
     data.punishIncome = (data.todayIncome.punish || 0).toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
