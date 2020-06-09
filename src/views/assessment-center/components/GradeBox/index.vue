@@ -12,7 +12,14 @@
           已重评
         </el-tag>
         <div class="score-box">
-          <el-button size="mini" type="primary" @click="afreshGrade">重新评分</el-button>
+          <el-button
+            v-if="hasRecheckPermission"
+            size="mini"
+            type="primary"
+            @click="afreshGrade"
+          >
+            重新评分
+          </el-button>
           <span>总分：{{ photoInfoData.score }}</span>
         </div>
       </div>
@@ -115,6 +122,9 @@ export default {
         versionItem.phototag = this.photoInfo.photoData.tags
       })
       return photoVersionInfo
+    },
+    hasRecheckPermission () {
+      return this.$store.state.permission.roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
     }
   },
   methods: {
