@@ -13,7 +13,7 @@
         </el-tag>
         <div class="score-box">
           <el-button
-            v-if="hasRecheckPermission"
+            v-if="showSpotRecheck"
             size="mini"
             type="primary"
             @click="afreshGrade"
@@ -97,6 +97,7 @@
 import PhotoList from '@/components/PhotoList'
 import GradePreview from '../GradePreview.vue'
 import * as AssessmentCenter from '@/api/assessmentCenter.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'GradeBox',
@@ -113,6 +114,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['showSpotRecheck']),
     photoInfoData () {
       return this.photoInfo
     },
@@ -122,9 +124,6 @@ export default {
         versionItem.phototag = this.photoInfo.photoData.tags
       })
       return photoVersionInfo
-    },
-    hasRecheckPermission () {
-      return this.$store.state.permission.roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
     }
   },
   methods: {

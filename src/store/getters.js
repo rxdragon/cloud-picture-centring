@@ -37,7 +37,8 @@ const permissionGetters = {
   showStreamList: state => state.permission.showStreamList, // 是否显示流量看板按钮
   showUrgentStream: state => state.permission.showUrgentStream, // 是否显示流量看板按钮
   isRetoucher: state => state.permission.isRetoucher, // 是否是修图师身份
-  showWorkInfo: state => state.permission.showWorkInfo // 是否是修图师身份
+  showWorkInfo: state => state.permission.showWorkInfo, // 是否是修图师身份
+  showSpotRecheck: state => state.permission.showSpotRecheck // 是否显示重新打分按钮
 }
 
 const getters = {
