@@ -48,7 +48,8 @@ const state = {
   showStreamList: false, // 是否显示浏览加急查询
   showUrgentStream: false, // 是否显示加急按钮
   isRetoucher: false, // 是否是修片师
-  showWorkInfo: false // 是否可以查看工作看板详情按钮
+  showWorkInfo: false, // 是否可以查看工作看板详情按钮
+  showSpotRecheck: false // 是否显示重新打分按钮
 }
 
 const mutations = {
@@ -70,6 +71,7 @@ const mutations = {
     state.showUrgentStream = roles.includes('AdminManage.workBoard.urgentStream')
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
+    state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
     Vue.prototype.$ws = new Ws()
     Vue.prototype.$ws.initializeSendMessage(state.isRetoucher)
   },

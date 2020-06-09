@@ -12,7 +12,14 @@
           已重评
         </el-tag>
         <div class="score-box">
-          <el-button size="mini" type="primary" @click="afreshGrade">重新评分</el-button>
+          <el-button
+            v-if="showSpotRecheck"
+            size="mini"
+            type="primary"
+            @click="afreshGrade"
+          >
+            重新评分
+          </el-button>
           <span>总分：{{ photoInfoData.score }}</span>
         </div>
       </div>
@@ -90,6 +97,7 @@
 import PhotoList from '@/components/PhotoList'
 import GradePreview from '../GradePreview.vue'
 import * as AssessmentCenter from '@/api/assessmentCenter.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'GradeBox',
@@ -106,6 +114,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['showSpotRecheck']),
     photoInfoData () {
       return this.photoInfo
     },
