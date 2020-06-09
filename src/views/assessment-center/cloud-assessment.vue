@@ -50,7 +50,8 @@
         v-for="photoItem in photoData"
         @startGrade="showGrade"
         :key="photoItem.businessId"
-        :photo-info="photoItem"/>
+        :photo-info="photoItem"
+      />
     </div>
     <div class="page-box">
       <el-pagination
@@ -80,7 +81,9 @@
       :photo-version="showPhotoVersion"
       @submit="submitData"
       ref="grade-preview"
-      :show.sync="showGradePreview" :info="gradeInfo" />
+      :show.sync="showGradePreview"
+      :info="gradeInfo"
+    />
   </div>
 </template>
 
@@ -356,7 +359,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .cloud-assessment {
   .search-box {

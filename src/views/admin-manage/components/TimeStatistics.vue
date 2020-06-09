@@ -11,7 +11,7 @@
       </div>
       <div class="outsourc-staff-search search-item">
         <span>修图标准</span>
-        <retouch-kind-select v-model="retouchType" />
+        <retouch-kind-select v-model="retouchType" placeholder="请选择修图标准"/>
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamTimesQuota">查询</el-button>
@@ -140,7 +140,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .time-statistics {
   .table-panel {

@@ -4,7 +4,12 @@
       <h3>组员修图报告</h3>
     </div>
     <el-tabs v-model="activeName" v-show="isShowTab">
-      <el-tab-pane v-for="(item,index) in tabList" :key="index" :label="item.label" :name="item.value" />
+      <el-tab-pane
+        v-for="(item,index) in tabList"
+        :key="index"
+        :label="item.label"
+        :name="item.value"
+      />
     </el-tabs>
     <keep-alive>
       <component :is="activeName" @changeShowTab="changeShowTab"/>

@@ -58,33 +58,34 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="scope">
           <div class="operation-box">
-            <el-dropdown v-if="showDropdown(scope.row)" placement="bottom" :show-timeout="100" trigger="hover">
+            <el-dropdown
+              v-if="showDropdown(scope.row)"
+              placement="bottom"
+              :show-timeout="100"
+              trigger="hover"
+            >
               <el-button size="mini" type="primary">操作<i class="el-icon-arrow-down el-icon--right" /></el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  :disabled="!canSeeInfo(scope.row)"
-                  class="primary-color"
-                  @click.native="linkto(scope.row)"
-                >
+                <el-dropdown-item :disabled="!canSeeInfo(scope.row)" class="primary-color" @click.native="linkto(scope.row)">
                   流水详情
                 </el-dropdown-item>
-                <el-dropdown-item
-                  v-if="canUrgent(scope.row)"
-                  class="danger-color"
-                  @click.native="urgentStream(scope.row.id)"
-                >
+                <el-dropdown-item v-if="canUrgent(scope.row)" class="danger-color" @click.native="urgentStream(scope.row.id)">
                   流水加急
                 </el-dropdown-item>
-                <el-dropdown-item
-                  v-if="canManualReview(scope.row)"
-                  class="warning-color"
-                  @click.native="manualReview(scope.row.id)"
-                >
+                <el-dropdown-item v-if="canManualReview(scope.row)" class="warning-color" @click.native="manualReview(scope.row.id)">
                   直接审核
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-button v-else size="mini" type="primary" :disabled="!canSeeInfo(scope.row)" @click.native="linkto(scope.row)">流水详情</el-button>
+            <el-button
+              v-else
+              size="mini"
+              type="primary"
+              :disabled="!canSeeInfo(scope.row)"
+              @click.native="linkto(scope.row)"
+            >
+              流水详情
+            </el-button>
           </div>
         </template>
       </el-table-column>

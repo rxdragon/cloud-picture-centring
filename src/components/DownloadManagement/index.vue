@@ -45,7 +45,13 @@
           <i class="el-icon-setting" @click="changeSavePath" />
         </div>
       </div>
-      <el-badge slot="reference" :max="9" :hidden="!showProgressingNum" :value="showProgressingNum" class="item">
+      <el-badge
+        slot="reference"
+        :max="9"
+        :hidden="!showProgressingNum"
+        :value="showProgressingNum"
+        class="item"
+      >
         <el-button class="icon-button" icon="el-icon-download" />
       </el-badge>
     </el-popover>
@@ -107,8 +113,6 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
-
 .down-scrollbar-wrapper {
   max-height: 500px;
   overflow: hidden;

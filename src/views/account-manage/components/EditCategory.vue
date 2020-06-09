@@ -14,10 +14,7 @@
     </div>
     <div class="product-box module-panel">
       <div class="panel-title">可接产品</div>
-      <product-panel
-        :default-checked-keys="defaultCheckedKeys"
-        :to-data.sync="toData"
-      />
+      <product-panel :default-checked-keys="defaultCheckedKeys" :to-data.sync="toData"/>
     </div>
   </div>
 </template>

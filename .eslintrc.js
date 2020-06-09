@@ -13,7 +13,8 @@ module.exports = {
     "plugin:vue/essential"
   ],
   "plugins": [
-    "vue"
+    "vue",
+    "attributes"
   ],
   // 指定脚本的运行环境
   "env": {
@@ -59,8 +60,6 @@ module.exports = {
         balanced: true
       }
     }],
-    "no-console": ["error", { allow: ["warn", "error"] }],
-    'semi': [2, 'never'],
     "no-var": 2, // 禁止使用 var，必须用 let 或 const
     "no-unused-vars": [2, // 禁止定义不使用的变量
       {
@@ -79,6 +78,8 @@ module.exports = {
     "no-undef-init": 2, // 禁止将 undefined 赋值给变量
     "no-undef": 2, // 禁止访问未定义的变量或方法
     "no-sparse-arrays": 2, // 禁止数组中出现连续逗号
+    "no-return-assign": 2, // 禁止在return中赋值
+    "no-return-await": 2, // 禁止在 return 中使用 await
     "no-redeclare": 2, // 禁止重复声明
     "no-regex-spaces": 2, // 禁止在正则表达式中出现连续空格
     "no-multi-assign": 2, // 禁止连等赋值
@@ -92,6 +93,7 @@ module.exports = {
     "no-mixed-spaces-and-tabs": 2,// 禁止混用空格和 tab 来做缩进，必须统一
     "no-lone-blocks": 2, // 禁止使用无效的块作用域
     "no-extra-semi": 2, // 禁止额外的分号
+    "semi": ["error", "never"],
     "no-eval": 2, // 禁止使用 eval
     "no-empty-function": 2, // 禁止空的 function, 包含注释的情况下允许
     "no-empty-pattern": 2, // 禁止解构中出现空 {} 或 []
@@ -101,10 +103,59 @@ module.exports = {
     "no-duplicate-case": 2, // 禁止 switch 中出现相同的 case\
     "no-duplicate-imports": 2, // 禁止重复 import
     "keyword-spacing": 2,// 关键字前后必须有空格
-    "object-curly-spacing": ["error", "always"], // 对象内的空格
-    "space-before-function-paren": 2, // 方法前的空格
-    "space-infix-ops": 2, // 要求操作符周围有空格
-    "space-unary-ops": 2, // 强制在一元操作符前后使用一致的空格
-    "spaced-comment": 2, // 强制在注释中 // 或 /* 使用一致的空格
+    "vue/script-indent": ["error", 2, { // script缩进配置
+      "baseIndent": 0,
+      "ignores": ["SwitchCase"]
+    }],
+    "vue/html-closing-bracket-newline": ["error", { // html右括号的位置，多行标签换行
+      "singleline": "never",
+      "multiline": "always"
+    }],
+    "vue/html-indent": ["error", 2, {
+      "attribute": 1 // 属性的缩进倍数
+    }],
+    "vue/html-quotes": [ "error", "double" ], // HTML属性的双引号样式
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": 3, // 单行超过3个属性，则换行
+      "multiline": {
+        "max": 1 // 多行最多只允许1个属性
+      }
+    }],
+    "vue/multiline-html-element-content-newline": ["error", { // 多行元素的内容之前和之后执行换行
+      "ignoreWhenEmpty": true,
+      "allowEmptyLines": false
+    }],
+    "vue/mustache-interpolation-spacing":  ["error", "always"], //插值统一间距
+    "vue/order-in-components": ["error", {
+      "order": [
+        "el",
+        "name",
+        "parent",
+        "functional",
+        ["delimiters", "comments"],
+        ["components", "directives", "filters"],
+        "extends",
+        "mixins",
+        "inheritAttrs",
+        "model",
+        ["props", "propsData"],
+        "fetch",
+        "asyncData",
+        "data",
+        "computed",
+        "watch",
+        "LIFECYCLE_HOOKS",
+        "methods",
+        "head",
+        ["template", "render"],
+        "renderError"
+      ]
+    }],
+    "vue/space-infix-ops": ["error", { "int32Hint": false }], // 缀操作符之间的间距
+    "no-console": ["error", { allow: ["warn", "error"] }],
+    // 最多允许的属性数量，单个属性的字符串最大长度
+    "attributes/max-attributes": [2, { "max": 3, "attrStrLimit": 50 }],
+    // 属性上'||'和'&&'出现的次数限制
+    "attributes/max-attribute-value-logical": [2, { "max": 2 }],
   }
 }

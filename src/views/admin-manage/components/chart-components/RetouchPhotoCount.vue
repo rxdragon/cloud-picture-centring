@@ -100,7 +100,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .retouch-photo-count {
   position: relative;

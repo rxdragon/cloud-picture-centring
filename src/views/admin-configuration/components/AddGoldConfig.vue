@@ -6,10 +6,7 @@
     <div class="module-panel">
       <div class="search-item">
         <span>配置伙伴</span>
-        <staff-panel
-          :default-checked-keys="defaultCheckedKeys"
-          :to-data.sync="toData"
-        />
+        <staff-panel :default-checked-keys="defaultCheckedKeys" :to-data.sync="toData"/>
       </div>
       <div class="search-item gold-box">
         <span>金币卡</span>

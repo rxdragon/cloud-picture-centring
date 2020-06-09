@@ -33,7 +33,10 @@
                     <th>产品名称</th>
                     <th>今日/其他</th>
                   </tr>
-                  <tr v-for="(productItem, productIndex) in flowInfo.waitRetouch.photos" :key="productIndex">
+                  <tr
+                    v-for="(productItem, productIndex) in flowInfo.waitRetouch.photos"
+                    :key="productIndex"
+                  >
                     <th>{{ productItem.name }}</th>
                     <th>{{ productItem.today + '/' + productItem.other }}</th>
                   </tr>
@@ -63,7 +66,10 @@
           </div>
         </div>
         <div class="panel-right">
-          <people-ring :retouch-num="flowInfo.retouchingPersonNum" :outer-retouch-num="flowInfo.outerRetouchingPersonNum" />
+          <people-ring
+            :retouch-num="flowInfo.retouchingPersonNum"
+            :outer-retouch-num="flowInfo.outerRetouchingPersonNum"
+          />
         </div>
       </div>
       <!-- 正在修片数据 -->
@@ -90,7 +96,10 @@
                   <th>产品名称</th>
                   <th>修图/重修</th>
                 </tr>
-                <tr v-for="(productItem, productIndex) in flowInfo.cloudRetouching.photos" :key="productIndex">
+                <tr
+                  v-for="(productItem, productIndex) in flowInfo.cloudRetouching.photos"
+                  :key="productIndex"
+                >
                   <th>{{ productItem.name }}</th>
                   <th>{{ productItem.retouching + '/' + productItem.reworking }}</th>
                 </tr>
@@ -114,7 +123,10 @@
                   <th>产品名称</th>
                   <th>修图/重修</th>
                 </tr>
-                <tr v-for="(productItem, productIndex) in flowInfo.outerRetouching.photos" :key="productIndex">
+                <tr
+                  v-for="(productItem, productIndex) in flowInfo.outerRetouching.photos"
+                  :key="productIndex"
+                >
                   <th>{{ productItem.name }}</th>
                   <th>{{ productItem.retouching + '/' + productItem.reworking }}</th>
                 </tr>
@@ -173,7 +185,10 @@
                   <th>产品名称</th>
                   <th>审核中/待审核</th>
                 </tr>
-                <tr v-for="(productItem, productIndex) in flowInfo.review.photos" :key="productIndex">
+                <tr
+                  v-for="(productItem, productIndex) in flowInfo.review.photos"
+                  :key="productIndex"
+                >
                   <th>{{ productItem.name }}</th>
                   <th>{{ productItem.reviewing + '/' + productItem.wait_review }}</th>
                 </tr>
@@ -325,7 +340,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .table-popover {
   .popover-table {

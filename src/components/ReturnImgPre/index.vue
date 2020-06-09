@@ -17,10 +17,22 @@
       <div class="middle-box">
         <i class="el-icon-arrow-left arrow" v-if="showNextBtn" @click="switchImg('last')"></i>
         <div class="return-pre-content">
-          <img ref="retouch-img" id="orginImg" :src="url" :style="imgScale" v-show="!preDetail" @load="getImgSize">
+          <img
+            ref="retouch-img"
+            id="orginImg"
+            :src="url"
+            :style="imgScale"
+            v-show="!preDetail"
+            @load="getImgSize"
+          >
           <!-- 大图预览框 -->
           <div id="return-magnifier-layer" />
-          <div v-show="showSign" ref="sign-dom" class="sign-dom" :style="imgScale">
+          <div
+            v-show="showSign"
+            ref="sign-dom"
+            class="sign-dom"
+            :style="imgScale"
+          >
             <div
               v-for="(item,index) in storePartReworkReason"
               class="sign-item"
@@ -39,10 +51,15 @@
                   color: item.brushColor
                 }"
               />
-              <div
-                class="retouch-reason"
-              >
-                <div class="part-reason-list"><span v-for="(itemsub, indexsub) in changeTag(item.reason)" :key="indexsub" class="reason-tag-common part-tag">{{ itemsub }}</span></div>
+              <div class="retouch-reason">
+                <div class="part-reason-list">
+                  <span
+                    v-for="(itemsub, indexsub) in changeTag(item.reason)"
+                    :key="indexsub"
+                    class="reason-tag-common part-tag"
+                  >{{ itemsub }}
+                  </span>
+                </div>
                 <div class="detail-box" v-if="item.note">
                   <p class="triangle-left"></p>
                   <span class="detail-content">{{ item.note }}</span>
@@ -76,13 +93,18 @@
           <el-slider v-model="scaleNum" style="width: 70%;"/>
           <span class="scale-num">{{ scaleNum * 4 + 100 }}%</span>
         </div>
-        <el-button :type="changeShowTag?'primary':'info'" @click="() => {changeShowTag = !changeShowTag}">{{ changeShowTag ? '隐藏标记' : '显示标记' }}</el-button>
+        <el-button :type="changeShowTag ? 'primary' : 'info'" @click="() => {changeShowTag = !changeShowTag}">{{ changeShowTag ? '隐藏标记' : '显示标记' }}</el-button>
       </div>
       <div class="right-main">
         <p class="tips border-tips">照片整体原因</p>
         <div class="reason-contain">
           <div class="whole-reason-list">
-            <span v-for="(item, index) in changeTag(storeReworkReason)" :key="index" class="reason-tag-common whole-tag">{{ item }}</span>
+            <span
+              v-for="(item, index) in changeTag(storeReworkReason)"
+              :key="index"
+              class="reason-tag-common whole-tag"
+            >{{ item }}
+            </span>
             <span v-if="!storeReworkReason" class="reason-note">暂无原因</span>
           </div>
           <p class="tips">整体原因备注：</p>
@@ -139,10 +161,6 @@ export default {
       },
     }
   },
-  mounted () {
-    this.keyBoardListener()
-    window.addEventListener('mousewheel',this.mouseWheelHandler,false)
-  },
   computed: {
     ...mapGetters(['imgDomain']),
     url () {
@@ -180,6 +198,10 @@ export default {
       }
       return style
     }
+  },
+  mounted () {
+    this.keyBoardListener()
+    window.addEventListener('mousewheel',this.mouseWheelHandler,false)
   },
   methods: {
     /**
@@ -238,13 +260,13 @@ export default {
       this.mouseMask.style.webkitTransform = `translate3d(${_maskX + this.imgObj.offsetLeft}px,${_maskY + this.imgObj.offsetTop}px,0)`
       const backgroundX =
         ((_maskX / this.imgRect.width) *
-          this.propConfigs.width *
-          this.propConfigs.scale) /
+        this.propConfigs.width *
+        this.propConfigs.scale) /
         100
       const backgroundY =
         ((_maskY / this.imgRect.height) *
-          this.propConfigs.height *
-          this.propConfigs.scale) /
+        this.propConfigs.height *
+        this.propConfigs.scale) /
         100
       this.imgLayer.style.backgroundPositionX = `-${backgroundX}px `
       this.imgLayer.style.backgroundPositionY = `-${backgroundY}px `
@@ -301,9 +323,9 @@ export default {
       document.getElementsByClassName('return-pre-content')[0].appendChild(imgLayer)
     },
     keyBoardListener () {
-    /**
-     * @description 监听键盘事件
-     */
+      /**
+       * @description 监听键盘事件
+       */
       document.onkeydown = e => {
         const key = window.event.keyCode
         switch (key) {

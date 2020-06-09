@@ -30,11 +30,11 @@
             <el-table-column prop="title" label="冲量标题" />
             <el-table-column prop="award" label="冲量奖励">
               <template slot-scope="scope">
-                <el-popover
-                  placement="bottom-start"
-                  trigger="hover"
-                >
-                  <p v-for="(awardItem, awardIndex) in scope.row.impulse_setting_item" :key="awardIndex">
+                <el-popover placement="bottom-start" trigger="hover">
+                  <p
+                    v-for="(awardItem, awardIndex) in scope.row.impulse_setting_item"
+                    :key="awardIndex"
+                  >
                     奖励{{ awardIndex + 1 }}：当日海草值达到{{ awardItem.reach_exp }} 额外奖励¥{{ awardItem.reward }}
                   </p>
                   <el-button slot="reference" type="text">详情</el-button>
@@ -59,8 +59,22 @@
             <el-table-column label="操作" width="200">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="getAmountDetail(scope.row)">详 情</el-button>
-                <el-button v-if="scope.row.state === 'using'" type="primary" size="mini" @click="disableImpulse(scope.row)">提前结束</el-button>
-                <el-button v-if="scope.row.state === 'unused'" type="danger" size="mini" @click="deleteImpulse(scope.row)">删除</el-button>
+                <el-button
+                  v-if="scope.row.state === 'using'"
+                  type="primary"
+                  size="mini"
+                  @click="disableImpulse(scope.row)"
+                >
+                  提前结束
+                </el-button>
+                <el-button
+                  v-if="scope.row.state === 'unused'"
+                  type="danger"
+                  size="mini"
+                  @click="deleteImpulse(scope.row)"
+                >
+                  删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -246,7 +260,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .amount-award {
   .button-box {

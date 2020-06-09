@@ -13,9 +13,11 @@ export function getSelfQuota () {
     for (const key in data.todayIncome) {
       data.todayIncome[key] = Number(data.todayIncome[key])
     }
+    data.punishExp = (data.todayIncome.punishExp || 0).toFixed(2)
+    data.todayExp = (Number(data.todayExp) || 0).toFixed(2)
     const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward - data.todayIncome.punish
-    data.todayIncome = todayIncome.toFixed(2)
-    data.todayExp = Number(data.todayExp).toFixed(2)
+    data.todayRewordIncome = (todayIncome || 0).toFixed(2)
+    data.punishIncome = (data.todayIncome.punish || 0).toFixed(2)
     if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
       data.todayFinishPhotoNumProgress = 0
     } else {
@@ -103,6 +105,8 @@ export function getRetouchQuota (params) {
     const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
     const punishIncome = Number(data.rewardIncome.punishIncome)
     const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count).toFixed(2)
+    const punishExp = Number(_.get(data, 'exp.punishExp')) || 0
+    const retouchExp = Number(_.get(data, 'exp.retouchExp')) || 0
     const createData = [{
       retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
       avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
@@ -116,10 +120,16 @@ export function getRetouchQuota (params) {
         punishIncome: punishIncome.toFixed(2),
         actualIncome: (Number(data.retouchIncome) + rewardIncome - punishIncome).toFixed(2)
       },
-      exp: data.exp,
       lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),
       gradeInfo: {
         npsGrade: retoucherNpsScoreAvg
+      },
+      streamNumForQuality: parseInt(data.storeReturnStreamNumForQuality),
+      photoNumForQuality: parseInt(data.storeReturnStreamNum),
+      exp: {
+        punishExp: punishExp,
+        retouchExp: retouchExp,
+        rewordExp: retouchExp - punishExp
       }
     }]
     return createData

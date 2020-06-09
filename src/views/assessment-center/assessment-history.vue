@@ -21,7 +21,14 @@
       </div>
       <!-- 查询按钮 -->
       <div class="button-box">
-        <el-button :disabled="!Boolean(timeSpan)" type="primary" class="search-button" @click="getSearchHistory(1)">查询</el-button>
+        <el-button
+          :disabled="!Boolean(timeSpan)"
+          type="primary"
+          class="search-button"
+          @click="getSearchHistory(1)"
+        >
+          查询
+        </el-button>
       </div>
     </div>
     <div class="search-box">
@@ -32,7 +39,7 @@
       </div>
     </div>
     <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
-      <GradeBox :photo-info="photoItem" />
+      <GradeBox :photo-info="photoItem" @updateList="getSearchHistory" />
     </div>
     <div v-if="!photoList.length" class="module-panel no-data">暂无数据</div>
     <div class="page-box">
@@ -53,7 +60,8 @@
       :show-close="false"
       size="500"
       :visible.sync="drawer"
-      :with-header="false">
+      :with-header="false"
+    >
       <report-box :time-span="searchTimeSpan" :show-draw.sync="drawer" />
     </el-drawer>
   </div>
@@ -181,7 +189,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .assessment-history {
   .search-box {

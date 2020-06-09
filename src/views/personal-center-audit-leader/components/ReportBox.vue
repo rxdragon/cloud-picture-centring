@@ -16,10 +16,7 @@
         </div>
       </div>
     </div>
-    <div
-      class="list-tabel"
-      style="grid-template-columns: repeat(5, 1fr);"
-    >
+    <div class="list-tabel" style="grid-template-columns: repeat(5, 1fr);">
       <div v-for="(listItem, listIndex) in tableDataRate" :key="listIndex" class="list-box">
         <div class="title">{{ listItem.label }}</div>
         <div class="content">
@@ -127,7 +124,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .report-box {
   .list-tabel {

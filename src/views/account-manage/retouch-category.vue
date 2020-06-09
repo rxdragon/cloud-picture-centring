@@ -44,7 +44,12 @@
           </div>
         </div>
       </div>
-      <edit-category v-else :edit-data="editData" :show-edit.sync="showEdit" @finishedEdit="finishedEdit" />
+      <edit-category
+        v-else
+        :edit-data="editData"
+        :show-edit.sync="showEdit"
+        @finishedEdit="finishedEdit"
+      />
     </transition>
   </div>
 </template>

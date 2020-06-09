@@ -9,11 +9,7 @@
         <div class="search-box">
           <div class="staff-box search-item">
             <span class="staff-label">伙伴</span>
-            <el-input
-              v-model.trim="staffName"
-              placeholder="请输入您要查询的伙伴"
-              @keyup.native.enter="getStaffListByPage(1)"
-            />
+            <el-input v-model.trim="staffName" placeholder="请输入您要查询的伙伴" @keyup.native.enter="getStaffListByPage(1)"/>
           </div>
           <div class="role-box search-item">
             <span>角色组</span>
@@ -37,8 +33,22 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="creationAccount(scope.row)">编辑</el-button>
-                <el-button v-if="!scope.row.account_available" type="success" size="mini" @click="enableStaff(scope.row.id)">启动</el-button>
-                <el-button v-else type="danger" size="mini" @click="disableStaff(scope.row.id)">禁用</el-button>
+                <el-button
+                  v-if="!scope.row.account_available"
+                  type="success"
+                  size="mini"
+                  @click="enableStaff(scope.row.id)"
+                >
+                  启动
+                </el-button>
+                <el-button
+                  v-else
+                  type="danger"
+                  size="mini"
+                  @click="disableStaff(scope.row.id)"
+                >
+                  禁用
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -55,7 +65,12 @@
           </div>
         </div>
       </div>
-      <add-account v-else :edit-data="editData" :show-edit.sync="showEdit" @finished="finishedAccount" />
+      <add-account
+        v-else
+        :edit-data="editData"
+        :show-edit.sync="showEdit"
+        @finished="finishedAccount"
+      />
     </transition>
   </div>
 </template>
@@ -175,7 +190,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .account-config {
   .main {

@@ -51,7 +51,6 @@
         :edit-config.sync="editConfig"
       />
     </transition>
-
   </div>
 </template>
 
@@ -144,7 +143,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .sand-clock-config {
   .header {

@@ -58,9 +58,8 @@ export function getStreamInfo (params) {
         photoItem.photoVersion.forEach(versionItem => {
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
           versionItem.phototag = photoItem.tags
-          const commitInfo = {
-            picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || ''
-          }
+          // 获取云学院评价
+          const commitInfo = { picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || '' }
           const issueLabel = _.get(versionItem, 'phototag.values.check_pool_tags') || []
           if (!issueLabel.length && !commitInfo.picUrl) return
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
@@ -91,6 +90,21 @@ export function getStreamInfo (params) {
     }
     createData.photos = data.photos
     return createData
+  })
+}
+
+/**
+ * @description 获取修改他人记录
+ * @param {*} params 
+ */
+export function getModifyRetouchQuotaInfo (params) {
+  return axios({
+    url: '/project_cloud/retoucher/getModifyRetouchQuotaInfo',
+    method: 'GET',
+    params
+  }).then(msg => {
+    // TODO 链条
+    return msg
   })
 }
 

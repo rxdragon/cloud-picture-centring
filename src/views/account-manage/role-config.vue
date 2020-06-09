@@ -39,7 +39,12 @@
           </div>
         </div>
       </div>
-      <edit-role v-else :role-id="roleId" :show-edit.sync="showEdit" @update:showEdit="finishedEditRole" />
+      <edit-role
+        v-else
+        :role-id="roleId"
+        :show-edit.sync="showEdit"
+        @update:showEdit="finishedEditRole"
+      />
     </transition>
   </div>
 </template>

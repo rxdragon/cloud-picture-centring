@@ -10,12 +10,12 @@ function posix (path) {
     return '.'
   }
   let code = path.charCodeAt(0)
-  let hasRoot = (code === 47/* /*/)
+  let hasRoot = (code === 47/* / */)
   let end = -1
   let matchedSlash = true
   for (let i = path.length - 1; i >= 1; --i) {
     code = path.charCodeAt(i)
-    if (code === 47/* /*/) {
+    if (code === 47/* / */) {
       if (!matchedSlash) {
         end = i
         break
@@ -49,20 +49,20 @@ function win32 (path) {
 
   // Try to match a root
   if (len > 1) {
-    if (code === 47/* /*/ || code === 92/* \*/) {
+    if (code === 47/* / */ || code === 92/* \ */) {
       // Possible UNC root
       offset = 1
       rootEnd = 1
 
       code = path.charCodeAt(1)
-      if (code === 47/* /*/ || code === 92/* \*/) {
+      if (code === 47/* / */ || code === 92/* \ */) {
         // Matched double path separator at beginning
         let j = 2
         let last = j
         // Match 1 or more non-path separators
         for (; j < len; ++j) {
           code = path.charCodeAt(j)
-          if (code === 47/* /*/ || code === 92/* \*/) {
+          if (code === 47/* / */ || code === 92/* \ */) {
             break
           }
         }
@@ -72,7 +72,7 @@ function win32 (path) {
           // Match 1 or more path separators
           for (; j < len; ++j) {
             code = path.charCodeAt(j)
-            if (code !== 47/* /*/ && code !== 92/* \*/) {
+            if (code !== 47/* / */ && code !== 92/* \ */) {
               break
             }
           }
@@ -82,7 +82,7 @@ function win32 (path) {
             // Match 1 or more non-path separators
             for (; j < len; ++j) {
               code = path.charCodeAt(j)
-              if (code === 47/* /*/ || code === 92/* \*/) {
+              if (code === 47/* / */ || code === 92/* \ */) {
                 break
               }
             }
@@ -101,30 +101,30 @@ function win32 (path) {
           }
         }
       }
-    } else if ((code >= 65/* A*/ && code <= 90/* Z*/) ||
-               (code >= 97/* a*/ && code <= 122/* z*/)) {
+    } else if ((code >= 65/* A */ && code <= 90/* Z */) ||
+               (code >= 97/* a */ && code <= 122/* z */)) {
       // Possible device root
 
       code = path.charCodeAt(1)
-      if (path.charCodeAt(1) === 58/* :*/) {
+      if (path.charCodeAt(1) === 58/* : */) {
         rootEnd = 2
         offset = 2
         if (len > 2) {
           code = path.charCodeAt(2)
-          if (code === 47/* /*/ || code === 92/* \*/) {
+          if (code === 47/* / */ || code === 92/* \ */) {
             rootEnd = 3
             offset = 3
           }
         }
       }
     }
-  } else if (code === 47/* /*/ || code === 92/* \*/) {
+  } else if (code === 47/* / */ || code === 92/* \ */) {
     return path[0]
   }
 
   for (let i = len - 1; i >= offset; --i) {
     code = path.charCodeAt(i)
-    if (code === 47/* /*/ || code === 92/* \*/) {
+    if (code === 47/* / */ || code === 92/* \ */) {
       if (!matchedSlash) {
         end = i
         break
@@ -167,7 +167,7 @@ export function getExtName (path) {
   let preDotState = 0
   for (let i = path.length - 1; i >= 0; --i) {
     const code = path.charCodeAt(i)
-    if (code === 47 /* /*/) {
+    if (code === 47 /* / */) {
       // If we reached a path separator that was not part of a set of path
       // separators at the end of the string, stop now
       if (!matchedSlash) {
@@ -182,7 +182,7 @@ export function getExtName (path) {
       matchedSlash = false
       end = i + 1
     }
-    if (code === 46 /* .*/) {
+    if (code === 46 /* . */) {
       // If this is our first dot, mark it as the start of our extension
       if (startDot === -1) {
         startDot = i
@@ -219,7 +219,7 @@ function basename (path) {
   let i
 
   for (i = path.length - 1; i >= 0; --i) {
-    if (path.charCodeAt(i) === 47 /* /*/) {
+    if (path.charCodeAt(i) === 47 /* / */) {
       // If we reached a path separator that was not part of a set of path
       // separators at the end of the string, stop now
       if (!matchedSlash) {

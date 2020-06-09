@@ -6,15 +6,16 @@
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
         <div class="panel-content content-one">退回标记：<span v-for="(reasonItem, index) in StoreReturnReason" :key="index" class="reason-item">{{ reasonItem }}</span></div>
-        <div class="panel-content">退回备注：{{ wholeNote + ' ' + partNote || '暂无备注' }}</div>
+        <div class="panel-content">退回备注：{{ wholeNote || partNote ?  wholeNote + ' ' + partNote : '暂无备注' }}</div>
       </div>
     </div>
     <div v-if="hcsCheckTags" class="panel-box">
       <div class="panel-title">云学院评价</div>
       <div class="panel-main">
         <div class="panel-content content-one">总分：{{ checkScore }}</div>
-        <div class="panel-content">问题标记：<span v-for="(tagItem, index) in checkTag" :key="index" class="reason-item">{{ tagItem }}</span>
-        <span v-if="!checkTag.length">暂无标记</span>
+        <div class="panel-content">
+          问题标记：<span v-for="(tagItem, index) in checkTag" :key="index" class="reason-item">{{ tagItem }}</span>
+          <span v-if="!checkTag.length">暂无标记</span>
         </div>
       </div>
     </div>
@@ -70,7 +71,7 @@ export default {
       let note = ''
       const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
       partArr.forEach(item => {
-        note += item.note + ' '
+        item.note && (note += item.note + ' ')
       })
       return note
     },
@@ -102,7 +103,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 @panelTitleWidth: 185px;
 
 .photo-detail {
@@ -122,7 +123,7 @@ export default {
 
         .reason-item {
           padding: 3px 5px;
-          margin: 5px 10px 5px 0;
+          margin: 0 10px 10px 0;
           font-size: 12px;
           color: #fff;
           background-color: #535353;

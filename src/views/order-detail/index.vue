@@ -8,7 +8,7 @@
       <order-info :is-work-board-info="isWorkBoardInfo" :order-data="orderData" />
     </div>
     <!-- 照片列表 -->
-     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
+    <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
       <div class="panel-title">照片{{ photoIndex + 1 }}</div>
       <photo-detail :photo-item="photoItem" />
     </div>
@@ -28,7 +28,6 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       streamId: '', // 流水id
-      orderId: '', // 订单id
       orderData: {}, // 订单信息
       photos: []
     }
@@ -40,14 +39,14 @@ export default {
     }
   },
   created () {
-    // 有订单号id
-    if (this.$route.query.orderId) {
-      this.orderId = this.$route.query.orderId
-    }
     // 有流水号id
     if (this.$route.query.streamId) {
       this.streamId = this.$route.query.streamId
-      this.getStreamInfo()
+      if (this.$route.query.searchOther) {
+        this.getModifyRetouchQuotaInfo()
+      } else {
+        this.getStreamInfo()
+      }
     }
     // 工作看板id
     if (this.$route.query.workBoardStreamNum) {
@@ -64,6 +63,22 @@ export default {
         const req = { streamId: this.streamId }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Commonality.getStreamInfo(req)
+        this.orderData = data.orderData
+        this.photos = data.photos
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      } catch (error) {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        console.error(error)
+      }
+    },
+    /**
+     * @description 获取修改他人记录订单详情
+     */
+    async getModifyRetouchQuotaInfo () {
+      try {
+        const req = { streamId: this.streamId }
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const data = await Commonality.getModifyRetouchQuotaInfo(req)
         this.orderData = data.orderData
         this.photos = data.photos
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -93,7 +108,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .order-detail {
   .panel-title {

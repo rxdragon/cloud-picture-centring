@@ -11,6 +11,16 @@ export function toThousandFilter (num) {
 }
 
 /**
+ * 0 => "0.00"
+ * @param {number} num
+ */
+export function toFixedString (num) {
+  num = Number(num)
+  if (isNaN(num)) return '0.00'
+  return num.toFixed(2)
+}
+
+/**
  * @description 获取照片版本对于名字
  * @param {*} str
  */

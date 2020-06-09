@@ -36,14 +36,41 @@
     </div>
     <div class="grade-box">
       <div class="button-list">
-        <el-button :disabled="!streamCanGlass || +photos.people_num === 0" :icon="isPlant ? 'el-icon-check' : ''" type="success" size="small" :class="{'plant-class': isPlant}" :plain="!isPlant" @click="plantPhoto">种草</el-button>
-        <el-button :disabled="!streamCanGlass || +photos.people_num === 0" :icon="isPull ? 'el-icon-check' : ''" type="danger" size="small" :plain="!isPull" @click="pullPhoto">拔草</el-button>
+        <el-button
+          :disabled="!streamCanGlass || +photos.people_num === 0"
+          :icon="isPlant ? 'el-icon-check' : ''"
+          type="success"
+          size="small"
+          :class="{'plant-class': isPlant}"
+          :plain="!isPlant"
+          @click="plantPhoto"
+        >
+          种草
+        </el-button>
+        <el-button
+          :disabled="!streamCanGlass || +photos.people_num === 0"
+          :icon="isPull ? 'el-icon-check' : ''"
+          type="danger"
+          size="small"
+          :plain="!isPull"
+          @click="pullPhoto"
+        >
+          拔草
+        </el-button>
       </div>
       <div v-if="isPlant || isPull" class="reason-box">
         <el-input v-model="photos.grassReason" :placeholder="isPlant | toGlassPlaceholder" />
       </div>
       <div class="button-list">
-        <el-button :icon="isReturn ? 'el-icon-check' : ''" type="warning" size="small" :plain="!isReturn" @click="returnPhoto">重修</el-button>
+        <el-button
+          :icon="isReturn ? 'el-icon-check' : ''"
+          type="warning"
+          size="small"
+          :plain="!isReturn"
+          @click="returnPhoto"
+        >
+          重修
+        </el-button>
       </div>
       <div v-if="isReturn" class="reason-box">
         <el-input v-model="photos.reworkMarkReason" placeholder="请输入重修理由" />
@@ -197,7 +224,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 @photoBox: 253px;
 
 .photo-grop {

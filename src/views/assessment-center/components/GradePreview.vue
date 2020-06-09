@@ -10,29 +10,55 @@
     <div class="photoBox" v-loading="allLoading">
       <!-- 画板工具 -->
       <div class="photo-tool">
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'move' }" @click.capture="changeDrawType('move')">
-          <el-tooltip class="item" effect="dark" content="移动" placement="right">
+        <div
+          class="tool"
+          :class="{ 'active': canvasOption.drawType === 'move' }"
+          @click.capture="changeDrawType('move')"
+        >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="移动"
+            placement="right"
+          >
             <div class="tool-dom">
               <i id="move" class="el-icon-rank" />
               <span class="shortcut">V</span>
             </div>
           </el-tooltip>
         </div>
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'pen' }" @click="changeDrawType('pen')">
+        <div
+          class="tool"
+          :class="{ 'active': canvasOption.drawType === 'pen' }"
+          @click="changeDrawType('pen')"
+        >
           <el-popover
             placement="right-start"
             width="30"
             popper-class="pen-weight"
-            trigger="click">
+            trigger="click"
+          >
             <div class="pen-list">
-              <div class="pen-item"
-                v-for="penWeightItem in penWeight" :key="penWeightItem.label"
-                @click="changeLineWidth(penWeightItem)">
-                <div class="pen-box" :class="penWeightItem.active ? penWeightItem.label + ' active' :penWeightItem.label "></div>
+              <div
+                class="pen-item"
+                v-for="penWeightItem in penWeight"
+                :key="penWeightItem.label"
+                @click="changeLineWidth(penWeightItem)"
+              >
+                <div
+                  class="pen-box"
+                  :class="penWeightItem.active ? penWeightItem.label + ' active' : penWeightItem.label "
+                >
+                </div>
               </div>
             </div>
             <div slot="reference">
-              <el-tooltip class="item" effect="dark" content="画笔" placement="right">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="画笔"
+                placement="right"
+              >
                 <div class="tool-dom">
                   <i id="pen" class="el-icon-edit" />
                   <span class="shortcut">B</span>
@@ -41,30 +67,66 @@
             </div>
           </el-popover>
         </div>
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'arrow' }" @click="changeDrawType('arrow')">
-          <el-tooltip class="item" effect="dark" content="箭头" placement="right">
+        <div
+          class="tool"
+          :class="{ 'active': canvasOption.drawType === 'arrow' }"
+          @click="changeDrawType('arrow')"
+        >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="箭头"
+            placement="right"
+          >
             <div class="tool-dom">
               <i id="arrow" class="el-icon-top-right" />
               <span class="shortcut">C</span>
             </div>
           </el-tooltip>
         </div>
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'ellipse' }" @click="changeDrawType('ellipse')">
-          <el-tooltip class="item" effect="dark" content="圆圈" placement="right">
+        <div
+          class="tool"
+          :class="{ 'active': canvasOption.drawType === 'ellipse' }"
+          @click="changeDrawType('ellipse')"
+        >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="圆圈"
+            placement="right"
+          >
             <div class="tool-dom">
               <div class="circle"></div>
             </div>
           </el-tooltip>
         </div>
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'line' }" @click="changeDrawType('line')">
-          <el-tooltip class="item" effect="dark" content="直线" placement="right">
+        <div
+          class="tool"
+          :class="{ 'active': canvasOption.drawType === 'line' }"
+          @click="changeDrawType('line')"
+        >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="直线"
+            placement="right"
+          >
             <div class="tool-dom">
               <i id="line" class="el-icon-minus" />
             </div>
           </el-tooltip>
         </div>
-        <div class="tool" :class="{ 'active': canvasOption.drawType === 'blowup' }" @click="changeDrawType('blowup')">
-          <el-tooltip class="item" effect="dark" content="放大" placement="right">
+        <div
+          class="tool"
+          :class="{ 'active': canvasOption.drawType === 'blowup' }"
+          @click="changeDrawType('blowup')"
+        >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="放大"
+            placement="right"
+          >
             <div class="tool-dom">
               <i id="blowup" class="el-icon-search" />
               <span class="shortcut">Z</span>
@@ -72,7 +134,12 @@
           </el-tooltip>
         </div>
         <div class="tool" @click="changeDrawType('delete')">
-          <el-tooltip class="item" effect="dark" content="删除" placement="right">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="删除"
+            placement="right"
+          >
             <div class="tool-dom">
               <i id="delete" class="el-icon-delete" />
             </div>
@@ -95,10 +162,15 @@
             @click="zoom"
           >
           <div id="_magnifier_layer" />
-          <fabric-canvas v-if="showCanvas" ref="fabric-canvas"
-            :style="photoZoomStyle" :option-obj="canvasOption"
+          <fabric-canvas
+            v-if="showCanvas"
+            ref="fabric-canvas"
+            :style="photoZoomStyle"
+            :option-obj="canvasOption"
             :show-canvas="isFinishPhoto"
-            @cancelDeleteLabel="addDeleteLabel" @click.native="zoom" />
+            @cancelDeleteLabel="addDeleteLabel"
+            @click.native="zoom"
+          />
         </div>
         <!-- left按钮 -->
         <button
@@ -411,7 +483,7 @@ export default {
      */
     resetLabelData () {
       this.labelData.forEach(item => {
-        item.child.forEach(issItem => issItem.isSelect = false)
+        item.child.forEach(issItem => { issItem.isSelect = false })
       })
     },
     /**
@@ -588,7 +660,7 @@ export default {
      * @description 更改线宽
      */
     changeLineWidth (penWeightItem) {
-      this.penWeight.forEach(item => item.active = false)
+      this.penWeight.forEach(item => { item.active = false })
       penWeightItem.active = true
       this.canvasOption.lineWidth = penWeightItem.size
     },
@@ -624,13 +696,13 @@ export default {
       this.mouseMask.style.webkitTransform = `translate3d(${_maskX}px,${_maskY}px,0)`
       const backgroundX =
         ((_maskX / this.imgRect.width) *
-          this.propConfigs.width *
-          this.propConfigs.scale) /
+        this.propConfigs.width *
+        this.propConfigs.scale) /
         100
       const backgroundY =
         ((_maskY / this.imgRect.height) *
-          this.propConfigs.height *
-          this.propConfigs.scale) /
+        this.propConfigs.height *
+        this.propConfigs.scale) /
         100
       this.imgLayer.style.backgroundPositionX = `-${backgroundX}px `
       this.imgLayer.style.backgroundPositionY = `-${backgroundY}px `
@@ -762,7 +834,7 @@ export default {
   .photoBox {
     position: relative;
     display: flex;
-    height: calc(100% - 42px);
+    height: calc(100% - 40px);
 
     .photo-tool {
       position: relative;

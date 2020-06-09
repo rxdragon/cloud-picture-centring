@@ -3,7 +3,12 @@
     <div class="header">
       <h3>新增更新</h3>
     </div>
-    <el-form ref="versionform" :model="versionForm" :rules="rules" label-width="80px">
+    <el-form
+      ref="versionform"
+      :model="versionForm"
+      :rules="rules"
+      label-width="80px"
+    >
       <el-form-item label="版本名称" prop="id">
         <el-select
           v-model="versionForm.id"
@@ -16,16 +21,13 @@
             v-for="versionItem in allVersionNum"
             :key="versionItem.id"
             :label="versionItem.version_num"
-            :value="versionItem.id">
+            :value="versionItem.id"
+          >
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="更新时间" prop="time">
-        <el-date-picker
-          v-model="versionForm.time"
-          type="date"
-          placeholder="选择日期">
-        </el-date-picker>
+        <el-date-picker v-model="versionForm.time" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-button class="save-button" type="primary" @click="save">保存</el-button>
       <el-button class="save-button" type="info" @click="templateData">模版</el-button>

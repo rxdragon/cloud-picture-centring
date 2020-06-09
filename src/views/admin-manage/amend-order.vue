@@ -6,11 +6,23 @@
     <div class="search-box">
       <div class="caid-search search-item">
         <span>流水号</span>
-        <el-input v-model.trim="caid" :disabled="Boolean(id)" placeholder="请输入流水号" clearable @keyup.native.enter="getStreamInfo" />
+        <el-input
+          v-model.trim="caid"
+          :disabled="Boolean(id)"
+          placeholder="请输入流水号"
+          clearable
+          @keyup.native.enter="getStreamInfo"
+        />
       </div>
       <div class="caid-search search-item">
         <span>订单号</span>
-        <el-input v-model.trim="id" :disabled="Boolean(caid)" placeholder="请输入订单号" clearable @keyup.native.enter="getStreamInfo" />
+        <el-input
+          v-model.trim="id"
+          :disabled="Boolean(caid)"
+          placeholder="请输入订单号"
+          clearable
+          @keyup.native.enter="getStreamInfo"
+        />
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>
@@ -23,7 +35,12 @@
         </div>
         <div class="product search-item">
           <span>拍摄产品</span>
-          <el-select v-model="item.product.id" clearable filterable placeholder="请选择产品">
+          <el-select
+            v-model="item.product.id"
+            clearable
+            filterable
+            placeholder="请选择产品"
+          >
             <el-option
               v-for="(optionItem, pIndex) in productsList"
               :key="pIndex"
@@ -41,14 +58,26 @@
                 <photo-box :src="photoItem.path" />
                 <div class="change-num">
                   <span>人数：</span>
-                  <input v-model="photoItem.people_num" v-numberOnly class="fake-el-input" min="0" size="mini" placeholder="请输入人数">
+                  <input
+                    v-model="photoItem.people_num"
+                    v-numberOnly
+                    class="fake-el-input"
+                    min="0"
+                    size="mini"
+                    placeholder="请输入人数"
+                  >
                 </div>
                 <!-- 拼接信息 -->
                 <div v-if="photoItem.isJoint" class="joint-box">
                   <div class="joint-type">
                     <span>拼接：</span>
                     <el-select v-model="photoItem.jointClass" size="mini" placeholder="请选择">
-                      <el-option v-for="(typeItem, typeIndex) in jointClassOption" :key="typeIndex" :label="typeItem.label" :value="typeItem.value" />
+                      <el-option
+                        v-for="(typeItem, typeIndex) in jointClassOption"
+                        :key="typeIndex"
+                        :label="typeItem.label"
+                        :value="typeItem.value"
+                      />
                     </el-select>
                   </div>
                   <div class="joint-sequence">
@@ -184,7 +213,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .amend-order {
   .search-box {

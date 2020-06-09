@@ -1,19 +1,35 @@
 <template>
   <div id="photoShow">
     <div class="title">
-      {{ showPhoto.version | toPhotoVerName }}
+      {{ showPhoto.version | toPhotoVerName }}{{ showPhoto.storeReturnCount || '' }}
       <div class="driver-star" @click.stop="guide">?</div>
       <div class="btn-right">
-        <button id="closeImg" type="button" class="button-close" @click="closeShowPhoto">
+        <button
+          id="closeImg"
+          type="button"
+          class="button-close"
+          @click="closeShowPhoto"
+        >
           <i class="el-icon-close" />
         </button>
       </div>
     </div>
-    <mode-switch-box v-if="showPhoto.versionCache" v-model="photoArray[photoIndex].mode" :show-store-mode="showPhoto.hasStoreReturnTag" :show-cloud-mode="showPhoto.hasCommitInfo" class="mode-switch-box" />
+    <mode-switch-box
+      v-if="showPhoto.versionCache"
+      v-model="photoArray[photoIndex].mode"
+      :show-store-mode="showPhoto.hasStoreReturnTag"
+      :show-cloud-mode="showPhoto.hasCommitInfo"
+      class="mode-switch-box"
+    />
     <div class="photoBox" v-loading="loading">
       <!-- 图片 -->
       <div class="photo-show" ref="photo-show">
-        <div v-loading="loading" class="orginPhoto" @click.capture.stop="zoom" :style="photoZoomStyle + (inZoomIn && 'cursor: zoom-out;')">
+        <div
+          v-loading="loading"
+          class="orginPhoto"
+          @click.capture.stop="zoom"
+          :style="photoZoomStyle + (inZoomIn && 'cursor: zoom-out;')"
+        >
           <img
             id="orginImg"
             ref="orgin-img"
@@ -22,10 +38,15 @@
             @load="loadingPhoto"
           >
           <!-- 门店退回显示 -->
-          <div v-if="showPhoto.hasStoreReturnTag" v-show="showStoreReson" class="sign-dom" :style="{
+          <div
+            v-if="showPhoto.hasStoreReturnTag"
+            v-show="showStoreReson"
+            class="sign-dom"
+            :style="{
               width: `${showImageRect.width}px`,
               height: `${showImageRect.height}px`
-            }">
+            }"
+          >
             <div
               v-for="(labelItem, labelIndex) in showPhoto.storePartReworkReason"
               class="sign-item"
@@ -36,7 +57,8 @@
                 height: `${labelItem.height}%`,
                 top: `${labelItem.location[0]}%`,
                 left: `${labelItem.location[1]}%`,
-              }">
+              }"
+            >
               <div class="circle-box" :style="{ color: labelItem.brushColor} "/>
               <div class="retouch-reason">
                 <div class="part-reason-list">
@@ -52,10 +74,14 @@
             </div>
           </div>
           <div class="mask-photo" v-if="showPhoto.hasCommitInfo" v-show="showMark">
-            <img :src="markPhoto" alt="" :style="{
-              width: `${showImageRect.width}px`,
-              height: `${showImageRect.height}px`
-            }">
+            <img
+              :src="markPhoto"
+              alt=""
+              :style="{
+                width: `${showImageRect.width}px`,
+                height: `${showImageRect.height}px`
+              }"
+            >
           </div>
           <div id="_magnifier_layer" />
         </div>
@@ -63,14 +89,16 @@
           v-if="photoArray.length !== 1"
           type="button"
           class="button-left"
-          @click.stop="prePhoto">
+          @click.stop="prePhoto"
+        >
           <i class="el-icon-arrow-left" />
         </button>
         <button
           v-if="photoArray.length !== 1"
           type="button"
           class="button-right"
-          @click.stop="nextPhoto">
+          @click.stop="nextPhoto"
+        >
           <i class="el-icon-arrow-right" />
         </button>
       </div>
@@ -99,10 +127,13 @@
                 <span class="down-button" @click.stop="downing">下载</span>
               </div>
               <div class="mark-show-btn" v-if="!isOriginalMode">
-                <el-button class="tag-btn"
+                <el-button
+                  class="tag-btn"
                   id="tagShowBtn"
                   @click="showMarkPhoto"
-                  :class="!tagShow && 'tag-show-btn'" type="info">
+                  :class="!tagShow && 'tag-show-btn'"
+                  type="info"
+                >
                   {{ tagShow ? '隐藏标记' : '显示标记' }}
                 </el-button>
               </div>
@@ -134,8 +165,11 @@
             <div class="reason-contain">
               <div class="whole-reason-list">
                 <template v-if="showPhoto.storeReworkReason.length">
-                  <span v-for="(labelItem, labelIndex) in showPhoto.storeReworkReason" :key="labelIndex"
-                    class="reason-tag-common whole-tag">
+                  <span
+                    v-for="(labelItem, labelIndex) in showPhoto.storeReworkReason"
+                    :key="labelIndex"
+                    class="reason-tag-common whole-tag"
+                  >
                     {{ labelItem }}
                   </span>
                 </template>
@@ -492,13 +526,13 @@ export default {
       this.mouseMask.style.webkitTransform = `translate3d(${_maskX}px,${_maskY}px,0)`
       const backgroundX =
         ((_maskX / this.imgRect.width) *
-          this.propConfigs.width *
-          this.propConfigs.scale) /
+        this.propConfigs.width *
+        this.propConfigs.scale) /
         100
       const backgroundY =
         ((_maskY / this.imgRect.height) *
-          this.propConfigs.height *
-          this.propConfigs.scale) /
+        this.propConfigs.height *
+        this.propConfigs.scale) /
         100
       this.imgLayer.style.backgroundPositionX = `-${backgroundX}px `
       this.imgLayer.style.backgroundPositionY = `-${backgroundY}px `

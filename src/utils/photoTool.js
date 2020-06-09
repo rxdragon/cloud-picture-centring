@@ -79,22 +79,24 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
  * @param photoVersion
  */
 export function settlePhotoVersion (photoVersion) {
-  const photoVersionArr = ['finish_photo', 'store_rework', 'complete_photo', 'original_photo']
+  const photoVersionArr = ['original_photo', 'complete_photo', 'store_rework', 'finish_photo']
   const timeLine = photoVersion.sort((a, b) => {
-    return Number(b.id) - Number(a.id)
+    return Number(a.id) - Number(b.id)
   })
   let createData = []
+  let storeReturnCount = 0
   timeLine.forEach(versionItem => {
     if (photoVersionArr.includes(versionItem.version)) {
+      if (versionItem.version === 'store_rework') {
+        storeReturnCount++
+        versionItem.storeReturnCount = storeReturnCount
+      }
       createData.push(versionItem)
       const findVersionIndex = photoVersionArr.findIndex(item => item === versionItem.version)
-      if (findVersionIndex > -1) {
+      if (findVersionIndex > -1 && versionItem.version !== 'store_rework') {
         photoVersionArr.splice(findVersionIndex, 1)
       }
     }
-  })
-  createData = createData.sort((a, b) => {
-    return Number(a.id) - Number(b.id)
   })
   return createData
 }

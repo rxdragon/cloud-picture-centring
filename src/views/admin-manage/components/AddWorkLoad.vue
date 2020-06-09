@@ -13,7 +13,12 @@
         />
       </el-select>
     </div>
-    <el-form ref="staffWork" :model="staffWork" label-position="left" label-width="150px">
+    <el-form
+      ref="staffWork"
+      :model="staffWork"
+      label-position="left"
+      label-width="150px"
+    >
       <el-form-item v-for="(staffItem, staffIndex) in staffWork" :key="staffIndex" :label="staffIndex | filterName">
         <el-input v-model="staffWork[staffIndex]" v-numberOnly />
         张/日

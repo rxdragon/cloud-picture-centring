@@ -11,7 +11,12 @@
       </div>
       <!-- 订单信息 -->
       <div class="order-search search-item">
-        <el-input v-model.trim="orderSearchValue" placeholder="请输入内容" @keyup.native.enter="getPhotoList(true)" class="input-with-select">
+        <el-input
+          v-model.trim="orderSearchValue"
+          placeholder="请输入内容"
+          @keyup.native.enter="getPhotoList(true)"
+          class="input-with-select"
+        >
           <el-select slot="prepend" v-model="orderType" placeholder="请选择">
             <el-option label="云端流水号" :value="1" />
             <el-option label="订单号" :value="2" />
@@ -42,7 +47,7 @@
       <!-- 修图标准 -->
       <div class="search-item">
         <span>修图标准</span>
-        <retouch-kind-select v-model="retouchStandards" multiple />
+        <retouch-kind-select v-model="retouchStandards" multiple placeholder="请选择修图标准"/>
       </div>
       <div class="button-box search-item">
         <el-button type="primary" @click="getPhotoList(true)">查询</el-button>
@@ -50,7 +55,12 @@
     </div>
     <div class="search-data table-box">
       <div v-if="photos.length" class="photo-module">
-        <div v-for="photoItem in photos" :key="photoItem.id" class="photo-box" @click="goGuestInfo(photoItem)">
+        <div
+          v-for="photoItem in photos"
+          :key="photoItem.id"
+          class="photo-box"
+          @click="goGuestInfo(photoItem)"
+        >
           <photo-box :src="photoItem.src" />
         </div>
         <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
@@ -236,7 +246,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .guest-photo-list {
   .search-box {

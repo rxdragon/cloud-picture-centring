@@ -18,6 +18,11 @@ const assessmentCenter = {
       component: () => import('@/views/assessment-center/assessment-history.vue'),
       meta: { title: '评价历史记录', icon: '' }
     }, {
+      path: 'modify-history',
+      name: 'ModifyHistory',
+      component: () => import('@/views/assessment-center/modify-history.vue'),
+      meta: { title: '评分修改记录', icon: '' }
+    }, {
       path: 'grade-configuration',
       name: 'GradeConfiguration',
       component: () => import('@/views/assessment-center/grade-configuration.vue'),
