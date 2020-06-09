@@ -430,6 +430,7 @@
  增加个人绩效 | [ba74181](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ba74181)
  增加环境判断 | [6ad28f9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6ad28f9)
  账号列表没有花名显示真名 | [57d3912](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/57d3912)
+ codeReview 权限放到store中 | [588a77e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/588a77e)
 
 
 ### chore
