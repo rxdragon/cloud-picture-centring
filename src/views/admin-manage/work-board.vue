@@ -264,19 +264,17 @@ export default {
      */
     async getQueueStreamList (page) {
       try {
-        if (page) {
-          this.pager.page = page
-        }
         this.$store.dispatch('setting/showLoading', this.routeName)
+        this.pager.page = page ? page : this.pager.page
         const req = this.getParams()
         const data = await AdminManage.getQueueStreamList(req)
         this.tableData = data.list
         this.pager.total = data.total
         await this.getQueueStreamListCount()
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
@@ -284,34 +282,30 @@ export default {
      */
     async getStreamList (page) {
       try {
-        if (page) {
-          this.urgentPager.page = page
+        this.urgentPager.page = page ? page : this.urgentPager.page
+        const req = {
+          page: this.urgentPager.page,
+          pageSize: this.urgentPager.pageSize
         }
-        const req = {}
-        if (this.urgentSearch.name) {
-          req.customerName = this.urgentSearch.name
-        }
-        if (this.urgentSearch.id) {
-          req.orderNum = this.urgentSearch.id
-        }
-        if (this.urgentSearch.caid) {
-          req.streamNum = this.urgentSearch.caid
-        }
-        if (!Object.keys(req).length) {
-          this.$newMessage.warning('请填写参数')
-          return false
+        if (this.urgentSearch.name) { req.customerName = this.urgentSearch.name }
+        if (this.urgentSearch.id) { req.orderNum = this.urgentSearch.id }
+        if (this.urgentSearch.caid) { req.streamNum = this.urgentSearch.caid }
+        // 如果没有输入条件
+        if (!this.urgentSearch.caid && !this.urgentSearch.id && !this.urgentSearch.name) {
+          this.searchTableData = []
+          this.urgentPager.total = 0
+          this.urgentPager.page = 1
+          return this.$newMessage.warning('请输入条件')
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AdminManage.getStreamList(req)
-        if (data.list.length === 0) {
-          this.$newMessage.warning('暂无数据')
-        }
+        if (data.list.length === 0) { this.$newMessage.warning('暂无数据') }
         this.searchTableData = data.list
         this.urgentPager.total = data.total
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
   }
