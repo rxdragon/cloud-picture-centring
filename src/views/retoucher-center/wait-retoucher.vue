@@ -60,7 +60,7 @@
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num purple-color">
-                    <count-to :end-value="quotaInfo.todayFinishPhotoNum" />
+                    <count-to :end-value="quotaInfo.todayFinishNormalPhotoNum" />/<count-to :end-value="quotaInfo.todayFinishReworkPhotoNum" />
                   </span>
                 </div>
                 <div class="prop-icon-box">

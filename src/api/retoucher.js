@@ -18,10 +18,13 @@ export function getSelfQuota () {
     const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward
     data.todayRewordIncome = (todayIncome || 0).toFixed(2)
     data.punishIncome = (data.todayIncome.punish || 0).toFixed(2)
-    if (!Number(data.todayFinishPhotoNum) || !Number(data.todayTargetPhotoNum)) {
+    data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
+    data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
+    const todayALlFinishPhotoNum = data.todayFinishNormalPhotoNum + data.todayFinishReworkPhotoNum
+    if (!todayALlFinishPhotoNum || !Number(data.todayTargetPhotoNum)) {
       data.todayFinishPhotoNumProgress = 0
     } else {
-      data.todayFinishPhotoNumProgress = (data.todayFinishPhotoNum / data.todayTargetPhotoNum) * 100
+      data.todayFinishPhotoNumProgress = (todayALlFinishPhotoNum / data.todayTargetPhotoNum) * 100
     }
     return data
   })
