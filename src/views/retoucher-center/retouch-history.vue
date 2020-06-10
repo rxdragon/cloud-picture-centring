@@ -62,14 +62,16 @@
                 popper-class="people-table"
                 trigger="hover"
               >
-                <el-table :key="row.streamNum + 'photo'" :data="row.peopleTable" style="width: 100%;">
-                  <el-table-column label="人数">
-                    <template slot-scope="peopleData">
-                      {{ Number(peopleData.row.peopleLabel) ? `${peopleData.row.peopleLabel}人` : peopleData.row.peopleLabel }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="photoNum" label="数量" />
-                </el-table>
+                <div class="exp-box">
+                  <div class="exp-item exp-title">
+                    <span>人数</span>
+                    <span>数量</span>
+                  </div>
+                  <div class="exp-item exp-list" v-for="(expItem, expIndex) in row.peopleTable" :key="row.streamNum + expIndex">
+                    <span>{{ Number(expItempeopleLabel) ? `${expItem.peopleLabel}人` : expItem.peopleLabel }}</span>
+                    <span>{{ expItem.photoNum }}</span>
+                  </div>
+                </div>
                 <span slot="reference">{{ row.exp }}</span>
               </el-popover>
             </template>
@@ -277,7 +279,7 @@ export default {
 
 <style lang="less">
 .people-table {
-  .el-table {
+  .exp-box {
     position: relative;
     max-height: 400px;
     overflow: overlay;
@@ -304,10 +306,30 @@ export default {
       display: none;
     }
 
-    .el-table__header-wrapper {
+    .exp-item {
+      display: flex;
+
+      & > span {
+        flex: 1;
+        text-align: center;
+      }
+    }
+
+    .exp-list {
+      padding: 3px 0;
+      border-bottom: 1px solid #ebeef5;
+
+      &:hover {
+        background-color: #f5f7fa;
+      }
+    }
+
+    .exp-title {
       position: sticky;
       top: 0;
       z-index: 99;
+      padding: 5px 0;
+      background-color: #fafafa;
     }
   }
 
