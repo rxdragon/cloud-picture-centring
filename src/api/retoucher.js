@@ -22,6 +22,7 @@ export function getSelfQuota () {
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
     data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
     const todayAllFinishPhotoNum = data.todayFinishNormalPhotoNum + data.todayFinishReworkPhotoNum
+    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum
     if (!todayAllFinishPhotoNum || !Number(data.todayTargetPhotoNum)) {
       data.todayFinishPhotoNumProgress = 0
     } else {
