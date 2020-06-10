@@ -68,7 +68,7 @@
                     <span>数量</span>
                   </div>
                   <div class="exp-item exp-list" v-for="(expItem, expIndex) in row.peopleTable" :key="row.streamNum + expIndex">
-                    <span>{{ Number(expItempeopleLabel) ? `${expItem.peopleLabel}人` : expItem.peopleLabel }}</span>
+                    <span>{{ Number(expItem.expItempeopleLabel) ? `${expItem.peopleLabel}人` : expItem.peopleLabel }}</span>
                     <span>{{ expItem.photoNum }}</span>
                   </div>
                 </div>

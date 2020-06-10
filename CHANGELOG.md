@@ -317,6 +317,7 @@
  修复lodash引入失败 | [4aa5441](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4aa5441)
  修复qetag验证问题 | [4a929ac](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4a929ac)
  修改修图收益 | [4fb24e8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4fb24e8)
+ 修图历史记录列表悬浮高亮修复 | [0f43f5b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0f43f5b)
  页码修复 | [f7880c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f7880c1)
  优化代码 | [05a7ae1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/05a7ae1)
  优化上次 | [be5a67e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/be5a67e)
