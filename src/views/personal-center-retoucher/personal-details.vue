@@ -23,7 +23,7 @@
         </div>
         <div class="panel-footer">
           <div class="footer-left">目标张数：{{ todayData.todayTargetPhotoNum || '--' }}</div>
-          <div class="footer-right">已完成：{{ todayData.todayFinishPhotoNum || '--' }}</div>
+          <div class="footer-right">已完成：{{ todayData.todayAllFinishPhotoNum || '--' }}</div>
         </div>
       </div>
       <!-- 个人修图等级 -->

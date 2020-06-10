@@ -60,7 +60,8 @@
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num purple-color">
-                    <count-to :end-value="quotaInfo.todayFinishNormalPhotoNum" />/<count-to :end-value="quotaInfo.todayFinishReworkPhotoNum" />
+                    <count-to :end-value="quotaInfo.todayFinishNormalPhotoNum" /> /
+                    <count-to :end-value="quotaInfo.todayFinishReworkPhotoNum" />
                   </span>
                 </div>
                 <div class="prop-icon-box">
@@ -176,7 +177,8 @@ export default {
         waitRetouchStream: 0 // 修图排队中流水
       },
       quotaInfo: { // 个人信息
-        todayFinishPhotoNum: 0,
+        todayFinishNormalPhotoNum: 0,
+        todayFinishReworkPhotoNum: 0,
         todayExp: 0.00,
         todayRewordIncome: 0.00,
         punishExp: 0,
