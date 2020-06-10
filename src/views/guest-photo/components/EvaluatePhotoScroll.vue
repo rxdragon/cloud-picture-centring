@@ -12,7 +12,7 @@
       <!-- 修图标准 -->
       <div class="search-item">
         <span>修图标准</span>
-        <retouch-kind-select v-model="retouchStandard" />
+        <retouch-kind-select v-model="retouchStandard" placeholder="请选择修图标准"/>
       </div>
       <div class="button-box">
         <el-button type="primary" @click="getAttitudePhotoList(1)">查询</el-button>
@@ -42,7 +42,12 @@
       >
         <template v-slot="{ data }">
           <div class="photo-row">
-            <div v-for="photoItem in data" :key="photoItem.id" class="photo-box" @click="goToDetails(photoItem)">
+            <div
+              v-for="photoItem in data"
+              :key="photoItem.id"
+              class="photo-box"
+              @click="goToDetails(photoItem)"
+            >
               <photo-box :use-ele-image="false" :src="photoItem.src" />
               <div class="staff-name">修图师：{{ photoItem.retoucherName }}</div>
               <div class="group-name">修图小组：{{ photoItem.retouchGroupName }}</div>
@@ -228,7 +233,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .evaluate-photo-scroll {
   .search-box {

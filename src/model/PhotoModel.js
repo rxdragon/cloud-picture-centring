@@ -1,6 +1,7 @@
 // 照片model
 export default class PhotoModel {
   baseData = null
+  id = ''
   isReturn = false // 是否审核退回
   isPull = false // 是否拔草
   isPlant = false // 是否种草
@@ -12,6 +13,7 @@ export default class PhotoModel {
   
   constructor (photoData) {
     this.baseData = photoData
+    this.id = photoData.id
     this.isReturn = _.get(photoData, 'tags.statics', []).includes('return_photo')
     this.isPull = _.get(photoData, 'tags.statics', []).includes('pull')
     this.isPlant = _.get(photoData, 'tags.statics', []).includes('plant')
@@ -22,6 +24,7 @@ export default class PhotoModel {
     this.reworkReason = _.get(photoData, 'tags.values.rework_reason') || ''
   }
 
+  // 获取版本
   get photoVersion () {
     if (this.isReturn) {
       return [this.originalPhoto, this.firstPhoto, this.completePhoto]

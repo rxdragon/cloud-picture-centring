@@ -3,7 +3,12 @@
     <div class="header" :class="showBorder">
       <h3>更新日志</h3>
     </div>
-    <div class="content-main" v-infinite-scroll="getVersionInfo" infinite-scroll-disabled="scrollLoadDisabled" infinite-scroll-distance="100">
+    <div
+      class="content-main"
+      v-infinite-scroll="getVersionInfo"
+      infinite-scroll-disabled="scrollLoadDisabled"
+      infinite-scroll-distance="100"
+    >
       <div class="module-panel" v-for="(versionItem,index) in versionData" :key="index">
         <h3 class="version-title">版本更新：{{ versionItem.version_num }} <time>{{ formatTime(versionItem.version_time) }}</time></h3>
         <div v-html="versionItem.info" class="tui-editor-contents"></div>

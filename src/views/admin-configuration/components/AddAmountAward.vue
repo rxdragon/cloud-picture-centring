@@ -14,10 +14,7 @@
       </div>
       <div class="search-item">
         <span>配置伙伴</span>
-        <staff-panel
-          :default-checked-keys="defaultCheckedKeys"
-          :to-data.sync="toData"
-        />
+        <staff-panel :default-checked-keys="defaultCheckedKeys" :to-data.sync="toData"/>
       </div>
       <div class="experience-box search-item">
         <span>冲量奖励</span>
@@ -36,7 +33,12 @@
       </div>
       <div class="search-item valid-time">
         <span>有效日期</span>
-        <date-picker v-model="timeSpan" value-format="yyyy-MM-dd HH:mm:ss" future type="datetimerange" />
+        <date-picker
+          v-model="timeSpan"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          future
+          type="datetimerange"
+        />
       </div>
       <div class="sure-button">
         <el-button type="primary" plain @click="goBack">返回</el-button>
@@ -51,7 +53,14 @@
       width="30%"
     >
       <div class="content-box">
-        <el-form ref="addAwardConfig" :model="addAwardConfig" status-icon :rules="rules" label-position="left" label-width="120px">
+        <el-form
+          ref="addAwardConfig"
+          :model="addAwardConfig"
+          status-icon
+          :rules="rules"
+          label-position="left"
+          label-width="120px"
+        >
           <el-form-item prop="reachExp" label="当前达到海草：">
             <el-input v-model="addAwardConfig.reachExp" placeholder="请输入达到海草数，最多2位小数" />
           </el-form-item>
@@ -231,7 +240,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .add-amount-award {
   .search-item {

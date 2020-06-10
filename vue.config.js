@@ -40,10 +40,16 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        'appId': 'com.example.app',
-        'productName': '缦图云端', // 项目名，也是生成的安装文件名，即aDemo.exe
-        'copyright': 'Copyright © 2019'// 版权信息
+        appId: 'com.example.app',
+        productName: '缦图云端',
+        copyright: 'Copyright © 2019'
       }
+    },
+    'style-resources-loader': {
+      preProcessor: 'less',
+      patterns: [
+        resolve('src/styles/variables.less')
+      ]
     }
   }
 }

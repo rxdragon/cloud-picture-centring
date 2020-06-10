@@ -4,8 +4,19 @@
       <h3>值班主管配置</h3>
     </div>
     <div class="module-panel">
-      <el-form ref="form" :model="submitData" :rules="rules" label-width="50px" label-position="right">
-        <el-form-item v-for="(item, key) in submitData" :key="key" :label="key | filterWeek" :prop="key">
+      <el-form
+        ref="form"
+        :model="submitData"
+        :rules="rules"
+        label-width="50px"
+        label-position="right"
+      >
+        <el-form-item
+          v-for="(item, key) in submitData"
+          :key="key"
+          :label="key | filterWeek"
+          :prop="key"
+        >
           <supervisor-on-duty-select v-model="submitData[key]" clearable multiple />
         </el-form-item>
         <el-form-item>

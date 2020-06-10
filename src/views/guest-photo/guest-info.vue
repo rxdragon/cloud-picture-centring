@@ -77,7 +77,12 @@
             <span>{{ workerInfo.reviewer || '-' }}</span>
             <span>{{ workerInfo.watcherName || '-' }}</span>
             <span class="check-evaluate">
-              <span><i v-for="i in workerInfo.storeEvaluateStar" :key="i" style="color: #f90;" class="el-icon-star-on" /></span>
+              <span><i
+                v-for="i in workerInfo.storeEvaluateStar"
+                :key="i"
+                style="color: #f90;"
+                class="el-icon-star-on"
+              /></span>
               <span>评语：{{ workerInfo.storeEvaluateReason }}</span>
             </span>
           </div>
@@ -87,7 +92,12 @@
     <!-- 照片信息 -->
     <div class="panel-box module-panel">
       <div class="panel-title">照片信息</div>
-      <photo-list need-grade :grade-info="gradeInfo" :photo-data="photoVersion" @gradeChange="onGradeChange" />
+      <photo-list
+        need-grade
+        :grade-info="gradeInfo"
+        :photo-data="photoVersion"
+        @gradeChange="onGradeChange"
+      />
     </div>
   </div>
 </template>
@@ -198,7 +208,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .guest-info {
   .header {

@@ -30,21 +30,34 @@
             <ul>
               <li class="online-li" @click="setOnline">
                 <div class="change-point" />
-                <span class="change-text" :class="{'active': isOnline, 'disabled-li': loading}">在线</span>
+                <span
+                  class="change-text"
+                  :class="{'active': isOnline, 'disabled-li': loading}"
+                >在线
+                </span>
                 <transition name="el-zoom-in-top">
                   <i v-show="isOnline" class="li-check el-icon-check" />
                 </transition>
               </li>
               <li class="offline-li" @click="setOffline">
                 <div class="change-point" />
-                <span class="change-text" :class="{'active': !isOnline, 'disabled-li': loading}">离线</span>
+                <span
+                  class="change-text"
+                  :class="{'active': !isOnline, 'disabled-li': loading}"
+                >离线
+                </span>
                 <transition name="el-zoom-in-top">
                   <i v-show="!isOnline" class="li-check el-icon-check" />
                 </transition>
               </li>
             </ul>
           </div>
-          <el-avatar slot="reference" class="online-point" :class="isOnline ? 'online' : 'offline'" :src="userInfo.avatarImg" />
+          <el-avatar
+            slot="reference"
+            class="online-point"
+            :class="isOnline ? 'online' : 'offline'"
+            :src="userInfo.avatarImg"
+          />
         </el-popover>
         <div v-if="isRetoucher" class="online-state" :class="{ 'online': isOnline }">{{ isOnline ? '[在线]' : '[离线]' }}</div>
         <!-- 非修图师 -->
@@ -208,7 +221,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .Navbar {
   width: 100%;

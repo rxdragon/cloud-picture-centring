@@ -128,7 +128,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .table-content {
   margin-top: 24px;

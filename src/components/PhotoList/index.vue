@@ -1,21 +1,36 @@
 <template>
   <div class="photo-list">
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
-      <photo-box downing :preload-photo="needPreload" :src="photoItem.path" @click.native="showPriviewPhoto(photoIndex)" show-yun-check>
+      <photo-box
+        downing
+        :preload-photo="needPreload"
+        :src="photoItem.path"
+        @click.native="showPriviewPhoto(photoIndex)"
+        show-yun-check
+      >
         <template v-slot:title>
-          <span class="lable-title">{{ photoItem.version | toPhotoVerName }}</span>
+          <span class="lable-title">{{ photoItem.version | toPhotoVerName }}{{ photoItem.storeReturnCount || '' }}</span>
         </template>
       </photo-box>
-      <div v-if="photoItem.version === 'complete_photo' && needGrade" class="grade-box">
+      <div
+        v-if="photoItem.version === 'complete_photo' && needGrade"
+        class="grade-box"
+      >
         <div v-if="canGrade" class="show-info">
           <!-- 赞 -->
           <div class="good icon-box" :class="{'good-photo': goodPhoto}" @click="setGood">
-            <i class="iconfont" :class="goodPhoto ? 'icon-like-press' : 'icon-like'" />
+            <i
+              class="iconfont"
+              :class="goodPhoto ? 'icon-like-press' : 'icon-like'"
+            />
             点赞
           </div>
           <!-- 踩 -->
           <div class="bad icon-box" :class="{'bad-photo': badPhoto}" @click="setBad">
-            <i class="iconfont" :class="badPhoto ? 'icon-unlike-press' : 'icon-unlike'" />
+            <i
+              class="iconfont"
+              :class="badPhoto ? 'icon-unlike-press' : 'icon-unlike'"
+            />
             不喜欢
           </div>
         </div>
@@ -78,6 +93,7 @@ export default {
     priviewPhotoData () {
       const previewList = this.photos.map(item => {
         const createData = new PreviewModel(item)
+        createData.storeReturnCount = item.storeReturnCount
         createData.src = this.imgDomain + createData.path
         return createData
       })
@@ -163,7 +179,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .photo-list {
   display: flex;

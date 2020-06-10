@@ -1,4 +1,4 @@
-export default class PhotoModel {
+export default class PreviewModel {
   version = 'original_photo'
   path = ''
   mode = 'original'

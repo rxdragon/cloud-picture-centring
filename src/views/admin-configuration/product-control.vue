@@ -9,7 +9,10 @@
           <el-tab-pane label="待审核" name="checkPending" />
           <el-tab-pane label="审核通过" name="checked" />
         </el-tabs>
-        <div class="table-box" :class="{'no-border': activeName === 'checkPending'}">
+        <div
+          class="table-box"
+          :class="{'no-border': activeName === 'checkPending'}"
+        >
           <div class="search-box">
             <div class="institution-box search-item">
               <span>摄影机构</span>
@@ -49,7 +52,14 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click="goDetail(scope.row)">详情</el-button>
-                <el-button v-if="!isPending" type="danger" size="mini" @click="delProduct(scope.row)">删除</el-button>
+                <el-button
+                  v-if="!isPending"
+                  type="danger"
+                  size="mini"
+                  @click="delProduct(scope.row)"
+                >
+                  删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -66,7 +76,12 @@
           </div>
         </div>
       </div>
-      <product-info v-else :show-info.sync="showInfo" :is-pending="isPending" :edit-id="editId" />
+      <product-info
+        v-else
+        :show-info.sync="showInfo"
+        :is-pending="isPending"
+        :edit-id="editId"
+      />
     </transition>
   </div>
 </template>
@@ -219,7 +234,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .product-control {
   .search-box {

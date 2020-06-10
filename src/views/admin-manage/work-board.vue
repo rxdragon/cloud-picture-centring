@@ -68,13 +68,17 @@
       <el-tab-pane v-if="showReviewStreamList" :label="`审核中（${reviewCount}）`" name="reviewing" />
     </el-tabs>
     <!-- 列表数据 -->
-    <div v-if="showRetouchStreamList || showReviewStreamList" class="table-box" :class="{'no-border': activeName === 'retouch'}">
+    <div
+      v-if="showRetouchStreamList || showReviewStreamList"
+      class="table-box"
+      :class="{'no-border': activeName === 'retouch'}"
+    >
       <!-- 搜索框 -->
       <div class="search-button search-box">
         <!-- 修图标准 -->
         <div class="retouch-type search-item">
           <span>修图标准</span>
-          <Retouch-kind-select v-model="retouchType" all-optision />
+          <Retouch-kind-select v-model="retouchType" all-optision placeholder="请选择修图标准"/>
         </div>
         <div class="button-box">
           <el-button type="primary" @click="getList(1)">查询</el-button>
@@ -309,7 +313,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .WorkBoard {
   .search-box {

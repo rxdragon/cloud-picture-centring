@@ -1,9 +1,13 @@
 <template>
   <div class="domain-switch-box">
     <div class="radio-group" v-show="modeArr.length !== 1">
-      <div v-for="(modeItem, modeIndex) in modeArr" :key="modeIndex"
+      <div
+        v-for="(modeItem, modeIndex) in modeArr"
+        :key="modeIndex"
         @click="changeMode(modeItem.value)"
-        class="radio-button" :class="{'is-active': mode === modeItem.value}">
+        class="radio-button"
+        :class="{'is-active': mode === modeItem.value}"
+      >
         {{ modeItem.label }}
       </div>
       <div class="back-button" :style="{'left': `${activeLeft}px`}" />
@@ -64,7 +68,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/variables.less";
+
 
 .domain-switch-box {
   .radio-group {

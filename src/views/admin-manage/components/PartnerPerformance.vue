@@ -15,7 +15,7 @@
     </div>
     <div class="table-panel">
       <div class="retouch-order-statistics">
-        <div class="panel-title">修图单量问题统计</div>
+        <div class="panel-title">修图问题统计</div>
         <retouch-order-chart :chart-datas="orderStatisticsData" />
       </div>
       <div class="performance-statistics">
@@ -137,7 +137,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .partner-performance {
   .search-box {

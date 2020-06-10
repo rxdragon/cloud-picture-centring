@@ -39,7 +39,12 @@
       </el-table>
     </div>
     <!-- 弹出框 -->
-    <el-dialog title="调整工作量" width="30%" :before-close="beforClose" :visible.sync="dialogFormVisible">
+    <el-dialog
+      title="调整工作量"
+      width="30%"
+      :before-close="beforClose"
+      :visible.sync="dialogFormVisible"
+    >
       <div class="dialog-content">
         <el-form ref="form" label-width="100px">
           <el-form-item label="预计工作量：">
@@ -134,7 +139,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .work-management {
   .today-info {

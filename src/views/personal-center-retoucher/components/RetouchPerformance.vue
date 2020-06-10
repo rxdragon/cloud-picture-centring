@@ -42,9 +42,9 @@
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.overNum }}</router-link>
           </template>
         </el-table-column>
-        <el-table-column label="利奇马单量/张数" min-width="140">
+        <el-table-column label="质量问题单量/张数" min-width="140">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=default'">{{ scope.row.lekimaCount }}</router-link>
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.QualityRework">{{ scope.row.streamNumForQuality + ' / ' + scope.row.photoNumForQuality }}</router-link>
           </template>
         </el-table-column>
         <el-table-column label="修图获得收益" min-width="150">
@@ -69,7 +69,24 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="exp" label="获得海草" min-width="110" />
+        <el-table-column label="获得海草" min-width="150">
+          <template slot-scope="scope">
+            <div class="income-box">
+              <span class="span-row">
+                <span class="span-title">修图海草：</span>
+                {{ scope.row.exp.retouchExp | toFixedString }}
+              </span>
+              <span class="span-row text-red">
+                <span class="span-title">惩罚海草：</span>
+                {{ scope.row.exp.punishExp | toFixedString }}
+              </span>
+              <span class="span-row">
+                <span class="span-title">实获海草：</span>
+                {{ scope.row.exp.rewordExp | toFixedString }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="评分（平均值）" min-width="150" fixed="right">
           <template slot-scope="scope">
             <div class="grade-box">
@@ -139,7 +156,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/styles/variables.less";
+
 
 .retouch-performance {
   .text-red {
@@ -170,11 +187,9 @@ export default {
     .income-box {
       .span-row {
         display: flex;
-        justify-content: space-between;
 
         .span-title {
           display: inline-block;
-          width: 80px;
           text-align: left;
         }
 

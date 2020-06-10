@@ -8,21 +8,35 @@
       :close-on-press-escape="false"
       top="25vh"
       v-bind="$attrs"
-      v-on="$listeners">
+      v-on="$listeners"
+    >
       <div class="issue-main">
+        <div class="issue-box">
+          <div class="issues-class">
+            摄影备注：{{ notes.photographNote }}
+          </div>
+          <div class="issues-class">
+            化妆备注：{{ notes.dressNote }}
+          </div>
+        </div>
         <div class="issue-box" v-for="(issueClass, issueKey) in issueData" :key="issueKey">
           <div class="issues-class">{{ issueKey | filterName }}</div>
-          <el-tooltip v-for="issueItem in issueClass" :key="issueItem.key" effect="dark" :content="issueItem.description" placement="top-start">
-            <el-tag
-              :effect="issueItem.select ? 'light' : 'plain'"
-              @click="selectData(issueKey, issueItem.key)">
+          <el-tooltip
+            v-for="issueItem in issueClass"
+            :key="issueItem.key"
+            effect="dark"
+            :content="issueItem.description"
+            placement="top-start"
+          >
+            <el-tag :effect="issueItem.select ? 'light' : 'plain'" @click="selectData(issueKey, issueItem.key)">
               {{ issueItem.label }}
             </el-tag>
           </el-tooltip>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitData" :loading="loading">提 交</el-button>
+        <span @click="submitData(false)" class="no-issue-btn">没有问题</span>
+        <el-button type="primary" @click="submitData(true)" :loading="loading">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -31,8 +45,14 @@
 <script>
 export default {
   name: 'IssueLabel',
+  filters: {
+    filterName (value) {
+      return value === 'photography' ? '摄影：' : '化妆：'
+    }
+  },
   props: {
-    issueData: { type: Object, default: () => ({}) }
+    issueData: { type: Object, default: () => ({}) },
+    notes: { type: Object, default: () => ({}) }
   },
   data () {
     return {
@@ -49,9 +69,9 @@ export default {
     },
     /**
      * @description 提交
+     * @param {Boolean} true： 提交 false：没有问题
      */
-    submitData () {
-      this.loading = true
+    submitData (hasIssue) {
       const problemTagPhotography = []
       const problemTagMakeup = []
       for (const key in this.issueData) {
@@ -65,13 +85,12 @@ export default {
           }
         })
       }
-      const issue = { problemTagPhotography, problemTagMakeup }
+      const hasIssuelength = Boolean(problemTagPhotography.length + problemTagMakeup.length)
+      if (hasIssue && !hasIssuelength) return this.$newMessage.warning('请选择问题标签')
+      let issue = { problemTagPhotography, problemTagMakeup }
+      if (!hasIssue) { issue = null }
+      this.loading = true
       this.$emit('submit', issue)
-    }
-  },
-  filters: {
-    filterName (value) {
-      return value === 'photography' ? '摄影：' : '化妆：'
     }
   }
 }
@@ -85,6 +104,20 @@ export default {
 
   & /deep/ .el-dialog__footer {
     text-align: center;
+
+    .dialog-footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+
+      .no-issue-btn {
+        margin-right: 20px;
+        font-size: 15px;
+        color: #aaa;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 
   .issue-main {

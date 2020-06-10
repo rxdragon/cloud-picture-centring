@@ -5,7 +5,6 @@
       filterable
       clearable
       :popper-append-to-body="false"
-      placeholder="请选择修图标准"
       v-on="$listeners"
     >
       <el-option v-if="allOptision" label="全部" :value="0" />
