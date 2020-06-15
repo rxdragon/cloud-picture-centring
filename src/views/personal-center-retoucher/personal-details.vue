@@ -68,7 +68,7 @@
                     :end-value="gradeInfo.nearly30DaysReturnNum | getPoint"
                   /></i>
                 </span>
-                <span>近30日退单数</span>
+                <span>近30日退张数</span>
               </div>
             </el-col>
             <el-col :span="6">
