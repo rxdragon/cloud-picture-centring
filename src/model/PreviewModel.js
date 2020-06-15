@@ -45,7 +45,7 @@ export default class PreviewModel {
 
   // 获取云学院评价 
   getCommitInfo (photoItem) {
-    if (this.version === 'complete_photo') {
+    if (this.version === 'last_retouch_photo') {
       this.commitInfo = photoItem.commitInfo || {}
     }
     this.hasCommitInfo = Boolean(Object.keys(this.commitInfo).length)
@@ -55,7 +55,7 @@ export default class PreviewModel {
   getMode () {
     if (this.version === 'store_rework' && this.hasStoreReturnTag) {
       this.mode = 'complete'
-    } else if (this.version === 'complete_photo' && this.hasCommitInfo) {
+    } else if (this.version === 'last_retouch_photo' && this.hasCommitInfo) {
       this.mode = 'cloudLabel'
     }
   }
