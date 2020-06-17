@@ -66,14 +66,16 @@
       </div>
       <div v-for="i in 4" :key="'empty' + i" class="empty-box list-photo-item" />
     </transition-group>
-    <el-button
-      size="small"
-      class="one-upload"
-      type="primary"
-      @click="getFiles"
-    >
-      一键上传
-    </el-button>
+    <el-tooltip effect="dark" content="匹配查找照片信息里，照片下方显示的文件名" placement="top-start">
+      <el-button
+        size="small"
+        class="one-upload"
+        type="primary"
+        @click="getFiles"
+      >
+        一键上传
+      </el-button>
+    </el-tooltip>
   </div>
 </template>
 

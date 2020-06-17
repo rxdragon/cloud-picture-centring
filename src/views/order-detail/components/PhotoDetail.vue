@@ -84,11 +84,6 @@ export default {
         partReason = [...item.reason.split('+'),...partReason]
       })
       return partReason.concat(wholeReason ? wholeReason.split('+') : [])
-    },
-    showMark () {
-      return function (version) {
-        return version === 'complete_photo'
-      }
     }
   },
   created () {

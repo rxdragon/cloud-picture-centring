@@ -91,8 +91,13 @@ export function settlePhotoVersion (photoVersion) {
         storeReturnCount++
         versionItem.storeReturnCount = storeReturnCount
       }
+      if (versionItem.version === 'complete_photo') {
+        versionItem = timeLine.find(item => item.version === 'last_retouch_photo')
+      }
       createData.push(versionItem)
-      const findVersionIndex = photoVersionArr.findIndex(item => item === versionItem.version)
+      const findVersionIndex = versionItem.version === 'last_retouch_photo'
+        ? photoVersionArr.findIndex(item => item === 'complete_photo')
+        : photoVersionArr.findIndex(item => item === versionItem.version)
       if (findVersionIndex > -1 && versionItem.version !== 'store_rework') {
         photoVersionArr.splice(findVersionIndex, 1)
       }

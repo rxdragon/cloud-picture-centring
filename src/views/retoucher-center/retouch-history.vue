@@ -158,9 +158,11 @@ export default {
     }
   },
   watch: {
-    '$route.query': {
-      handler (query) {
-        const { retouchHistoryTimeSpan, retouchHistorySearchType } = query
+    '$route': {
+      handler (to, from) {
+        const keepLiveRoute = ['RetouchHistory', 'orderDetail']
+        if (keepLiveRoute.includes(_.get(from, 'name'))) return
+        const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
         if (retouchHistoryTimeSpan) {
           this.timeSpan = this.$route.query.retouchHistoryTimeSpan.split(',')
         }

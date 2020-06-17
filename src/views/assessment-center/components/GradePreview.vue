@@ -343,7 +343,7 @@ export default {
     showPhoto () {
       return this.photoArray[this.photoIndex] || {}
     },
-    // 是云端成片
+    // 是否最新修片
     isFinishPhoto () {
       return this.showPhoto.version === 'complete_photo'
     }
