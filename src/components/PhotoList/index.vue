@@ -180,7 +180,6 @@ export default {
 
 <style lang="less" scoped>
 
-
 .photo-list {
   display: flex;
   flex-wrap: wrap;

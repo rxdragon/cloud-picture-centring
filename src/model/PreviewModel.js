@@ -1,3 +1,5 @@
+const completePhoto = ['last_retouch_photo', 'complete_photo']
+
 export default class PreviewModel {
   version = 'original_photo'
   path = ''
@@ -45,7 +47,7 @@ export default class PreviewModel {
 
   // 获取云学院评价 
   getCommitInfo (photoItem) {
-    if (this.version === 'last_retouch_photo') {
+    if (completePhoto.includes(this.version)) {
       this.commitInfo = photoItem.commitInfo || {}
     }
     this.hasCommitInfo = Boolean(Object.keys(this.commitInfo).length)
@@ -55,7 +57,7 @@ export default class PreviewModel {
   getMode () {
     if (this.version === 'store_rework' && this.hasStoreReturnTag) {
       this.mode = 'complete'
-    } else if (this.version === 'last_retouch_photo' && this.hasCommitInfo) {
+    } else if (completePhoto.includes(this.version) && this.hasCommitInfo) {
       this.mode = 'cloudLabel'
     }
   }
