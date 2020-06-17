@@ -21,7 +21,9 @@ export default class PhotoModel {
     this.firstPhoto = photoData.first_photo
     this.completePhoto = photoData.other_photo_version.find(item => item.version === 'complete_photo')
     if (this.completePhoto) {
-      this.completePhoto = photoData.other_photo_version.find(item => item.version === 'last_retouch_photo')
+      const findLastRetouchPhoto = photoData.other_photo_version.find(item => item.version === 'last_retouch_photo')
+      if (findLastRetouchPhoto) { findLastRetouchPhoto.version = 'complete_photo' }
+      this.completePhoto = findLastRetouchPhoto || this.completePhoto
     }
     this.grassReason = _.get(photoData, 'tags.values.grass_reason') || ''
     this.reworkReason = _.get(photoData, 'tags.values.rework_reason') || ''

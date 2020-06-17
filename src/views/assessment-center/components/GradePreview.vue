@@ -345,7 +345,7 @@ export default {
     },
     // 是否最新修片
     isFinishPhoto () {
-      return this.showPhoto.version === 'last_retouch_photo'
+      return this.showPhoto.version === 'complete_photo'
     }
   },
   created () {

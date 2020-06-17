@@ -161,7 +161,6 @@ export default {
 
 <style lang="less">
 
-
 .grade-box {
   .photo-panel {
     margin-bottom: 32px;
