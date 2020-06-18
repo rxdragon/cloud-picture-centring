@@ -92,7 +92,8 @@ export function settlePhotoVersion (photoVersion) {
         versionItem.storeReturnCount = storeReturnCount
       }
       if (versionItem.version === 'complete_photo') {
-        versionItem = timeLine.find(item => item.version === 'last_retouch_photo')
+        // 兼容老数据，没有last_retouch_photo
+        versionItem = timeLine.find(item => item.version === 'last_retouch_photo') || versionItem
       }
       createData.push(versionItem)
       const findVersionIndex = versionItem.version === 'last_retouch_photo'
