@@ -34,6 +34,12 @@ const guestPhoto = {
       hidden: true,
       component: () => import('@/views/guest-photo/guest-photo-details.vue'),
       meta: { title: '客片详情', icon: '' }
+    },
+    {
+      path: '/identify-image',
+      name: 'identify-image',
+      component: () => import('@/views/guest-photo/identify-image.vue'),
+      meta: { title: '云端识图', icon: '' }
     }
   ]
 }

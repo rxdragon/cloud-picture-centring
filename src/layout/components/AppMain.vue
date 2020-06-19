@@ -51,7 +51,6 @@ export default {
 
 <style lang="less" scoped>
 
-
 .app-main {
   position: relative;
   box-sizing: border-box;

@@ -222,7 +222,6 @@ export default {
 
 <style lang="less">
 
-
 .Navbar {
   width: 100%;
   height: 100%;
