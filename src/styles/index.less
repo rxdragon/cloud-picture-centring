@@ -340,6 +340,8 @@ aside {
 
   .panel-title {
     position: relative;
+    display: flex;
+    align-items: center;
     padding-left: 14px;
     font-size: 16px;
     font-weight: 600;
@@ -356,6 +358,10 @@ aside {
       content: '';
       background-color: @blue;
       transform: translateY(-50%);
+    }
+
+    .panel-slot {
+      margin-left: auto;
     }
   }
 }

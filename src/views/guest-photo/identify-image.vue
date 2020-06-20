@@ -25,15 +25,47 @@
       <div class="progress-box" v-else>
         <el-progress :percentage="percentageAge" :show-text="false" />
         <div class="progress-text">
-          上传中 {{ percentageAge }} %
+          {{ identifyState === 'identifying' ? '识别中' : '上传中' }} {{ percentageAge }} %
         </div>
       </div>
     </div>
     <div class="identify-box module-panel" v-else>
       <div class="upload-box">
         <div class="panel-title">识别图片</div>
-        <photo-box photo-name preview-breviary :src="finishPhoto[photoItem.uid].path" />
+        <div class="upload-photo">
+          <photo-box
+            class="photo-box"
+            photo-name
+            preview-breviary
+            :src="uploadPhoto"
+          />
+        </div>
       </div>
+      <el-divider></el-divider>
+      <div class="search-result">
+        <div class="panel-title">
+          <span>搜索结果</span>
+          <div class="panel-slot">
+            <el-button size="small" plain type="primary">查看订单</el-button>
+            <el-button type="primary" size="small">查看流水单</el-button>
+          </div>
+        </div>
+        <div class="panel-main">
+          <div class="match-photo">
+            <photo-box
+              class="photo-box"
+              photo-name
+              preview-breviary
+              :src="uploadPhoto"
+            />
+          </div>
+          <div class="match-info">
+            <identify-order-info />
+          </div>
+        </div>
+      </div>
+      <el-divider></el-divider>
+      <simulate-photos />
     </div>
   </div>
 </template>
@@ -41,6 +73,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import * as Commonality from '@/api/commonality'
+import PhotoBox from '@/components/PhotoBox'
+import IdentifyOrderInfo from './components/IdentifyOrderInfo'
+import SimulatePhotos from './components/SimulatePhotos'
 
 const IDENTIFY_STATE = {
   'BEFOR_UPDATE': 'beforeUpdate',
@@ -51,16 +86,18 @@ const IDENTIFY_STATE = {
 
 export default {
   name: 'IdentifyImage',
+  components: { PhotoBox, IdentifyOrderInfo, SimulatePhotos },
   data () {
     return {
       IDENTIFY_STATE,
       upyunConfig: {}, // 七牛云配置
       percentageAge: 0,
-      identifyState: 'beforeUpdate', // 识别状态
+      identifyState: 'identifyDone', // 识别状态
       searchTimer: null,
       similarityImageList: [],
       selectPhotoId: '',
-      selectOrderInfo: {}
+      selectOrderInfo: {},
+      uploadPhoto: '2020/05/05/lkWd_6m82023L3kcvVyDxIGoPN0V.jpg'
     }
   },
   computed: {
@@ -214,6 +251,35 @@ export default {
 
   .identify-box {
     min-height: calc(~'@{appMainHeight} - 24px');
+
+    .upload-box {
+      .panel-title {
+        margin-bottom: 20px;
+      }
+
+      .upload-photo {
+        width: 253px;
+      }
+    }
+
+    .search-result {
+      .panel-title {
+        margin-bottom: 20px;
+      }
+
+      .panel-main {
+        display: flex;
+
+        .match-photo {
+          width: 400px;
+        }
+
+        .match-info {
+          width: calc(100% - 400px);
+          padding: 20px;
+        }
+      }
+    }
   }
 }
 </style>
