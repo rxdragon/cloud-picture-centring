@@ -217,6 +217,19 @@
             </div>
           </div>
           <order-info-module v-if="Object.keys(info).length" :order-info="info" />
+          <!-- 种拔草设置 -->
+          <div class="label-top" v-if="labelDataTop.length">
+            <el-tag
+              size="medium"
+              disable-transitions
+              v-for="(item, index) in labelDataTop"
+              :key="index"
+              :class="item.isSelect ? 'active' : ''"
+              @click="selectTLabelData(item)"
+            >
+              {{ item.name }}
+            </el-tag>
+          </div>
           <!-- 问题标签 -->
           <div class="order-label">
             <div class="label-title">标签栏</div>
@@ -232,7 +245,7 @@
                     disable-transitions
                     @click="setLabel(issueItem)"
                   >
-                    {{ issueItem.name }}
+                    {{ issueItem.name }}{{ issueItem.isSelect }}
                   </el-tag>
                 </div>
               </div>
@@ -298,6 +311,7 @@ export default {
       driver: null, // 引导信息
       inZoomIn: false, // 是否放大中
       photoZoomStyle: '', // 图片信息
+      labelDataTop: [], // 种拔草标签, 选了这个以后才能展示对应的标签数据
       labelData: [], // 标签数据
       showCanvas: false,
       canvasOption: { // canvas 信息
@@ -473,10 +487,31 @@ export default {
       return selectData
     },
     /**
-     * @description 获取标签数据
+     * @description 获取所有数据
      */
     async getLabelData () {
-      this.labelData = await AssessmentCenter.getScoreConfigList()
+      this.labelDataTop = await AssessmentCenter.getScoreConfigList()
+      // this.labelDataTop[0].child.forEach((fatherItem) => {
+      //   fatherItem.child.forEach(childItem => { childItem.isSelect = false })
+      // })
+      // this.labelData = this.labelDataTop[0].child
+      // this.labelData = await AssessmentCenter.getScoreConfigList()
+    },
+    /**
+     * @description 根据种拔草,选择对应的标签
+     */
+    selectTLabelData (selItem) {
+      this.labelDataTop.forEach((item) => {
+        if (item.name === selItem.name) {
+          item.isSelect = true
+        } else {
+          item.isSelect = false
+        }
+      })
+      selItem.child.forEach((fatherItem) => {
+        fatherItem.child.forEach(childItem => { childItem.isSelect = false })
+      })
+      this.labelData = selItem.child
     },
     /**
      * @description 重制标签
@@ -1074,6 +1109,27 @@ export default {
               height: 12px;
               border: 1px solid #409eff;
             }
+          }
+        }
+      }
+
+      .label-top {
+        margin-top: 10px;
+        margin-left: 10px;
+
+        .el-tag {
+          margin: 0 10px 10px 0;
+          font-size: 12px;
+          font-weight: 400;
+          color: #eee;
+          cursor: pointer;
+          -webkit-user-select: none;
+          background-color: rgba(0, 0, 0, 0.6);
+          border: none;
+          border-radius: 4px;
+
+          &.active {
+            background-color: #808080;
           }
         }
       }

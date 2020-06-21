@@ -160,9 +160,30 @@ export function getScoreConfigList () {
     url: '/project_cloud/checkPool/getScoreConfigList',
     method: 'GET'
   }).then(msg => {
+    const tempmsg = msg
+    msg = [
+      {
+        id: 2,
+        name: '种草',
+        child: tempmsg
+      },
+      {
+        id: 1,
+        name: '拔草',
+        child: tempmsg
+      },
+      {
+        id: 3,
+        name: '一般',
+        child: tempmsg
+      },
+    ]
     msg.forEach(item => {
-      item.child.forEach(issItem => { issItem.isSelect = false })
+      item.isSelect = false
     })
+    // msg.forEach(item => {
+    //   item.child.forEach(issItem => { issItem.isSelect = false })
+    // })
     return msg
   })
 }
