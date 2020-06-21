@@ -3,55 +3,14 @@
     <div class="header">
       <h3>云端识图</h3>
     </div>
-    <div
-      class="identify-main module-panel"
-      v-if="identifyState !== IDENTIFY_STATE.IDENTIFY_DONE"
-    >
-      <el-upload
-        v-if="identifyState === IDENTIFY_STATE.BEFOR_UPDATE"
-        class="upload-main"
-        drag
-        :action="updateDomain"
-        :show-file-list="false"
-        :before-upload="beforeUpload"
-        :on-progress="handleProgress"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :data="upyunConfig"
-      >
-        <i class="el-icon-picture-outline"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-      </el-upload>
-      <div class="progress-box" v-else>
-        <el-progress :percentage="percentageAge" :show-text="false" />
-        <div class="progress-text">
-          {{ identifyState === 'identifying' ? '识别中' : '上传中' }} {{ percentageAge }} %
-        </div>
-      </div>
+    <div class="identify-main module-panel" v-if="!hasIdentify">
+      <identify-update :state.sync="identifyState" :identify-progress="percentageAge" @uploadSuccess="getSimilarity"/>
     </div>
     <div class="identify-box module-panel" v-else>
       <div class="upload-box">
         <div class="panel-title">识别图片</div>
-        <div class="upload-photo">
-          <photo-box
-            class="photo-box"
-            photo-name
-            preview-breviary
-            :src="uploadPhoto"
-          />
-        </div>
-      </div>
-      <el-divider></el-divider>
-      <div class="search-result">
-        <div class="panel-title">
-          <span>搜索结果</span>
-          <div class="panel-slot">
-            <el-button size="small" plain type="primary">查看订单</el-button>
-            <el-button type="primary" size="small">查看流水单</el-button>
-          </div>
-        </div>
-        <div class="panel-main">
-          <div class="match-photo">
+        <div class="upload-content">
+          <div class="upload-photo">
             <photo-box
               class="photo-box"
               photo-name
@@ -59,23 +18,51 @@
               :src="uploadPhoto"
             />
           </div>
-          <div class="match-info">
-            <identify-order-info />
+          <div class="upload-module">
+            <identify-update :state.sync="identifyState" :identify-progress="percentageAge" @uploadSuccess="getSimilarity"/>
           </div>
         </div>
+        <el-divider></el-divider>
       </div>
-      <el-divider></el-divider>
-      <simulate-photos />
+      <template v-if="similarityImageList.length">
+        <div class="search-result">
+          <div class="panel-title">
+            <span>搜索结果</span>
+            <div class="panel-slot">
+              <el-button size="small" plain type="primary">查看订单</el-button>
+              <el-button type="primary" size="small">查看流水单</el-button>
+            </div>
+          </div>
+          <div class="panel-main">
+            <div class="match-photo">
+              <photo-box
+                class="photo-box"
+                photo-name
+                preview-breviary
+                :src="uploadPhoto"
+              />
+            </div>
+            <div class="match-info">
+              <identify-order-info />
+            </div>
+          </div>
+        </div>
+        <el-divider></el-divider>
+        <simulate-photos />
+      </template>
+      <div class="no-match">
+        <no-data desc="暂无相关照片信息数据" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import * as Commonality from '@/api/commonality'
 import PhotoBox from '@/components/PhotoBox'
 import IdentifyOrderInfo from './components/IdentifyOrderInfo'
+import IdentifyUpdate from './components/IdentifyUpdate'
 import SimulatePhotos from './components/SimulatePhotos'
+import NoData from '@/components/NoData'
 
 const IDENTIFY_STATE = {
   'BEFOR_UPDATE': 'beforeUpdate',
@@ -86,22 +73,21 @@ const IDENTIFY_STATE = {
 
 export default {
   name: 'IdentifyImage',
-  components: { PhotoBox, IdentifyOrderInfo, SimulatePhotos },
+  components: { PhotoBox, IdentifyOrderInfo, SimulatePhotos, NoData, IdentifyUpdate },
   data () {
     return {
       IDENTIFY_STATE,
-      upyunConfig: {}, // 七牛云配置
       percentageAge: 0,
       identifyState: 'identifyDone', // 识别状态
       searchTimer: null,
       similarityImageList: [],
       selectPhotoId: '',
       selectOrderInfo: {},
+      hasIdentify: false,
       uploadPhoto: '2020/05/05/lkWd_6m82023L3kcvVyDxIGoPN0V.jpg'
     }
   },
   computed: {
-    ...mapGetters(['updateDomain']),
     hasSelectOrderInfo () {
       return Object.keys(this.selectOrderInfo).length
     }
@@ -115,31 +101,24 @@ export default {
       }
     }
   },
-  created () {
-    this.getUpyunSign()
-  },
   methods: {
-    beforeUpload () {
-      this.identifyState = IDENTIFY_STATE.UPDATEING
-    },
-    handleProgress (event, file, fileList) {
-      this.percentageAge = Number(Math.floor(event.percent / 2))
-    },
-    async handleSuccess (response, file, fileList) {
-      this.simulatePercentageAge()
-      this.identifyState = IDENTIFY_STATE.IDENTIFYING
-      await this.getSimilarity(response)
-    },
-    handleError () {
-      // TODO
-    },
+    /**
+     * @description 匹配相似图片
+     */
     async getSimilarity (path) {
+      this.simulatePercentageAge()
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           // 是被完成
           this.similarityImageList = ['1']
           this.selectPhotoId = '1'
           this.identifyState = IDENTIFY_STATE.IDENTIFY_DONE
+          if (this.searchTimer) {
+            clearInterval(this.searchTimer)
+            this.searchTimer = null
+            this.percentageAge = 50
+            this.hasIdentify = true
+          }
           resolve()
         }, 5000)
       })
@@ -148,26 +127,26 @@ export default {
       this.selectOrderInfo = {
         id: '1'
       }
+      this.percentageAge = 0
     },
+    /**
+     * @description 模拟获取识别进度
+     */
     simulatePercentageAge () {
       this.searchTimer = setInterval(() => {
         const STEP = 5
-        if (this.percentageAge >= 90) {
+        if (this.percentageAge >= 40) {
           // 结果已返回，则设置100%
           if (this.identifyState === IDENTIFY_STATE.IDENTIFY_DONE) {
-            this.percentageAge = 100
-            return clearInterval(this.searchTimer)
+            this.percentageAge = 50
+            clearInterval(this.searchTimer)
+            this.searchTimer = null
+            return
           }
         } else {
           this.percentageAge = this.percentageAge + STEP
         }
       }, 300)
-    },
-    /**
-     * @description 获取又拍云
-     */
-    async getUpyunSign () {
-      this.upyunConfig = await Commonality.getSignature()
     }
   }
 }
@@ -257,8 +236,82 @@ export default {
         margin-bottom: 20px;
       }
 
-      .upload-photo {
-        width: 253px;
+      .upload-content {
+        display: flex;
+        justify-content: space-between;
+
+        .upload-photo {
+          width: 253px;
+        }
+
+        .upload-module {
+          float: right;
+          width: 253px;
+          height: 253px;
+          background-color: #f5f7fa;
+          border-radius: 4px;
+
+          .identify-update {
+            width: 100%;
+            height: 100%;
+          }
+
+          .upload-main {
+            width: 100%;
+            height: 100%;
+
+            .el-upload {
+              width: 100%;
+              height: 100%;
+
+              .el-upload-dragger {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                background: #f5f7fa;
+                border: none;
+
+                .el-icon-picture-outline {
+                  font-size: 50px;
+                  color: #ebecf0;
+                }
+
+                .el-upload__text {
+                  margin-top: 20px;
+                  font-size: 14px;
+                  color: #676e9b;
+
+                  em {
+                    font-weight: 500;
+                    color: #558fb7;
+                  }
+                }
+              }
+            }
+          }
+
+          .progress-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+
+            .el-progress {
+              width: 80%;
+            }
+
+            .progress-text {
+              margin-top: 12px;
+              font-size: 14px;
+              color: #999;
+            }
+          }
+        }
       }
     }
 
@@ -279,6 +332,13 @@ export default {
           padding: 20px;
         }
       }
+    }
+
+    .no-match {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
     }
   }
 }

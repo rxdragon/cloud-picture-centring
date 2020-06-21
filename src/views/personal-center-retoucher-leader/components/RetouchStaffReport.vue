@@ -1,5 +1,5 @@
 <template>
-  <div class="page-class">
+  <div class="retouch-report">
     <div v-if="!isSeachPage" class="report-box">
       <div class="search-box module-panel">
         <div class="search-item">

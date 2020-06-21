@@ -281,7 +281,6 @@ export default {
 
 <style lang="less">
 
-
 .guest-photo-scroll {
   .search-box {
     flex-wrap: wrap;

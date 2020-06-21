@@ -22,6 +22,11 @@ const adminManage = {
       name: 'AmendOrder',
       component: () => import('@/views/admin-manage/amend-order.vue'),
       meta: { title: '修改照片产品', icon: '' }
+    }, {
+      path: 'retouch-designate',
+      name: 'RetouchDesignate',
+      component: () => import('@/views/admin-manage/retouch-designate.vue'),
+      meta: { title: '修图指派', icon: '' }
     }
   ]
 }
