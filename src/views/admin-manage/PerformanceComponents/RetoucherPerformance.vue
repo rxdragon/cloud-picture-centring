@@ -1,5 +1,5 @@
 <template>
-  <div class="crew-performance-management module-panel">
+  <div class="retoucher-performance">
     <div class="search-box">
       <div class="search-item">
         <span>绩效月份</span>
@@ -9,6 +9,10 @@
           value-format="yyyy-MM"
           placeholder="选择月"
         />
+      </div>
+      <div class="search-item">
+        <span>云端伙伴</span>
+        <staff-select v-model="staffIds" />
       </div>
       <div class="search-item">
         <el-button type="primary">查 询</el-button>
@@ -23,39 +27,62 @@
         />
       </div>
     </div>
-    <div class="module-tabel-box">
+    <div class="table-module-box">
       <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="name" label="伙伴姓名（花名）" />
-        <el-table-column prop="staffNum" label="工号" />
-        <el-table-column prop="score" label="绩效得分" />
-        <el-table-column prop="date" label="最后操作时间" />
+        <el-table-column prop="date" label="伙伴姓名（姓名）" />
+        <el-table-column prop="name" label="修图组" />
+        <el-table-column prop="name" label="工号" />
+        <el-table-column prop="name" label="绩效得分" />
+        <el-table-column prop="name" label="最后操作时间" />
+        <el-table-column prop="name" label="最后操作人" />
         <el-table-column label="操作">
           <template slot-scope="{ row }">
             <el-button type="primary" size="mini" @click="alterPerformance(row.orderId)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 页码 -->
+      <div class="page-box">
+        <el-pagination
+          :hide-on-single-page="true"
+          :current-page.sync="pager.page"
+          :page-size="pager.pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="pager.total"
+          :page-count="pager.pages"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </div>
     <alter-performance v-if="dialogVisible" @visibeClose="closeDialog" />
   </div>
 </template>
 
 <script>
+import StaffSelect from '@SelectBox/StaffSelect'
 import UploadExcel from '@/components/UploadExcel'
 import exportPerformanceExcel, { headerCellkeys } from "@/utils/exportPerformanceExcel.js"
 import AlterPerformance from '@/components/AlterPerformance'
 
 export default {
-  name: 'CrewPerformanceManagement',
-  components: { UploadExcel, AlterPerformance },
-  data () {
+  name: 'RetoucherPerformance',
+  components: { StaffSelect, UploadExcel, AlterPerformance },
+  data() {
     return {
       timeSpan: null,
-      tableData: [{
-        name: 1
-      }],
+      staffIds: [],
+      headerKeys: headerCellkeys,
+      tableData: [
+        {
+          date: '1'
+        }
+      ],
+      pager: {
+        page: 1,
+        pageSize: 10,
+        total: 100
+      },
       dialogVisible: false,
-      headerKeys: headerCellkeys
     }
   },
   methods: {
@@ -70,23 +97,11 @@ export default {
       this.dialogVisible = false
     },
     /**
-     * @description 处理完成
+     * @description 页面更改
      */
-    handleSuccess ({ results }) {
-      results.splice(0, 1)
-      const hasEveryScore = results.every(item => item.score)
-      if (!hasEveryScore) return this.$newMessage.warning('分数没有填写完整！')
-      this.tableData = results
+    handleCurrentChange () {
+      // TODO
     },
-    /**
-     * @description 上传表格前
-     */
-    beforeUpload () {
-      return true
-    },
-    /**
-     * @description 下载绩模版
-     */
     downPerformanceTemplete () {
       const data = [
         {
@@ -126,18 +141,33 @@ export default {
         }
       ]
       exportPerformanceExcel('组员6月', data)
+    },
+    /**
+     * @description 处理完成
+     */
+    handleSuccess ({ results }) {
+      results.splice(0, 1)
+      const hasEveryScore = results.every(item => item.score)
+      if (!hasEveryScore) return this.$newMessage.warning('分数没有填写完整！')
+      this.tableData = results
+    },
+    /**
+     * @description 上传表格前
+     */
+    beforeUpload () {
+      return true
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.crew-performance-management {
+.retoucher-performance {
   .search-box {
     margin-bottom: 20px;
 
     .button-box {
-      margin-left: auto;
+      margin: 0 0 0 auto;
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="crew-performance-management module-panel">
+  <div class="charge-performance">
     <div class="search-box">
       <div class="search-item">
         <span>绩效月份</span>
@@ -23,12 +23,14 @@
         />
       </div>
     </div>
-    <div class="module-tabel-box">
+    <div class="table-module-box">
       <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="name" label="伙伴姓名（花名）" />
-        <el-table-column prop="staffNum" label="工号" />
-        <el-table-column prop="score" label="绩效得分" />
-        <el-table-column prop="date" label="最后操作时间" />
+        <el-table-column prop="date" label="伙伴姓名（姓名）" />
+        <el-table-column prop="name" label="修图组" />
+        <el-table-column prop="name" label="工号" />
+        <el-table-column prop="name" label="绩效得分" />
+        <el-table-column prop="name" label="最后操作时间" />
+        <el-table-column prop="name" label="最后操作人" />
         <el-table-column label="操作">
           <template slot-scope="{ row }">
             <el-button type="primary" size="mini" @click="alterPerformance(row.orderId)">修改</el-button>
@@ -41,21 +43,27 @@
 </template>
 
 <script>
-import UploadExcel from '@/components/UploadExcel'
 import exportPerformanceExcel, { headerCellkeys } from "@/utils/exportPerformanceExcel.js"
 import AlterPerformance from '@/components/AlterPerformance'
+import UploadExcel from '@/components/UploadExcel'
 
 export default {
-  name: 'CrewPerformanceManagement',
+  name: 'ChargePerformance',
   components: { UploadExcel, AlterPerformance },
-  data () {
+  data() {
     return {
       timeSpan: null,
-      tableData: [{
-        name: 1
-      }],
+      headerKeys: headerCellkeys,
+      tableData: [
+        {
+          date: '1'
+        }
+      ],
+      pager: {
+        page: 1,
+        pageSize: 99,
+      },
       dialogVisible: false,
-      headerKeys: headerCellkeys
     }
   },
   methods: {
@@ -69,24 +77,6 @@ export default {
     closeDialog () {
       this.dialogVisible = false
     },
-    /**
-     * @description 处理完成
-     */
-    handleSuccess ({ results }) {
-      results.splice(0, 1)
-      const hasEveryScore = results.every(item => item.score)
-      if (!hasEveryScore) return this.$newMessage.warning('分数没有填写完整！')
-      this.tableData = results
-    },
-    /**
-     * @description 上传表格前
-     */
-    beforeUpload () {
-      return true
-    },
-    /**
-     * @description 下载绩模版
-     */
     downPerformanceTemplete () {
       const data = [
         {
@@ -126,18 +116,39 @@ export default {
         }
       ]
       exportPerformanceExcel('组员6月', data)
+    },
+    /**
+     * @description 页面更改
+     */
+    handleCurrentChange () {
+      // TODO
+    },
+    /**
+     * @description 处理完成
+     */
+    handleSuccess ({ results }) {
+      results.splice(0, 1)
+      const hasEveryScore = results.every(item => item.score)
+      if (!hasEveryScore) return this.$newMessage.warning('分数没有填写完整！')
+      this.tableData = results
+    },
+    /**
+     * @description 上传表格前
+     */
+    beforeUpload () {
+      return true
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.crew-performance-management {
+.charge-performance {
   .search-box {
     margin-bottom: 20px;
 
     .button-box {
-      margin-left: auto;
+      margin: 0 0 0 auto;
     }
   }
 }

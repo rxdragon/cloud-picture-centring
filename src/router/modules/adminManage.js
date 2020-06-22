@@ -23,6 +23,11 @@ const adminManage = {
       component: () => import('@/views/admin-manage/amend-order.vue'),
       meta: { title: '修改照片产品', icon: '' }
     }, {
+      path: 'performance-management',
+      name: 'PerformanceManagement',
+      component: () => import('@/views/admin-manage/performance-management.vue'),
+      meta: { title: '云端绩效管理', icon: '' }
+    }, {
       path: 'retouch-designate',
       name: 'RetouchDesignate',
       component: () => import('@/views/admin-manage/retouch-designate.vue'),

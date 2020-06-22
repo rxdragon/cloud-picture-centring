@@ -19,6 +19,11 @@ const personalCenterRetoucherLeader = {
       name: 'LeaderAuditSurvey',
       component: () => import('@/views/personal-center-audit/index.vue'),
       meta: { title: '个人审核概况', icon: '' }
+    }, {
+      path: 'charge-self-performance',
+      name: 'ChargeSelfPerformance',
+      component: () => import('@/views/personal-center-audit/charge-self-performance.vue'),
+      meta: { title: '个人绩效', icon: '' }
     }
   ]
 }
