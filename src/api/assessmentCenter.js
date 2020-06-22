@@ -120,10 +120,34 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
+      // todo mock
+      let mockArr = [{
+        type: {
+          id: 1,
+          name: '种草',
+        }
+      },
+      {
+        type: {
+          id: 1,
+          name: '拔草',
+        },
+      }
+      ]
+      item.tags = item.tags.concat(mockArr)
+
+      // 取出tag中种拔草等标签
+      const pureTag = item.tags.filter((item) => {
+        return !item.type
+      })
+      const typeTag = item.tags.filter((item) => {
+        return item.type
+      })
+      item.typeTag = typeTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
-      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
+      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, pureTag)
       item.issueLabel = item.commitInfo.issueLabel
       item.score = item.commitInfo.score
       item.photoInfo.photoVersion.forEach(versionItem => { versionItem.commitInfo = item.commitInfo })

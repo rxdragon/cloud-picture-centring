@@ -20,7 +20,6 @@
           >
             重新评分
           </el-button>
-          <span>总分：{{ photoInfoData.score }}</span>
         </div>
       </div>
       <photo-list
@@ -31,10 +30,16 @@
       />
     </div>
     <div class="info-grid">
-      <!-- 问题标签 -->
+      <!-- 评价信息 -->
       <div class="panel-info" v-if="photoInfoData.issueLabel.length">
-        <div class="panel-title">问题标签</div>
+        <div class="panel-title">
+          <span>评价信息</span>
+          <span>总分：{{ photoInfoData.score }}</span>
+        </div>
         <div class="panel-content">
+          <div class="issue-class-box panel-row">
+            <el-tag size="medium" v-for="(item, index) in photoInfoData.typeTag" :key="index">{{ item.type.name }}</el-tag>
+          </div>
           <div class="issue-class-box panel-row" v-for="issueClass in photoInfoData.issueLabel" :key="issueClass.id">
             <div class="label-title">{{ issueClass.name }}</div>
             <div class="label-box">
@@ -205,6 +210,8 @@ export default {
 
   .panel-info {
     .panel-title {
+      display: flex;
+      justify-content: space-between;
       margin-bottom: 20px;
     }
 

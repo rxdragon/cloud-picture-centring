@@ -25,6 +25,17 @@
           <el-option :label="5" :value="5" />
         </el-select>
       </div>
+      <div class="search-item">
+        <span>修图机构</span>
+        <el-select v-model="psOrganization" placeholder="请选择修图机构">
+          <el-option
+            v-for="(item, index) in psOrganizationMap"
+            :label="item.name"
+            :value="item.id"
+            :key="index"
+          />
+        </el-select>
+      </div>
       <div class="button-box">
         <el-button :disabled="Boolean(photoData.length)" type="primary" @click="takePhoto">抽 取</el-button>
       </div>
@@ -106,6 +117,7 @@ export default {
       timeSpan: null, // 时间
       institutionType: 0, // 修图标准
       sampleNum: '', // 伙伴抽样量
+      psOrganization: '', // 伙伴抽样量
       spotAllNum: '-',
       allPhotoPath: [],
       pager: {
@@ -121,7 +133,17 @@ export default {
       gradeUUid: '', // 正在打分uuid
       showGradePreview: false, // 是否显示打分概况
       dialogTableVisible: false, // 抽取成功弹框
-      showPhotoVersion: '' // 展示图片版本
+      showPhotoVersion: '', // 展示图片版本
+      psOrganizationMap: [
+        {
+          name: 'kid',
+          id: 0
+        },
+        {
+          name: 'himo',
+          id: 1
+        },
+      ]
     }
   },
   computed: {

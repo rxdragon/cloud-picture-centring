@@ -2,10 +2,6 @@
   <div class="grade-configuration">
     <div class="header">
       <h3>云学院评分配置</h3>
-      <div class="deploy-weight">
-        <span class="weight-info">当前权重比 1(点) : {{ weight }}(分)</span>
-        <el-button type="primary" @click="showWeight">配置权重分值</el-button>
-      </div>
     </div>
     <div class="main module-panel">
       <div class="add-configuration-item">
@@ -31,7 +27,26 @@
           </div>
           <el-button slot="reference" type="primary">添加评分类</el-button>
         </el-popover>
+        <div class="right">
+          <el-button type="primary" @click="showEmptyDialog = true">清空评分</el-button>
+          <div class="grade-limit">
+            <el-button type="primary" plain @click="showGradeLimitDialog = true">设置分数限制</el-button>
+          </div>
+          <div class="deploy-weight">
+            <el-button type="primary" @click="showWeight">配置权重分值</el-button>
+            <span class="weight-info">1(点) : {{ weight }}(分)</span>
+          </div>
+        </div>
       </div>
+      <el-tabs v-model="tabName" >
+        <el-tab-pane
+          v-for="(tab, index) in tabMap"
+          :label="tab.name"
+          :name="tab.id"
+          :key="index"
+        >
+        </el-tab-pane>
+      </el-tabs>
       <div class="configuration-main" v-if="scoreConfigList.length">
         <issue-class
           v-for="issueClass in scoreConfigList"
@@ -45,6 +60,7 @@
         <span class="desc">当前暂无评分项</span>
       </div>
     </div>
+    
     <!-- 配置弹出框 -->
     <el-dialog
       width="35%"
@@ -74,6 +90,48 @@
         <el-button type="primary" @click="setWeight">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 清空弹出框 -->
+    <el-dialog
+      width="35%"
+      title="清空评分内容"
+      center
+      :visible.sync="showEmptyDialog"
+    >
+      <div class="">
+        <span>选择清空对象:</span>
+        <el-select v-model="emptyPeople">
+          <el-option
+            v-for="(item, index) in emptyPeopleMap"
+            :label="item.name"
+            :value="item.id"
+            :key="index"
+          />
+        </el-select>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="info" @click="showEmptyDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setEmpty">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 分数限制 -->
+    <el-dialog
+      width="35%"
+      title="设置分数限制"
+      custom-class="grade-limit-dialog"
+      center
+      :visible.sync="showGradeLimitDialog"
+    >
+      <div class="grade-limit">
+        <span>分数范围:</span>
+        <el-input  v-model="gradeLimit.bottom" placeholder="下限"></el-input>
+        ~
+        <el-input v-model="gradeLimit.top" placeholder="上限"></el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="info" @click="showGradeLimitDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setGradeLimit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,6 +151,13 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
+      emptyPeople: 0,
+      showEmptyDialog: false,
+      showGradeLimitDialog: false,
+      gradeLimit: {
+        bottom: '',
+        top: ''
+      },
       showConfigWeight: false,
       weight: '',
       cacheWeight: '',
@@ -101,12 +166,52 @@ export default {
       newIssueItem: 1,
       weightObject: {
         score: 0
-      }
+      },
+      tabName: 'good',
+      tabMap: [
+        {
+          name: '种草',
+          id: 'good'
+        },
+        {
+          name: '一般',
+          id: 'normal'
+        },
+        {
+          name: '拔草',
+          id: 'bad'
+        },
+        {
+          name: '激励词',
+          id: 'goodWord'
+        }
+      ],
+      emptyPeopleMap: [
+        {
+          name: '小a',
+          id: 0
+        },
+        {
+          name: '小b',
+          id: 1
+        },
+        {
+          name: '小c',
+          id: 2
+        },
+        {
+          name: '小d',
+          id: 3
+        },
+      ]
     }
   },
   watch: {
     weight () {
       this.weightObject.score = this.weight
+    },
+    tabName () {
+      // console.log(123)
     }
   },
   created () {
@@ -197,7 +302,19 @@ export default {
       }
       this.scoreConfigList.push(createData)
       this.showAddNewClassProp = false
-    }
+    },
+    /**
+     * @description 确认清除
+     */
+    setEmpty () {
+      this.showEmptyDialog = false
+    },
+    /**
+     * @description 设置限制
+     */
+    setGradeLimit () {
+      this.showGradeLimitDialog = false
+    },
   }
 }
 </script>
@@ -205,21 +322,6 @@ export default {
 <style lang="less" scoped>
 .grade-configuration {
   height: calc(100% - 14px);
-
-  .header {
-    .deploy-weight {
-      display: flex;
-      align-items: center;
-
-      .weight-info {
-        margin-right: 20px;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-        color: #606266;
-      }
-    }
-  }
 
   .main {
     height: 100%;
@@ -230,8 +332,29 @@ export default {
       position: sticky;
       top: 0;
       z-index: 100;
+      display: flex;
+      justify-content: space-between;
       padding: 19px 0 24px;
       background-color: #fff;
+
+      .right {
+        display: flex;
+        align-items: center;
+
+        .deploy-weight {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .weight-info {
+            margin-right: 20px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            color: #606266;
+          }
+        }
+      }
     }
 
     .no-data-box {
@@ -252,6 +375,18 @@ export default {
         font-weight: 400;
         line-height: 20px;
         color: #606266;
+      }
+    }
+  }
+
+  .grade-limit-dialog {
+    .grade-limit {
+      display: flex;
+      align-items: center;
+
+      .el-input {
+        width: 100px;
+        margin: 10px;
       }
     }
   }
