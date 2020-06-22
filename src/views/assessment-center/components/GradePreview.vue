@@ -245,7 +245,7 @@
                     disable-transitions
                     @click="setLabel(issueItem)"
                   >
-                    {{ issueItem.name }}{{ issueItem.isSelect }}
+                    {{ issueItem.name }}
                   </el-tag>
                 </div>
               </div>
@@ -271,6 +271,7 @@ import Driver from 'driver.js' // 引导框
 import FabricCanvas from './FabricCanvas'
 import * as AssessmentCenter from '@/api/assessmentCenter'
 
+let allLabel = null
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas },
@@ -490,28 +491,22 @@ export default {
      * @description 获取所有数据
      */
     async getLabelData () {
-      this.labelDataTop = await AssessmentCenter.getScoreConfigList()
-      // this.labelDataTop[0].child.forEach((fatherItem) => {
-      //   fatherItem.child.forEach(childItem => { childItem.isSelect = false })
-      // })
-      // this.labelData = this.labelDataTop[0].child
-      // this.labelData = await AssessmentCenter.getScoreConfigList()
+      const labelInfo = await AssessmentCenter.getScoreConfigList()
+      this.labelDataTop = labelInfo.typeArr
+      allLabel = labelInfo.allLabel
     },
     /**
      * @description 根据种拔草,选择对应的标签
      */
     selectTLabelData (selItem) {
+      const { name } = selItem
       this.labelDataTop.forEach((item) => {
-        if (item.name === selItem.name) {
-          item.isSelect = true
-        } else {
-          item.isSelect = false
-        }
+        item.isSelect = item.name === name
       })
-      selItem.child.forEach((fatherItem) => {
-        fatherItem.child.forEach(childItem => { childItem.isSelect = false })
-      })
-      this.labelData = selItem.child
+
+      this.labelData = allLabel[name]
+      this.showCanvas = false
+      // this.resetLabelData()
     },
     /**
      * @description 重制标签

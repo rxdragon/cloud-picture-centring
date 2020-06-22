@@ -160,31 +160,51 @@ export function getScoreConfigList () {
     url: '/project_cloud/checkPool/getScoreConfigList',
     method: 'GET'
   }).then(msg => {
-    const tempmsg = msg
-    msg = [
+    let typeArr = []
+    let allLabel = {}
+    // mock
+    const tempData1 = msg
+    const tempData2 = JSON.parse(JSON.stringify(msg))
+    const tempData3 = JSON.parse(JSON.stringify(msg))
+    const mockData = [
       {
         id: 2,
         name: '种草',
-        child: tempmsg
+        score_config: tempData1
       },
       {
         id: 1,
         name: '拔草',
-        child: tempmsg
+        score_config: tempData2.slice(0,2)
       },
       {
         id: 3,
         name: '一般',
-        child: tempmsg
+        score_config: tempData3.slice(2,3)
       },
     ]
-    msg.forEach(item => {
-      item.isSelect = false
+    // 将数据拆开
+    mockData.forEach((msgItem) => {
+      const {
+        name,
+        id,
+        score_config: scoreConfig
+      } = msgItem
+      scoreConfig.forEach(scoreConfigItem => {
+        scoreConfigItem.child.forEach(issItem => { issItem.isSelect = false })
+      })
+      typeArr.push({
+        name,
+        id,
+        isSelect: false
+      })
+      allLabel[name] = scoreConfig
     })
-    // msg.forEach(item => {
-    //   item.child.forEach(issItem => { issItem.isSelect = false })
-    // })
-    return msg
+
+    return {
+      typeArr,
+      allLabel,
+    }
   })
 }
 

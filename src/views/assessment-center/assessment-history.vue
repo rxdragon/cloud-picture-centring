@@ -37,6 +37,18 @@
         <span>问题标签</span>
         <issue-label-select v-model="issueValue" />
       </div>
+      <div class="product-search search-item">
+        <span>评分人</span>
+        <el-select v-model="currentScorer" placeholder="请选择伙伴">
+          <el-option
+            v-for="item in scorer"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </div>
     </div>
     <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
       <GradeBox :photo-info="photoItem" @updateList="getSearchHistory" />
@@ -98,7 +110,22 @@ export default {
       uuid: '',
       cacheTimeSpan: [],
       cacheSendStaff: '',
-      drawer: false
+      drawer: false,
+      scorer: [
+        {
+          name: '小a',
+          id: 0
+        },
+        {
+          name: '小b',
+          id: 1
+        },
+        {
+          name: '小c',
+          id: 2
+        },
+      ],
+      currentScorer: '',
     }
   },
   created () {
