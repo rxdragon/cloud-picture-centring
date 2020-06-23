@@ -79,7 +79,8 @@ export const constantRoutes = [
     path: '*',
     component: () => import('@/views/error-page/404'),
     hidden: true
-  }
+  },
+  ...experimentRoutes
 ]
 
 export const lastBaseRoutes = [

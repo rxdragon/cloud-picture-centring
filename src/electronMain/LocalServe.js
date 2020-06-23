@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const express = require('express')
 const fs = require('fs')
+const os = require('os')
 const path = require('path')
 const request = require('request')
 const exp = express()
@@ -40,6 +41,14 @@ exp.get('/image/*', (req, res, next) => {
   } else {
     res.download(imageLocalPath)
   }
+})
+
+exp.get('/getAllMemory', (req, res, next) => {
+  let freeMemory = os.freemem() / 1024 / 1024 / 1024
+  let totalMemory = os.totalmem() / 1024 / 1024 / 1024
+  freeMemory = Number(freeMemory.toFixed(2))
+  totalMemory = Number(totalMemory.toFixed(2))
+  res.send({ freeMemory, totalMemory })
 })
 
 /**

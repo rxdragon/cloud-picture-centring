@@ -25,24 +25,6 @@ export default {
       document.body.style.setProperty('--subMenuBg', variables.devSubMenuBg)
       document.body.style.setProperty('--menuBg', variables.devMenuBg)
     }
-    this.$ipcRenderer.on('get-photoshop-memory:res', (e, item) => {
-      const res = item.stdout
-      let rowList = res.split('\n')
-      rowList = rowList.filter(item => item)
-      const tableData = rowList.map(item => {
-        const colArr = item.split(' ')
-        return {
-          PID: colArr[0],
-          CPU: colArr[1] / 100,
-          MEM: colArr[2] / 100,
-          VSZ: colArr[3],
-          RSS: colArr[4],
-          PPID: colArr[5],
-        }
-      })
-      console.error(tableData)
-    })
-    this.$ipcRenderer.send('get-photoshop-memory')
   },
   mounted () {
     this.$ipcRenderer.on('closed-win', (e, item) => {
