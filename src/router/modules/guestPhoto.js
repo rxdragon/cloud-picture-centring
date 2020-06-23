@@ -37,7 +37,7 @@ const guestPhoto = {
     },
     {
       path: '/identify-image',
-      name: 'identify-image',
+      name: 'IdentifyImage',
       component: () => import('@/views/guest-photo/identify-image.vue'),
       meta: { title: '云端识图', icon: '' }
     }

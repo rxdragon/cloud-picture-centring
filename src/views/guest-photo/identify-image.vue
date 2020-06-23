@@ -4,26 +4,39 @@
       <h3>云端识图</h3>
     </div>
     <div class="identify-main module-panel" v-if="!hasIdentify">
-      <identify-update :state.sync="identifyState" :identify-progress="percentageAge" @uploadSuccess="getSimilarity"/>
+      <identify-update
+        ref="identifyUpdate1"
+        :state.sync="identifyState"
+        :identify-progress="percentageAge"
+        @uploadSuccess="getSimilarity"
+      />
     </div>
     <div class="identify-box module-panel" v-else>
+      <!-- 上传图片 -->
       <div class="upload-box">
         <div class="panel-title">识别图片</div>
         <div class="upload-content">
           <div class="upload-photo">
             <photo-box
+              v-if="identifyState !== IDENTIFY_STATE.UPDATEING"
               class="photo-box"
               photo-name
               preview-breviary
-              :src="uploadPhoto"
+              :fileData="uploadFile"
             />
           </div>
           <div class="upload-module">
-            <identify-update :state.sync="identifyState" :identify-progress="percentageAge" @uploadSuccess="getSimilarity"/>
+            <identify-update
+              ref="identifyUpdate2"
+              :state.sync="identifyState"
+              :identify-progress="percentageAge"
+              @uploadSuccess="getSimilarity"
+            />
           </div>
         </div>
         <el-divider></el-divider>
       </div>
+      <!-- 搜索结果 -->
       <template v-if="similarityImageList.length">
         <div class="search-result">
           <div class="panel-title">
@@ -39,7 +52,7 @@
                 class="photo-box"
                 photo-name
                 preview-breviary
-                :src="uploadPhoto"
+                :src="selectPhotoPaht"
               />
             </div>
             <div class="match-info">
@@ -48,9 +61,9 @@
           </div>
         </div>
         <el-divider></el-divider>
-        <simulate-photos />
+        <simulate-photos :similarity-image-list="similarityImageList" :select-photo-id.sync="selectPhotoId" />
       </template>
-      <div class="no-match">
+      <div class="no-match" v-else>
         <no-data desc="暂无相关照片信息数据" />
       </div>
     </div>
@@ -63,6 +76,7 @@ import IdentifyOrderInfo from './components/IdentifyOrderInfo'
 import IdentifyUpdate from './components/IdentifyUpdate'
 import SimulatePhotos from './components/SimulatePhotos'
 import NoData from '@/components/NoData'
+import * as IdentifyImage from '@/api/identifyImage.js'
 
 const IDENTIFY_STATE = {
   'BEFOR_UPDATE': 'beforeUpdate',
@@ -78,18 +92,26 @@ export default {
     return {
       IDENTIFY_STATE,
       percentageAge: 0,
-      identifyState: 'identifyDone', // 识别状态
+      identifyState: 'beforeUpdate', // 识别状态
       searchTimer: null,
-      similarityImageList: [],
+      similarityImageList: [], // 相似图片列表
       selectPhotoId: '',
       selectOrderInfo: {},
       hasIdentify: false,
-      uploadPhoto: '2020/05/05/lkWd_6m82023L3kcvVyDxIGoPN0V.jpg'
+      uploadFile: null // 上传图片
     }
   },
   computed: {
+    // 是否有订单信息
     hasSelectOrderInfo () {
       return Object.keys(this.selectOrderInfo).length
+    },
+    // 选中图片
+    selectPhotoPaht () {
+      const productionDomain = 'https://cloud.cdn-qn.hzmantu.com/compress/'
+      const findSelectPhoto = this.similarityImageList.find(item => item.id === this.selectPhotoId)
+      if (!findSelectPhoto) return ''
+      return productionDomain + findSelectPhoto.path
     }
   },
   watch: {
@@ -105,29 +127,48 @@ export default {
     /**
      * @description 匹配相似图片
      */
-    async getSimilarity (path) {
-      this.simulatePercentageAge()
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // 是被完成
-          this.similarityImageList = ['1']
-          this.selectPhotoId = '1'
-          this.identifyState = IDENTIFY_STATE.IDENTIFY_DONE
-          if (this.searchTimer) {
-            clearInterval(this.searchTimer)
-            this.searchTimer = null
-            this.percentageAge = 50
-            this.hasIdentify = true
-          }
-          resolve()
-        }, 5000)
-      })
-    },
-    getOrderInfo (id) {
-      this.selectOrderInfo = {
-        id: '1'
+    async getSimilarity (sendMsg) {
+      try {
+        const { path, file } = sendMsg
+        this.uploadFile = file
+        this.simulatePercentageAge()
+        const req = {
+          imageKey: path,
+          top: 10
+        }
+        this.similarityImageList = await IdentifyImage.getSimilarPhotoList(req)
+        this.selectPhotoId = this.similarityImageList[0].id
+        this.identifyState = IDENTIFY_STATE.IDENTIFY_DONE
+        if (this.searchTimer) {
+          clearInterval(this.searchTimer)
+          this.searchTimer = null
+          this.percentageAge = 50
+          this.hasIdentify = true
+        }
+      } catch (error) {
+        if (this.$refs.identifyUpdate1) { this.$refs.identifyUpdate1.resetUpload() }
+        if (this.$refs.identifyUpdate2) { this.$refs.identifyUpdate2.resetUpload() }
+        this.$newMessage.error('识别失败')
       }
-      this.percentageAge = 0
+    },
+    /**
+     * @description 根据照片path获取流水信息
+     */
+    async getOrderInfo (id) {
+      try {
+        const findSelectPhoto = this.similarityImageList.find(item => item.id === id)
+        if (!findSelectPhoto) return
+        const req = { imagePath: findSelectPhoto.path }
+        const data = await IdentifyImage.getPhotoStreamInfo(req)
+        this.selectOrderInfo = {
+          id: '1'
+        }
+        console.error(data)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.percentageAge = 0
+      }
     },
     /**
      * @description 模拟获取识别进度

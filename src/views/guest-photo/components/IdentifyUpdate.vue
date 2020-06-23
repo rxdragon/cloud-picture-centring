@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['updateDomain']),
+    ...mapGetters(['updateDomain', 'imgUploadDomain']),
     percentage () {
       return Number(Math.floor(this.percentageAge + this.identifyProgress))
     },
@@ -65,19 +65,43 @@ export default {
     this.getUpyunSign()
   },
   methods: {
+    /**
+     * @description 上传前
+     */
     beforeUpload () {
       this.$emit('update:state', IDENTIFY_STATE.UPDATEING)
     },
+    /**
+     * @description 上传中
+     */
     handleProgress (event, file, fileList) {
       this.percentageAge = Number(Math.floor(event.percent / 2))
     },
+    /**
+     * @description 上传成功
+     */
     async handleSuccess (response, file, fileList) {
       this.$emit('update:state', IDENTIFY_STATE.IDENTIFYING)
-      const path = ''
-      this.$emit('uploadSuccess', path)
+      const sendMsg = {
+        path: this.imgUploadDomain + response.url,
+        file: file
+      }
+
+      this.$emit('uploadSuccess', sendMsg)
     },
-    handleError () {
-      // TODO
+    /**
+     * @description 上传失败钩子
+     * @param {*} err 错误信息
+     * @param {*} file 上传失败单文件
+     * @param {*} fileList 上传文件列表
+     */
+    handleError (err, file, fileList) {
+      console.error(err)
+      this.resetUpload()
+    },
+    resetUpload () {
+      this.percentageAge = 0
+      this.$emit('update:state', IDENTIFY_STATE.BEFOR_UPDATE)
     },
     /**
      * @description 获取又拍云

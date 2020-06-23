@@ -149,7 +149,7 @@ export default {
     imageSrc () {
       // 不是上传显示
       if (!this.fileData) {
-        return this.imgCompressDomain + this.src
+        return this.src.includes('http') ? this.src : this.imgCompressDomain + this.src
       } else {
         return ''
       }

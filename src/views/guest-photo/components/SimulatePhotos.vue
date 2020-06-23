@@ -2,9 +2,13 @@
   <div class="simulate-photos">
     <div class="panel-title">相似照片</div>
     <div class="simulate-list">
-      <div class="simulate-photo-item" v-for="item in 14" :key="item" >
-        <el-checkbox :value="radio === item" :label="item" @click.native.prevent="selectPhotoIndx(item)" >
-          <photo-box class="photo-box" :src="selectPhoto" />
+      <div class="simulate-photo-item" v-for="photoItem in similarityImageList" :key="photoItem.id" >
+        <el-checkbox
+          :value="radio === photoItem.id"
+          :label="photoItem.id"
+          @click.native.prevent="selectPhotoIndx(photoItem.id)"
+        >
+          <photo-box class="photo-box" :src="productionDomain + photoItem.path" />
         </el-checkbox>
       </div>
     </div>
@@ -17,15 +21,29 @@ import PhotoBox from '@/components/PhotoBox'
 export default {
   name: 'SimulatePhotos',
   components: { PhotoBox },
+  props: {
+    similarityImageList: { type: Array, required: true },
+    selectPhotoId: { type: String, default: '' }
+  },
   data () {
     return {
-      selectPhoto: '2020/05/05/lkWd_6m82023L3kcvVyDxIGoPN0V.jpg',
-      radio: 1
+      productionDomain: 'https://cloud.cdn-qn.hzmantu.com/compress/'
+    }
+  },
+  computed: {
+    photoList () {
+      return this.similarityImageList
+    },
+    radio () {
+      return this.selectPhotoId
     }
   },
   methods: {
-    selectPhotoIndx (index) {
-      this.radio = index
+    /**
+     * @description 选择照片
+     */
+    selectPhotoIndx (id) {
+      this.$emit('update:selectPhotoId', id)
     }
   }
 }
