@@ -21,7 +21,8 @@
               v-if="identifyState !== IDENTIFY_STATE.UPDATEING"
               class="photo-box"
               photo-name
-              preview-breviary
+              contain-photo
+              preview
               :fileData="uploadFile"
             />
           </div>
@@ -51,7 +52,8 @@
               <photo-box
                 class="photo-box"
                 photo-name
-                preview-breviary
+                contain-photo
+                preview
                 :src="selectPhotoPaht"
               />
             </div>
@@ -92,7 +94,7 @@ export default {
     return {
       IDENTIFY_STATE,
       percentageAge: 0,
-      identifyState: 'beforeUpdate', // 识别状态
+      identifyState: IDENTIFY_STATE.BEFOR_UPDATE, // 识别状态
       searchTimer: null,
       similarityImageList: [], // 相似图片列表
       selectPhotoId: '',
@@ -138,6 +140,7 @@ export default {
         }
         this.similarityImageList = await IdentifyImage.getSimilarPhotoList(req)
         this.selectPhotoId = this.similarityImageList[0].id
+
         this.identifyState = IDENTIFY_STATE.IDENTIFY_DONE
         if (this.searchTimer) {
           clearInterval(this.searchTimer)
@@ -146,9 +149,10 @@ export default {
           this.hasIdentify = true
         }
       } catch (error) {
+        this.$newMessage.error('识别失败')
+      } finally {
         if (this.$refs.identifyUpdate1) { this.$refs.identifyUpdate1.resetUpload() }
         if (this.$refs.identifyUpdate2) { this.$refs.identifyUpdate2.resetUpload() }
-        this.$newMessage.error('识别失败')
       }
     },
     /**
@@ -158,7 +162,8 @@ export default {
       try {
         const findSelectPhoto = this.similarityImageList.find(item => item.id === id)
         if (!findSelectPhoto) return
-        const req = { imagePath: findSelectPhoto.path }
+        // const req = { imagePath: findSelectPhoto.path }
+        const req = { imagePath: 'upload_dev/2020/06/17/lkLb5AfrSqhmamZTsZ_XqzFDnSdv.jpg' }
         const data = await IdentifyImage.getPhotoStreamInfo(req)
         this.selectOrderInfo = {
           id: '1'
@@ -182,6 +187,7 @@ export default {
             this.percentageAge = 50
             clearInterval(this.searchTimer)
             this.searchTimer = null
+            this.hasIdentify = true
             return
           }
         } else {

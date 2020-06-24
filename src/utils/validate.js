@@ -133,3 +133,15 @@ export function waitTime (time, passTime) {
   differ = (differ / 1000 / 60).toFixed(0) + 'min'
   return differ
 }
+
+/**
+ * toFied 四舍五入，消除精度丢失
+ * @param {*} number
+ * @param {Number} point
+ */
+export function toFixed (number, point = 2) {
+  const numArr = Number(number).toFixed(point + 1).split('.')
+  // 判断个位大于等于5，加1
+  if (numArr.length > 1 && Number(numArr[1]) % 10 >= 5) numArr[1] = Number(numArr[1]) + 1
+  return Number(numArr.join('.')).toFixed(point)
+}

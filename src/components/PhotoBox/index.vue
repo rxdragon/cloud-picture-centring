@@ -4,7 +4,7 @@
       <el-image
         v-if="useEleImage && !showCanvas"
         :src="imageSrc"
-        fit="cover"
+        :fit="containPhoto ? 'contain' : 'cover'"
         :preview-src-list="getPreviewPhoto"
       >
         <div slot="error" class="image-slot">
@@ -12,7 +12,7 @@
           <span>加载失败...</span>
         </div>
       </el-image>
-      <preview-canvas-img v-else-if="showCanvas" :file="fileData" />
+      <preview-canvas-img contain-photo v-else-if="showCanvas" :file="fileData" />
       <img
         v-else
         class="orgin-img"
@@ -91,7 +91,8 @@ export default {
     preloadPhoto: { type: Boolean },
     useEleImage: { type: Boolean, default: true },
     isLekima: { type: Boolean },
-    fileData: { type: Object, default: null }
+    fileData: { type: Object, default: null },
+    containPhoto: { type: Boolean }
   },
   data () {
     return {
@@ -160,10 +161,11 @@ export default {
     },
     // 展示图片
     getPreviewPhoto () {
+      const imgDomain = this.src.includes('http') ? '' : this.imgDomain
       if (this.preview) {
-        return [this.imgDomain + this.src]
+        return [imgDomain + this.src]
       } else if (this.previewBreviary) {
-        return [this.imgDomain + this.src + this.breviary]
+        return [this.imgCompressDomain + this.src]
       } else {
         return []
       }
@@ -265,7 +267,9 @@ export default {
 
     img {
       -webkit-user-select: none;
-      object-position: top;
+      -webkit-user-drag: none;
+      user-select: none;
+      object-position: center;
     }
   }
 

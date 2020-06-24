@@ -3,7 +3,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router' // 路由
 import store from './store' // vuex
-import lottie from 'lottie-web'
 import * as filters from './filters' // 全局过滤器
 import { ipcRenderer } from 'electron'
 import { eventEmitter } from './plugins/eventemitter.js' // ui布局
@@ -18,7 +17,6 @@ import './indexDB/index.js'
 import '@/directive'
 
 window._ = { get }
-window.bodymovin = lottie
 // 注册websocket
 Vue.prototype.$eventEmitter = eventEmitter
 

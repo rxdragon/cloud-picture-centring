@@ -16,6 +16,7 @@
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
     </el-upload>
     <div class="progress-box" v-else>
+      <identify-loading />
       <el-progress :percentage="percentage" :show-text="false" />
       <div class="progress-text">
         {{ identifyState === 'identifying' ? '识别中' : '上传中' }} {{ percentage }} %
@@ -27,6 +28,7 @@
 <script>
 import * as Commonality from '@/api/commonality'
 import { mapGetters } from 'vuex'
+import IdentifyLoading from '@/components/IdentifyLoading'
 
 const IDENTIFY_STATE = {
   'BEFOR_UPDATE': 'beforeUpdate',
@@ -37,6 +39,7 @@ const IDENTIFY_STATE = {
 
 export default {
   name: 'IdentifyUpdate',
+  components: { IdentifyLoading },
   props: {
     state: { type: String, required: true },
     identifyProgress: { type: Number, required: true }
@@ -99,6 +102,9 @@ export default {
       console.error(err)
       this.resetUpload()
     },
+    /**
+     * @description 重制上传
+     */
     resetUpload () {
       this.percentageAge = 0
       this.$emit('update:state', IDENTIFY_STATE.BEFOR_UPDATE)

@@ -8,7 +8,7 @@
           :label="photoItem.id"
           @click.native.prevent="selectPhotoIndx(photoItem.id)"
         >
-          <photo-box class="photo-box" :src="productionDomain + photoItem.path" />
+          <photo-box class="photo-box" contain-photo :src="productionDomain + photoItem.path" />
         </el-checkbox>
       </div>
     </div>

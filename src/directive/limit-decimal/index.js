@@ -10,6 +10,7 @@ Vue.directive('decimalOnly', {
         const regArr = reg2.exec(val)
         const trueText = regArr ? regArr[0] : ''
         event.target.value = trueText
+        el.__vue__.isComposing = false
         event.target.dispatchEvent(new Event('input'))
       }
     })
