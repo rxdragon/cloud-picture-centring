@@ -37,6 +37,7 @@
           >
             一键下载成片
           </el-button>
+          <el-button type="primary" size="small" @click="switchAutoRetouch(true)">智能修图</el-button>
         </div>
       </div>
       <div class="photo-panel">
@@ -98,6 +99,17 @@
       :imgarray="priviewPhotoData"
       :show-preview.sync="showPreview"
     />
+    <!-- 自动修图 -->
+    <div class="auto-retouch" v-if="showAutoRetouch">
+      <div class="auto-retouch-title">
+        <span>智能修图</span>
+        <i class="el-icon-circle-close" @click="switchAutoRetouch(false)" />
+      </div>
+      <iframe
+        class="auto-retouch-content"
+        src="http://10.20.200.250:18089/algo/id/entry_main/?uuid=181faf7c3e86a4a128d0ede2b5430fc1.jpg"
+      />
+    </div>
   </div>
 </template>
 
@@ -152,7 +164,8 @@ export default {
       showPreview: false,
       isReturnOrder: false, // 是否退单订单
       priviewPhotoData: [], // 预览数组
-      imgIndex: 0 // 照片索引
+      imgIndex: 0, // 照片索引
+      showAutoRetouch: false // 显示自动修图页面
     }
   },
   computed: {
@@ -373,6 +386,12 @@ export default {
     async getPhotoProblemTagSets () {
       const res = await RetoucherCenter.getPhotoProblemTagSets()
       this.issueData = res
+    },
+    /**
+     * @description 自动修图页面切换
+     */
+    switchAutoRetouch (flag) {
+      this.showAutoRetouch = flag
     }
   }
 }
@@ -531,6 +550,36 @@ export default {
 
   .upload-module {
     margin-bottom: 10px;
+  }
+
+  .auto-retouch {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    .auto-retouch-title {
+      height: 40px;
+      margin-top: 42px;
+      color: #fff;
+      text-align: center;
+
+      .el-icon-circle-close {
+        float: right;
+        margin-right: 20px;
+        font-size: 28px;
+        cursor: pointer;
+      }
+    }
+
+    .auto-retouch-content {
+      width: 100%;
+      height: calc(100vh - 40px);
+      border: none;
+    }
   }
 }
 </style>
