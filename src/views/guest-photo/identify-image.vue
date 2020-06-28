@@ -43,8 +43,21 @@
           <div class="panel-title">
             <span>搜索结果</span>
             <div class="panel-slot">
-              <el-button size="small" plain type="primary">查看订单</el-button>
-              <el-button type="primary" size="small">查看流水单</el-button>
+              <el-button
+                size="small"
+                plain
+                type="primary"
+                @click="checkOrderInfo(selectOrderInfo.orderInfo.externalNum)"
+              >
+                查看订单
+              </el-button>
+              <el-button
+                type="primary"
+                size="small"
+                @click="checkStreamInfo(selectOrderInfo.streamInfo.streamNum)"
+              >
+                查看流水单
+              </el-button>
             </div>
           </div>
           <div class="panel-main">
@@ -58,7 +71,7 @@
               />
             </div>
             <div class="match-info">
-              <identify-order-info />
+              <identify-order-info v-if="hasSelectOrderInfo" :order-data="selectOrderInfo" />
             </div>
           </div>
         </div>
@@ -162,13 +175,12 @@ export default {
       try {
         const findSelectPhoto = this.similarityImageList.find(item => item.id === id)
         if (!findSelectPhoto) return
-        // const req = { imagePath: findSelectPhoto.path }
+        // TODO
+        // const domain = this.$isDev ? 'upload_dev/' : 'upload/'
+        // const req = { imagePath: domain + findSelectPhoto.path }
         const req = { imagePath: 'upload_dev/2020/06/17/lkLb5AfrSqhmamZTsZ_XqzFDnSdv.jpg' }
         const data = await IdentifyImage.getPhotoStreamInfo(req)
-        this.selectOrderInfo = {
-          id: '1'
-        }
-        console.error(data)
+        this.selectOrderInfo = data
       } catch (error) {
         console.error(error)
       } finally {
@@ -194,6 +206,24 @@ export default {
           this.percentageAge = this.percentageAge + STEP
         }
       }, 300)
+    },
+    /**
+     * @description 查看流水信息
+     */
+    checkStreamInfo (streamNum) {
+      this.$router.push({
+        path: '/guest-photo/guest-photo-center',
+        query: { streamNum }
+      })
+    },
+    /**
+     * @description 查看订单信息
+     */
+    checkOrderInfo (orderNum) {
+      this.$router.push({
+        path: '/guest-photo/guest-photo-center',
+        query: { orderNum }
+      })
     }
   }
 }

@@ -30,11 +30,11 @@ export function getCanScoreStaff (type) {
  */
 export function getStaffPerformance (params) {
   return axios({
-    url: '/project_cloud/staff/getSelfGroupStaffScores',
+    url: '/project_cloud/staff/getStaffScores',
     method: 'PUT',
     data: params
   }).then(msg => {
-    const createData = msg.map(item => {
+    const createData = msg.list.map(item => {
       const performanceData = new PerformanceModel(item)
       const joinName = `${performanceData.name}(${performanceData.nickname})`
       return {
@@ -42,7 +42,10 @@ export function getStaffPerformance (params) {
         ...performanceData
       }
     })
-    return createData
+    return {
+      list: createData,
+      total: msg.total
+    }
   })
 }
 

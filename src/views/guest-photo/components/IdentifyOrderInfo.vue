@@ -5,15 +5,15 @@
       <el-row class="info-main" :gutter="20" type="flex">
         <el-col :span="8">
           <div class="info-label">订单号：</div>
-          <div class="info-value">T2020051317477724</div>
+          <div class="info-value">{{ orderInfo.externalNum }}</div>
         </el-col>
         <el-col :span="8">
           <div class="info-label">流水单号：</div>
-          <div class="info-value">C2020051317477724</div>
+          <div class="info-value">{{ streamInfo.streamNum }}</div>
         </el-col>
         <el-col :span="8">
           <div class="info-label">拍摄门店：</div>
-          <div class="info-value">贵阳印象城店</div>
+          <div class="info-value">{{ orderInfo.storeName }}</div>
         </el-col>
       </el-row>
     </div>
@@ -26,46 +26,50 @@
         </el-col>
         <el-col :span="8">
           <div class="info-label">摄影师：</div>
-          <div class="info-value">李四</div>
+          <div class="info-value">{{ orderInfo.photographerStaffName }}</div>
         </el-col>
         <el-col :span="8">
           <div class="info-label">修图师：</div>
-          <div class="info-value">李四（501234）</div>
+          <div class="info-value">{{ `${streamInfo.retoucher}(${streamInfo.retoucherJobNum})` }}</div>
         </el-col>
         <el-col :span="8">
           <div class="info-label">修图主管：</div>
-          <div class="info-value">王武</div>
+          <div class="info-value">{{ streamInfo.retoucherLeader }}</div>
         </el-col>
         <el-col :span="8">
           <div class="info-label">是否有退单记录：</div>
-          <div class="info-value">是</div>
+          <div class="info-value">{{ photoInfo.isStoreReturn ? '是' : '否' }}</div>
         </el-col>
         <el-col :span="8">
           <div class="info-label">退回次数：</div>
-          <div class="info-value">2</div>
+          <div class="info-value">{{ streamInfo.storeReturnNum }}</div>
         </el-col>
         <el-col class="tags-box" :span="24">
           <div class="info-label">退回标记：</div>
           <div class="info-value info-tags">
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
-            <el-tag size="mini">退回原因</el-tag>
+            <el-tag
+              size="mini"
+              v-for="(tagItem, tagIndex) in photoInfo.storePartReworkReason"
+              :key="tagIndex"
+            >
+              {{ tagItem.reason }}
+            </el-tag>
           </div>
         </el-col>
         <el-col class="tags-box" :span="24">
-          <div class="info-label">退回备注：</div>
-          <div class="info-value">备注内容备注内容备注内容备注内容</div>
+          <div class="info-label">退回原因：</div>
+          <div class="info-value">{{ photoInfo.storeReworkReason }}</div>
         </el-col>
+        <el-col class="tags-box" :span="24">
+          <div class="info-label">退回备注：</div>
+          <div class="info-value">{{ photoInfo.storeReworkNote }}</div>
+        </el-col>
+        <!-- TODO -->
         <el-col class="tags-box" :span="8">
           <div class="info-label">技术评分：</div>
           <div class="info-value">80</div>
         </el-col>
+        <!-- TODO -->
         <el-col class="tags-box" :span="8">
           <div class="info-label">评分人：</div>
           <div class="info-value">张三</div>
@@ -73,8 +77,13 @@
         <el-col class="tags-box" :span="24">
           <div class="info-label">问题标记：</div>
           <div class="info-value info-tags">
-            <el-tag size="mini">问题</el-tag>
-            <el-tag size="mini">问题</el-tag>
+            <el-tag
+              v-for="(tagItem, tagIndex) in photoInfo.checkPoolTags"
+              :key="tagIndex"
+              size="mini"
+            >
+              {{ tagItem.name }}
+            </el-tag>
           </div>
         </el-col>
       </el-row>
@@ -84,7 +93,21 @@
 
 <script>
 export default {
-  name: 'IdentifyOrderInfo'
+  name: 'IdentifyOrderInfo',
+  props: {
+    orderData: { type: Object, required: true }
+  },
+  computed: {
+    streamInfo () {
+      return this.orderData.streamInfo
+    },
+    orderInfo () {
+      return this.orderData.orderInfo
+    },
+    photoInfo () {
+      return this.orderData.photoInfo
+    }
+  }
 }
 </script>
 

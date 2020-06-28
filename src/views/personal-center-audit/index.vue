@@ -117,10 +117,10 @@ export default {
         const data = await ReviewCheck.getGroupReviewQuota(reqData)
         this.tableDataCount = data.tableDataCount
         this.tableDataRate = data.tableDataRate
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
   }

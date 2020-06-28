@@ -6,7 +6,8 @@
         <el-date-picker
           v-model="timeSpan"
           type="month"
-          value-format="yyyy-MM"
+          clearable
+          value-format="yyyyMM"
           placeholder="选择月"
         />
       </div>
@@ -15,10 +16,9 @@
         <staff-select v-model="staffIds" />
       </div>
       <div class="search-item">
-        <el-button type="primary">查 询</el-button>
+        <el-button type="primary" @click="searchPerformance(1)">查 询</el-button>
       </div>
       <div class="search-item button-box">
-        <el-button type="primary" plain @click="downPerformanceTemplete">下载绩效模版</el-button>
         <upload-excel
           btn-text="导入当月绩效"
           :header-data="headerKeys"
@@ -29,15 +29,15 @@
     </div>
     <div class="table-module-box">
       <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="date" label="伙伴姓名（姓名）" />
-        <el-table-column prop="name" label="修图组" />
-        <el-table-column prop="name" label="工号" />
-        <el-table-column prop="name" label="绩效得分" />
-        <el-table-column prop="name" label="最后操作时间" />
-        <el-table-column prop="name" label="最后操作人" />
+        <el-table-column prop="joinName" label="伙伴姓名（姓名）" />
+        <el-table-column prop="retouchGroupName" label="修图组" />
+        <el-table-column prop="jobNumber" label="工号" />
+        <el-table-column prop="performanceScode" label="绩效得分" />
+        <el-table-column prop="updatedAt" label="最后操作时间" />
+        <el-table-column prop="updatedName" label="最后操作人" />
         <el-table-column label="操作">
           <template slot-scope="{ row }">
-            <el-button type="primary" size="mini" @click="alterPerformance(row.orderId)">修改</el-button>
+            <el-button type="primary" size="mini" @click="alterPerformance(row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -54,108 +54,47 @@
         />
       </div>
     </div>
-    <alter-performance v-if="dialogVisible" @visibeClose="closeDialog" />
+    <alter-performance v-if="dialogVisible" :edit-info="editInfo" @visibeClose="closeDialog" />
   </div>
 </template>
 
 <script>
 import StaffSelect from '@SelectBox/StaffSelect'
 import UploadExcel from '@/components/UploadExcel'
-import exportPerformanceExcel, { headerCellkeys } from "@/utils/exportPerformanceExcel.js"
 import AlterPerformance from '@/components/AlterPerformance'
+import moment from 'moment'
+import PerformanceMix from '@/mixins/performance-mixins'
 
 export default {
   name: 'RetoucherPerformance',
   components: { StaffSelect, UploadExcel, AlterPerformance },
+  mixins: [PerformanceMix],
   data() {
     return {
+      searchType: 'retoucher',
+      routeName: this.$route.name, // 路由名字
       timeSpan: null,
+      tableData: [],
       staffIds: [],
-      headerKeys: headerCellkeys,
-      tableData: [
-        {
-          date: '1'
-        }
-      ],
       pager: {
         page: 1,
         pageSize: 10,
-        total: 100
+        total: 10
       },
-      dialogVisible: false,
+      dialogVisible: false
     }
   },
+  created () {
+    const nowDate = moment(new Date())
+    this.timeSpan = nowDate.format('YYYYMM')
+    this.searchPerformance(1)
+  },
   methods: {
-    /**
-     * @description 修改成绩
-     */
-    alterPerformance (id) {
-      this.dialogVisible = true
-      // TODO 修改绩效
-    },
-    closeDialog () {
-      this.dialogVisible = false
-    },
     /**
      * @description 页面更改
      */
     handleCurrentChange () {
-      // TODO
-    },
-    downPerformanceTemplete () {
-      const data = [
-        {
-          name: '李智超（班纳）1',
-          staffNum: '621234',
-          score: ''
-        },
-        {
-          name: '李智超（班纳）2',
-          staffNum: '621234',
-          score: ''
-        },
-        {
-          name: '李智超（班纳）3',
-          staffNum: '621234',
-          score: ''
-        },
-        {
-          name: '李智超（班纳）4',
-          staffNum: '621234',
-          score: ''
-        },
-        {
-          name: '李智超（班纳）5',
-          staffNum: '621234',
-          score: ''
-        },
-        {
-          name: '李智超（班纳）6',
-          staffNum: '621234',
-          score: ''
-        },
-        {
-          name: '李智超（班纳）7',
-          staffNum: '621234',
-          score: ''
-        }
-      ]
-      exportPerformanceExcel('组员6月', data)
-    },
-    /**
-     * @description 处理完成
-     */
-    handleSuccess ({ results }) {
-      results.splice(0, 1)
-      const hasEveryScore = results.every(item => item.score)
-      if (!hasEveryScore) return this.$newMessage.warning('分数没有填写完整！')
-      this.tableData = results
-    },
-    /**
-     * @description 上传表格前
-     */
-    beforeUpload () {
-      return true
+      this.searchPerformance()
     }
   }
 }

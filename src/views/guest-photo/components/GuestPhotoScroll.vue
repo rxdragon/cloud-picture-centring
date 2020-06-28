@@ -141,6 +141,18 @@ export default {
       ]
     }
   },
+  watch: {
+    'initSearch': {
+      handler (value) {
+        const { orderType, orderSearchValue } = value
+        if (!orderType) return
+        this.orderType = orderType
+        this.orderSearchValue = orderSearchValue
+        this.getPhotoList(true)
+      },
+      immediate: true
+    }
+  },
   mounted () {
     this.resizeWindow()
     this.$ipcRenderer.on('win-resize', (e, item) => {

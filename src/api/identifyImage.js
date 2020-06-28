@@ -1,5 +1,8 @@
 import axios from '@/plugins/axios.js'
 import uuidv4 from 'uuid'
+import StreamModel from '@/model/StreamModel'
+import OrderModel from '@/model/OrderModel'
+import PhotoModel from '@/model/PhotoModel'
 
 /**
  * @description 获取获取相似照片列表
@@ -31,7 +34,16 @@ export function getPhotoStreamInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
-    
-    return msg
+    const streamInfo = { ...new StreamModel(msg.stream_info) }
+    const orderInfo = { ...new OrderModel(msg.stream_info.order) }
+    const photoInfo = new PhotoModel(msg.photo_info)
+    photoInfo.getCheckPoolTags()
+
+    const createData = {
+      streamInfo,
+      orderInfo,
+      photoInfo
+    }
+    return createData
   })
 }
