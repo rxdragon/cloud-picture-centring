@@ -46,7 +46,7 @@
           <el-date-picker
             v-model="timeSpan"
             type="month"
-            value-format="yyyy-MM"
+            value-format="yyyyMM"
             placeholder="选择月"
           />
         </div>
@@ -58,27 +58,27 @@
         <el-row class="info-box">
           <el-col :span="6" class="info-item">
             <div class="info-label">退单率</div>
-            <div class="info-value">¥：20.00</div>
+            <div class="info-value">{{ performanceInfo.return_rate || '-' }}</div>
           </el-col>
           <el-col :span="6" class="info-item">
             <div class="info-label">退单排名</div>
-            <div class="info-value">1</div>
+            <div class="info-value">{{ performanceInfo.return_rate_rank || '-' }}</div>
           </el-col>
           <el-col :span="6" class="info-item">
             <div class="info-label">绩效得分</div>
-            <div class="info-value">1</div>
+            <div class="info-value">{{ performanceInfo.kpi_score || '-' }}</div>
           </el-col>
           <el-col :span="6" class="info-item">
             <div class="info-label">绩效排名</div>
-            <div class="info-value">1</div>
+            <div class="info-value">{{ performanceInfo.kpi_rank || '-' }}</div>
           </el-col>
           <el-col :span="6" class="info-item">
             <div class="info-label">抽查平均分</div>
-            <div class="info-value">1</div>
+            <div class="info-value">{{ performanceInfo.average_score || '-' }}</div>
           </el-col>
           <el-col :span="18" class="info-item">
             <div class="info-label">抽查排名</div>
-            <div class="info-value">1</div>
+            <div class="info-value">{{ performanceInfo.average_score_rank || '-' }}</div>
           </el-col>
         </el-row>
       </div>
@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import * as Performance from '@/api/performance.js'
+
 export default {
   name: 'PersonalCenterAudit',
   data() {
@@ -94,7 +96,8 @@ export default {
       yearValue: null, // 小蜜蜂查询日期
       apisLoading: false, // 小蜜蜂加载动态
       timeSpan: null, // 绩效查询时间戳
-      performanceLoading: false // 绩效加载动态
+      performanceLoading: false, // 绩效加载动态
+      performanceInfo: [] // 绩效得分
     }
   },
   methods: {
@@ -124,10 +127,14 @@ export default {
       try {
         if (!this.timeSpan) throw new Error('请选择时间')
         this.performanceLoading = true
-        // TODO
-        // const req = {
-        //   timeSpan: this.timeSpan
-        // }
+        const req = {
+          cycle: this.timeSpan,
+          type: 'all',
+          page: 1,
+          pageSize: 99
+        }
+        const data = await Performance.getGroupScoreRanks(req)
+        this.performanceInfo = data.list[0]
       } catch (error) {
         console.error(error)
         error.message && this.$newMessage.warning(error.message)

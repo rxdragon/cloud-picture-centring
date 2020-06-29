@@ -73,3 +73,16 @@ export function editStaffScore (params) {
   })
 }
 
+/**
+ * @description 编辑分数
+ * @param { String } type retoucher 组员 retoucherLeader 组管
+ */
+export function getGroupScoreRanks (params) {
+  return axios({
+    // TODO
+    // url: '/project_cloud/staff/getGroupScoreRanks',
+    url: 'https://doc.local.hzmantu.com/project_cloud/release-2.8.1/project_cloud/staff/getGroupScoreRanks',
+    method: 'PUT',
+    data: params
+  })
+}
