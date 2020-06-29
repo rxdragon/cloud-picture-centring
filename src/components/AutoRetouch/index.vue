@@ -17,7 +17,8 @@
           type="primary"
           v-for="(funItem, funIndex) in funList"
           :key="funIndex"
-          @click="getAutoRetouch(funItem.value)"
+          :disabled="funItem.active"
+          @click="changeAutoRetouchImg(funIndex, funItem.value)"
         >
           {{ funItem.name }}
         </el-button>
@@ -38,40 +39,37 @@ export default {
   name: "AutoRetouch",
   props: {
     photoList: { type: Array, default: () => [] },
+    streamNum: { type: String, default: '' }
   },
   data () {
     return {
       funList: [
         {
           name: '原图',
-          value: 'origin'
+          value: 'origin',
+          active: false
         },
         {
           name: '裁剪图',
-          value: 'crop'
+          value: 'crop',
+          active: false
         },
         {
           name: '矫正图1',
-          value: 'adjust-one'
+          value: 'adjust-one',
+          active: false
         },
         {
           name: '矫正图2',
-          value: 'adjust-two'
-        },
-        {
-          name: '瘦脸',
-          value: 'chubby'
-        },
-        {
-          name: '微笑',
-          value: 'smile'
-        },
-        {
-          name: '眼睛',
-          value: 'eye'
+          value: 'adjust-two',
+          active: false
         }
       ],
-      url: '',
+      url: '', // 图片uuid
+      originImg: '', // 原图地址
+      cropImg: '', // 裁剪图地址
+      adjustoneImg: '', // 调整图1地址
+      adjusttwoImg: '', // 调整图2地址
       photoIndex: 0, // 图片索引
       showAutoRetouch: false, // 显示自动修图页面
       loading: true
@@ -86,13 +84,12 @@ export default {
   watch: {
     photoIndex: {
       handler (val) {
-        this.setPhotoUrl ('origin', this.photoList[val])
+        this.getAutoRetouch()
       }
     }
   },
   created () {
-    //
-    this.setPhotoUrl ('origin', this.photoList[0])
+    this.getAutoRetouch()
   },
   methods: {
     /**
@@ -101,16 +98,23 @@ export default {
     closeAutoRetouch () {
       this.$emit('closeAutoRetouch', false)
     },
+    /**
+     * @description 拼接图片地址
+     */
     setPhotoUrl (mode, src) {
       if (mode === 'origin') {
         this.url = this.imgDomain + src
       } else {
         this.url = AutoRetouch.algoUrl + '/static/images/' + this.photoList[this.photoIndex] + '/' + src
       }
+      this.loadPhoto()
     },
     loadPhoto () {
       this.loading = false
     },
+    /**
+     * @description 图片左右切换
+     */
     switchPhoto (type) {
       if (type === 'next') {
         if (this.photoIndex >= this.photoList.length - 1) {
@@ -126,28 +130,61 @@ export default {
         }
       }
     },
-    async getAutoRetouch (type) {
+    /**
+     * @description 加载自动修复图片
+     */
+    async getAutoRetouch () {
+      this.loading = true
+      let params = {
+        uuid: this.photoList[this.photoIndex]
+      }
+      this.cropImg = await AutoRetouch.getAutoCropPic(params)
+      params.plan = 1
+      this.adjustoneImg = await AutoRetouch.getAutoAdjuctPic(params)
+      await AutoRetouch.getAutoCropPic(params)
+      params.plan = 2
+      this.adjusttwoImg = await AutoRetouch.getAutoAdjuctPic(params)
+      this.changeAutoRetouchImg(0, 'origin')
+      this.loadPhoto()
+    },
+    /**
+     * @description 查看图片
+     */
+    changeAutoRetouchImg (index, type) {
+      this.funList.map((funItem, funIndex) => {
+        if (funIndex === index) {
+          funItem.active = true
+        } else {
+          funItem.active = false
+        }
+      })
       switch (type) {
         case 'origin':
-          this.setPhotoUrl('origin', this.photoList[0])
+          this.setPhotoUrl('origin', this.photoList[this.photoIndex])
           break
         case 'crop':
-          this.loading = true
-          const params = {
-            uuid: this.photoList[this.photoIndex]
-          }
-          const retouchData = await AutoRetouch.getAutoCropPic(params)
-          this.setPhotoUrl('retouched', retouchData)
+          this.setPhotoUrl('retouched', this.cropImg)
+          break
+        case 'adjust-one':
+          this.setPhotoUrl('retouched', this.adjustoneImg)
+          break
+        case 'adjust-two':
+          this.setPhotoUrl('retouched', this.adjusttwoImg)
+          break
+        default:
           break
       }
     },
+    /**
+     * @description 下载图片
+     */
     downloadPhoto () {
       const data = {
         url: this.url,
-        path: this.photoList[this.photoIndex]
+        path: this.streamNum
       }
       DownIpc.addDownloadFile(data)
-    },
+    }
   }
 }
 </script>
@@ -179,9 +216,9 @@ export default {
     .auto-retouch-img-box {
       position: relative;
       display: flex;
-      flex-grow: 1;
       align-items: center;
       justify-content: center;
+      height: calc(100% - 40px);
 
       .img-switch {
         width: 50px;
@@ -222,16 +259,12 @@ export default {
     height: 100%;
     border-left: 1px solid #8a8a8a;
 
-    .close-box {
-      border-bottom: 1px solid #8a8a8a;
-
-      .el-icon-circle-close {
-        float: right;
-        margin: 10px 15px 10px 0;
-        font-size: 28px;
-        color: #fff;
-        cursor: pointer;
-      }
+    .el-icon-circle-close {
+      float: right;
+      margin: 10px 15px 10px 0;
+      font-size: 28px;
+      color: #fff;
+      cursor: pointer;
     }
 
     .btn-box {

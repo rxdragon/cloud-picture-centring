@@ -100,7 +100,12 @@
       :show-preview.sync="showPreview"
     />
     <!-- 自动修图 -->
-    <auto-retouch v-if="showAutoRetouch" :photo-list="autoRetouchPhoto" @closeAutoRetouch="switchAutoRetouch"/>
+    <auto-retouch
+      v-if="showAutoRetouch"
+      :photo-list="autoRetouchPhoto"
+      :stream-num="orderData.streamNum"
+      @closeAutoRetouch="switchAutoRetouch"
+    />
   </div>
 </template>
 
