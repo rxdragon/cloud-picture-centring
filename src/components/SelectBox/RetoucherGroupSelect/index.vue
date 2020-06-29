@@ -4,6 +4,7 @@
       :disabled="disableState"
       v-bind="$attrs"
       filterable
+      clearable
       :popper-append-to-body="false"
       placeholder="请选择修图组"
       v-on="$listeners"

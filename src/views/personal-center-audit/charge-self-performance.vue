@@ -4,20 +4,20 @@
       <h3>个人绩效</h3>
     </div>
     <!-- 小蜜蜂 -->
-    <div class="module-panel apis-florea">
+    <div class="module-panel apis-florea" v-loading="apisLoading">
       <div class="panel-title">小蜜蜂</div>
       <div class="search-box">
         <div class="search-item">
           <span>查询时间</span>
           <el-date-picker
             v-model="yearValue"
-            type="month"
+            type="year"
             value-format="yyyy"
             placeholder="选择年"
           />
         </div>
         <div class="search-item">
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="getApisFlorea">查询</el-button>
         </div>
       </div>
       <div class="apis-info">
@@ -38,7 +38,7 @@
       </div>
     </div>
     <!-- 月度绩效 -->
-    <div class="module-panel monthly-performance">
+    <div class="module-panel monthly-performance" v-loading="performanceLoading">
       <div class="panel-title">月度绩效</div>
       <div class="search-box">
         <div class="search-item">
@@ -51,7 +51,7 @@
           />
         </div>
         <div class="search-item">
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="getPerformanceInfo">查 询</el-button>
         </div>
       </div>
       <div class="performance-box">
@@ -91,8 +91,50 @@ export default {
   name: 'PersonalCenterAudit',
   data() {
     return {
-      yearValue: null,
-      timeSpan: null
+      yearValue: null, // 小蜜蜂查询日期
+      apisLoading: false, // 小蜜蜂加载动态
+      timeSpan: null, // 绩效查询时间戳
+      performanceLoading: false // 绩效加载动态
+    }
+  },
+  methods: {
+    /**
+     * @description 获取小蜜蜂奖励
+     */
+    async getApisFlorea () {
+      try {
+        if (!this.yearValue) throw new Error('请选择时间')
+        this.apisLoading = true
+        // TODO
+        // const req = {
+        //   timeSpan: this.yearValue
+        // }
+      } catch (error) {
+        console.error(error)
+        error.message && this.$newMessage.warning(error.message)
+      } finally {
+        await this.$delayLoading()
+        this.apisLoading = false
+      }
+    },
+    /**
+     * @description 获取绩效
+     */
+    async getPerformanceInfo () {
+      try {
+        if (!this.timeSpan) throw new Error('请选择时间')
+        this.performanceLoading = true
+        // TODO
+        // const req = {
+        //   timeSpan: this.timeSpan
+        // }
+      } catch (error) {
+        console.error(error)
+        error.message && this.$newMessage.warning(error.message)
+      } finally {
+        await this.$delayLoading()
+        this.performanceLoading = false
+      }
     }
   },
 }

@@ -10,7 +10,7 @@
         <retoucher-group-select v-model="retoucherGroupValue" />
       </div>
       <div class="search-item">
-        <el-button type="primary">查 询</el-button>
+        <el-button type="primary" @click="searchPerformance">查 询</el-button>
       </div>
       <div class="tip-box search-item">
         <tip :message="tipMessage" />
@@ -48,6 +48,9 @@
 import DatePicker from '@/components/DatePicker'
 import RetoucherGroupSelect from '@SelectBox/RetoucherGroupSelect'
 import Tip from '@/components/Tip'
+import moment from 'moment'
+import { joinTimeSpan } from '@/utils/timespan.js'
+
 
 const tipMessage = `列表中，绩效是人工导入，其余的是由系统进行计算得出的排名。<br/>
 排名和平均分的规则为每个月最后一天23:59:59<i>自动冻结</i>当月的排名和分数,<br/>
@@ -58,17 +61,39 @@ export default {
   components: { DatePicker, RetoucherGroupSelect, Tip },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       tipMessage,
       timeSpan: null, // 查询时间
       retoucherGroupValue: '', // 修图组
-      tableData: [
-        {
-          date: {
-            value: 123,
-            tip: 12
-          }
+      tableData: []
+    }
+  },
+  created () {
+    const nowAt = moment().locale('zh-cn').format('YYYY-MM-DD')
+    const beginningOfMonth = moment(nowAt).format('YYYY-MM-')
+    const startAt = beginningOfMonth + '01'
+    this.timeSpan = [startAt, nowAt]
+  },
+  methods: {
+    /**
+     * @description 查询修图组绩效
+     */
+    searchPerformance () {
+      try {
+        if (!this.timeSpan) throw new Error('请选择时间')
+        if (moment(this.timeSpan[0]).get('month') !== moment(this.timeSpan[1]).get('month')) throw new Error('不能隔月查询')
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const req = {
+          startAt: joinTimeSpan(this.timeSpan[0]),
+          endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
-      ]
+        if (this.retoucherGroupValue) { req.retouchGroup === this.retoucherGroupValue }
+        // TODO 链条接口
+      } catch (error) {
+        this.$newMessage.warning(error.message)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     }
   }
 }

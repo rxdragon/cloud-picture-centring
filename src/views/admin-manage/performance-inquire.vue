@@ -26,7 +26,7 @@
 <script>
 import PartnerPerformance from './components/PartnerPerformance' // 伙伴绩效
 import OverallPerformance from './components/OverallPerformance' // 总体绩效
-import RetoucherGroupPerformance from './components/RetoucherGroupPerformance' // 审核绩效
+import RetoucherGroupPerformance from './components/RetoucherGroupPerformance' // 修图组绩效
 import TimeStatistics from './components/TimeStatistics' // 用时统计
 import CheckerEvaluate from './components/CheckerEvaluate' // 看片评价
 import { mapGetters } from 'vuex'

@@ -6,6 +6,7 @@ import store from './store' // vuex
 import * as filters from './filters' // 全局过滤器
 import { ipcRenderer } from 'electron'
 import { eventEmitter } from './plugins/eventemitter.js' // ui布局
+import { delayLoading } from '@/utils/timespan.js' // ui布局
 import './plugins/element.js' // ui布局
 import './plugins/charts.js' // charts框架
 import './plugins/icon-font/iconfont.css' // ui布局
@@ -19,6 +20,7 @@ import '@/directive'
 window._ = { get }
 // 注册websocket
 Vue.prototype.$eventEmitter = eventEmitter
+Vue.prototype.$delayLoading = delayLoading
 
 // 注入全局过滤器
 Object.keys(filters).forEach(key => {
