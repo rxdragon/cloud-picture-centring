@@ -37,7 +37,14 @@
           >
             一键下载成片
           </el-button>
-          <el-button type="primary" size="small" @click="switchAutoRetouch(true)">智能修图</el-button>
+          <el-button
+            v-if="showAutoRetouchBtn"
+            type="primary"
+            size="small"
+            @click="switchAutoRetouch(true)"
+          >
+            自动修图
+          </el-button>
         </div>
       </div>
       <div class="photo-panel">
@@ -101,7 +108,7 @@
     />
     <!-- 自动修图 -->
     <auto-retouch
-      v-if="showAutoRetouch"
+      v-show="showAutoRetouch"
       :photo-list="autoRetouchPhoto"
       :stream-num="orderData.streamNum"
       @closeAutoRetouch="switchAutoRetouch"
@@ -167,11 +174,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain']),
+    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain', 'canAutoRetouch']),
     // 是否开启沙漏
     isSandClockOpen () {
       if (!this.hourGlass) return this.hourGlass
       return Object.keys(this.hourGlass).length
+    },
+    // 是否显示自动修图按钮
+    showAutoRetouchBtn () {
+      const photoTypeArr = ['证件', '签证']
+      const filterTypeArr = photoTypeArr.filter(typeItem => _.get(this.orderData, 'productInfo.productName', '').search(typeItem) > -1)
+      return this.canAutoRetouch && filterTypeArr.length > 0
     }
   },
   watch: {
@@ -237,7 +250,8 @@ export default {
           this.countDown()
         }
         this.photos = data.photos
-        this.autoRetouchPhoto = data.photos.map(item => item.orginPhotoPath)
+        const filterPhotos = data.photos.filter(item => item.type !== 'template')
+        this.autoRetouchPhoto = filterPhotos.map(item => item.orginPhotoPath)
         this.reviewerNote = data.reviewerNote
         this.needPunchLabel = data.needPunchLabel
         this.notes.dressNote = this.orderData.dresserNote

@@ -1,10 +1,10 @@
 <template>
   <div class="auto-retouch">
     <div class="content-box">
-      <div class="content-title">智能修图</div>
+      <div class="content-title">自动修图</div>
       <div class="auto-retouch-img-box" v-loading="loading">
         <i class="el-icon-arrow-left img-switch" v-if="showSwitchBtn" @click="switchPhoto('next')"/>
-        <img  :src="url" class="content-img" @load="loadPhoto" />
+        <img  :src="url" class="content-img" @load="hiddenLoading" />
         <i class="el-icon-arrow-right img-switch" v-if="showSwitchBtn" @click="switchPhoto('pre')"/>
       </div>
     </div>
@@ -17,14 +17,14 @@
           type="primary"
           v-for="(funItem, funIndex) in funList"
           :key="funIndex"
-          :disabled="funItem.active"
-          @click="changeAutoRetouchImg(funIndex, funItem.value)"
+          :disabled="funItem.active || loading"
+          @click="changeAutoRetouchImg(funIndex)"
         >
           {{ funItem.name }}
         </el-button>
       </div>
       <div class="back-box">
-        <el-button type="info" @click="downloadPhoto">下载照片</el-button>
+        <el-button type="info" @click="downloadPhoto" :disabled="loading">下载照片</el-button>
       </div>
     </div>
   </div>
@@ -72,6 +72,7 @@ export default {
       adjusttwoImg: '', // 调整图2地址
       photoIndex: 0, // 图片索引
       showAutoRetouch: false, // 显示自动修图页面
+      cacheRetouchPic: [], // 自动修图图片缓存
       loading: true
     }
   },
@@ -86,10 +87,54 @@ export default {
       handler (val) {
         this.getAutoRetouch()
       }
+    },
+    photoList: {
+      handler () {
+        this.getAutoRetouch()
+      }
     }
   },
   created () {
     this.getAutoRetouch()
+  },
+  mounted () {
+    /**
+     * @description 监听键盘事件
+     */
+    document.onkeydown = e => {
+      if (this.loading) return
+      const key = window.event.keyCode
+      switch (key) {
+        // 左右键图片切换
+        case 37:
+          if (this.photoList.length > 1) {
+            this.switchPhoto('pre')
+          }
+          break
+        case 39:
+          if (this.photoList.length > 1) {
+            this.switchPhoto('next')
+          }
+          break
+          // 上下键功能切换
+        case 38:
+          const upIndex = this.funList.findIndex(funItem => funItem.active)
+          if (upIndex > -1) {
+            const setActiveIndex = upIndex === 0 ? this.funList.length - 1 : upIndex - 1
+            this.changeAutoRetouchImg(setActiveIndex)
+          }
+          break
+        case 40:
+          const downIndex = this.funList.findIndex(funItem => funItem.active)
+          if (downIndex > -1) {
+            const setActiveIndex = downIndex === this.funList.length - 1 ? 0 : downIndex + 1
+            this.changeAutoRetouchImg(setActiveIndex)
+          }
+          break
+        default:
+          break
+      }
+    }
   },
   methods: {
     /**
@@ -107,10 +152,13 @@ export default {
       } else {
         this.url = AutoRetouch.algoUrl + '/static/images/' + this.photoList[this.photoIndex] + '/' + src
       }
-      this.loadPhoto()
+      this.hiddenLoading()
     },
-    loadPhoto () {
+    hiddenLoading () {
       this.loading = false
+    },
+    showLoading () {
+      this.loading = true
     },
     /**
      * @description 图片左右切换
@@ -134,23 +182,43 @@ export default {
      * @description 加载自动修复图片
      */
     async getAutoRetouch () {
-      this.loading = true
-      let params = {
+      const cachePics = this.cacheRetouchPic.find(cacheItem => cacheItem.photoIndex === this.photoIndex)
+      if (cachePics) {
+        this.cropImg = cachePics.cropImg
+        this.adjustoneImg = cachePics.adjustoneImg
+        this.adjusttwoImg = cachePics.adjusttwoImg
+        this.changeAutoRetouchImg(0, 'origin')
+        return
+      }
+      if (this.photoList.length === 0) return
+      this.showLoading()
+      let cropParams = {
         uuid: this.photoList[this.photoIndex]
       }
-      this.cropImg = await AutoRetouch.getAutoCropPic(params)
-      params.plan = 1
-      this.adjustoneImg = await AutoRetouch.getAutoAdjuctPic(params)
-      await AutoRetouch.getAutoCropPic(params)
-      params.plan = 2
-      this.adjusttwoImg = await AutoRetouch.getAutoAdjuctPic(params)
+      let adjustParams = {
+        ...cropParams,
+        plan: 1
+      }
+      this.cropImg = await AutoRetouch.getAutoCropPic(cropParams)
+      this.adjustoneImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
+      await AutoRetouch.getAutoCropPic(cropParams)
+      adjustParams.plan = 2
+      this.adjusttwoImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
+      const retouchData = {
+        photoIndex: this.photoIndex,
+        cropImg: this.cropImg,
+        adjustoneImg: this.adjustoneImg,
+        adjusttwoImg: this.adjusttwoImg
+      }
+      this.cacheRetouchPic.push(retouchData)
       this.changeAutoRetouchImg(0, 'origin')
-      this.loadPhoto()
+      this.hiddenLoading()
     },
     /**
      * @description 查看图片
      */
-    changeAutoRetouchImg (index, type) {
+    changeAutoRetouchImg (index) {
+      const type = this.funList[index].value
       this.funList.map((funItem, funIndex) => {
         if (funIndex === index) {
           funItem.active = true

@@ -49,7 +49,8 @@ const state = {
   showUrgentStream: false, // 是否显示加急按钮
   isRetoucher: false, // 是否是修片师
   showWorkInfo: false, // 是否可以查看工作看板详情按钮
-  showSpotRecheck: false // 是否显示重新打分按钮
+  showSpotRecheck: false, // 是否显示重新打分按钮
+  canAutoRetouch: false // 是否显示自动修图按钮
 }
 
 const mutations = {
@@ -72,6 +73,7 @@ const mutations = {
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
+    state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
     Vue.prototype.$ws = new Ws()
     Vue.prototype.$ws.initializeSendMessage(state.isRetoucher)
   },
