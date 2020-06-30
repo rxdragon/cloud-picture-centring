@@ -37,6 +37,14 @@
           >
             一键下载成片
           </el-button>
+          <el-button
+            v-if="showAutoRetouchBtn"
+            type="primary"
+            size="small"
+            @click="switchAutoRetouch(true)"
+          >
+            自动修图
+          </el-button>
         </div>
       </div>
       <div class="photo-panel">
@@ -98,6 +106,13 @@
       :imgarray="priviewPhotoData"
       :show-preview.sync="showPreview"
     />
+    <!-- 自动修图 -->
+    <auto-retouch
+      v-show="showAutoRetouch"
+      :photo-list="autoRetouchPhoto"
+      :stream-num="orderData.streamNum"
+      @closeAutoRetouch="switchAutoRetouch"
+    />
   </div>
 </template>
 
@@ -109,6 +124,7 @@ import UploadPhoto from './UploadPhoto.vue'
 import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
+import AutoRetouch from '@/components/AutoRetouch/index.vue'
 import { mapGetters } from 'vuex'
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
@@ -116,7 +132,7 @@ import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel, PreviewPhoto },
+  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel, PreviewPhoto, AutoRetouch },
   props: {
     showDetail: { type: Boolean }
   },
@@ -152,15 +168,23 @@ export default {
       showPreview: false,
       isReturnOrder: false, // 是否退单订单
       priviewPhotoData: [], // 预览数组
-      imgIndex: 0 // 照片索引
+      imgIndex: 0, // 照片索引
+      showAutoRetouch: false, // 显示自动修图页面
+      autoRetouchPhoto: []
     }
   },
   computed: {
-    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain']),
+    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain', 'canAutoRetouch']),
     // 是否开启沙漏
     isSandClockOpen () {
       if (!this.hourGlass) return this.hourGlass
       return Object.keys(this.hourGlass).length
+    },
+    // 是否显示自动修图按钮
+    showAutoRetouchBtn () {
+      const photoTypeArr = ['证件', '签证']
+      const filterTypeArr = photoTypeArr.filter(typeItem => _.get(this.orderData, 'productInfo.productName', '').search(typeItem) > -1)
+      return this.canAutoRetouch && filterTypeArr.length > 0
     }
   },
   watch: {
@@ -226,6 +250,8 @@ export default {
           this.countDown()
         }
         this.photos = data.photos
+        const filterPhotos = data.photos.filter(item => item.type !== 'template')
+        this.autoRetouchPhoto = filterPhotos.map(item => item.orginPhotoPath)
         this.reviewerNote = data.reviewerNote
         this.needPunchLabel = data.needPunchLabel
         this.notes.dressNote = this.orderData.dresserNote
@@ -373,6 +399,12 @@ export default {
     async getPhotoProblemTagSets () {
       const res = await RetoucherCenter.getPhotoProblemTagSets()
       this.issueData = res
+    },
+    /**
+     * @description 自动修图页面切换
+     */
+    switchAutoRetouch (flag) {
+      this.showAutoRetouch = flag
     }
   }
 }
