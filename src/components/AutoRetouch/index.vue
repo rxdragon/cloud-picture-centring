@@ -201,7 +201,6 @@ export default {
       }
       this.cropImg = await AutoRetouch.getAutoCropPic(cropParams)
       this.adjustoneImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
-      await AutoRetouch.getAutoCropPic(cropParams)
       adjustParams.plan = 2
       this.adjusttwoImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
       const retouchData = {
