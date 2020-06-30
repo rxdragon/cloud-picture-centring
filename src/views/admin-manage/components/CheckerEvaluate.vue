@@ -58,7 +58,7 @@ import DatePicker from '@/components/DatePicker'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import StaffSelect from '@SelectBox/StaffSelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
-import { joinTimeSpan } from '@/utils/timespan.js'
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 import * as WorkManage from '@/api/workManage'
 
 export default {
@@ -133,9 +133,8 @@ export default {
       } catch (error) {
         console.error(error)
       } finally {
-        setTimeout(() => {
-          this.loading = false
-        }, 500)
+        await delayLoading()
+        this.loading = false
       }
     }
   }

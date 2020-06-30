@@ -129,12 +129,12 @@ export default {
         this.performanceLoading = true
         const req = {
           cycle: this.timeSpan,
-          type: 'all',
+          type: 'retoucherLeader',
           page: 1,
           pageSize: 99
         }
         const data = await Performance.getGroupScoreRanks(req)
-        this.performanceInfo = data.list[0]
+        this.performanceInfo = data[0]
       } catch (error) {
         console.error(error)
         error.message && this.$newMessage.warning(error.message)

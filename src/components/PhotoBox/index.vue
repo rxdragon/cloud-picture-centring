@@ -5,6 +5,9 @@
         v-if="useEleImage && !showCanvas"
         :src="imageSrc"
         :fit="containPhoto ? 'contain' : 'cover'"
+        :class="{
+          'show-center': containPhoto
+        }"
         :preview-src-list="getPreviewPhoto"
       >
         <div slot="error" class="image-slot">
@@ -269,6 +272,14 @@ export default {
       -webkit-user-select: none;
       -webkit-user-drag: none;
       user-select: none;
+      object-position: top;
+    }
+  }
+
+  .show-center {
+    img {
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
       object-position: center;
     }
   }

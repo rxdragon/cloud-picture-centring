@@ -13,9 +13,9 @@ export function getCanScoreStaff (type) {
   }).then(msg => {
     const createData = msg.map(item => {
       const nickName = _.get(item, 'nickname') || '-'
-      const name = `${item.name}(${nickName})`
       return {
-        name,
+        name: item.name,
+        nickName,
         staffNum: item.id,
         score: ''
       }
@@ -79,10 +79,19 @@ export function editStaffScore (params) {
  */
 export function getGroupScoreRanks (params) {
   return axios({
-    // TODO
-    // url: '/project_cloud/staff/getGroupScoreRanks',
-    url: 'https://doc.local.hzmantu.com/project_cloud/release-2.8.1/project_cloud/staff/getGroupScoreRanks',
+    url: '/project_cloud/staff/getGroupScoreRanks',
     method: 'PUT',
     data: params
+  }).then(msg => {
+    const createList = msg.list.map(listItem => {
+      return {
+        ...listItem,
+        // TODO
+        groupName: '-',
+        groupLeader: '-',
+        groupLeaderJobNumber: '-'
+      }
+    })
+    return createList
   })
 }

@@ -6,6 +6,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane v-if="showPartnerPerformance" label="伙伴绩效" name="PartnerPerformance" />
       <el-tab-pane v-if="showOverallPerformance" label="总体绩效" name="OverallPerformance" />
+      <!-- TODO 权限 -->
       <el-tab-pane label="修图组绩效" name="RetoucherGroupPerformance" />
       <el-tab-pane v-if="showTimeStatistics" label="用时统计" name="TimeStatistics" />
       <el-tab-pane v-if="showCheckerEvaluate" label="看片评价" name="CheckerEvaluate" />

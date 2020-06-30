@@ -7,7 +7,7 @@
           v-model="timeSpan"
           type="month"
           clearable
-          value-format="yyyy-MM"
+          value-format="yyyyMM"
           placeholder="选择月"
         />
       </div>

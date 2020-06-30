@@ -26,6 +26,11 @@ export default {
           req.page = this.pager.page,
           req.pageSize = this.pager.pageSize
         }
+        // 云端绩效管理，查询修图师绩效
+        if (this.staffIds && this.staffIds.length) {
+          req.staffIds = this.staffIds
+          req.type = 'some'
+        }
         const data = await Performance.getStaffPerformance(req)
         this.tableData = data.list
         if (this.pager) { this.pager.total = data.total }
@@ -57,7 +62,7 @@ export default {
     async downPerformanceTemplete () {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = await Performance.getCanScoreStaff('retoucherLeader')
+        const data = await Performance.getCanScoreStaff(this.searchType)
         const gradeMouth = getGradeMouth()
         this.canUpdatePerformance()
         const title = this.searchType === 'retoucherLeader' ? `修图主管${gradeMouth}月` : `组员${gradeMouth}月`
@@ -84,7 +89,8 @@ export default {
         const staffScores = results.map(item => {
           return {
             id: item.staffNum,
-            score: Number(item.score)
+            score: Number(item.score),
+            name: item.name
           }
         })
         await this.saveRetouchPerformance(staffScores)

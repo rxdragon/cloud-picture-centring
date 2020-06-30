@@ -1,5 +1,5 @@
 <template>
-  <div class="retoucher-group-performance">
+  <div class="retoucher-group-performance" v-loading="loading">
     <div class="search-box">
       <div class="search-item">
         <span>时间</span>
@@ -18,25 +18,25 @@
     </div>
     <div class="module-table-box">
       <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="date" label="修图组"/>
-        <el-table-column prop="date" label="修图主管" />
-        <el-table-column prop="date" label="工号" />
-        <el-table-column label="退单">
+        <el-table-column prop="groupName" label="修图组"/>
+        <el-table-column prop="groupLeader" label="修图主管" />
+        <el-table-column prop="groupLeaderJobNumber" label="主管工号" />
+        <el-table-column label="退单" sortable sort-by="return_rate_rank">
           <template slot-scope="{ row }">
-            <p>退单率：{{ row.date.value }}%</p>
-            <p>排名：1</p>
+            <p>退张率：{{ row.return_rate }}%</p>
+            <p>排名：{{ row.return_rate_rank }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="抽查">
+        <el-table-column label="抽查" sortable sort-by="average_score_rank">
           <template slot-scope="{ row }">
-            <p>平均分：{{ row.date.value }}</p>
-            <p>排名：1</p>
+            <p>平均分：{{ row.average_score }}</p>
+            <p>排名：{{ row.average_score_rank }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="绩效">
+        <el-table-column label="绩效" sortable sort-by="kpi_rank">
           <template slot-scope="{ row }">
-            <p>得分：{{ row.date.value }}</p>
-            <p>排名：1</p>
+            <p>得分：{{ row.kpi_score }}</p>
+            <p>排名：{{ row.kpi_rank }}</p>
           </template>
         </el-table-column>
       </el-table>
@@ -49,7 +49,9 @@ import DatePicker from '@/components/DatePicker'
 import RetoucherGroupSelect from '@SelectBox/RetoucherGroupSelect'
 import Tip from '@/components/Tip'
 import moment from 'moment'
-import { joinTimeSpan } from '@/utils/timespan.js'
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
+
+import * as Performance from '@/api/performance.js'
 
 
 const tipMessage = `列表中，绩效是人工导入，其余的是由系统进行计算得出的排名。<br/>
@@ -61,11 +63,11 @@ export default {
   components: { DatePicker, RetoucherGroupSelect, Tip },
   data () {
     return {
-      routeName: this.$route.name, // 路由名字
       tipMessage,
       timeSpan: null, // 查询时间
       retoucherGroupValue: '', // 修图组
-      tableData: []
+      tableData: [],
+      loading: false
     }
   },
   created () {
@@ -73,26 +75,34 @@ export default {
     const beginningOfMonth = moment(nowAt).format('YYYY-MM-')
     const startAt = beginningOfMonth + '01'
     this.timeSpan = [startAt, nowAt]
+    this.searchPerformance()
   },
   methods: {
     /**
      * @description 查询修图组绩效
      */
-    searchPerformance () {
+    async searchPerformance () {
       try {
         if (!this.timeSpan) throw new Error('请选择时间')
         if (moment(this.timeSpan[0]).get('month') !== moment(this.timeSpan[1]).get('month')) throw new Error('不能隔月查询')
-        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.loading = true
         const req = {
           startAt: joinTimeSpan(this.timeSpan[0]),
-          endAt: joinTimeSpan(this.timeSpan[1], 1)
+          endAt: joinTimeSpan(this.timeSpan[1], 1),
+          cycle: '202006',
+          type: 'all',
+          page: 1,
+          pageSize: 99
         }
-        if (this.retoucherGroupValue) { req.retouchGroup === this.retoucherGroupValue }
-        // TODO 链条接口
+        if (this.retoucherGroupValue) { req.group_id = this.retoucherGroupValue }
+        const data = await Performance.getGroupScoreRanks(req)
+        this.tableData = data
       } catch (error) {
+        console.error(error)
         this.$newMessage.warning(error.message)
       } finally {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        await delayLoading()
+        this.loading = false
       }
     }
   }
@@ -103,6 +113,13 @@ export default {
 .retoucher-group-performance {
   .search-box {
     margin-bottom: 20px;
+  }
+
+  .module-table-box {
+    & /deep/ .el-table__body-wrapper {
+      max-height: calc(100vh - 396px);
+      overflow-y: auto;
+    }
   }
 }
 </style>

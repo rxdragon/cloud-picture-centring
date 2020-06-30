@@ -28,7 +28,12 @@
     <div class="module-panel table-box">
       <div v-if="photos.length" class="search-data">
         <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
-          <photo-box :tags="photoItem.tags" :src="photoItem.src" @click.native="goToDetails(photoItem)"/>
+          <photo-box
+            contain-photo
+            :tags="photoItem.tags"
+            :src="photoItem.src"
+            @click.native="goToDetails(photoItem)"
+          />
           <div class="staff-name">修图师：{{ photoItem.retoucherName }}</div>
           <div class="group-name">修图小组：{{ photoItem.retouchGroupName }}</div>
         </div>

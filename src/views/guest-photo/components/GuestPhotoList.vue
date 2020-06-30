@@ -61,7 +61,7 @@
           class="photo-box"
           @click="goGuestInfo(photoItem)"
         >
-          <photo-box :src="photoItem.src" />
+          <photo-box contain-photo :src="photoItem.src" />
         </div>
         <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
       </div>
