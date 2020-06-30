@@ -89,12 +89,12 @@ export default {
         const req = {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1),
-          cycle: '202006',
+          cycleFormat: 'Ymd',
           type: 'all',
           page: 1,
           pageSize: 99
         }
-        if (this.retoucherGroupValue) { req.group_id = this.retoucherGroupValue }
+        if (this.retoucherGroupValue) { req.groupId = this.retoucherGroupValue }
         const data = await Performance.getGroupScoreRanks(req)
         this.tableData = data
       } catch (error) {

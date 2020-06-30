@@ -84,12 +84,13 @@ export function getGroupScoreRanks (params) {
     data: params
   }).then(msg => {
     const createList = msg.list.map(listItem => {
+      const leaderName = _.get(listItem, 'group_info.leader_info.nickname') || ''
+      const leaderNickName = _.get(listItem, 'group_info.leader_info.name') || ''
       return {
         ...listItem,
-        // TODO
-        groupName: '-',
-        groupLeader: '-',
-        groupLeaderJobNumber: '-'
+        groupName: _.get(listItem, 'group_info.name') || '-',
+        groupLeader: leaderNickName || leaderName || '-',
+        groupLeaderJobNumber: _.get(listItem, 'group_info.leader_info.id') || '-'
       }
     })
     return createList

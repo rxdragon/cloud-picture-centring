@@ -22,17 +22,14 @@
       </div>
       <div class="apis-info">
         <el-row class="info-box">
-          <el-col :span="4" class="info-item">
-            <div class="info-label">金额</div>
-            <div class="info-value">¥：20.00</div>
-          </el-col>
-          <el-col :span="4" class="info-item">
-            <div class="info-label">绩效平均分</div>
-            <div class="info-value">1</div>
-          </el-col>
-          <el-col :span="4" class="info-item">
-            <div class="info-label">排名</div>
-            <div class="info-value">1</div>
+          <el-col
+            v-for="(apisItem, apisIndex) in apisFloreaData"
+            :key="apisIndex"
+            :span="4"
+            class="info-item"
+          >
+            <div class="info-label">{{ apisItem.label }}</div>
+            <div class="info-value">{{ apisItem.value }}</div>
           </el-col>
         </el-row>
       </div>
@@ -57,11 +54,11 @@
       <div class="performance-box">
         <el-row class="info-box">
           <el-col :span="6" class="info-item">
-            <div class="info-label">退单率</div>
-            <div class="info-value">{{ performanceInfo.return_rate || '-' }}</div>
+            <div class="info-label">退张率</div>
+            <div class="info-value">{{ performanceInfo.return_rate || '-' }}%</div>
           </el-col>
           <el-col :span="6" class="info-item">
-            <div class="info-label">退单排名</div>
+            <div class="info-label">退张排名</div>
             <div class="info-value">{{ performanceInfo.return_rate_rank || '-' }}</div>
           </el-col>
           <el-col :span="6" class="info-item">
@@ -88,6 +85,8 @@
 
 <script>
 import * as Performance from '@/api/performance.js'
+import { getSearchMonth } from '@/utils/exportPerformanceExcel.js'
+import * as Retoucher from '@/api/retoucher.js'
 
 export default {
   name: 'PersonalCenterAudit',
@@ -97,8 +96,25 @@ export default {
       apisLoading: false, // 小蜜蜂加载动态
       timeSpan: null, // 绩效查询时间戳
       performanceLoading: false, // 绩效加载动态
-      performanceInfo: [] // 绩效得分
+      performanceInfo: {}, // 绩效得分
+      apisFloreaData: [{
+        label: '金额',
+        value: '-'
+      }, {
+        label: '绩效平均分',
+        value: '-'
+      }, {
+        label: '排名',
+        value: '-'
+      }] // 小蜜蜂数据
     }
+  },
+  created () {
+    const nowYear = new Date().getFullYear()
+    this.yearValue = nowYear.toString()
+    this.timeSpan = getSearchMonth()
+    this.getPerformanceInfo()
+    this.getApisFlorea()
   },
   methods: {
     /**
@@ -108,10 +124,10 @@ export default {
       try {
         if (!this.yearValue) throw new Error('请选择时间')
         this.apisLoading = true
-        // TODO
-        // const req = {
-        //   timeSpan: this.yearValue
-        // }
+        const req = {
+          year: this.yearValue
+        }
+        this.apisFloreaData = await Retoucher.getLittleBeeInfo(req)
       } catch (error) {
         console.error(error)
         error.message && this.$newMessage.warning(error.message)
@@ -129,12 +145,13 @@ export default {
         this.performanceLoading = true
         const req = {
           cycle: this.timeSpan,
+          cycleFormat: 'Ym',
           type: 'retoucherLeader',
           page: 1,
           pageSize: 99
         }
         const data = await Performance.getGroupScoreRanks(req)
-        this.performanceInfo = data[0]
+        this.performanceInfo = data[0] || {}
       } catch (error) {
         console.error(error)
         error.message && this.$newMessage.warning(error.message)

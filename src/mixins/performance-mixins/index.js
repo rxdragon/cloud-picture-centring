@@ -79,13 +79,14 @@ export default {
     async handleSuccess ({ results }) {
       try {
         results.splice(0, 1)
-        const reg = /^\d+\.?\d{0,2}$/g
+        const reg = /^\d+\.?\d{0,2}$/
         const hasEveryScore = results.every(item => {
           const hasScore = Boolean(item.score)
-          const isDecimal = reg.test(item.score)
-          return hasScore && isDecimal
+          const isDecimal = reg.test(Number(item.score))
+          const isRightful = Number(item.score) <= 100 && Number(item.score) > 0
+          return hasScore && isDecimal && isRightful
         })
-        if (!hasEveryScore) throw new Error('分数没有填写完整！')
+        if (!hasEveryScore) throw new Error('分数没有填写完整，或没有填写正确分数值！')
         const staffScores = results.map(item => {
           return {
             id: item.staffNum,

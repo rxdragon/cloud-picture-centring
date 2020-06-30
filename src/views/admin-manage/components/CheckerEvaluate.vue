@@ -143,7 +143,6 @@ export default {
 
 <style lang="less">
 
-
 .checker-evaluate {
   .search-box {
     margin-bottom: 24px;

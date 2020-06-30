@@ -20,13 +20,22 @@ export default function exportPerformanceExcel (couponTitle, data) {
 export function getGradeMouth () {
   const nowDate = moment(new Date())
   const day = nowDate.date()
-  if (day >= 20) {
-    let month = nowDate.month()
-    return month + 1
+  if (day < 10) {
+    let month = nowDate.add(-1, 'month')
+    return month.format('MM')
   }
-  if (day <= 10) {
-    let month = nowDate.month()
-    return month
+  return nowDate.format('MM')
+}
+
+/**
+ * @description 获取打分日期
+ */
+export function getSearchMonth () {
+  const nowDate = moment(new Date())
+  const day = nowDate.date()
+  if (day < 20) {
+    let month = nowDate.add(-1, 'month')
+    return month.format('YYYYMM')
   }
-  return nowDate.month() + 1
+  return nowDate.format('YYYYMM')
 }

@@ -26,20 +26,20 @@
     </div>
     <div class="table-module-box">
       <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="date" label="伙伴姓名（姓名）" />
-        <el-table-column prop="name" label="修图组" />
-        <el-table-column prop="name" label="工号" />
-        <el-table-column prop="name" label="绩效得分" />
-        <el-table-column prop="name" label="最后操作时间" />
-        <el-table-column prop="name" label="最后操作人" />
+        <el-table-column prop="joinName" label="伙伴姓名（姓名）" />
+        <el-table-column prop="retouchGroupName" label="修图组" />
+        <el-table-column prop="jobNumber" label="工号" />
+        <el-table-column prop="performanceScode" label="绩效得分" />
+        <el-table-column prop="updatedAt" label="最后操作时间" />
+        <el-table-column prop="updatedName" label="最后操作人" />
         <el-table-column label="操作">
           <template slot-scope="{ row }">
-            <el-button type="primary" size="mini" @click="alterPerformance(row.orderId)">修改</el-button>
+            <el-button type="primary" size="mini" @click="alterPerformance(row)">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <alter-performance v-if="dialogVisible" @visibeClose="closeDialog" />
+    <alter-performance v-if="dialogVisible" :edit-info="editInfo" @visibeClose="closeDialog" />
   </div>
 </template>
 
