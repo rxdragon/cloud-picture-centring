@@ -68,8 +68,8 @@ export default {
       url: '', // 图片uuid
       originImg: '', // 原图地址
       cropImg: '', // 裁剪图地址
-      adjustoneImg: '', // 调整图1地址
-      adjusttwoImg: '', // 调整图2地址
+      adjustOneImg: '', // 调整图1地址
+      adjustTwoImg: '', // 调整图2地址
       photoIndex: 0, // 图片索引
       showAutoRetouch: false, // 显示自动修图页面
       cacheRetouchPic: [], // 自动修图图片缓存
@@ -185,29 +185,29 @@ export default {
       const cachePics = this.cacheRetouchPic.find(cacheItem => cacheItem.photoIndex === this.photoIndex)
       if (cachePics) {
         this.cropImg = cachePics.cropImg
-        this.adjustoneImg = cachePics.adjustoneImg
-        this.adjusttwoImg = cachePics.adjusttwoImg
+        this.adjustOneImg = cachePics.adjustOneImg
+        this.adjustTwoImg = cachePics.adjustTwoImg
         this.changeAutoRetouchImg(0, 'origin')
         return
       }
       if (this.photoList.length === 0) return
       this.showLoading()
-      let cropParams = {
+      const cropParams = {
         uuid: this.photoList[this.photoIndex]
       }
-      let adjustParams = {
+      const adjustParams = {
         ...cropParams,
         plan: 1
       }
       this.cropImg = await AutoRetouch.getAutoCropPic(cropParams)
-      this.adjustoneImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
+      this.adjustOneImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
       adjustParams.plan = 2
-      this.adjusttwoImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
+      this.adjustTwoImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
       const retouchData = {
         photoIndex: this.photoIndex,
         cropImg: this.cropImg,
-        adjustoneImg: this.adjustoneImg,
-        adjusttwoImg: this.adjusttwoImg
+        adjustOneImg: this.adjustOneImg,
+        adjustTwoImg: this.adjustTwoImg
       }
       this.cacheRetouchPic.push(retouchData)
       this.changeAutoRetouchImg(0, 'origin')
@@ -218,12 +218,8 @@ export default {
      */
     changeAutoRetouchImg (index) {
       const type = this.funList[index].value
-      this.funList.map((funItem, funIndex) => {
-        if (funIndex === index) {
-          funItem.active = true
-        } else {
-          funItem.active = false
-        }
+      this.funList.forEach((funItem, funIndex) => {
+        funItem.active = funIndex === index
       })
       switch (type) {
         case 'origin':
@@ -233,10 +229,10 @@ export default {
           this.setPhotoUrl('retouched', this.cropImg)
           break
         case 'adjust-one':
-          this.setPhotoUrl('retouched', this.adjustoneImg)
+          this.setPhotoUrl('retouched', this.adjustOneImg)
           break
         case 'adjust-two':
-          this.setPhotoUrl('retouched', this.adjusttwoImg)
+          this.setPhotoUrl('retouched', this.adjustTwoImg)
           break
         default:
           break

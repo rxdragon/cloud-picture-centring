@@ -233,6 +233,7 @@
 --|--|--
  版本更新滚动加载 | [5ecc523](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5ecc523)
  版本说明样式修改 | [e8b974b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e8b974b)
+ 裁剪图调用删除 | [050e4e3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/050e4e3)
  处理20mb以上图片不能显示的问题 | [c68d44c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c68d44c)
  传递组员id | [08f8212](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/08f8212)
  代码错误 | [37a5ddc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/37a5ddc)
