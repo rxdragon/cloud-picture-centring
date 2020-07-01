@@ -53,16 +53,6 @@ export default {
           name: '裁剪图',
           value: 'crop',
           active: false
-        },
-        {
-          name: '矫正图1',
-          value: 'adjust-one',
-          active: false
-        },
-        {
-          name: '矫正图2',
-          value: 'adjust-two',
-          active: false
         }
       ],
       url: '', // 图片uuid
@@ -77,7 +67,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['imgDomain']),
+    ...mapGetters(['imgDomain', 'canAutoRetouch']),
     showSwitchBtn () {
       return this.photoList.length > 1
     }
@@ -150,7 +140,7 @@ export default {
       if (mode === 'origin') {
         this.url = this.imgDomain + src
       } else {
-        this.url = AutoRetouch.algoUrl + '/static/images/' + this.photoList[this.photoIndex] + '/' + src
+        this.url = src ? AutoRetouch.algoUrl + '/static/images/' + this.photoList[this.photoIndex] + '/' + src : AutoRetouch.algoUrl + '/static/common/error.png'
       }
       this.hiddenLoading()
     },
@@ -185,29 +175,22 @@ export default {
       const cachePics = this.cacheRetouchPic.find(cacheItem => cacheItem.photoIndex === this.photoIndex)
       if (cachePics) {
         this.cropImg = cachePics.cropImg
-        this.adjustOneImg = cachePics.adjustOneImg
-        this.adjustTwoImg = cachePics.adjustTwoImg
         this.changeAutoRetouchImg(0, 'origin')
         return
       }
-      if (this.photoList.length === 0) return
+      if (this.photoList.length === 0 || !this.canAutoRetouch) return
       this.showLoading()
       const cropParams = {
         uuid: this.photoList[this.photoIndex]
       }
-      const adjustParams = {
-        ...cropParams,
-        plan: 1
+      try {
+        this.cropImg = await AutoRetouch.getAutoCropPic(cropParams)
+      } catch {
+        this.cropImg = ''
       }
-      this.cropImg = await AutoRetouch.getAutoCropPic(cropParams)
-      this.adjustOneImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
-      adjustParams.plan = 2
-      this.adjustTwoImg = await AutoRetouch.getAutoAdjuctPic(adjustParams)
       const retouchData = {
         photoIndex: this.photoIndex,
-        cropImg: this.cropImg,
-        adjustOneImg: this.adjustOneImg,
-        adjustTwoImg: this.adjustTwoImg
+        cropImg: this.cropImg
       }
       this.cacheRetouchPic.push(retouchData)
       this.changeAutoRetouchImg(0, 'origin')

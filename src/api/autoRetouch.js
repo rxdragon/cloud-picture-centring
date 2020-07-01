@@ -20,7 +20,7 @@ algoAxios.interceptors.response.use(
     let res = null
     res = response.data
     if (res.success) return res.msg
-    return res
+    return ''
   },
   error => {
     return Promise.reject(error)
