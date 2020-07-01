@@ -39,7 +39,8 @@ export default {
   name: "AutoRetouch",
   props: {
     photoList: { type: Array, default: () => [] },
-    streamNum: { type: String, default: '' }
+    streamNum: { type: String, default: '' },
+    loadRetouch: { type: Boolean, default: false}
   },
   data () {
     return {
@@ -67,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['imgDomain', 'canAutoRetouch']),
+    ...mapGetters(['imgDomain']),
     showSwitchBtn () {
       return this.photoList.length > 1
     }
@@ -178,7 +179,7 @@ export default {
         this.changeAutoRetouchImg(0, 'origin')
         return
       }
-      if (this.photoList.length === 0 || !this.canAutoRetouch) return
+      if (this.photoList.length === 0 || !this.loadRetouch) return
       this.showLoading()
       const cropParams = {
         uuid: this.photoList[this.photoIndex]

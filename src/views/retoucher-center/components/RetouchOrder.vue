@@ -111,6 +111,7 @@
       v-show="showAutoRetouch"
       :photo-list="autoRetouchPhoto"
       :stream-num="orderData.streamNum"
+      :load-retouch="showAutoRetouchBtn"
       @closeAutoRetouch="switchAutoRetouch"
     />
   </div>
