@@ -252,7 +252,14 @@
             </template>
           </div>
           <div class="submit-box">
-            <el-button type="primary" @click="submitData" :loading="isSubmit">提交评分</el-button>
+            <el-button
+              type="primary"
+              v-if="currentId"
+              @click="submitData"
+              :loading="isSubmit"
+            >
+              提交评分
+            </el-button>
             <el-button type="info" @click="closePreview" class="out-btn">退出</el-button>
           </div>
         </div>
@@ -270,8 +277,10 @@ import guideData from './guideData'
 import Driver from 'driver.js' // 引导框
 import FabricCanvas from './FabricCanvas'
 import * as AssessmentCenter from '@/api/assessmentCenter'
+import * as GradeConfiguration from '@/api/gradeConfiguration'
 
 let allLabel = null
+let goodWord = []
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas },
@@ -340,7 +349,8 @@ export default {
         }
       ],
       isSubmit: false, // 是否提交
-      allLoading: false // 整个页面loading
+      allLoading: false, // 整个页面loading
+      currentId: '' // 当前种拔草的id 1种草,2拔草,3一般
     }
   },
   computed: {
@@ -364,6 +374,7 @@ export default {
     }
   },
   created () {
+    this.fetchGoodWord()
     this.initShowPhoto()
     this.getLabelData()
     this.driver = new Driver({
@@ -456,6 +467,21 @@ export default {
      */
     async submitData () {
       try {
+        const issuesLabel = this.getIssuesData()
+        const issuesLabelId = issuesLabel.reduce((sumArr, item) => {
+          if (item.type !== 'goodWord') {
+            sumArr.push({
+              id: item.id
+            })
+          }
+          return sumArr
+        }, [])
+        const typeLabelId = issuesLabel.reduce((sumArr, item) => {
+          if (item.type === 'goodWord') {
+            sumArr.push(item.id)
+          }
+          return sumArr
+        }, [])
         this.isSubmit = true
         let markPhotoImg = ''
         if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
@@ -463,12 +489,11 @@ export default {
         }
         this.showCanvas = false
         this.canvasOption.drawType = ''
-        const issuesLabel = this.getIssuesData()
-        const issuesLabelId = issuesLabel.map(item => ({ id: item.id }))
         this.resetLabelData()
         const sendData = {
           issuesLabelId,
-          markPhotoImg
+          markPhotoImg,
+          typeLabelId
         }
         this.$emit('submit', sendData)
       } catch (error) {
@@ -496,17 +521,44 @@ export default {
       allLabel = labelInfo.allLabel
     },
     /**
+     * @description 获取激励词列表
+     */
+    async fetchGoodWord () {
+      const words = await GradeConfiguration.getExcitationDirList()
+      const finalWord = words.reduce((arr, item) => {
+        const { name, id } = item
+        arr.push({
+          name,
+          id,
+          isSelect: false,
+          type: 'goodWord'
+        })
+        return arr
+      }, [])
+      goodWord = finalWord
+    },
+    /**
      * @description 根据种拔草,选择对应的标签
      */
     selectTLabelData (selItem) {
-      const { name } = selItem
+      const { id } = selItem
+      if (id === this.currentId) {
+        return
+      }
       this.labelDataTop.forEach((item) => {
-        item.isSelect = item.name === name
+        item.isSelect = item.id === id
       })
+      this.currentId = id
+      this.labelData = allLabel[id]
+      if (id === 1) { // 种草情况下,将激励词推进标签中
 
-      this.labelData = allLabel[name]
+        this.labelData.push({
+          name: '激励词',
+          child: goodWord
+        })
+      }
       this.showCanvas = false
-      // this.resetLabelData()
+      this.resetLabelData()
     },
     /**
      * @description 重制标签

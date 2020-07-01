@@ -31,14 +31,14 @@
     </div>
     <div class="info-grid">
       <!-- 评价信息 -->
-      <div class="panel-info" v-if="photoInfoData.issueLabel.length">
+      <div class="panel-info">
         <div class="panel-title">
           <span>评价信息</span>
           <span>总分：{{ photoInfoData.score }}</span>
         </div>
         <div class="panel-content">
-          <div class="issue-class-box panel-row">
-            <el-tag size="medium" v-for="(item, index) in photoInfoData.typeTag" :key="index">{{ item.type.name }}</el-tag>
+          <div class="issue-class-box panel-row" v-if="photoInfoData.typeTag.length">
+            <el-tag size="medium" v-for="(item, index) in photoInfoData.typeTag" :key="index">{{ item.name }}</el-tag>
           </div>
           <div class="issue-class-box panel-row" v-for="issueClass in photoInfoData.issueLabel" :key="issueClass.id">
             <div class="label-title">{{ issueClass.name }}</div>
@@ -141,7 +141,8 @@ export default {
           photoId: this.photoInfo.photo_id,
           uuid: this.photoInfo._id,
           tags: sendData.issuesLabelId,
-          picUrl: sendData.markPhotoImg
+          picUrl: sendData.markPhotoImg,
+          exTags: sendData.typeLabelId
         }
         await AssessmentCenter.updateCommitHistory(req)
         this.$newMessage.success('重新评价成功')

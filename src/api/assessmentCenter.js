@@ -120,29 +120,21 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      // todo mock
-      let mockArr = [{
-        type: {
-          id: 1,
-          name: '种草',
-        }
-      },
-      {
-        type: {
-          id: 1,
-          name: '拔草',
-        },
-      }
-      ]
-      item.tags = item.tags.concat(mockArr)
-
       // 取出tag中种拔草等标签
-      const pureTag = item.tags.filter((item) => {
-        return !item.type
-      })
-      const typeTag = item.tags.filter((item) => {
-        return item.type
-      })
+      const pureTag = item.tags
+      const tempArr = []
+      let typeTag = item.tags.reduce((sumArr, item) => {
+        // 需要去重
+        if (item.type && tempArr.indexOf(item.type.id) < 0) {
+          tempArr.push(item.type.id)
+          sumArr.push(item.type)
+        }
+        return sumArr
+      }, [])
+      // 加上激励词
+      if (item.exTags && item.exTags.length) {
+        typeTag = typeTag.concat(item.exTags)
+      }
       item.typeTag = typeTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
@@ -186,29 +178,8 @@ export function getScoreConfigList () {
   }).then(msg => {
     let typeArr = []
     let allLabel = {}
-    // mock
-    const tempData1 = msg
-    const tempData2 = JSON.parse(JSON.stringify(msg))
-    const tempData3 = JSON.parse(JSON.stringify(msg))
-    const mockData = [
-      {
-        id: 2,
-        name: '种草',
-        score_config: tempData1
-      },
-      {
-        id: 1,
-        name: '拔草',
-        score_config: tempData2.slice(0,2)
-      },
-      {
-        id: 3,
-        name: '一般',
-        score_config: tempData3.slice(2,3)
-      },
-    ]
     // 将数据拆开
-    mockData.forEach((msgItem) => {
+    msg.forEach((msgItem) => {
       const {
         name,
         id,
@@ -222,7 +193,7 @@ export function getScoreConfigList () {
         id,
         isSelect: false
       })
-      allLabel[name] = scoreConfig
+      allLabel[id] = scoreConfig
     })
 
     return {
@@ -244,11 +215,28 @@ export function getIssueList () {
     url: '/project_cloud/checkPool/getScoreConfigList',
     method: 'GET'
   }).then(msg => {
+    // const finalArr = msg.reduce((msgArr, msgItem) => {
+    //   const tempMsgObj = {}
+    //   tempMsgObj.label = msgItem.name
+    //   tempMsgObj.value = msgItem.id
+    //   tempMsgObj.children = msgItem.score_config.reduce((configArr, configItem) => {
+    //     return
+    //   }, [])
+    //   msgArr.push(tempMsgObj)
+    //   return msgArr
+    // }, [])
     const createData = msg.map(item => {
-      item.children = item.child.map(issueItem => {
+      item.children = item.score_config.map(configItem => {
+        configItem.children = configItem.child.map(chilItem => {
+          return {
+            value: chilItem.id,
+            label: chilItem.name
+          }
+        })
         return {
-          value: issueItem.id,
-          label: issueItem.name
+          value: configItem.id,
+          label: configItem.name,
+          children: configItem.children
         }
       })
       return {
@@ -347,3 +335,29 @@ export function updateCommitHistory (params) {
     data: params
   })
 }
+/**
+ * @description 获取摄影机构列表
+ * @method GET
+ * @returns {Obeject} 结果
+ * @author cl 2020/06/24
+ * @version @version 2.8.0
+ */
+export function getPhotographerOrgList () {
+  return axios({
+    url: '/project_cloud/operator/getPhotographerOrgList',
+    method: 'GET',
+  })
+}
+// /**
+//  * @description 获取摄影机构列表
+//  * @method GET
+//  * @returns {Obeject} 结果
+//  * @author cl 2020/06/24
+//  * @version @version 2.8.0
+//  */
+// export function test () {
+//   return axios({
+//     url: 'http://10.20.200.250:18089/algo/id/get_crop/',
+//     method: 'GET',
+//   })
+// }

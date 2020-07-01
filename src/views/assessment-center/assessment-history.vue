@@ -89,6 +89,7 @@ import ReportBox from './components/ReportBox.vue'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as AssessmentCenter from '@/api/assessmentCenter'
+import * as GradeConfiguration from '@/api/gradeConfiguration.js'
 
 export default {
   name: 'AssessmentHistory',
@@ -111,20 +112,7 @@ export default {
       cacheTimeSpan: [],
       cacheSendStaff: '',
       drawer: false,
-      scorer: [
-        {
-          name: '小a',
-          id: 0
-        },
-        {
-          name: '小b',
-          id: 1
-        },
-        {
-          name: '小c',
-          id: 2
-        },
-      ],
+      scorer: [],
       currentScorer: '',
     }
   },
@@ -133,6 +121,7 @@ export default {
     const endAt = moment().locale('zh-cn').format('YYYY-MM-DD')
     this.timeSpan = [startAt, endAt]
     this.initial()
+    this.getStaffList()
   },
   activated () {
     this.initial()
@@ -210,13 +199,21 @@ export default {
      */
     showDrawer () {
       this.drawer = true
+    },
+    /**
+     * @description 确认清除
+     */
+    async getStaffList () {
+      const msg = await GradeConfiguration.getTakeStaffList()
+      if (msg) {
+        this.scorer = msg
+      }
     }
   }
 }
 </script>
 
 <style lang="less">
-
 
 .assessment-history {
   .search-box {

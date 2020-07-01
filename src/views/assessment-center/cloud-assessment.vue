@@ -117,7 +117,7 @@ export default {
       timeSpan: null, // 时间
       institutionType: 0, // 修图标准
       sampleNum: '', // 伙伴抽样量
-      psOrganization: '', // 伙伴抽样量
+      psOrganization: '', // 摄影机构
       spotAllNum: '-',
       allPhotoPath: [],
       pager: {
@@ -134,16 +134,7 @@ export default {
       showGradePreview: false, // 是否显示打分概况
       dialogTableVisible: false, // 抽取成功弹框
       showPhotoVersion: '', // 展示图片版本
-      psOrganizationMap: [
-        {
-          name: 'kid',
-          id: 0
-        },
-        {
-          name: 'himo',
-          id: 1
-        },
-      ]
+      psOrganizationMap: [] // 摄影机构列表
     }
   },
   computed: {
@@ -153,6 +144,7 @@ export default {
     }
   },
   created () {
+    // AssessmentCenter.test()
     this.resetPage()
   },
   methods: {
@@ -212,7 +204,9 @@ export default {
           photoId: selectPhoto.photo_id,
           uuid: selectPhoto._id,
           tags: sendData.issuesLabelId,
-          picUrl: sendData.markPhotoImg
+          picUrl: sendData.markPhotoImg,
+          exTags: sendData.typeLabelId,
+          spotUuid: this.uuid
         }
         this.$refs['grade-preview'].allLoading = true
         await AssessmentCenter.commitHistory(req)
@@ -247,7 +241,8 @@ export default {
       this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getStatistics(),
-        this.getHaveCheckResult()
+        this.getHaveCheckResult(),
+        this.fetchPhotographyAgency()
       ])
     },
     /**
@@ -256,6 +251,16 @@ export default {
     async getStatistics () {
       try {
         this.todayInfo = await AssessmentCenter.getStatistics()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    /**
+     * @description 获取今日评价数据
+     */
+    async fetchPhotographyAgency () {
+      try {
+        this.psOrganizationMap = await AssessmentCenter.getPhotographerOrgList()
       } catch (error) {
         console.error(error)
       }
@@ -279,6 +284,9 @@ export default {
       }
       if (this.institutionType) {
         req.retouchStandard = this.institutionType
+      }
+      if (this.psOrganization) {
+        req.orgId = this.psOrganization
       }
       return req
     },
@@ -381,7 +389,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 .cloud-assessment {
   .search-box {
