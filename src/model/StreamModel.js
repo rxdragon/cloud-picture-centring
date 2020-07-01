@@ -17,17 +17,21 @@ export default class StreamModel {
   streamNum = '' // 流水号
   isCheckReturn = false // 是否是审核退回
   streamState = '' // 流水状态
+
   retouchRemark = '' // 修图备注
-  backgroundColor = '' // 背景备注
   referencePhoto = '' // 参考图
+  backgroundColor = '' // 背景备注
   photographyNote = '' // 摄影备注
   dresserNote = '' // 化妆备注
   orderNote = '' // 订单备注
   reviewerNote = '' // 审核备注
+  
   requireLabel = {} // 修图要求
   photoNum = 0 // 照片数据
   isGreen = false // 是否是绿色通道
+
   retoucher = '' // 修图师
+  retoucherJobNum = '' // 修图师id
   retoucherLeader = "" // 修图组长
 
   // 海草
@@ -81,7 +85,9 @@ export default class StreamModel {
     this.referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
     this.photoNum = this.getPhotoNum()
     this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
+
     this.retoucher = _.get(streamData, 'retoucher.name') || _.get(streamData, 'retoucher.real_name') || '-'
+    this.retoucherJobNum = _.get(streamData, 'retoucher.id') || '-'
     this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.name') || _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
 
     this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(StreamStatics.STORERETURN)

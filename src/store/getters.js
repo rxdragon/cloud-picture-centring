@@ -28,6 +28,7 @@ const defaultGetters = {
 const permissionGetters = {
   showPartnerPerformance: state => state.permission.showPartnerPerformance, // 是否显示伙伴绩效
   showOverallPerformance: state => state.permission.showOverallPerformance, // 是否显示总体绩效
+  // TODO 是否取消
   showAuditPerformance: state => state.permission.showAuditPerformance, // 是否显示审核绩效
   showTimeStatistics: state => state.permission.showTimeStatistics, // 是否显示用时统计
   showCheckerEvaluate: state => state.permission.showCheckerEvaluate, // 是否显示看片评价

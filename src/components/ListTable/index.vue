@@ -76,7 +76,6 @@ export default {
 
 <style lang="less" scoped>
 
-
 .list-tabel {
   display: grid;
   text-align: center;
@@ -106,7 +105,7 @@ export default {
     line-height: 22px;
     color: #303133;
     text-align: left;
-    background-color: #fafafa;
+    background-color: #f2f2f2;
   }
 
   .content {

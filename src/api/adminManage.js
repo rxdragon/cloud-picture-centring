@@ -219,3 +219,48 @@ export function manualReview (params) {
     data: params
   })
 }
+
+/**
+ * @description 获取修图指派列表
+ * @param {*} params 
+ */
+export function getOrderInfoForCloud (params) {
+  return axios({
+    url: '/himo_product/extend/cloud/get_order_info_for_cloud',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    const storeName = _.get(msg, 'store_info.name') || '-'
+    const retouchType = _.get(msg, 'store_info.store_type') || '-'
+    const orderList = msg.order_info.map(listItem => {
+      let productArr = []
+      listItem.sub_orders.forEach(subOrderItem => {
+        const productItems = _.get(subOrderItem, 'items') || []
+        productArr = [...productArr, ...productItems]
+      })
+      let productInfo = productArr.map(item => item.product_name)
+      productInfo = productInfo.join('，')
+      return {
+        orderNo: listItem.order_no,
+        userName: listItem.user_name,
+        userPhone: listItem.user_phone,
+        storeName,
+        retouchType,
+        productInfo
+      }
+    })
+    return orderList
+  })
+}
+
+/**
+ * @description 指派伙伴
+ * @param {*} params 
+ */
+export function advanceAssignOrderToStaff (params) {
+  return axios({
+    url: '/project_cloud/order/advanceAssignOrderToStaff',
+    method: 'POST',
+    data: params
+  })
+}

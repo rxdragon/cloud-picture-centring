@@ -213,7 +213,7 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      yearValue: '2019',
+      yearValue: '',
       todayData: {}, // 今日指标
       gradeInfo: {},
       awardInfo: [],
@@ -222,6 +222,8 @@ export default {
   },
   created () {
     this.$store.dispatch('setting/showLoading', this.routeName)
+    const nowYear = new Date().getFullYear()
+    this.yearValue = nowYear.toString()
     Promise.all([
       this.getSelfQuota(),
       this.getRankInfo(),

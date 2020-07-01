@@ -69,7 +69,6 @@ export default {
 
 <style lang="less" scoped>
 
-
 .domain-switch-box {
   .radio-group {
     position: relative;

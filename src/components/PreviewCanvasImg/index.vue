@@ -1,5 +1,5 @@
 <template>
-  <el-image class="preview-canvas-img" :src="src" fit="cover">
+  <el-image class="preview-canvas-img" :src="src" :fit="containPhoto ? 'contain' : 'cover'">
     <div slot="error" class="image-slot">
       <i class="el-icon-picture-outline" />
       <span>加载失败...</span>
@@ -11,7 +11,8 @@
 export default {
   name: 'PreviewCanvasImg',
   props: {
-    file: { type: Object, required: true }
+    file: { type: Object, required: true },
+    containPhoto: { type: Boolean }
   },
   data () {
     return {

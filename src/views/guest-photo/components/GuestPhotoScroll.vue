@@ -76,7 +76,7 @@
               class="photo-box"
               @click="goGuestInfo(photoItem)"
             >
-              <photo-box :use-ele-image="false" :src="photoItem.src" />
+              <photo-box :use-ele-image="false" contain-photo :src="photoItem.src" />
             </div>
             <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
           </div>
@@ -139,6 +139,18 @@ export default {
           value: 5
         }
       ]
+    }
+  },
+  watch: {
+    'initSearch': {
+      handler (value) {
+        const { orderType, orderSearchValue } = value
+        if (!orderType) return
+        this.orderType = orderType
+        this.orderSearchValue = orderSearchValue
+        this.getPhotoList(true)
+      },
+      immediate: true
     }
   },
   mounted () {
@@ -280,7 +292,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 .guest-photo-scroll {
   .search-box {
