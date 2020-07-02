@@ -21,6 +21,7 @@ export default class PhotoModel {
 
   checkPoolScore = '' // 云学院抽片分数
   checkPoolTags = [] // 云学院标记
+  checkEvaluator = '' // 打分人
 
   constructor (photoData) {
     this.baseData = photoData
@@ -62,6 +63,7 @@ export default class PhotoModel {
   // 获取云学院分数
   getCheckPoolTags () {
     this.checkPoolScore = _.get(this.baseData, 'tags.values.score') || '-'
+    this.checkEvaluator = _.get(this.baseData, 'tags.values.evaluator') || '-'
     const checkPoolTags = _.get(this.baseData, 'tags.values.check_pool_tags') || []
     const parentData = []
     checkPoolTags.forEach(issueItem => {

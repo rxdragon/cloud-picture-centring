@@ -71,7 +71,7 @@
         <!-- TODO -->
         <el-col class="tags-box" :span="8">
           <div class="info-label">评分人：</div>
-          <div class="info-value">张三</div>
+          <div class="info-value">{{ photoInfo.checkEvaluator }}</div>
         </el-col>
         <el-col class="tags-box" :span="24">
           <div class="info-label">问题标记：</div>

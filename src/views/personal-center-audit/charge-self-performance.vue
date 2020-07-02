@@ -63,11 +63,11 @@
           </el-col>
           <el-col :span="6" class="info-item">
             <div class="info-label">绩效得分</div>
-            <div class="info-value">{{ performanceInfo.kpi_score || '-' }}</div>
+            <div class="info-value">{{ performanceInfo.leaderKpi || '-' }}</div>
           </el-col>
           <el-col :span="6" class="info-item">
             <div class="info-label">绩效排名</div>
-            <div class="info-value">{{ performanceInfo.kpi_rank || '-' }}</div>
+            <div class="info-value">{{ performanceInfo.leaderKpiRank || '-' }}</div>
           </el-col>
           <el-col :span="6" class="info-item">
             <div class="info-label">抽查平均分</div>

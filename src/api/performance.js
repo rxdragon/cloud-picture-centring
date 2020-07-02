@@ -90,7 +90,9 @@ export function getGroupScoreRanks (params) {
         ...listItem,
         groupName: _.get(listItem, 'group_info.name') || '-',
         groupLeader: leaderNickName || leaderName || '-',
-        groupLeaderJobNumber: _.get(listItem, 'group_info.leader_info.id') || '-'
+        groupLeaderJobNumber: _.get(listItem, 'group_info.leader_info.id') || '-',
+        leaderKpi: _.get(listItem, 'leader_score_info.leader_kpi_score') || '-',
+        leaderKpiRank: _.get(listItem, 'leader_score_info.leader_kpi_rank') || '-'
       }
     })
     return createList
