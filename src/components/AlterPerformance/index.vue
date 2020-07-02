@@ -37,6 +37,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 关闭弹出框
+     */
     cancelDialog () {
       this.$emit('visibeClose')
     },

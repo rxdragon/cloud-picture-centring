@@ -19,9 +19,8 @@ export default class PerformanceModel {
     this.name = _.get(performanceData, 'staffInfo.name') || '-'
     this.nickname = _.get(performanceData, 'staffInfo.nickname') || '-'
 
-    // TOOD 缺少修图组信息
-    this.retouchGroupName = '-'
-    this.updatedName = '-'
+    this.retouchGroupName = _.get(performanceData, 'group_info.name') || '-'
+    this.updatedName = _.get(performanceData, 'operator_info.nickname') || _.get(performanceData, 'operator_info.nickname') || '_'
 
     this.jobNumber = _.get(performanceData, 'staffInfo.id') || '-'
     this.performanceScode = _.get(performanceData, 'value') || 0

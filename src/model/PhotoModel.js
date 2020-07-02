@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid'
+
 // 照片model
 export default class PhotoModel {
   baseData = null
@@ -15,6 +17,10 @@ export default class PhotoModel {
   storeReworkReason = '' // 门店退回理由
   storeReworkNote = '' // 门店退回备注
   storePartReworkReason = [] // 退回标记
+
+
+  checkPoolScore = '' // 云学院抽片分数
+  checkPoolTags = [] // 云学院标记
 
   constructor (photoData) {
     this.baseData = photoData
@@ -51,5 +57,32 @@ export default class PhotoModel {
     } else {
       return [this.originalPhoto, this.completePhoto]
     }
+  }
+
+  // 获取云学院分数
+  getCheckPoolTags () {
+    this.checkPoolScore = _.get(this.baseData, 'tags.values.score') || '-'
+    const checkPoolTags = _.get(this.baseData, 'tags.values.check_pool_tags') || []
+    const parentData = []
+    checkPoolTags.forEach(issueItem => {
+      const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
+      if (findClass) {
+        findClass.child.push({
+          id: issueItem.id,
+          name: issueItem.name
+        })
+      } else {
+        const newClass = {
+          id: _.get(issueItem, 'parent.id') || uuidv4(),
+          name: _.get(issueItem, 'parent.name') || '-',
+          child: [{
+            id: issueItem.id,
+            name: issueItem.name,
+          }]
+        }
+        parentData.push(newClass)
+      }
+    })
+    this.checkPoolTags = parentData
   }
 }

@@ -64,10 +64,9 @@
           <div class="info-label">退回备注：</div>
           <div class="info-value">{{ photoInfo.storeReworkNote }}</div>
         </el-col>
-        <!-- TODO -->
         <el-col class="tags-box" :span="8">
           <div class="info-label">技术评分：</div>
-          <div class="info-value">80</div>
+          <div class="info-value">{{ photoInfo.checkPoolScore }}</div>
         </el-col>
         <!-- TODO -->
         <el-col class="tags-box" :span="8">
@@ -77,13 +76,14 @@
         <el-col class="tags-box" :span="24">
           <div class="info-label">问题标记：</div>
           <div class="info-value info-tags">
-            <el-tag
-              v-for="(tagItem, tagIndex) in photoInfo.checkPoolTags"
-              :key="tagIndex"
-              size="mini"
-            >
-              {{ tagItem.name }}
-            </el-tag>
+            <div class="tags-class" v-for="tagClass in photoInfo.checkPoolTags" :key="tagClass.id">
+              {{ tagClass.name }}：
+              <div class="tags-items">
+                <el-tag v-for="tagItem in tagClass.child" :key="tagItem.id" size="mini">
+                  {{ tagItem.name }}
+                </el-tag>
+              </div>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -155,8 +155,18 @@ export default {
       flex-wrap: wrap;
       margin-bottom: -12px;
 
-      .el-tag {
-        margin: 0 12px 12px 0;
+      .tags-class {
+        display: flex;
+
+        .tags-items {
+          display: flex;
+          flex-wrap: wrap;
+          margin-bottom: -12px;
+
+          .el-tag {
+            margin: 0 12px 12px 0;
+          }
+        }
       }
     }
   }

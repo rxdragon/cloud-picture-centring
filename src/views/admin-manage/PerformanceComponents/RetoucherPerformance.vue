@@ -62,8 +62,9 @@
 import StaffSelect from '@SelectBox/StaffSelect'
 import UploadExcel from '@/components/UploadExcel'
 import AlterPerformance from '@/components/AlterPerformance'
-import moment from 'moment'
 import PerformanceMix from '@/mixins/performance-mixins'
+import { getSearchMonth } from '@/utils/exportPerformanceExcel'
+
 
 export default {
   name: 'RetoucherPerformance',
@@ -85,8 +86,7 @@ export default {
     }
   },
   created () {
-    const nowDate = moment(new Date())
-    this.timeSpan = nowDate.format('YYYYMM')
+    this.timeSpan = getSearchMonth()
     this.searchPerformance(1)
   },
   methods: {

@@ -102,9 +102,6 @@ export function getModifyRetouchQuotaInfo (params) {
     url: '/project_cloud/retoucher/getModifyRetouchQuotaInfo',
     method: 'GET',
     params
-  }).then(msg => {
-    // TODO 链条
-    return msg
   })
 }
 

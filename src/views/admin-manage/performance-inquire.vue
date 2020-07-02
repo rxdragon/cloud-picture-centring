@@ -56,8 +56,7 @@ export default {
   props: {},
   data () {
     return {
-      // TODO 默认页面
-      activeName: 'RetoucherGroupPerformance'
+      activeName: 'PartnerPerformance'
     }
   },
   computed: {

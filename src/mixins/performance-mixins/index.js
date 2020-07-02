@@ -1,5 +1,6 @@
 import exportPerformanceExcel, { headerCellkeys, getGradeMouth } from "@/utils/exportPerformanceExcel.js"
 import moment from 'moment'
+import { getSearchMonth } from '@/utils/exportPerformanceExcel'
 import * as Performance from '@/api/performance.js'
 
 export default {
@@ -95,8 +96,7 @@ export default {
           }
         })
         await this.saveRetouchPerformance(staffScores)
-        const nowDate = moment(new Date())
-        this.timeSpan = nowDate.format('YYYYMM')
+        this.timeSpan = getSearchMonth()
         this.searchPerformance()
       } catch (error) {
         if (error.message) this.$newMessage.warning(error.message)
