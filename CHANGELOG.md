@@ -223,6 +223,7 @@
  增加标签秒速 | [7a6b29f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7a6b29f)
  完成云学院ui布局 | [6c9e12c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c9e12c)
  将最终成片文案改为顾客满意片 | [5766118](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5766118)
+ 常量命名规范 | [2f75e83](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2f75e83)
  更改eslint | [adf9d26](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/adf9d26)
  更改文案 | [b505f95](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b505f95)
  更改样式 | [a021d75](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a021d75)
