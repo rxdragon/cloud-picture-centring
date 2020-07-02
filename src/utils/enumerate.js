@@ -155,7 +155,7 @@ const PLANT_ID_MAP = {
   NONE_ID: '3' // 一般id
 }
 // 种拔草id对应type
-export const PLANT_IDTypeEnum = {
+export const PlantIdTypeEnum = {
   [PLANT_ID_MAP.PLANT_ID]: 'plant',
   [PLANT_ID_MAP.PULL_ID]: 'pull',
   [PLANT_ID_MAP.NONE_ID]: 'none'
