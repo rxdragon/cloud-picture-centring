@@ -154,10 +154,13 @@ export function getLittleBeeInfo (params) {
     const data = keyToHump(msg)
     const createData = [{
       label: '金额',
-      value: data.bonus
+      value: `¥${data.bonus}` || '-'
+    }, {
+      label: '绩效平均分',
+      value: Number(data.avgKpi).toFixed(2) || '-'
     }, {
       label: '排名',
-      value: data.rank
+      value: data.rank || '-'
     }]
     return createData
   })

@@ -28,11 +28,19 @@ const CheckPoolException = [
   [0xE11001003, '抽查更换一个时，当前项不是可更换状态'],
   [0xE11001004, '抽查更换一个时，没有更多可以更换的'],
   [0xE11001005, '需要查看的时间 > 31天了'],
-  [0xA11006006, '还存在打分中的抽片，不能删除评分配置']
+  [0xA11006006, '还存在打分中的抽片，不能修改配置'],
+  [0xA11006007, '该抽片不存在']
+]
+
+const ScoreConfigException = [
+  [0xA11016001, '保存配置失败'],
+  [0xA11016002, '分值设置存在交叉'],
+  [0xA11016003, '该激励词已存在']
 ]
 
 const CommonException = [
-  [0xA11011001, '请登录']
+  [0xA11011001, '请登录'],
+  [0x191, '暂无权限']
 ]
 
 const HourGlassException = [
@@ -79,7 +87,14 @@ const StaffException = [
   [0xA11003008, '账号编辑失败'],
   [0xA11003009, '账号编辑失败'],
   [0xA11003010, '账号已在云端存在'],
-  [0xA11003011, '伙伴未在线']
+  [0xA11003011, '伙伴未在线'],
+  [0xA11003012, '伙伴被禁用'],
+  [0xA11003013, 'id非本组伙伴'],
+  [0xA11003014, '无待评价修图主管'],
+  [0xA11003015, '无待评价伙伴'],
+  [0xA11003016, '不能调整非当月分数'],
+  [0xA11003017, '不在打分时间'],
+  [0xA11003018, 'name非本组伙伴']
 ]
 
 const StreamException = [
@@ -109,6 +124,7 @@ export const errText = [
   ...ApiException,
   ...CardException,
   ...CheckPoolException,
+  ...ScoreConfigException,
   ...CommonException,
   ...HourGlassException,
   ...ImpulseException,

@@ -32,7 +32,21 @@ export function formatTime (time) {
   return date.format('YYYY.MM.DD HH:mm')
 }
 
+/**
+ * @description 获取现在时间
+ */
 export function getNowDate () {
   const date = moment(new Date())
   return date.format('YYYY-MM-DD')
+}
+
+/**
+ * @description 获取现在时间
+ */
+export function delayLoading () {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, 300)
+  })
 }

@@ -239,3 +239,27 @@ export function changeGroupStaffWorkLoad (params) {
     data: params
   })
 }
+
+/**
+ * @description 修改组员工作量
+ */
+export function getLittleBeeInfo (params) {
+  return axios({
+    url: '/project_cloud/retouchLeader/getLittleBeeInfo',
+    method: 'GET',
+    params
+  }).then(msg => {
+    const data = keyToHump(msg)
+    const createData = [{
+      label: '奖励系数',
+      value: `¥${data.rate}` || '-'
+    }, {
+      label: '绩效平均分',
+      value: Number(data.avgKpi).toFixed(2) || '-'
+    }, {
+      label: '排名',
+      value: data.rank || '-'
+    }]
+    return createData
+  })
+}

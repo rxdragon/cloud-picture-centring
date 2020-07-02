@@ -37,6 +37,18 @@
         <span>问题标签</span>
         <issue-label-select v-model="issueValue" />
       </div>
+      <div class="product-search search-item">
+        <span>评分人</span>
+        <el-select multiple v-model="currentScorer" placeholder="请选择伙伴">
+          <el-option
+            v-for="item in scorer"
+            :key="item.id"
+            :label="item.nickname"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </div>
     </div>
     <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
       <GradeBox :photo-info="photoItem" @updateList="getSearchHistory" />
@@ -77,6 +89,7 @@ import ReportBox from './components/ReportBox.vue'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as AssessmentCenter from '@/api/assessmentCenter'
+import * as GradeConfiguration from '@/api/gradeConfiguration.js'
 
 export default {
   name: 'AssessmentHistory',
@@ -98,7 +111,9 @@ export default {
       uuid: '',
       cacheTimeSpan: [],
       cacheSendStaff: '',
-      drawer: false
+      drawer: false,
+      scorer: [],
+      currentScorer: [],
     }
   },
   created () {
@@ -106,6 +121,7 @@ export default {
     const endAt = moment().locale('zh-cn').format('YYYY-MM-DD')
     this.timeSpan = [startAt, endAt]
     this.initial()
+    this.getStaffList()
   },
   activated () {
     this.initial()
@@ -148,6 +164,9 @@ export default {
       }
       if (this.issueValue.length) { req.tagIds = this.issueValue }
       if (this.productValue.length) { req.productIds = this.productValue }
+      if (this.currentScorer.length) {
+        req.operatorIds = this.currentScorer
+      }
       this.cacheTimeSpan = this.timeSpan
       return req
     },
@@ -183,13 +202,19 @@ export default {
      */
     showDrawer () {
       this.drawer = true
+    },
+    /**
+     * @description 确认清除
+     */
+    async getStaffList () {
+      const msg = await GradeConfiguration.getTakeStaffList()
+      this.scorer = msg
     }
   }
 }
 </script>
 
 <style lang="less">
-
 
 .assessment-history {
   .search-box {

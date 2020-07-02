@@ -113,6 +113,11 @@ export function commitHistory (params) {
  * @param {*} params
  */
 export function getSearchHistory (params) {
+  const typeNameMap = {
+    'plant': '种草',
+    'pull': '拔草',
+    'none': '普通'
+  }
   return axios({
     url: '/project_cloud/checkPool/getSearchHistory',
     method: 'POST',
@@ -120,10 +125,24 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
+      // 取出tag中种拔草等标签
+      const pureTag = item.tags
+      let typeTag = []
+      // 加上激励词
+      if (item.exTags && item.exTags.length) {
+        typeTag = typeTag.concat(item.exTags)
+      }
+      // 纯种拔草的时候会在commitInfo中返回type
+      if (item.commitInfo && item.commitInfo.type) {
+        typeTag.unshift({
+          name: typeNameMap[item.commitInfo.type]
+        })
+      }
+      item.typeTag = typeTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
-      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
+      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, pureTag)
       item.issueLabel = item.commitInfo.issueLabel
       item.score = item.commitInfo.score
       item.photoInfo.photoVersion.forEach(versionItem => { versionItem.commitInfo = item.commitInfo })
@@ -160,10 +179,30 @@ export function getScoreConfigList () {
     url: '/project_cloud/checkPool/getScoreConfigList',
     method: 'GET'
   }).then(msg => {
-    msg.forEach(item => {
-      item.child.forEach(issItem => { issItem.isSelect = false })
+    let typeArr = []
+    let allLabel = {}
+    // 将数据拆开
+    msg.forEach((msgItem) => {
+      const {
+        name,
+        id,
+        score_config: scoreConfig
+      } = msgItem
+      scoreConfig.forEach(scoreConfigItem => {
+        scoreConfigItem.child.forEach(issItem => { issItem.isSelect = false })
+      })
+      typeArr.push({
+        name,
+        id,
+        isSelect: false
+      })
+      allLabel[id] = scoreConfig
     })
-    return msg
+
+    return {
+      typeArr,
+      allLabel,
+    }
   })
 }
 
@@ -180,10 +219,17 @@ export function getIssueList () {
     method: 'GET'
   }).then(msg => {
     const createData = msg.map(item => {
-      item.children = item.child.map(issueItem => {
+      item.children = item.score_config.map(configItem => {
+        configItem.children = configItem.child.map(chilItem => {
+          return {
+            value: chilItem.id,
+            label: chilItem.name
+          }
+        })
         return {
-          value: issueItem.id,
-          label: issueItem.name
+          value: configItem.id,
+          label: configItem.name,
+          children: configItem.children
         }
       })
       return {
@@ -280,5 +326,18 @@ export function updateCommitHistory (params) {
     url: '/project_cloud/checkPool/updateCommitHistory',
     method: 'POST',
     data: params
+  })
+}
+/**
+ * @description 获取摄影机构列表
+ * @method GET
+ * @returns {Obeject} 结果
+ * @author cl 2020/06/24
+ * @version @version 2.8.0
+ */
+export function getPhotographerOrgList () {
+  return axios({
+    url: '/project_cloud/operator/getPhotographerOrgList',
+    method: 'GET',
   })
 }

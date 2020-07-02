@@ -2,10 +2,7 @@
   <div class="grade-configuration">
     <div class="header">
       <h3>云学院评分配置</h3>
-      <div class="deploy-weight">
-        <span class="weight-info">当前权重比 1(点) : {{ weight }}(分)</span>
-        <el-button type="primary" @click="showWeight">配置权重分值</el-button>
-      </div>
+      <el-button type="primary" @click="openEmptyDialog">清空评分</el-button>
     </div>
     <div class="main module-panel">
       <div class="add-configuration-item">
@@ -31,20 +28,45 @@
           </div>
           <el-button slot="reference" type="primary">添加评分类</el-button>
         </el-popover>
+        <div class="right">
+          <div class="grade-limit">
+            <el-button type="primary" plain @click="gradeLimitDialog = true">设置分数限制</el-button>
+            <span class="weight-info">{{ showScoreLimit.bottom }}(分) ~ {{ showScoreLimit.top }}(分)</span>
+          </div>
+          <div class="deploy-weight">
+            <el-button type="primary" @click="showWeight">配置权重分值</el-button>
+            <span class="weight-info">1(点) : {{ weight }}(分)</span>
+          </div>
+        </div>
       </div>
-      <div class="configuration-main" v-if="scoreConfigList.length">
-        <issue-class
-          v-for="issueClass in scoreConfigList"
-          @getList="getScoreConfigList"
-          :key="issueClass.key"
-          :issue-class-data="issueClass"
-        />
+      <el-tabs v-model="tabName" >
+        <el-tab-pane
+          v-for="(tab, index) in tabMap"
+          :label="tab.name"
+          :name="tab.type"
+          :key="index"
+        >
+        </el-tab-pane>
+      </el-tabs>
+      <div v-if="tabName === 'goodWord'">
+        <good-word></good-word>
       </div>
-      <div class="no-data-box" v-else>
-        <img src="@/assets/404_images/no-data.png" alt="">
-        <span class="desc">当前暂无评分项</span>
+      <div v-else class="score-area">
+        <div class="configuration-main" v-if="scoreConfigList.length">
+          <issue-class
+            v-for="issueClass in scoreConfigList"
+            @getList="getScoreConfigList"
+            :key="issueClass.key"
+            :issue-class-data="issueClass"
+          />
+        </div>
+        <div class="no-data-box" v-else>
+          <img src="@/assets/404_images/no-data.png" alt="">
+          <span class="desc">当前暂无评分项</span>
+        </div>
       </div>
     </div>
+    
     <!-- 配置弹出框 -->
     <el-dialog
       width="35%"
@@ -74,17 +96,63 @@
         <el-button type="primary" @click="setWeight">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 清空弹出框 -->
+    <el-dialog
+      width="35%"
+      title="清空评分内容"
+      center
+      custom-class="empty-dialog"
+      :visible.sync="showEmptyDialog"
+    >
+      <div class="">
+        <span>选择清空对象:</span>
+        <el-select multiple v-model="emptyPeople">
+          <el-option
+            v-for="(item, index) in emptyPeopleMap"
+            :label="item.nickname"
+            :value="item.id"
+            :key="index"
+          />
+        </el-select>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="info" @click="showEmptyDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setEmpty">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 分数限制 -->
+    <el-dialog
+      width="35%"
+      title="设置分数限制"
+      custom-class="grade-limit-dialog"
+      center
+      :visible.sync="gradeLimitDialog"
+    >
+      <div class="grade-limit-dialog-cont">
+        <span>分数范围:</span>
+        <el-input type="tel"  v-model="gradeLimit.bottom" placeholder="下限"></el-input>
+        ~
+        <el-input type="tel" v-model="gradeLimit.top" placeholder="上限"></el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="info" @click="gradeLimitDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setGradeLimit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import IssueClass from './components/GradeConfig/IssueClass'
+import GoodWord from './components/GoodWord'
 import uuidv4 from 'uuid'
 import * as GradeConfiguration from '@/api/gradeConfiguration.js'
+import { mapGetters } from 'vuex'
+import { PlantTypeIdEnum } from '@/utils/enumerate'
 
 export default {
   name: 'GradeConfiguration',
-  components: { IssueClass },
+  components: { IssueClass, GoodWord },
   provide () {
     return {
       weightProvide: this.weightObject
@@ -93,14 +161,64 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
+      emptyPeople: [],
+      showEmptyDialog: false,
+      gradeLimitDialog: false,
+      gradeLimit: {
+        bottom: 0,
+        top: 0
+      },
       showConfigWeight: false,
       weight: '',
       cacheWeight: '',
-      scoreConfigList: [],
+      allScoreConfigList: {},
       showAddNewClassProp: false,
       newIssueItem: 1,
       weightObject: {
         score: 0
+      },
+      tabName: 'plant',
+      tabMap: [
+        {
+          name: '种草',
+          type: 'plant',
+        },
+        {
+          name: '一般',
+          type: 'none',
+        },
+        {
+          name: '拔草',
+          type: 'pull',
+        },
+        {
+          name: '激励词',
+          type: 'goodWord'
+        }
+      ],
+      emptyPeopleMap: []
+    }
+  },
+  computed: {
+    ...mapGetters(['showSpotRecheck']),
+    scoreConfigList () {
+      if (Object.keys(this.allScoreConfigList).length) {
+        return this.allScoreConfigList[this.tabName].list
+      } else {
+        return []
+      }
+    },
+    showScoreLimit () {
+      if (Object.keys(this.allScoreConfigList).length && this.tabName !== 'goodWord') {
+        return {
+          top: this.allScoreConfigList[this.tabName].maxScore,
+          bottom: this.allScoreConfigList[this.tabName].minScore
+        }
+      } else {
+        return {
+          top: '--',
+          bottom: '--'
+        }
       }
     }
   },
@@ -140,9 +258,11 @@ export default {
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = { score: this.cacheWeight }
-        await GradeConfiguration.setWeightsScore(req)
-        this.weight = this.cacheWeight
-        this.showConfigWeight = false
+        const res = await GradeConfiguration.setWeightsScore(req)
+        if (res) {
+          this.weight = this.cacheWeight
+          this.showConfigWeight = false
+        }
       } catch (error) {
         if (error.message) {
           this.$newMessage.warning(error.message)
@@ -169,7 +289,7 @@ export default {
     async getScoreConfigList () {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        this.scoreConfigList = await GradeConfiguration.getScoreConfigList()
+        this.allScoreConfigList = await GradeConfiguration.getScoreConfigList()
       } catch (error) {
         console.error(error)
       } finally {
@@ -185,7 +305,8 @@ export default {
         name: '',
         child: [],
         isEdit: true,
-        isNewAdd: true
+        isNewAdd: true,
+        scoreTypeId: PlantTypeIdEnum[this.tabName]
       }
       for (let index = 0; index < this.newIssueItem; index++) {
         createData.child.push({
@@ -197,6 +318,94 @@ export default {
       }
       this.scoreConfigList.push(createData)
       this.showAddNewClassProp = false
+    },
+    /**
+     * @description 确认清除
+     */
+    async setEmpty () {
+      if (!this.emptyPeople.length) {
+        this.$newMessage.warning('请选择清空对象')
+        return
+      }
+      let params = {}
+      if (this.emptyPeople.indexOf('all') < 0) {
+        params.staffIds = this.emptyPeople
+      }
+      const msg = GradeConfiguration.emptyCheckPoolByStaffId(params)
+      if (msg) {
+        this.$newMessage.success('清除成功')
+        this.emptyPeople = []
+        this.showEmptyDialog = false
+      }
+    },
+    /**
+     * @description 确认清除
+     */
+    async openEmptyDialog () {
+      const msg = await GradeConfiguration.getTakeStaffList()
+      this.emptyPeopleMap = msg
+      this.emptyPeopleMap.unshift({
+        id: 'all',
+        nickname: '全部人员'
+      })
+      this.showEmptyDialog = true
+    },
+    /**
+     * @description 设置限制
+     */
+    async setGradeLimit () {
+      let { bottom, top } = this.gradeLimit
+      bottom = parseFloat(bottom)
+      top = parseFloat(top)
+      if (!this.judgeLimit(bottom, top)) return
+      const req = {
+        scoreTypeId: String(PlantTypeIdEnum[this.tabName]),
+        minScore: bottom,
+        maxScore: top,
+      }
+      const msg = await GradeConfiguration.editScoreLimit(req)
+      if (msg) {
+        this.getScoreConfigList()
+        this.gradeLimitDialog = false
+        this.gradeLimit = {
+          bottom: 0,
+          top: 0,
+        }
+      }
+    },
+    /**
+     * @description 设置限制
+     */
+    judgeLimit (bottom, top) {
+      if (this.tabName === 'goodWord') {
+        this.$message({
+          type: 'warning',
+          message: '激励词不能设置分数限制!'
+        })
+        return false
+      }
+      if (Math.floor(bottom) !== bottom || Math.floor(top) !== top) {
+        this.$message({
+          type: 'warning',
+          message: '分数设置需要为整数!'
+        })
+        return false
+      }
+      if (bottom < 0 || bottom > 100 || top < 0 || top > 100) {
+        this.$message({
+          type: 'warning',
+          message: '分数设置只能再0-100之间的整数!'
+        })
+        return false
+      }
+      if (bottom > top) {
+        this.$message({
+          type: 'warning',
+          message: '下限不能高于上限'
+        })
+        return false
+      }
+      return true
     }
   }
 }
@@ -205,21 +414,6 @@ export default {
 <style lang="less" scoped>
 .grade-configuration {
   height: calc(100% - 14px);
-
-  .header {
-    .deploy-weight {
-      display: flex;
-      align-items: center;
-
-      .weight-info {
-        margin-right: 20px;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-        color: #606266;
-      }
-    }
-  }
 
   .main {
     height: 100%;
@@ -230,8 +424,31 @@ export default {
       position: sticky;
       top: 0;
       z-index: 100;
+      display: flex;
+      justify-content: space-between;
       padding: 19px 0 24px;
       background-color: #fff;
+
+      .right {
+        display: flex;
+        align-items: center;
+
+        .deploy-weight,
+        .grade-limit {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin-right: 10px;
+
+          .weight-info {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            color: #606266;
+          }
+        }
+      }
     }
 
     .no-data-box {
@@ -252,6 +469,24 @@ export default {
         font-weight: 400;
         line-height: 20px;
         color: #606266;
+      }
+    }
+  }
+
+  .empty-dialog {
+    .el-select {
+      margin-left: 10px;
+    }
+  }
+
+  .grade-limit-dialog {
+    .grade-limit-dialog-cont {
+      display: flex;
+      align-items: center;
+
+      .el-input {
+        width: 100px;
+        margin: 10px;
       }
     }
   }

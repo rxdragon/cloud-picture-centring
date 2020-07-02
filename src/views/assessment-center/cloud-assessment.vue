@@ -25,6 +25,17 @@
           <el-option :label="5" :value="5" />
         </el-select>
       </div>
+      <div class="search-item">
+        <span>修图机构</span>
+        <el-select v-model="psOrganization" placeholder="请选择修图机构">
+          <el-option
+            v-for="(item, index) in psOrganizationMap"
+            :label="item.name"
+            :value="item.id"
+            :key="index"
+          />
+        </el-select>
+      </div>
       <div class="button-box">
         <el-button :disabled="Boolean(photoData.length)" type="primary" @click="takePhoto">抽 取</el-button>
       </div>
@@ -106,6 +117,7 @@ export default {
       timeSpan: null, // 时间
       institutionType: 0, // 修图标准
       sampleNum: '', // 伙伴抽样量
+      psOrganization: '', // 摄影机构
       spotAllNum: '-',
       allPhotoPath: [],
       pager: {
@@ -121,7 +133,8 @@ export default {
       gradeUUid: '', // 正在打分uuid
       showGradePreview: false, // 是否显示打分概况
       dialogTableVisible: false, // 抽取成功弹框
-      showPhotoVersion: '' // 展示图片版本
+      showPhotoVersion: '', // 展示图片版本
+      psOrganizationMap: [] // 摄影机构列表
     }
   },
   computed: {
@@ -190,7 +203,10 @@ export default {
           photoId: selectPhoto.photo_id,
           uuid: selectPhoto._id,
           tags: sendData.issuesLabelId,
-          picUrl: sendData.markPhotoImg
+          picUrl: sendData.markPhotoImg,
+          exTags: sendData.typeLabelId,
+          spotUuid: this.uuid,
+          type: sendData.type
         }
         this.$refs['grade-preview'].allLoading = true
         await AssessmentCenter.commitHistory(req)
@@ -225,7 +241,8 @@ export default {
       this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getStatistics(),
-        this.getHaveCheckResult()
+        this.getHaveCheckResult(),
+        this.fetchPhotographyAgency()
       ])
     },
     /**
@@ -234,6 +251,16 @@ export default {
     async getStatistics () {
       try {
         this.todayInfo = await AssessmentCenter.getStatistics()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    /**
+     * @description 获取今日评价数据
+     */
+    async fetchPhotographyAgency () {
+      try {
+        this.psOrganizationMap = await AssessmentCenter.getPhotographerOrgList()
       } catch (error) {
         console.error(error)
       }
@@ -257,6 +284,9 @@ export default {
       }
       if (this.institutionType) {
         req.retouchStandard = this.institutionType
+      }
+      if (this.psOrganization) {
+        req.orgId = this.psOrganization
       }
       return req
     },
@@ -360,9 +390,18 @@ export default {
 
 <style lang="less">
 
-
 .cloud-assessment {
   .search-box {
+    flex-wrap: wrap;
+
+    .search-item {
+      margin-bottom: 10px;
+    }
+
+    .button-box {
+      margin-bottom: 10px;
+    }
+
     .sample-num {
       display: flex;
       align-items: center;
