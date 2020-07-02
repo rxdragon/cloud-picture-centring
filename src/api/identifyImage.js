@@ -37,8 +37,7 @@ export function getPhotoStreamInfo (params) {
     const streamInfo = { ...new StreamModel(msg.stream_info) }
     const orderInfo = { ...new OrderModel(msg.stream_info.order) }
     const photoInfo = new PhotoModel(msg.photo_info)
-    // 疑问
-    // photoInfo.getCheckPoolTags()
+    photoInfo.getCheckPoolTags()
 
     const createData = {
       streamInfo,
