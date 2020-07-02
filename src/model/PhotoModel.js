@@ -23,7 +23,7 @@ export default class PhotoModel {
     this.isPull = _.get(photoData, 'tags.statics', []).includes('pull')
     this.isPlant = _.get(photoData, 'tags.statics', []).includes('plant')
 
-    const otherPhotoVersion = _.get(photoData.other_photo_version) || []
+    const otherPhotoVersion = photoData.other_photo_version || []
     this.originalPhoto = otherPhotoVersion.find(item => item.version === 'original_photo')
     this.firstPhoto = photoData.first_photo
     this.completePhoto = otherPhotoVersion.find(item => item.version === 'complete_photo')

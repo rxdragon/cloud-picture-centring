@@ -206,7 +206,8 @@ export default {
           tags: sendData.issuesLabelId,
           picUrl: sendData.markPhotoImg,
           exTags: sendData.typeLabelId,
-          spotUuid: this.uuid
+          spotUuid: this.uuid,
+          type: sendData.type
         }
         this.$refs['grade-preview'].allLoading = true
         await AssessmentCenter.commitHistory(req)

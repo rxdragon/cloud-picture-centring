@@ -281,6 +281,11 @@ import * as GradeConfiguration from '@/api/gradeConfiguration'
 
 let allLabel = null
 let goodWord = []
+const currentIdTypeMap = {
+  '1': 'plant',
+  '2': 'pull',
+  '3': 'none'
+}
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas },
@@ -350,7 +355,8 @@ export default {
       ],
       isSubmit: false, // 是否提交
       allLoading: false, // 整个页面loading
-      currentId: '' // 当前种拔草的id 1种草,2拔草,3一般
+      currentId: '', // 当前种拔草的id 1种草,2拔草,3一般
+      hasPushGoodWord: false // 是否推入过激励词
     }
   },
   computed: {
@@ -493,7 +499,8 @@ export default {
         const sendData = {
           issuesLabelId,
           markPhotoImg,
-          typeLabelId
+          typeLabelId,
+          type: currentIdTypeMap[this.currentId]
         }
         this.$emit('submit', sendData)
       } catch (error) {
@@ -550,12 +557,12 @@ export default {
       })
       this.currentId = id
       this.labelData = allLabel[id]
-      if (id === 1) { // 种草情况下,将激励词推进标签中
-
+      if (id === 1 && !this.hasPushGoodWord) { // 种草情况下,将激励词推进标签中
         this.labelData.push({
           name: '激励词',
           child: goodWord
         })
+        this.hasPushGoodWord = true
       }
       this.showCanvas = false
       this.resetLabelData()

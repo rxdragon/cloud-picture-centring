@@ -178,7 +178,8 @@ export default {
         // TODO
         // const domain = this.$isDev ? 'upload_dev/' : 'upload/'
         // const req = { imagePath: domain + findSelectPhoto.path }
-        const req = { imagePath: 'upload_dev/2020/06/17/lkLb5AfrSqhmamZTsZ_XqzFDnSdv.jpg' }
+        // const req = { imagePath: 'upload_dev/2020/06/17/lkLb5AfrSqhmamZTsZ_XqzFDnSdv.jpg' }
+        const req = { imagePath: 'upload_dev/2020/07/01/ljB4x8BME8iOylWygHx2I-_quQmV.jpg' }
         const data = await IdentifyImage.getPhotoStreamInfo(req)
         this.selectOrderInfo = data
       } catch (error) {

@@ -39,7 +39,7 @@
       </div>
       <div class="product-search search-item">
         <span>评分人</span>
-        <el-select v-model="currentScorer" placeholder="请选择伙伴">
+        <el-select multiple v-model="currentScorer" placeholder="请选择伙伴">
           <el-option
             v-for="item in scorer"
             :key="item.id"
@@ -113,7 +113,7 @@ export default {
       cacheSendStaff: '',
       drawer: false,
       scorer: [],
-      currentScorer: '',
+      currentScorer: [],
     }
   },
   created () {
@@ -164,6 +164,9 @@ export default {
       }
       if (this.issueValue.length) { req.tagIds = this.issueValue }
       if (this.productValue.length) { req.productIds = this.productValue }
+      if (this.currentScorer.length) {
+        req.operatorIds = this.currentScorer
+      }
       this.cacheTimeSpan = this.timeSpan
       return req
     },

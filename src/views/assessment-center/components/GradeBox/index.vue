@@ -142,7 +142,8 @@ export default {
           uuid: this.photoInfo._id,
           tags: sendData.issuesLabelId,
           picUrl: sendData.markPhotoImg,
-          exTags: sendData.typeLabelId
+          exTags: sendData.typeLabelId,
+          type: sendData.type
         }
         await AssessmentCenter.updateCommitHistory(req)
         this.$newMessage.success('重新评价成功')

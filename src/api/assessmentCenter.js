@@ -113,6 +113,11 @@ export function commitHistory (params) {
  * @param {*} params
  */
 export function getSearchHistory (params) {
+  const typeNameMap = {
+    'plant': '种草',
+    'pull': '拔草',
+    'none': '普通'
+  }
   return axios({
     url: '/project_cloud/checkPool/getSearchHistory',
     method: 'POST',
@@ -122,18 +127,25 @@ export function getSearchHistory (params) {
     data.forEach(item => {
       // 取出tag中种拔草等标签
       const pureTag = item.tags
-      const tempArr = []
-      let typeTag = item.tags.reduce((sumArr, item) => {
-        // 需要去重
-        if (item.type && tempArr.indexOf(item.type.id) < 0) {
-          tempArr.push(item.type.id)
-          sumArr.push(item.type)
-        }
-        return sumArr
-      }, [])
+      // const tempArr = []
+      let typeTag = []
+      // let typeTag = item.tags.reduce((sumArr, item) => {
+      //   // 需要去重
+      //   if (item.type && tempArr.indexOf(item.type.id) < 0) {
+      //     tempArr.push(item.type.id)
+      //     sumArr.push(item.type)
+      //   }
+      //   return sumArr
+      // }, [])
       // 加上激励词
       if (item.exTags && item.exTags.length) {
         typeTag = typeTag.concat(item.exTags)
+      }
+      // 纯种拔草的时候会在commitInfo中返回type
+      if (item.commitInfo && item.commitInfo.type) {
+        typeTag.unshift({
+          name: typeNameMap[item.commitInfo.type]
+        })
       }
       item.typeTag = typeTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
