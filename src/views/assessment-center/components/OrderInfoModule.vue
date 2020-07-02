@@ -42,6 +42,7 @@ export default {
     infoData () {
       return this.orderInfo
     },
+    // 特效备注
     specialEfficacy () {
       const tempSpecialEfficacy = _.get(this.infoData, 'photoData.tags.values.special_efficacy')
       return tempSpecialEfficacy || ''

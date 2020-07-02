@@ -473,17 +473,11 @@ export default {
       try {
         const issuesLabel = this.getIssuesData()
         const issuesLabelId = issuesLabel.reduce((sumArr, item) => {
-          if (item.type !== 'goodWord') {
-            sumArr.push({
-              id: item.id
-            })
-          }
+          if (item.type !== 'goodWord') { sumArr.push({ id: item.id }) }
           return sumArr
         }, [])
         const typeLabelId = issuesLabel.reduce((sumArr, item) => {
-          if (item.type === 'goodWord') {
-            sumArr.push(item.id)
-          }
+          if (item.type === 'goodWord') { sumArr.push(item.id) }
           return sumArr
         }, [])
         this.isSubmit = true
@@ -530,17 +524,11 @@ export default {
      */
     async fetchGoodWord () {
       const words = await GradeConfiguration.getExcitationDirList()
-      const finalWord = words.reduce((arr, item) => {
-        const { name, id } = item
-        arr.push({
-          name,
-          id,
-          isSelect: false,
-          type: 'goodWord'
-        })
-        return arr
-      }, [])
-      goodWord = finalWord
+      words.forEach(wordsItem => {
+        wordsItem.isSelect = false
+        wordsItem.type = 'goodWord'
+      })
+      goodWord = words
     },
     /**
      * @description 根据种拔草,选择对应的标签

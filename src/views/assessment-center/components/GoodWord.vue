@@ -55,10 +55,7 @@ export default {
      * @description 词典列表
      */
     async getGoodWordList () {
-      const res = await GradeConfiguration.getExcitationDirList()
-      if (res) {
-        this.goodWordList = res
-      }
+      this.goodWordList= await GradeConfiguration.getExcitationDirList()
     },
     /**
      * @description 添加词典
