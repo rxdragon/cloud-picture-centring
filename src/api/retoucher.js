@@ -157,7 +157,7 @@ export function getLittleBeeInfo (params) {
       value: `¥${data.bonus}` || '-'
     }, {
       label: '绩效平均分',
-      value: data.avgKpi || '-'
+      value: Number(data.avgKpi).toFixed(2) || '-'
     }, {
       label: '排名',
       value: data.rank || '-'

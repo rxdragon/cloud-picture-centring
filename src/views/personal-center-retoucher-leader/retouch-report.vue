@@ -25,7 +25,7 @@ export default {
   data () {
     return {
       isShowTab: true,
-      activeName: 'CrewPerformanceManagement',//  初始化显示修图报告
+      activeName: 'RetouchStaffReport'
     }
   },
   methods: {

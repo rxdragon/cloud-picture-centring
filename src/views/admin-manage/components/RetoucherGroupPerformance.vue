@@ -84,6 +84,7 @@ export default {
     async searchPerformance () {
       try {
         if (!this.timeSpan) throw new Error('请选择时间')
+        if (moment(this.timeSpan[0]).get('year') !== moment(this.timeSpan[1]).get('year')) throw new Error('不能隔年查询')
         if (moment(this.timeSpan[0]).get('month') !== moment(this.timeSpan[1]).get('month')) throw new Error('不能隔月查询')
         this.loading = true
         const req = {

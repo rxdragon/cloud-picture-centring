@@ -31,7 +31,7 @@ export function getGradeMouth () {
  * @description 获取打分日期
  */
 export function getSearchMonth () {
-  const nowDate = moment(new Date())
+  const nowDate = moment()
   const day = nowDate.date()
   if (day < 20) {
     let month = nowDate.add(-1, 'month')

@@ -86,7 +86,7 @@
 <script>
 import * as Performance from '@/api/performance.js'
 import { getSearchMonth } from '@/utils/exportPerformanceExcel.js'
-import * as Retoucher from '@/api/retoucher.js'
+import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'PersonalCenterAudit',
@@ -127,7 +127,7 @@ export default {
         const req = {
           year: this.yearValue
         }
-        this.apisFloreaData = await Retoucher.getLittleBeeInfo(req)
+        this.apisFloreaData = await RetouchLeader.getLittleBeeInfo(req)
       } catch (error) {
         console.error(error)
         error.message && this.$newMessage.warning(error.message)
