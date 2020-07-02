@@ -44,11 +44,7 @@ export default {
     return {
       goodWord: '',
       showWordDialog: false,
-      goodWordList: [{
-        word: '666',
-        time: '2020-06-23 12:00',
-        acter: '查拉'
-      }]
+      goodWordList: []
     }
   },
   created () {

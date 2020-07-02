@@ -144,7 +144,6 @@ export default {
     }
   },
   created () {
-    // AssessmentCenter.test()
     this.resetPage()
   },
   methods: {
@@ -393,6 +392,16 @@ export default {
 
 .cloud-assessment {
   .search-box {
+    flex-wrap: wrap;
+
+    .search-item {
+      margin-bottom: 10px;
+    }
+
+    .button-box {
+      margin-bottom: 10px;
+    }
+
     .sample-num {
       display: flex;
       align-items: center;

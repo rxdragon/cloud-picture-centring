@@ -43,7 +43,7 @@
         <el-tab-pane
           v-for="(tab, index) in tabMap"
           :label="tab.name"
-          :name="tab.id"
+          :name="tab.type"
           :key="index"
         >
         </el-tab-pane>
@@ -109,7 +109,7 @@
         <el-select multiple v-model="emptyPeople">
           <el-option
             v-for="(item, index) in emptyPeopleMap"
-            :label="item.name"
+            :label="item.nickname"
             :value="item.id"
             :key="index"
           />
@@ -148,12 +148,7 @@ import GoodWord from './components/GoodWord'
 import uuidv4 from 'uuid'
 import * as GradeConfiguration from '@/api/gradeConfiguration.js'
 import { mapGetters } from 'vuex'
-
-const nameIdMap = {
-  good: 1, // 种草
-  bad: 2, // 拔草
-  normal: 3, // 普通
-}
+import { PlantTypeIdEnum } from '@/utils/enumerate'
 
 export default {
   name: 'GradeConfiguration',
@@ -182,26 +177,23 @@ export default {
       weightObject: {
         score: 0
       },
-      tabName: 'good',
+      tabName: 'plant',
       tabMap: [
         {
           name: '种草',
-          id: 'good',
-          type: 1
+          type: 'plant',
         },
         {
           name: '一般',
-          id: 'normal',
-          type: 3
+          type: 'none',
         },
         {
           name: '拔草',
-          id: 'bad',
-          type: 2
+          type: 'pull',
         },
         {
           name: '激励词',
-          id: 'goodWord'
+          type: 'goodWord'
         }
       ],
       emptyPeopleMap: []
@@ -314,7 +306,7 @@ export default {
         child: [],
         isEdit: true,
         isNewAdd: true,
-        scoreTypeId: nameIdMap[this.tabName]
+        scoreTypeId: PlantTypeIdEnum[this.tabName]
       }
       for (let index = 0; index < this.newIssueItem; index++) {
         createData.child.push({
@@ -351,20 +343,12 @@ export default {
      */
     async openEmptyDialog () {
       const msg = await GradeConfiguration.getTakeStaffList()
-      if (msg) {
-        this.emptyPeopleMap = msg
-        // 测试
-        this.emptyPeopleMap.unshift({
-          id: 613495,
-          name: '查拉'
-        })
-
-        this.emptyPeopleMap.unshift({
-          id: 'all',
-          name: '全部人员'
-        })
-        this.showEmptyDialog = true
-      }
+      this.emptyPeopleMap = msg
+      this.emptyPeopleMap.unshift({
+        id: 'all',
+        nickname: '全部人员'
+      })
+      this.showEmptyDialog = true
     },
     /**
      * @description 设置限制
@@ -375,7 +359,7 @@ export default {
       top = parseFloat(top)
       if (!this.judgeLimit(bottom, top)) return
       const req = {
-        scoreTypeId: String(nameIdMap[this.tabName]),
+        scoreTypeId: String(PlantTypeIdEnum[this.tabName]),
         minScore: bottom,
         maxScore: top,
       }

@@ -43,7 +43,7 @@
           <el-option
             v-for="item in scorer"
             :key="item.id"
-            :label="item.name"
+            :label="item.nickname"
             :value="item.id"
           >
           </el-option>
@@ -208,9 +208,7 @@ export default {
      */
     async getStaffList () {
       const msg = await GradeConfiguration.getTakeStaffList()
-      if (msg) {
-        this.scorer = msg
-      }
+      this.scorer = msg
     }
   }
 }

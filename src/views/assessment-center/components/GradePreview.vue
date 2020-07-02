@@ -278,14 +278,12 @@ import Driver from 'driver.js' // 引导框
 import FabricCanvas from './FabricCanvas'
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'
+import { PlantIdTypeEnum } from '@/utils/enumerate'
+
 
 let allLabel = null
 let goodWord = []
-const currentIdTypeMap = {
-  '1': 'plant',
-  '2': 'pull',
-  '3': 'none'
-}
+
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas },
@@ -500,7 +498,7 @@ export default {
           issuesLabelId,
           markPhotoImg,
           typeLabelId,
-          type: currentIdTypeMap[this.currentId]
+          type: PlantIdTypeEnum[this.currentId]
         }
         this.$emit('submit', sendData)
       } catch (error) {

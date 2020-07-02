@@ -127,16 +127,7 @@ export function getSearchHistory (params) {
     data.forEach(item => {
       // 取出tag中种拔草等标签
       const pureTag = item.tags
-      // const tempArr = []
       let typeTag = []
-      // let typeTag = item.tags.reduce((sumArr, item) => {
-      //   // 需要去重
-      //   if (item.type && tempArr.indexOf(item.type.id) < 0) {
-      //     tempArr.push(item.type.id)
-      //     sumArr.push(item.type)
-      //   }
-      //   return sumArr
-      // }, [])
       // 加上激励词
       if (item.exTags && item.exTags.length) {
         typeTag = typeTag.concat(item.exTags)
@@ -227,16 +218,6 @@ export function getIssueList () {
     url: '/project_cloud/checkPool/getScoreConfigList',
     method: 'GET'
   }).then(msg => {
-    // const finalArr = msg.reduce((msgArr, msgItem) => {
-    //   const tempMsgObj = {}
-    //   tempMsgObj.label = msgItem.name
-    //   tempMsgObj.value = msgItem.id
-    //   tempMsgObj.children = msgItem.score_config.reduce((configArr, configItem) => {
-    //     return
-    //   }, [])
-    //   msgArr.push(tempMsgObj)
-    //   return msgArr
-    // }, [])
     const createData = msg.map(item => {
       item.children = item.score_config.map(configItem => {
         configItem.children = configItem.child.map(chilItem => {
@@ -360,16 +341,3 @@ export function getPhotographerOrgList () {
     method: 'GET',
   })
 }
-// /**
-//  * @description 获取摄影机构列表
-//  * @method GET
-//  * @returns {Obeject} 结果
-//  * @author cl 2020/06/24
-//  * @version @version 2.8.0
-//  */
-// export function test () {
-//   return axios({
-//     url: 'http://10.20.200.250:18089/algo/id/get_crop/',
-//     method: 'GET',
-//   })
-// }

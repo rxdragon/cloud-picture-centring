@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
 import uuidv4 from 'uuid'
+import { PlantIdTypeEnum } from '@/utils/enumerate'
 
 /**
  * @description 获取云学院评分权重
@@ -39,11 +40,6 @@ export function setWeightsScore (params) {
  * @author cf 2020/04/13
  * @version @version 2.4.0
  */
-const idNameMap = {
-  1: 'good', // 种草
-  2: 'bad', // 拔草
-  3: 'normal', // 普通
-}
 export function getScoreConfigList () {
   return axios({
     url: '/project_cloud/checkPool/getScoreConfigList',
@@ -62,7 +58,7 @@ export function getScoreConfigList () {
       tempObj.list = msgItem.score_config
       tempObj.maxScore = msgItem.max_score
       tempObj.minScore = msgItem.min_score
-      finalMsg[idNameMap[msgItem.id]] = tempObj
+      finalMsg[PlantIdTypeEnum[msgItem.id]] = tempObj
       return finalMsg
     }, {})
     return finalMsg
@@ -195,6 +191,14 @@ export function getTakeStaffList () {
   return axios({
     url: '/project_cloud/checkPool/getTakeStaffList',
     method: 'GET',
+  }).then((res) => {
+    const list = res.map((item) => {
+      return {
+        nickname: item.nickname,
+        id: item.id,
+      }
+    })
+    return list
   })
 }
 /**

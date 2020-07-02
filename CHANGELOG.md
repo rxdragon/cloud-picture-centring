@@ -323,6 +323,7 @@
  修复预加载问题 | [3109147](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3109147)
  修复预览问题 | [3a258aa](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3a258aa)
  修复默认值问题 | [e95ee8f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e95ee8f)
+ 修改一些联调问题 | [5ec7fb1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5ec7fb1)
  修改修图收益 | [4fb24e8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4fb24e8)
  兼容 win | [c297ce3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c297ce3)
  兼容jpeg和jpg对应版本' | [6dee0a1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6dee0a1)

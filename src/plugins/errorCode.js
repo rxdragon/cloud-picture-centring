@@ -29,7 +29,12 @@ const CheckPoolException = [
   [0xE11001004, '抽查更换一个时，没有更多可以更换的'],
   [0xE11001005, '需要查看的时间 > 31天了'],
   [0xA11006006, '还存在打分中的抽片，不能修改配置'],
-  [0xA11006007, '该抽片不存在'],
+  [0xA11006007, '该抽片不存在']
+]
+
+const ScoreConfigException = [
+  [0xA11016001, '保存配置失败'],
+  [0xA11016002, '分值设置存在交叉'],
   [0xA11016003, '该激励词已存在']
 ]
 
@@ -119,6 +124,7 @@ export const errText = [
   ...ApiException,
   ...CardException,
   ...CheckPoolException,
+  ...ScoreConfigException,
   ...CommonException,
   ...HourGlassException,
   ...ImpulseException,

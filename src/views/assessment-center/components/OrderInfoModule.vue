@@ -44,11 +44,7 @@ export default {
     },
     specialEfficacy () {
       const tempSpecialEfficacy = _.get(this.infoData, 'photoData.tags.values.special_efficacy')
-      if (tempSpecialEfficacy) {
-        return tempSpecialEfficacy
-      } else {
-        return ''
-      }
+      return tempSpecialEfficacy || ''
     }
   }
 }

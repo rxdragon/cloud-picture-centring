@@ -148,3 +148,23 @@ export const StaffLevelEnum = {
   masterCraftsman: '工匠大师',
   chiefCraftsmanMaster: '首席工匠大师'
 }
+
+const PLANTIDMAP = {
+  PLANTID: '1', // 种草id
+  PULLID: '2', // 拔草id
+  NONEID: '3' // 一般id
+}
+// 种拔草id对应type
+export const PlantIdTypeEnum = {
+  [PLANTIDMAP.PLANTID]: 'plant',
+  [PLANTIDMAP.PULLID]: 'pull',
+  [PLANTIDMAP.NONEID]: 'none'
+}
+
+// 种拔草type对应id
+export const PlantTypeIdEnum = {
+  'plant': PLANTIDMAP.PLANTID,
+  'pull': PLANTIDMAP.PULLID,
+  'none': PLANTIDMAP.NONEID
+}
+
