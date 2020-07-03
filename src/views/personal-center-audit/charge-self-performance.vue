@@ -150,7 +150,7 @@ export default {
           page: 1,
           pageSize: 99
         }
-        const data = await Performance.getGroupScoreRanks(req)
+        const data = await Performance.getSelfGroupScoreRanks(req)
         this.performanceInfo = data[0] || {}
       } catch (error) {
         console.error(error)
