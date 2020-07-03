@@ -94,7 +94,7 @@ export function getGroupScoreRanks (params) {
         groupLeader: leaderNickName || leaderName || '-',
         groupLeaderJobNumber: _.get(listItem, 'leader_info.id') || '-',
         returnRate: Validate.toFixed(listItem.return_rate || 0),
-        kpiScore: Validate.toFixed(listItem.kpi_score || 0),
+        kpiScore: Validate.toFixed(listItem.leader_kpi_score || 0),
         averageScore: Validate.toFixed(listItem.average_score || 0)
       }
     })
