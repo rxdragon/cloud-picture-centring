@@ -26,15 +26,8 @@
         </el-select>
       </div>
       <div class="search-item">
-        <span>修图机构</span>
-        <el-select filterable v-model="psOrganization" placeholder="请选择修图机构">
-          <el-option
-            v-for="(item, index) in psOrganizationMap"
-            :label="item.name"
-            :value="item.id"
-            :key="index"
-          />
-        </el-select>
+        <span>摄影机构</span>
+        <institution-select v-model="psOrganization" institution-class="photographe" />
       </div>
       <div class="button-box">
         <el-button :disabled="Boolean(photoData.length)" type="primary" @click="takePhoto">抽 取</el-button>
@@ -101,6 +94,7 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import InstitutionType from '@SelectBox/InstitutionType'
+import InstitutionSelect from '@SelectBox/InstitutionSelect'
 import GradePreview from './components/GradePreview'
 import PhotoGradeBox from './components/PhotoGradeBox'
 import DownIpc from '@electronMain/ipc/DownIpc'
@@ -110,7 +104,7 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'CloudAssessment',
-  components: { DatePicker, InstitutionType, GradePreview, PhotoGradeBox },
+  components: { DatePicker, InstitutionType, InstitutionSelect, GradePreview, PhotoGradeBox },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -134,7 +128,7 @@ export default {
       showGradePreview: false, // 是否显示打分概况
       dialogTableVisible: false, // 抽取成功弹框
       showPhotoVersion: '', // 展示图片版本
-      psOrganizationMap: [] // 摄影机构列表
+      intervalGetSpotCheckTimer: null // 定时获取数据
     }
   },
   computed: {
@@ -241,8 +235,7 @@ export default {
       this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getStatistics(),
-        this.getHaveCheckResult(),
-        this.fetchPhotographyAgency()
+        this.getHaveCheckResult()
       ])
     },
     /**
@@ -251,16 +244,6 @@ export default {
     async getStatistics () {
       try {
         this.todayInfo = await AssessmentCenter.getStatistics()
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    /**
-     * @description 获取今日评价数据
-     */
-    async fetchPhotographyAgency () {
-      try {
-        this.psOrganizationMap = await AssessmentCenter.getPhotographerOrgList()
       } catch (error) {
         console.error(error)
       }
@@ -365,10 +348,19 @@ export default {
         this.photoData = data.list
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         this.photoData = []
+        if (error === '正在抽片中') { this.intervalGetSpotCheck() }
         console.error(error)
       }
+    },
+    /**
+     * @description 定时获取数据
+     */
+    intervalGetSpotCheck () {
+      clearTimeout(this.intervalGetSpotCheckTimer)
+      this.intervalGetSpotCheckTimer = setTimeout(() => {
+        this.getSpotCheckResult(1)
+      }, 500)
     },
     /**
      * @description 页面更换

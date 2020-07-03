@@ -34,7 +34,14 @@
         <el-table-column prop="updatedName" label="最后操作人" />
         <el-table-column label="操作">
           <template slot-scope="{ row }">
-            <el-button type="primary" size="mini" @click="alterPerformance(row)">修改</el-button>
+            <el-button
+              v-if="canEditScore"
+              type="primary"
+              size="mini"
+              @click="alterPerformance(row)"
+            >
+              修改
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

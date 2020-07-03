@@ -4,6 +4,7 @@
       v-if="canUpload"
       class="upload-main"
       drag
+      accept="image/*"
       :action="updateDomain"
       :show-file-list="false"
       :before-upload="beforeUpload"
@@ -27,6 +28,7 @@
 
 <script>
 import * as Commonality from '@/api/commonality'
+import * as PhotoTool from '@/utils/photoTool'
 import { mapGetters } from 'vuex'
 import IdentifyLoading from '@/components/IdentifyLoading'
 
@@ -71,8 +73,32 @@ export default {
     /**
      * @description 上传前
      */
-    beforeUpload () {
-      this.$emit('update:state', IDENTIFY_STATE.UPDATEING)
+    async beforeUpload (file) {
+      try {
+        const imgInfo = await PhotoTool.getImgBufferPhoto(file)
+        const type = imgInfo.typeInfo.mime
+        this.checkFileType(type) // 判断是否是图片
+        this.$emit('update:state', IDENTIFY_STATE.UPDATEING)
+        return Promise.resolve()
+      } catch (error) {
+        console.error(error)
+        this.$newMessage({
+          dangerouslyUseHTMLString: true,
+          message: error.message || error,
+          type: 'warning',
+          duration: 3000
+        })
+        return Promise.reject()
+      }
+    },
+    /**
+     * @description 检查是否是照片
+     */
+    checkFileType (type) {
+      const canUploadTpye = ['image/jpeg', 'image/png']
+      if (!canUploadTpye.includes(type)) {
+        throw new Error('上传图片只能是 JPG 或 PNG 格式!')
+      }
     },
     /**
      * @description 上传中

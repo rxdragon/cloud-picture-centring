@@ -1,5 +1,6 @@
 import exportPerformanceExcel, { headerCellkeys, getGradeMouth } from "@/utils/exportPerformanceExcel.js"
 import moment from 'moment'
+import { mapGetters } from 'vuex'
 import { getSearchMonth } from '@/utils/exportPerformanceExcel'
 import * as Performance from '@/api/performance.js'
 
@@ -7,10 +8,19 @@ export default {
   data() {
     return {
       headerKeys: headerCellkeys,
+      canEditScore: false,
       editInfo: {} // 编辑修图绩效信息
     }
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   methods: {
+    // 是否能打分
+    getCanEditScore () {
+      const nowDate = getSearchMonth()
+      this.canEditScore = nowDate === this.timeSpan
+    },
     /**
      * @description 获取修图绩效
      */
@@ -35,6 +45,7 @@ export default {
         const data = await Performance.getStaffPerformance(req)
         this.tableData = data.list
         if (this.pager) { this.pager.total = data.total }
+        this.getCanEditScore()
       } catch (error) {
         console.error(error)
       } finally {
@@ -64,6 +75,9 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Performance.getCanScoreStaff(this.searchType)
+        // 删除自身数据
+        const findSelfIndex = data.findIndex(item => item.staffNum === this.userInfo.id)
+        if (findSelfIndex >= 0) { data.splice(findSelfIndex, 1) }
         const gradeMouth = getGradeMouth()
         this.canUpdatePerformance()
         const title = this.searchType === 'retoucherLeader' ? `修图主管${gradeMouth}月` : `组员${gradeMouth}月`
@@ -87,6 +101,9 @@ export default {
           const isRightful = Number(item.score) <= 100 && Number(item.score) > 0
           return hasScore && isDecimal && isRightful
         })
+        // 是否有自身分数
+        const findSelfIndex = results.findIndex(item => item.staffNum === this.userInfo.id)
+        if (findSelfIndex >= 0) throw new Error('不能给自身打分')
         if (!hasEveryScore) throw new Error('分数没有填写完整，或没有填写正确分数值！')
         const staffScores = results.map(item => {
           return {

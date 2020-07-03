@@ -91,7 +91,7 @@ export default class StreamModel {
     this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.name') || _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
 
     this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(StreamStatics.STORERETURN)
-    this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_photo_num') || '-'
+    this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || '-'
     this.qualityNum = _.get(streamData, 'tags.values.quality_num') || 0
     this.notQualityNum = _.get(streamData, 'tags.values.not_quality_num') || 0
 
