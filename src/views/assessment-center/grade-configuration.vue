@@ -106,7 +106,12 @@
     >
       <div class="">
         <span>选择清空对象:</span>
-        <el-select multiple v-model="emptyPeople">
+        <el-select
+          filterable
+          placeholder="全部人员"
+          multiple
+          v-model="emptyPeople"
+        >
           <el-option
             v-for="(item, index) in emptyPeopleMap"
             :label="item.nickname"
@@ -323,12 +328,8 @@ export default {
      * @description 确认清除
      */
     async setEmpty () {
-      if (!this.emptyPeople.length) {
-        this.$newMessage.warning('请选择清空对象')
-        return
-      }
       let params = {}
-      if (this.emptyPeople.indexOf('all') < 0) {
+      if (this.emptyPeople.length > 0) {
         params.staffIds = this.emptyPeople
       }
       const msg = GradeConfiguration.emptyCheckPoolByStaffId(params)
@@ -344,10 +345,6 @@ export default {
     async openEmptyDialog () {
       const msg = await GradeConfiguration.getTakeStaffList()
       this.emptyPeopleMap = msg
-      this.emptyPeopleMap.unshift({
-        id: 'all',
-        nickname: '全部人员'
-      })
       this.showEmptyDialog = true
     },
     /**

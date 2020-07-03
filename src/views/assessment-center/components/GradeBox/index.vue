@@ -39,7 +39,7 @@
         <div class="panel-content">
           <div class="issue-class-box panel-row" v-if="photoInfoData.typeTag.length">
             <el-tag
-              class="type-tag"
+              :class="['type-tag', item.type]"
               size="medium"
               v-for="(item, index) in photoInfoData.typeTag"
               :key="index"
@@ -244,6 +244,24 @@ export default {
 
         .type-tag {
           margin-right: 10px;
+
+          &.plant {
+            color: #44c27e;
+            background-color: #fff;
+            border-color: #44c27e;
+          }
+
+          &.pull {
+            color: #ff3974;
+            background-color: #fff;
+            border-color: #ff3974;
+          }
+
+          &.none {
+            color: #909399;
+            background-color: #fff;
+            border-color: #909399;
+          }
         }
 
         .label-box {

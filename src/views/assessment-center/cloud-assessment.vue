@@ -27,7 +27,7 @@
       </div>
       <div class="search-item">
         <span>修图机构</span>
-        <el-select v-model="psOrganization" placeholder="请选择修图机构">
+        <el-select filterable v-model="psOrganization" placeholder="请选择修图机构">
           <el-option
             v-for="(item, index) in psOrganizationMap"
             :label="item.name"

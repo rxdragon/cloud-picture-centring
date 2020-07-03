@@ -39,7 +39,12 @@
       </div>
       <div class="product-search search-item">
         <span>评分人</span>
-        <el-select multiple v-model="currentScorer" placeholder="请选择伙伴">
+        <el-select
+          filterable
+          multiple
+          v-model="currentScorer"
+          placeholder="请选择伙伴"
+        >
           <el-option
             v-for="item in scorer"
             :key="item.id"
