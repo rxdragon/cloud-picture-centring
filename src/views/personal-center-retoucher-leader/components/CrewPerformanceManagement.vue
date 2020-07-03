@@ -32,7 +32,14 @@
         <el-table-column prop="updatedAt" label="最后操作时间" />
         <el-table-column label="操作">
           <template slot-scope="{ row }">
-            <el-button type="primary" size="mini" @click="alterPerformance(row)">修改</el-button>
+            <el-button
+              v-if="canEditScore"
+              type="primary"
+              size="mini"
+              @click="alterPerformance(row)"
+            >
+              修改
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,7 +51,7 @@
 <script>
 import UploadExcel from '@/components/UploadExcel'
 import AlterPerformance from '@/components/AlterPerformance'
-import moment from 'moment'
+import { getSearchMonth } from '@/utils/exportPerformanceExcel'
 import PerformanceMix from '@/mixins/performance-mixins'
 
 export default {
@@ -61,8 +68,7 @@ export default {
     }
   },
   created () {
-    const nowDate = moment(new Date())
-    this.timeSpan = nowDate.format('YYYYMM')
+    this.timeSpan = getSearchMonth()
     this.searchPerformance()
   }
 }
