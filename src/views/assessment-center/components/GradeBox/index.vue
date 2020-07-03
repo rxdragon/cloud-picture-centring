@@ -38,7 +38,14 @@
         </div>
         <div class="panel-content">
           <div class="issue-class-box panel-row" v-if="photoInfoData.typeTag.length">
-            <el-tag size="medium" v-for="(item, index) in photoInfoData.typeTag" :key="index">{{ item.name }}</el-tag>
+            <el-tag
+              class="type-tag"
+              size="medium"
+              v-for="(item, index) in photoInfoData.typeTag"
+              :key="index"
+            >
+              {{ item.name }}
+            </el-tag>
           </div>
           <div class="issue-class-box panel-row" v-for="issueClass in photoInfoData.issueLabel" :key="issueClass.id">
             <div class="label-title">{{ issueClass.name }}</div>
@@ -233,6 +240,10 @@ export default {
           font-weight: 600;
           line-height: 28px;
           color: #303133;
+        }
+
+        .type-tag {
+          margin-right: 10px;
         }
 
         .label-box {
