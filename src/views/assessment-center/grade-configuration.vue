@@ -2,7 +2,7 @@
   <div class="grade-configuration">
     <div class="header">
       <h3>云学院评分配置</h3>
-      <el-button type="primary" @click="openEmptyDialog">清空评分</el-button>
+      <el-button type="primary" @click="showEmptyDialog = true">清空评分</el-button>
     </div>
     <div class="main module-panel">
       <div class="add-configuration-item">
@@ -106,19 +106,8 @@
     >
       <div class="">
         <span>选择清空对象:</span>
-        <el-select
-          filterable
-          placeholder="全部人员"
-          multiple
-          v-model="emptyPeople"
-        >
-          <el-option
-            v-for="(item, index) in emptyPeopleMap"
-            :label="item.nickname"
-            :value="item.id"
-            :key="index"
-          />
-        </el-select>
+        <scorer-select v-model="emptyPeople"></scorer-select>
+        <span v-if="!emptyPeople.length" class="all-empty-warning">默认清空全部人员评分</span>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="info" @click="showEmptyDialog = false">取 消</el-button>
@@ -150,6 +139,7 @@
 <script>
 import IssueClass from './components/GradeConfig/IssueClass'
 import GoodWord from './components/GoodWord'
+import scorerSelect from '@SelectBox/scorerSelect'
 import uuidv4 from 'uuid'
 import * as GradeConfiguration from '@/api/gradeConfiguration.js'
 import { mapGetters } from 'vuex'
@@ -157,7 +147,7 @@ import { PlantTypeIdEnum } from '@/utils/enumerate'
 
 export default {
   name: 'GradeConfiguration',
-  components: { IssueClass, GoodWord },
+  components: { IssueClass, GoodWord, scorerSelect },
   provide () {
     return {
       weightProvide: this.weightObject
@@ -200,8 +190,7 @@ export default {
           name: '激励词',
           type: 'goodWord'
         }
-      ],
-      emptyPeopleMap: []
+      ]
     }
   },
   computed: {
@@ -340,14 +329,6 @@ export default {
       }
     },
     /**
-     * @description 确认清除
-     */
-    async openEmptyDialog () {
-      const msg = await GradeConfiguration.getTakeStaffList()
-      this.emptyPeopleMap = msg
-      this.showEmptyDialog = true
-    },
-    /**
      * @description 设置限制
      */
     async setGradeLimit () {
@@ -473,6 +454,11 @@ export default {
   .empty-dialog {
     .el-select {
       margin-left: 10px;
+    }
+
+    .all-empty-warning {
+      margin-left: 10px;
+      color: red;
     }
   }
 

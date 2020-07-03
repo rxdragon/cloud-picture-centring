@@ -39,20 +39,7 @@
       </div>
       <div class="product-search search-item">
         <span>评分人</span>
-        <el-select
-          filterable
-          multiple
-          v-model="currentScorer"
-          placeholder="请选择伙伴"
-        >
-          <el-option
-            v-for="item in scorer"
-            :key="item.id"
-            :label="item.nickname"
-            :value="item.id"
-          >
-          </el-option>
-        </el-select>
+        <scorer-select v-model="currentScorer"></scorer-select>
       </div>
     </div>
     <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
@@ -90,15 +77,15 @@ import GradeBox from './components/GradeBox'
 import StaffSelect from '@SelectBox/StaffSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
+import scorerSelect from '@SelectBox/scorerSelect'
 import ReportBox from './components/ReportBox.vue'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as AssessmentCenter from '@/api/assessmentCenter'
-import * as GradeConfiguration from '@/api/gradeConfiguration.js'
 
 export default {
   name: 'AssessmentHistory',
-  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, ReportBox },
+  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, scorerSelect, ReportBox },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -117,7 +104,6 @@ export default {
       cacheTimeSpan: [],
       cacheSendStaff: '',
       drawer: false,
-      scorer: [],
       currentScorer: [],
     }
   },
@@ -126,7 +112,6 @@ export default {
     const endAt = moment().locale('zh-cn').format('YYYY-MM-DD')
     this.timeSpan = [startAt, endAt]
     this.initial()
-    this.getStaffList()
   },
   activated () {
     this.initial()
@@ -208,13 +193,6 @@ export default {
     showDrawer () {
       this.drawer = true
     },
-    /**
-     * @description 确认清除
-     */
-    async getStaffList () {
-      const msg = await GradeConfiguration.getTakeStaffList()
-      this.scorer = msg
-    }
   }
 }
 </script>
