@@ -168,3 +168,10 @@ export const PlantTypeIdEnum = {
   'none': PLANT_ID_MAP.NONE_ID
 }
 
+// 种拔草type对应name
+export const PlantTypeNameEnum = {
+  'plant': '种草',
+  'pull': '拔草',
+  'none': '一般'
+}
+

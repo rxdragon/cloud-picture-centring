@@ -7,6 +7,7 @@ import StreamModel from '@/model/StreamModel.js'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import { PlantTypeNameEnum } from '@/utils/enumerate'
 
 /**
  * @description 获取今日抽片指标
@@ -113,11 +114,6 @@ export function commitHistory (params) {
  * @param {*} params
  */
 export function getSearchHistory (params) {
-  const typeNameMap = {
-    'plant': '种草',
-    'pull': '拔草',
-    'none': '普通'
-  }
   return axios({
     url: '/project_cloud/checkPool/getSearchHistory',
     method: 'POST',
@@ -135,7 +131,8 @@ export function getSearchHistory (params) {
       // 纯种拔草的时候会在commitInfo中返回type
       if (item.commitInfo && item.commitInfo.type) {
         typeTag.unshift({
-          name: typeNameMap[item.commitInfo.type]
+          name: PlantTypeNameEnum[item.commitInfo.type],
+          type: item.commitInfo.type
         })
       }
       item.typeTag = typeTag
