@@ -21,10 +21,6 @@
       <div class="info-title">照片信息</div>
       <el-row class="info-main" :gutter="20" type="flex">
         <el-col :span="8">
-          <div class="info-label">化妆师：</div>
-          <div class="info-value">张三</div>
-        </el-col>
-        <el-col :span="8">
           <div class="info-label">摄影师：</div>
           <div class="info-value">{{ orderInfo.photographerStaffName }}</div>
         </el-col>

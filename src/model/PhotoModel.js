@@ -44,7 +44,7 @@ export default class PhotoModel {
     this.reworkReason = _.get(photoData, 'tags.values.rework_reason') || ''
 
     // 退单相关
-    const statics = _.get(photoData, 'tags.values.statics') || []
+    const statics = _.get(photoData, 'tags.statics') || []
     this.isStoreReturn = statics.includes('store_rework')
     this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || '-'
     this.storeReworkNote = _.get(photoData, 'tags.values.store_rework_note') || '-'
