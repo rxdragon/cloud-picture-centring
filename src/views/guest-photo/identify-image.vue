@@ -43,6 +43,10 @@
           <div class="panel-title">
             <span>搜索结果</span>
             <div class="panel-slot">
+              <div class="dev-debug" v-if="$isDev">
+                <el-input v-model.trim="devImagePath" @keydown.native.enter="getPhotoInfo" clearable />
+                <el-button @click="getPhotoInfo">搜 索</el-button>
+              </div>
               <el-button
                 size="small"
                 plain
@@ -60,7 +64,7 @@
               </el-button>
             </div>
           </div>
-          <div class="panel-main">
+          <div class="panel-main" v-loading="photoInfoLoading">
             <div class="match-photo">
               <photo-box
                 class="photo-box"
@@ -113,7 +117,9 @@ export default {
       selectPhotoId: '',
       selectOrderInfo: {},
       hasIdentify: false,
-      uploadFile: null // 上传图片
+      photoInfoLoading: false, // 获取信息加载
+      uploadFile: null, // 上传图片
+      devImagePath: '' // 图片测试路径
     }
   },
   computed: {
@@ -174,17 +180,33 @@ export default {
     async getOrderInfo (id) {
       try {
         const findSelectPhoto = this.similarityImageList.find(item => item.id === id)
-        if (!findSelectPhoto) return
-        // TODO
-        // const domain = this.$isDev ? 'upload_dev/' : 'upload/'
-        // const req = { imagePath: domain + findSelectPhoto.path }
-        const req = { imagePath: 'upload_dev/2020/07/02/FhBXmmdRltLvxpFtp3byqhzP40Td.jpg' }
-        // const req = { imagePath: 'upload_dev/2020/07/01/ljB4x8BME8iOylWygHx2I-_quQmV.jpg' }
+        if (!findSelectPhoto || this.$isDev) return
+        this.photoInfoLoading = true
+        const domain = this.$isDev ? 'upload_dev/' : 'upload/'
+        const req = { imagePath: domain + findSelectPhoto.path }
         const data = await IdentifyImage.getPhotoStreamInfo(req)
         this.selectOrderInfo = data
       } catch (error) {
         console.error(error)
       } finally {
+        this.photoInfoLoading = false
+        this.percentageAge = 0
+      }
+    },
+    /**
+     * @description 调试获取图片，图像识别返回线上数据，所以要手动查询dev图片数据
+     */
+    async getPhotoInfo () {
+      try {
+        if (!this.devImagePath.includes('upload_dev')) return this.$newMessage.warning('请输入预发照片地址')
+        this.photoInfoLoading = true
+        const req = { imagePath: this.devImagePath }
+        const data = await IdentifyImage.getPhotoStreamInfo(req)
+        this.selectOrderInfo = data
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.photoInfoLoading = false
         this.percentageAge = 0
       }
     },
@@ -396,6 +418,16 @@ export default {
     .search-result {
       .panel-title {
         margin-bottom: 20px;
+
+        .dev-debug {
+          display: inline-flex;
+          margin-right: 20px;
+
+          .el-input {
+            width: 600px;
+            margin-right: 20px;
+          }
+        }
       }
 
       .panel-main {

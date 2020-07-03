@@ -25,8 +25,7 @@ export default {
   data () {
     return {
       isShowTab: true,
-      // TODO
-      activeName: 'CrewPerformanceManagement'
+      activeName: 'RetouchStaffReport'
     }
   },
   methods: {

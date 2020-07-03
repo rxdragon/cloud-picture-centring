@@ -68,14 +68,13 @@
           <div class="info-label">技术评分：</div>
           <div class="info-value">{{ photoInfo.checkPoolScore }}</div>
         </el-col>
-        <!-- TODO -->
         <el-col class="tags-box" :span="8">
           <div class="info-label">评分人：</div>
           <div class="info-value">{{ photoInfo.checkEvaluator }}</div>
         </el-col>
         <el-col class="tags-box" :span="24">
           <div class="info-label">问题标记：</div>
-          <div class="info-value info-tags">
+          <div class="info-value info-tags" v-if="photoInfo.checkPoolTags.length">
             <div class="tags-class" v-for="tagClass in photoInfo.checkPoolTags" :key="tagClass.id">
               {{ tagClass.name }}：
               <div class="tags-items">
@@ -85,6 +84,7 @@
               </div>
             </div>
           </div>
+          <div class="info-value" v-else>-</div>
         </el-col>
       </el-row>
     </div>
@@ -147,6 +147,7 @@ export default {
     .info-value {
       font-size: 14px;
       font-weight: 400;
+      line-height: 20px;
       color: #6e6e6e;
     }
 
