@@ -39,7 +39,7 @@
           </div>
         </div>
       </div>
-      <el-tabs v-model="tabName" >
+      <el-tabs @tab-click="tabChange" v-model="tabName" >
         <el-tab-pane
           v-for="(tab, index) in tabMap"
           :label="tab.name"
@@ -124,9 +124,21 @@
     >
       <div class="grade-limit-dialog-cont">
         <span>分数范围:</span>
-        <el-input type="tel"  v-model="gradeLimit.bottom" placeholder="下限"></el-input>
+        <el-input
+          @input="gradeLimitChange"
+          type="tel"
+          v-model="gradeLimit.bottom"
+          placeholder="下限"
+        >
+        </el-input>
         ~
-        <el-input type="tel" v-model="gradeLimit.top" placeholder="上限"></el-input>
+        <el-input
+          @input="gradeLimitChange"
+          type="tel"
+          v-model="gradeLimit.top"
+          placeholder="上限"
+        >
+        </el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="info" @click="gradeLimitDialog = false">取 消</el-button>
@@ -284,16 +296,30 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.allScoreConfigList = await GradeConfiguration.getScoreConfigList()
+        this.gradeLimit.top = this.allScoreConfigList[this.tabName].maxScore
+        this.gradeLimit.bottom = this.allScoreConfigList[this.tabName].minScore
       } catch (error) {
         console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
+    tabChange (e) {
+      if (e.name === 'goodWord') return
+      this.gradeLimit.top = this.allScoreConfigList[e.name].maxScore
+      this.gradeLimit.bottom = this.allScoreConfigList[e.name].minScore
+    },
     /**
      * @description 添加大类
      */
     addNewAddClass () {
+      if (this.tabName === 'goodWord') {
+        this.$message({
+          type: 'warning',
+          message: '激励词不能添加评分类!'
+        })
+        return
+      }
       const createData = {
         key: uuidv4(),
         name: '',
@@ -345,10 +371,6 @@ export default {
       if (msg) {
         this.getScoreConfigList()
         this.gradeLimitDialog = false
-        this.gradeLimit = {
-          bottom: 0,
-          top: 0,
-        }
       }
     },
     /**
@@ -384,6 +406,18 @@ export default {
         return false
       }
       return true
+    },
+    /**
+     * @description 输入中的判断
+     */
+    gradeLimitChange (e) {
+      const reg = new RegExp("^([0-9]|[0-9]\\d|100)$")
+      if (!reg.test(e)) {
+        this.$message({
+          type: 'warning',
+          message: '请输入0-100的数字'
+        })
+      }
     }
   }
 }

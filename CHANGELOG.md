@@ -1,4 +1,4 @@
-# 2.0.0 (2020-07-03)
+# 2.0.0 (2020-07-05)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -243,6 +243,7 @@
  滚动条样式优化，流量看板样式优化 | [6c61941](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c61941)
  种草标签样式修改 | [b30fdc1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b30fdc1)
  评价历史记录种拔草标签样式修改,单选框增加搜索配置,全部人员的展示逻辑修改 | [5fb3d72](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5fb3d72)
+ 评分人合并为组件,清空全部人员情况增加提示 | [7448cfa](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7448cfa)
  默认不启动播放，不开启音乐 | [8eec25d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8eec25d)
  ' | 优化样式 | [0fad9a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0fad9a5)
  默认值处理 | [0aa4c73](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0aa4c73)
