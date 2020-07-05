@@ -29,7 +29,7 @@ export default {
   components: { RetoucherPerformance, ChargePerformance },
   data() {
     return {
-      activeName: 'ChargePerformance'
+      activeName: 'RetoucherPerformance'
     }
   },
 }

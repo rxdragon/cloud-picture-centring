@@ -29,9 +29,12 @@ export function getCanScoreStaff (type) {
  * @description 获取组员分数
  * @param { String } type retoucher 组员 retoucherLeader 组管
  */
-export function getStaffPerformance (params) {
+export function getStaffPerformance (params, isSearchAll = false) {
+  const url = isSearchAll
+    ? '/project_cloud/operator/getStaffScores'
+    : '/project_cloud/staff/getStaffScores'
   return axios({
-    url: '/project_cloud/staff/getStaffScores',
+    url,
     method: 'PUT',
     data: params
   }).then(msg => {
@@ -54,9 +57,12 @@ export function getStaffPerformance (params) {
  * @description 保存伙伴分数
  * @param { String } type retoucher 组员 retoucherLeader 组管
  */
-export function batchSaveStaffScores (params) {
+export function batchSaveStaffScores (params, isSearchAll = false) {
+  const url = isSearchAll
+    ? '/project_cloud/operator/batchSaveStaffScores'
+    : '/project_cloud/staff/batchSaveStaffScores'
   return axios({
-    url: '/project_cloud/staff/batchSaveStaffScores',
+    url,
     method: 'POST',
     data: params
   })
@@ -66,9 +72,12 @@ export function batchSaveStaffScores (params) {
  * @description 编辑分数
  * @param { String } type retoucher 组员 retoucherLeader 组管
  */
-export function editStaffScore (params) {
+export function editStaffScore (params, isSearchAll = false) {
+  const url = isSearchAll
+    ? '/project_cloud/operator/editStaffScore'
+    : '/project_cloud/staff/editStaffScore'
   return axios({
-    url: '/project_cloud/staff/editStaffScore',
+    url,
     method: 'PUT',
     data: params
   })

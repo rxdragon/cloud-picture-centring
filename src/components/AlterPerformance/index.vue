@@ -48,6 +48,7 @@ export default {
      */
     async affirmAlter () {
       try {
+        if (!this.performanceScore) return this.$newMessage.warning('请输入分数')
         const score = Number(this.performanceScore)
         if (score > 100 || score < 0) return this.$newMessage.warning('请输入正确的绩效分数')
         this.loading = true
@@ -55,7 +56,7 @@ export default {
           id: this.editInfo.id,
           score
         }
-        await Performance.editStaffScore(req)
+        await Performance.editStaffScore(req, Boolean(this.$parent.performancType))
         this.$emit('visibeClose', 'refreshList')
       } catch (error) {
         console.error(error)

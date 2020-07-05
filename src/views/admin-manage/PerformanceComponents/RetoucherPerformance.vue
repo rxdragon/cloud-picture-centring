@@ -79,7 +79,8 @@ export default {
   mixins: [PerformanceMix],
   data() {
     return {
-      searchType: 'all',
+      searchType: 'retoucher',
+      performancType: 'all',
       routeName: this.$route.name, // 路由名字
       timeSpan: null,
       tableData: [],

@@ -90,7 +90,9 @@ export default class StreamModel {
     const outRetoucher = _.get(streamData, 'tags.values.retoucher_name')
     this.retoucher = retoucher || outRetoucher || '-'
     this.retoucherJobNum = _.get(streamData, 'retoucher.id') || '-'
-    this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.name') || _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
+    this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.nickname') ||
+      _.get(streamData, 'retoucher.retoucher_leader.name') ||
+      _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
 
     this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(StreamStatics.STORERETURN)
     this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || '-'
