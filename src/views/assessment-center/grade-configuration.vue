@@ -2,7 +2,7 @@
   <div class="grade-configuration">
     <div class="header">
       <h3>云学院评分配置</h3>
-      <el-button type="primary" @click="showEmptyDialog = true">清空评分</el-button>
+      <el-button v-if="showEmptyCheckPool" type="primary" @click="showEmptyDialog = true">清空评分</el-button>
     </div>
     <div class="main module-panel">
       <div class="add-configuration-item">
@@ -208,7 +208,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['showSpotRecheck']),
+    ...mapGetters(['showEmptyCheckPool']),
     scoreConfigList () {
       if (Object.keys(this.allScoreConfigList).length) {
         return this.allScoreConfigList[this.tabName].list

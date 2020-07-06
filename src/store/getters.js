@@ -33,6 +33,7 @@ const permissionGetters = {
   showWorkInfo: state => state.permission.showWorkInfo, // 是否显示工作看板
   showAuditPerformance: state => state.permission.showAuditPerformance, // 是否显示审核绩效
   showTimeStatistics: state => state.permission.showTimeStatistics, // 是否显示用时统计
+  showRetoucherGroupPerformance: state => state.permission.showRetoucherGroupPerformance, // 是否显示用时统计
   showCheckerEvaluate: state => state.permission.showCheckerEvaluate, // 是否显示看片评价
   showFlowInfo: state => state.permission.showCheckerEvaluate, // 是否显示流量看板按钮
   // 云端工作看板
@@ -41,7 +42,8 @@ const permissionGetters = {
   showStreamList: state => state.permission.showStreamList, // 是否显示流水管理
   showUrgentStream: state => state.permission.showUrgentStream, // 是否可以加急
   // 云学院
-  showSpotRecheck: state => state.permission.showSpotRecheck // 是否显示重新打分按钮
+  showSpotRecheck: state => state.permission.showSpotRecheck, // 是否显示重新打分按钮
+  showEmptyCheckPool: state => state.permission.showEmptyCheckPool // 是否显示重新打分按钮
 }
 
 const getters = {

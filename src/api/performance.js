@@ -88,6 +88,9 @@ export function editStaffScore (params, isSearchAll = false) {
  * @param { String } type retoucher 组员 retoucherLeader 组管
  */
 export function getGroupScoreRanks (params) {
+  const groupId = params.groupId || ''
+  delete params.groupId
+
   return axios({
     url: '/project_cloud/staff/getGroupScores',
     method: 'PUT',
@@ -120,6 +123,12 @@ export function getGroupScoreRanks (params) {
     createList.forEach((item, index) => {
       item.returnRateRank = index + 1
     })
+
+    // 如果查询修图组，前端过滤修图组
+    if (groupId) {
+      const filterGroupList = createList.filter(item => item.id === groupId)
+      return filterGroupList
+    }
     return createList
   })
 }

@@ -134,7 +134,6 @@ export default {
      */
     async saveRetouchPerformance (staffScores) {
       const req = {
-        // TODO 导入全部绩效
         type: this.searchType === 'retoucherLeader' ? 'retoucherLeader' : 'retoucher',
         staffScores
       }
