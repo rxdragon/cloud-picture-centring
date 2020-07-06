@@ -43,7 +43,8 @@ const permissionGetters = {
   showUrgentStream: state => state.permission.showUrgentStream, // 是否可以加急
   // 云学院
   showSpotRecheck: state => state.permission.showSpotRecheck, // 是否显示重新打分按钮
-  showEmptyCheckPool: state => state.permission.showEmptyCheckPool // 是否显示重新打分按钮
+  showEmptyCheckPool: state => state.permission.showEmptyCheckPool, // 是否显示重新打分按钮
+  canAutoRetouch: state => state.permission.canAutoRetouch // 是否显示自动修图按钮
 }
 
 const getters = {
