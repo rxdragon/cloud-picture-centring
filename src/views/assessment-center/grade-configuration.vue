@@ -39,7 +39,7 @@
           </div>
         </div>
       </div>
-      <el-tabs @tab-click="tabChange" v-model="tabName" >
+      <el-tabs @tab-click="onTabChange" v-model="tabName" >
         <el-tab-pane
           v-for="(tab, index) in tabMap"
           :label="tab.name"
@@ -306,7 +306,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
-    tabChange (e) {
+    on (e) {
       if (e.name === 'goodWord') return
       this.gradeLimit.top = this.allScoreConfigList[e.name].maxScore
       this.gradeLimit.bottom = this.allScoreConfigList[e.name].minScore
