@@ -20,7 +20,6 @@
           >
             重新评分
           </el-button>
-          <span>总分：{{ photoInfoData.score }}</span>
         </div>
       </div>
       <photo-list
@@ -31,10 +30,23 @@
       />
     </div>
     <div class="info-grid">
-      <!-- 问题标签 -->
-      <div class="panel-info" v-if="photoInfoData.issueLabel.length">
-        <div class="panel-title">问题标签</div>
+      <!-- 评价信息 -->
+      <div class="panel-info">
+        <div class="panel-title">
+          <span>评价信息</span>
+          <span>总分：{{ photoInfoData.score }}</span>
+        </div>
         <div class="panel-content">
+          <div class="issue-class-box panel-row" v-if="photoInfoData.typeTag.length">
+            <el-tag
+              :class="['type-tag', item.type]"
+              size="medium"
+              v-for="(item, index) in photoInfoData.typeTag"
+              :key="index"
+            >
+              {{ item.name }}
+            </el-tag>
+          </div>
           <div class="issue-class-box panel-row" v-for="issueClass in photoInfoData.issueLabel" :key="issueClass.id">
             <div class="label-title">{{ issueClass.name }}</div>
             <div class="label-box">
@@ -136,7 +148,9 @@ export default {
           photoId: this.photoInfo.photo_id,
           uuid: this.photoInfo._id,
           tags: sendData.issuesLabelId,
-          picUrl: sendData.markPhotoImg
+          picUrl: sendData.markPhotoImg,
+          exTags: sendData.typeLabelId,
+          type: sendData.type
         }
         await AssessmentCenter.updateCommitHistory(req)
         this.$newMessage.success('重新评价成功')
@@ -205,6 +219,8 @@ export default {
 
   .panel-info {
     .panel-title {
+      display: flex;
+      justify-content: space-between;
       margin-bottom: 20px;
     }
 
@@ -224,6 +240,28 @@ export default {
           font-weight: 600;
           line-height: 28px;
           color: #303133;
+        }
+
+        .type-tag {
+          margin-right: 10px;
+
+          &.plant {
+            color: #44c27e;
+            background-color: #fff;
+            border-color: #44c27e;
+          }
+
+          &.pull {
+            color: #ff3974;
+            background-color: #fff;
+            border-color: #ff3974;
+          }
+
+          &.none {
+            color: #909399;
+            background-color: #fff;
+            border-color: #909399;
+          }
         }
 
         .label-box {

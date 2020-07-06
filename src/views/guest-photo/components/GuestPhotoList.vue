@@ -61,7 +61,7 @@
           class="photo-box"
           @click="goGuestInfo(photoItem)"
         >
-          <photo-box :src="photoItem.src" />
+          <photo-box contain-photo :src="photoItem.src" />
         </div>
         <div v-for="i in columnCount" :key="i + 'empty'" class="empty-box" />
       </div>
@@ -93,6 +93,9 @@ import * as GuestPhoto from '@/api/guestPhoto'
 export default {
   name: 'GuestPhotoList',
   components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect, NoData },
+  props: {
+    initSearch: { type: Object, required: true }
+  },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -144,6 +147,18 @@ export default {
       const enderIndex = starterIndex + this.locPager.pageSize
       const truePhotoes = this.orinPhotoes.slice(starterIndex, enderIndex)
       return truePhotoes
+    }
+  },
+  watch: {
+    'initSearch': {
+      handler (value) {
+        const { orderType, orderSearchValue } = value
+        if (!orderType) return
+        this.orderType = orderType
+        this.orderSearchValue = orderSearchValue
+        this.getPhotoList(true)
+      },
+      immediate: true
     }
   },
   methods: {
@@ -246,7 +261,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 .guest-photo-list {
   .search-box {

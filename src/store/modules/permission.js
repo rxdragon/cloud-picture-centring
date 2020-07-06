@@ -40,6 +40,7 @@ const state = {
   showPartnerPerformance: false, // 是否显示伙伴绩效
   showOverallPerformance: false, // 是否显示总体绩效
   showAuditPerformance: false, // 是否显示审核绩效
+  showRetoucherGroupPerformance: false, // 是否显示修图组绩效
   showTimeStatistics: false, // 是否显示用时统计
   showCheckerEvaluate: false, // 是否显示看片评价
   showFlowInfo: false, // 是否显示浏览看板
@@ -50,6 +51,7 @@ const state = {
   isRetoucher: false, // 是否是修片师
   showWorkInfo: false, // 是否可以查看工作看板详情按钮
   showSpotRecheck: false, // 是否显示重新打分按钮
+  showEmptyCheckPool: false, // 是否显示清空按钮
   canAutoRetouch: false // 是否显示自动修图按钮
 }
 
@@ -62,6 +64,7 @@ const mutations = {
     state.roles = roles
     state.showPartnerPerformance = roles.includes('AdminManage.performanceInquire.retoucherQuota')
     state.showAuditPerformance = roles.includes('AdminManage.performanceInquire.reviewQuota')
+    state.showRetoucherGroupPerformance = roles.includes('AdminManage.performanceInquire.retoucherGroupPerformance')
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
     state.showOverallPerformance = roles.includes('AdminManage.performanceInquire.overallperformance')
     state.showTimeStatistics = roles.includes('AdminManage.performanceInquire.timestatistics')
@@ -73,6 +76,7 @@ const mutations = {
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
+    state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
     Vue.prototype.$ws = new Ws()
     Vue.prototype.$ws.initializeSendMessage(state.isRetoucher)
@@ -127,7 +131,6 @@ const actions = {
           }
         ]
       }
-      
       accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)

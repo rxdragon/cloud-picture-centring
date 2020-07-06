@@ -103,6 +103,7 @@ export default {
           return false
         }
         const req = {
+          scoreTypeId: this.issueClassData.scoreTypeId,
           mainName: this.issueClassData.name,
           configData: []
         }
@@ -115,18 +116,18 @@ export default {
           if (item.id) { createData.id = item.id }
           req.configData.push(createData)
         })
+        let msg = ''
         if (this.issueClassData.isNewAdd) {
-          await GradeConfiguration.addScoreConfig(req)
+          msg = await GradeConfiguration.addScoreConfig(req)
         } else {
-          await GradeConfiguration.editScoreConfig(req)
+          msg = await GradeConfiguration.editScoreConfig(req)
         }
-        this.$emit('getList')
+        if (msg) {
+          this.$emit('getList')
+        }
       } catch (error) {
-        console.error(error)
         if (error.message) {
           this.$newMessage.warning(error.message)
-        } else {
-          this.$emit('getList')
         }
       }
     },

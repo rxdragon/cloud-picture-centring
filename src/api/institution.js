@@ -29,12 +29,12 @@ export function getPhotographerOrg () {
     url: '/project_cloud/common/getPhotographerOrg',
     method: 'get'
   }).then(res => {
-    const createData = []
-    res.forEach(item => {
-      createData.push({
+    res.sort((a, b) => a.id - b.id)
+    const createData = res.map(item => {
+      return {
         value: Number(item.id),
         label: item.name
-      })
+      }
     })
     return createData
   })

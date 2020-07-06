@@ -255,9 +255,49 @@ aside {
   padding-right: 20px;
 }
 
-.el-tabs__item.is-active {
-  background-color: #fff;
-  border-radius: 6px 6px 0 0;
+.el-tabs__item {
+  @radius: 12px;
+
+  &:not(:first-of-type)::before,
+  &:not(:first-of-type)::after {
+    content: "";
+    bottom: 0;
+    width: @radius;
+    height: @radius;
+    position: absolute;
+  }
+
+  &.is-active {
+    background-color: #fff;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+  
+    &::before {
+      left: -@radius;
+      border-radius: 0 0 @radius 0;
+      background: #f2f6fc;
+      z-index: 2;
+    }
+  
+    &::after {
+      left: -@radius;
+      background: #fff;
+      z-index: 1;
+    }
+  }
+
+  &.is-active + .el-tabs__item {
+    &::before {
+      left: 0;
+      background: #fff;
+    }
+
+    &::after {
+      border-radius: 0 0 0 @radius;
+      left: 0;
+      background: #f2f6fc;
+    }
+  }
 }
 
 .el-tabs__nav-wrap::after {
@@ -331,6 +371,16 @@ aside {
   background-color: #fafafa;
 }
 
+.el-table {
+  .el-table__empty-block {
+    min-height: 53px;
+
+    .el-table__empty-text {
+      line-height: 53px;
+    }
+  }
+}
+
 // 模块框
 .module-panel {
   padding: 20px 24px;
@@ -340,6 +390,8 @@ aside {
 
   .panel-title {
     position: relative;
+    display: flex;
+    align-items: center;
     padding-left: 14px;
     font-size: 16px;
     font-weight: 600;
@@ -356,6 +408,10 @@ aside {
       content: '';
       background-color: @blue;
       transform: translateY(-50%);
+    }
+
+    .panel-slot {
+      margin-left: auto;
     }
   }
 }
@@ -385,6 +441,10 @@ aside {
     margin-right: 12px;
     font-size: 14px;
     color: #303133;
+  }
+
+  &.tip-box {
+    margin: 0 0 0 auto;
   }
 }
 

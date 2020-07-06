@@ -26,19 +26,24 @@ const defaultGetters = {
 }
 
 const permissionGetters = {
+  isRetoucher: state => state.permission.isRetoucher, // 是否是修图师身份
+  // 云端绩效信息相关
   showPartnerPerformance: state => state.permission.showPartnerPerformance, // 是否显示伙伴绩效
   showOverallPerformance: state => state.permission.showOverallPerformance, // 是否显示总体绩效
+  showWorkInfo: state => state.permission.showWorkInfo, // 是否显示工作看板
   showAuditPerformance: state => state.permission.showAuditPerformance, // 是否显示审核绩效
   showTimeStatistics: state => state.permission.showTimeStatistics, // 是否显示用时统计
+  showRetoucherGroupPerformance: state => state.permission.showRetoucherGroupPerformance, // 是否显示用时统计
   showCheckerEvaluate: state => state.permission.showCheckerEvaluate, // 是否显示看片评价
   showFlowInfo: state => state.permission.showCheckerEvaluate, // 是否显示流量看板按钮
-  showRetouchStreamList: state => state.permission.showRetouchStreamList, // 是否显示流量看板按钮
-  showReviewStreamList: state => state.permission.showReviewStreamList, // 是否显示流量看板按钮
-  showStreamList: state => state.permission.showStreamList, // 是否显示流量看板按钮
-  showUrgentStream: state => state.permission.showUrgentStream, // 是否显示流量看板按钮
-  isRetoucher: state => state.permission.isRetoucher, // 是否是修图师身份
-  showWorkInfo: state => state.permission.showWorkInfo, // 是否是修图师身份
+  // 云端工作看板
+  showRetouchStreamList: state => state.permission.showRetouchStreamList, // 是否显示修图队列
+  showReviewStreamList: state => state.permission.showReviewStreamList, // 是否显示审核队列
+  showStreamList: state => state.permission.showStreamList, // 是否显示流水管理
+  showUrgentStream: state => state.permission.showUrgentStream, // 是否可以加急
+  // 云学院
   showSpotRecheck: state => state.permission.showSpotRecheck, // 是否显示重新打分按钮
+  showEmptyCheckPool: state => state.permission.showEmptyCheckPool, // 是否显示重新打分按钮
   canAutoRetouch: state => state.permission.canAutoRetouch // 是否显示自动修图按钮
 }
 
