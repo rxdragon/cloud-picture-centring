@@ -98,7 +98,7 @@ export default {
       performanceLoading: false, // 绩效加载动态
       performanceInfo: {}, // 绩效得分
       apisFloreaData: [{
-        label: '金额',
+        label: '奖励系数',
         value: '-'
       }, {
         label: '绩效平均分',

@@ -252,7 +252,7 @@ export function getLittleBeeInfo (params) {
     const data = keyToHump(msg)
     const createData = [{
       label: '奖励系数',
-      value: `¥${data.rate}` || '-'
+      value: `${data.rate}` || '-'
     }, {
       label: '绩效平均分',
       value: Number(data.avgKpi).toFixed(2) || '-'

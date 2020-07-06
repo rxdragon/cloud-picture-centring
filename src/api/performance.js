@@ -151,8 +151,8 @@ export function getSelfGroupScoreRanks (params) {
         groupName: _.get(listItem, 'group_info.name') || '-',
         groupLeader: leaderNickName || leaderName || '-',
         groupLeaderJobNumber: _.get(listItem, 'group_info.leader_info.id') || '-',
-        leaderKpi: _.get(listItem, 'leader_score_info.leader_kpi_score') || '-',
-        leaderKpiRank: _.get(listItem, 'leader_score_info.leader_kpi_rank') || '-'
+        leaderKpi: Validate.toFixed(listItem.leader_kpi_score) || '-',
+        leaderKpiRank: _.get(listItem, 'leader_kpi_rank') || '-'
       }
     })
     return createList
