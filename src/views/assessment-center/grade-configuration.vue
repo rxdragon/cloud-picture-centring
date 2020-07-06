@@ -125,16 +125,18 @@
       <div class="grade-limit-dialog-cont">
         <span>分数范围:</span>
         <el-input
-          @input="gradeLimitChange"
-          type="tel"
+          v-numberOnly
+          min="0"
+          max="100"
           v-model="gradeLimit.bottom"
           placeholder="下限"
         >
         </el-input>
         ~
         <el-input
-          @input="gradeLimitChange"
-          type="tel"
+          v-numberOnly
+          min="0"
+          max="100"
           v-model="gradeLimit.top"
           placeholder="上限"
         >
@@ -406,18 +408,6 @@ export default {
         return false
       }
       return true
-    },
-    /**
-     * @description 输入中的判断
-     */
-    gradeLimitChange (e) {
-      const reg = new RegExp("^([0-9]|[0-9]\\d|100)$")
-      if (!reg.test(e)) {
-        this.$message({
-          type: 'warning',
-          message: '请输入0-100的数字'
-        })
-      }
     }
   }
 }
