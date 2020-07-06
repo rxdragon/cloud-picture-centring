@@ -306,7 +306,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
-    on (e) {
+    onTabChange (e) {
       if (e.name === 'goodWord') return
       this.gradeLimit.top = this.allScoreConfigList[e.name].maxScore
       this.gradeLimit.bottom = this.allScoreConfigList[e.name].minScore
