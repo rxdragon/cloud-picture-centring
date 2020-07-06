@@ -43,13 +43,18 @@
         <el-col class="tags-box" :span="24">
           <div class="info-label">退回标记：</div>
           <div class="info-value info-tags">
-            <el-tag
-              size="mini"
-              v-for="(tagItem, tagIndex) in photoInfo.storePartReworkReason"
-              :key="tagIndex"
-            >
-              {{ tagItem.reason }}
-            </el-tag>
+            <div class="tags-class">
+              <div class="tags-items">
+                <el-tag
+                  size="mini"
+                  class="tag-item"
+                  v-for="(tagItem, tagIndex) in photoInfo.storePartReworkReasonTags"
+                  :key="tagIndex"
+                >
+                  {{ tagItem }}
+                </el-tag>
+              </div>
+            </div>
           </div>
         </el-col>
         <el-col class="tags-box" :span="24">
@@ -72,7 +77,7 @@
           <div class="info-label">问题标记：</div>
           <div class="info-value info-tags" v-if="photoInfo.checkPoolTags.length">
             <div class="tags-class" v-for="tagClass in photoInfo.checkPoolTags" :key="tagClass.id">
-              {{ tagClass.name }}：
+              <span class="tags-name">{{ tagClass.name }}：</span>
               <div class="tags-items">
                 <el-tag v-for="tagItem in tagClass.child" :key="tagItem.id" size="mini">
                   {{ tagItem.name }}
@@ -154,6 +159,10 @@ export default {
 
       .tags-class {
         display: flex;
+
+        .tags-name {
+          flex-shrink: 0;
+        }
 
         .tags-items {
           display: flex;

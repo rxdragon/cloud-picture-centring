@@ -1,3 +1,5 @@
+import * as ExtraErrorCode from './extraErrorCode.js'
+
 const ApiException = [
   [0xA11001001, 'Token过期'],
   [0xA11001002, '缺少Token'],
@@ -11,6 +13,7 @@ const ApiException = [
   [0xA11001010, '不匹配的照片'],
   [0xA11001011, '参数格式异常'],
   [0xA11001012, '修片师未在线'],
+  [0xA11001013, '最大的退回次数']
 ]
 
 const CardException = [
@@ -73,7 +76,8 @@ const ProductException = [
 ]
 
 const QueueException = [
-  [0xA11012001, '需要对象']
+  [0xA11012001, '需要对象'],
+  [0xA11012002, '该订单已经指派']
 ]
 
 const StaffException = [
@@ -137,10 +141,16 @@ export const errText = [
   ...StreamException,
   ...TagException
 ]
-let errMap = new Map(errText)
+
+const errMap = new Map(errText)
+
 export const errorCode = {
   getMsg: (err) => {
-    let codeNum = Number(err.error_code)
+    const codeNum = Number(err.error_code)
+    // 额外单独处理
+    if (ExtraErrorCode.ErrorCode.includes(codeNum)) {
+      return ExtraErrorCode.extraErrorHandle(codeNum, err.error_msg)
+    }
     return errMap.get(codeNum) || JSON.stringify(err.error_msg)
   }
 }

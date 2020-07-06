@@ -40,9 +40,9 @@ export default {
         // 云端绩效管理，查询修图师绩效
         if (this.staffIds && this.staffIds.length) {
           req.staffIds = this.staffIds
-          req.type = 'some'
+          req.type = 'retoucher'
         }
-        const data = await Performance.getStaffPerformance(req)
+        const data = await Performance.getStaffPerformance(req, Boolean(this.performancType))
         this.tableData = data.list
         if (this.pager) { this.pager.total = data.total }
         this.getCanEditScore()
@@ -96,9 +96,9 @@ export default {
         results.splice(0, 1)
         const reg = /^\d+\.?\d{0,2}$/
         const hasEveryScore = results.every(item => {
-          const hasScore = Boolean(item.score)
+          const hasScore = Boolean(item.score) || Number(item.score) === 0
           const isDecimal = reg.test(Number(item.score))
-          const isRightful = Number(item.score) <= 100 && Number(item.score) > 0
+          const isRightful = Number(item.score) <= 100 && Number(item.score) >= 0
           return hasScore && isDecimal && isRightful
         })
         // 是否有自身分数
@@ -134,10 +134,11 @@ export default {
      */
     async saveRetouchPerformance (staffScores) {
       const req = {
-        type: this.searchType,
+        // TODO 导入全部绩效
+        type: this.searchType === 'retoucherLeader' ? 'retoucherLeader' : 'retoucher',
         staffScores
       }
-      await Performance.batchSaveStaffScores(req)
+      await Performance.batchSaveStaffScores(req, Boolean(this.performancType))
     },
     /**
      * @description 判断能否导入绩效

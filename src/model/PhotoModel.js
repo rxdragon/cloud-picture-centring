@@ -17,7 +17,7 @@ export default class PhotoModel {
   storeReworkReason = '' // 门店退回理由
   storeReworkNote = '' // 门店退回备注
   storePartReworkReason = [] // 退回标记
-
+  storePartReworkReasonTags = [] // 全部退回标记
 
   checkPoolScore = '' // 云学院抽片分数
   checkPoolTags = [] // 云学院标记
@@ -49,6 +49,7 @@ export default class PhotoModel {
     this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || '-'
     this.storeReworkNote = _.get(photoData, 'tags.values.store_rework_note') || '-'
     this.storePartReworkReason = _.get(photoData, 'tags.values.store_part_rework_reason') || []
+    this.getStoreReturnReason()
   }
 
   // 获取版本
@@ -60,9 +61,19 @@ export default class PhotoModel {
     }
   }
 
+  getStoreReturnReason () {
+    let storePartReworkReasonString = ''
+    this.storePartReworkReason.forEach(item => {
+      storePartReworkReasonString += `+${item.reason}`
+    })
+    this.storePartReworkReasonTags = storePartReworkReasonString.split('+')
+    this.storePartReworkReasonTags.splice(0, 1)
+  }
+
   // 获取云学院分数
   getCheckPoolTags () {
-    this.checkPoolScore = _.get(this.baseData, 'tags.values.score') || '-'
+    this.checkPoolScore = _.get(this.baseData, 'tags.values.score')
+    this.checkPoolScore = Number(this.checkPoolScore) === 0 ? 0 : '-'
     this.checkEvaluator = _.get(this.baseData, 'tags.values.evaluator') || '-'
     const checkPoolTags = _.get(this.baseData, 'tags.values.check_pool_tags') || []
     const parentData = []

@@ -1,9 +1,6 @@
 'use strict'
 
 import axios from 'axios'
-import router from '@/router/index.js'
-import store from '../store' // vuex
-import { newMessage } from '@/utils/message.js'
 import { Message } from 'element-ui'
 import { errorCode } from './errorCode'
 import { readConfig } from "../utils/electronConfig"
@@ -82,22 +79,24 @@ axios.interceptors.response.use(
     if (!error.response) {
       // 请求没有任何返回值：网络差，无服务
       let message = '网络错误，请稍后再试！'
-      let promiseMessage = errorMessage(message)
+      errorMessage(message)
+      return Promise.reject(message)
+    }
+    
+
+    // 请求成功 但是报错
+    const data = error.response.data
+    const noData = !data
+    const serverError = data && (!data.error_code || (data.error_code !== 401 && data.error_code < 1000))
+    // 系统繁忙错误
+    if (noData || serverError) {
+      const message =  '系统繁忙，请稍后再试：' + data.error_msg
+      errorMessage(message)
       return Promise.reject(message)
     }
 
-    // 请求成功 但是报错
-    let data = error.response.data
-    let noData = !data
-    let serverError = data &&
-      (!data.error_code || (data.error_code !== 401 && data.error_code < 1000))
-    if (noData || serverError) {
-      let message =  '系统繁忙，请稍后再试：' + data.error_msg
-      let promiseMessage = errorMessage(message)
-      return Promise.reject(message)
-    }
-    let message = errorCode.getMsg(data)
-    let promiseMessage = errorMessage(message)
+    const message = errorCode.getMsg(data)
+    errorMessage(message)
     return Promise.reject(message)
   }
 )

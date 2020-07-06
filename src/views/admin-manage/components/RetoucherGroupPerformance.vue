@@ -21,22 +21,22 @@
         <el-table-column prop="groupName" label="修图组"/>
         <el-table-column prop="groupLeader" label="修图主管" />
         <el-table-column prop="groupLeaderJobNumber" label="主管工号" />
-        <el-table-column label="退单" sortable sort-by="return_rate_rank">
+        <el-table-column label="退张" sortable sort-by="returnRateRank">
           <template slot-scope="{ row }">
-            <p>退张率：{{ row.return_rate }}%</p>
-            <p>排名：{{ row.return_rate_rank }}</p>
+            <p>退张率：{{ row.returnRate }}%</p>
+            <p>排名：{{ row.returnRateRank }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="抽查" sortable sort-by="average_score_rank">
+        <el-table-column label="抽查" sortable sort-by="averageScoreRank">
           <template slot-scope="{ row }">
-            <p>平均分：{{ row.average_score }}</p>
-            <p>排名：{{ row.average_score_rank }}</p>
+            <p>平均分：{{ row.averageScore }}</p>
+            <p>排名：{{ row.averageScoreRank }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="绩效" sortable sort-by="kpi_rank">
+        <el-table-column label="绩效" sortable sort-by="kpiScoreRank">
           <template slot-scope="{ row }">
-            <p>得分：{{ row.kpi_score }}</p>
-            <p>排名：{{ row.kpi_rank }}</p>
+            <p>得分：{{ row.kpiScore }}</p>
+            <p>排名：{{ row.kpiScoreRank }}</p>
           </template>
         </el-table-column>
       </el-table>
@@ -49,7 +49,7 @@ import DatePicker from '@/components/DatePicker'
 import RetoucherGroupSelect from '@SelectBox/RetoucherGroupSelect'
 import Tip from '@/components/Tip'
 import moment from 'moment'
-import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
+import { delayLoading } from '@/utils/timespan.js'
 
 import * as Performance from '@/api/performance.js'
 
@@ -88,12 +88,8 @@ export default {
         if (moment(this.timeSpan[0]).get('month') !== moment(this.timeSpan[1]).get('month')) throw new Error('不能隔月查询')
         this.loading = true
         const req = {
-          startAt: joinTimeSpan(this.timeSpan[0]),
-          endAt: joinTimeSpan(this.timeSpan[1], 1),
-          cycleFormat: 'Ymd',
-          type: 'all',
-          page: 1,
-          pageSize: 99
+          startAt: this.timeSpan[0],
+          endAt: this.timeSpan[1]
         }
         if (this.retoucherGroupValue) { req.groupId = this.retoucherGroupValue }
         const data = await Performance.getGroupScoreRanks(req)
