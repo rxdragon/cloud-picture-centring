@@ -250,6 +250,7 @@
  格式化代码 | [e2ab9b0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e2ab9b0)
  格式化代码 | [d71a32c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d71a32c)
  滚动条样式优化，流量看板样式优化 | [6c61941](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c61941)
+ 种拔草样式调整 | [e9cb2b2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e9cb2b2)
  种草标签样式修改 | [b30fdc1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b30fdc1)
  评价历史记录种拔草标签样式修改,单选框增加搜索配置,全部人员的展示逻辑修改 | [5fb3d72](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5fb3d72)
  评分人合并为组件,清空全部人员情况增加提示 | [7448cfa](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7448cfa)

@@ -41,6 +41,12 @@
         <span>评分人</span>
         <scorer-select v-model="currentScorer"></scorer-select>
       </div>
+      <div class="product-search search-item">
+        <span>流水号</span>
+        <div class="stream-num">
+          <el-input v-model="streamNum"></el-input>
+        </div>
+      </div>
     </div>
     <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
       <GradeBox :photo-info="photoItem" @updateList="getSearchHistory" />
@@ -105,6 +111,7 @@ export default {
       cacheSendStaff: '',
       drawer: false,
       currentScorer: [],
+      streamNum: ''
     }
   },
   created () {
@@ -154,9 +161,8 @@ export default {
       }
       if (this.issueValue.length) { req.tagIds = this.issueValue }
       if (this.productValue.length) { req.productIds = this.productValue }
-      if (this.currentScorer.length) {
-        req.operatorIds = this.currentScorer
-      }
+      if (this.currentScorer.length) req.operatorIds = this.currentScorer
+      if (this.streamNum) req.streamNum = this.streamNum
       this.cacheTimeSpan = this.timeSpan
       return req
     },
@@ -236,6 +242,10 @@ export default {
     }
 
     .product-search {
+      .stream-num {
+        width: 200px;
+      }
+
       .el-cascader {
         width: 250px;
       }
