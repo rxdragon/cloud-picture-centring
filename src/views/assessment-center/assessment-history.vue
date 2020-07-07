@@ -44,7 +44,7 @@
       <div class="product-search search-item">
         <span>流水号</span>
         <div class="stream-num">
-          <el-input v-model="streamNum"></el-input>
+          <el-input v-model.trim="streamNum" @keyup.native.enter="getSearchHistory(1)" ></el-input>
         </div>
       </div>
     </div>
