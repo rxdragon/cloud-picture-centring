@@ -13,12 +13,17 @@ const personalCenterRetoucherLeader = {
       path: 'retouch-report',
       name: 'RetouchReport',
       component: () => import('@/views/personal-center-retoucher-leader/retouch-report.vue'),
-      meta: { title: '组员修图报告', icon: '' }
+      meta: { title: '组员报告', icon: '' }
     }, {
       path: 'leader-audit-survey',
       name: 'LeaderAuditSurvey',
       component: () => import('@/views/personal-center-audit/index.vue'),
       meta: { title: '个人审核概况', icon: '' }
+    }, {
+      path: 'charge-self-performance',
+      name: 'ChargeSelfPerformance',
+      component: () => import('@/views/personal-center-audit/charge-self-performance.vue'),
+      meta: { title: '个人绩效', icon: '' }
     }
   ]
 }

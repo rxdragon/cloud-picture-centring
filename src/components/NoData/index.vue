@@ -67,13 +67,16 @@
         </g>
       </svg>
     </div>
-    暂无数据
+    {{ desc }}
   </div>
 </template>
 
 <script>
 export default {
-  name: 'NoDataComponents'
+  name: 'NoDataComponents',
+  props: {
+    desc: { type: String, default: '暂无数据' }
+  }
 }
 </script>
 

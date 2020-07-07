@@ -37,6 +37,16 @@
         <span>问题标签</span>
         <issue-label-select v-model="issueValue" />
       </div>
+      <div class="product-search search-item">
+        <span>评分人</span>
+        <scorer-select v-model="currentScorer"></scorer-select>
+      </div>
+      <div class="product-search search-item">
+        <span>流水号</span>
+        <div class="stream-num">
+          <el-input v-model.trim="streamNum" @keyup.native.enter="getSearchHistory(1)" ></el-input>
+        </div>
+      </div>
     </div>
     <div v-for="photoItem in photoList" :key="photoItem.businessId" class="photo-data module-panel">
       <GradeBox :photo-info="photoItem" @updateList="getSearchHistory" />
@@ -73,6 +83,7 @@ import GradeBox from './components/GradeBox'
 import StaffSelect from '@SelectBox/StaffSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
+import scorerSelect from '@SelectBox/scorerSelect'
 import ReportBox from './components/ReportBox.vue'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
@@ -80,7 +91,7 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'AssessmentHistory',
-  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, ReportBox },
+  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, scorerSelect, ReportBox },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -98,7 +109,9 @@ export default {
       uuid: '',
       cacheTimeSpan: [],
       cacheSendStaff: '',
-      drawer: false
+      drawer: false,
+      currentScorer: [],
+      streamNum: ''
     }
   },
   created () {
@@ -148,6 +161,8 @@ export default {
       }
       if (this.issueValue.length) { req.tagIds = this.issueValue }
       if (this.productValue.length) { req.productIds = this.productValue }
+      if (this.currentScorer.length) req.operatorIds = this.currentScorer
+      if (this.streamNum) req.streamNum = this.streamNum
       this.cacheTimeSpan = this.timeSpan
       return req
     },
@@ -183,13 +198,12 @@ export default {
      */
     showDrawer () {
       this.drawer = true
-    }
+    },
   }
 }
 </script>
 
 <style lang="less">
-
 
 .assessment-history {
   .search-box {
@@ -228,6 +242,10 @@ export default {
     }
 
     .product-search {
+      .stream-num {
+        width: 200px;
+      }
+
       .el-cascader {
         width: 250px;
       }

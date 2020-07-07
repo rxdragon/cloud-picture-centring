@@ -138,7 +138,6 @@ export default {
 
 <style lang="less">
 
-
 .partner-performance {
   .search-box {
     .button-box {

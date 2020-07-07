@@ -217,8 +217,19 @@
             </div>
           </div>
           <order-info-module v-if="Object.keys(info).length" :order-info="info" />
+          <!-- 种拔草设置 -->
+          <div class="label-top" v-if="labelDataTop.length">
+            <div
+              v-for="(item, index) in labelDataTop"
+              :key="index"
+              :class="[item.isSelect ? 'active' : '', item.class, 'type-tag']"
+              @click="selectTLabelData(item)"
+            >
+              {{ item.name }}
+            </div>
+          </div>
           <!-- 问题标签 -->
-          <div class="order-label">
+          <div class="order-label" v-if="labelData.length">
             <div class="label-title">标签栏</div>
             <template v-for="(labelClassItem, labelClassIndex) in labelData">
               <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
@@ -239,7 +250,14 @@
             </template>
           </div>
           <div class="submit-box">
-            <el-button type="primary" @click="submitData" :loading="isSubmit">提交评分</el-button>
+            <el-button
+              type="primary"
+              v-if="currentId"
+              @click="submitData"
+              :loading="isSubmit"
+            >
+              提交评分
+            </el-button>
             <el-button type="info" @click="closePreview" class="out-btn">退出</el-button>
           </div>
         </div>
@@ -257,6 +275,12 @@ import guideData from './guideData'
 import Driver from 'driver.js' // 引导框
 import FabricCanvas from './FabricCanvas'
 import * as AssessmentCenter from '@/api/assessmentCenter'
+import * as GradeConfiguration from '@/api/gradeConfiguration'
+import { PlantIdTypeEnum } from '@/utils/enumerate'
+
+
+let allLabel = null
+let goodWord = []
 
 export default {
   name: 'GradePreview',
@@ -298,6 +322,7 @@ export default {
       driver: null, // 引导信息
       inZoomIn: false, // 是否放大中
       photoZoomStyle: '', // 图片信息
+      labelDataTop: [], // 种拔草标签, 选了这个以后才能展示对应的标签数据
       labelData: [], // 标签数据
       showCanvas: false,
       canvasOption: { // canvas 信息
@@ -325,7 +350,9 @@ export default {
         }
       ],
       isSubmit: false, // 是否提交
-      allLoading: false // 整个页面loading
+      allLoading: false, // 整个页面loading
+      currentId: '', // 当前种拔草的id 1种草,2拔草,3一般
+      hasPushGoodWord: false
     }
   },
   computed: {
@@ -349,6 +376,7 @@ export default {
     }
   },
   created () {
+    this.fetchGoodWord()
     this.initShowPhoto()
     this.getLabelData()
     this.driver = new Driver({
@@ -441,6 +469,15 @@ export default {
      */
     async submitData () {
       try {
+        const issuesLabel = this.getIssuesData()
+        const issuesLabelId = issuesLabel.reduce((sumArr, item) => {
+          if (item.type !== 'goodWord') { sumArr.push({ id: item.id }) }
+          return sumArr
+        }, [])
+        const typeLabelId = issuesLabel.reduce((sumArr, item) => {
+          if (item.type === 'goodWord') { sumArr.push(item.id) }
+          return sumArr
+        }, [])
         this.isSubmit = true
         let markPhotoImg = ''
         if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
@@ -448,14 +485,14 @@ export default {
         }
         this.showCanvas = false
         this.canvasOption.drawType = ''
-        const issuesLabel = this.getIssuesData()
-        const issuesLabelId = issuesLabel.map(item => ({ id: item.id }))
-        this.resetLabelData()
         const sendData = {
           issuesLabelId,
-          markPhotoImg
+          markPhotoImg,
+          typeLabelId,
+          type: PlantIdTypeEnum[this.currentId]
         }
         this.$emit('submit', sendData)
+        this.resetLabelData()
       } catch (error) {
         console.error(error)
         this.$newMessage.error('上传标记图失败')
@@ -473,18 +510,59 @@ export default {
       return selectData
     },
     /**
-     * @description 获取标签数据
+     * @description 获取所有数据
      */
     async getLabelData () {
-      this.labelData = await AssessmentCenter.getScoreConfigList()
+      const labelInfo = await AssessmentCenter.getScoreConfigList()
+      this.labelDataTop = labelInfo.typeArr
+      allLabel = labelInfo.allLabel
+    },
+    /**
+     * @description 获取激励词列表
+     */
+    async fetchGoodWord () {
+      const words = await GradeConfiguration.getExcitationDirList()
+      words.forEach(wordsItem => {
+        wordsItem.isSelect = false
+        wordsItem.type = 'goodWord'
+      })
+      goodWord = words
+    },
+    /**
+     * @description 根据种拔草,选择对应的标签
+     */
+    selectTLabelData (selItem) {
+      const { id } = selItem
+      if (id === this.currentId) {
+        return
+      }
+      this.resetLabelData()
+      this.labelDataTop.forEach((item) => {
+        item.isSelect = item.id === id
+      })
+      this.currentId = id
+      this.labelData = allLabel[id]
+      if (id === 1 && !this.hasPushGoodWord) { // 种草情况下,将激励词推进标签中
+        this.labelData.push({
+          name: '激励词',
+          child: goodWord
+        })
+        this.hasPushGoodWord = true
+      }
+      this.showCanvas = false
     },
     /**
      * @description 重制标签
      */
     resetLabelData () {
+      this.labelDataTop.forEach(item => {
+        item.isSelect = false
+      })
       this.labelData.forEach(item => {
         item.child.forEach(issItem => { issItem.isSelect = false })
       })
+      this.currentId = ''
+      this.labelData = []
     },
     /**
      * @description 提示按钮
@@ -1073,6 +1151,59 @@ export default {
               width: 12px;
               height: 12px;
               border: 1px solid #409eff;
+            }
+          }
+        }
+      }
+
+      .label-top {
+        margin-top: 10px;
+        margin-left: 10px;
+
+        .type-tag {
+          display: inline-block;
+          width: 80px;
+          height: 40px;
+          margin: 0 10px 10px 0;
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 40px;
+          text-align: center;
+          cursor: pointer;
+          -webkit-user-select: none;
+          border: 1px solid #fff;
+          border-radius: 4px;
+
+          &.plant {
+            color: #44c27e;
+            background-color: #fff;
+            border-color: #44c27e;
+
+            &.active {
+              color: #fff;
+              background-color: #44c27e;
+            }
+          }
+
+          &.pull {
+            color: #ff3974;
+            background-color: #fff;
+            border-color: #ff3974;
+
+            &.active {
+              color: #fff;
+              background-color: #ff3974;
+            }
+          }
+
+          &.none {
+            color: #4669fb;
+            background-color: #fff;
+            border-color: #4669fb;
+
+            &.active {
+              color: #fff;
+              background-color: #4669fb;
             }
           }
         }

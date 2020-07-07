@@ -1,6 +1,7 @@
 <template>
   <div class="staff-select">
     <el-cascader
+      ref="staffCascader"
       :options="options"
       :props="propsValue"
       collapse-tags
@@ -57,6 +58,12 @@ export default {
       const list = await Staff.getStaffSelectList()
       this.options = list
       this.loadingDown = false
+    },
+    /**
+     * @description 获取选中节点
+     */
+    getCheckedStaff () {
+      return this.$refs['staffCascader'].getCheckedNodes(true)
     }
   }
 }
