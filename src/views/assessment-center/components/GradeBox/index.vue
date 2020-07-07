@@ -258,9 +258,9 @@ export default {
           }
 
           &.none {
-            color: #909399;
+            color: #4669fb;
             background-color: #fff;
-            border-color: #909399;
+            border-color: #4669fb;
           }
         }
 
