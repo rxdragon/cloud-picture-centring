@@ -219,19 +219,17 @@
           <order-info-module v-if="Object.keys(info).length" :order-info="info" />
           <!-- 种拔草设置 -->
           <div class="label-top" v-if="labelDataTop.length">
-            <el-tag
-              size="medium"
-              disable-transitions
+            <div
               v-for="(item, index) in labelDataTop"
               :key="index"
-              :class="item.isSelect ? 'active' : ''"
+              :class="[item.isSelect ? 'active' : '', item.class, 'type-tag']"
               @click="selectTLabelData(item)"
             >
               {{ item.name }}
-            </el-tag>
+            </div>
           </div>
           <!-- 问题标签 -->
-          <div class="order-label">
+          <div class="order-label" v-if="labelData.length">
             <div class="label-title">标签栏</div>
             <template v-for="(labelClassItem, labelClassIndex) in labelData">
               <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
@@ -354,7 +352,7 @@ export default {
       isSubmit: false, // 是否提交
       allLoading: false, // 整个页面loading
       currentId: '', // 当前种拔草的id 1种草,2拔草,3一般
-      hasPushGoodWord: false // 是否推入过激励词
+      hasPushGoodWord: false
     }
   },
   computed: {
@@ -487,7 +485,6 @@ export default {
         }
         this.showCanvas = false
         this.canvasOption.drawType = ''
-        this.resetLabelData()
         const sendData = {
           issuesLabelId,
           markPhotoImg,
@@ -495,6 +492,7 @@ export default {
           type: PlantIdTypeEnum[this.currentId]
         }
         this.$emit('submit', sendData)
+        this.resetLabelData()
       } catch (error) {
         console.error(error)
         this.$newMessage.error('上传标记图失败')
@@ -538,6 +536,7 @@ export default {
       if (id === this.currentId) {
         return
       }
+      this.resetLabelData()
       this.labelDataTop.forEach((item) => {
         item.isSelect = item.id === id
       })
@@ -551,15 +550,19 @@ export default {
         this.hasPushGoodWord = true
       }
       this.showCanvas = false
-      this.resetLabelData()
     },
     /**
      * @description 重制标签
      */
     resetLabelData () {
+      this.labelDataTop.forEach(item => {
+        item.isSelect = false
+      })
       this.labelData.forEach(item => {
         item.child.forEach(issItem => { issItem.isSelect = false })
       })
+      this.currentId = ''
+      this.labelData = []
     },
     /**
      * @description 提示按钮
@@ -1157,19 +1160,51 @@ export default {
         margin-top: 10px;
         margin-left: 10px;
 
-        .el-tag {
+        .type-tag {
+          display: inline-block;
+          width: 80px;
+          height: 40px;
           margin: 0 10px 10px 0;
           font-size: 12px;
           font-weight: 400;
-          color: #eee;
+          line-height: 40px;
+          text-align: center;
           cursor: pointer;
           -webkit-user-select: none;
-          background-color: rgba(0, 0, 0, 0.6);
-          border: none;
+          border: 1px solid #fff;
           border-radius: 4px;
 
-          &.active {
-            background-color: #808080;
+          &.plant {
+            color: #44c27e;
+            background-color: #fff;
+            border-color: #44c27e;
+
+            &.active {
+              color: #fff;
+              background-color: #44c27e;
+            }
+          }
+
+          &.pull {
+            color: #ff3974;
+            background-color: #fff;
+            border-color: #ff3974;
+
+            &.active {
+              color: #fff;
+              background-color: #ff3974;
+            }
+          }
+
+          &.none {
+            color: #909399;
+            background-color: #fff;
+            border-color: #909399;
+
+            &.active {
+              color: #fff;
+              background-color: #909399;
+            }
           }
         }
       }

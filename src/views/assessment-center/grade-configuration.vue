@@ -5,7 +5,16 @@
       <el-button v-if="showEmptyCheckPool" type="primary" @click="showEmptyDialog = true">清空评分</el-button>
     </div>
     <div class="main module-panel">
-      <div class="add-configuration-item">
+      <el-tabs @tab-click="onTabChange" v-model="tabName" >
+        <el-tab-pane
+          v-for="(tab, index) in tabMap"
+          :label="tab.name"
+          :name="tab.type"
+          :key="index"
+        >
+        </el-tab-pane>
+      </el-tabs>
+      <div class="add-configuration-item" v-if="tabName !== 'goodWord'">
         <el-popover
           placement="bottom-start"
           width="462"
@@ -39,15 +48,6 @@
           </div>
         </div>
       </div>
-      <el-tabs @tab-click="onTabChange" v-model="tabName" >
-        <el-tab-pane
-          v-for="(tab, index) in tabMap"
-          :label="tab.name"
-          :name="tab.type"
-          :key="index"
-        >
-        </el-tab-pane>
-      </el-tabs>
       <div v-if="tabName === 'goodWord'">
         <good-word></good-word>
       </div>
@@ -423,9 +423,6 @@ export default {
     overflow: overlay;
 
     .add-configuration-item {
-      position: sticky;
-      top: 0;
-      z-index: 100;
       display: flex;
       justify-content: space-between;
       padding: 19px 0 24px;

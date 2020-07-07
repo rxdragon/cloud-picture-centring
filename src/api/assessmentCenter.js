@@ -7,7 +7,7 @@ import StreamModel from '@/model/StreamModel.js'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-import { PlantTypeNameEnum } from '@/utils/enumerate'
+import { PlantTypeNameEnum, PlantIdTypeEnum } from '@/utils/enumerate'
 
 /**
  * @description 获取今日抽片指标
@@ -191,7 +191,8 @@ export function getScoreConfigList () {
       typeArr.push({
         name,
         id,
-        isSelect: false
+        isSelect: false,
+        class: PlantIdTypeEnum[id]
       })
       allLabel[id] = scoreConfig
     })
