@@ -66,6 +66,9 @@ export default {
       return canUploadState.includes(this.state)
     }
   },
+  created () {
+    this.getUpyunSign()
+  },
   activated () {
     this.getUpyunSign()
   },
