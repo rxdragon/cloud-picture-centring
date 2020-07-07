@@ -1165,7 +1165,7 @@ export default {
           width: 80px;
           height: 40px;
           margin: 0 10px 10px 0;
-          font-size: 12px;
+          font-size: 18px;
           font-weight: 400;
           line-height: 40px;
           text-align: center;
@@ -1197,13 +1197,13 @@ export default {
           }
 
           &.none {
-            color: #909399;
+            color: #4669fb;
             background-color: #fff;
-            border-color: #909399;
+            border-color: #4669fb;
 
             &.active {
               color: #fff;
-              background-color: #909399;
+              background-color: #4669fb;
             }
           }
         }
