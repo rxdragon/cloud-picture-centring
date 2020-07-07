@@ -13,7 +13,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo']),
+    // 显示编辑按钮
+    showPerformanceEdit () {
+      return this.timeSpan === getSearchMonth()
+    }
   },
   methods: {
     // 是否能打分
@@ -96,7 +100,7 @@ export default {
         results.splice(0, 1)
         const reg = /^\d+\.?\d{0,2}$/
         const hasEveryScore = results.every(item => {
-          const hasScore = Boolean(item.score) || Number(item.score) === 0
+          const hasScore = Boolean(item.score) || item.score === 0 || item.score === '0'
           const isDecimal = reg.test(Number(item.score))
           const isRightful = Number(item.score) <= 100 && Number(item.score) >= 0
           return hasScore && isDecimal && isRightful
@@ -104,7 +108,7 @@ export default {
         // 是否有自身分数
         const findSelfIndex = results.findIndex(item => item.staffNum === this.userInfo.id)
         if (findSelfIndex >= 0) throw new Error('不能给自身打分')
-        if (!hasEveryScore) throw new Error('分数没有填写完整，或没有填写正确分数值！')
+        if (!hasEveryScore) throw new Error('分数没有填写完整或没有填写正确分数值！')
         const staffScores = results.map(item => {
           return {
             id: item.staffNum,

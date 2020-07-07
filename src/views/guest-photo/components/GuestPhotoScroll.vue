@@ -101,6 +101,9 @@ import * as GuestPhoto from '@/api/guestPhoto'
 export default {
   name: 'GuestPhotoScroll',
   components: { DatePicker, PhotoBox, StaffSelect, ProductSelect, RetouchKindSelect, ListScroll, NoData },
+  props: {
+    initSearch: { type: Object, required: true }
+  },
   data () {
     return {
       routeName: this.$route.name, // 路由名字

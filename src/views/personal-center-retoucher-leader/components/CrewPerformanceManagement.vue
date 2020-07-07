@@ -14,7 +14,7 @@
       <div class="search-item">
         <el-button type="primary" @click="searchPerformance">查 询</el-button>
       </div>
-      <div class="search-item button-box">
+      <div class="search-item button-box" v-if="showPerformanceEdit">
         <el-button type="primary" plain @click="downPerformanceTemplete">下载绩效模版</el-button>
         <upload-excel
           btn-text="导入当月绩效"
