@@ -23,6 +23,10 @@ const whiteRequest = [
   'incrCacheCount'
 ]
 
+const noHandlerError = [
+  0xA11006004
+]
+
 // 设置请求头信息
 axios.interceptors.request.use(
   config => {
@@ -95,8 +99,11 @@ axios.interceptors.response.use(
       return Promise.reject(message)
     }
 
+
     const message = errorCode.getMsg(data)
-    errorMessage(message)
+    if (!noHandlerError.includes(data.error_code)) {
+      errorMessage(message)
+    }
     return Promise.reject(message)
   }
 )
