@@ -205,6 +205,7 @@
 |范围|描述|commitId|
 --|--|--
  css样式搭建 | [48bab17](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/48bab17)
+ tab样式和修图师一致 | [32e84c0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/32e84c0)
  代码格式优化 | [860b6c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/860b6c1)
  代码格式化 | [b8f7ccb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b8f7ccb)
  优化上传代码 | [aa498cd](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/aa498cd)
