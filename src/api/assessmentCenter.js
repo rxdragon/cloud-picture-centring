@@ -7,7 +7,7 @@ import StreamModel from '@/model/StreamModel.js'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-import { PlantTypeNameEnum, PlantIdTypeEnum } from '@/utils/enumerate'
+import { PLANT_ID_MAP, PlantTypeNameEnum, PlantIdTypeEnum } from '@/utils/enumerate'
 
 /**
  * @description 获取今日抽片指标
@@ -176,18 +176,22 @@ export function getScoreConfigList () {
     url: '/project_cloud/checkPool/getScoreConfigList',
     method: 'GET'
   }).then(msg => {
-    let typeArr = []
-    let allLabel = {}
-    // 将数据拆开
-    msg.forEach((msgItem) => {
-      const {
-        name,
-        id,
-        score_config: scoreConfig
-      } = msgItem
+    // 排序
+    const typeArrSort = [PLANT_ID_MAP.PLANT_ID, PLANT_ID_MAP.NONE_ID, PLANT_ID_MAP.PULL_ID]
+    const sortMsg = []
+    typeArrSort.forEach(typeItem => {
+      const findTypeItem = msg.find(item => +item.id === +typeItem)
+      sortMsg.push(findTypeItem)
+    })
+    // 处理数据
+    const typeArr = []
+    const allLabel = {}
+    sortMsg.forEach((msgItem) => {
+      const { name, id, score_config: scoreConfig } = msgItem
       scoreConfig.forEach(scoreConfigItem => {
         scoreConfigItem.child.forEach(issItem => { issItem.isSelect = false })
       })
+
       typeArr.push({
         name,
         id,

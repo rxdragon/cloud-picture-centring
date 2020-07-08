@@ -149,7 +149,7 @@ export const StaffLevelEnum = {
   chiefCraftsmanMaster: '首席工匠大师'
 }
 
-const PLANT_ID_MAP = {
+export const PLANT_ID_MAP = {
   PLANT_ID: '1', // 种草id
   PULL_ID: '2', // 拔草id
   NONE_ID: '3' // 一般id

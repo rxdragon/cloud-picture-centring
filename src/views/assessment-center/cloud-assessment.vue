@@ -235,7 +235,7 @@ export default {
       this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getStatistics(),
-        this.getHaveCheckResult()
+        this.getHaveCheckResult(true)
       ])
     },
     /**
@@ -256,21 +256,14 @@ export default {
         this.$newMessage.warning('请填写正确的抽片量')
         return false
       }
-      if (!this.timeSpan) {
-        this.$newMessage.warning('请填写正确的时间')
-        return false
-      }
+      if (!this.timeSpan) return this.$newMessage.warning('请填写正确的时间')
       const req = {
         takeNum: this.sampleNum,
         passStartAt: joinTimeSpan(this.timeSpan[0]),
         passEndAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.institutionType) {
-        req.retouchStandard = this.institutionType
-      }
-      if (this.psOrganization) {
-        req.orgId = this.psOrganization
-      }
+      if (this.institutionType) { req.retouchStandard = this.institutionType }
+      if (this.psOrganization) { req.orgId = this.psOrganization }
       return req
     },
     /**
@@ -281,17 +274,15 @@ export default {
         const req = this.getTakeParams()
         if (!req) return false
         this.$store.dispatch('setting/showLoading', this.routeName)
+        // 防止重读抽片
         if (await this.getHaveCheckResult()) return false
         const data = await AssessmentCenter.takePhoto(req)
-        if (!data.length) {
-          this.$newMessage.warning('当前暂无可被抽取的订单。')
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          return
-        }
+        if (!data.length) throw new Error('当前暂无可被抽取的订单。')
         this.uuid = data
         this.isTakePhoto = true
         await this.getSpotCheckResult()
       } catch (error) {
+        this.$newMessage.warning(error.message || error)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
@@ -299,7 +290,7 @@ export default {
     /**
      * @description 是否有抽片
      */
-    async getHaveCheckResult () {
+    async getHaveCheckResult (isReset) {
       try {
         const msg = await AssessmentCenter.getHaveCheckResult()
         if (msg) {
@@ -311,7 +302,7 @@ export default {
           this.photoData = []
           this.spotAllNum = '-'
           this.pager.total = 10
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+          if (isReset) { this.$store.dispatch('setting/hiddenLoading', this.routeName) }
           return false
         }
       } catch (error) {
@@ -336,7 +327,8 @@ export default {
         const data = await AssessmentCenter.getSpotCheckResult(req)
         this.spotAllNum = data.total
         this.pager.total = data.pageTotal || this.pager.total
-        if (this.isTakePhoto === true) {
+        // 抽片成功
+        if (this.isTakePhoto) {
           this.dialogTableVisible = true
           this.isTakePhoto = false
           setTimeout(() => {
@@ -350,7 +342,6 @@ export default {
       } catch (error) {
         this.photoData = []
         if (error === '正在抽片中') {
-          this.$store.dispatch('setting/showLoading', this.routeName)
           this.intervalGetSpotCheck()
         } else {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
