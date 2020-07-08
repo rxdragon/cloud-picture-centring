@@ -350,6 +350,7 @@ export default {
       } catch (error) {
         this.photoData = []
         if (error === '正在抽片中') {
+          this.$store.dispatch('setting/showLoading', this.routeName)
           this.intervalGetSpotCheck()
         } else {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
