@@ -124,9 +124,16 @@ export default {
 
 <style lang="less" scoped>
 .good-word-area {
+  padding: 0 24px;
+  margin-bottom: 40px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.06);
+
   .top {
     display: flex;
     justify-content: flex-end;
+    padding: 10px 0;
   }
 
   .dialog {

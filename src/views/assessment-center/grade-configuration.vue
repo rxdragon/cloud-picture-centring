@@ -4,7 +4,7 @@
       <h3>云学院评分配置</h3>
       <el-button v-if="showEmptyCheckPool" type="primary" @click="showEmptyDialog = true">清空评分</el-button>
     </div>
-    <div class="main module-panel">
+    <div class="main">
       <el-tabs @tab-click="onTabChange" v-model="tabName" >
         <el-tab-pane
           v-for="(tab, index) in tabMap"
@@ -14,7 +14,10 @@
         >
         </el-tab-pane>
       </el-tabs>
-      <div class="add-configuration-item" v-if="tabName !== 'goodWord'">
+      <div
+        :class="['add-configuration-item', tabName === 'plant' ? 'no-radius' : '']"
+        v-if="tabName !== 'goodWord'"
+      >
         <el-popover
           placement="bottom-start"
           width="462"
@@ -419,14 +422,19 @@ export default {
 
   .main {
     height: 100%;
-    padding: 0 24px 19px;
-    overflow: overlay;
 
     .add-configuration-item {
       display: flex;
       justify-content: space-between;
-      padding: 19px 0 24px;
+      padding: 24px;
       background-color: #fff;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.06);
+
+      &.no-radius {
+        border-top-left-radius: 0;
+      }
 
       .right {
         display: flex;
@@ -448,6 +456,15 @@ export default {
           }
         }
       }
+    }
+
+    .score-area {
+      padding: 0 24px;
+      margin-bottom: 40px;
+      background-color: #fff;
+      border-bottom-right-radius: 16px;
+      border-bottom-left-radius: 16px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.06);
     }
 
     .no-data-box {
