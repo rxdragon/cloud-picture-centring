@@ -149,6 +149,8 @@ export default {
         const findGradePhotoIndex = this.photoData.findIndex(item => item._id === this.gradeUUid)
         const nowPhotoIndexArr = this.photoData[findGradePhotoIndex].photoIndex.split('-')
         const isAllLast = nowPhotoIndexArr[0] === nowPhotoIndexArr[1]
+        const isPageLast = this.photoData.length === findGradePhotoIndex + 1 // 页面嘴鸥
+        // 第一页只有一张图
         if (isAllLast && this.photoData.length === 1 && this.pager.page === 1) {
           this.$newMessage.success('你已经打完全部照片')
           this.showGradePreview = false
@@ -157,6 +159,7 @@ export default {
             this.getSpotCheckResult(),
             this.getStatistics()
           ])
+          // 处理在非第一页情况下处理只有一张图的情况
         } else if (isAllLast && this.photoData.length === 1 && this.pager.page > 1) {
           this.$refs['grade-preview'].allLoading = true
           this.pager.page--
@@ -168,7 +171,7 @@ export default {
           this.$refs['grade-preview'].allLoading = false
         } else {
           let gradeUUid = ''
-          if (isAllLast && this.photoData.length !== 1) {
+          if (isPageLast && this.photoData.length !== 1) {
             gradeUUid = this.photoData[findGradePhotoIndex - 1]._id
           } else {
             gradeUUid = this.photoData[findGradePhotoIndex + 1]._id
