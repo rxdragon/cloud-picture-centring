@@ -77,10 +77,10 @@ export default {
       tableDataCount: {
         finishStreamNum: { label: '修图单量', value: '-', componentSwitch: true },
         finishPhotoNum: { label: '修图张数', value: '-' },
-        reworkStreamNum: { label: '重修次数', value: '-', componentSwitch: true },
+        reworkStreamNum: { label: '重修次数', labelDesc: '云端审核退回次数', value: '-', componentSwitch: true },
         overTimeStreamNum: { label: '超时单量', value: '-', componentSwitch: true },
         avgRetouchTime: { label: '修图平均用时', value: '-' },
-        income: { label: '收益', value: '-' },
+        income: { label: '收益', labelDesc: '未扣除负收益', value: '-' },
         notReachStandardDays: { label: '未完成指标（天）', value: '-' }
       },
       tableDataRate: {
