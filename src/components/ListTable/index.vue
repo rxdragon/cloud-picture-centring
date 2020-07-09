@@ -2,12 +2,12 @@
   <div class="list-tabel" :style="gridStyle">
     <div v-if="header" class="title-header">{{ header }}</div>
     <div v-for="(listItem, listIndex) in listdata" :key="listIndex" class="list-box">
-      <el-popover v-if="listItem.labelDesc" placement="left" trigger="hover">
-        <div class="tip-content">
-          <p>{{ listItem.labelDesc }}</p>
-        </div>
-        <div class="cursor-point title" slot="reference">{{ listItem.label }}</div>
-      </el-popover>
+      <div class="title" v-if="listItem.labelDesc">
+        <tip :message="listItem.labelDesc">
+          {{ listItem.label }}
+        </tip>
+      </div>
+      
       <div v-else class="title">{{ listItem.label }}</div>
       <div class="content">
         <el-link
@@ -28,8 +28,11 @@
 </template>
 
 <script>
+import Tip from '@/components/Tip'
+
 export default {
   name: 'ListTable',
+  components: { Tip },
   props: {
     listdata: { type: [Array, Object], default: () => [] }, // 列表数据
     width: { type: String, default: '' }, // 宽

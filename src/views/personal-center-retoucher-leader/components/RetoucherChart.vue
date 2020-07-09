@@ -1,15 +1,10 @@
 <template>
   <div class="retoucher-chart">
-    <el-popover v-if="descMap[showKey]" placement="top" trigger="hover">
-      <div class="tip-content">
-        <p>{{ descMap[showKey] }}</p>
-      </div>
-      <span
-        :class="`cursor-point panel-title-${showKey} panel-title`"
-        slot="reference"
-      >{{ showKey | titleName }}
-      </span>
-    </el-popover>
+    <div v-if="descMap[showKey]" :class="`panel-title-${showKey}`" class="panel-title">
+      <tip :message="descMap[showKey]">
+        {{ showKey | titleName }}
+      </tip>
+    </div>
     <div v-else :class="`panel-title-${showKey}`" class="panel-title">{{ showKey | titleName }}</div>
     <ve-histogram
       class="chart-box"
@@ -23,6 +18,8 @@
 </template>
 
 <script>
+import Tip from '@/components/Tip'
+
 const DataType = {
   finishPhotoNum: '修图张数',
   retouchAvgTime: '平均时长（张）/ 分钟',
@@ -41,6 +38,7 @@ const DataColor = {
 }
 export default {
   name: 'RetoucherChart',
+  components: { Tip },
   filters: {
     titleName (value) {
       return DataType[value]
@@ -113,8 +111,8 @@ export default {
         rows: []
       },
       descMap: {
-        storeReturnStreamNum: '2.6之后为订单完成时间,之前为订单退回时间',
-        goodStreamNum: '2.6之后为订单完成时间,之前为点赞时间',
+        storeReturnStreamNum: '按订单订单完成时间统计',
+        goodStreamNum: '按订单完成时间统计'
       }
     }
   },

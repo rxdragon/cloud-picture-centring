@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <h3>组员修图报告</h3>
+      <h3>组员报告</h3>
     </div>
     <el-tabs v-model="activeName" v-show="isShowTab">
       <el-tab-pane label="修图报告" name="RetouchStaffReport" />

@@ -141,12 +141,7 @@
     <!-- 我的道具 -->
     <div class="module-panel prop-panel">
       <div class="panel-title">
-        <el-popover placement="top" trigger="hover">
-          <div class="tip-content">
-            <p>有效期15天,请尽快使用</p>
-          </div>
-          <span class="cursor-point" slot="reference">我的道具</span>
-        </el-popover>
+        <tip message="有效期15天,请尽快使用">我的道具</tip>
       </div>
       <div class="panel-main">
         <template v-if="Object.keys(propData).length">
@@ -195,12 +190,13 @@ import ListTable from '@/components/ListTable'
 import CountTo from '@/components/CountTo'
 import NoData from '@/components/NoData'
 import RetouchPerformance from './components/RetouchPerformance'
+import Tip from '@/components/Tip'
 
 import * as Retoucher from '@/api/retoucher.js'
 
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, CountTo, NoData, RetouchPerformance },
+  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip },
   filters: {
     // 获取小数
     getPoint (value) {
@@ -302,10 +298,6 @@ export default {
 
 <style lang="less">
 @import '../../styles/variables.less';
-
-.cursor-point {
-  cursor: pointer;
-}
 
 .personal-details {
   .today-box {

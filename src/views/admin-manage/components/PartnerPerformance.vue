@@ -17,14 +17,7 @@
       <div class="retouch-order-statistics">
         <div class="panel-title">
           修图问题统计
-          <el-popover placement="top" trigger="hover">
-            <div class="tip-content">
-              <p><span class="bold">张数统计:</span> 不包含模版照、不计收益和退单张数</p>
-              <p><span class="bold">总数量:</span> 任何情况退单都会会新增总订单和总张数</p>
-              <p><span class="bold">门店退单:</span> 同一修图师接到退单,不会增加</p>
-            </div>
-            <div class="driver-icon small" slot="reference">?</div>
-          </el-popover>
+          <tip :message="message"></tip>
         </div>
         <retouch-order-chart :chart-datas="orderStatisticsData" />
       </div>
@@ -32,12 +25,7 @@
         <div class="title-box">
           <div class="panel-title">
             云学院抽查统计
-            <el-popover placement="top" trigger="hover">
-              <div class="tip-content">
-                <p>统计范围:该时间段修图完成的单子</p>
-              </div>
-              <div class="driver-icon small" slot="reference">?</div>
-            </el-popover>
+            <tip message="统计范围:该时间段修图完成的单子"></tip>
           </div>
           <div class="check-avg">抽查平均分：{{ checkData.checkAvgScore }}</div>
         </div>
@@ -64,15 +52,23 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import RetouchOrderChart from './chart-components/RetouchOrderChart'
 import PieChart from '@/components/charts/PieChart'
 import CountTo from '@/components/CountTo'
+import Tip from '@/components/Tip'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as WorkManage from '@/api/workManage'
 
+const message = `
+<p><span class="bold">张数统计:</span> 不包含模版照、不计收益和退单张数</p>
+              <p><span class="bold">总数量:</span> 任何情况退单都会会新增总订单和总张数</p>
+              <p><span class="bold">门店退单:</span> 同一修图师接到退单,不会增加</p>
+`
+
 export default {
   name: 'PartnerPerformance',
-  components: { DatePicker, StaffSelect, RetouchOrderChart, PieChart, CountTo },
+  components: { DatePicker, StaffSelect, RetouchOrderChart, PieChart, CountTo, Tip },
   data () {
     return {
+      message,
       loading: false,
       timeSpan: null, // 时间戳
       staffIds: [], // 伙伴id
