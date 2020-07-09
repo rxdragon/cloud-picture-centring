@@ -15,12 +15,30 @@
     </div>
     <div class="table-panel">
       <div class="retouch-order-statistics">
-        <div class="panel-title">修图问题统计</div>
+        <div class="panel-title">
+          修图问题统计
+          <el-popover placement="top" trigger="hover">
+            <div class="tip-content">
+              <p><span class="bold">张数统计:</span> 不包含模版照、不计收益和退单张数</p>
+              <p><span class="bold">总数量:</span> 任何情况退单都会会新增总订单和总张数</p>
+              <p><span class="bold">门店退单:</span> 同一修图师接到退单,不会增加</p>
+            </div>
+            <div class="driver-icon small" slot="reference">?</div>
+          </el-popover>
+        </div>
         <retouch-order-chart :chart-datas="orderStatisticsData" />
       </div>
       <div class="performance-statistics">
         <div class="title-box">
-          <div class="panel-title">云学院抽查统计</div>
+          <div class="panel-title">
+            云学院抽查统计
+            <el-popover placement="top" trigger="hover">
+              <div class="tip-content">
+                <p>统计范围:该时间段修图完成的单子</p>
+              </div>
+              <div class="driver-icon small" slot="reference">?</div>
+            </el-popover>
+          </div>
           <div class="check-avg">抽查平均分：{{ checkData.checkAvgScore }}</div>
         </div>
         <div class="chart-box">
@@ -61,8 +79,8 @@ export default {
       otherData: {
         exp: { value: '0.00', label: '海草值' },
         income: { value: '0.00', label: '收益' },
-        goodRate: { value: '0.00', label: '门店点赞率' },
-        retoucherNpsAvg: { value: '0.00', label: '顾客满意度（平均值）' }
+        goodRate: { value: '0.00', label: '门店点赞率(云端完成时间)' },
+        retoucherNpsAvg: { value: '0.00', label: '顾客满意度（顾客评价时间）' }
       },
       checkData: {},
       orderStatisticsData: {
@@ -137,6 +155,9 @@ export default {
 </script>
 
 <style lang="less">
+.bold {
+  font-weight: bold;
+}
 
 .partner-performance {
   .search-box {
@@ -194,6 +215,7 @@ export default {
     .panel-title {
       position: absolute;
       top: 0;
+      z-index: 1;
       height: 24px;
     }
   }

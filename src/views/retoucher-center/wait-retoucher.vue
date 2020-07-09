@@ -4,7 +4,10 @@
       <div v-if="!showDetail" key="list-box" class="list-box">
         <!-- 标题 -->
         <div class="header">
-          <h3>我的待修订单</h3>
+          <h3>
+            我的待修订单
+            <p class="driver-icon" @click.stop="guide">?</p>
+          </h3>
           <div class="header-left">
             <span v-if="state !== 2" class="queue-info queue-length">修图排队中流水：{{ queueInfo.waitRetouchStream }}</span>
             <span v-else class="queue-info">排队接单中（顺序{{ queueInfo.retouchQueueIndex }}）</span>
@@ -74,7 +77,7 @@
             </div>
           </div>
           <!-- 今日获得收益 -->
-          <div class="today-info">
+          <div class="today-info" id="todayEarning">
             <div class="box-left">
               <div class="title">今日获得收益</div>
               <div class="data-info">
@@ -96,7 +99,7 @@
             </div>
           </div>
           <!-- 今日负收益 -->
-          <div class="today-info">
+          <div class="today-info" id="todayLose">
             <div class="box-left">
               <div class="title">今日负收益</div>
               <div class="data-info">
@@ -155,6 +158,10 @@ import TakeOrdersList from './components/TakeOrdersList'
 import HangUpList from './components/HangUpList'
 import CountTo from '@/components/CountTo'
 import { mapGetters } from 'vuex'
+import guideData from './guideData.js'
+import Driver from 'driver.js' // 引导框
+import 'driver.js/dist/driver.min.css'
+
 
 import * as Retoucher from '@/api/retoucher.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
@@ -191,7 +198,8 @@ export default {
         goldReward: 0, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
-      hasInitialization: false // 是否有初始化数据
+      hasInitialization: false, // 是否有初始化数据
+      driver: null
     }
   },
   computed: {
@@ -238,6 +246,13 @@ export default {
     })
     this.hasInitialization = true
     this.initializeData()
+    this.driver = new Driver({
+      nextBtnText: '下一个',
+      prevBtnText: '上一个',
+      doneBtnText: '完成',
+      closeBtnText: '关闭',
+      animate: true
+    })
   },
   deactivated () {
     this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
@@ -339,6 +354,14 @@ export default {
       }).finally(() => {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       })
+    },
+    /**
+       * @description 提示按钮
+       */
+    guide () {
+      const steps = guideData
+      this.driver.defineSteps(steps)
+      this.driver.start()
     }
   }
 }

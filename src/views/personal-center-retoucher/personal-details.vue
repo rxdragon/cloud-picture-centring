@@ -140,7 +140,14 @@
     </div>
     <!-- 我的道具 -->
     <div class="module-panel prop-panel">
-      <div class="panel-title">我的道具</div>
+      <div class="panel-title">
+        <el-popover placement="top" trigger="hover">
+          <div class="tip-content">
+            <p>有效期15天,请尽快使用</p>
+          </div>
+          <span class="cursor-point" slot="reference">我的道具</span>
+        </el-popover>
+      </div>
       <div class="panel-main">
         <template v-if="Object.keys(propData).length">
           <el-badge
@@ -295,6 +302,10 @@ export default {
 
 <style lang="less">
 @import '../../styles/variables.less';
+
+.cursor-point {
+  cursor: pointer;
+}
 
 .personal-details {
   .today-box {

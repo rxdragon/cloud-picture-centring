@@ -1,6 +1,16 @@
 <template>
   <div class="retoucher-chart">
-    <div :class="`panel-title-${showKey}`" class="panel-title">{{ showKey | titleName }}</div>
+    <el-popover v-if="descMap[showKey]" placement="top" trigger="hover">
+      <div class="tip-content">
+        <p>{{ descMap[showKey] }}</p>
+      </div>
+      <span
+        :class="`cursor-point panel-title-${showKey} panel-title`"
+        slot="reference"
+      >{{ showKey | titleName }}
+      </span>
+    </el-popover>
+    <div v-else :class="`panel-title-${showKey}`" class="panel-title">{{ showKey | titleName }}</div>
     <ve-histogram
       class="chart-box"
       :data="chartData"
@@ -101,6 +111,10 @@ export default {
       chartData: {
         columns: ['name', 'value'],
         rows: []
+      },
+      descMap: {
+        storeReturnStreamNum: '2.6之后为订单完成时间,之前为订单退回时间',
+        goodStreamNum: '2.6之后为订单完成时间,之前为点赞时间',
       }
     }
   },
@@ -121,6 +135,10 @@ export default {
 
 <style lang="less">
 .retoucher-chart {
+  .panel-title {
+    display: inline-block;
+  }
+
   .panel-title-retouchAvgTime {
     &::before {
       background-color: #6b46fb;

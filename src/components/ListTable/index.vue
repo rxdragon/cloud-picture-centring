@@ -2,7 +2,13 @@
   <div class="list-tabel" :style="gridStyle">
     <div v-if="header" class="title-header">{{ header }}</div>
     <div v-for="(listItem, listIndex) in listdata" :key="listIndex" class="list-box">
-      <div class="title">{{ listItem.label }}</div>
+      <el-popover v-if="listItem.labelDesc" placement="left" trigger="hover">
+        <div class="tip-content">
+          <p>{{ listItem.labelDesc }}</p>
+        </div>
+        <div class="cursor-point title" slot="reference">{{ listItem.label }}</div>
+      </el-popover>
+      <div v-else class="title">{{ listItem.label }}</div>
       <div class="content">
         <el-link
           v-if="listItem.componentSwitch"

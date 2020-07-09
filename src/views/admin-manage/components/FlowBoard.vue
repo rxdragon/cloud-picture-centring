@@ -19,7 +19,12 @@
             </div>
           </div>
           <div class="panel-data-box">
-            <div class="data-title">全部待修照片数</div>
+            <el-popover placement="top" trigger="hover">
+              <div class="tip-content">
+                <p>不包括不计收益的照片(模板照,人数为0的照片)和退单照片</p>
+              </div>
+              <div class="cursor-point data-title" slot="reference">全部待修照片数</div>
+            </el-popover>
             <div class="data-content">
               <count-to :end-value="flowInfo.waitRetouch.photoNum.today + flowInfo.waitRetouch.photoNum.other" />
               <el-popover
@@ -341,7 +346,6 @@ export default {
 
 <style lang="less">
 
-
 .table-popover {
   .popover-table {
     display: block;
@@ -490,6 +494,10 @@ export default {
       display: inline-block;
       width: 183px;
       padding: 12px 10px;
+
+      .cursor-point {
+        cursor: pointer;
+      }
 
       .data-title {
         padding-bottom: 8px;
