@@ -19,7 +19,11 @@
             </div>
           </div>
           <div class="panel-data-box">
-            <div class="data-title">全部待修照片数</div>
+            <div class="data-title">
+              <tip :message="message">
+                全部待修照片数
+              </tip>
+            </div>
             <div class="data-content">
               <count-to :end-value="flowInfo.waitRetouch.photoNum.today + flowInfo.waitRetouch.photoNum.other" />
               <el-popover
@@ -225,12 +229,16 @@
 import * as AdminManage from '@/api/adminManage.js'
 import PeopleRing from './PeopleRing.vue'
 import CountTo from '@/components/CountTo'
+import Tip from '@/components/Tip'
+
+const message = '不包括不计收益的照片(模板照,人数为0的照片)和退单照片'
 
 export default {
   name: 'FlowBoard',
-  components: { PeopleRing, CountTo },
+  components: { PeopleRing, CountTo, Tip },
   data () {
     return {
+      message,
       flowInfo: {
         retouchingPersonNum: 0,
         outerRetouchingPersonNum: 0,
@@ -340,7 +348,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 .table-popover {
   .popover-table {

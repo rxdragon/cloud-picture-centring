@@ -1,6 +1,11 @@
 <template>
   <div class="retoucher-chart">
-    <div :class="`panel-title-${showKey}`" class="panel-title">{{ showKey | titleName }}</div>
+    <div v-if="descMap[showKey]" :class="`panel-title-${showKey}`" class="panel-title">
+      <tip :message="descMap[showKey]">
+        {{ showKey | titleName }}
+      </tip>
+    </div>
+    <div v-else :class="`panel-title-${showKey}`" class="panel-title">{{ showKey | titleName }}</div>
     <ve-histogram
       class="chart-box"
       :data="chartData"
@@ -13,6 +18,8 @@
 </template>
 
 <script>
+import Tip from '@/components/Tip'
+
 const DataType = {
   finishPhotoNum: '修图张数',
   retouchAvgTime: '平均时长（张）/ 分钟',
@@ -31,6 +38,7 @@ const DataColor = {
 }
 export default {
   name: 'RetoucherChart',
+  components: { Tip },
   filters: {
     titleName (value) {
       return DataType[value]
@@ -101,6 +109,10 @@ export default {
       chartData: {
         columns: ['name', 'value'],
         rows: []
+      },
+      descMap: {
+        storeReturnStreamNum: '按订单订单完成时间统计',
+        goodStreamNum: '按订单完成时间统计'
       }
     }
   },
@@ -121,6 +133,10 @@ export default {
 
 <style lang="less">
 .retoucher-chart {
+  .panel-title {
+    display: inline-block;
+  }
+
   .panel-title-retouchAvgTime {
     &::before {
       background-color: #6b46fb;

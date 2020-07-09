@@ -3,7 +3,9 @@
     <el-tooltip effect="dark" placement="top" popper-class="tip-tooltip">
       <div slot="content" class="message-content" v-html="message"></div>
       <div class="question-box">
-        <i class="el-icon-question" />
+        <slot>
+          <i class="el-icon-question" />
+        </slot>
       </div>
     </el-tooltip>
   </div>
@@ -20,11 +22,15 @@ export default {
 
 <style lang="less" scoped>
 .tip {
+  display: inline;
+  cursor: pointer;
+
   .question-box {
+    display: inline;
+
     .el-icon-question {
       font-size: 20px;
       color: #909399;
-      cursor: pointer;
     }
   }
 }
