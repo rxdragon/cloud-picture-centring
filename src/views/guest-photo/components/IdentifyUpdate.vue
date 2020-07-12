@@ -78,7 +78,7 @@ export default {
      */
     async beforeUpload (file) {
       try {
-        const imgInfo = await PhotoTool.getImgBufferPhoto(file)
+        const imgInfo = await PhotoTool.getImgBufferPhotoNotCheck(file)
         const type = imgInfo.typeInfo.mime
         this.checkFileType(type) // 判断是否是图片
         this.$emit('update:state', IDENTIFY_STATE.UPDATEING)

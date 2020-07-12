@@ -235,6 +235,17 @@ export async function getImgBufferPhoto (file) {
 }
 
 /**
+ * @description 获取图片md5值
+ * @param {*} file
+ */
+export async function getImgBufferPhotoNotCheck (file) {
+  const reader = new QiNiuETag()
+  await reader.updateBlob(file)
+  const data = reader.fileInfo
+  return data
+}
+
+/**
  * @description 获取人数列表
  * @param {*} photos
  */
