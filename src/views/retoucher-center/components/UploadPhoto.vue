@@ -246,7 +246,8 @@ export default {
       const hasSameName = this.photos.some(item => {
         const orginPhotoName = PhotoTool.photoPathExtToLowerCase(item.path)
         const orginPhotoNameForJpeg = orginPhotoName.replace('jpeg', 'jpg')
-        return orginPhotoName === fileName || orginPhotoNameForJpeg === fileName
+        const orginPhotoNameForUnknow = orginPhotoName.replace('unknow', 'jpg')
+        return orginPhotoName === fileName || orginPhotoNameForJpeg === fileName || orginPhotoNameForUnknow === fileName
       })
       if (!hasSameName) {
         throw new Error('请上传与原片文件名一致的照片。')
