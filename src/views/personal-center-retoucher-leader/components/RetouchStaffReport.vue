@@ -110,7 +110,7 @@ export default {
         lekimaInfo: { label: '利奇马（单/张）', value: '- / -', componentSwitch: true, query: 'isLichma' }
       },
       chartInfo: [],
-      chartShowKeys: ['finishPhotoNum', 'retouchAvgTime', 'lekimaCount', 'goodStreamNum', 'storeReturnStreamNum']
+      chartShowKeys: ['finishPhotoNum', 'retouchAvgTime', 'goodStreamNum', 'storeReturnStreamNum']
     }
   },
   computed: {

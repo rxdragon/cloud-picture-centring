@@ -84,7 +84,6 @@ export function getStaffQuotaInfoGroupByStaff (params) {
       createItem.finishPhotoNum = retouchPhotoCount // 完成张数
       const retouchAvgTimeSec = getAvg(retouchAllTime, retouchPhotoCount)
       createItem.retouchAvgTime = (retouchAvgTimeSec / 60).toFixed(2) // 平均修图时间
-      createItem.lekimaCount = parseInt(staffInfoItem.lichmaPhotoNum) // 利奇马张数
       createItem.reviewPlantPhotoNum = parseInt(staffInfoItem.reviewPlantPhotoNum) // 审核种草数
       createItem.reviewPullPhotoNum = parseInt(staffInfoItem.reviewPullPhotoNum) // 审核报草数
       createItem.goodStreamNum = parseInt(staffInfoItem.goodStreamNum) // 点赞单量

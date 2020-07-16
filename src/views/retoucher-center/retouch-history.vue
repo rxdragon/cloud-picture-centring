@@ -4,11 +4,18 @@
       <h3>修图历史记录</h3>
     </div>
     <!-- 列表主要内容 -->
-    <div class="history-main table-box">
+    <el-tabs ref="tabs" v-model="activeName" class="tabs-box">
+      <el-tab-pane label="正常流水历史记录" :name="SEARCH_TYPE.NORMAL" />
+      <el-tab-pane label="被退回流水历史记录" :name="SEARCH_TYPE.REWORK" />
+    </el-tabs>
+    <div
+      class="history-main table-box"
+      :class="{'no-border': activeName === SEARCH_TYPE.NORMAL }"
+    >
       <div class="search-box">
         <!-- 修图完成时间 -->
         <div class="date-search search-item">
-          <span>修图完成时间</span>
+          <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成时间' : '退单时间' }}</span>
           <date-picker v-model="timeSpan" />
         </div>
         <!-- 流水号 -->
@@ -17,9 +24,14 @@
           <el-input v-model="streamNum" clearable placeholder="请输入流水号" />
         </div>
         <!-- 门店退回 -->
-        <div class="audit-box search-item">
+        <div class="audit-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
           <span>门店退回</span>
           <return-select v-model="isReturn" />
+        </div>
+        <!-- 门店评价 -->
+        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <span>门店评价</span>
+          <evaluate-select v-model="isGood" />
         </div>
         <!-- 退单类型 -->
         <div class="audit-box search-item">
@@ -31,9 +43,15 @@
             v-model="returnType"
           />
         </div>
-        <div class="spot-check-box search-item">
-          <span>门店点赞</span>
-          <evaluate-select v-model="isGood" />
+        <!-- 是否云学院抽查 -->
+        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <span>云学院抽查</span>
+          <cloud-spot v-model="cloudSpot" clearable />
+        </div>
+        <!-- 云学院问题标签 -->
+        <div class="cloud-issue-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <span>云学院问题标签</span>
+          <issue-label-select v-model="issueValue" />
         </div>
         <div class="search-button-box search-item">
           <el-button type="primary" @click="searchList(1)">查询</el-button>
@@ -124,17 +142,26 @@ import DatePicker from '@/components/DatePicker'
 import ReturnSelect from '@SelectBox/ReturnStateSelect'
 import QualitySelect from '@SelectBox/WhetherSelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
+import CloudSpot from '@SelectBox/CloudSpot'
+import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
+
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
 
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
+const SEARCH_TYPE = {
+  NORMAL: 'normal', // 正常流水
+  REWORK: 'rework', // 重修流水
+}
+
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot },
   data () {
     return {
+      SEARCH_TYPE,
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       streamNum: '', // 流水号
@@ -143,6 +170,9 @@ export default {
       isReturn: 'all', // 门店退回
       isGood: 'all', // 是否门店点赞
       returnType: 'all', // 退单类型
+      cloudSpot: '',
+      issueValue: [], // 云学院问题标签
+      activeName: SEARCH_TYPE.NORMAL, // 标签显示类型
       pager: {
         page: 1,
         pageSize: 10,
@@ -158,42 +188,85 @@ export default {
     }
   },
   watch: {
-    '$route': {
-      handler (to, from) {
-        const keepLiveRoute = ['RetouchHistory', 'orderDetail']
-        if (keepLiveRoute.includes(_.get(from, 'name'))) return
-        const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
-        if (retouchHistoryTimeSpan) {
-          this.timeSpan = this.$route.query.retouchHistoryTimeSpan.split(',')
+    'activeName': {
+      handler (e) {
+        if (e === SEARCH_TYPE.NORMAL) {
+          this.searchList(1)
+        } else {
+          this.resetSearchParm()
+          this.searchList(1)
         }
-        if (retouchHistorySearchType) {
-          switch (retouchHistorySearchType) {
-            case SearchType.GoodEvaluation:
-              this.isGood = true
-              break
-            case SearchType.ReworkPhoto:
-              this.isReturn = true
-              break
-            case SearchType.QualityRework:
-              this.isReturn = true
-              this.returnType = 'quality'
-              break
-          }
-        }
-        this.searchList(1)
       },
       immediate: true
     }
   },
+  /**
+   * @description 监听路由
+   */
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      const keepLiveRoute = ['RetouchHistory', 'orderDetail']
+      if (keepLiveRoute.includes(_.get(from, 'name'))) return
+      const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
+      if (retouchHistoryTimeSpan) { vm.timeSpan = retouchHistoryTimeSpan.split(',') }
+      if (retouchHistorySearchType) {
+        switch (retouchHistorySearchType) {
+          case SearchType.GoodEvaluation:
+            vm.isGood = true
+            break
+          case SearchType.ReworkPhoto:
+            vm.isReturn = true
+            break
+          case SearchType.QualityRework:
+            vm.isReturn = true
+            vm.returnType = 'quality'
+            break
+        }
+      }
+      if (vm.activeName !== SEARCH_TYPE.NORMAL) {
+        vm.activeName = SEARCH_TYPE.NORMAL
+        vm.resetTabActivePosition(vm.$refs.tabs.$el)
+      } else {
+        vm.searchList(1)
+      }
+    })
+  },
   methods: {
+    /**
+     * @description 重制条件
+     */
+    resetSearchParm () {
+      this.timeSpan = null
+      this.streamNum = ''
+      this.searchType = 0
+      this.tableData = []
+      this.isReturn = 'all'
+      this.isGood = 'all'
+      this.returnType = 'all'
+      this.cloudSpot = ''
+      this.issueValue = []
+    },
+    /**
+     * @description 变更代码
+     */
+    resetTabActivePosition($el) {
+      setTimeout(() => {
+        const activeEl = $el.querySelector('.el-tabs__item.is-active')
+        const lineEl = $el.querySelector('.el-tabs__active-bar')
+        const style = getComputedStyle(activeEl)
+        const pl = style.paddingLeft.match(/\d+/)[0] * 1
+        const pr = style.paddingRight.match(/\d+/)[0] * 1
+        const w = style.width.match(/\d+/)[0] * 1
+        lineEl.style.transform = 'translateX(' + (activeEl.offsetLeft + pl) + 'px)'
+        lineEl.style.width = (w - pl - pr)+'px'
+      }, 100)
+    },
     /**
      * @description 跳转链接
      */
     linkto (streamId) {
       const query = { streamId }
-      if (this.active === 'others') {
-        query.searchOther = 1
-      }
+      if (this.active === 'others') { query.searchOther = 1 }
       this.$router.push({
         path: '/order-detail',
         query
@@ -204,7 +277,17 @@ export default {
      */
     searchList (page) {
       this.pager.page = page ? page : this.pager.page
-      this.getRetouchList()
+      if (this.activeName === SEARCH_TYPE.NORMAL) {
+        this.getRetouchList()
+      } else {
+        this.searchReworkList()
+      }
+    },
+    /**
+     * @description 获取历史退回记录
+     */
+    searchReworkList () {
+      // TODO 获取历史数据
     },
     /**
      * @description 获取历史列表
@@ -240,7 +323,11 @@ export default {
      * @description 页码改变
      */
     handleCurrentChange () {
-      this.searchList()
+      if (this.activeName === SEARCH_TYPE.NORMAL) {
+        this.searchList()
+      } else {
+        this.searchReworkList()
+      }
     }
   }
 }
@@ -257,6 +344,10 @@ export default {
       .search-item {
         margin-right: 30px;
         margin-bottom: 20px;
+      }
+
+      .search-button-box {
+        margin-right: 0;
       }
     }
 
