@@ -35,8 +35,9 @@
       </div>
     </div>
     <div class="grade-box">
-      <div class="button-list">
+      <div class="button-list" v-if="showGrade">
         <el-button
+          
           :disabled="!streamCanGlass || +photos.people_num === 0"
           :icon="isPlant ? 'el-icon-check' : ''"
           type="success"
@@ -115,7 +116,8 @@ export default {
       showPreview: false, // 显示预览
       imgIndex: 0, // 照片id
       priviewPhotoData: [], // 预览数组
-      uploadPhoto: [] // 上传照片
+      uploadPhoto: [], // 上传照片
+      showGrade: false // 是否显示打分信息
     }
   },
   computed: {
