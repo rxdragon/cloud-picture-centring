@@ -1,23 +1,21 @@
 <template>
-  <div class="assessment-report module-panel">
-    <cloud-report :role="CLOUD_ROLE.GROUP_LEADER" />
+  <div class="cloud-college-report">
+    <cloud-report :role="CLOUD_ROLE.OPERATE" />
   </div>
 </template>
 
 <script>
+// 运营云端修图报告
 import CloudReport from '@/components/CloudReport'
 import { CLOUD_ROLE } from '@/utils/enumerate'
 
 export default {
-  name: 'AssessmentReport',
+  name: 'CloudCollegeReport',
   components: { CloudReport },
-  props: {},
-  data () {
+  data() {
     return {
       CLOUD_ROLE
     }
   },
-  methods: {
-  }
 }
 </script>

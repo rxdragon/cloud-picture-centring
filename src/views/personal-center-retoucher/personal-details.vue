@@ -113,6 +113,11 @@
     </div>
     <!-- 修图绩效 -->
     <retouch-performance />
+    <!-- 云学院报告 -->
+    <div class="cloud-report-self module-panel">
+      <div class="panel-title">抽查绩效</div>
+      <cloud-report :role="CLOUD_ROLE.CREW" />
+    </div>
     <!-- 小蜜蜂奖励记录 -->
     <div class="module-panel bee-award">
       <div class="panel-title">小蜜蜂奖励记录</div>
@@ -191,12 +196,15 @@ import CountTo from '@/components/CountTo'
 import NoData from '@/components/NoData'
 import RetouchPerformance from './components/RetouchPerformance'
 import Tip from '@/components/Tip'
+import CloudReport from '@/components/CloudReport'
 
 import * as Retoucher from '@/api/retoucher.js'
 
+import { CLOUD_ROLE } from '@/utils/enumerate'
+
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip },
+  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip, CloudReport },
   filters: {
     // 获取小数
     getPoint (value) {
@@ -215,6 +223,7 @@ export default {
   },
   data () {
     return {
+      CLOUD_ROLE,
       routeName: this.$route.name, // 路由名字
       yearValue: '',
       todayData: {}, // 今日指标
@@ -297,8 +306,6 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../styles/variables.less';
-
 .personal-details {
   .today-box {
     display: flex;
@@ -519,6 +526,10 @@ export default {
         }
       }
     }
+  }
+
+  .cloud-report-self {
+    margin-top: 24px;
   }
 }
 

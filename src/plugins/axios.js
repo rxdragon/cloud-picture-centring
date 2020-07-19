@@ -96,7 +96,6 @@ axios.interceptors.response.use(
     if (noData || serverError) {
       const message =  '系统繁忙，请稍后再试：' + data.error_msg
       errorMessage(message)
-      return Promise.reject(message)
     }
 
 

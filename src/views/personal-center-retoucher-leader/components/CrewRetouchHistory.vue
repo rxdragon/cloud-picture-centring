@@ -116,7 +116,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       tableData: [],
-      staffId: 0,
+      staffId: '',
       isCloudSpot: 'all', // 是否云学院抽查
       issueIds: [], // 问题标签
       isReturn: 'all', // 是否门店退回

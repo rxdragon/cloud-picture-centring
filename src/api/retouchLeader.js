@@ -30,6 +30,7 @@ export function getGroupStaffQuotaInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
+    // TODO 更改写入方式
     function getRateInfo (cardinal, sum) {
       return Number(cardinal) + ' / ' + transformPercentage(cardinal, sum)
     }
@@ -54,13 +55,12 @@ export function getGroupStaffQuotaInfo (params) {
     avgRetouchTimeStream = timeFormat(avgRetouchTimeStream, 'text', true)
     avgRetouchTimePhoto = timeFormat(avgRetouchTimePhoto, 'text', true)
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
-    createData.income = income.toFixed(2) // 收益
+    createData.income = income.toFixed(2) // 正常收益
     createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, streamCount) // 点赞数 / 点赞率
-    createData.reworkStreamInfo = getRateInfo(data.storeReturnStreamNumForQuality, streamCount) // 退单量 / 退单率 (质量)
-    createData.reworkPhotoInfo = getRateInfo(data.storeReturnPhotoNumForQuality, photoCount) // 退单张数 / 退张率 （质量）
-    createData.qualityPhotoInfo = Number(data.storeReturnStreamNumForQuality) + '/' + Number(data.storeReturnPhotoNumForQuality) // 质量退单 / 张
-    createData.notQualityPhotoInfo = Number(data.storeReturnStreamNumForNotQuality) + '/' + Number(data.storeReturnPhotoNumForNotQuality) // 非质量退单 / 张
+    createData.badEvaluationInfo = getRateInfo(data.badStreamNum, streamCount) // 点赞数 / 点赞率
+    // TODO 缺少顾客满意度
+    createData.npsEvaluate = getAvg(data.storeEvaluate.sum, data.storeEvaluate.count) // 点赞数 / 点赞率
     return createData
   })
 }

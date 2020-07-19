@@ -217,7 +217,7 @@ export function isObj (obj) {
  * @param {*} b 基数
  */
 export function getAvg (a, b) {
-  if (!Number(a) || !Number(b)) return 0
+  if (!Number(a) || !Number(b)) return '0.00'
   const avg = (Number(a) / Number(b)).toFixed(2)
   return parseFloat(avg)
 }

@@ -109,7 +109,7 @@ export function getRetouchQuota (params) {
     const avgRetouchTimePhoto = getAvg(allRetouchTime, avgTime.retouchTimeForPhotoNum.count)
     const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
     const punishIncome = Number(data.rewardIncome.punishIncome)
-    const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count).toFixed(2)
+    const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count)
     const punishExp = Number(_.get(data, 'exp.punishExp')) || 0
     const retouchExp = Number(_.get(data, 'exp.retouchExp')) || 0
     const createData = [{

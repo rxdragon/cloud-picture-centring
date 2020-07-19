@@ -1,7 +1,7 @@
 <template>
   <div class="retouch-report">
-    <div v-if="!isSeachPage" class="report-box">
-      <div class="search-box module-panel">
+    <div v-if="!isSeachPage" class="report-box module-panel">
+      <div class="search-box">
         <div class="search-item">
           <span>时间</span>
           <date-picker v-model="timeSpan" />
@@ -14,7 +14,7 @@
           <el-button type="primary" @click="searchData">查 询</el-button>
         </div>
       </div>
-      <div class="module-panel">
+      <div class="retouch-report-table report-module">
         <div class="panel-title">修图报告</div>
         <div class="table-content">
           <list-table
@@ -31,7 +31,7 @@
           />
         </div>
       </div>
-      <div class="module-panel">
+      <div class="retouch-report-chat report-module">
         <retoucher-chart
           v-for="keyItem in chartShowKeys"
           :key="keyItem"
@@ -71,7 +71,7 @@ export default {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间戳
       isSeachPage: false,
-      staffId: 0,
+      staffId: '',
       allStaffs: [],
       searchType: '', // 搜索类型
       tableDataCount: {
@@ -80,34 +80,13 @@ export default {
         reworkStreamNum: { label: '重修次数', labelDesc: '云端审核退回次数', value: '-', componentSwitch: true },
         overTimeStreamNum: { label: '超时单量', value: '-', componentSwitch: true },
         avgRetouchTime: { label: '修图平均用时', value: '-' },
-        income: { label: '收益', labelDesc: '未扣除负收益', value: '-' },
+        income: { label: '正常收益', labelDesc: '未扣除负收益', value: '-' },
         notReachStandardDays: { label: '未完成指标（天）', value: '-' }
       },
       tableDataRate: {
         goodEvaluationInfo: { label: '点赞数 / 点赞率', value: '- / -', componentSwitch: true, query: SearchType.GoodEvaluation },
-        reworkStreamInfo: { label: '退单量 / 退单率', value: '- / -', componentSwitch: true, query: SearchType.ReworkPhoto },
-        reworkPhotoInfo: {
-          label: '退单张数 / 退张率',
-          value: '- / -',
-          componentSwitch: true,
-          link: '',
-          query: SearchType.ReworkPhoto
-        },
-        qualityPhotoInfo: {
-          label: '质量退单（单/张）',
-          value: '- / -',
-          componentSwitch: true,
-          link: '',
-          query: SearchType.ReworkPhoto
-        },
-        notQualityPhotoInfo: {
-          label: '非质量退单（单/张）',
-          value: '- / -',
-          componentSwitch: true,
-          link: '',
-          query: SearchType.ReworkPhoto
-        },
-        lekimaInfo: { label: '利奇马（单/张）', value: '- / -', componentSwitch: true, query: 'isLichma' }
+        badEvaluationInfo: { label: '点踩数 / 点踩率', value: '- / -', componentSwitch: true, query: SearchType.BadEvaluation },
+        npsEvaluate: { label: '顾客满意度（平均值）', value: '- / -' }
       },
       chartInfo: [],
       chartShowKeys: ['finishPhotoNum', 'retouchAvgTime', 'goodStreamNum', 'storeReturnStreamNum']
@@ -207,19 +186,25 @@ export default {
 <style lang="less" scoped>
 .report-box {
   .search-box {
+    padding-bottom: 24px;
     margin-top: 0;
+    border-bottom: 1px solid #ecedee;
     border-radius: 0 16px 16px;
   }
 }
 
 .module-panel {
-  margin-top: 20px;
+  border-top-left-radius: 0;
 
   .retoucher-chart {
     &:last-of-type {
       margin-bottom: -48px;
     }
   }
+}
+
+.report-module {
+  margin-top: 24px;
 }
 
 .table-content {

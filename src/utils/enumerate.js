@@ -102,6 +102,7 @@ export const SearchType = {
   RectifySame: 'rectifySame', // 意见相同
   RectifyDifferent: 'rectifyDifferent', // 意见不同
   GoodEvaluation: 'goodEvaluation', // 点赞数
+  BadEvaluation: 'badEvaluation', // 点赞数
   ReworkStream: 'reworkStream', // 退单量
   ReworkPhoto: 'reworkPhoto', // 退单张数
   QualityRework: 'qualityRework', // 质量退单
@@ -175,3 +176,19 @@ export const PlantTypeNameEnum = {
   'none': '一般'
 }
 
+/**
+ * @description 搜索角色
+ */
+export const SEARCH_ROLE = {
+  GROUP_LEADER: 'groupLeader', // 修图组长
+  OPERATE: 'operate' // 运营
+}
+
+/**
+ * @description 搜索角色
+ */
+export const CLOUD_ROLE = {
+  CREW: 'crew', // 修图组员
+  GROUP_LEADER: 'groupLeader', // 修图组长
+  OPERATE: 'operate' // 运营
+}
