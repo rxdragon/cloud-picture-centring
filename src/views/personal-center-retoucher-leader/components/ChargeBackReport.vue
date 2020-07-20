@@ -24,7 +24,7 @@
         <div class="info-item" v-for="(otherItem, otherIndex) in otherInfo" :key="otherIndex">
           <div class="info-header">
             <div class="info-title">{{ otherItem.title }}</div>
-            <div class="info-desc">{{ otherItem.desc || '&nbsp;' }}</div>
+            <div class="info-desc">{{ otherItem.desc }}</div>
           </div>
           <div class="info-value">
             ¥{{ otherItem.value }}
@@ -94,7 +94,6 @@ export default {
   .panel-content {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     margin-top: 24px;
 
     .info-item {
@@ -103,6 +102,7 @@ export default {
       width: 25%;
 
       .info-header {
+        flex-grow: 1;
         padding: 14px 12px;
         text-align: center;
         background-color: #fafafa;

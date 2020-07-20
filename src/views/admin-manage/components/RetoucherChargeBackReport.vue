@@ -117,7 +117,6 @@ export default {
   .panel-content {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     margin-top: 24px;
 
     .info-item {
@@ -126,6 +125,7 @@ export default {
       width: 25%;
 
       .info-header {
+        flex-grow: 1;
         padding: 14px 12px;
         text-align: center;
         background-color: #fafafa;

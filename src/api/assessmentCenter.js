@@ -269,6 +269,9 @@ export function getCloudProblemReport (params) {
     })
     checkTags.forEach(labelItem => {
       labelItem.rate = transformPercentage(labelItem.value, sum)
+      labelItem.group.forEach(item => {
+        item.rate = transformPercentage(item.count, sum)
+      })
     })
     return checkTags
   })

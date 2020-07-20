@@ -68,7 +68,7 @@
                     :end-value="gradeInfo.nearly30DaysReturnNum | getPoint"
                   /></i>
                 </span>
-                <span>近30日退张数</span>
+                <span>近30日被退张数(质量问题)</span>
               </div>
             </el-col>
             <el-col :span="6">
@@ -102,7 +102,7 @@
             </el-col>
             <el-col :span="12" class="pull-box">
               <div class="rote-title">
-                <span>近30日退张率</span>
+                <span>近30日退张率(质量问题)</span>
                 <span class="num">{{ gradeInfo.nearly30DaysReturnRate }}%</span>
               </div>
               <el-progress :percentage="gradeInfo.nearly30DaysReturnRate" :show-text="false" />
@@ -401,19 +401,19 @@ export default {
       .main-content {
         display: flex;
         flex-direction: column;
-        padding-bottom: 18px;
-        margin-top: 28px;
+        padding-bottom: 36px;
+        margin-top: 48px;
         font-family: @DINAlternate;
         font-size: 12px;
         color: #909399;
 
         .num {
-          font-size: 36px;
+          font-size: 44px;
           font-weight: bold;
           color: #303133;
 
           i {
-            font-size: 20px;
+            font-size: 36px;
             font-style: normal;
           }
         }

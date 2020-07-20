@@ -29,7 +29,7 @@
         <span>摄影机构</span>
         <institution-select v-model="psOrganization" institution-class="photographe" />
       </div>
-      <div class="button-box">
+      <div class="search-item button-box">
         <el-button :disabled="Boolean(photoData.length)" type="primary" @click="takePhoto">抽 取</el-button>
       </div>
     </div>
@@ -386,11 +386,7 @@ export default {
     flex-wrap: wrap;
 
     .search-item {
-      margin-bottom: 10px;
-    }
-
-    .button-box {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
     .sample-num {
@@ -415,7 +411,7 @@ export default {
   }
 
   .assessment-info {
-    margin: 20px 0;
+    margin-bottom: 20px;
 
     .list-table {
       width: 400px;

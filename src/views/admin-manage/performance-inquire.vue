@@ -72,7 +72,7 @@ export default {
     return {
       SEARCH_ROLE,
       // TODO
-      activeName: 'CloudCollegeReport'
+      activeName: 'RetoucherChargeBackReport'
     }
   },
   computed: {

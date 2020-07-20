@@ -48,22 +48,27 @@
       </div>
       <div class="list-panel-title row-two">
         <div class="title">
-          <span>审核用时</span>
-          <span class="describe">(审核团审核的平均时长)</span>
+          <span>单张蓝标修图平均时长</span>
+          <span class="describe">(蓝标修图标准的单张修图平均时长)</span>
         </div>
         <div class="title">
-          <span>审核退回重修时长</span>
-          <span class="describe">(审核团退回修图师至修图师再次提交的平均时长)</span>
+          <span>单张大师修图平均时长</span>
+          <span class="describe">(大师修图标准的单张修图平均时长)</span>
         </div>
         <div class="title">
-          <span>门店退回时长</span>
-          <span class="describe">(门店看片师退回质量问题单到修片师重新上传平均用时)</span>
+          <span>单张kids修图总平均时长</span>
+          <span class="describe">(kids修图标准的单张修图平均时长)</span>
+        </div>
+        <div class="title">
+          <span>单张缦图修图总平均时长</span>
+          <span class="describe">(缦图修图标准的单张修图平均时长)</span>
         </div>
       </div>
       <div class="list-panel-content">
         <div class="content row-two">
           <span>{{ tableData.reviewTimeAvg | formatDuring }}</span>
           <span>{{ tableData.returnToRebuildTime | formatDuring }}</span>
+          <span>{{ tableData.storeReturnTime | formatDuring }}</span>
           <span>{{ tableData.storeReturnTime | formatDuring }}</span>
         </div>
       </div>
@@ -157,11 +162,11 @@ export default {
     }
 
     .row-one {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .row-two {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .list-panel-title {

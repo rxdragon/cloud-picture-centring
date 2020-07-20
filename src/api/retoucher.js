@@ -113,12 +113,12 @@ export function getRetouchQuota (params) {
     const punishExp = Number(_.get(data, 'exp.punishExp')) || 0
     const retouchExp = Number(_.get(data, 'exp.retouchExp')) || 0
     const createData = [{
-      retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
+      // retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
+      retouchNum: '2000' + ' / ' + '2000',
       avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
       avgRetouchTimePhoto: timeFormat(avgRetouchTimePhoto, 'text', true),
       goodNum: Number(data.goodNum) + ' / ' + transformPercentage(data.goodNum, data.retouchStreamNum),
       storeReturnNum: Number(data.storeReturnPhotoNumForQuality) + ' / ' + transformPercentage(data.storeReturnPhotoNumForQuality, data.retouchPhotoNum),
-      overNum: data.overNum,
       retouchIncomeInfo: {
         getIncome: Number(data.retouchIncome).toFixed(2),
         rewardIncome: rewardIncome.toFixed(2),
@@ -129,8 +129,6 @@ export function getRetouchQuota (params) {
       gradeInfo: {
         npsGrade: retoucherNpsScoreAvg
       },
-      streamNumForQuality: parseInt(data.storeReturnStreamNumForQuality),
-      photoNumForQuality: parseInt(data.storeReturnStreamNum),
       exp: {
         punishExp: punishExp,
         retouchExp: retouchExp,

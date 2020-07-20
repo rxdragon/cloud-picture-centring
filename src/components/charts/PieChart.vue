@@ -17,7 +17,7 @@ function filterLabelName (data) {
   let msg = ''
   group.forEach(item => {
     const name = item.nickname || item.name
-    msg += `${name}：${item.count}张<br/>`
+    msg += `<p>${name}：<span class="text-right">${item.count}张---${item.rate}</span></p>`
   })
   return msg
 }
@@ -101,5 +101,11 @@ export default {
     width: 100%;
     height: 100%;
   }
+}
+</style>
+
+<style lang="less">
+.text-right {
+  float: right;
 }
 </style>
