@@ -44,9 +44,7 @@ const GreenLinearGradient = new echarts.graphic.LinearGradient(
 export default {
   name: 'ChargeBackChat',
   props: {
-    chartDatas: { type: Object, default: () => {
-      return null
-    } }
+    chartDatas: { type: Array, default: () => [] }
   },
   data () {
     this.extend = {
@@ -104,34 +102,15 @@ export default {
       }
     }
   },
-  created () {
-    this.chartData.rows = [
-      {
-        name: '门店退回（总）',
-        orderCount: 10,
-        photoCount: 20
+  watch: {
+    'chartDatas': {
+      handler (value) {
+        if (!value) return
+        this.chartData.rows = value
       },
-      {
-        name: '云端完成退回订单（总）',
-        orderCount: 30,
-        photoCount: 40
-      },
-      {
-        name: '退回非质量问题',
-        orderCount: 30,
-        photoCount: 40
-      },
-      {
-        name: '退回质量问题',
-        orderCount: 30,
-        photoCount: 40
-      },
-      {
-        name: '退回非质量&质量问退',
-        orderCount: 30,
-        photoCount: 40
-      }
-    ]
+      deep: true,
+      immediate: true
+    }
   }
 }
 </script>

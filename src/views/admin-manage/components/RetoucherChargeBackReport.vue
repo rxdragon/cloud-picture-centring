@@ -1,8 +1,8 @@
 <template>
-  <div class="retoucher-charge-back-report">
+  <div class="retoucher-charge-back-report" v-loading="loading">
     <div class="search-box">
       <div class="search-item">
-        <span>时间</span>
+        <span>门店退回时间</span>
         <date-picker v-model="timeSpan" />
       </div>
       <div class="staff-option search-item">
@@ -16,7 +16,7 @@
     <!-- 退单单量统计 -->
     <div class="charge-back-chat charge-back-module">
       <div class="panel-title">退单单量统计</div>
-      <charge-back-chat />
+      <charge-back-chat :chart-datas="chatData" />
     </div>
     <div class="charge-back-chat charge-back-module">
       <div class="panel-title">其他数据</div>
@@ -27,7 +27,9 @@
             <div class="info-desc">{{ otherItem.desc || '&nbsp;' }}</div>
           </div>
           <div class="info-value">
-            ¥{{ otherItem.value }}
+            <template v-if="otherItem.type === 'money'">{{ otherItem.value | toFixedString }}</template>
+            <template v-else-if="otherItem.type === 'time'">{{ otherItem.value | toTimeFormatText }}</template>
+            <template v-else>{{ otherItem.value }}</template>
           </div>
         </div>
       </div>
@@ -39,6 +41,11 @@
 import DatePicker from '@/components/DatePicker'
 import StaffSelect from '@SelectBox/StaffSelect'
 import ChargeBackChat from '@/components/ChartComponents/ChargeBackChat'
+import moment from 'moment'
+
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
+
+import * as ReturnTarget from '@/api/returnTarget'
 
 export default {
   name: 'RetoucherChargeBackReport',
@@ -46,57 +53,75 @@ export default {
   data () {
     return {
       timeSpan: null,
-      staffIds: '',
+      staffIds: [],
+      loading: false,
       otherInfo: {
-        storeReturnIncome: { title: '退单总收益', desc: '门店退回云端所获得实际收益', value: '10' },
-        storeReturnIncomeForNotQuality: { title: '退单非质量问题获得收益', desc: '', value: '10' },
-        // TODO
-        storeReturnIncomeForNotSelf: { title: '退单质量问题非本人接单获得收益', desc: '', value: '10' },
-        storeReturnIncomeForPunish: { title: '退单质量问题扣除收益', desc: '', value: '10' },
-        storeReturnExp: { title: '退单总海草', desc: '门店退回云端所获得实际海草', value: '10' },
-        storeReturnExpForNotQuality: { title: '退单非质量问题获得海草', desc: '', value: '10' },
-        // TODO
-        storeReturnExpForNotSelf: { title: '退单质量问题非本人接单获得海草', desc: '', value: '10' },
-        storeReturnExpForPunish: { title: '退单质量问题扣除海草', desc: '', value: '10' },
-        storeReturnRetouchTime: { title: '门店退回修图时长', desc: '门店退回至云端再次提交的平均修图时长', value: '10' },
-        // TODO storeReturnPhotoNumForQuality / retouchAll
-        returnPhotoRate: { title: '退张率', desc: '质量问题', value: '10' }
+        storeReturnIncome: { title: '退单总收益', desc: '门店退回云端所获得实际收益', value: '0.00', type: 'money' },
+        storeReturnIncomeForQuality: { title: '退单质量问题获得收益', desc: '', value: '0.00', type: 'money' },
+        storeReturnIncomeForNotQuality: { title: '退单非质量问题获得收益', desc: '', value: '0.00', type: 'money' },
+        punishIncome: { title: '被退单质量问题扣除收益', desc: '', value: '0.00', type: 'money' },
+        storeReturnExp: { title: '退单总海草', desc: '门店退回云端所获得实际海草', value: '0.00' },
+        storeReturnExpForQuality: { title: '退单质量问题获得收益', desc: '', value: '0.00' },
+        storeReturnExpForNotQuality: { title: '退单非质量问题获得海草', desc: '', value: '0.00' },
+        punishExp: { title: '退单质量问题扣除海草', desc: '', value: '0.00' },
+        storeReturnRetouchTime: { title: '门店退回修图时长', desc: '门店退回至云端再次提交的平均修图时长', value: '0.00', type: 'time' },
+        storeReturnPhotoRate: { title: '退张率', desc: '质量问题', value: '0.00' }
       },
-      chatData: {
-        // 门店退回（总）
-        storeReturn: {
-          orderCount: 'storeReturnStreamNum',
-          photoCount: 'storeReturnPhotoNum'
+      chatData: [
+        {
+          name: '门店退回（总）',
+          orderCount: 0,
+          photoCount: 0
         },
-        // 云端完成退回订单（总）
-        retoucherFinishRework: {
-          orderCount: 'retoucherFinishReworkStreamNum',
-          photoCount: 'retoucherFinishReworkPhotoNum'
+        {
+          name: '云端完成退回订单（总）',
+          orderCount: 0,
+          photoCount: 0
         },
-        // 退回非质量问题
-        storeReturnForNotQuality: {
-          orderCount: 'storeReturnStreamNumForNotQuality',
-          photoCount: 'storeReturnPhotoNumForNotQuality'
+        {
+          name: '退回质量问题',
+          orderCount: 0,
+          photoCount: 0
         },
-        // 退回质量问题
-        storeReturnForQuality: {
-          orderCount: 'storeReturnStreamNumForQuality',
-          photoCount: 'storeReturnPhotoNumForQuality'
+        {
+          name: '退回非质量问题',
+          orderCount: 0,
+          photoCount: 0
         },
-        // 退回质量问题
-        storeReturnForBoth: {
-          orderCount: 'storeReturnStreamNumForBoth',
-          photoCount: 'storeReturnPhotoNumForBoth'
+        {
+          name: '退回非质量&质量问退',
+          orderCount: 0,
+          photoCount: 0
         }
-      }
+      ]
     }
+  },
+  created () {
+    const nowAt = moment().format('YYYY-MM-DD')
+    this.timeSpan = [nowAt, nowAt]
+    this.searchData()
   },
   methods: {
     /**
      * @description 搜索数据
      */
-    searchData () {
-      // TODO 搜搜时间
+    async searchData () {
+      try {
+        const req = {
+          startAt: joinTimeSpan(this.timeSpan[0]),
+          endAt: joinTimeSpan(this.timeSpan[1], 1)
+        }
+        if (this.staffIds.length) { req.retouchIds = this.staffIds }
+        this.loading = true
+        const data = await ReturnTarget.getStoreReturnQuota(req)
+        this.chatData = data.chatData
+        for (const key in this.otherInfo) {
+          this.otherInfo[key].value = data.tableInfo[key]
+        }
+      } finally {
+        await delayLoading()
+        this.loading = false
+      }
     }
   }
 }

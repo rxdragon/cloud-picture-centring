@@ -11,23 +11,23 @@
     <div class="panel-content">
       <el-table ref="panel-table" :data="performanceData" style="width: 100%;">
         <el-table-column label="修图单量/张数" width="200" fixed>
-          <template slot-scope="scope">
+          <template slot-scope="{ row }">
             <div class="income-box">
               <span class="span-row">
                 <span class="span-title">正常单量：</span>
-                {{ scope.row.retouchNum }}
+                {{ row.retouchStreamNum }} / {{ row.retouchPhotoNum }}
               </span>
               <span class="span-row text-money">
                 <span class="span-title">质量退单：</span>
-                {{ scope.row.retouchNum }}
+                {{ row.finishStreamNumForQuality }} / {{ row.finishPhotoNumForQuality }}
               </span>
               <span class="span-row text-red">
                 <span class="span-title">非质量退单：</span>
-                {{ scope.row.retouchNum }}
+                {{ row.finishStreamNumForNotQuality }} / {{ row.finishPhotoNumForNotQuality }}
               </span>
               <span class="span-row">
                 <span class="span-title">质量&非质量：</span>
-                {{ scope.row.retouchNum }}
+                {{ row.finishStreamNumForBoth }} / {{ row.finishPhotoNumForBoth }}
               </span>
             </div>
           </template>
@@ -41,85 +41,85 @@
           </template>
         </el-table-column>
         <el-table-column label="退张数/退张率" width="120">
-          <template slot-scope="scope">
+          <template slot-scope="{ row }">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.ReworkPhoto">
-              {{ scope.row.storeReturnNum }}
+              {{ row.storeReturnNum }} / {{ row.storeReturnPhotoRate }}
             </router-link>
           </template>
         </el-table-column>
         <el-table-column label="修图获得收益" width="220">
-          <template slot-scope="scope">
+          <template slot-scope="{ row }">
             <div class="income-box">
               <span class="span-row">
                 <span class="span-title">修图收益（不包含退单）：</span>
-                {{ scope.row.retouchIncomeInfo.getIncome }}
+                {{ row.income.retouchIncome }}
               </span>
               <span class="span-row text-red">
                 <span class="span-title">沙漏超时扣除收益：</span>
-                {{ scope.row.retouchIncomeInfo.rewardIncome }}
+                {{ row.income.glassPunishIncome }}
               </span>
               <span class="span-row">
                 <span class="span-title">退单获得收益：</span>
-                {{ scope.row.retouchIncomeInfo.punishIncome }}
+                {{ row.income.storeReturnIncome }}
               </span>
               <span class="span-row text-red">
                 <span class="span-title">退单扣除收益：</span>
-                {{ scope.row.retouchIncomeInfo.actualIncome }}
+                {{ row.income.punishIncome }}
               </span>
               <span class="span-row text-money">
                 <span class="span-title">奖励收益：</span>
-                {{ scope.row.retouchIncomeInfo.actualIncome }}
+                {{ row.income.sunReward }}
               </span>
               <span class="span-row">
                 <span class="span-title">总计：</span>
-                {{ scope.row.retouchIncomeInfo.actualIncome }}
+                {{ row.income.sumIncome }}
               </span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="获得海草" width="220">
-          <template slot-scope="scope">
+          <template slot-scope="{ row }">
             <div class="income-box">
               <span class="span-row">
                 <span class="span-title">修图海草（不包含退单）：</span>
-                {{ scope.row.exp.retouchExp | toFixedString }}
+                {{ row.exp.retouchExp | toFixedString }}
               </span>
               <span class="span-row text-red">
                 <span class="span-title">沙漏超时扣除海草：</span>
-                {{ scope.row.exp.punishExp | toFixedString }}
+                {{ row.exp.glassPunishExp | toFixedString }}
               </span>
               <span class="span-row">
                 <span class="span-title">退单获得海草：</span>
-                {{ scope.row.exp.rewordExp | toFixedString }}
+                {{ row.exp.sumStoreReturnExp | toFixedString }}
               </span>
               <span class="span-row text-red">
                 <span class="span-title">退单扣除海草：</span>
-                {{ scope.row.exp.rewordExp | toFixedString }}
+                {{ row.exp.punishExp | toFixedString }}
               </span>
               <span class="span-row">
                 <span class="span-title">总计：</span>
-                {{ scope.row.exp.rewordExp | toFixedString }}
+                {{ row.exp.sumExp | toFixedString }}
               </span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="点赞数/点赞率" min-width="120">
-          <template slot-scope="scope">
+          <template slot-scope="{ row }">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.GoodEvaluation">
-              {{ scope.row.goodNum }}
+              {{ row.storeGoodNum }} / {{ row.storeGoodRate }}
             </router-link>
           </template>
         </el-table-column>
         <el-table-column label="点踩数/点踩率" min-width="120">
-          <template slot-scope="scope">
+          <template slot-scope="{ row }">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.GoodEvaluation">
-              {{ scope.row.goodNum }}
+              {{ row.storeBadNum }} / {{ row.storeBadRate }}
             </router-link>
           </template>
         </el-table-column>
         <el-table-column label="顾客满意度（平均）" width="150" fixed="right">
-          <template slot-scope="scope">
-            {{ scope.row.gradeInfo.npsGrade }}
+          <template slot-scope="{ row }">
+            {{ row.retoucherNpsScoreAvg }}
           </template>
         </el-table-column>
       </el-table>
@@ -128,10 +128,12 @@
 </template>
 
 <script>
-import { joinTimeSpan } from '@/utils/timespan.js'
-import { parseTime } from '@/utils/index.js'
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate.js'
+
 import DatePicker from '@/components/DatePicker'
+import moment from 'moment'
+
 import * as Retoucher from '@/api/retoucher.js'
 
 export default {
@@ -147,7 +149,7 @@ export default {
     }
   },
   created () {
-    const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
+    const nowTime = moment().format('YYYY-MM-DD')
     this.timeSpan = [nowTime, nowTime]
     this.getRetouchQuota()
   },
@@ -157,10 +159,7 @@ export default {
      */
     async getRetouchQuota () {
       try {
-        if (!this.timeSpan) {
-          this.$newMessage.warning('请输入时间')
-          return false
-        }
+        if (!this.timeSpan) return this.$newMessage.warning('请输入时间')
         const reqData = {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)
@@ -168,12 +167,9 @@ export default {
         this.loading = true
         this.performanceData = await Retoucher.getRetouchQuota(reqData)
         this.$refs['panel-table'].doLayout()
-      } catch (error) {
-        console.error(error)
       } finally {
-        setTimeout(() => {
-          this.loading = false
-        }, 500)
+        await delayLoading()
+        this.loading = false
       }
     }
   }
