@@ -97,7 +97,6 @@ export default {
 
   .retouch-remark {
     display: flex;
-    align-items: center;
 
     .remark-title {
       width: 60px;
