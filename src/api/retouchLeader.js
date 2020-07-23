@@ -1,5 +1,6 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
+import StreamModel from '@/model/StreamModel.js'
 import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
 
 /**
@@ -104,16 +105,10 @@ export function getStaffRetouchList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.list.forEach(listItem => {
-      const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)
-      listItem.retoucherName = _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-'
-      listItem.retouchAllTime = timeFormat(allTime, 'text', true)
-      listItem.storeReworkPhotoNum = _.get(listItem, 'tags.values.store_rework_photo_num') || '-'
-      listItem.lekimaInfo = _.get(listItem, 'tags.values.lichma_photo_num', '-')
-      listItem.checkTags = _.get(listItem, 'tags.values.config_parent_name') || []
-      const storeEvaluation = listItem.store_evaluation || '-'
-      const npsGrade = _.get(listItem, 'tags.values.retoucher_score', '-')
-      listItem.gradeInfo = { storeEvaluation, npsGrade }
+    msg.list = msg.list.map(item => {
+      return {
+        ...new StreamModel(item)
+      }
     })
     return msg
   })

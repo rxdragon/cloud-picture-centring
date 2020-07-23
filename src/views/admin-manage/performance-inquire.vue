@@ -38,7 +38,7 @@ import RetoucherChargeBackReport from './components/RetoucherChargeBackReport' /
 import TimeStatistics from './components/TimeStatistics' // 用时统计
 import CheckerEvaluate from './components/CheckerEvaluate' // 看片评价
 import CloudCollegeReport from './components/CloudCollegeReport' // 云学院评价
-import SearchRetouchRecord from '@/components/SearchRetouchRecord' // 查询
+import SearchRetouchRecord from '@/components/SearchRetouchRecord' // 云端查询
 import { SEARCH_ROLE } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
@@ -67,7 +67,6 @@ export default {
       }
     }
   },
-  props: {},
   data () {
     return {
       SEARCH_ROLE,

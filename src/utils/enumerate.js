@@ -192,3 +192,17 @@ export const CLOUD_ROLE = {
   GROUP_LEADER: 'groupLeader', // 修图组长
   OPERATE: 'operate' // 运营
 }
+
+// 照片问题标记
+export const QUALITY_TYPE = {
+  QUALITY: 'quality',
+  NOT_QUALITY: 'not_quality',
+  BOTH: 'both'
+}
+
+// 照片问题标记映射中文
+export const qualityTypeToCN = {
+  [QUALITY_TYPE.QUALITY]: '质量问题',
+  [QUALITY_TYPE.NOT_QUALITY]: '非质量问题',
+  [QUALITY_TYPE.BOTH]: '质量&非质量问题'
+}

@@ -36,12 +36,7 @@
         <!-- 退单类型 -->
         <div class="audit-box search-item">
           <span>退单类型</span>
-          <quality-select
-            placeholder="请选择退单类型"
-            :options="returnOptions"
-            showAllOption
-            v-model="returnType"
-          />
+          <quality-select v-model="returnType" />
         </div>
         <!-- 是否云学院抽查 -->
         <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
@@ -140,7 +135,7 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import ReturnSelect from '@SelectBox/ReturnStateSelect'
-import QualitySelect from '@SelectBox/WhetherSelect'
+import QualitySelect from '@SelectBox/QualitySelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import CloudSpot from '@SelectBox/CloudSpot'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
@@ -169,7 +164,7 @@ export default {
       tableData: [], // 列表数据
       isReturn: 'all', // 门店退回
       isGood: 'all', // 是否门店点赞
-      returnType: 'all', // 退单类型
+      returnType: '', // 退单类型
       cloudSpot: '',
       issueValue: [], // 云学院问题标签
       activeName: SEARCH_TYPE.NORMAL, // 标签显示类型
@@ -242,7 +237,7 @@ export default {
       this.tableData = []
       this.isReturn = 'all'
       this.isGood = 'all'
-      this.returnType = 'all'
+      this.returnType = ''
       this.cloudSpot = ''
       this.issueValue = []
     },
@@ -305,7 +300,7 @@ export default {
         }
         if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
-        if (this.returnType !== 'all' ) { reqData.storeReworkType = this.returnType }
+        if (this.returnType) { reqData.storeReworkType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)

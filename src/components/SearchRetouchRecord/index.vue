@@ -16,25 +16,15 @@
         align="center"
         type="flex"
       >
-        <!-- 退单时间 -->
-        <el-col :span="11" :xl="6">
+        <!-- 门店退单时间 -->
+        <el-col :span="10" :xl="6">
           <div class="search-item">
-            <span>退单时间</span>
+            <span>门店退单时间</span>
             <date-picker v-model="reworkTimeSpan" :disabled="!canSelectTimeSpan('reworkTimeSpan')" />
           </div>
         </el-col>
-        <!-- 门店评价时间 -->
-        <el-col :span="11" :xl="6">
-          <div class="search-item">
-            <span>门店评价时间</span>
-            <date-picker
-              v-model="storeEvaluateTimeSpan"
-              :disabled="!canSelectTimeSpan('storeEvaluateTimeSpan')"
-            />
-          </div>
-        </el-col>
         <!-- 云端审核通过时间 -->
-        <el-col :span="11" :xl="6">
+        <el-col :span="10" :xl="6">
           <div class="search-item">
             <span>云端审核通过时间</span>
             <date-picker
@@ -43,8 +33,18 @@
             />
           </div>
         </el-col>
+        <!-- 门店评价时间 -->
+        <el-col :span="10" :xl="6">
+          <div class="search-item">
+            <span>门店评价时间</span>
+            <date-picker
+              v-model="storeEvaluateTimeSpan"
+              :disabled="!canSelectTimeSpan('storeEvaluateTimeSpan')"
+            />
+          </div>
+        </el-col>
         <!-- 云学院评价时间 -->
-        <el-col :span="11" :xl="6">
+        <el-col :span="10" :xl="6">
           <div class="search-item">
             <span>云学院评价时间</span>
             <date-picker
@@ -54,7 +54,7 @@
           </div>
         </el-col>
         <!-- 云学院问题 -->
-        <el-col :span="7" :xl="4">
+        <el-col :span="24" :xl="24">
           <div class="search-item">
             <span>云学院问题</span>
             <issue-label-select v-model="issueValue" />
@@ -63,9 +63,8 @@
         <!-- 门店退回问题 -->
         <el-col :span="7" :xl="4">
           <div class="search-item">
-            <span>门店退回问题</span>
-            <!-- TODO 退回问题接口 -->
-            <issue-label-select v-model="issueValue" />
+            <span>门店退回类型</span>
+            <quality-select v-model="returnType" />
           </div>
         </el-col>
         <!-- 门店评价 -->
@@ -75,24 +74,59 @@
             <evaluate-select v-model="isGood" />
           </div>
         </el-col>
+        <!-- 伙伴 -->
+        <el-col :span="5" :xl="12">
+          <div class="staff-option search-item" v-if="searchRole === SEARCH_ROLE.GROUP_LEADER">
+            <span>组员</span>
+            <crew-select v-model="staffId" />
+          </div>
+          <div class="staff-search search-item" v-if="searchRole === SEARCH_ROLE.OPERATE">
+            <span>云端伙伴</span>
+            <staff-select v-model="staffIds" />
+          </div>
+        </el-col>
         <!-- 查 询 -->
         <el-col :span="5" :xl="12">
           <div class="search-item">
-            <el-button type="primary">查 询</el-button>
+            <el-button type="primary" @click="searchCloudInfo(1)">查 询</el-button>
           </div>
         </el-col>
       </el-row>
       <!-- 列表数据 -->
       <div class="table-box">
         <el-table :data="tableData" style="width: 100%;">
-          <el-table-column prop="date" label="组员" width="50" />
-          <el-table-column prop="name" label="流水号" width="180" />
-          <el-table-column prop="address" label="修图时间" />
-          <el-table-column prop="address" label="退回张数" />
-          <el-table-column prop="address" label="门店评分" />
+          <el-table-column prop="retoucher" label="组员" width="50" />
+          <el-table-column prop="streamNum" label="流水号" width="180" />
+          <el-table-column label="修图时间">
+            <template slot-scope="{ row }">
+              <p>时长：{{ row.retouchAllTime }}</p>
+              <p>接单时间：{{ row.receiptAt }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="退回张数">
+            <template slot-scope="{ row }">
+              <p>总张数：{{ row.storeReturnNum }}</p>
+              <!-- TODO 退回时间 -->
+              <p>退回时间：{{ row.receiptAt }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="云学院抽查">
+            <template slot-scope="{ row }">
+              <!-- TODO 是否抽查 -->
+              <p>是否抽查：{{ row.receiptAt }}</p>
+              <!-- TODO 评价时间 -->
+              <p>评价时间：{{ row.receiptAt }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="评价">
+            <template slot-scope="{ row }">
+              <p>门店评价：<show-evaluate :evaluate="row.goodEvaluate" /></p>
+              <p>顾客评价：<show-evaluate :evaluate="row.retoucherNpsAvg" /></p>
+            </template>
+          </el-table-column>
           <el-table-column prop="address" label="操作" align="right">
             <template slot-scope="{ row }">
-              <el-button type="primary" size="small" @click="linkto(row.id)">详情</el-button>
+              <el-button type="primary" size="small" @click="linkto(row.streamId)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -113,27 +147,40 @@
 </template>
 
 <script>
-import { SEARCH_ROLE } from '@/utils/enumerate'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import DatePicker from '@/components/DatePicker'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
+import QualitySelect from '@SelectBox/QualitySelect'
+import CrewSelect from '@SelectBox/CrewSelect'
+import StaffSelect from '@SelectBox/StaffSelect'
+import ShowEvaluate from '@/components/ShowEvaluate'
+
+import { SEARCH_ROLE } from '@/utils/enumerate'
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
+
+import * as OperationManage from '@/api/operationManage.js'
+import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'SearchRetouchRecord',
-  components: { DatePicker, IssueLabelSelect, EvaluateSelect },
+  components: { DatePicker, IssueLabelSelect, EvaluateSelect, QualitySelect, CrewSelect, StaffSelect, ShowEvaluate },
   props: {
     searchRole: { type: String, required: true }
   },
   data () {
     return {
+      loading: false,
       SEARCH_ROLE,
-      showSearchPage: false,
+      showSearchPage: true,
       reworkTimeSpan: null, // 门店退单时间
       storeEvaluateTimeSpan: null, // 门店评价时间
       cloudAuditTimeSpan: null, // 云端审核时间
       cloudEvaluateTimeSpan: null, // 云学院评价时间
       issueValue: [], // 问题标签
+      returnType: '', // 门店退单类型
       isGood: 'all', // 门店评价
+      staffId: '', // 组员
+      staffIds: [], // 云端伙伴
       tableData: [],
       pager: {
         page: 1,
@@ -143,6 +190,80 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 搜索流水信息
+     */
+    async searchCloudInfo (page) {
+      try {
+        this.pager.page = page === 1 ? 1 : this.pager.page
+        // 是否为运营查询
+        const req = this.getParams()
+        if (!req) return
+        this.loading = true
+        if (this.searchRole === SEARCH_ROLE.OPERATE) {
+          await this.searchForOperate(req)
+        } else {
+          await this.searchForGroupLeader(req)
+        }
+      } catch (error) {
+        this.$newMessage.warning(error.message || error)
+      } finally {
+        await delayLoading
+        this.loading = false
+      }
+    },
+    /**
+     * @description 获取搜索参数
+     */
+    getParams () {
+      const req = {
+        page: this.pager.page,
+        pageSize: this.pager.pageSize
+      }
+      if (this.reworkTimeSpan) {
+        req.returnStartAt = joinTimeSpan(this.reworkTimeSpan[0])
+        req.returnEndAt = joinTimeSpan(this.reworkTimeSpan[1], 1)
+      }
+      if (this.storeEvaluateTimeSpan) {
+        req.storeEvaluateStartAt = joinTimeSpan(this.storeEvaluateTimeSpan[0])
+        req.storeEvaluateEndAt = joinTimeSpan(this.storeEvaluateTimeSpan[1], 1)
+      }
+      if (this.cloudAuditTimeSpan) {
+        req.passEndAt = joinTimeSpan(this.cloudAuditTimeSpan[0])
+        req.passEndAt = joinTimeSpan(this.cloudAuditTimeSpan[1], 1)
+      }
+      if (this.cloudEvaluateTimeSpan) {
+        req.cloudEvaluateStartAt = joinTimeSpan(this.cloudEvaluateTimeSpan[0])
+        req.cloudEvaluateEndAt = joinTimeSpan(this.cloudEvaluateTimeSpan[1], 1)
+      }
+      if (this.isGood !== 'all') { req.evaluate = this.isGood ? 'good' : 'bad' }
+      if (this.issueValue.length) { req.cloudTags = this.issueValue }
+      if (this.returnType) { req.storeReworkType = this.returnType }
+      // 伙伴id
+      if (this.searchRole === SEARCH_ROLE.GROUP_LEADER && this.staffId) {
+        req.retoucherIds = [this.staffId]
+      }
+      if (this.searchRole === SEARCH_ROLE.OPERATE && this.staffIds.length) {
+        req.retoucherIds = this.staffIds
+      }
+      return req
+    },
+    /**
+     * @description 运营搜搜
+     */
+    async searchForOperate (req) {
+      const data = await OperationManage.getAllCloudStream(req)
+      this.tableData = data.list
+      this.pager.total = data.total
+    },
+    /**
+     * @description 修图组长搜搜
+     */
+    async searchForGroupLeader (req) {
+      const data = await RetouchLeader.getStaffRetouchList(req)
+      this.tableData = data.list
+      this.pager.total = data.total
+    },
     /**
      * @description 打开搜索页面
      */
@@ -212,18 +333,6 @@ export default {
 
   .el-col {
     width: max-content;
-  }
-
-  & /deep/ .date-picker {
-    .el-range-editor.el-input__inner {
-      width: auto;
-    }
-  }
-
-  & /deep/ .issue-label-select {
-    .el-cascader {
-      width: auto;
-    }
   }
 
   .searhc-row {

@@ -1,6 +1,6 @@
 import axios from '@/plugins/axios.js'
 import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '@/utils'
-import { isNumber } from '@/utils/validate'
+import { toFixed, isNumber } from '@/utils/validate'
 
 /** 工作指标 */
 
@@ -75,45 +75,28 @@ export function getRetoucherQuota (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.retouchSinglePhotoNum = parseInt(msg.retouchSinglePhotoNum) // 单人修图张数
-    msg.retouchMultiPhotoNum = parseInt(msg.retouchMultiPhotoNum) // 多人修图张数
+    // 计算收益
     for (const key in msg.income) {
       msg.income[key] = Number(msg.income[key])
     }
-    msg.income = msg.income.retouch + msg.income.impulse + msg.income.reward - msg.income.punish// 收益
+    const income = msg.income.retouch * 100 +
+      msg.income.impulse * 100 +
+      msg.income.reward * 100 -
+      msg.income.punish * 100
+    msg.income = toFixed(income / 100)
+
+    // 顾客满意度
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
     msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.sum, retoucherNpsCount) // 顾客满意度
-    msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) // 门店评分
-    msg.retouchReworkRate = getAvg(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
-    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
-    msg.storeReturnStreamNum = parseInt(msg.storeReturnStreamNum || 0) // 门店退单
-    msg.storeReturnStreamNumForQuality = parseInt(msg.storeReturnStreamNumForQuality || 0) // 门店退单（非质量问题）
-    msg.storeReturnPhotoNumForQuality = parseInt(msg.storeReturnPhotoNumForQuality || 0) // 门店退单（非质量问题）张数
-    msg.storeReturnStreamNumForNotQuality = parseInt(msg.storeReturnStreamNumForNotQuality || 0) // 门店退单（质量问题）
-    msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
-    msg.lekimaStreamNum = parseInt(msg.lichmaStreamNum || 0) // 利奇马张数
-    msg.lekimaPhotoNum = parseInt(msg.lichmaPhotoNum || 0) // 利奇马单数
+
+    // 点赞点踩量
+    const storeEvaluateCount = _.get(msg, 'storeEvaluateScoreAvg.count') || 0
     msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
-    msg.goodRate = parseFloat(msg.goodNum / msg.retoucherFinishStreamNum) * 100 // 门店点赞率
-    // 处理饼图
-    msg.checkAvgScore = getAvg(msg.retoucherCheckPoolEvaluationScore, msg.retoucherCheckPoolEvaluationPhotoNum)
-    let sum = 0
-    msg.retoucherCheckCount = msg.retoucherCheckCount.filter(item => item.count)
-    const checkTags = msg.retoucherCheckCount.map(labelItem => {
-      labelItem.child.forEach(childItem => {
-        childItem.count = parseInt(childItem.count)
-      })
-      sum = sum + Number(labelItem.count)
-      return {
-        name: labelItem.name,
-        value: Number(labelItem.count),
-        group: labelItem.child
-      }
-    })
-    checkTags.forEach(labelItem => {
-      labelItem.rate = transformPercentage(labelItem.value, sum)
-    })
-    msg.retoucherCheckCount = checkTags
+    msg.goodRate = toFixed(parseFloat(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
+    msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
+    msg.badRate = toFixed(parseFloat(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
+
+    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     return msg
   })
 }
