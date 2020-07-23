@@ -9,6 +9,7 @@ import { eventEmitter } from './plugins/eventemitter.js' // ui布局
 import { delayLoading } from '@/utils/timespan.js' // ui布局
 import './plugins/element.js' // ui布局
 import './plugins/charts.js' // charts框架
+import './plugins/errorLogSdk.js' // 错误日志监控
 import './plugins/icon-font/iconfont.css' // ui布局
 import './styles/font.less' // 全局样式
 import './styles/index.less' // 字体
