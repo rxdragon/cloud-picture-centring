@@ -19,6 +19,7 @@ stages:
     
 deploy-master:
   extends: .deploy
+  image: registry.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
   script:
     - yarn install
     - yarn run build
@@ -27,6 +28,9 @@ deploy-master:
     - node print_version.js
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
     - node upload.js
+    - PROJECT_DIR=`pwd`
+    - SOURCE_FOLDER='dist_vue'
+    - cd /deploy-scripts && node deploySourceMap.js $PROJECT_DIR/$SOURCE_FOLDER
   environment:
     name: master
   only:

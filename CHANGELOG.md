@@ -428,6 +428,7 @@
 |范围|描述|commitId|
 --|--|--
  新增审核配置文件 | [9fe0f13](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fe0f13)
+ 更改ci | [cc08a50](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cc08a50)
  更改ci相关配置 | [22884fe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22884fe)
  更改下载依赖 | [9399065](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9399065)
  更改判断字段 | [99e512f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/99e512f)
@@ -441,20 +442,6 @@
 |范围|描述|commitId|
 --|--|--
  增加顾客满意度 | 增加顾客满意度 | [885acec](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/885acec)
-
-
-### 🔧 测试
-|范围|描述|commitId|
---|--|--
- test | [6c8537b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c8537b)
-
-
-### 🔨 代码重构
-|范围|描述|commitId|
---|--|--
- 更新版本说明 | 更新版本说明 | [9a00067](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a00067)
- 删除多余文件 | [bc377f1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bc377f1)
- 更改配置 | [aafa90f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/aafa90f)
 
 
 |范围|描述|commitId|
@@ -597,6 +584,20 @@
  CI fix | [af9bd3a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/af9bd3a)
  10.10 | [c8722c5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c8722c5)
  Initial commit | [803e576](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/803e576)
+
+
+### 🔧 测试
+|范围|描述|commitId|
+--|--|--
+ test | [6c8537b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c8537b)
+
+
+### 🔨 代码重构
+|范围|描述|commitId|
+--|--|--
+ 更新版本说明 | 更新版本说明 | [9a00067](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a00067)
+ 删除多余文件 | [bc377f1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bc377f1)
+ 更改配置 | [aafa90f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/aafa90f)
 
 
 ### 🚀 性能优化
