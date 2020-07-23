@@ -668,6 +668,7 @@
  增加commit验证 | [d804efc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d804efc)
  增加upyun上传 | [eafd6d3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eafd6d3)
  更改ci | [0c2135f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0c2135f)
+ 更改ci | [9d43ba1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9d43ba1)
  更改element-ui 为2。12。2 | [38424b5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/38424b5)
  更改fabric依赖 | [4688a88](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4688a88)
  更改环境变量 | [2d512ca](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d512ca)

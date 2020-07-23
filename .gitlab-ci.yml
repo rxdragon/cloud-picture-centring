@@ -5,6 +5,8 @@ stages:
 
 .deploy:
   stage: deploy
+  tags:
+    - nodejs-outwall
   cache:
     key: cache
     paths:
@@ -32,7 +34,7 @@ deploy-master:
 
 deploy-dev:
   extends: .deploy
-  image: registry-vpc.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
+  image: registry.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
   script:
     - yarn install
     - yarn run build-dev
