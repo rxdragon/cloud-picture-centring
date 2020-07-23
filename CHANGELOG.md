@@ -449,6 +449,14 @@
  test | [6c8537b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c8537b)
 
 
+### 🔨 代码重构
+|范围|描述|commitId|
+--|--|--
+ 更新版本说明 | 更新版本说明 | [9a00067](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a00067)
+ 删除多余文件 | [bc377f1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bc377f1)
+ 更改配置 | [aafa90f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/aafa90f)
+
+
 |范围|描述|commitId|
 --|--|--
  ci | [adf0fab](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/adf0fab)
@@ -591,14 +599,6 @@
  Initial commit | [803e576](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/803e576)
 
 
-### 🔨 代码重构
-|范围|描述|commitId|
---|--|--
- 更新版本说明 | 更新版本说明 | [9a00067](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a00067)
- 删除多余文件 | [bc377f1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bc377f1)
- 更改配置 | [aafa90f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/aafa90f)
-
-
 ### 🚀 性能优化
 |范围|描述|commitId|
 --|--|--
@@ -667,6 +667,7 @@
  取消webpackstylelint | [e99ac4d](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e99ac4d)
  增加commit验证 | [d804efc](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d804efc)
  增加upyun上传 | [eafd6d3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/eafd6d3)
+ 更改ci | [0c2135f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0c2135f)
  更改element-ui 为2。12。2 | [38424b5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/38424b5)
  更改fabric依赖 | [4688a88](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4688a88)
  更改环境变量 | [2d512ca](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d512ca)
