@@ -3,7 +3,7 @@
     <el-select
       v-bind="$attrs"
       clearable
-      placeholder="请选择退单类型"
+      placeholder="退单类型"
       v-on="$listeners"
     >
       <el-option

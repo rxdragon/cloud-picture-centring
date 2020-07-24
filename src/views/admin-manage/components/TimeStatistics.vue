@@ -14,12 +14,10 @@
         <retouch-kind-select v-model="retouchType" placeholder="请选择修图标准"/>
       </div>
       <div class="button-box">
-        <el-button type="primary" @click="getStreamTimesQuota">查询</el-button>
+        <el-button type="primary" @click="getStreamTimesInfo">查询</el-button>
       </div>
     </div>
     <div class="table-panel">
-      <div class="unit">单位：分钟</div>
-      <!-- 第一行 -->
       <div class="list-panel-title row-one">
         <div class="title">
           <span>接单时间</span>
@@ -81,8 +79,10 @@ import DatePicker from '@/components/DatePicker'
 import RetoucherGroupSelect from '@SelectBox/RetoucherGroupSelect'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
 import moment from 'moment'
+
 import * as WorkManage from '@/api/workManage'
-import { joinTimeSpan } from '@/utils/timespan.js'
+
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 import { formatDuring } from '@/utils'
 
 export default {
@@ -101,9 +101,25 @@ export default {
   created () {
     const nowAt = moment().locale('zh-cn').format('YYYY-MM-DD')
     this.timeSpan = [nowAt, nowAt]
-    this.getStreamTimesQuota()
+    this.getStreamTimesInfo()
   },
   methods: {
+    /**
+     * @description 搜索相关信息
+     */
+    async getStreamTimesInfo () {
+      try {
+        this.$loading()
+        await Promise.all([
+          this.getStreamTimesQuota(),
+          this.getOrgStandardTimesQuota()
+        ])
+      } finally {
+        await delayLoading()
+        this.loading = false
+      }
+      
+    },
     /**
      * @description 获取请求参数
      */
@@ -115,30 +131,27 @@ export default {
       }
       req.startAt = joinTimeSpan(this.timeSpan[0])
       req.endAt = joinTimeSpan(this.timeSpan[1], 1)
-      if (this.retoucherGroupValue) {
-        req.retouchGroup = this.retoucherGroupValue
-      }
-      if (this.retouchType) {
-        req.retouchClass = this.retouchType
-      }
+      if (this.retoucherGroupValue) { req.retouchGroup = this.retoucherGroupValue }
+      if (this.retouchType) { req.retouchClass = this.retouchType }
       return req
     },
     /**
      * @description 查询绩效
      */
     async getStreamTimesQuota () {
-      try {
-        const req = this.getParams()
-        if (!req) return
-        this.loading = true
-        this.tableData = await WorkManage.getStreamTimesQuota(req)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setTimeout(() => {
-          this.loading = false
-        }, 500)
-      }
+      const req = this.getParams()
+      if (!req) return
+      this.loading = true
+      this.tableData = await WorkManage.getStreamTimesQuota(req)
+    },
+    /**
+     * @description 获取修图标准时间
+     */
+    async getOrgStandardTimesQuota () {
+      const req = this.getParams()
+      delete req.retouchType
+      // TODO 获取数据
+      await WorkManage.getOrgStandardTimesQuota(req)
     }
   }
 }
@@ -146,20 +159,11 @@ export default {
 
 <style lang="less">
 
-
 .time-statistics {
   .table-panel {
     position: relative;
     margin-top: 32px;
     border-bottom: 1px solid #f2f6fc;
-
-    .unit {
-      position: absolute;
-      top: -30px;
-      right: 0;
-      font-size: 14px;
-      color: #606266;
-    }
 
     .row-one {
       grid-template-columns: repeat(4, 1fr);

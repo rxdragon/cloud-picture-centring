@@ -1,5 +1,5 @@
 <template>
-  <div class="search-retouch-record">
+  <div class="search-retouch-record" v-loading="loading">
     <!-- 修图记录 -->
     <el-button type="primary" @click="openShowSearchPage">{{ searchRole === SEARCH_ROLE.GROUP_LEADER ? '组员修图记录' : '云端全流水查询' }}</el-button>
     <div class="search-page" v-if="showSearchPage">
@@ -99,29 +99,34 @@
           <el-table-column prop="streamNum" label="流水号" width="180" />
           <el-table-column label="修图时间">
             <template slot-scope="{ row }">
-              <p>时长：{{ row.retouchAllTime }}</p>
-              <p>接单时间：{{ row.receiptAt }}</p>
+              <div class="table-detail-box">
+                <p>时长：{{ row.retouchAllTime }}</p>
+                <p>接单时间：{{ row.receiptAt }}</p>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="退回张数">
             <template slot-scope="{ row }">
-              <p>总张数：{{ row.storeReturnNum }}</p>
-              <!-- TODO 退回时间 -->
-              <p>退回时间：{{ row.receiptAt }}</p>
+              <div class="table-detail-box">
+                <p>总张数：{{ row.storeReturnNum }}</p>
+                <p>退回时间：{{ row.storeReturnTime }}</p>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="云学院抽查">
             <template slot-scope="{ row }">
-              <!-- TODO 是否抽查 -->
-              <p>是否抽查：{{ row.receiptAt }}</p>
-              <!-- TODO 评价时间 -->
-              <p>评价时间：{{ row.receiptAt }}</p>
+              <div class="table-detail-box">
+                <p>是否抽查：{{ row.isCloudEvaluation }}</p>
+                <p>评价时间：{{ row.cloudEvaluateTime }}</p>
+              </div>
             </template>
           </el-table-column>
-          <el-table-column label="评价">
+          <el-table-column label="评价" width="120">
             <template slot-scope="{ row }">
-              <p>门店评价：<show-evaluate :evaluate="row.goodEvaluate" /></p>
-              <p>顾客评价：<show-evaluate :evaluate="row.retoucherNpsAvg" /></p>
+              <div class="table-detail-box">
+                <p>门店评价：<show-evaluate :evaluate="row.goodEvaluate" /></p>
+                <p>顾客评价：<show-evaluate :evaluate="row.retoucherNpsAvg" /></p>
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="address" label="操作" align="right">
@@ -172,7 +177,7 @@ export default {
     return {
       loading: false,
       SEARCH_ROLE,
-      showSearchPage: true,
+      showSearchPage: false,
       reworkTimeSpan: null, // 门店退单时间
       storeEvaluateTimeSpan: null, // 门店评价时间
       cloudAuditTimeSpan: null, // 云端审核时间
@@ -207,7 +212,7 @@ export default {
           await this.searchForGroupLeader(req)
         }
       } catch (error) {
-        this.$newMessage.warning(error.message || error)
+        if (error.message) { this.$newMessage.warning(error.message) }
       } finally {
         await delayLoading
         this.loading = false
@@ -322,7 +327,7 @@ export default {
      * @description 监听页面切换
      */
     handleCurrentChange () {
-      // TODO
+      this.searchCloudInfo()
     }
   }
 }
@@ -374,6 +379,12 @@ export default {
 
   .table-box {
     margin-top: 0;
+
+    .table-detail-box {
+      p {
+        display: flex;
+      }
+    }
   }
 }
 </style>

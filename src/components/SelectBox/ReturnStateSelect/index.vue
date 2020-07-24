@@ -3,7 +3,8 @@
     <el-select
       v-bind="$attrs"
       :popper-append-to-body="false"
-      placeholder="请选择是否门店退回"
+      placeholder="门店退回"
+      clearable
       v-on="$listeners"
     >
       <el-option

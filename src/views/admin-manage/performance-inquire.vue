@@ -71,7 +71,7 @@ export default {
     return {
       SEARCH_ROLE,
       // TODO
-      activeName: 'RetoucherChargeBackReport'
+      activeName: 'TimeStatistics'
     }
   },
   computed: {

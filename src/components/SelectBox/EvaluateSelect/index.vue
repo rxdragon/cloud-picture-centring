@@ -1,6 +1,6 @@
 <template>
   <div class="evaluate-select">
-    <el-select v-bind="$attrs" placeholder="请选择是否点赞" v-on="$listeners">
+    <el-select v-bind="$attrs" placeholder="是否点赞" v-on="$listeners">
       <el-option
         v-for="(optionItem, optionIndex) in options"
         :key="optionIndex"

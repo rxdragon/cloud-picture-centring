@@ -1,11 +1,19 @@
 // enumerate
 
 // 修图标准
-export const RetouchStandard = {
-  blue: '蓝标',
-  master: '大师',
-  kids: 'kids',
-  mainto: '缦图'
+export const RETOUCH_STANDARD = {
+  BLUE: 'blue',
+  MASTER: 'master',
+  KIDS: 'kids',
+  MAINTO: 'mainto'
+}
+
+// 修图标准映射中文
+export const retouchStandardToCN = {
+  [RETOUCH_STANDARD.BLUE]: '蓝标',
+  [RETOUCH_STANDARD.MASTER]: '大师',
+  [RETOUCH_STANDARD.KIDS]: 'kids',
+  [RETOUCH_STANDARD.MAINTO]: '缦图'
 }
 
 // 流水状态

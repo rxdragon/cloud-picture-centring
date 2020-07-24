@@ -184,25 +184,21 @@ export function getStreamTimesQuota (params) {
     method: 'GET',
     params
   }).then(msg => {
+    // TODO 缺少修图标准
     const data = keyToHump(msg)
     const createData = {}
     for (const key in data) {
-      if (key !== 'retouchTimeAvg') {
-        createData[key] = getAvg(data[key].sum * 1000, data[key].count)
-      }
+      createData[key] = getAvg(data[key].sum * 1000, data[key].count)
     }
-    const retouchTime = Number(data.retouchTimeAvg.rebuildTime.sum) + Number(data.retouchTimeAvg.retouchTime.sum)
+    const retouchTime = Number(data.retouchTimeAvg.sum)
     const outerRetouchTime = Number(data.outerRetouchTimeAvg.sum)
     const allRetouchTime = outerRetouchTime + retouchTime
-    const retouchCount = Number(data.retouchTimeAvg.retouchTime.count)
+    const retouchCount = Number(data.retouchTimeAvg.count)
     const outerRetouchCount = Number(data.outerRetouchTimeAvg.count)
     const allRetouchCount = retouchCount + outerRetouchCount
     createData['retouchTimeAvg'] = getAvg(retouchTime * 1000, retouchCount)
     createData['retouchAllTimeAvg'] = getAvg(allRetouchTime * 1000, allRetouchCount)
-    const returnCount = Number(data.retouchTimeAvg.rebuildTime.count)
-    const returnTime = Number(data.retouchTimeAvg.rebuildTime.sum)
-    createData['returnToRebuildTime'] = getAvg(returnTime * 1000, returnCount)
-    return createData
+    return Object.freeze(createData)
   })
 }
 
@@ -270,6 +266,20 @@ export function modifyStream (params) {
 export function getAllProduct () {
   return axios({
     url: '/project_cloud/common/getAllProduct',
-    method: 'get'
+    method: 'GET'
+  })
+}
+
+/**
+ * @description 获取修图标准时间信息
+ * @param {*} params 
+ */
+export function getOrgStandardTimesQuota (params) {
+  return axios({
+    url: '/project_cloud/operator/getOrgStandardTimesQuota',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
   })
 }

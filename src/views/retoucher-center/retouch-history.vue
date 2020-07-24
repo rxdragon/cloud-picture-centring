@@ -70,11 +70,11 @@
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
-                  <p>照片海草：<span>{{ row.retouchIncome | toFixedString }}</span></p>
-                  <p class="text-red">沙漏超时惩罚海草：<span>{{ row.punishIncome | toFixedString }}</span></p>
-                  <p class="text-money">实际获得海草：<span>{{ row.rewordIncome | toFixedString }}</span></p>
+                  <p>照片海草：<span>{{ row.exp | toFixedString }}</span></p>
+                  <p class="text-red">沙漏超时惩罚海草：<span>{{ row.overtimeExp | toFixedString }}</span></p>
+                  <p>实际获得海草：<span>{{ row.actualExp | toFixedString }}</span></p>
                 </div>
-                <span class="hover-class" slot="reference">{{ row.exp }}</span>
+                <span class="hover-class" slot="reference">{{ row.actualExp }}</span>
               </el-popover>
             </template>
           </el-table-column>
@@ -83,7 +83,7 @@
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
                   <p>照片收益：<span>{{ row.retouchIncome | toFixedString }}</span></p>
-                  <p class="text-red">沙漏惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
+                  <p class="text-red">沙漏惩罚收益：<span>{{ row.overtimeIncome | toFixedString }}</span></p>
                   <p class="text-red">退单惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
                   <p class="text-money">奖励收益：<span>{{ row.rewordIncome | toFixedString }}</span></p>
                   <p>实获收益：<span>{{ row.actualIncome | toFixedString }}</span></p>
@@ -103,6 +103,7 @@
               </el-popover>
             </template>
           </el-table-column>
+          <el-table-column prop="isCloudEvaluation" label="云学院抽查" width="100" />
           <el-table-column label="门店评价" width="120">
             <template slot-scope="{ row }">
               <div class="table-detail-box">
