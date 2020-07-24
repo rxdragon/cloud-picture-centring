@@ -154,6 +154,7 @@ import QualitySelect from '@SelectBox/QualitySelect'
 import CrewSelect from '@SelectBox/CrewSelect'
 import StaffSelect from '@SelectBox/StaffSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
+import moment from 'moment'
 
 import { SEARCH_ROLE } from '@/utils/enumerate'
 import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
@@ -216,9 +217,31 @@ export default {
      * @description 获取搜索参数
      */
     getParams () {
+      function getDiffDays (timeSpan) {
+        if (!timeSpan) return 0
+        const startTime = moment(timeSpan[0])
+        const endTime = moment(timeSpan[1])
+        return endTime.diff(startTime, 'days')
+      }
       const req = {
         page: this.pager.page,
         pageSize: this.pager.pageSize
+      }
+      if (!this.reworkTimeSpan && !this.storeEvaluateTimeSpan && !this.cloudAuditTimeSpan && !this.cloudEvaluateTimeSpan) {
+        this.$newMessage.warning('请填写时间')
+        return false
+      }
+      // 如果选中退回标记问题或者云学院问题标记讲不能查询超过10日的日期
+      if (this.issueValue.length || this.returnType) {
+        const timeType = ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan']
+        const timeLess10 = timeType.some(timeTypeItem => {
+          const diffDays = getDiffDays(this[timeTypeItem])
+          return diffDays <= 10 && diffDays > 0
+        })
+        if (!timeLess10) {
+          this.$newMessage.warning('选择门店退回类型或者云学院问题标签后，查询日期不能大于10天')
+          return
+        }
       }
       if (this.reworkTimeSpan) {
         req.returnStartAt = joinTimeSpan(this.reworkTimeSpan[0])
@@ -246,6 +269,7 @@ export default {
       if (this.searchRole === SEARCH_ROLE.OPERATE && this.staffIds.length) {
         req.retoucherIds = this.staffIds
       }
+      // 判断时间
       return req
     },
     /**
