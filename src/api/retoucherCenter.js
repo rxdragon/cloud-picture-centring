@@ -180,7 +180,7 @@ export function getRetouchQuotaList (params) {
       }
     })
     createData.list = msg.list
-    return createData
+    return Object.freeze(createData)
   })
 }
 

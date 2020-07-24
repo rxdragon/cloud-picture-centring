@@ -22,14 +22,11 @@ export default {
   data () {
     return {
       options: [{
-        label: '全部',
-        value: 'all'
-      }, {
         label: '是',
-        value: true
+        value: 'isReturn'
       }, {
         label: '否',
-        value: false
+        value: 'notReturn'
       }]
     }
   }

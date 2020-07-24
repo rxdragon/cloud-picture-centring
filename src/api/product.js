@@ -36,7 +36,7 @@ export function getAllProduct () {
         })
       }
     })
-    return createData
+    return Object.freeze(createData)
   })
 }
 

@@ -45,7 +45,7 @@ export default class StreamModel {
   retouchAllTime = '-' // 修图总时长
 
   // 门店退回相关
-  storeReturnNum = '-' // 门店退回张数
+  storeReturnNum = 0 // 门店退回张数
   lekimaCount = '-' // 利奇马樟树
   isStoreReturn = false // 是否是门店退回
   qualityNum = '' // 门店退回质量问题张数
@@ -56,10 +56,10 @@ export default class StreamModel {
   retoucherNpsAvg = '-'
 
   // 收益
-  retouchIncome = 0
-  rewordIncome = 0
-  punishIncome = 0
-  actualIncome = 0
+  retouchIncome = 0 // 修图收益
+  rewordIncome = 0 // 奖励收益
+  punishIncome = 0 // 惩罚收益
+  actualIncome = 0 // 实获收益
 
 
   constructor (streamData) {
@@ -95,7 +95,7 @@ export default class StreamModel {
       _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
 
     this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(StreamStatics.STORERETURN)
-    this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || '-'
+    this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || 0
     this.qualityNum = _.get(streamData, 'tags.values.quality_num') || 0
     this.notQualityNum = _.get(streamData, 'tags.values.not_quality_num') || 0
 

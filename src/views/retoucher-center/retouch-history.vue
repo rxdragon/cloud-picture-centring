@@ -66,51 +66,51 @@
             </template>
           </el-table-column>
           <el-table-column prop="retouchAllTime" label="修图总时长" width="100" />
-          <el-table-column prop="storeReturnNum" label="退单张数" width="80" />
-          <el-table-column prop="exp" label="海草值">
-            <template slot-scope="{ row }">
-              <el-popover
-                placement="right"
-                width="240"
-                popper-class="people-table"
-                trigger="hover"
-              >
-                <div class="exp-box">
-                  <div class="exp-item exp-title">
-                    <span>人数</span>
-                    <span>数量</span>
-                  </div>
-                  <div class="exp-item exp-list" v-for="(expItem, expIndex) in row.peopleTable" :key="row.streamNum + expIndex">
-                    <span>{{ Number(expItem.expItempeopleLabel) ? `${expItem.peopleLabel}人` : expItem.peopleLabel }}</span>
-                    <span>{{ expItem.photoNum }}</span>
-                  </div>
-                </div>
-                <span slot="reference">{{ row.exp }}</span>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <el-table-column label="实际收益">
+          <el-table-column label="海草值（颗）">
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
-                <p>修图收益：{{ row.retouchIncome | toFixedString }}</p>
-                <p class="text-money">奖励收益：{{ row.rewordIncome | toFixedString }}</p>
-                <p class="text-red">惩罚收益：{{ row.punishIncome | toFixedString }}</p>
-                <p>实获收益：{{ row.actualIncome | toFixedString }}</p>
-                <span slot="reference">{{ row.actualIncome | toFixedString }}</span>
+                <div class="table-detail-box">
+                  <p>照片海草：<span>{{ row.retouchIncome | toFixedString }}</span></p>
+                  <p class="text-red">沙漏超时惩罚海草：<span>{{ row.punishIncome | toFixedString }}</span></p>
+                  <p class="text-money">实际获得海草：<span>{{ row.rewordIncome | toFixedString }}</span></p>
+                </div>
+                <span class="hover-class" slot="reference">{{ row.exp }}</span>
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="质量问题/非质量问题（张）" width="200">
+          <el-table-column label="实际收益（元）">
             <template slot-scope="{ row }">
-              {{ row.qualityNum }} / {{ row.notQualityNum }}
+              <el-popover placement="right" popper-class="income-list" trigger="hover">
+                <div class="table-detail-box">
+                  <p>照片收益：<span>{{ row.retouchIncome | toFixedString }}</span></p>
+                  <p class="text-red">沙漏惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
+                  <p class="text-red">退单惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
+                  <p class="text-money">奖励收益：<span>{{ row.rewordIncome | toFixedString }}</span></p>
+                  <p>实获收益：<span>{{ row.actualIncome | toFixedString }}</span></p>
+                </div>
+                <span class="hover-class" slot="reference">{{ row.actualIncome | toFixedString }}</span>
+              </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="goodEvaluate" label="门店评价">
-            <template slot-scope="scope">
-              <show-evaluate :evaluate="scope.row.goodEvaluate" />
+          <el-table-column label="退单张数">
+            <template slot-scope="{ row }">
+              <el-popover placement="right" popper-class="income-list" trigger="hover">
+                <div class="table-detail-box">
+                  <p>质量问题数量：<span>{{ row.qualityNum }}</span></p>
+                  <p>非质量问题数量：<span>{{ row.notQualityNum }}</span></p>
+                </div>
+                <span class="hover-class" slot="reference">{{ row.storeReturnNum }}</span>
+              </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="retoucherNpsAvg" label="顾客满意度" width="100" />
+          <el-table-column label="门店评价" width="120">
+            <template slot-scope="{ row }">
+              <div class="table-detail-box">
+                <p>门店评价：<show-evaluate :evaluate="row.goodEvaluate" /></p>
+                <p>顾客评价：<span>{{ row.retoucherNpsAvg }}</span></p>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="linkto(scope.row.streamId)">详情</el-button>
@@ -162,7 +162,7 @@ export default {
       streamNum: '', // 流水号
       searchType: 0, // 搜索标准
       tableData: [], // 列表数据
-      isReturn: 'all', // 门店退回
+      isReturn: '', // 门店退回
       isGood: 'all', // 是否门店点赞
       returnType: '', // 退单类型
       cloudSpot: '',
@@ -185,12 +185,8 @@ export default {
   watch: {
     'activeName': {
       handler (e) {
-        if (e === SEARCH_TYPE.NORMAL) {
-          this.searchList(1)
-        } else {
-          this.resetSearchParm()
-          this.searchList(1)
-        }
+        if (e === SEARCH_TYPE.REWORK) { this.resetSearchParm('noTime') }
+        this.searchList(1)
       },
       immediate: true
     }
@@ -203,6 +199,8 @@ export default {
       const keepLiveRoute = ['RetouchHistory', 'orderDetail']
       if (keepLiveRoute.includes(_.get(from, 'name'))) return
       const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
+      // 重制条件
+      vm.resetSearchParm()
       if (retouchHistoryTimeSpan) { vm.timeSpan = retouchHistoryTimeSpan.split(',') }
       if (retouchHistorySearchType) {
         switch (retouchHistorySearchType) {
@@ -210,11 +208,7 @@ export default {
             vm.isGood = true
             break
           case SearchType.ReworkPhoto:
-            vm.isReturn = true
-            break
-          case SearchType.QualityRework:
-            vm.isReturn = true
-            vm.returnType = 'quality'
+            vm.isReturn = 'isReturn'
             break
         }
       }
@@ -230,12 +224,12 @@ export default {
     /**
      * @description 重制条件
      */
-    resetSearchParm () {
-      this.timeSpan = null
+    resetSearchParm (notChangeTime) {
+      this.timeSpan = notChangeTime ? this.timeSpan : null
       this.streamNum = ''
       this.searchType = 0
       this.tableData = []
-      this.isReturn = 'all'
+      this.isReturn = ''
       this.isGood = 'all'
       this.returnType = ''
       this.cloudSpot = ''
@@ -272,17 +266,7 @@ export default {
      */
     searchList (page) {
       this.pager.page = page ? page : this.pager.page
-      if (this.activeName === SEARCH_TYPE.NORMAL) {
-        this.getRetouchList()
-      } else {
-        this.searchReworkList()
-      }
-    },
-    /**
-     * @description 获取历史退回记录
-     */
-    searchReworkList () {
-      // TODO 获取历史数据
+      this.getRetouchList()
     },
     /**
      * @description 获取历史列表
@@ -292,13 +276,14 @@ export default {
       try {
         const reqData = {
           page: this.pager.page,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          type: this.activeName
         }
         if (this.timeSpan) {
           reqData.startAt = joinTimeSpan(this.timeSpan[0])
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
+        if (this.isReturn) { reqData.isReturn = this.isReturn === 'isReturn' }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
         if (this.returnType) { reqData.storeReworkType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
@@ -308,8 +293,6 @@ export default {
         this.tableData = data.list
         delete this.$route.query.retouchHistoryTimeSpan
         delete this.$route.query.retouchHistorySearchType
-      } catch (error) {
-        console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -318,11 +301,7 @@ export default {
      * @description 页码改变
      */
     handleCurrentChange () {
-      if (this.activeName === SEARCH_TYPE.NORMAL) {
-        this.searchList()
-      } else {
-        this.searchReworkList()
-      }
+      this.searchList()
     }
   }
 }
@@ -362,6 +341,12 @@ export default {
       }
     }
   }
+}
+
+.hover-class {
+  color: @blue;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
 
@@ -456,6 +441,13 @@ export default {
 
   .text-plant {
     color: @panGreen;
+  }
+}
+
+.table-detail-box {
+  p {
+    display: flex;
+    justify-content: space-between;
   }
 }
 </style>
