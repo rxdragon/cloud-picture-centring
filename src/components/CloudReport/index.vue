@@ -1,5 +1,5 @@
 <template>
-  <div class="cloud-report">
+  <div class="cloud-report" v-loading="loading">
     <div class="search-box">
       <div class="search-item">
         <span>评价时间</span>
@@ -22,14 +22,16 @@
       </div>
     </div>
     <div class="report-module">
-      <!-- TODO -->
       <div class="panel-title">整理抽查数据统计</div>
       <table class="table-panel" border="0">
         <th class="table-item" v-for="(spotItem, spotIndex) in spotData" :key="spotIndex">
           <tr class="info-title">{{ spotItem.lable }}</tr>
           <tr
             class="info-content"
-            :class="spotIndex === 'score' && 'info-content-nolink'"
+            :class="{
+              'info-content-nolink': spotIndex === 'score',
+              'info-content-disabled': clickType === spotIndex
+            }"
             @click="onClickClass(spotIndex)"
           >
             {{ spotItem.count }} {{ spotIndex !== 'score' ? '/' : '' }} {{ spotItem.rate }}
@@ -68,8 +70,8 @@ import PieChart from '@/components/charts/PieChart'
 import GroupChart from '@/components/ChartComponents/GroupChart'
 import moment from 'moment'
 
-import { CLOUD_ROLE } from '@/utils/enumerate'
-import { joinTimeSpan } from '@/utils/timespan.js'
+import { CLOUD_ROLE, GRADE_TYPE } from '@/utils/enumerate'
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 
@@ -83,31 +85,33 @@ export default {
   data () {
     return {
       CLOUD_ROLE,
-      routeName: this.$route.name, // 路由名字
+      GRADE_TYPE,
+      loading: false,
       timeSpan: null,
       staffId: '',
       staffIds: [], // 云端伙伴
       productValue: [], // 产品
       cloudProblem: [],
       issueValue: [], // 问题标签
+      clickType: GRADE_TYPE.PLANT, // 选中标签
       spotData: {
-        plantInfo: {
-          count: 1,
-          rate: '10%',
+        [GRADE_TYPE.PLANT]: {
+          count: 0,
+          rate: '0%',
           lable: '种草张数 / 种草率'
         },
-        pullInfo: {
-          count: 1,
-          rate: '10%',
+        [GRADE_TYPE.PULL]: {
+          count: 0,
+          rate: '0%',
           lable: '拔草张数 / 拔草率'
         },
-        passInfo: {
-          count: 1,
-          rate: '10%',
+        [GRADE_TYPE.NONE]: {
+          count: 0,
+          rate: '0%',
           lable: '通过张数 / 通过率'
         },
         score: {
-          count: 1,
+          count: 0,
           rate: '',
           lable: '总分'
         }
@@ -115,30 +119,86 @@ export default {
     }
   },
   created () {
-    const startAt = moment().subtract('day', 28).locale('zh-cn').format('YYYY-MM-DD')
-    const endAt = moment().locale('zh-cn').format('YYYY-MM-DD')
+    const startAt = moment().subtract('day', 28).format('YYYY-MM-DD')
+    const endAt = moment().format('YYYY-MM-DD')
     this.timeSpan = [startAt, endAt]
-    this.getCloudProblemReport()
+    this.searchData()
   },
   methods: {
-    searchData () {
-      // TODO
+    /**
+     * @description 搜搜数据
+     */
+    async searchData () {
+      this.loading = true
+      try {
+        await Promise.all([
+          this.getCheckPoolQuota(),
+          this.getCheckPoolSubQuota()
+        ])
+      } finally {
+        await delayLoading()
+        this.loading = false
+      }
+      
     },
     /**
-     * @description 监听点击大类切换
+     * @description 获取抽查指标参数
      */
-    onClickClass (type) {
-      if (type === 'score') return
-    },
-    /**
-     * @description 获取饼图数据
-     */
-    async getCloudProblemReport () {
+    getCheckQuotaParams () {
+      if (!this.timeSpan) {
+        this.$newMessage.warning('请输入时间')
+        return false
+      }
       const req = {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      this.cloudProblem = await AssessmentCenter.getCloudProblemReport(req)
+      if (this.role === CLOUD_ROLE.OPERATE && this.productValue.length) {
+        req.productIds = this.productValue
+      }
+      if (this.role === CLOUD_ROLE.OPERATE && this.staffIds.length) {
+        req.retoucherIds = this.staffIds
+      }
+      if (this.role === CLOUD_ROLE.GROUP_LEADER && this.staffId) {
+        req.retoucherIds = [this.staffId]
+      }
+      return req
+    },
+    /**
+     * @description 获取抽查统计
+     */
+    async getCheckPoolQuota () {
+      const req = this.getCheckQuotaParams()
+      if (!req) return
+      const type = this.role
+      const data = await AssessmentCenter.getCheckPoolQuota(req, type)
+      for (const key in data) {
+        this.spotData[key].count = data[key].count
+        this.spotData[key].rate = data[key].rate
+      }
+    },
+    /**
+     * @description 监听点击大类切换
+     */
+    async onClickClass (type) {
+      if (type === 'score' || type === this.clickType) return
+      this.clickType = type
+      try {
+        this.loading = true
+        await this.getCheckPoolSubQuota()
+      } finally {
+        this.loading = false
+      }
+    },
+    /**
+     * @description 获取饼图数据
+     */
+    async getCheckPoolSubQuota () {
+      const req = this.getCheckQuotaParams()
+      if (!req) return
+      req.type = this.clickType
+      const roleType = this.role
+      this.cloudProblem = await AssessmentCenter.getCheckPoolSubQuota(req, roleType)
     }
   }
 }
@@ -207,6 +267,7 @@ export default {
       cursor: pointer;
     }
 
+    .info-content-disabled,
     .info-content-nolink {
       color: #333;
       text-decoration: none;

@@ -163,6 +163,13 @@ export const PLANT_ID_MAP = {
   PULL_ID: '2', // 拔草id
   NONE_ID: '3' // 一般id
 }
+
+// 云学院打分类型
+export const GRADE_TYPE = {
+  PLANT: 'plant',
+  PULL: 'pull',
+  NONE: 'none'
+}
 // 种拔草id对应type
 export const PlantIdTypeEnum = {
   [PLANT_ID_MAP.PLANT_ID]: 'plant',

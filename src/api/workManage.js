@@ -1,4 +1,5 @@
 import axios from '@/plugins/axios.js'
+import { RETOUCH_STANDARD } from '@/utils/enumerate'
 import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '@/utils'
 import { toFixed, isNumber } from '@/utils/validate'
 
@@ -184,11 +185,10 @@ export function getStreamTimesQuota (params) {
     method: 'GET',
     params
   }).then(msg => {
-    // TODO 缺少修图标准
     const data = keyToHump(msg)
     const createData = {}
     for (const key in data) {
-      createData[key] = getAvg(data[key].sum * 1000, data[key].count)
+      createData[key] = getAvg(data[key].sum, data[key].count)
     }
     const retouchTime = Number(data.retouchTimeAvg.sum)
     const outerRetouchTime = Number(data.outerRetouchTimeAvg.sum)
@@ -196,8 +196,8 @@ export function getStreamTimesQuota (params) {
     const retouchCount = Number(data.retouchTimeAvg.count)
     const outerRetouchCount = Number(data.outerRetouchTimeAvg.count)
     const allRetouchCount = retouchCount + outerRetouchCount
-    createData['retouchTimeAvg'] = getAvg(retouchTime * 1000, retouchCount)
-    createData['retouchAllTimeAvg'] = getAvg(allRetouchTime * 1000, allRetouchCount)
+    createData['retouchTimeAvg'] = getAvg(retouchTime, retouchCount)
+    createData['retouchAllTimeAvg'] = getAvg(allRetouchTime, allRetouchCount)
     return Object.freeze(createData)
   })
 }
@@ -277,9 +277,41 @@ export function getAllProduct () {
 export function getOrgStandardTimesQuota (params) {
   return axios({
     url: '/project_cloud/operator/getOrgStandardTimesQuota',
-    method: 'POST',
-    data: params
+    method: 'GET',
+    params
   }).then(msg => {
-    return msg
+    const timeAvg = {
+      [RETOUCH_STANDARD.BLUE]: {
+        sum: 0,
+        count: 0,
+        avg: 0
+      },
+      [RETOUCH_STANDARD.MASTER]: {
+        sum: 0,
+        count: 0,
+        avg: 0
+      },
+      [RETOUCH_STANDARD.KIDS]: {
+        sum: 0,
+        count: 0,
+        avg: 0
+      },
+      [RETOUCH_STANDARD.MAINTO]: {
+        sum: 0,
+        count: 0,
+        avg: 1000
+      }
+    }
+    msg.forEach(orgItem => {
+      for (const type in orgItem) {
+        timeAvg[type].sum += Number(orgItem[type].sum)
+        timeAvg[type].count += Number(orgItem[type].count)
+      }
+    })
+    for (const type in timeAvg) {
+      timeAvg[type].sum *= 1000
+      timeAvg[type].avg = getAvg(timeAvg[type].sum, timeAvg[type].count)
+    }
+    return timeAvg
   })
 }

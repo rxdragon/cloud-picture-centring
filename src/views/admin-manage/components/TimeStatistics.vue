@@ -38,10 +38,10 @@
       </div>
       <div class="list-panel-content">
         <div class="content row-one">
-          <span>{{ tableData.receiptTime | formatDuring }}</span>
-          <span>{{ tableData.retouchAllTimeAvg | formatDuring }}</span>
-          <span>{{ tableData.retouchTimeAvg | formatDuring }}</span>
-          <span>{{ tableData.outerRetouchTimeAvg | formatDuring }}</span>
+          <span>{{ tableData.receiptTime | toTimeFormatText }}</span>
+          <span>{{ tableData.retouchAllTimeAvg | toTimeFormatText }}</span>
+          <span>{{ tableData.retouchTimeAvg | toTimeFormatText }}</span>
+          <span>{{ tableData.outerRetouchTimeAvg | toTimeFormatText }}</span>
         </div>
       </div>
       <div class="list-panel-title row-two">
@@ -64,10 +64,10 @@
       </div>
       <div class="list-panel-content">
         <div class="content row-two">
-          <span>{{ tableData.reviewTimeAvg | formatDuring }}</span>
-          <span>{{ tableData.returnToRebuildTime | formatDuring }}</span>
-          <span>{{ tableData.storeReturnTime | formatDuring }}</span>
-          <span>{{ tableData.storeReturnTime | formatDuring }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.BLUE].avg | toTimeFormatText }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.MASTER].avg | toTimeFormatText }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.KIDS].avg | toTimeFormatText }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.MAINTO].avg | toTimeFormatText }}</span>
         </div>
       </div>
     </div>
@@ -82,24 +82,46 @@ import moment from 'moment'
 
 import * as WorkManage from '@/api/workManage'
 
+import { RETOUCH_STANDARD } from '@/utils/enumerate.js'
 import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
-import { formatDuring } from '@/utils'
 
 export default {
   name: 'TimeStatistics',
   components: { DatePicker, RetoucherGroupSelect, RetouchKindSelect },
-  filters: { formatDuring },
   data () {
     return {
+      RETOUCH_STANDARD,
       loading: false,
       timeSpan: null, // 时间戳
       retouchType: '', // 修图标准
       retoucherGroupValue: '', // 修图组
-      tableData: {}
+      tableData: {},
+      retouchTimeAvg: {
+        [RETOUCH_STANDARD.BLUE]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        },
+        [RETOUCH_STANDARD.MASTER]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        },
+        [RETOUCH_STANDARD.KIDS]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        },
+        [RETOUCH_STANDARD.MAINTO]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        }
+      }
     }
   },
   created () {
-    const nowAt = moment().locale('zh-cn').format('YYYY-MM-DD')
+    const nowAt = moment().format('YYYY-MM-DD')
     this.timeSpan = [nowAt, nowAt]
     this.getStreamTimesInfo()
   },
@@ -109,7 +131,7 @@ export default {
      */
     async getStreamTimesInfo () {
       try {
-        this.$loading()
+        this.loading = true
         await Promise.all([
           this.getStreamTimesQuota(),
           this.getOrgStandardTimesQuota()
@@ -150,8 +172,7 @@ export default {
     async getOrgStandardTimesQuota () {
       const req = this.getParams()
       delete req.retouchType
-      // TODO 获取数据
-      await WorkManage.getOrgStandardTimesQuota(req)
+      this.retouchTimeAvg = await WorkManage.getOrgStandardTimesQuota(req)
     }
   }
 }

@@ -70,8 +70,7 @@ export default {
   data () {
     return {
       SEARCH_ROLE,
-      // TODO
-      activeName: 'TimeStatistics'
+      activeName: 'PartnerPerformance'
     }
   },
   computed: {

@@ -2,7 +2,6 @@
   <div class="crew-select">
     <el-select
       :disabled="disableState"
-      :popper-append-to-body="false"
       v-bind="$attrs"
       clearable
       placeholder="请选择组员"

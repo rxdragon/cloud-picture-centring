@@ -14,6 +14,7 @@ import { pieColors } from '@/utils/colors.js'
 
 function filterLabelName (data) {
   const group = data.data.group
+  if (!group) return `<p>${data.data.name}：<span class="text-right">${data.data.value}张---${data.data.rate}</span></p>`
   let msg = ''
   group.forEach(item => {
     const name = item.nickname || item.name

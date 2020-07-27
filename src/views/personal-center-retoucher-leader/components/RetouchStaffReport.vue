@@ -1,6 +1,6 @@
 <template>
   <div class="retouch-report">
-    <div v-if="!isSeachPage" class="report-box module-panel">
+    <div class="report-box module-panel">
       <div class="search-box">
         <div class="search-item">
           <span>时间</span>
@@ -20,14 +20,14 @@
           <list-table
             key="tableDataCount"
             :search-type.sync="searchType"
-            :is-seach-page.sync="isSeachPage"
             :listdata="tableDataCount"
+            @showSearchPage="onShowSearchPage"
           />
           <list-table
             key="tableDataRate"
             :search-type.sync="searchType"
-            :is-seach-page.sync="isSeachPage"
             :listdata="tableDataRate"
+            @showSearchPage="onShowSearchPage"
           />
         </div>
       </div>
@@ -40,20 +40,12 @@
         />
       </div>
     </div>
-    <CrewRetouchHistory
-      v-else
-      :is-seach-page.sync="isSeachPage"
-      :search-staff="staffId"
-      :search-type.sync="searchType"
-      :search-time="timeSpan"
-    />
   </div>
 </template>
 
 <script>
 import DatePicker from '@/components/DatePicker'
 import ListTable from '@/components/ListTable'
-import CrewRetouchHistory from './CrewRetouchHistory'
 import RetoucherChart from './RetoucherChart'
 import CrewSelect from '@SelectBox/CrewSelect'
 
@@ -65,12 +57,11 @@ import * as Staff from '@/api/staff.js'
 
 export default {
   name: 'RetouchReport',
-  components: { DatePicker, ListTable, CrewRetouchHistory, CrewSelect, RetoucherChart },
+  components: { DatePicker, ListTable, CrewSelect, RetoucherChart },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间戳
-      isSeachPage: false,
       staffId: '',
       allStaffs: [],
       searchType: '', // 搜索类型
@@ -100,11 +91,6 @@ export default {
       return this.timeSpan
     }
   },
-  watch: {
-    isSeachPage (val) {
-      this.$emit('changeShowTab',val)
-    }
-  },
   async created () {
     const nowTime = parseTime(new Date(), '{y}-{m}-{d}')
     this.timeSpan = [nowTime, nowTime]
@@ -113,17 +99,22 @@ export default {
   },
   methods: {
     /**
+     * @description 搜素数据
+     */
+    onShowSearchPage () {
+      const sendMsg = {
+        timeSpan: this.timeSpan,
+        searchType: this.searchType
+      }
+      if (this.staffId) { sendMsg.staffId = this.staffId }
+      this.$emit('showSearchPage', sendMsg)
+    },
+    /**
      * @description 获取组员
      */
     async getSelfStaffs () {
       const list = await Staff.getSelfStaffs()
       this.allStaffs = list.map(item => item.value)
-    },
-    /**
-     * @description 获取详情
-     */
-    showDetail () {
-      this.isSeachPage = true
     },
     /**
      * @description 获取组员修图报告
@@ -133,24 +124,14 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.staffId) {
-        req.staffId = this.staffId
-      }
+      if (this.staffId) { req.staffId = this.staffId }
       const data = await RetouchLeader.getGroupStaffQuotaInfo(req)
-      const lintKey = ['spotCheckPlantInfo', 'spotCheckPullInfo', 'spotCheckNoneInfo']
       for (const key in data) {
         if (this.tableDataCount[key]) {
           this.tableDataCount[key].value = data[key]
         }
         if (this.tableDataRate[key]) {
           this.tableDataRate[key].value = data[key]
-          if (lintKey.includes(key)) {
-            const sendStaff = this.staffId ? [this.staffId] : this.allStaffs
-            this.tableDataRate[key].link = '/assessment-center/assessment-history' +
-              '?searchTimeSpan=' + this.timeSpan +
-              '&searchType=' + this.tableDataRate[key].query +
-              '&sendStaff=' + sendStaff
-          }
         }
       }
     },
@@ -164,6 +145,9 @@ export default {
       }
       this.chartInfo = await RetouchLeader.getStaffQuotaInfoGroupByStaff(req)
     },
+    /**
+     * @description 搜索数据
+     */
     searchData () {
       if (!this.timeSpan) {
         this.$newMessage.warning('请输入时间')
@@ -173,9 +157,7 @@ export default {
       Promise.all([
         this.getGroupStaffQuotaInfo(),
         this.getStaffQuotaInfoGroupByStaff()
-      ]).catch(error => {
-        console.error(error)
-      }).finally(() => {
+      ]).finally(() => {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       })
     }

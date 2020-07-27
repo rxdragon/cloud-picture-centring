@@ -11,6 +11,7 @@
 <script>
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { CLOUD_ROLE } from '@/utils/enumerate'
+
 import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
@@ -101,11 +102,7 @@ export default {
   },
   methods: {
     searchData () {
-      if (this.role === CLOUD_ROLE.OPERATE) {
-        this.getChartData()
-      } else {
-        // TODO
-      }
+      this.getChartData()
     },
     /**
      * @description 获取小组数据
@@ -115,10 +112,9 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.tags.length) {
-        req.tagId = this.tags
-      }
-      this.chartData.rows = await AssessmentCenter.getCloudProblemReportByGroup(req)
+      if (this.tags.length) { req.tagId = this.tags }
+      const roleType = this.role
+      this.chartData.rows = await AssessmentCenter.getCloudProblemReportByGroup(req, roleType)
     }
   }
 }

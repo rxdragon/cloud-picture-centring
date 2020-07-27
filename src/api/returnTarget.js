@@ -98,9 +98,7 @@ function handerReturnQuota (msg) {
  */
 export function getStoreReturnQuota (params) {
   return axios({
-    // TODO mock数据
-    url: 'https://doc.local.hzmantu.com/project_cloud/release-2-9-1/project_cloud/operator/getStoreReturnQuota',
-    // url: '/project_cloud/operator/getStoreReturnQuota',
+    url: '/project_cloud/operator/getStoreReturnQuota',
     method: 'GET',
     params
   }).then(msg => {
@@ -114,9 +112,7 @@ export function getStoreReturnQuota (params) {
  */
 export function getStaffStoreReturnQuota (params) {
   return axios({
-    // TODO mock数据
-    url: 'https://doc.local.hzmantu.com/project_cloud/release-2-9-1/project_cloud/retouchLeader/getStoreReturnQuota',
-    // url: '/project_cloud/retouchLeader/getStoreReturnQuota',
+    url: '/project_cloud/retouchLeader/getStoreReturnQuota',
     method: 'POST',
     params
   }).then(msg => {
@@ -126,9 +122,7 @@ export function getStaffStoreReturnQuota (params) {
 
 export function getStaffReturnChartInfo (params) {
   return axios({
-    // TODO mock数据
-    url: 'https://doc.local.hzmantu.com/project_cloud/release-2-9-1/project_cloud/retouchLeader/getReworkQuotaGroupByStaff',
-    // url: '/project_cloud/retouchLeader/getReworkQuotaGroupByStaff',
+    url: '/project_cloud/retouchLeader/getReworkQuotaGroupByStaff',
     method: 'POST',
     params
   }).then(msg => {

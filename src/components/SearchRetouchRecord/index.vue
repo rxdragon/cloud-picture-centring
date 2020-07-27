@@ -1,8 +1,8 @@
 <template>
-  <div class="search-retouch-record" v-loading="loading">
+  <div class="search-retouch-record">
     <!-- 修图记录 -->
     <el-button type="primary" @click="openShowSearchPage">{{ searchRole === SEARCH_ROLE.GROUP_LEADER ? '组员修图记录' : '云端全流水查询' }}</el-button>
-    <div class="search-page" v-if="showSearchPage">
+    <div class="search-page" v-if="showSearchPage" v-loading="loading">
       <div class="header-box">
         <h3>{{ searchRole === SEARCH_ROLE.GROUP_LEADER ? '组员修图记录' : '云端全流水查询' }}</h3>
         <div class="header-plugin">
@@ -95,7 +95,7 @@
       <!-- 列表数据 -->
       <div class="table-box">
         <el-table :data="tableData" style="width: 100%;">
-          <el-table-column prop="retoucher" label="组员" width="50" />
+          <el-table-column prop="retoucher" label="组员" />
           <el-table-column prop="streamNum" label="流水号" width="180" />
           <el-table-column label="修图时间">
             <template slot-scope="{ row }">
@@ -129,23 +129,23 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="address" label="操作" align="right">
+          <el-table-column label="操作" align="right" width="80">
             <template slot-scope="{ row }">
               <el-button type="primary" size="small" @click="linkto(row.streamId)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
-      </div>
-      <!-- 分页html -->
-      <div class="page-box">
-        <el-pagination
-          :hide-on-single-page="true"
-          :current-page.sync="pager.page"
-          :page-size="pager.pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="pager.total"
-          @current-change="handleCurrentChange"
-        />
+        <!-- 分页html -->
+        <div class="page-box">
+          <el-pagination
+            :hide-on-single-page="true"
+            :current-page.sync="pager.page"
+            :page-size="pager.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="pager.total"
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -175,8 +175,8 @@ export default {
   },
   data () {
     return {
-      loading: false,
       SEARCH_ROLE,
+      loading: false,
       showSearchPage: false,
       reworkTimeSpan: null, // 门店退单时间
       storeEvaluateTimeSpan: null, // 门店评价时间
@@ -214,7 +214,7 @@ export default {
       } catch (error) {
         if (error.message) { this.$newMessage.warning(error.message) }
       } finally {
-        await delayLoading
+        await delayLoading()
         this.loading = false
       }
     },
@@ -245,7 +245,7 @@ export default {
         })
         if (!timeLess10) {
           this.$newMessage.warning('选择门店退回类型或者云学院问题标签后，查询日期不能大于10天')
-          return
+          return false
         }
       }
       if (this.reworkTimeSpan) {
@@ -257,7 +257,7 @@ export default {
         req.storeEvaluateEndAt = joinTimeSpan(this.storeEvaluateTimeSpan[1], 1)
       }
       if (this.cloudAuditTimeSpan) {
-        req.passEndAt = joinTimeSpan(this.cloudAuditTimeSpan[0])
+        req.passStartAt = joinTimeSpan(this.cloudAuditTimeSpan[0])
         req.passEndAt = joinTimeSpan(this.cloudAuditTimeSpan[1], 1)
       }
       if (this.cloudEvaluateTimeSpan) {
@@ -328,6 +328,26 @@ export default {
      */
     handleCurrentChange () {
       this.searchCloudInfo()
+    },
+    /**
+     * @description 重制搜索条件
+     */
+    resetSearchType () {
+      this.reworkTimeSpan = null
+      this.storeEvaluateTimeSpan = null
+      this.cloudAuditTimeSpan = null
+      this.cloudEvaluateTimeSpan = null
+      this.issueValue = []
+      this.returnType = ''
+      this.isGood = 'all'
+      this.staffId = ''
+      this.staffIds = []
+      this.tableData = []
+      this.pager = {
+        page: 1,
+        pageSize: 10,
+        total: 10
+      }
     }
   }
 }

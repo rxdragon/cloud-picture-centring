@@ -31,7 +31,6 @@ export function getGroupStaffQuotaInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
-    // TODO 更改写入方式
     function getRateInfo (cardinal, sum) {
       return Number(cardinal) + ' / ' + transformPercentage(cardinal, sum)
     }
@@ -59,9 +58,8 @@ export function getGroupStaffQuotaInfo (params) {
     createData.income = income.toFixed(2) // 正常收益
     createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, streamCount) // 点赞数 / 点赞率
-    createData.badEvaluationInfo = getRateInfo(data.badStreamNum, streamCount) // 点赞数 / 点赞率
-    // TODO 缺少顾客满意度
-    createData.npsEvaluate = getAvg(data.storeEvaluate.sum, data.storeEvaluate.count) // 点赞数 / 点赞率
+    createData.badEvaluationInfo = getRateInfo(data.badStreamNum, streamCount) // 点踩数 / 点踩率
+    createData.npsEvaluate = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count) // 顾客满意度
     return createData
   })
 }
