@@ -188,8 +188,7 @@ export default {
       handler (e) {
         if (e === SEARCH_TYPE.REWORK) { this.resetSearchParm('noTime') }
         this.searchList(1)
-      },
-      immediate: true
+      }
     }
   },
   /**
