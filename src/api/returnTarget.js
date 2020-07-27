@@ -42,12 +42,12 @@ function handerReturnQuota (msg) {
   // 门店质量&非质量问题退单张数
   const storeReturnForBothPhoto = msg.storeReturnPhotoNumForNormalBoth + msg.storeReturnPhotoNumForReworkBoth
   // 退单总收益
-  let storeReturnIncome = msg.storeReturnIncomeForQuality * 100 +
+  const storeReturnIncome = msg.storeReturnIncomeForQuality * 100 +
     msg.storeReturnIncomeForNotQuality * 100 +
     msg.storeReturnIncomeForBoth * 100
   msg.storeReturnIncome = toFixed(storeReturnIncome / 100)
   // 退单总海草
-  let storeReturnExp = msg.storeReturnExpForQuality * 100 +
+  const storeReturnExp = msg.storeReturnExpForQuality * 100 +
     msg.storeReturnExpForNotQuality * 100 +
     msg.storeReturnExpForBoth * 100
   msg.storeReturnExp = toFixed(storeReturnExp / 100)

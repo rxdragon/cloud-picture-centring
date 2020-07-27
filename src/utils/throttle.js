@@ -6,8 +6,8 @@
 export function debounce (fn, delay) {
   let timer = null
   return function () {
-    let _this = this
-    let _args = arguments
+    const _this = this
+    const _args = arguments
     // 清除上一个timer
     clearTimeout(timer)
     // 当最后回调时，经过delay毫秒后执行事件处理程序
@@ -25,7 +25,7 @@ export function debounce (fn, delay) {
 export const throttle = function (fn, delay) {
   let last = 0
   return function () {
-    let cur = +new Date()
+    const cur = +new Date()
     if (cur - last > delay) {
       fn.apply()
       last = cur

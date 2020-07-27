@@ -21,7 +21,7 @@ export function getGradeMouth () {
   const nowDate = moment(new Date())
   const day = nowDate.date()
   if (day < 10) {
-    let month = nowDate.add(-1, 'month')
+    const month = nowDate.add(-1, 'month')
     return month.format('MM')
   }
   return nowDate.format('MM')
@@ -34,7 +34,7 @@ export function getSearchMonth () {
   const nowDate = moment()
   const day = nowDate.date()
   if (day < 20) {
-    let month = nowDate.add(-1, 'month')
+    const month = nowDate.add(-1, 'month')
     return month.format('YYYYMM')
   }
   return nowDate.format('YYYYMM')

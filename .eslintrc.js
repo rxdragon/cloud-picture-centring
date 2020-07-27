@@ -153,6 +153,7 @@ module.exports = {
     }],
     "vue/space-infix-ops": ["error", { "int32Hint": false }], // 缀操作符之间的间距
     "no-console": ["error", { allow: ["warn", "error"] }],
+    'prefer-const': 2,
     // 最多允许的属性数量，单个属性的字符串最大长度
     "attributes/max-attributes": [2, { "max": 3, "attrStrLimit": 50 }],
     // 属性上'||'和'&&'出现的次数限制
