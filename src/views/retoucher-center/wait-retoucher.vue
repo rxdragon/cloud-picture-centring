@@ -49,6 +49,8 @@
                     </div>
                     <div v-show="buffInfo.impulseStatus" slot="reference" class="prop-icon iconmap-impulse-icon" />
                   </el-popover>
+                  <!-- 早鸟奖励 -->
+                  <div v-show="showMorningAward" slot="reference" class="prop-icon iconmap-impulse-icon" />
                 </div>
               </div>
             </div>
@@ -165,6 +167,7 @@ import 'driver.js/dist/driver.min.css'
 
 import * as Retoucher from '@/api/retoucher.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+import moment from 'moment'
 
 export default {
   name: 'WaitRetoucher',
@@ -199,7 +202,9 @@ export default {
         greenChannelStatus: false // 绿色通道
       },
       hasInitialization: false, // 是否有初始化数据
-      driver: null
+      driver: null,
+      timeId: null,
+      showMorningAward: false // 是否显示时间
     }
   },
   computed: {
@@ -215,6 +220,7 @@ export default {
     disabledJoinQueue () {
       return this.state === 3 || Boolean(this.retouchingListNum) || this.lineState === 'offline'
     },
+    // 今日是否有收益
     isNoIncome () {
       return Number(this.quotaInfo.todayIncome) === 0
     }
@@ -254,6 +260,13 @@ export default {
       animate: true
     })
   },
+  mounted() {
+    this.intervalShowMorning()
+  },
+  beforeDestroy () {
+    // 销毁轮训 是否早鸟奖
+    if (this.timeId) { clearTimeout(this.timeId) }
+  },
   deactivated () {
     this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
     this.showDetail = false
@@ -262,6 +275,19 @@ export default {
     this.$eventEmitter.removeAllListeners('getRetouchStream')
   },
   methods: {
+    /**
+     * @description 循环监听是否有早鸟
+     */
+    intervalShowMorning () {
+      const startTime = moment().set({ 'h': 8, 'm': 0 })
+      const endTime = moment().set({ 'h': 10, 'm': 0 })
+      this.showMorningAward = moment().isBetween(startTime, endTime)
+      clearTimeout(this.timeId)
+      if (!this.showMorningAward) return
+      this.timeId = setTimeout(() => {
+        this.intervalShowMorning()
+      }, 1000)
+    },
     /**
      * @description 获取个人今日指标
      */
@@ -415,7 +441,9 @@ export default {
 
       .data-info {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
+        min-width: 170px;
 
         .num {
           margin-right: 15px;

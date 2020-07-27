@@ -3,7 +3,8 @@
     <el-select
       v-bind="$attrs"
       :popper-append-to-body="false"
-      placeholder="请选择是否门店退回"
+      placeholder="门店退回"
+      clearable
       v-on="$listeners"
     >
       <el-option
@@ -22,14 +23,11 @@ export default {
   data () {
     return {
       options: [{
-        label: '全部',
-        value: 'all'
-      }, {
         label: '是',
-        value: true
+        value: 'isReturn'
       }, {
         label: '否',
-        value: false
+        value: 'notReturn'
       }]
     }
   }

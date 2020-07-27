@@ -1,5 +1,6 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
+import StreamModel from '@/model/StreamModel.js'
 import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
 
 /**
@@ -54,13 +55,11 @@ export function getGroupStaffQuotaInfo (params) {
     avgRetouchTimeStream = timeFormat(avgRetouchTimeStream, 'text', true)
     avgRetouchTimePhoto = timeFormat(avgRetouchTimePhoto, 'text', true)
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
-    createData.income = income.toFixed(2) // 收益
+    createData.income = income.toFixed(2) // 正常收益
     createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, streamCount) // 点赞数 / 点赞率
-    createData.reworkStreamInfo = getRateInfo(data.storeReturnStreamNumForQuality, streamCount) // 退单量 / 退单率 (质量)
-    createData.reworkPhotoInfo = getRateInfo(data.storeReturnPhotoNumForQuality, photoCount) // 退单张数 / 退张率 （质量）
-    createData.qualityPhotoInfo = Number(data.storeReturnStreamNumForQuality) + '/' + Number(data.storeReturnPhotoNumForQuality) // 质量退单 / 张
-    createData.notQualityPhotoInfo = Number(data.storeReturnStreamNumForNotQuality) + '/' + Number(data.storeReturnPhotoNumForNotQuality) // 非质量退单 / 张
+    createData.badEvaluationInfo = getRateInfo(data.badStreamNum, streamCount) // 点踩数 / 点踩率
+    createData.npsEvaluate = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count) // 顾客满意度
     return createData
   })
 }
@@ -84,7 +83,6 @@ export function getStaffQuotaInfoGroupByStaff (params) {
       createItem.finishPhotoNum = retouchPhotoCount // 完成张数
       const retouchAvgTimeSec = getAvg(retouchAllTime, retouchPhotoCount)
       createItem.retouchAvgTime = (retouchAvgTimeSec / 60).toFixed(2) // 平均修图时间
-      createItem.lekimaCount = parseInt(staffInfoItem.lichmaPhotoNum) // 利奇马张数
       createItem.reviewPlantPhotoNum = parseInt(staffInfoItem.reviewPlantPhotoNum) // 审核种草数
       createItem.reviewPullPhotoNum = parseInt(staffInfoItem.reviewPullPhotoNum) // 审核报草数
       createItem.goodStreamNum = parseInt(staffInfoItem.goodStreamNum) // 点赞单量
@@ -105,16 +103,10 @@ export function getStaffRetouchList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.list.forEach(listItem => {
-      const allTime = (listItem.retouch_time + listItem.review_return_rebuild_time)
-      listItem.retoucherName = _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-'
-      listItem.retouchAllTime = timeFormat(allTime, 'text', true)
-      listItem.storeReworkPhotoNum = _.get(listItem, 'tags.values.store_rework_photo_num') || '-'
-      listItem.lekimaInfo = _.get(listItem, 'tags.values.lichma_photo_num', '-')
-      listItem.checkTags = _.get(listItem, 'tags.values.config_parent_name') || []
-      const storeEvaluation = listItem.store_evaluation || '-'
-      const npsGrade = _.get(listItem, 'tags.values.retoucher_score', '-')
-      listItem.gradeInfo = { storeEvaluation, npsGrade }
+    msg.list = msg.list.map(item => {
+      return {
+        ...new StreamModel(item)
+      }
     })
     return msg
   })

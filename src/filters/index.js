@@ -1,6 +1,6 @@
 import { timeFormat } from '@/utils/index.js'
 import { formatTime } from '@/utils/timespan.js'
-import { PhotoEnumName, RetouchStandard, HourGlassSettingEnum, StreamState } from '@/utils/enumerate.js'
+import { PhotoEnumName, retouchStandardToCN, HourGlassSettingEnum, StreamState } from '@/utils/enumerate.js'
 
 /**
  * 10000 => "10,000"
@@ -33,7 +33,7 @@ export function toPhotoVerName (str) {
  * @param {*} str
  */
 export function toRetouchClass (str) {
-  return RetouchStandard[str] || '异常'
+  return retouchStandardToCN[str] || '异常'
 }
 
 /**

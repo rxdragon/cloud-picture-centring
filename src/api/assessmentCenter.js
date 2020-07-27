@@ -4,10 +4,12 @@ import store from '@/store' // vuex
 import ProductModel from '@/model/ProductModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import StreamModel from '@/model/StreamModel.js'
-import { getAvg, transformPercentage } from '@/utils/index.js'
+
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-import { PLANT_ID_MAP, PlantTypeNameEnum, PlantIdTypeEnum } from '@/utils/enumerate'
+
+import { PLANT_ID_MAP, GRADE_TYPE, PlantTypeNameEnum, PlantIdTypeEnum, CLOUD_ROLE } from '@/utils/enumerate'
+import { getAvg, transformPercentage } from '@/utils/index.js'
 
 /**
  * @description 获取今日抽片指标
@@ -269,6 +271,9 @@ export function getCloudProblemReport (params) {
     })
     checkTags.forEach(labelItem => {
       labelItem.rate = transformPercentage(labelItem.value, sum)
+      labelItem.group.forEach(item => {
+        item.rate = transformPercentage(item.count, sum)
+      })
     })
     return checkTags
   })
@@ -278,16 +283,18 @@ export function getCloudProblemReport (params) {
  * @description 获取问题标签柱状图
  * @method GET
  * @returns {Array} 标记数据
- * @author cf 2020/04/12
- * @version @version 2.4.0
+ * @author cf 2020/07/27
+ * @version @version 2.10.0
  */
-export function getCloudProblemReportByGroup (params) {
+export function getCloudProblemReportByGroup (params, type) {
+  const roleUrl = {
+    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudProblemReportByGroup',
+    [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudProblemReportByGroup'
+  }
   return axios({
-    url: '/project_cloud/checkPool/getCloudProblemReportByGroup',
+    url: roleUrl[type],
     method: 'POST',
     data: params
-  }).then(msg => {
-    return msg
   })
 }
 
@@ -330,6 +337,7 @@ export function updateCommitHistory (params) {
     data: params
   })
 }
+
 /**
  * @description 获取摄影机构列表
  * @method GET
@@ -340,6 +348,81 @@ export function updateCommitHistory (params) {
 export function getPhotographerOrgList () {
   return axios({
     url: '/project_cloud/operator/getPhotographerOrgList',
-    method: 'GET',
+    method: 'GET'
+  })
+}
+
+/**
+ * @description 获取摄影机构列表
+ * @method GET
+ * @returns {Obeject} 结果
+ * @author cl 2020/07/27
+ * @version @version 2.10.0
+ */
+export function getCheckPoolQuota (params, type) {
+  const roleUrl = {
+    [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolQuota',
+    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCheckPoolQuota',
+    [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolQuota'
+  }
+  return axios({
+    url: roleUrl[type],
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    const gradeSum = Number(msg.checkPoolPlantNum) + Number(msg.checkPoolPullNum) + Number(msg.checkPoolNormalNum)
+    const createData = {
+      [GRADE_TYPE.PLANT]: {
+        count: msg.checkPoolPlantNum,
+        rate: transformPercentage(msg.checkPoolPlantNum, gradeSum)
+      },
+      [GRADE_TYPE.PULL]: {
+        count: msg.checkPoolPullNum,
+        rate: transformPercentage(msg.checkPoolPullNum, gradeSum)
+      },
+      [GRADE_TYPE.NONE]: {
+        count: msg.checkPoolNormalNum,
+        rate: transformPercentage(msg.checkPoolNormalNum, gradeSum)
+      },
+      'score': {
+        count: getAvg(msg.checkPoolTotalScore, gradeSum),
+        rate: ''
+      }
+    }
+    return createData
+  })
+}
+
+/**
+ * @description 获取摄影机构列表
+ * @method GET
+ * @returns {Obeject} 结果
+ * @author cf 2020/07/27
+ * @version @version 2.10.0
+ */
+export function getCheckPoolSubQuota (params, type) {
+  const roleUrl = {
+    [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolSubQuota',
+    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCheckPoolSubQuota',
+    [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolSubQuota'
+  }
+  return axios({
+    url: roleUrl[type],
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    msg = msg.filter(item => item.count)
+    let sum = 0
+    const checkTags = msg.map(labelItem => {
+      sum = sum + Number(labelItem.count)
+      return {
+        name: labelItem.name,
+        value: Number(labelItem.count)
+      }
+    })
+    checkTags.forEach(labelItem => {
+      labelItem.rate = transformPercentage(labelItem.value, sum)
+    })
+    return checkTags
   })
 }

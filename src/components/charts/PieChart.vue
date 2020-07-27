@@ -14,10 +14,11 @@ import { pieColors } from '@/utils/colors.js'
 
 function filterLabelName (data) {
   const group = data.data.group
+  if (!group) return `<p>${data.data.name}：<span class="text-right">${data.data.value}张---${data.data.rate}</span></p>`
   let msg = ''
   group.forEach(item => {
     const name = item.nickname || item.name
-    msg += `${name}：${item.count}张<br/>`
+    msg += `<p>${name}：<span class="text-right">${item.count}张---${item.rate}</span></p>`
   })
   return msg
 }
@@ -101,5 +102,11 @@ export default {
     width: 100%;
     height: 100%;
   }
+}
+</style>
+
+<style lang="less">
+.text-right {
+  float: right;
 }
 </style>

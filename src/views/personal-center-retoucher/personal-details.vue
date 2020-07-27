@@ -68,7 +68,7 @@
                     :end-value="gradeInfo.nearly30DaysReturnNum | getPoint"
                   /></i>
                 </span>
-                <span>近30日退张数</span>
+                <span>近30日被退张数(质量问题)</span>
               </div>
             </el-col>
             <el-col :span="6">
@@ -102,7 +102,7 @@
             </el-col>
             <el-col :span="12" class="pull-box">
               <div class="rote-title">
-                <span>近30日退张率</span>
+                <span>近30日退张率(质量问题)</span>
                 <span class="num">{{ gradeInfo.nearly30DaysReturnRate }}%</span>
               </div>
               <el-progress :percentage="gradeInfo.nearly30DaysReturnRate" :show-text="false" />
@@ -113,6 +113,11 @@
     </div>
     <!-- 修图绩效 -->
     <retouch-performance />
+    <!-- 云学院报告 -->
+    <div class="cloud-report-self module-panel">
+      <div class="panel-title">抽查绩效</div>
+      <cloud-report :role="CLOUD_ROLE.CREW" />
+    </div>
     <!-- 小蜜蜂奖励记录 -->
     <div class="module-panel bee-award">
       <div class="panel-title">小蜜蜂奖励记录</div>
@@ -191,12 +196,15 @@ import CountTo from '@/components/CountTo'
 import NoData from '@/components/NoData'
 import RetouchPerformance from './components/RetouchPerformance'
 import Tip from '@/components/Tip'
+import CloudReport from '@/components/CloudReport'
 
 import * as Retoucher from '@/api/retoucher.js'
 
+import { CLOUD_ROLE } from '@/utils/enumerate'
+
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip },
+  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip, CloudReport },
   filters: {
     // 获取小数
     getPoint (value) {
@@ -215,6 +223,7 @@ export default {
   },
   data () {
     return {
+      CLOUD_ROLE,
       routeName: this.$route.name, // 路由名字
       yearValue: '',
       todayData: {}, // 今日指标
@@ -297,8 +306,6 @@ export default {
 </script>
 
 <style lang="less">
-@import '../../styles/variables.less';
-
 .personal-details {
   .today-box {
     display: flex;
@@ -394,19 +401,19 @@ export default {
       .main-content {
         display: flex;
         flex-direction: column;
-        padding-bottom: 18px;
-        margin-top: 28px;
+        padding-bottom: 36px;
+        margin-top: 48px;
         font-family: @DINAlternate;
         font-size: 12px;
         color: #909399;
 
         .num {
-          font-size: 36px;
+          font-size: 44px;
           font-weight: bold;
           color: #303133;
 
           i {
-            font-size: 20px;
+            font-size: 36px;
             font-style: normal;
           }
         }
@@ -519,6 +526,10 @@ export default {
         }
       }
     }
+  }
+
+  .cloud-report-self {
+    margin-top: 24px;
   }
 }
 

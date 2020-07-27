@@ -4,11 +4,18 @@
       <h3>修图历史记录</h3>
     </div>
     <!-- 列表主要内容 -->
-    <div class="history-main table-box">
+    <el-tabs ref="tabs" v-model="activeName" class="tabs-box">
+      <el-tab-pane label="正常流水历史记录" :name="SEARCH_TYPE.NORMAL" />
+      <el-tab-pane label="被退回流水历史记录" :name="SEARCH_TYPE.REWORK" />
+    </el-tabs>
+    <div
+      class="history-main table-box"
+      :class="{'no-border': activeName === SEARCH_TYPE.NORMAL }"
+    >
       <div class="search-box">
         <!-- 修图完成时间 -->
         <div class="date-search search-item">
-          <span>修图完成时间</span>
+          <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成时间' : '退单时间' }}</span>
           <date-picker v-model="timeSpan" />
         </div>
         <!-- 流水号 -->
@@ -17,23 +24,29 @@
           <el-input v-model="streamNum" clearable placeholder="请输入流水号" />
         </div>
         <!-- 门店退回 -->
-        <div class="audit-box search-item">
+        <div class="audit-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
           <span>门店退回</span>
           <return-select v-model="isReturn" />
+        </div>
+        <!-- 门店评价 -->
+        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <span>门店评价</span>
+          <evaluate-select v-model="isGood" />
         </div>
         <!-- 退单类型 -->
         <div class="audit-box search-item">
           <span>退单类型</span>
-          <quality-select
-            placeholder="请选择退单类型"
-            :options="returnOptions"
-            showAllOption
-            v-model="returnType"
-          />
+          <quality-select v-model="returnType" />
         </div>
-        <div class="spot-check-box search-item">
-          <span>门店点赞</span>
-          <evaluate-select v-model="isGood" />
+        <!-- 是否云学院抽查 -->
+        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <span>云学院抽查</span>
+          <cloud-spot v-model="cloudSpot" clearable />
+        </div>
+        <!-- 云学院问题标签 -->
+        <div class="cloud-issue-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <span>云学院问题标签</span>
+          <issue-label-select v-model="issueValue" />
         </div>
         <div class="search-button-box search-item">
           <el-button type="primary" @click="searchList(1)">查询</el-button>
@@ -53,51 +66,52 @@
             </template>
           </el-table-column>
           <el-table-column prop="retouchAllTime" label="修图总时长" width="100" />
-          <el-table-column prop="storeReturnNum" label="退单张数" width="80" />
-          <el-table-column prop="exp" label="海草值">
-            <template slot-scope="{ row }">
-              <el-popover
-                placement="right"
-                width="240"
-                popper-class="people-table"
-                trigger="hover"
-              >
-                <div class="exp-box">
-                  <div class="exp-item exp-title">
-                    <span>人数</span>
-                    <span>数量</span>
-                  </div>
-                  <div class="exp-item exp-list" v-for="(expItem, expIndex) in row.peopleTable" :key="row.streamNum + expIndex">
-                    <span>{{ Number(expItem.expItempeopleLabel) ? `${expItem.peopleLabel}人` : expItem.peopleLabel }}</span>
-                    <span>{{ expItem.photoNum }}</span>
-                  </div>
-                </div>
-                <span slot="reference">{{ row.exp }}</span>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <el-table-column label="实际收益">
+          <el-table-column label="海草值（颗）">
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
-                <p>修图收益：{{ row.retouchIncome | toFixedString }}</p>
-                <p class="text-money">奖励收益：{{ row.rewordIncome | toFixedString }}</p>
-                <p class="text-red">惩罚收益：{{ row.punishIncome | toFixedString }}</p>
-                <p>实获收益：{{ row.actualIncome | toFixedString }}</p>
-                <span slot="reference">{{ row.actualIncome | toFixedString }}</span>
+                <div class="table-detail-box">
+                  <p>照片海草：<span>{{ row.exp | toFixedString }}</span></p>
+                  <p class="text-red">沙漏超时惩罚海草：<span>{{ row.overtimeExp | toFixedString }}</span></p>
+                  <p>实际获得海草：<span>{{ row.actualExp | toFixedString }}</span></p>
+                </div>
+                <span class="hover-class" slot="reference">{{ row.actualExp }}</span>
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="质量问题/非质量问题（张）" width="200">
+          <el-table-column label="实际收益（元）">
             <template slot-scope="{ row }">
-              {{ row.qualityNum }} / {{ row.notQualityNum }}
+              <el-popover placement="right" popper-class="income-list" trigger="hover">
+                <div class="table-detail-box">
+                  <p>照片收益：<span>{{ row.retouchIncome | toFixedString }}</span></p>
+                  <p class="text-red">沙漏惩罚收益：<span>{{ row.overtimeIncome | toFixedString }}</span></p>
+                  <p class="text-red">退单惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
+                  <p class="text-money">奖励收益：<span>{{ row.rewordIncome | toFixedString }}</span></p>
+                  <p>实获收益：<span>{{ row.actualIncome | toFixedString }}</span></p>
+                </div>
+                <span class="hover-class" slot="reference">{{ row.actualIncome | toFixedString }}</span>
+              </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="goodEvaluate" label="门店评价">
-            <template slot-scope="scope">
-              <show-evaluate :evaluate="scope.row.goodEvaluate" />
+          <el-table-column label="退单张数">
+            <template slot-scope="{ row }">
+              <el-popover placement="right" popper-class="income-list" trigger="hover">
+                <div class="table-detail-box">
+                  <p>质量问题数量：<span>{{ row.qualityNum }}</span></p>
+                  <p>非质量问题数量：<span>{{ row.notQualityNum }}</span></p>
+                </div>
+                <span class="hover-class" slot="reference">{{ row.storeReturnNum }}</span>
+              </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="retoucherNpsAvg" label="顾客满意度" width="100" />
+          <el-table-column prop="isCloudEvaluation" label="云学院抽查" width="100" />
+          <el-table-column label="门店评价" width="120">
+            <template slot-scope="{ row }">
+              <div class="table-detail-box">
+                <p>门店评价：<show-evaluate :evaluate="row.goodEvaluate" /></p>
+                <p>顾客评价：<span>{{ row.retoucherNpsAvg }}</span></p>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" @click="linkto(scope.row.streamId)">详情</el-button>
@@ -122,27 +136,39 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import ReturnSelect from '@SelectBox/ReturnStateSelect'
-import QualitySelect from '@SelectBox/WhetherSelect'
+import QualitySelect from '@SelectBox/QualitySelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
+import CloudSpot from '@SelectBox/CloudSpot'
+import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
+
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
 
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
+const SEARCH_TYPE = {
+  NORMAL: 'normal', // 正常流水
+  REWORK: 'rework', // 重修流水
+}
+
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot },
   data () {
     return {
+      SEARCH_TYPE,
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       streamNum: '', // 流水号
       searchType: 0, // 搜索标准
       tableData: [], // 列表数据
-      isReturn: 'all', // 门店退回
+      isReturn: '', // 门店退回
       isGood: 'all', // 是否门店点赞
-      returnType: 'all', // 退单类型
+      returnType: '', // 退单类型
+      cloudSpot: '',
+      issueValue: [], // 云学院问题标签
+      activeName: SEARCH_TYPE.NORMAL, // 标签显示类型
       pager: {
         page: 1,
         pageSize: 10,
@@ -158,42 +184,79 @@ export default {
     }
   },
   watch: {
-    '$route': {
-      handler (to, from) {
-        const keepLiveRoute = ['RetouchHistory', 'orderDetail']
-        if (keepLiveRoute.includes(_.get(from, 'name'))) return
-        const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
-        if (retouchHistoryTimeSpan) {
-          this.timeSpan = this.$route.query.retouchHistoryTimeSpan.split(',')
-        }
-        if (retouchHistorySearchType) {
-          switch (retouchHistorySearchType) {
-            case SearchType.GoodEvaluation:
-              this.isGood = true
-              break
-            case SearchType.ReworkPhoto:
-              this.isReturn = true
-              break
-            case SearchType.QualityRework:
-              this.isReturn = true
-              this.returnType = 'quality'
-              break
-          }
-        }
+    'activeName': {
+      handler (e) {
+        if (e === SEARCH_TYPE.REWORK) { this.resetSearchParm('noTime') }
         this.searchList(1)
       },
       immediate: true
     }
   },
+  /**
+   * @description 监听路由
+   */
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      const keepLiveRoute = ['RetouchHistory', 'orderDetail']
+      if (keepLiveRoute.includes(_.get(from, 'name'))) return
+      const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
+      // 重制条件
+      vm.resetSearchParm()
+      if (retouchHistoryTimeSpan) { vm.timeSpan = retouchHistoryTimeSpan.split(',') }
+      if (retouchHistorySearchType) {
+        switch (retouchHistorySearchType) {
+          case SearchType.GoodEvaluation:
+            vm.isGood = true
+            break
+          case SearchType.ReworkPhoto:
+            vm.isReturn = 'isReturn'
+            break
+        }
+      }
+      if (vm.activeName !== SEARCH_TYPE.NORMAL) {
+        vm.activeName = SEARCH_TYPE.NORMAL
+        vm.resetTabActivePosition(vm.$refs.tabs.$el)
+      } else {
+        vm.searchList(1)
+      }
+    })
+  },
   methods: {
+    /**
+     * @description 重制条件
+     */
+    resetSearchParm (notChangeTime) {
+      this.timeSpan = notChangeTime ? this.timeSpan : null
+      this.streamNum = ''
+      this.searchType = 0
+      this.tableData = []
+      this.isReturn = ''
+      this.isGood = 'all'
+      this.returnType = ''
+      this.cloudSpot = ''
+      this.issueValue = []
+    },
+    /**
+     * @description 变更代码
+     */
+    resetTabActivePosition($el) {
+      setTimeout(() => {
+        const activeEl = $el.querySelector('.el-tabs__item.is-active')
+        const lineEl = $el.querySelector('.el-tabs__active-bar')
+        const style = getComputedStyle(activeEl)
+        const pl = style.paddingLeft.match(/\d+/)[0] * 1
+        const pr = style.paddingRight.match(/\d+/)[0] * 1
+        const w = style.width.match(/\d+/)[0] * 1
+        lineEl.style.transform = 'translateX(' + (activeEl.offsetLeft + pl) + 'px)'
+        lineEl.style.width = (w - pl - pr)+'px'
+      }, 100)
+    },
     /**
      * @description 跳转链接
      */
     linkto (streamId) {
       const query = { streamId }
-      if (this.active === 'others') {
-        query.searchOther = 1
-      }
+      if (this.active === 'others') { query.searchOther = 1 }
       this.$router.push({
         path: '/order-detail',
         query
@@ -214,15 +277,16 @@ export default {
       try {
         const reqData = {
           page: this.pager.page,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          type: this.activeName
         }
         if (this.timeSpan) {
           reqData.startAt = joinTimeSpan(this.timeSpan[0])
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
+        if (this.isReturn) { reqData.isReturn = this.isReturn === 'isReturn' }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
-        if (this.returnType !== 'all' ) { reqData.storeReworkType = this.returnType }
+        if (this.returnType) { reqData.storeReworkType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
@@ -230,8 +294,6 @@ export default {
         this.tableData = data.list
         delete this.$route.query.retouchHistoryTimeSpan
         delete this.$route.query.retouchHistorySearchType
-      } catch (error) {
-        console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -258,6 +320,10 @@ export default {
         margin-right: 30px;
         margin-bottom: 20px;
       }
+
+      .search-button-box {
+        margin-right: 0;
+      }
     }
 
     .table-module {
@@ -276,6 +342,12 @@ export default {
       }
     }
   }
+}
+
+.hover-class {
+  color: @blue;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
 
@@ -370,6 +442,13 @@ export default {
 
   .text-plant {
     color: @panGreen;
+  }
+}
+
+.table-detail-box {
+  p {
+    display: flex;
+    justify-content: space-between;
   }
 }
 </style>

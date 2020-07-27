@@ -1,11 +1,19 @@
 // enumerate
 
 // 修图标准
-export const RetouchStandard = {
-  blue: '蓝标',
-  master: '大师',
-  kids: 'kids',
-  mainto: '缦图'
+export const RETOUCH_STANDARD = {
+  BLUE: 'blue',
+  MASTER: 'master',
+  KIDS: 'kids',
+  MAINTO: 'mainto'
+}
+
+// 修图标准映射中文
+export const retouchStandardToCN = {
+  [RETOUCH_STANDARD.BLUE]: '蓝标',
+  [RETOUCH_STANDARD.MASTER]: '大师',
+  [RETOUCH_STANDARD.KIDS]: 'kids',
+  [RETOUCH_STANDARD.MAINTO]: '缦图'
 }
 
 // 流水状态
@@ -102,6 +110,7 @@ export const SearchType = {
   RectifySame: 'rectifySame', // 意见相同
   RectifyDifferent: 'rectifyDifferent', // 意见不同
   GoodEvaluation: 'goodEvaluation', // 点赞数
+  BadEvaluation: 'badEvaluation', // 点赞数
   ReworkStream: 'reworkStream', // 退单量
   ReworkPhoto: 'reworkPhoto', // 退单张数
   QualityRework: 'qualityRework', // 质量退单
@@ -154,6 +163,13 @@ export const PLANT_ID_MAP = {
   PULL_ID: '2', // 拔草id
   NONE_ID: '3' // 一般id
 }
+
+// 云学院打分类型
+export const GRADE_TYPE = {
+  PLANT: 'plant',
+  PULL: 'pull',
+  NONE: 'none'
+}
 // 种拔草id对应type
 export const PlantIdTypeEnum = {
   [PLANT_ID_MAP.PLANT_ID]: 'plant',
@@ -175,3 +191,33 @@ export const PlantTypeNameEnum = {
   'none': '一般'
 }
 
+/**
+ * @description 搜索角色
+ */
+export const SEARCH_ROLE = {
+  GROUP_LEADER: 'groupLeader', // 修图组长
+  OPERATE: 'operate' // 运营
+}
+
+/**
+ * @description 搜索角色
+ */
+export const CLOUD_ROLE = {
+  CREW: 'crew', // 修图组员
+  GROUP_LEADER: 'groupLeader', // 修图组长
+  OPERATE: 'operate' // 运营
+}
+
+// 照片问题标记
+export const QUALITY_TYPE = {
+  QUALITY: 'quality',
+  NOT_QUALITY: 'not_quality',
+  BOTH: 'both'
+}
+
+// 照片问题标记映射中文
+export const qualityTypeToCN = {
+  [QUALITY_TYPE.QUALITY]: '质量问题',
+  [QUALITY_TYPE.NOT_QUALITY]: '非质量问题',
+  [QUALITY_TYPE.BOTH]: '质量&非质量问题'
+}

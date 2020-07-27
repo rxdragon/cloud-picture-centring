@@ -1,6 +1,11 @@
 <template>
-  <div class="evaluate-select">
-    <el-select v-bind="$attrs" placeholder="是否点赞" v-on="$listeners">
+  <div class="cloud-spot">
+    <el-select
+      v-bind="$attrs"
+      :popper-append-to-body="false"
+      placeholder="是否抽查"
+      v-on="$listeners"
+    >
       <el-option
         v-for="(optionItem, optionIndex) in options"
         :key="optionIndex"
@@ -13,17 +18,14 @@
 
 <script>
 export default {
-  name: 'EvaluateSelect',
+  name: 'CloudSpot',
   data () {
     return {
       options: [{
-        label: '全部',
-        value: 'all'
-      }, {
-        label: '点赞',
+        label: '是',
         value: true
       }, {
-        label: '点踩',
+        label: '否',
         value: false
       }]
     }
@@ -33,6 +35,6 @@ export default {
 
 <style lang="less" scoped>
 .el-select {
-  width: 100px;
+  width: 110px;
 }
 </style>

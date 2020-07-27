@@ -1,6 +1,7 @@
 import axios from '@/plugins/axios.js'
+import { RETOUCH_STANDARD } from '@/utils/enumerate'
 import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '@/utils'
-import { isNumber } from '@/utils/validate'
+import { toFixed, isNumber } from '@/utils/validate'
 
 /** 工作指标 */
 
@@ -75,45 +76,28 @@ export function getRetoucherQuota (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.retouchSinglePhotoNum = parseInt(msg.retouchSinglePhotoNum) // 单人修图张数
-    msg.retouchMultiPhotoNum = parseInt(msg.retouchMultiPhotoNum) // 多人修图张数
+    // 计算收益
     for (const key in msg.income) {
       msg.income[key] = Number(msg.income[key])
     }
-    msg.income = msg.income.retouch + msg.income.impulse + msg.income.reward - msg.income.punish// 收益
+    const income = msg.income.retouch * 100 +
+      msg.income.impulse * 100 +
+      msg.income.reward * 100 -
+      msg.income.punish * 100
+    msg.income = toFixed(income / 100)
+
+    // 顾客满意度
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
     msg.retoucherNpsAvg = getAvg(msg.retoucherNpsScore.sum, retoucherNpsCount) // 顾客满意度
-    msg.storeEvaluateScoreAvg = getAvg(msg.storeEvaluateScoreAvg.sum, msg.storeEvaluateScoreAvg.count) // 门店评分
-    msg.retouchReworkRate = getAvg(msg.retouchRework, msg.retoucherFinishStreamNum) // 重修率
-    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
-    msg.storeReturnStreamNum = parseInt(msg.storeReturnStreamNum || 0) // 门店退单
-    msg.storeReturnStreamNumForQuality = parseInt(msg.storeReturnStreamNumForQuality || 0) // 门店退单（非质量问题）
-    msg.storeReturnPhotoNumForQuality = parseInt(msg.storeReturnPhotoNumForQuality || 0) // 门店退单（非质量问题）张数
-    msg.storeReturnStreamNumForNotQuality = parseInt(msg.storeReturnStreamNumForNotQuality || 0) // 门店退单（质量问题）
-    msg.storeReturnPhotoNumForNotQuality = parseInt(msg.storeReturnPhotoNumForNotQuality || 0) // 门店退单（质量问题）张数
-    msg.lekimaStreamNum = parseInt(msg.lichmaStreamNum || 0) // 利奇马张数
-    msg.lekimaPhotoNum = parseInt(msg.lichmaPhotoNum || 0) // 利奇马单数
+
+    // 点赞点踩量
+    const storeEvaluateCount = _.get(msg, 'storeEvaluateScoreAvg.count') || 0
     msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
-    msg.goodRate = parseFloat(msg.goodNum / msg.retoucherFinishStreamNum) * 100 // 门店点赞率
-    // 处理饼图
-    msg.checkAvgScore = getAvg(msg.retoucherCheckPoolEvaluationScore, msg.retoucherCheckPoolEvaluationPhotoNum)
-    let sum = 0
-    msg.retoucherCheckCount = msg.retoucherCheckCount.filter(item => item.count)
-    const checkTags = msg.retoucherCheckCount.map(labelItem => {
-      labelItem.child.forEach(childItem => {
-        childItem.count = parseInt(childItem.count)
-      })
-      sum = sum + Number(labelItem.count)
-      return {
-        name: labelItem.name,
-        value: Number(labelItem.count),
-        group: labelItem.child
-      }
-    })
-    checkTags.forEach(labelItem => {
-      labelItem.rate = transformPercentage(labelItem.value, sum)
-    })
-    msg.retoucherCheckCount = checkTags
+    msg.goodRate = toFixed(parseFloat(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
+    msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
+    msg.badRate = toFixed(parseFloat(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
+
+    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     return msg
   })
 }
@@ -153,7 +137,6 @@ export function getWholeQuota (params) {
     createData.outerRetouchPhotoNum = data.outerRetouchPhotoNum // 外包已修张数
     createData.outerRetouchStreamNum = data.outerRetouchStreamNum // 外包已修单量
     createData.templatePhotoNum = data.templatePhotoNum // 模版照
-    createData.reworkRate = getAvg(data.retoucherReworkStreamNum, data.retoucherFinishStreamNum) * 100 // 重修率
     return createData
   })
 }
@@ -205,22 +188,17 @@ export function getStreamTimesQuota (params) {
     const data = keyToHump(msg)
     const createData = {}
     for (const key in data) {
-      if (key !== 'retouchTimeAvg') {
-        createData[key] = getAvg(data[key].sum * 1000, data[key].count)
-      }
+      createData[key] = getAvg(data[key].sum, data[key].count)
     }
-    const retouchTime = Number(data.retouchTimeAvg.rebuildTime.sum) + Number(data.retouchTimeAvg.retouchTime.sum)
+    const retouchTime = Number(data.retouchTimeAvg.sum)
     const outerRetouchTime = Number(data.outerRetouchTimeAvg.sum)
     const allRetouchTime = outerRetouchTime + retouchTime
-    const retouchCount = Number(data.retouchTimeAvg.retouchTime.count)
+    const retouchCount = Number(data.retouchTimeAvg.count)
     const outerRetouchCount = Number(data.outerRetouchTimeAvg.count)
     const allRetouchCount = retouchCount + outerRetouchCount
-    createData['retouchTimeAvg'] = getAvg(retouchTime * 1000, retouchCount)
-    createData['retouchAllTimeAvg'] = getAvg(allRetouchTime * 1000, allRetouchCount)
-    const returnCount = Number(data.retouchTimeAvg.rebuildTime.count)
-    const returnTime = Number(data.retouchTimeAvg.rebuildTime.sum)
-    createData['returnToRebuildTime'] = getAvg(returnTime * 1000, returnCount)
-    return createData
+    createData['retouchTimeAvg'] = getAvg(retouchTime, retouchCount)
+    createData['retouchAllTimeAvg'] = getAvg(allRetouchTime, allRetouchCount)
+    return Object.freeze(createData)
   })
 }
 
@@ -288,6 +266,52 @@ export function modifyStream (params) {
 export function getAllProduct () {
   return axios({
     url: '/project_cloud/common/getAllProduct',
-    method: 'get'
+    method: 'GET'
+  })
+}
+
+/**
+ * @description 获取修图标准时间信息
+ * @param {*} params 
+ */
+export function getOrgStandardTimesQuota (params) {
+  return axios({
+    url: '/project_cloud/operator/getOrgStandardTimesQuota',
+    method: 'GET',
+    params
+  }).then(msg => {
+    const timeAvg = {
+      [RETOUCH_STANDARD.BLUE]: {
+        sum: 0,
+        count: 0,
+        avg: 0
+      },
+      [RETOUCH_STANDARD.MASTER]: {
+        sum: 0,
+        count: 0,
+        avg: 0
+      },
+      [RETOUCH_STANDARD.KIDS]: {
+        sum: 0,
+        count: 0,
+        avg: 0
+      },
+      [RETOUCH_STANDARD.MAINTO]: {
+        sum: 0,
+        count: 0,
+        avg: 1000
+      }
+    }
+    msg.forEach(orgItem => {
+      for (const type in orgItem) {
+        timeAvg[type].sum += Number(orgItem[type].sum)
+        timeAvg[type].count += Number(orgItem[type].count)
+      }
+    })
+    for (const type in timeAvg) {
+      timeAvg[type].sum *= 1000
+      timeAvg[type].avg = getAvg(timeAvg[type].sum, timeAvg[type].count)
+    }
+    return timeAvg
   })
 }
