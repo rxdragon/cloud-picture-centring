@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+        "@/*": ["src/*"],
+        "@SelectBox/*": ["src/components/SelectBox/*"],
+        "@electronMain/*": ["src/electronMain/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist_vue"]
+}

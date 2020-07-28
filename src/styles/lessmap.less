@@ -5,6 +5,12 @@
 @sandOrange: url(~@/assets/sand_clock/sand_orange.png);
 @anniversary: url(~@/assets/congratulation_images/anniversary.png);
 
+@impulse: url(~@/assets/award_maps/impulse.png);
+@experience: url(~@/assets/award_maps/experience.png);
+@greenAisle: url(~@/assets/award_maps/green_aisle.png);
+@gold: url(~@/assets/award_maps/gold.png);
+@morningAward: url(~@/assets/award_maps/morning_award.png);
+
 .iconmapBaseSet(@x, @y) {
   display: block;
   width: 100%;
@@ -38,6 +44,24 @@
   &-standard-mainto { .iconmapBaseSet(-319px, -76px); }
   &-standard-kids { .iconmapBaseSet(-339px, -76px); }
   &-loss-income-icon { .lossIncomeIcon; }
+}
+
+.awardBaseSet(@image) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-image: @image;
+  background-position: 0 0;
+  background-size: 100%;
+}
+
+.awardmap {
+  &-impulse { .awardBaseSet(@impulse); }
+  &-experience { .awardBaseSet(@experience); }
+  &-greenAisle { .awardBaseSet(@greenAisle); }
+  &-gold { .awardBaseSet(@gold); }
+  &-morningAward { .awardBaseSet(@morningAward); }
 }
 
 .home-logo {
