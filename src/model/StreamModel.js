@@ -13,7 +13,7 @@ export const STREAM_TAG = {
  * @property {String} updated_at -更新时间
  */
 export default class StreamModel {
-  baseData = null
+  baseData = {}
   streamId = '' // 流水id
   streamNum = '' // 流水号
   isCheckReturn = false // 是否是审核退回
@@ -48,12 +48,19 @@ export default class StreamModel {
   retouchAllTime = '-' // 修图总时长
 
   // 门店退回相关
-  storeReturnNum = 0 // 门店退回张数
+  isStoreReturn = false // 是否是门店退回
+  storeReturnNum = 0 // 门店退回次数
   storeReturnTime = '-' // 门店退回时间
   lekimaCount = '-' // 利奇马樟树
-  isStoreReturn = false // 是否是门店退回
-  qualityNum = '' // 门店退回质量问题张数
-  notQualityNum = '' // 门店退回非质量问题张数
+
+  qualityNum = 0 // 正常流水门店退回质量问题张数
+  notQualityNum = 0 // 正常流水门店退回非质量问题张数
+  bothNum = 0 // 正常流水门店退回质量&非质量问题张数
+
+  qualityNumForRework = 0 // 退回单门店退回质量问题张数
+  notQualityNumForRework = 0 // 退回单门店退回非质量问题张数
+  bothNumForRework = 0 // 退回单门店退回质量问题张数&非质量问题张数
+  allReturnPhotoNum = 0 // 全部退单张数
 
   // 评价相关
   goodEvaluate = '-'
@@ -76,6 +83,7 @@ export default class StreamModel {
     this.streamId = streamData.id || ''
     this.streamNum = streamData.stream_num || ''
     this.streamState = streamData.state || ''
+    this.getReturnPhotoInfo()
     this.getNote()
     this.getTime()
     this.getIncome()
@@ -106,8 +114,6 @@ export default class StreamModel {
     this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.STORERETURN)
     this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || 0
     this.storeReturnTime = _.get(streamData, 'tags.values.store_return_time') || '-'
-    this.qualityNum = _.get(streamData, 'tags.values.quality_num') || 0
-    this.notQualityNum = _.get(streamData, 'tags.values.not_quality_num') || 0
 
     this.lekimaCount = _.get(streamData, 'tags.values.lichma_photo_num') || '-'
     this.goodEvaluate = _.get(streamData, 'store_evaluate_stream.store_evaluate') || '-'
@@ -132,6 +138,23 @@ export default class StreamModel {
         isRework: _.get(this.baseData, 'tags.statics', []).includes('rework')
       }
     }
+  }
+
+  getReturnPhotoInfo () {
+    this.qualityNum = Number(_.get(this.baseData, 'tags.values.quality_num')) || 0
+    this.notQualityNum = Number(_.get(this.baseData, 'tags.values.not_quality_num')) || 0
+    this.bothNum = Number(_.get(this.baseData, 'tags.values.both_num')) || 0
+
+    this.qualityNumForRework = Number(_.get(this.baseData, 'tags.values.quality_num_for_rework')) || 0
+    this.notQualityNumForRework = Number(_.get(this.baseData, 'tags.values.not_quality_num_for_rework')) || 0
+    this.bothNumForRework = Number(_.get(this.baseData, 'tags.values.both_num_for_rework')) || 0
+
+    this.allReturnPhotoNum = this.qualityNum +
+      this.notQualityNum +
+      this.bothNum +
+      this.qualityNumForRework +
+      this.notQualityNumForRework +
+      this.bothNumForRework
   }
 
   // 获取收益

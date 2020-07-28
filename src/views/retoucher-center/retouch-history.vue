@@ -96,10 +96,10 @@
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
-                  <p>质量问题数量：<span>{{ row.qualityNum }}</span></p>
-                  <p>非质量问题数量：<span>{{ row.notQualityNum }}</span></p>
+                  <p>质量问题数量：<span>{{ row.isStoreReturn ? row.qualityNumForRework : row.qualityNum }}</span></p>
+                  <p>非质量问题数量：<span>{{ row.isStoreReturn ? row.notQualityNumForRework : row.notQualityNum }}</span></p>
                 </div>
-                <span class="hover-class" slot="reference">{{ row.storeReturnNum }}</span>
+                <span class="hover-class" slot="reference">{{ row.allReturnPhotoNum }}</span>
               </el-popover>
             </template>
           </el-table-column>
