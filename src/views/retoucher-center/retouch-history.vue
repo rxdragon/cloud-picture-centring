@@ -276,13 +276,14 @@ export default {
       try {
         const reqData = {
           page: this.pager.page,
-          pageSize: this.pager.pageSize,
-          type: this.activeName
+          pageSize: this.pager.pageSize
         }
+        if (this.activeName === SEARCH_TYPE.REWORK) { reqData.isReturned = true }
         if (this.timeSpan) {
           reqData.startAt = joinTimeSpan(this.timeSpan[0])
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
+        if (this.cloudSpot) { reqData.cloudEvaluation = this.cloudSpot }
         if (this.isReturn) { reqData.isReturn = this.isReturn === 'isReturn' }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
         if (this.returnType) { reqData.storeReworkType = this.returnType }
