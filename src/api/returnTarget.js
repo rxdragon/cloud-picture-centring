@@ -99,8 +99,8 @@ function handerReturnQuota (msg) {
 export function getStoreReturnQuota (params) {
   return axios({
     url: '/project_cloud/operator/getStoreReturnQuota',
-    method: 'GET',
-    params
+    method: 'POST',
+    data: params
   }).then(msg => {
     return handerReturnQuota(msg)
   })
@@ -127,12 +127,12 @@ export function getStaffReturnChartInfo (params) {
     params
   }).then(msg => {
     const createData = msg.map(retoucherItem => {
-      const orderCount = Number(retoucherItem.storeReturnStreamNumForNormalQuality) || 0 +
-        Number(retoucherItem.storeReturnStreamNumForReworkQuality) || 0
-      const photoCount = Number(retoucherItem.storeReturnPhotoNumForNormalQuality) || 0 +
-      Number(retoucherItem.storeReturnPhotoNumForReworkQuality) || 0
+      const orderCount = (Number(retoucherItem.storeReturnStreamNumForNormalQuality) || 0) +
+        (Number(retoucherItem.storeReturnStreamNumForReworkQuality) || 0)
+      const photoCount = (Number(retoucherItem.storeReturnPhotoNumForNormalQuality) || 0) +
+        (Number(retoucherItem.storeReturnPhotoNumForReworkQuality) || 0)
       return {
-        name: retoucherItem.name,
+        name: retoucherItem.nickName || retoucherItem.name || '-',
         orderCount,
         photoCount
       }

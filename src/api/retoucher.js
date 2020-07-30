@@ -99,8 +99,7 @@ export function getRankInfo () {
  */
 export function getRetouchQuota (params) {
   return axios({
-    url: 'https://doc.local.hzmantu.com/project_cloud/release-2-9-1/project_cloud/retoucher/getRetouchQuota',
-    // url: '/project_cloud/retoucher/getRetouchQuota',
+    url: '/project_cloud/retoucher/getRetouchQuota',
     method: 'GET',
     params
   }).then(msg => {

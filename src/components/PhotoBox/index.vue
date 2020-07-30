@@ -40,7 +40,6 @@
       <div class="reason-content">
         <el-tag
           size="medium"
-          type="info"
           class="reason-tag"
           v-for="(tagItem, tagIndex) in storePartReworkReason"
           :key="tagIndex"
@@ -356,14 +355,13 @@ export default {
 
     .reason-tag {
       height: auto;
-      min-height: 28px;
-      padding: 4px 10px 6px;
       font-weight: 400;
       line-height: 20px;
-      color: #fff;
       white-space: inherit;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 4px;
+
+      & + .reason-tag {
+        margin-top: 5px;
+      }
     }
   }
 }

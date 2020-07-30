@@ -37,7 +37,6 @@ export function getGroupStaffQuotaInfo (params) {
     const data = keyToHump(msg)
     const avgTime = data.retouchTimeAvg
     const streamCount = parseInt(data.finishStreamNum)
-    const photoCount = parseInt(data.finishPhotoNum)
     for (const key in data.income) {
       data.income[key] = Number(data.income[key])
     }
@@ -46,14 +45,14 @@ export function getGroupStaffQuotaInfo (params) {
     const createData = {}
     createData.finishStreamNum = parseInt(data.finishStreamNum) // 修图单量
     createData.finishPhotoNum = parseInt(data.finishPhotoNum) // 修图张数
-    createData.reworkStreamNum = parseInt(data.reworkStreamNum) // 重修次数
     createData.overTimeStreamNum = parseInt(data.overTimeStreamNum) // 超时单量
     createData.lekimaInfo = parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum)
-    const retouchTime = Number(avgTime.rebuildTime.sum) + Number(avgTime.retouchTime.sum)
-    let avgRetouchTimeStream = getAvg(retouchTime, streamCount)
-    let avgRetouchTimePhoto = getAvg(retouchTime, photoCount)
+
+    let avgRetouchTimeStream = getAvg(avgTime.retouchTime.sum, avgTime.retouchTime.count)
+    let avgRetouchTimePhoto = getAvg(avgTime.retouchTimeForPhotoNum.sum, avgTime.retouchTimeForPhotoNum.count)
     avgRetouchTimeStream = timeFormat(avgRetouchTimeStream, 'text', true)
     avgRetouchTimePhoto = timeFormat(avgRetouchTimePhoto, 'text', true)
+
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
     createData.income = income.toFixed(2) // 正常收益
     createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）

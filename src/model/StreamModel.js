@@ -178,7 +178,7 @@ export default class StreamModel {
   getExp () {
     this.exp = parseFloat(this.baseData.exp) || 0
     this.overtimeExp = parseFloat(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
-    const actualExp = this.exp * 100 - this.overtimeIncome * 100
+    const actualExp = this.exp * 100 - this.overtimeExp * 100
     this.actualExp = Validate.toFixed(actualExp / 100)
   }
 

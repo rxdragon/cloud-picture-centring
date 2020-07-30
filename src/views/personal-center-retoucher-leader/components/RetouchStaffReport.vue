@@ -66,9 +66,8 @@ export default {
       allStaffs: [],
       searchType: '', // 搜索类型
       tableDataCount: {
-        finishStreamNum: { label: '修图单量', value: '-', componentSwitch: true },
-        finishPhotoNum: { label: '修图张数', value: '-' },
-        reworkStreamNum: { label: '重修次数', labelDesc: '云端审核退回次数', value: '-', componentSwitch: true },
+        finishStreamNum: { label: '修图单量（正常）', value: '-', componentSwitch: true },
+        finishPhotoNum: { label: '修图张数（正常）', value: '-' },
         overTimeStreamNum: { label: '超时单量', value: '-', componentSwitch: true },
         avgRetouchTime: { label: '修图平均用时', value: '-' },
         income: { label: '正常收益', labelDesc: '未扣除负收益', value: '-' },
@@ -171,7 +170,6 @@ export default {
     padding-bottom: 24px;
     margin-top: 0;
     border-bottom: 1px solid #ecedee;
-    border-radius: 0 16px 16px;
   }
 }
 

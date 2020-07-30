@@ -174,8 +174,7 @@ export function getRetouchQuotaList (params) {
     msg.list = msg.list.map(listItem => {
       const streamInfo = new StreamModel(listItem)
       return {
-        ...streamInfo,
-        // peopleTable: PhotoTool.getPhotoPeopleTabel(listItem.photos)
+        ...streamInfo
       }
     })
     createData.list = msg.list

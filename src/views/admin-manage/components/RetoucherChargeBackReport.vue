@@ -29,7 +29,7 @@
           <div class="info-value">
             <template v-if="otherItem.type === 'money'">{{ otherItem.value | toFixedString }}</template>
             <template v-else-if="otherItem.type === 'time'">{{ otherItem.value | toTimeFormatText }}</template>
-            <template v-else>{{ otherItem.value }}</template>
+            <template v-else>{{ otherItem.value | toFixedString }}</template>
           </div>
         </div>
       </div>

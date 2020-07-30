@@ -247,6 +247,46 @@ export function getIssueList () {
 }
 
 /**
+ * @description 获取问题标签筛选框
+ * @method GET
+ * @returns {Array} 标记数据
+ * @author cf 2020/04/10
+ * @version @version 2.4.0
+ */
+export function getOldIssueList () {
+  return axios({
+    url: '/project_cloud/checkPool/getOldScoreConfigList',
+    method: 'GET'
+  }).then(msg => {
+    const createLabel = [{
+      name: '其他',
+      score_config: msg
+    }]
+    const createData = createLabel.map(item => {
+      item.children = item.score_config.map(configItem => {
+        configItem.children = configItem.child.map(chilItem => {
+          return {
+            value: chilItem.id,
+            label: chilItem.name
+          }
+        })
+        return {
+          value: configItem.id,
+          label: configItem.name,
+          children: configItem.children
+        }
+      })
+      return {
+        value: item.id,
+        label: item.name,
+        children: item.children
+      }
+    })
+    return createData
+  })
+}
+
+/**
  * @description 获取问题标签报告数据
  * @method GET
  * @returns {Array} 标记数据

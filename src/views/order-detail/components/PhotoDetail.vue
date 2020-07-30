@@ -5,7 +5,17 @@
     <div v-if="hasStoreReturnReason" class="panel-box">
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
-        <div class="panel-content content-one">退回标记：<span v-for="(reasonItem, index) in StoreReturnReason" :key="index" class="reason-item">{{ reasonItem }}</span></div>
+        <div class="panel-content content-one">
+          退回标记：
+          <el-tag
+            size="medium"
+            class="reason-item"
+            v-for="(reasonItem, tagIndex) in StoreReturnReason"
+            :key="tagIndex"
+          >
+            {{ reasonItem }}
+          </el-tag>
+        </div>
         <div class="panel-content">退回备注：{{ wholeNote || partNote ?  wholeNote + ' ' + partNote : '暂无备注' }}</div>
       </div>
     </div>
@@ -14,7 +24,15 @@
       <div class="panel-main">
         <div class="panel-content content-one">总分：{{ checkScore }}</div>
         <div class="panel-content">
-          问题标记：<span v-for="(tagItem, index) in checkTag" :key="index" class="reason-item">{{ tagItem }}</span>
+          问题标记：
+          <el-tag
+            size="medium"
+            class="reason-item"
+            v-for="(tagItem, tagIndex) in checkTag"
+            :key="tagIndex"
+          >
+            {{ tagItem }}
+          </el-tag>
           <span v-if="!checkTag.length">暂无标记</span>
         </div>
       </div>
@@ -117,11 +135,8 @@ export default {
         padding: 10px 0;
 
         .reason-item {
-          padding: 3px 5px;
           margin: 0 10px 10px 0;
           font-size: 12px;
-          color: #fff;
-          background-color: #535353;
           border-radius: 5px;
         }
       }

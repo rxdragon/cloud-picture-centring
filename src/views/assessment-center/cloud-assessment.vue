@@ -344,7 +344,7 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.photoData = []
-        if (error === '正在抽片中') {
+        if (error.message === '正在抽片中') {
           this.intervalGetSpotCheck()
         } else {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)

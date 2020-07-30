@@ -16,7 +16,16 @@
       <div v-show="buffInfo.impulseStatus" slot="reference" class="prop-icon awardmap-impulse" />
     </el-popover>
     <!-- 早鸟奖励 -->
-    <div v-show="showMorningAward" class="prop-icon awardmap-morningAward" />
+    <el-popover placement="bottom" trigger="hover">
+      <div
+        v-for="(infoItem, infoIndex) in buffInfo.impulseInfo"
+        :key="infoIndex"
+        class="impulse-info"
+      >
+        1.5倍经验加成
+      </div>
+      <div v-show="showMorningAward" slot="reference" class="prop-icon awardmap-morningAward" />
+    </el-popover>
   </div>
 </template>
 

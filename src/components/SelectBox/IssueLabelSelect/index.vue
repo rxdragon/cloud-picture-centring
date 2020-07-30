@@ -53,8 +53,14 @@ export default {
      * @description 获取全部伙伴
      */
     async getIssueList () {
-      const list = await AssessmentCenter.getIssueList()
-      this.options = list
+      const data = await Promise.all([
+        AssessmentCenter.getIssueList(),
+        AssessmentCenter.getOldIssueList()
+      ])
+      const list = data[0]
+      const oldList = data[1]
+      const createList = [...list, ...oldList]
+      this.options = createList
       this.loadingDown = true
     }
   }

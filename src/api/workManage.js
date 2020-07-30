@@ -299,7 +299,7 @@ export function getOrgStandardTimesQuota (params) {
       [RETOUCH_STANDARD.MAINTO]: {
         sum: 0,
         count: 0,
-        avg: 1000
+        avg: 0
       }
     }
     msg.forEach(orgItem => {
@@ -309,7 +309,6 @@ export function getOrgStandardTimesQuota (params) {
       }
     })
     for (const type in timeAvg) {
-      timeAvg[type].sum *= 1000
       timeAvg[type].avg = getAvg(timeAvg[type].sum, timeAvg[type].count)
     }
     return timeAvg

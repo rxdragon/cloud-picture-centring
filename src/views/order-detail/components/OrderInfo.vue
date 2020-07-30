@@ -126,8 +126,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .order-info {
   .table-panel {
     display: grid;

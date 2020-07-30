@@ -5,7 +5,7 @@
     </div>
     <!-- 列表主要内容 -->
     <el-tabs ref="tabs" v-model="activeName" class="tabs-box">
-      <el-tab-pane label="正常流水历史记录" :name="SEARCH_TYPE.NORMAL" />
+      <el-tab-pane label="修图流水历史记录" :name="SEARCH_TYPE.NORMAL" />
       <el-tab-pane label="被退回流水历史记录" :name="SEARCH_TYPE.REWORK" />
     </el-tabs>
     <div
@@ -74,7 +74,7 @@
                   <p class="text-red">沙漏超时惩罚海草：<span>{{ row.overtimeExp | toFixedString }}</span></p>
                   <p>实际获得海草：<span>{{ row.actualExp | toFixedString }}</span></p>
                 </div>
-                <span class="hover-class" slot="reference">{{ row.actualExp }}</span>
+                <span class="hover-class" slot="reference">{{ row.actualExp | toFixedString }}</span>
               </el-popover>
             </template>
           </el-table-column>
@@ -96,8 +96,8 @@
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
-                  <p>质量问题数量：<span>{{ row.isStoreReturn ? row.qualityNumForRework : row.qualityNum }}</span></p>
-                  <p>非质量问题数量：<span>{{ row.isStoreReturn ? row.notQualityNumForRework : row.notQualityNum }}</span></p>
+                  <p>质量问题数量：<span>{{ row.qualityNum || row.qualityNumForRework }}</span></p>
+                  <p>非质量问题数量：<span>{{ row.notQualityNum || row.notQualityNumForRework }}</span></p>
                 </div>
                 <span class="hover-class" slot="reference">{{ row.allReturnPhotoNum }}</span>
               </el-popover>

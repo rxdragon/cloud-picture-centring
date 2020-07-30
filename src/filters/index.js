@@ -15,9 +15,9 @@ export function toThousandFilter (num) {
  * @param {number} num
  */
 export function toFixedString (num) {
-  num = Number(num)
-  if (isNaN(num)) return '0.00'
-  return num.toFixed(2)
+  const numValue = Number(num)
+  if (isNaN(numValue)) return num
+  return numValue.toFixed(2)
 }
 
 /**
