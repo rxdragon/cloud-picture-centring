@@ -362,6 +362,8 @@ export default {
   width: calc(~'100vw - @{sideBarWidth}');
   height: calc(~'@{appMainHeight} + @{headerHeight} ');
   padding: @appMainPadding;
+  padding-bottom: 24px;
+  overflow: overlay;
   background-color: #f2f6fc;
   transform: scale(1);
   transform-origin: right top;

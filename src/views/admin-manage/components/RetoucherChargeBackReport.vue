@@ -61,7 +61,7 @@ export default {
         storeReturnIncomeForNotQuality: { title: '退单非质量问题获得收益', desc: '', value: '0.00', type: 'money' },
         punishIncome: { title: '被退单质量问题扣除收益', desc: '', value: '0.00', type: 'money' },
         storeReturnExp: { title: '退单总海草', desc: '门店退回云端所获得实际海草', value: '0.00' },
-        storeReturnExpForQuality: { title: '退单质量问题获得收益', desc: '', value: '0.00' },
+        storeReturnExpForQuality: { title: '退单质量问题获得海草', desc: '', value: '0.00' },
         storeReturnExpForNotQuality: { title: '退单非质量问题获得海草', desc: '', value: '0.00' },
         punishExp: { title: '退单质量问题扣除海草', desc: '', value: '0.00' },
         storeReturnRetouchTime: { title: '门店退回修图时长', desc: '门店退回至云端再次提交的平均修图时长', value: '0.00', type: 'time' },

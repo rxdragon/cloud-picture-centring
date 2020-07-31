@@ -362,7 +362,7 @@ export default {
         this.getStreamQueueInfo()
       } catch (error) {
         console.error(error)
-        if (error === '离线无法加入队列') {
+        if (error.message === '离线无法加入队列') {
           this.$store.dispatch('user/setUserlineState', 'offline')
         }
       } finally {
