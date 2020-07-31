@@ -32,7 +32,7 @@
           <div class="info-value">
             <template v-if="otherItem.type === 'money'">{{ otherItem.value | toFixedString }}</template>
             <template v-else-if="otherItem.type === 'time'">{{ otherItem.value | toTimeFormatText }}</template>
-            <template v-else>{{ otherItem.value }}</template>
+            <template v-else>{{ otherItem.value | toFixedString }}</template>
           </div>
         </div>
       </div>
@@ -95,6 +95,7 @@ export default {
      * @description 获取表格信息
      */
     async getChartData () {
+      if (!this.timeSpan) return this.$newMessage.warning('请输入时间')
       const req = {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
@@ -107,6 +108,7 @@ export default {
      * @description 搜索数据
      */
     async searchTableInfo () {
+      if (!this.timeSpan) return this.$newMessage.warning('请输入时间')
       const req = {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)

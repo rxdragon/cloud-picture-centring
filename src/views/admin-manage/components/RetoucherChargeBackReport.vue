@@ -107,6 +107,7 @@ export default {
      */
     async searchData () {
       try {
+        if (!this.timeSpan) return this.$newMessage.warning('请输入时间')
         const req = {
           startAt: joinTimeSpan(this.timeSpan[0]),
           endAt: joinTimeSpan(this.timeSpan[1], 1)

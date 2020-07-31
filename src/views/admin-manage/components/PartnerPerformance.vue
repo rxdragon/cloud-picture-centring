@@ -176,8 +176,8 @@ export default {
 
     .num-box {
       display: inline-block;
-      padding-right: 49px;
-      padding-left: 80px;
+      width: 20%;
+      padding-left: 20px;
       border-right: 1px solid #ebeef5;
 
       .num {

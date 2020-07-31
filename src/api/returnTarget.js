@@ -114,7 +114,7 @@ export function getStaffStoreReturnQuota (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getStoreReturnQuota',
     method: 'POST',
-    params
+    data: params
   }).then(msg => {
     return handerReturnQuota(msg)
   })
