@@ -9,7 +9,6 @@ import { readConfig } from "../utils/electronConfig"
 axios.defaults.timeout = 20000
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.baseURL = readConfig('microApi') || process.env.VUE_APP_BASE_API
-axios.defaults.withCredentials = true
 // 超时重新请求配置
 axios.defaults.retry = 4
 axios.defaults.retryDelay = 500

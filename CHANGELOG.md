@@ -1,4 +1,4 @@
-# 2.0.0 (2020-07-23)
+# 2.0.0 (2020-07-31)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -428,6 +428,7 @@
 |范围|描述|commitId|
 --|--|--
  新增审核配置文件 | [9fe0f13](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fe0f13)
+ 更改ci | [f52ed61](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f52ed61)
  更改ci | [cc08a50](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cc08a50)
  更改ci相关配置 | [22884fe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22884fe)
  更改下载依赖 | [9399065](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9399065)
