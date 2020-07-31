@@ -241,7 +241,7 @@ export default {
         const timeType = ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan']
         const timeLess10 = timeType.some(timeTypeItem => {
           const diffDays = getDiffDays(this[timeTypeItem])
-          return diffDays <= 10 && diffDays > 0
+          return diffDays <= 10 && diffDays >= 0
         })
         if (!timeLess10) {
           this.$newMessage.warning('选择门店退回类型或者云学院问题标签后，查询日期不能大于10天')

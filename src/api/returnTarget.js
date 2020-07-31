@@ -60,7 +60,7 @@ function handerReturnQuota (msg) {
   msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto, finishPhotoNum)
   const chatData = [
     {
-      name: '门店退回（总）',
+      name: '被门店退回（总）',
       orderCount: msg.storeReturnAllStream,
       photoCount: msg.storeReturnAllPhoto
     },
@@ -70,17 +70,17 @@ function handerReturnQuota (msg) {
       photoCount: msg.finishStoreReturnPhoto
     },
     {
-      name: '退回质量问题',
+      name: '被退回质量问题',
       orderCount: storeReturnForQualityStream,
       photoCount: storeReturnForQualityPhoto
     },
     {
-      name: '退回非质量问题',
+      name: '被退回非质量问题',
       orderCount: storeReturnForNotQualityStream,
       photoCount: storeReturnForNotQualityPhoto
     },
     {
-      name: '退回非质量&质量问退',
+      name: '被退回非质量&质量问退',
       orderCount: storeReturnForBothStream,
       photoCount: storeReturnForBothPhoto
     }

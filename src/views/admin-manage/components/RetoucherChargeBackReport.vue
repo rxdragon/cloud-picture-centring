@@ -69,7 +69,7 @@ export default {
       },
       chatData: [
         {
-          name: '门店退回（总）',
+          name: '被门店退回（总）',
           orderCount: 0,
           photoCount: 0
         },
@@ -79,17 +79,17 @@ export default {
           photoCount: 0
         },
         {
-          name: '退回质量问题',
+          name: '被退回质量问题',
           orderCount: 0,
           photoCount: 0
         },
         {
-          name: '退回非质量问题',
+          name: '被退回非质量问题',
           orderCount: 0,
           photoCount: 0
         },
         {
-          name: '退回非质量&质量问退',
+          name: '被退回非质量&质量问退',
           orderCount: 0,
           photoCount: 0
         }

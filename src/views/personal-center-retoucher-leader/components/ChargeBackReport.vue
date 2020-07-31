@@ -16,7 +16,7 @@
     <!-- 退单单量统计 -->
     <div class="charge-back-chat charge-back-module">
       <div class="panel-title">
-        退单单量统计
+        被退单单量统计
         <div class="desc">（张数为纯质量问题张数）</div>
       </div>
       <charge-back-chat :chart-datas="chatData" />
