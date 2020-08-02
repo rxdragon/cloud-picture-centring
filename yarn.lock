@@ -8241,10 +8241,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-mainto-fed-log@^1.0.0-release.21:
-  version "1.0.0-release.21"
-  resolved "https://npm.code.hzmantu.com/mainto-fed-log/-/mainto-fed-log-1.0.0-release.21.tgz#30e3e570e4640a0b0165f68f1b16d13d68d18b75"
-  integrity sha512-CnnF7B2KvARhCY50a80GnTtvWFX1okN0N3xKnf73F+IOVHx0TLjJOYc3E2zZVBdRdaPXOvRR56Oqw2/hBOPIDw==
+mainto-fed-log@^1.0.0-release.23:
+  version "1.0.0-release.23"
+  resolved "https://npm.code.hzmantu.com/mainto-fed-log/-/mainto-fed-log-1.0.0-release.23.tgz#2fcbc56e863082fb46097afbae475017ecbc6964"
+  integrity sha512-EAXhphty3M01FaDy+FHcL/qyOzrdNQZLUsyvvpQBo3f1d6tR07mMwOR2d9QerkYkdYOvZQMzdapDRHiJ85hkMQ==
   dependencies:
     "@babel/runtime-corejs3" "^7.10.2"
     axios "^0.19.2"
