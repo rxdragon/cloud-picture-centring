@@ -2,7 +2,7 @@
   <div class="charge-back-report module-panel" v-loading="loading">
     <div class="search-box">
       <div class="search-item">
-        <span>门店退回时间</span>
+        <span>时间</span>
         <date-picker v-model="timeSpan" />
       </div>
       <div class="staff-option search-item">

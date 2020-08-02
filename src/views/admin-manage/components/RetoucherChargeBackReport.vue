@@ -2,7 +2,7 @@
   <div class="retoucher-charge-back-report" v-loading="loading">
     <div class="search-box">
       <div class="search-item">
-        <span>门店退回时间</span>
+        <span>时间</span>
         <date-picker v-model="timeSpan" />
       </div>
       <div class="staff-option search-item">
@@ -117,7 +117,13 @@ export default {
         const data = await ReturnTarget.getStoreReturnQuota(req)
         this.chatData = data.chatData
         for (const key in this.otherInfo) {
-          this.otherInfo[key].value = data.tableInfo[key]
+          if (key === 'storeReturnExpForNotQuality') {
+            this.otherInfo[key].value = data.tableInfo['storeReturnExpForNotQuality'] + data.tableInfo['storeReturnExpForBoth']
+          } else if (key === 'storeReturnIncomeForNotQuality') {
+            this.otherInfo[key].value = data.tableInfo['storeReturnIncomeForNotQuality'] + data.tableInfo['storeReturnIncomeForBoth']
+          } else {
+            this.otherInfo[key].value = data.tableInfo[key]
+          }
         }
       } finally {
         await delayLoading()

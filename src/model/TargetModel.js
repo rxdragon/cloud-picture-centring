@@ -58,7 +58,7 @@ export default class TargetModel {
     glassPunishExp: 0, // 沙漏扣除海草
     storeReturnExpForQuality: 0, // 非本人订单产生海草
     storeReturnExpForNotQuality: 0, // 非质量问题订单产生海草
-    storeReturnIncomeForBoth: 0, // 质量&非质量问题收益
+    storeReturnExpForBoth: 0, // 质量&非质量问题收益
     sumStoreReturnExp: 0, // 退单获得海草
     punishExp: 0, // 质量扣除获取收益
     sumExp: 0
@@ -96,32 +96,32 @@ export default class TargetModel {
 
   // 获取订单数量相关信息
   getStreamCount () {
-    this.retouchStreamNum = this.base.retouchStreamNum
-    this.storeReturnNum = this.base.storeReturnNum
-    this.finishStreamNumForQuality = this.base.finishStreamNumForQuality
-    this.finishStreamNumForNotQuality = this.base.finishStreamNumForNotQuality
-    this.finishStreamNumForBoth = this.base.finishStreamNumForBoth
-    this.storeReturnStreamNumForNormalQuality = this.base.storeReturnStreamNumForNormalQuality
-    this.storeReturnStreamNumForNormalNotQuality = this.base.storeReturnStreamNumForNormalNotQuality
-    this.storeReturnStreamNumForNormalBoth = this.base.storeReturnStreamNumForNormalBoth
-    this.storeReturnStreamNumForReworkQuality = this.base.storeReturnStreamNumForReworkQuality
-    this.storeReturnStreamNumForReworkNotQuality = this.base.storeReturnStreamNumForReworkNotQuality
-    this.storeReturnStreamNumForReworkBoth = this.base.storeReturnStreamNumForReworkBoth
+    this.retouchStreamNum = Number(this.base.retouchStreamNum)
+    this.storeReturnNum = Number(this.base.storeReturnNum)
+    this.finishStreamNumForQuality = Number(this.base.finishStreamNumForQuality)
+    this.finishStreamNumForNotQuality = Number(this.base.finishStreamNumForNotQuality)
+    this.finishStreamNumForBoth = Number(this.base.finishStreamNumForBoth)
+    this.storeReturnStreamNumForNormalQuality = Number(this.base.storeReturnStreamNumForNormalQuality)
+    this.storeReturnStreamNumForNormalNotQuality = Number(this.base.storeReturnStreamNumForNormalNotQuality)
+    this.storeReturnStreamNumForNormalBoth = Number(this.base.storeReturnStreamNumForNormalBoth)
+    this.storeReturnStreamNumForReworkQuality = Number(this.base.storeReturnStreamNumForReworkQuality)
+    this.storeReturnStreamNumForReworkNotQuality = Number(this.base.storeReturnStreamNumForReworkNotQuality)
+    this.storeReturnStreamNumForReworkBoth = Number(this.base.storeReturnStreamNumForReworkBoth)
   }
 
   // 获取照片数量相关信息
   getPhotoCount () {
-    this.retouchPhotoNum = this.base.retouchPhotoNum
-    this.storeReturnPhotoNum = this.base.storeReturnPhotoNum
-    this.finishPhotoNumForQuality = this.base.finishPhotoNumForQuality
-    this.finishPhotoNumForNotQuality = this.base.finishPhotoNumForNotQuality
-    this.finishPhotoNumForBoth = this.base.finishPhotoNumForBoth
-    this.storeReturnPhotoNumForNormalQuality = this.base.storeReturnPhotoNumForNormalQuality
-    this.storeReturnPhotoNumForNormalNotQuality = this.base.storeReturnPhotoNumForNormalNotQuality
-    this.storeReturnPhotoNumForNormalBoth = this.base.storeReturnPhotoNumForNormalBoth
-    this.storeReturnPhotoNumForReworkQuality = this.base.storeReturnPhotoNumForReworkQuality
-    this.storeReturnPhotoNumForReworkNotQuality = this.base.storeReturnPhotoNumForReworkNotQuality
-    this.storeReturnPhotoNumForReworkBoth = this.base.storeReturnPhotoNumForReworkBoth
+    this.retouchPhotoNum = Number(this.base.retouchPhotoNum)
+    this.storeReturnPhotoNum = Number(this.base.storeReturnPhotoNum)
+    this.finishPhotoNumForQuality = Number(this.base.finishPhotoNumForQuality)
+    this.finishPhotoNumForNotQuality = Number(this.base.finishPhotoNumForNotQuality)
+    this.finishPhotoNumForBoth = Number(this.base.finishPhotoNumForBoth)
+    this.storeReturnPhotoNumForNormalQuality = Number(this.base.storeReturnPhotoNumForNormalQuality)
+    this.storeReturnPhotoNumForNormalNotQuality = Number(this.base.storeReturnPhotoNumForNormalNotQuality)
+    this.storeReturnPhotoNumForNormalBoth = Number(this.base.storeReturnPhotoNumForNormalBoth)
+    this.storeReturnPhotoNumForReworkQuality = Number(this.base.storeReturnPhotoNumForReworkQuality)
+    this.storeReturnPhotoNumForReworkNotQuality = Number(this.base.storeReturnPhotoNumForReworkNotQuality)
+    this.storeReturnPhotoNumForReworkBoth = Number(this.base.storeReturnPhotoNumForReworkBoth)
   }
 
   // 修图平均时间
@@ -184,23 +184,23 @@ export default class TargetModel {
     this.exp.glassPunishExp = Number(_.get(this.base, 'exp.glassPunishExp')) || 0
     this.exp.storeReturnExpForQuality = Number(_.get(this.base, 'exp.storeReturnExpForQuality')) || 0
     this.exp.storeReturnExpForNotQuality = Number(_.get(this.base, 'exp.storeReturnExpForNotQuality')) || 0
-    this.exp.storeReturnIncomeForBoth = Number(_.get(this.base, 'exp.storeReturnIncomeForBoth')) || 0
+    this.exp.storeReturnExpForBoth = Number(_.get(this.base, 'exp.storeReturnExpForBoth')) || 0
     this.exp.punishExp = Number(_.get(this.base, 'exp.punishExp')) || 0
 
     let sumStoreReturnExp =
-      this.income.storeReturnExpForQuality * 100 +
-      this.income.storeReturnExpForNotQuality * 100 +
-      this.income.storeReturnIncomeForBoth * 100
+      this.exp.storeReturnExpForQuality * 100 +
+      this.exp.storeReturnExpForNotQuality * 100 +
+      this.exp.storeReturnExpForBoth * 100
     sumStoreReturnExp = (sumStoreReturnExp / 100).toFixed(2)
     this.exp.sumStoreReturnExp = sumStoreReturnExp
 
     let sumExp =
-      this.income.retouchExp * 100 -
-      this.income.glassPunishExp * 100 +
-      this.income.storeReturnExpForQuality * 100 +
-      this.income.storeReturnExpForNotQuality * 100 +
-      this.income.storeReturnIncomeForBoth * 100 -
-      this.income.punishExp * 100
+      this.exp.retouchExp * 100 -
+      this.exp.glassPunishExp * 100 +
+      this.exp.storeReturnExpForQuality * 100 +
+      this.exp.storeReturnExpForNotQuality * 100 +
+      this.exp.storeReturnExpForBoth * 100 -
+      this.exp.punishExp * 100
     sumExp = (sumExp / 100).toFixed(2)
     this.exp.sumExp = sumExp
   }

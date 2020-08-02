@@ -3,7 +3,7 @@
     <div class="panel-title">修图绩效</div>
     <div class="search-box">
       <div class="search-item">
-        <span>时间</span>
+        <span>修图完成时间</span>
         <date-picker v-model="timeSpan" />
       </div>
       <el-button type="primary" @click="getRetouchQuota">查 询</el-button>
