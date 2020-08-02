@@ -52,7 +52,7 @@ function handerReturnQuota (msg) {
     msg.storeReturnExpForBoth * 100
   msg.storeReturnExp = toFixed(storeReturnExp / 100)
   // 修图总张数
-  const finishPhotoNum = msg.retouchPhotoNum || 0 +
+  const finishPhotoNum = (msg.retouchPhotoNum || 0) +
     msg.finishPhotoNumForQuality +
     msg.finishPhotoNumForNotQuality +
     msg.finishPhotoNumForBoth
