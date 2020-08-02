@@ -130,7 +130,7 @@ export function getRetouchQuota (params) {
         npsGrade: retoucherNpsScoreAvg
       },
       streamNumForQuality: parseInt(data.storeReturnStreamNumForQuality),
-      photoNumForQuality: parseInt(data.storeReturnStreamNum),
+      photoNumForQuality: parseInt(data.storeReturnPhotoNumForQuality),
       exp: {
         punishExp: punishExp,
         retouchExp: retouchExp,

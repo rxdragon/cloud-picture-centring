@@ -44,7 +44,9 @@
         </el-table-column>
         <el-table-column label="质量问题单量/张数" min-width="140">
           <template slot-scope="scope">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.QualityRework">{{ scope.row.streamNumForQuality + ' / ' + scope.row.photoNumForQuality }}</router-link>
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.QualityRework">
+              {{ scope.row.streamNumForQuality + ' / ' + scope.row.photoNumForQuality }}
+            </router-link>
           </template>
         </el-table-column>
         <el-table-column label="修图获得收益" min-width="150">
