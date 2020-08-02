@@ -5,8 +5,24 @@
     <div v-if="hasStoreReturnReason" class="panel-box">
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
-        <div class="panel-content content-one">退回标记：<span v-for="(reasonItem, index) in StoreReturnReason" :key="index" class="reason-item">{{ reasonItem }}</span></div>
-        <div class="panel-content">退回备注：{{ wholeNote || partNote ?  wholeNote + ' ' + partNote : '暂无备注' }}</div>
+        <div class="panel-content content-one">
+          局部退回标记：<span
+            v-for="(reasonItem, index) in photoItem.partReason"
+            :key="index"
+            class="reason-item"
+          >{{ reasonItem }}
+          </span>
+        </div>
+        <div class="panel-content content-one">局部退回备注：{{ photoItem.partNote }}</div>
+        <div class="panel-content content-one">
+          整体退回标记：<span
+            v-for="(reasonItem, index) in photoItem.wholeReason"
+            :key="index"
+            class="reason-item"
+          >{{ reasonItem }}
+          </span>
+        </div>
+        <div class="panel-content">整体退回备注：{{ photoItem.wholeNote }}</div>
       </div>
     </div>
     <div v-if="hcsCheckTags" class="panel-box">
@@ -44,7 +60,7 @@ export default {
     },
     // 判断是否有退单标记
     hasStoreReturnReason () {
-      return _.get(this.photoData, 'tags.values.store_rework_reason') || _.get(this.photoData, 'tags.values.store_part_rework_reason') || false
+      return _.get(this.photoData, 'tags.values.store_rework_reason') || _.get(this.photoData, 'tags.values.store_part_rework_reason') || false || _.get(this.photoData, 'tags.values.labels')
     },
     // 是否云学院打分
     hcsCheckTags () {
@@ -61,29 +77,6 @@ export default {
         return item.name
       })
       return tagFilter
-    },
-    // 整体备注
-    wholeNote () {
-      return _.get( this.photoData, 'tags.values.store_rework_note') || ''
-    },
-    // 局部备注数组
-    partNote () {
-      let note = ''
-      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
-      partArr.forEach(item => {
-        item.note && (note += item.note + ' ')
-      })
-      return note
-    },
-    // 退单标记 包括整体标记和局部标记
-    StoreReturnReason () {
-      const wholeReason = _.get( this.photoData, 'tags.values.store_rework_reason', '')
-      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
-      let partReason = []
-      partArr.forEach(item => {
-        partReason = [...item.reason.split('+'),...partReason]
-      })
-      return partReason.concat(wholeReason ? wholeReason.split('+') : [])
     }
   },
   created () {

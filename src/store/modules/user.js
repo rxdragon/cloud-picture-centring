@@ -95,6 +95,16 @@ const actions = {
       try {
         const savePermission = SessionTool.getUserPermission()
         const permissions = savePermission || await UserAction.getAuthority()
+        // todo 最后删掉
+        permissions.push(
+          {
+            "id": 5000,
+            "name": "retoucher_center.complain_history.get",
+            "title": "修片师-申诉记录-查看",
+            "application": 888
+          }
+        )
+
         SessionTool.setUserPermission(permissions)
         const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
         resetRouter()

@@ -1,39 +1,30 @@
 <template>
-  <div class="retouch-history transform-fixed page-class">
+  <div class="complain-history transform-fixed page-class">
     <div class="header">
-      <h3>修图历史记录</h3>
+      <h3>申诉记录</h3>
     </div>
     <!-- 列表主要内容 -->
     <div class="history-main table-box">
       <div class="search-box">
-        <!-- 修图完成时间 -->
+        <!-- 申诉时间 -->
         <div class="date-search search-item">
-          <span>修图完成时间</span>
-          <date-picker v-model="timeSpan" />
+          <span>申诉时间:</span>
+          <el-date-picker v-model="timeSpan" type="datetime" placeholder="选择申诉时间" />
         </div>
         <!-- 流水号 -->
         <div class="stream-search search-item">
-          <span>流水号</span>
+          <span>流水号:</span>
           <el-input v-model="streamNum" clearable placeholder="请输入流水号" />
         </div>
-        <!-- 门店退回 -->
+        <!-- 处理状态 -->
         <div class="audit-box search-item">
-          <span>门店退回</span>
-          <return-select v-model="isReturn" />
+          <span>处理状态:</span>
+          <complain-status-select v-model="complainStatus" />
         </div>
-        <!-- 退单类型 -->
+        <!-- 申诉类型 -->
         <div class="audit-box search-item">
-          <span>退单类型</span>
-          <quality-select
-            placeholder="请选择退单类型"
-            :options="returnOptions"
-            showAllOption
-            v-model="returnType"
-          />
-        </div>
-        <div class="spot-check-box search-item">
-          <span>门店点赞</span>
-          <evaluate-select v-model="isGood" />
+          <span>申诉类型</span>
+          <complain-type-select v-model="complainType" />
         </div>
         <div class="search-button-box search-item">
           <el-button type="primary" @click="searchList(1)">查询</el-button>
@@ -43,18 +34,18 @@
         <el-table :data="tableData" style="width: 100%;">
           <el-table-column
             prop="streamNum"
-            label="流水号"
+            label="申诉信息"
             width="160"
             fixed="left"
           />
-          <el-table-column label="接单时间" width="150">
+          <el-table-column label="申诉类型" width="150">
             <template slot-scope="scope">
               {{ scope.row.receiptAt | toTimeSpan }}
             </template>
           </el-table-column>
-          <el-table-column prop="retouchAllTime" label="修图总时长" width="100" />
-          <el-table-column prop="storeReturnNum" label="退单张数" width="80" />
-          <el-table-column prop="exp" label="海草值">
+          <el-table-column prop="retouchAllTime" label="处理状态" width="100" />
+          <el-table-column prop="storeReturnNum" label="初审详情" width="80" />
+          <el-table-column prop="exp" label="复审详情">
             <template slot-scope="{ row }">
               <el-popover
                 placement="right"
@@ -76,31 +67,9 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="实际收益">
-            <template slot-scope="{ row }">
-              <el-popover placement="right" popper-class="income-list" trigger="hover">
-                <p>修图收益：{{ row.retouchIncome | toFixedString }}</p>
-                <p class="text-money">奖励收益：{{ row.rewordIncome | toFixedString }}</p>
-                <p class="text-red">惩罚收益：{{ row.punishIncome | toFixedString }}</p>
-                <p>实获收益：{{ row.actualIncome | toFixedString }}</p>
-                <span slot="reference">{{ row.actualIncome | toFixedString }}</span>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <el-table-column label="质量问题/非质量问题（张）" width="200">
-            <template slot-scope="{ row }">
-              {{ row.qualityNum }} / {{ row.notQualityNum }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="goodEvaluate" label="门店评价">
-            <template slot-scope="scope">
-              <show-evaluate :evaluate="scope.row.goodEvaluate" />
-            </template>
-          </el-table-column>
-          <el-table-column prop="retoucherNpsAvg" label="顾客满意度" width="100" />
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="linkto(scope.row)">详情</el-button>
+              <el-button type="primary" size="mini" @click="linkto(scope.row.streamId)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -120,27 +89,59 @@
 </template>
 
 <script>
-import DatePicker from '@/components/DatePicker'
-import ReturnSelect from '@SelectBox/ReturnStateSelect'
-import QualitySelect from '@SelectBox/WhetherSelect'
-import EvaluateSelect from '@SelectBox/EvaluateSelect'
-import ShowEvaluate from '@/components/ShowEvaluate'
-import { joinTimeSpan } from '@/utils/timespan.js'
-import { SearchType } from '@/utils/enumerate'
+import ComplainStatusSelect from '@SelectBox/ComplainStatusSelect'
+import ComplainTypeSelect from '@SelectBox/ComplainTypeSelect'
 
-import * as RetoucherCenter from '@/api/retoucherCenter.js'
-
+// import * as RetoucherCenter from '@/api/retoucherCenter.js'
+// todo mock
+const mockData = [
+  {
+    "id": 1,
+    "stream_id": 1,
+    "stream_num": "asdasdasd",
+    "created_at": "2019-12-01 10:00:00",
+    "streamAppealExamines": [
+      [
+        {
+          "id": 1123123,
+          "state": "wait",
+          "phase": "st",
+          "examine_staff_id": 123,
+          "examine_staff_info": {
+            "id": 123,
+            "nickname": "xxxxx",
+            "name": "xxxx"
+          }
+        },
+        {
+          "id": 1123123,
+          "state": "",
+          "phase": "st",
+          "examine_staff_id": 123,
+          "examine_staff_info": {
+            "id": 123,
+            "nickname": "xxxxx",
+            "name": "xxxx"
+          }
+        }
+      ]
+    ],
+    "type": "rework",
+    "state": "wait_st"
+  }
+]
 export default {
-  name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect },
+  name: 'ComplainHistory',
+  components: { ComplainStatusSelect, ComplainTypeSelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       streamNum: '', // 流水号
+      complainStatus: 'all',
+      complainType: 'all',
       searchType: 0, // 搜索标准
-      tableData: [], // 列表数据
-      isReturn: 'all', // 门店退回
+      tableData: mockData, // 列表数据
       isGood: 'all', // 是否门店点赞
       returnType: 'all', // 退单类型
       pager: {
@@ -157,41 +158,12 @@ export default {
       }]
     }
   },
-  watch: {
-    '$route': {
-      handler (to, from) {
-        const keepLiveRoute = ['RetouchHistory', 'orderDetail']
-        if (keepLiveRoute.includes(_.get(from, 'name'))) return
-        const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
-        if (retouchHistoryTimeSpan) {
-          this.timeSpan = this.$route.query.retouchHistoryTimeSpan.split(',')
-        }
-        if (retouchHistorySearchType) {
-          switch (retouchHistorySearchType) {
-            case SearchType.GoodEvaluation:
-              this.isGood = true
-              break
-            case SearchType.ReworkPhoto:
-              this.isReturn = true
-              break
-            case SearchType.QualityRework:
-              this.isReturn = true
-              this.returnType = 'quality'
-              break
-          }
-        }
-        this.searchList(1)
-      },
-      immediate: true
-    }
-  },
   methods: {
     /**
      * @description 跳转链接
      */
-    linkto (row) {
-      const { streamId, qualityNum } = row
-      const query = { streamId, qualityNum }
+    linkto (streamId) {
+      const query = { streamId }
       if (this.active === 'others') {
         query.searchOther = 1
       }
@@ -205,37 +177,13 @@ export default {
      */
     searchList (page) {
       this.pager.page = page ? page : this.pager.page
-      this.getRetouchList()
+      this.getComplainList()
     },
     /**
-     * @description 获取历史列表
-     * @param 页码 如果通过按搜索框搜索,传输1 到第一页
+     * @description 获取申诉列表
      */
-    async getRetouchList () {
-      try {
-        const reqData = {
-          page: this.pager.page,
-          pageSize: this.pager.pageSize
-        }
-        if (this.timeSpan) {
-          reqData.startAt = joinTimeSpan(this.timeSpan[0])
-          reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
-        }
-        if (this.isReturn !== 'all' ) { reqData.isReturn = this.isReturn }
-        if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
-        if (this.returnType !== 'all' ) { reqData.storeReworkType = this.returnType }
-        if (this.streamNum) { reqData.streamNum = this.streamNum }
-        this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = await RetoucherCenter.getRetouchQuotaList(reqData)
-        this.pager.total = data.total
-        this.tableData = data.list
-        delete this.$route.query.retouchHistoryTimeSpan
-        delete this.$route.query.retouchHistorySearchType
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      }
+    async getComplainList () {
+      // 
     },
     /**
      * @description 页码改变
@@ -248,7 +196,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.retouch-history {
+.complain-history {
   .history-main {
     margin-top: 0;
 

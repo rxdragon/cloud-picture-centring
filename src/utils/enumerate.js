@@ -74,6 +74,10 @@ export const StoreReturnPhoto = [
   'store_rework' // 门店退回
 ]
 
+export const PHOTO_VERSION = {
+  STORE_REWORK: 'store_rework' // 门店退回的照片version
+}
+
 export const PhotoEnumName = {
   OriginalPhoto: '原片',
   FirstPhoto: '一次成片',
@@ -174,4 +178,3 @@ export const PlantTypeNameEnum = {
   'pull': '拔草',
   'none': '一般'
 }
-

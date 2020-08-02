@@ -3,6 +3,8 @@ import axios from '@/plugins/axios.js'
 import store from '@/store' // vuex
 import { keyToHump } from '@/utils/index.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import { PHOTO_VERSION } from '@/utils/enumerate.js'
+
 
 /**
  * @description 获取修图类型
@@ -44,9 +46,20 @@ export function getStreamInfo (params) {
     const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
     const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
     data.photos.forEach(photoItem => {
+      let wholeReason = []
+      let partReason = []
+      let partNote = ''
+      const part = _.get( photoItem, 'tags.values.part', [])
+      const storePartReworkReason = _.get( photoItem, 'tags.values.store_part_rework_reason', [])
       const filmEvaluation = _.get(photoItem, 'tags.values.film_evaluation') || ''
+      const labels = _.get( photoItem, 'tags.values.labels', [])
+      const storeReworkReason = _.get( photoItem, 'tags.values.store_rework_reason', '')
+      const storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note')
       photoItem.filmEvaluation = filmEvaluation
       photoItem.reworkNum = reworkNum
+      photoItem.reworkChecked = false // 申诉的勾选
+      photoItem.complainReason = '' // 申诉的说明
+
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
         // 过滤看片师新增照片
@@ -54,10 +67,109 @@ export function getStreamInfo (params) {
       } else {
         photoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
       }
+      // todo mock增加labels
+      photoItem.tags.values.labels = [
+        {
+          "id": 121,
+          "name": "证件照液化不对称、不自然（大小脸、眼睛大小等）new",
+          "type": "quality"
+        },
+        {
+          "id": 122,
+          "name": "液化局部或整体有失真 new",
+          "type": "quality"
+        }
+      ]
+      photoItem.tags.values.part =[
+        {
+          "note": "局部问题1 new",
+          "location": [
+            "23.62",
+            "68.91"
+          ],
+          "width": "21.59",
+          "height": "32.25",
+          "brushColor": "#e41e07",
+          "labels": [
+            {
+              "id": 223,
+              "name": "证件照液化不对称、不自然（大小脸、眼睛大小等）new",
+              "type": "quality"
+            },
+            {
+              "id": 222,
+              "name": "液化局部或整体有失真new",
+              "type": "quality"
+            }
+          ]
+        },
+        {
+          "note": "局部问题1 new",
+          "location": [
+            "23.62",
+            "68.91"
+          ],
+          "width": "21.59",
+          "height": "32.25",
+          "brushColor": "#e41e07",
+          "labels": [
+            {
+              "id": 223,
+              "name": "证件照液化不对称、不自然（大小脸、眼睛大小等）new",
+              "type": "quality"
+            },
+            {
+              "id": 222,
+              "name": "液化局部或整体有失真new",
+              "type": "quality"
+            }
+          ]
+        }
+      ]
+      // 处理整体的退单标记
+      // 判断是新的数据还是老的数据,新的数据有labels字段
+      if (labels.length) {
+        labels.forEach(labelsItem => {
+          wholeReason.push(labelsItem.name)
+        })
+      } else {
+        wholeReason = wholeReason.concat(storeReworkReason ? storeReworkReason.split('+') : [])
+      }
+      photoItem.wholeReason = wholeReason
+      // 处理局部的退单标记
+      // 判断是新的数据还是老的数据,新的数据有part字段
+      if (part.length) {
+        part.forEach(partItem => {
+          partItem.labels.forEach( labelItem => {
+            partReason.push(labelItem.name)
+          } )
+        })
+      } else {
+        storePartReworkReason.forEach(partReasonItem => {
+          partReason = [...partReasonItem.reason.split('+'),...partReason]
+        })
+      }
+      photoItem.partReason = partReason
+      // 处理局部的备注
+      if (part.length) {
+        part.forEach(partItem => {
+          partNote += partItem.note
+        })
+      } else {
+        storePartReworkReason.forEach(item => {
+          item.note && (partNote += item.note + ' ')
+        })
+      }
+      photoItem.partNote = partNote || '暂无备注'
+      photoItem.wholeNote = storeReworkNote || '暂无备注'
+      
+
       if (photoItem.photoVersion) {
         photoItem.photoVersion.forEach(versionItem => {
+          if (versionItem.version === PHOTO_VERSION.STORE_REWORK) photoItem.storeReworkPath = versionItem.path
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
           versionItem.phototag = photoItem.tags
+
           // 获取云学院评价
           const commitInfo = { picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || '' }
           const issueLabel = _.get(versionItem, 'phototag.values.check_pool_tags') || []
