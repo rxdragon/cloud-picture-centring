@@ -113,7 +113,7 @@ export default {
         score: {
           count: 0,
           rate: '',
-          lable: '总分'
+          lable: '总体平均分'
         }
       }
     }
