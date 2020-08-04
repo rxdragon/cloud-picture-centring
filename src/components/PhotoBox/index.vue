@@ -28,6 +28,21 @@
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
       <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto('original')">下载照片</el-button>
+      <el-popover
+        v-if="orginLinkPhotoPath"
+        placement="right"
+        width="241"
+        trigger="hover"
+      >
+        <el-image
+          :src="imgCompressDomain + orginLinkPhotoPath"
+          :fit="containPhoto ? 'contain' : 'cover'"
+          :class="{
+            'show-center': containPhoto
+          }"
+        />
+        <el-button type="text" @click.stop.capture="downingOrginLinkPhoto" slot="reference">原始图片下载</el-button>
+      </el-popover>
       <el-button v-if="downComplete" type="text" @click.stop.capture="downingPhoto">下载云端成片</el-button>
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
@@ -114,6 +129,14 @@ export default {
         return null
       }
     },
+    // 如果模版照，关联是由哪张照片生成的
+    orginLinkPhotoPath () {
+      const isStoreReturn = _.get(this.tags, 'statics', []).includes('store_rework')
+      const isTemplate = this.orginPhotoPath.includes('template')
+      if (!isStoreReturn || !isTemplate) return ''
+      const orginLinkPath = _.get(this.tags, 'values.origin_photo_path') || ''
+      return orginLinkPath
+    },
     // 重修理由
     recedeReason () {
       const hasReworkReason = this.tags && this.tags.values && this.tags.values.rework_reason
@@ -199,6 +222,19 @@ export default {
       const savePath = `/${this.streamNum}`
       let imgSrc = type === 'original' ? this.orginPhotoPath : this.src
       imgSrc = imgSrc || this.src
+      const data = {
+        url: this.imgDomain + imgSrc,
+        path: savePath
+      }
+      this.$newMessage.success('已添加一张照片到下载')
+      DownIpc.addDownloadFile(data)
+    },
+    /**
+     * @description 下载原始图片显示
+     */
+    downingOrginLinkPhoto () {
+      const savePath = `/${this.streamNum}`
+      const imgSrc = this.orginLinkPhotoPath
       const data = {
         url: this.imgDomain + imgSrc,
         path: savePath
