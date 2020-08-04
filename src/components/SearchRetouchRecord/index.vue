@@ -125,7 +125,7 @@
             <template slot-scope="{ row }">
               <div class="table-detail-box">
                 <p>门店评价：<show-evaluate :evaluate="row.goodEvaluate" /></p>
-                <p>顾客评价：<show-evaluate :evaluate="row.retoucherNpsAvg" /></p>
+                <p>顾客评价：{{ row.retoucherNpsAvg || '-' }}</p>
               </div>
             </template>
           </el-table-column>
