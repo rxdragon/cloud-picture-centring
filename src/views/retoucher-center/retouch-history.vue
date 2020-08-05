@@ -283,7 +283,7 @@ export default {
           reqData.startAt = joinTimeSpan(this.timeSpan[0])
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
-        if (this.cloudSpot) { reqData.cloudEvaluation = this.cloudSpot }
+        if (typeof this.cloudSpot === 'boolean') { reqData.cloudEvaluation = this.cloudSpot }
         if (this.issueValue.length) { reqData.cloudTags = this.issueValue }
         if (this.isReturn) { reqData.isReturn = this.isReturn === 'isReturn' }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
