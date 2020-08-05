@@ -116,7 +116,13 @@ export default {
       if (this.staffId) { req.retouchIds = [this.staffId] }
       const data = await ReturnTarget.getStaffStoreReturnQuota(req)
       for (const key in this.otherInfo) {
-        this.otherInfo[key].value = data.tableInfo[key]
+        if (key === 'storeReturnExpForNotQuality') {
+          this.otherInfo[key].value = data.tableInfo['storeReturnExpForNotQuality'] + data.tableInfo['storeReturnExpForBoth']
+        } else if (key === 'storeReturnIncomeForNotQuality') {
+          this.otherInfo[key].value = data.tableInfo['storeReturnIncomeForNotQuality'] + data.tableInfo['storeReturnIncomeForBoth']
+        } else {
+          this.otherInfo[key].value = data.tableInfo[key]
+        }
       }
     }
   }
