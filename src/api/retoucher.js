@@ -104,7 +104,6 @@ export function getRetouchQuota (params) {
     params
   }).then(msg => {
     const createData = new TargetModel(msg)
-    
     return [createData]
   })
 }
