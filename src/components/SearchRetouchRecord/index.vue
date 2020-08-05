@@ -223,7 +223,7 @@ export default {
      */
     getParams () {
       function getDiffDays (timeSpan) {
-        if (!timeSpan) return 0
+        if (!timeSpan) return -1
         const startTime = moment(timeSpan[0])
         const endTime = moment(timeSpan[1])
         return endTime.diff(startTime, 'days')
