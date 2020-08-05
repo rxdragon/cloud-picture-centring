@@ -43,7 +43,12 @@
       <div class="product-search search-item">
         <span>流水号</span>
         <div class="stream-num">
-          <el-input v-model.trim="streamNum" @keyup.native.enter="getSearchHistory(1)" ></el-input>
+          <el-input
+            placeholder="请输入流水号"
+            v-model.trim="streamNum"
+            clearable
+            @keyup.native.enter="getSearchHistory(1)"
+          />
         </div>
       </div>
     </div>

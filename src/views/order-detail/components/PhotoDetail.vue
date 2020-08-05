@@ -19,10 +19,13 @@
         <div class="panel-content">退回备注：{{ wholeNote || partNote ?  wholeNote + ' ' + partNote : '暂无备注' }}</div>
       </div>
     </div>
-    <div v-if="hcsCheckTags" class="panel-box">
+    <div v-if="hasCheckTags" class="panel-box">
       <div class="panel-title">云学院评价</div>
       <div class="panel-main">
-        <div class="panel-content content-one">总分：{{ checkScore }}</div>
+        <div class="panel-content content-one">
+          总分：{{ checkScore }}
+          <el-tag :class="['type-tag', evaluatorType]" size="medium">{{ evaluatorType | toPlantCN }}</el-tag>
+        </div>
         <div class="panel-content">
           问题标记：
           <el-tag
@@ -65,8 +68,16 @@ export default {
       return _.get(this.photoData, 'tags.values.store_rework_reason') || _.get(this.photoData, 'tags.values.store_part_rework_reason') || false
     },
     // 是否云学院打分
-    hcsCheckTags () {
-      return _.get(this.photoData, 'tags.values.score') || _.get(this.photoData, 'tags.values.check_pool_tags') || false
+    hasCheckTags () {
+      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
+      const hasEvaluatorScore = _.get(this.photoData, 'tags.values.score')
+      const hasCheckPoolTags = _.get(this.photoData, 'tags.values.check_pool_tags')
+      return hasEvaluatorType || hasEvaluatorScore || hasCheckPoolTags || false
+    },
+    // 云学院评价类型
+    evaluatorType () {
+      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
+      return hasEvaluatorType
     },
     // 云学院评分
     checkScore () {
@@ -145,6 +156,28 @@ export default {
         display: flex;
         flex-wrap: wrap;
         border-bottom: 1px solid @borderColor;
+      }
+    }
+
+    .type-tag {
+      margin: 0 10px 10px;
+
+      &.plant {
+        color: #fff;
+        background-color: #44c27e;
+        border-color: #44c27e;
+      }
+
+      &.pull {
+        color: #fff;
+        background-color: #ff3974;
+        border-color: #ff3974;
+      }
+
+      &.none {
+        color: #fff;
+        background-color: #4669fb;
+        border-color: #4669fb;
       }
     }
   }

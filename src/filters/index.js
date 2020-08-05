@@ -1,6 +1,6 @@
 import { timeFormat } from '@/utils/index.js'
 import { formatTime } from '@/utils/timespan.js'
-import { PhotoEnumName, retouchStandardToCN, HourGlassSettingEnum, StreamState } from '@/utils/enumerate.js'
+import { PhotoEnumName, retouchStandardToCN, HourGlassSettingEnum, StreamState, PlantTypeNameEnum } from '@/utils/enumerate.js'
 
 /**
  * 10000 => "10,000"
@@ -93,4 +93,12 @@ export function toTimeFormatText (time) {
  */
 export function toTimeSpan (time) {
   return formatTime(time)
+}
+
+/**
+ * @description 格式化中拔草信息
+ * @param {*} time
+ */
+export function toPlantCN (type) {
+  return PlantTypeNameEnum[type]
 }
