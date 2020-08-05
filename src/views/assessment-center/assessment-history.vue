@@ -2,7 +2,6 @@
   <div class="assessment-history page-class">
     <div class="header">
       <h3>评价历史记录</h3>
-      <el-button type="primary" @click="showDrawer">查看问题报告</el-button>
     </div>
     <div class="search-box">
       <div class="search-item">
@@ -44,7 +43,12 @@
       <div class="product-search search-item">
         <span>流水号</span>
         <div class="stream-num">
-          <el-input v-model.trim="streamNum" @keyup.native.enter="getSearchHistory(1)" ></el-input>
+          <el-input
+            placeholder="请输入流水号"
+            v-model.trim="streamNum"
+            clearable
+            @keyup.native.enter="getSearchHistory(1)"
+          />
         </div>
       </div>
     </div>
@@ -62,18 +66,6 @@
         @current-change="handlePage"
       />
     </div>
-    <!-- 抽屉 -->
-    <el-drawer
-      v-if="timeSpan"
-      custom-class="info-drawer"
-      append-to-body
-      :show-close="false"
-      size="500"
-      :visible.sync="drawer"
-      :with-header="false"
-    >
-      <report-box :time-span="searchTimeSpan" :show-draw.sync="drawer" />
-    </el-drawer>
   </div>
 </template>
 
@@ -84,14 +76,13 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import scorerSelect from '@SelectBox/scorerSelect'
-import ReportBox from './components/ReportBox.vue'
 import moment from 'moment'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'AssessmentHistory',
-  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, scorerSelect, ReportBox },
+  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, scorerSelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -109,7 +100,6 @@ export default {
       uuid: '',
       cacheTimeSpan: [],
       cacheSendStaff: '',
-      drawer: false,
       currentScorer: [],
       streamNum: ''
     }
@@ -192,13 +182,7 @@ export default {
     handlePage () {
       this.$el.parentElement.scrollTop = 0
       this.getSearchHistory()
-    },
-    /**
-     * @description 打开抽屉
-     */
-    showDrawer () {
-      this.drawer = true
-    },
+    }
   }
 }
 </script>

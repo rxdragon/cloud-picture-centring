@@ -348,7 +348,7 @@ export default {
      * @description 确认清除
      */
     async setEmpty () {
-      let params = {}
+      const params = {}
       if (this.emptyPeople.length > 0) {
         params.staffIds = this.emptyPeople
       }

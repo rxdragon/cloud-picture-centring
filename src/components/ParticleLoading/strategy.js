@@ -4,14 +4,14 @@ export default class Strategy {
   RING_COUNT = 5
   
   getStrategies () {
-    let strategies = []
+    const strategies = []
     strategies.push(this.createSphere.bind(this))
     strategies.push(this.createTorus.bind(this))
     return strategies
   }
 
   createSphere () {
-    let cosTheta = Math.random() * 2 - 1,
+    const cosTheta = Math.random() * 2 - 1,
       sinTheta = Math.sqrt(1 - cosTheta * cosTheta),
       phi = Math.random() * 2 * Math.PI
 			
@@ -24,7 +24,7 @@ export default class Strategy {
   }
 
   createTorus () {
-    let theta = Math.random() * Math.PI * 2,
+    const theta = Math.random() * Math.PI * 2,
       x = this.SCATTER_RADIUS + this.SCATTER_RADIUS / 6 * Math.cos(theta),
       y = this.SCATTER_RADIUS / 6 * Math.sin(theta),
       phi = Math.random() * Math.PI * 2
@@ -38,11 +38,11 @@ export default class Strategy {
   }
 
   createCone () {
-    let status = Math.random() > 1 / 3,
-      x,
-      y,
-      phi = Math.random() * Math.PI * 2,
-      rate = Math.tan(30 / 180 * Math.PI) / this.CONE_ASPECT_RATIO
+    const status = Math.random() > 1 / 3
+    const phi = Math.random() * Math.PI * 2
+    const rate = Math.tan(30 / 180 * Math.PI) / this.CONE_ASPECT_RATIO
+    let x
+    let y
 		
     if (status){
       y = this.SCATTER_RADIUS * (1 - Math.random() * 2)
@@ -60,7 +60,7 @@ export default class Strategy {
   }
 
   createVase () {
-    let theta = Math.random() * Math.PI,
+    const theta = Math.random() * Math.PI,
       x = Math.abs(this.SCATTER_RADIUS * Math.cos(theta) / 2) + this.SCATTER_RADIUS / 8,
       y = this.SCATTER_RADIUS * Math.cos(theta) * 1.2,
       phi = Math.random() * Math.PI * 2

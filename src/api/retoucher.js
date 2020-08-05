@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
-import { keyToHump, transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
+import TargetModel from '@/model/TargetModel'
+import { keyToHump, getAvg } from '@/utils/index.js'
 
 /**
  * @description 获取个人今日指标
@@ -102,42 +103,8 @@ export function getRetouchQuota (params) {
     method: 'GET',
     params
   }).then(msg => {
-    const data = keyToHump(msg)
-    const avgTime = data.avgRetouchAndRebuildTime
-    const allRetouchTime = Number(avgTime.retouchTime.sum) + Number(avgTime.rebuildTime.sum)
-    const avgRetouchTimeStream = getAvg(allRetouchTime, avgTime.retouchTime.count)
-    const avgRetouchTimePhoto = getAvg(allRetouchTime, avgTime.retouchTimeForPhotoNum.count)
-    const rewardIncome = Number(data.rewardIncome.impulse) + Number(data.rewardIncome.reward)
-    const punishIncome = Number(data.rewardIncome.punishIncome)
-    const retoucherNpsScoreAvg = getAvg(data.retoucherNpsScore.sum, data.retoucherNpsScore.count).toFixed(2)
-    const punishExp = Number(_.get(data, 'exp.punishExp')) || 0
-    const retouchExp = Number(_.get(data, 'exp.retouchExp')) || 0
-    const createData = [{
-      retouchNum: data.retouchStreamNum + ' / ' + data.retouchPhotoNum,
-      avgRetouchTimeStream: timeFormat(avgRetouchTimeStream, 'text', true),
-      avgRetouchTimePhoto: timeFormat(avgRetouchTimePhoto, 'text', true),
-      goodNum: Number(data.goodNum) + ' / ' + transformPercentage(data.goodNum, data.retouchStreamNum),
-      storeReturnNum: Number(data.storeReturnPhotoNumForQuality) + ' / ' + transformPercentage(data.storeReturnPhotoNumForQuality, data.retouchPhotoNum),
-      overNum: data.overNum,
-      retouchIncomeInfo: {
-        getIncome: Number(data.retouchIncome).toFixed(2),
-        rewardIncome: rewardIncome.toFixed(2),
-        punishIncome: punishIncome.toFixed(2),
-        actualIncome: (Number(data.retouchIncome) + rewardIncome - punishIncome).toFixed(2)
-      },
-      lekimaCount: parseInt(data.lichmaStreamNum) + ' / ' + parseInt(data.lichmaPhotoNum),
-      gradeInfo: {
-        npsGrade: retoucherNpsScoreAvg
-      },
-      streamNumForQuality: parseInt(data.storeReturnStreamNumForQuality),
-      photoNumForQuality: parseInt(data.storeReturnPhotoNumForQuality),
-      exp: {
-        punishExp: punishExp,
-        retouchExp: retouchExp,
-        rewordExp: retouchExp - punishExp
-      }
-    }]
-    return createData
+    const createData = new TargetModel(msg)
+    return [createData]
   })
 }
 

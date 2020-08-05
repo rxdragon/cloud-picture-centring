@@ -14,7 +14,7 @@ export default class ExplodingParticle {
   }
   
   draw = ctx => {
-    let p = this
+    const p = this
     if (this.remainingLife > 0 && this.radius > 0) {
       // Draw a circle at the current location
       ctx.beginPath()

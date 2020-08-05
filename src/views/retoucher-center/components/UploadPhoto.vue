@@ -7,7 +7,12 @@
         class="photo-box list-photo-item"
         :class="photoItem.isRepetition ? 'is-repetition' : ''"
       >
-        <photo-box photo-name preview-breviary :src="photoItem.path"/>
+        <photo-box
+          photo-name
+          preview-breviary
+          contain-photo
+          :src="photoItem.path"
+        />
         <span class="delete-button" @click="deleteCachePhoto(photoIndex)">
           <i class="el-icon-error" />
         </span>

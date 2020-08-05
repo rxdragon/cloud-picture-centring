@@ -1,4 +1,5 @@
 import axios from '@/plugins/axios.js'
+import StreamModel from '@/model/StreamModel.js'
 import { keyToHump } from '../utils'
 
 /** 卡片配置 */
@@ -405,5 +406,24 @@ export function editProduct (params) {
     url: '/project_cloud/product/editProduct',
     method: 'PUT',
     data: params
+  })
+}
+
+/**
+ * @description 云端全流水查询
+ * @param {*} params 
+ */
+export function getAllCloudStream (params) {
+  return axios({
+    url: '/project_cloud/operator/getAllCloudStream',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    msg.list = msg.list.map(item => {
+      return {
+        ...new StreamModel(item)
+      }
+    })
+    return msg
   })
 }

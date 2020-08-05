@@ -2,12 +2,11 @@
   <div class="crew-select">
     <el-select
       :disabled="disableState"
-      :popper-append-to-body="false"
       v-bind="$attrs"
+      clearable
       placeholder="请选择组员"
       v-on="$listeners"
     >
-      <el-option label="全部" :value="0" />
       <el-option
         v-for="(optionItem, optionIndex) in options"
         :key="optionIndex"

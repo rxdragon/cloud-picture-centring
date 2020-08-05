@@ -1,10 +1,11 @@
 import * as Validate from '@/utils/validate.js'
 import store from '@/store' // vuex
 
-// 流水静态状态资源
-export const StreamStatics = {
+// 标记枚举
+export const STREAM_TAG = {
   STORERETURN: 'store_rework',
-  CHECKRETURN: 'rework'
+  CHECKRETURN: 'rework',
+  CLOUD_EVALUATION: 'cloud_evaluation'
 }
 
 /**
@@ -12,7 +13,7 @@ export const StreamStatics = {
  * @property {String} updated_at -更新时间
  */
 export default class StreamModel {
-  baseData = null
+  baseData = {}
   streamId = '' // 流水id
   streamNum = '' // 流水号
   isCheckReturn = false // 是否是审核退回
@@ -35,7 +36,9 @@ export default class StreamModel {
   retoucherLeader = "" // 修图组长
 
   // 海草
-  exp = ''
+  exp = 0 // 正常海草
+  overtimeExp = 0 // 沙漏抽出海草
+  actualExp = 0 // 实获海草
 
   // 时间
   waitTime = '' // 流水号等待时间
@@ -45,22 +48,34 @@ export default class StreamModel {
   retouchAllTime = '-' // 修图总时长
 
   // 门店退回相关
-  storeReturnNum = '-' // 门店退回张数
-  lekimaCount = '-' // 利奇马樟树
   isStoreReturn = false // 是否是门店退回
-  qualityNum = '' // 门店退回质量问题张数
-  notQualityNum = '' // 门店退回非质量问题张数
+  storeReturnNum = 0 // 门店退回次数
+  storeReturnTime = '-' // 门店退回时间
+  lekimaCount = '-' // 利奇马樟树
+
+  qualityNum = 0 // 正常流水门店退回质量问题张数
+  notQualityNum = 0 // 正常流水门店退回非质量问题张数
+  bothNum = 0 // 正常流水门店退回质量&非质量问题张数
+
+  qualityNumForRework = 0 // 退回单门店退回质量问题张数
+  notQualityNumForRework = 0 // 退回单门店退回非质量问题张数
+  bothNumForRework = 0 // 退回单门店退回质量问题张数&非质量问题张数
+  allReturnPhotoNum = 0 // 全部退单张数
 
   // 评价相关
   goodEvaluate = '-'
   retoucherNpsAvg = '-'
 
   // 收益
-  retouchIncome = 0
-  rewordIncome = 0
-  punishIncome = 0
-  actualIncome = 0
+  retouchIncome = 0 // 修图收益
+  overtimeIncome = 0 // 超时惩罚收益
+  rewordIncome = 0 // 奖励收益
+  punishIncome = 0 // 惩罚收益
+  actualIncome = 0 // 实获收益
 
+  // 云学院
+  isCloudEvaluation = '否' // 是否云学院抽查
+  cloudEvaluateTime = '-' // 云学院评价时间
 
   constructor (streamData) {
     if (!streamData) return
@@ -68,9 +83,11 @@ export default class StreamModel {
     this.streamId = streamData.id || ''
     this.streamNum = streamData.stream_num || ''
     this.streamState = streamData.state || ''
+    this.getReturnPhotoInfo()
     this.getNote()
     this.getTime()
     this.getIncome()
+    this.getExp()
     const retouchRequire = {
       eye: '暂无',
       face: '暂无',
@@ -78,7 +95,7 @@ export default class StreamModel {
     }
     this.requireLabel = _.get(streamData, 'tags.values.retouch_claim') || retouchRequire
 
-    this.isCheckReturn = _.get(streamData, 'tags.statics', []).includes(StreamStatics.CHECKRETURN)
+    this.isCheckReturn = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CHECKRETURN)
     this.reviewerNote = _.get(streamData, 'reviewer_note') || ''
 
     const referencePhoto = _.get(streamData, 'tags.values.retouch_claim.referenceImg')
@@ -94,16 +111,17 @@ export default class StreamModel {
       _.get(streamData, 'retoucher.retoucher_leader.name') ||
       _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
 
-    this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(StreamStatics.STORERETURN)
-    this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || '-'
-    this.qualityNum = _.get(streamData, 'tags.values.quality_num') || 0
-    this.notQualityNum = _.get(streamData, 'tags.values.not_quality_num') || 0
+    this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.STORERETURN)
+    this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || 0
+    this.storeReturnTime = _.get(streamData, 'tags.values.store_return_time') || '-'
 
     this.lekimaCount = _.get(streamData, 'tags.values.lichma_photo_num') || '-'
     this.goodEvaluate = _.get(streamData, 'store_evaluate_stream.store_evaluate') || '-'
     this.retoucherNpsAvg = _.get(streamData, 'tags.values.retoucher_score') || '-'
-    this.exp = Number(streamData.exp) ? parseFloat(streamData.exp) : '-'
 
+    // 云学院
+    this.isCloudEvaluation = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CLOUD_EVALUATION) ? '是' : '否'
+    this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
   }
 
   // 获取沙漏相关信息
@@ -122,16 +140,46 @@ export default class StreamModel {
     }
   }
 
+  getReturnPhotoInfo () {
+    this.qualityNum = Number(_.get(this.baseData, 'tags.values.quality_num')) || 0
+    this.notQualityNum = Number(_.get(this.baseData, 'tags.values.not_quality_num')) || 0
+    this.bothNum = Number(_.get(this.baseData, 'tags.values.both_num')) || 0
+
+    this.qualityNumForRework = Number(_.get(this.baseData, 'tags.values.quality_num_for_rework')) || 0
+    this.notQualityNumForRework = Number(_.get(this.baseData, 'tags.values.not_quality_num_for_rework')) || 0
+    this.bothNumForRework = Number(_.get(this.baseData, 'tags.values.both_num_for_rework')) || 0
+
+    this.allReturnPhotoNum = this.qualityNum +
+      this.notQualityNum +
+      this.bothNum +
+      this.qualityNumForRework +
+      this.notQualityNumForRework +
+      this.bothNumForRework
+  }
+
   // 获取收益
   getIncome () {
     const retouchIncome = parseFloat(this.baseData.income) || 0 // 原始收益
+    const overtimeIncome = parseFloat(_.get(this.baseData, 'tags.values.overtime_income')) || 0
     const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword')) || 0
     const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish')) || 0
-    const actualIncome = retouchIncome + rewordIncome - punishIncome
+    const actualIncome = retouchIncome * 100 +
+      rewordIncome * 100 -
+      punishIncome *100 -
+      overtimeIncome * 100
     this.retouchIncome = retouchIncome
+    this.overtimeIncome = overtimeIncome
     this.rewordIncome = rewordIncome
     this.punishIncome = punishIncome
-    this.actualIncome = actualIncome
+    this.actualIncome = Validate.toFixed(actualIncome / 100)
+  }
+
+  // 获取海草
+  getExp () {
+    this.exp = parseFloat(this.baseData.exp) || 0
+    this.overtimeExp = parseFloat(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
+    const actualExp = this.exp * 100 - this.overtimeExp * 100
+    this.actualExp = Validate.toFixed(actualExp / 100)
   }
 
   // 获取时间相关

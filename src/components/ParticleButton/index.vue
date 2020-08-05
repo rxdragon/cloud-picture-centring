@@ -107,7 +107,7 @@ export default {
       window.cancelAnimationFrame(this.particleAnimationId)
       this.particleAnimationId = window.requestAnimationFrame(this.update)
       let count = 0
-      let reductionFactor = 17
+      const reductionFactor = 17
       for (let localX = 0; localX < this.width; localX++) {
         for (let localY = 0; localY < this.height; localY++) {
           if (count % reductionFactor === 0) {
@@ -136,7 +136,7 @@ export default {
         
         // Simple way to clean up if the last particle is done animating
         if (i === this.particles.length - 1) {
-          let percent = (Date.now() - this.particles[i].startTime) / this.particles[i].animationDuration
+          const percent = (Date.now() - this.particles[i].startTime) / this.particles[i].animationDuration
           if (percent > 1) {
             this.particles = []
             window.cancelAnimationFrame(this.particleAnimationId)

@@ -6,6 +6,7 @@
         <div class="header">
           <h3>
             我的待修订单
+            <div class="header-desc">（以下数据统计纬度为：今早8点～次日早8点）</div>
             <p class="driver-icon" @click.stop="guide">?</p>
           </h3>
           <div class="header-left">
@@ -27,7 +28,12 @@
           <!-- 今日海草值 -->
           <div class="today-info">
             <div class="box-left">
-              <div class="title">今日海草值</div>
+              <div class="title">
+                <span class="title-content">今日海草值</span>
+                <div class="prop-icon-box">
+                  <grass-prop-icon :buff-info="buffInfo" :show-morning-award="showMorningAward" />
+                </div>
+              </div>
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num green-color">
@@ -35,20 +41,8 @@
                   </span>
                   <span class="goal-num">/ 35</span>
                 </div>
-                <div class="prop-icon-box">
-                  <el-popover placement="bottom" trigger="hover" :content="`经验奖励：${buffInfo.expCard}倍`">
-                    <div v-show="buffInfo.expCard" slot="reference" class="prop-icon iconmap-experience-icon" />
-                  </el-popover>
-                  <el-popover placement="bottom" trigger="hover">
-                    <div
-                      v-for="(infoItem, infoIndex) in buffInfo.impulseInfo"
-                      :key="infoIndex"
-                      class="impulse-info"
-                    >
-                      {{ `当前海草值达到${infoItem.reachExp} 奖励${infoItem.reward}` }}
-                    </div>
-                    <div v-show="buffInfo.impulseStatus" slot="reference" class="prop-icon iconmap-impulse-icon" />
-                  </el-popover>
+                <div class="prop-icon-big-box">
+                  <grass-prop-icon :buff-info="buffInfo" :show-morning-award="showMorningAward" size="40" />
                 </div>
               </div>
             </div>
@@ -59,7 +53,12 @@
           <!-- 今日目标张数 -->
           <div class="today-info">
             <div class="box-left">
-              <div class="title">今日已修张数</div>
+              <div class="title">
+                <span class="title-content">今日已修张数</span>
+                <div class="prop-icon-box">
+                  <green-channel-icon :buff-info="buffInfo" />
+                </div>
+              </div>
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num purple-color">
@@ -67,8 +66,8 @@
                     <count-to :end-value="quotaInfo.todayFinishReworkPhotoNum" />
                   </span>
                 </div>
-                <div class="prop-icon-box">
-                  <div v-if="buffInfo.greenChannelStatus" class="prop-icon iconmap-green-aisle-icon" />
+                <div class="prop-icon-big-box">
+                  <green-channel-icon :buff-info="buffInfo" size="40" />
                 </div>
               </div>
             </div>
@@ -79,7 +78,12 @@
           <!-- 今日获得收益 -->
           <div class="today-info" id="todayEarning">
             <div class="box-left">
-              <div class="title">今日获得收益</div>
+              <div class="title">
+                <span class="title-content">今日获得收益</span>
+                <div class="prop-icon-box">
+                  <money-award-icon :buff-info="buffInfo" />
+                </div>
+              </div>
               <div class="data-info">
                 <div class="num money-num" :class="{ 'no-income': isNoIncome }">
                   <span class="symbol money-color">¥</span>
@@ -87,10 +91,8 @@
                     <count-to show-point :end-value="quotaInfo.todayRewordIncome" />
                   </span>
                 </div>
-                <div class="prop-icon-box">
-                  <el-popover placement="bottom" trigger="hover" :content="`金币奖励：${buffInfo.goldReward}倍`">
-                    <div v-show="buffInfo.goldReward" slot="reference" class="prop-icon iconmap-gold-icon" />
-                  </el-popover>
+                <div class="prop-icon-big-box">
+                  <money-award-icon :buff-info="buffInfo" size="40" />
                 </div>
               </div>
             </div>
@@ -153,22 +155,27 @@
 </template>
 
 <script>
-import RetouchOrder from './components/RetouchOrder'
-import TakeOrdersList from './components/TakeOrdersList'
-import HangUpList from './components/HangUpList'
-import CountTo from '@/components/CountTo'
-import { mapGetters } from 'vuex'
-import guideData from './guideData.js'
-import Driver from 'driver.js' // 引导框
 import 'driver.js/dist/driver.min.css'
 
+import RetouchOrder from './components/RetouchOrder'
+import TakeOrdersList from './components/TakeOrdersList'
+import GrassPropIcon from './components/GrassPropIcon'
+import GreenChannelIcon from './components/GreenChannelIcon'
+import MoneyAwardIcon from './components/MoneyAwardIcon'
+import HangUpList from './components/HangUpList'
+import CountTo from '@/components/CountTo'
+import moment from 'moment'
+import guideData from './guideData.js'
+import Driver from 'driver.js' // 引导框
+
+import { mapGetters } from 'vuex'
 
 import * as Retoucher from '@/api/retoucher.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 
 export default {
   name: 'WaitRetoucher',
-  components: { RetouchOrder, TakeOrdersList, HangUpList, CountTo },
+  components: { RetouchOrder, TakeOrdersList, HangUpList, CountTo, GrassPropIcon, GreenChannelIcon, MoneyAwardIcon },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -199,7 +206,9 @@ export default {
         greenChannelStatus: false // 绿色通道
       },
       hasInitialization: false, // 是否有初始化数据
-      driver: null
+      driver: null,
+      timeId: null,
+      showMorningAward: false // 是否显示时间
     }
   },
   computed: {
@@ -215,6 +224,7 @@ export default {
     disabledJoinQueue () {
       return this.state === 3 || Boolean(this.retouchingListNum) || this.lineState === 'offline'
     },
+    // 今日是否有收益
     isNoIncome () {
       return Number(this.quotaInfo.todayIncome) === 0
     }
@@ -254,6 +264,13 @@ export default {
       animate: true
     })
   },
+  mounted() {
+    this.intervalShowMorning()
+  },
+  beforeDestroy () {
+    // 销毁轮训 是否早鸟奖
+    if (this.timeId) { clearTimeout(this.timeId) }
+  },
   deactivated () {
     this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
     this.showDetail = false
@@ -262,6 +279,19 @@ export default {
     this.$eventEmitter.removeAllListeners('getRetouchStream')
   },
   methods: {
+    /**
+     * @description 循环监听是否有早鸟
+     */
+    intervalShowMorning () {
+      const startTime = moment().set({ 'h': 8, 'm': 0 })
+      const endTime = moment().set({ 'h': 10, 'm': 0 })
+      this.showMorningAward = moment().isBetween(startTime, endTime)
+      clearTimeout(this.timeId)
+      if (!this.showMorningAward) return
+      this.timeId = setTimeout(() => {
+        this.intervalShowMorning()
+      }, 1000)
+    },
     /**
      * @description 获取个人今日指标
      */
@@ -332,7 +362,7 @@ export default {
         this.getStreamQueueInfo()
       } catch (error) {
         console.error(error)
-        if (error === '离线无法加入队列') {
+        if (error.message === '离线无法加入队列') {
           this.$store.dispatch('user/setUserlineState', 'offline')
         }
       } finally {
@@ -368,8 +398,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../../styles/variables.less';
-
 .header {
   .header-left {
     .queue-info {
@@ -408,14 +436,22 @@ export default {
       margin-top: 6px;
 
       .title {
+        display: flex;
+        align-items: center;
         margin-bottom: 4px;
         font-size: 16px;
         color: #606266;
+
+        .title-content {
+          margin-right: 4px;
+        }
       }
 
       .data-info {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
+        min-width: 170px;
 
         .num {
           margin-right: 15px;
@@ -474,16 +510,6 @@ export default {
             font-size: 13px;
           }
         }
-
-        .prop-icon-box {
-          display: flex;
-
-          .prop-icon {
-            width: 44px;
-            height: 34px;
-            margin-right: 6px;
-          }
-        }
       }
     }
 
@@ -515,11 +541,21 @@ export default {
     margin-top: 0;
   }
 }
+
+@media screen and (max-width: 1620px) {
+  .prop-icon-big-box {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 1620px) {
+  .prop-icon-box {
+    display: none !important;
+  }
+}
 </style>
 
 <style lang="less">
-@import '../../styles/variables.less';
-
 .today-info {
   .green-progress {
     box-shadow: @greenBoxShadow;
