@@ -2,9 +2,16 @@
   <div class="order-detail page-class">
     <div class="header">
       <h3>修图详情</h3>
-      <!-- <el-button type="primary" v-if="qualityNum" @click="showComplain">我要申诉</el-button> -->
-      <!-- todo qualityNum暂时没有,有了以后再修改 -->
-      <el-button type="primary" @click="showComplain">我要申诉</el-button>
+      <el-button
+        type="primary"
+        v-if="qualityNum && !orderData.currentStreamAppeal"
+        @click="showAppeal"
+      >
+        我要申诉
+      </el-button>
+      <el-button type="info" disabled v-if="qualityNum && orderData.currentStreamAppeal">
+        申诉中
+      </el-button>
     </div>
     <div class="order module-panel">
       <div class="panel-title">照片信息</div>
@@ -16,16 +23,16 @@
       <photo-detail :photo-item="photoItem" />
     </div>
     <el-dialog
-      class="complain-dialog"
+      class="appeal-dialog"
       title="我要申诉"
       width="700px"
-      :visible.sync="dialogComplainVisible"
+      :visible.sync="dialogAppealVisible"
     >
-      <div class="complain-item">
+      <div class="appeal-item">
         <span class="item-name">申诉类型</span>
-        <el-select v-model="complainType" placeholder="请选择">
+        <el-select v-model="appealType" placeholder="请选择">
           <el-option
-            v-for="item in complainOptions"
+            v-for="item in appealOptions"
             :key="item.value"
             :label="item.name"
             :value="item.value"
@@ -33,13 +40,13 @@
           </el-option>
         </el-select>
       </div>
-      <p class="complain-photo-title">选择问题照片</p>
-      <div class="complain-photos">
+      <p class="appeal-photo-title">选择问题照片</p>
+      <div class="appeal-photos">
         <rework-photo v-for="(photo) in photos" :photo-item="photo" :key="photo.id"></rework-photo>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="cancelComplain">取消</el-button>
-        <el-button type="primary" @click="submitComplain">提交</el-button>
+        <el-button type="info" @click="cancelAppeal">取消</el-button>
+        <el-button type="primary" @click="submitAppeal">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -51,6 +58,7 @@ import OrderInfo from './components/OrderInfo'
 import ReworkPhoto from './components/ReworkPhoto'
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
+import * as Appeal from '@/api/appeal.js'
 
 export default {
   name: 'OrderDetail',
@@ -62,9 +70,9 @@ export default {
       orderData: {}, // 订单信息
       photos: [],
       qualityNum: this.$route.query.qualityNum, // 质量问题数量
-      dialogComplainVisible: false,
-      complainType: 'rework', // 申诉信息
-      complainOptions: [
+      dialogAppealVisible: false,
+      appealType: 'rework', // 申诉信息
+      appealOptions: [
         {
           value: 'rework',
           name: '门店退单问题'
@@ -146,30 +154,30 @@ export default {
     /**
      * @description 显示申诉弹窗
      */
-    showComplain () {
-      this.dialogComplainVisible = true
+    showAppeal () {
+      this.dialogAppealVisible = true
     },
     /**
      * @description 提交申诉
      */
-    submitComplain () {
+    async submitAppeal () {
       let checkFail = false
       let checkArr = []
       let req = {
         streamId: this.streamId,
         photoAppeals: [],
-        type: this.complainType
+        type: this.appealType
       }
       this.photos.forEach(photoItem => {
         if (photoItem.reworkChecked) {
           checkArr.push(photoItem.id)
-          if (!photoItem.complainReason) {
+          if (!photoItem.appealReason) {
             checkFail = true
             return
           }
           req.photoAppeals.push({
             photo_id: photoItem.id,
-            desc: photoItem.complainReason
+            desc: photoItem.appealReason
           })
         }
       })
@@ -181,13 +189,15 @@ export default {
         this.$newMessage.warning('因未勾选问题照片or没有填写问题描述则需要进行提示：请填写完整申诉问题!')
         return
       }
-      this.dialogComplainVisible = false
+      await Appeal.addAppeal(req)
+      this.$newMessage.success('申诉成功')
+      this.dialogAppealVisible = false
     },
     /**
      * @description 取消申诉
      */
-    cancelComplain () {
-      this.dialogComplainVisible = false
+    cancelAppeal () {
+      this.dialogAppealVisible = false
     }
   }
 }
@@ -248,13 +258,13 @@ export default {
     }
   }
 
-  .complain-dialog {
+  .appeal-dialog {
     .dialog-footer {
       display: flex;
       justify-content: center;
     }
 
-    .complain-item {
+    .appeal-item {
       margin-bottom: 20px;
 
       .item-name {
@@ -262,12 +272,12 @@ export default {
       }
     }
 
-    .complain-photos {
+    .appeal-photos {
       height: 300px;
       overflow-y: auto;
     }
 
-    .complain-photo-title {
+    .appeal-photo-title {
       margin-bottom: 10px;
     }
   }

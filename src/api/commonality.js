@@ -3,7 +3,6 @@ import axios from '@/plugins/axios.js'
 import store from '@/store' // vuex
 import { keyToHump } from '@/utils/index.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-import { PHOTO_VERSION } from '@/utils/enumerate.js'
 
 
 /**
@@ -58,7 +57,7 @@ export function getStreamInfo (params) {
       photoItem.filmEvaluation = filmEvaluation
       photoItem.reworkNum = reworkNum
       photoItem.reworkChecked = false // 申诉的勾选
-      photoItem.complainReason = '' // 申诉的说明
+      photoItem.appealReason = '' // 申诉的说明
 
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -67,65 +66,6 @@ export function getStreamInfo (params) {
       } else {
         photoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
       }
-      // todo mock增加labels
-      photoItem.tags.values.labels = [
-        {
-          "id": 121,
-          "name": "证件照液化不对称、不自然（大小脸、眼睛大小等）new",
-          "type": "quality"
-        },
-        {
-          "id": 122,
-          "name": "液化局部或整体有失真 new",
-          "type": "quality"
-        }
-      ]
-      photoItem.tags.values.part =[
-        {
-          "note": "局部问题1 new",
-          "location": [
-            "23.62",
-            "68.91"
-          ],
-          "width": "21.59",
-          "height": "32.25",
-          "brushColor": "#e41e07",
-          "labels": [
-            {
-              "id": 223,
-              "name": "证件照液化不对称、不自然（大小脸、眼睛大小等）new",
-              "type": "quality"
-            },
-            {
-              "id": 222,
-              "name": "液化局部或整体有失真new",
-              "type": "quality"
-            }
-          ]
-        },
-        {
-          "note": "局部问题1 new",
-          "location": [
-            "23.62",
-            "68.91"
-          ],
-          "width": "21.59",
-          "height": "32.25",
-          "brushColor": "#e41e07",
-          "labels": [
-            {
-              "id": 223,
-              "name": "证件照液化不对称、不自然（大小脸、眼睛大小等）new",
-              "type": "quality"
-            },
-            {
-              "id": 222,
-              "name": "液化局部或整体有失真new",
-              "type": "quality"
-            }
-          ]
-        }
-      ]
       // 处理整体的退单标记
       // 判断是新的数据还是老的数据,新的数据有labels字段
       if (labels.length) {
@@ -166,7 +106,6 @@ export function getStreamInfo (params) {
 
       if (photoItem.photoVersion) {
         photoItem.photoVersion.forEach(versionItem => {
-          if (versionItem.version === PHOTO_VERSION.STORE_REWORK) photoItem.storeReworkPath = versionItem.path
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
           versionItem.phototag = photoItem.tags
 
@@ -182,6 +121,7 @@ export function getStreamInfo (params) {
     let referencePhoto = _.get(data, 'tags.values.retouch_claim.referenceImg')
     referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
     createData.orderData = {
+      currentStreamAppeal: data.currentStreamAppeal,
       streamNum: data.streamNum,
       photographerOrg: data.order ? data.order.photographer_org.name : '-',
       productName: _.get(data, 'product.name', '-'),

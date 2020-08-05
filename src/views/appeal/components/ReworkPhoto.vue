@@ -3,7 +3,7 @@
     <div class="photo-area">
       <img
         class="photo"
-        :src="imgCompressDomain + photoItem.last_store_rework_photo.path"
+        :src="imgCompressDomain + photoItem.storeReworkPath"
         alt=""
       />
       <el-checkbox v-model="photoItem.reworkChecked"></el-checkbox>

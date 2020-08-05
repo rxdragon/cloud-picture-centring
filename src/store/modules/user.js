@@ -99,8 +99,14 @@ const actions = {
         permissions.push(
           {
             "id": 5000,
-            "name": "retoucher_center.complain_history.get",
+            "name": "retoucher_center.appeal_history.get",
             "title": "修片师-申诉记录-查看",
+            "application": 888
+          },
+          {
+            "id": 5001,
+            "name": "admin_manage.appeal_handle.get",
+            "title": "云端工作管理-申诉处理-查看",
             "application": 888
           }
         )

@@ -1,5 +1,5 @@
 <template>
-  <div class="complain-status-select">
+  <div class="appeal-type-select">
     <el-select v-bind="$attrs" v-on="$listeners">
       <el-option
         v-for="(optionItem, optionIndex) in options"
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'ComplainStatusSelect',
+  name: 'AppealTypeSelect',
   data () {
     return {
       options: [
@@ -21,27 +21,8 @@ export default {
           label: '全部',
           value: 'all'
         }, {
-          label: '待初审',
+          label: '门店退单问题',
           value: true
-        }, {
-          label: '初审中',
-          value: false
-        },
-        {
-          label: '待复审',
-          value: false
-        },
-        {
-          label: '复审中',
-          value: false
-        },
-        {
-          label: '处理完成',
-          value: false
-        },
-        {
-          label: '过期未处理',
-          value: false
         }
       ]
     }
@@ -50,7 +31,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.complain-status-select {
+.appeal-type-select {
   width: 180px;
 }
 </style>

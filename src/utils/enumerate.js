@@ -178,3 +178,27 @@ export const PlantTypeNameEnum = {
   'pull': '拔草',
   'none': '一般'
 }
+
+// 申诉问题类型
+export const AppealTypeNameEnum = {
+  'rework': '门店退单问题'
+}
+
+// 申诉流水状态
+export const AppealStreamStatusEnum = {
+  'wait_first': '等待初审',
+  'first_examine': '初审中',
+  'wait_second': '等待复审',
+  'second_examine': '复审中',
+  'finish': '处理完成',
+  'expire': '超时未处理'
+}
+
+// 申诉审核状态
+export const AppealCheckStatusEnum = {
+  'wait': '待审核',
+  'accept': '审核通过',
+  'part_accept': '部分通过',
+  'refuse': '审核拒绝'
+}
+
