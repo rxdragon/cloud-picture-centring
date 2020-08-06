@@ -43,7 +43,7 @@
         <el-table-column label="退张数/退张率" width="120">
           <template slot-scope="{ row }">
             <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.ReworkPhoto">
-              {{ row.retouchPhotoNum }} / {{ row.storeReturnPhotoRate }}
+              {{ row.storeReturnPhotoNumForNormalQuality + row.storeReturnPhotoNumForReworkQuality }} / {{ row.storeReturnPhotoRate }}
             </router-link>
           </template>
         </el-table-column>
