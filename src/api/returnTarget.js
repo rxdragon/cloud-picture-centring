@@ -1,6 +1,6 @@
 import axios from '@/plugins/axios.js'
 import { toFixed } from '@/utils/validate'
-import { transformPercentage } from '@/utils'
+import { transformPercentage, getAvg } from '@/utils'
 
 
 function handerReturnQuota (msg) {
@@ -58,6 +58,9 @@ function handerReturnQuota (msg) {
     msg.finishPhotoNumForBoth
   // 门店退单率
   msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto, finishPhotoNum)
+
+  // 门店退回修图平均时长（单）
+  msg.storeReturnRetouchTime = getAvg(msg.storeReturnRetouchTime, msg.finishStoreReturnStream)
   const chatData = [
     {
       name: '被门店退回（总）',
