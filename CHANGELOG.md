@@ -716,4 +716,5 @@
  更改fabric依赖 | [4688a88](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4688a88)
  更改环境变量 | [2d512ca](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2d512ca)
  更改环境变量，更改login | [6874b9b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6874b9b)
+ 更改配置 | [7b4e34c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7b4e34c)
 
