@@ -259,7 +259,7 @@ export function getOldIssueList () {
     method: 'GET'
   }).then(msg => {
     const createLabel = [{
-      name: '其他',
+      name: '历史标签',
       score_config: msg
     }]
     const createData = createLabel.map(item => {
