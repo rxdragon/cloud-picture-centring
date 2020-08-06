@@ -27,6 +27,7 @@ export default class PreviewModel {
 
   // 获取门店退单信息
   getStoreReaseon (photoItem) {
+    if (!photoItem.tags) return
     // todo 兼容新格式的store_part_rework_reason
     let storePartReworkReason = _.get(photoItem, 'tags.values.store_part_rework_reason') || []
     storePartReworkReason = storePartReworkReason.map(labelItem => {

@@ -137,7 +137,7 @@ export default {
         const secondResult = this.$refs[`photoDetail${photoIndex}`][0].$data.secondResult
         if (this.checkType === 'first' && firstResult.result) {
           let firstObj = {
-            id: firstResult.id,
+            photo_appeal_id: firstResult.id,
             result: firstResult.result
           }
           if (firstResult.reason) firstObj.reason = firstResult.reason
@@ -145,7 +145,7 @@ export default {
         }
         if (this.checkType === 'second' && secondResult.result) {
           let secondObj = {
-            id: secondResult.id,
+            photo_appeal_id: secondResult.id,
             result: secondResult.result
           }
           if (secondResult.reason) secondObj.reason = secondResult.reason
