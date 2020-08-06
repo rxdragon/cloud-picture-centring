@@ -87,22 +87,28 @@ export default {
     }
   },
   created () {
-    // 有流水号id
-    if (this.$route.query.streamId) {
-      this.streamId = this.$route.query.streamId
-      if (this.$route.query.searchOther) {
-        this.getModifyRetouchQuotaInfo()
-      } else {
-        this.getStreamInfo()
-      }
-    }
-    // 工作看板id
-    if (this.$route.query.workBoardStreamNum) {
-      this.streamId = this.$route.query.workBoardStreamNum
-      this.getWorkBoardStreamInfo()
-    }
+    this.init()
   },
   methods: {
+    /**
+     * @description 初始化
+     */
+    init () {
+      // 有流水号id
+      if (this.$route.query.streamId) {
+        this.streamId = this.$route.query.streamId
+        if (this.$route.query.searchOther) {
+          this.getModifyRetouchQuotaInfo()
+        } else {
+          this.getStreamInfo()
+        }
+      }
+      // 工作看板id
+      if (this.$route.query.workBoardStreamNum) {
+        this.streamId = this.$route.query.workBoardStreamNum
+        this.getWorkBoardStreamInfo()
+      }
+    },
     /**
      * @description 获取订单详情
      */
@@ -192,6 +198,7 @@ export default {
       await Appeal.addAppeal(req)
       this.$newMessage.success('申诉成功')
       this.dialogAppealVisible = false
+      this.init()
     },
     /**
      * @description 取消申诉

@@ -12,7 +12,7 @@
       <div class="panel-title">申诉照片{{ photoIndex + 1 }}</div>
       <photo-detail :ref="`photoDetail${photoIndex}`" :check-type="checkType" :photo-item="photoItem"/>
     </div>
-    <div class="footer">
+    <div class="footer" v-if="checkType">
       <el-button type="info" @click="cancelAll">返回</el-button>
       <el-button type="primary" @click="submitAll">提交</el-button>
     </div>

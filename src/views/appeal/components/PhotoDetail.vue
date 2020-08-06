@@ -14,23 +14,42 @@
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
         <div class="panel-content content-one">
-          局部退回标记：<span
-            v-for="(reasonItem, index) in photoItem.partReason"
+          局部退回标记：
+          <div
+            v-for="(reasonItem, index) in realPhotoData.storePartReworkReason"
             :key="index"
-            class="reason-item"
-          >{{ reasonItem }}
-          </span>
+          >
+            <div
+              v-for="(reasonManageItem, index) in reasonItem.reasonManage"
+              :key="index"
+              class="reason-item"
+            >
+              <span>{{ reasonManageItem.name }}</span>
+              <span v-if="reasonManageItem.cancel">(已删除)</span>
+            </div>
+          </div>
         </div>
-        <div class="panel-content content-one">局部退回备注：{{ photoItem.partNote }}</div>
         <div class="panel-content content-one">
-          整体退回标记：<span
-            v-for="(reasonItem, index) in photoItem.wholeReason"
+          局部退回备注：
+          <span
+            v-for="(storePartReworkReason, index) in realPhotoData.storePartReworkReason"
             :key="index"
-            class="reason-item"
-          >{{ reasonItem }}
+          >
+            {{ storePartReworkReason.note }}
           </span>
         </div>
-        <div class="panel-content">整体退回备注：{{ photoItem.wholeNote }}</div>
+        <div class="panel-content content-one">
+          整体退回标记：
+          <div
+            v-for="(reasonItem, index) in realPhotoData.storeReworkReasonManage"
+            :key="index"
+            class="reason-item"
+          >
+            <span>{{ reasonItem.name }}</span>
+            <span v-if="reasonItem.cancel">(已删除)</span>
+          </div>
+        </div>
+        <div class="panel-content">整体退回备注：{{ realPhotoData.storeReworkNote }}</div>
       </div>
     </div>
     <div class="panel-box">
@@ -88,7 +107,8 @@ export default {
       secondResult: {
         resultDesc: '--',
         reason: '--'
-      } // 复审结果
+      }, // 复审结果
+      photoVersionId: ''
     }
   },
   computed: {
@@ -102,6 +122,9 @@ export default {
         return createData
       })
       return previewList
+    },
+    realPhotoData () {
+      return this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
     },
     ...mapGetters(['imgDomain', 'imgCompressDomain']),
     // 判断是否有退单标记
@@ -134,6 +157,7 @@ export default {
      */
     initPhotoList () {
       this.photoVersionList = this.photoItem.photoVersion
+      this.photoVersionId = this.photoItem.photoVersionId
     },
     /**
      * @description 去审核
@@ -145,10 +169,10 @@ export default {
      * @description 接受预览组件的审核结果
      */
     saveResult (resultObj) {
-      const { type, id, result, reason } = resultObj
+      const { type, result, reason } = resultObj
       if (type === 'first') {
         this.firstResult = {
-          id,
+          id: this.photoItem.photoAppeals.id,
           result,
           reason,
           resultDesc: AppealCheckStatusEnum[result]
@@ -156,11 +180,12 @@ export default {
       }
       if (type === 'second') {
         this.secondResult = {
-          id,
+          id: this.photoItem.photoAppeals.id,
           result,
           reason,
           resultDesc: AppealCheckStatusEnum[result]
         }
+        this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
       }
     }
   }
@@ -220,6 +245,7 @@ export default {
         padding: 10px 0;
 
         .reason-item {
+          display: inline-block;
           padding: 3px 5px;
           margin: 0 10px 10px 0;
           font-size: 12px;

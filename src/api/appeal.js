@@ -3,7 +3,21 @@ import AppealListItemModel from '@/model/AppealListItemModel.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import PhotoAppealModel from '@/model/PhotoAppealModel.js'
+
 import * as PhotoTool from '@/utils/photoTool.js'
+
+import { APPEAL_STREAM_STATUS } from '@/utils/enumerate'
+/**
+ * @description 申诉绑定
+ * @param {*} params
+ */
+export function bindAppeal (params) {
+  return axios({
+    url: '/project_cloud/appeal/bind',
+    method: 'GET',
+    params
+  })
+}
 
 /**
  * @description 发起申诉
@@ -42,6 +56,9 @@ export function appealDetail (params) {
     const { id } = msg
     const photos = []
     msg.photo_appeals.forEach(photoAppealItem => {
+      // todo mock photo_version_id
+      photoAppealItem.photo_version_id = 2121548341
+
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
       const { baseData, ...rest } = new PhotoAppealModel(photoAppealItem)
@@ -52,7 +69,8 @@ export function appealDetail (params) {
         partReason: photoData.partReason,
         partNote: photoData.partNote,
         wholeNote: photoData.wholeNote,
-        photoAppeals: { ...rest }
+        photoAppeals: { ...rest },
+        photoVersionId: photoAppealItem.photo_version_id
       }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -61,7 +79,7 @@ export function appealDetail (params) {
       } else {
         finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
       }
-      photos.push(finalPhotoItem)
+      if (finalPhotoItem.photoVersion) photos.push(finalPhotoItem)
     })
     const streamData = new StreamModel(msg.stream)
     const orderData = {
@@ -94,7 +112,11 @@ export function getAppealList (params) {
   }).then(msg => {
     const appealList = msg.list.map(appealItem => {
       const { baseData, ...rest } = new AppealListItemModel(appealItem)
-      return { ...rest }
+      const finalAppealItem = { ...rest }
+      // 判断展示那种按钮
+      if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_FIRST || finalAppealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE ) finalAppealItem.showFirstCheck = true
+      if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_SECOND || finalAppealItem.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE ) finalAppealItem.showSecondCheck = true
+      return finalAppealItem
     })
     return appealList
   })

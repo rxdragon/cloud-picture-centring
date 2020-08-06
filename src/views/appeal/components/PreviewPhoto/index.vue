@@ -658,10 +658,11 @@ export default {
      */
     emitResult () {
       const result = {
-        id: this.showPhoto,
         result: this.checkResult,
         type: this.checkType
       }
+      result.storePartReworkReason = this.showPhoto.storePartReworkReason
+      result.storeReworkReasonManage = this.showPhoto.storeReworkReasonManage
       if (this.refuseTextarea) result.reason = this.refuseTextarea
       this.$emit('saveResult', result)
       this.closeShowPhoto()

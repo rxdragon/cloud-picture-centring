@@ -201,13 +201,23 @@ export const AppealTypeNameEnum = {
 }
 
 // 申诉流水状态
+export const APPEAL_STREAM_STATUS = {
+  WAIT_FIRST: 'wait_first',
+  FIRST_EXAMINE: 'first_examine',
+  WAIT_SECOND: 'wait_second',
+  SECOND_EXAMINE: 'second_examine',
+  FINISH: 'finish',
+  EXPIRE: 'expire'
+}
+
+// 申诉流水状态
 export const AppealStreamStatusEnum = {
-  'wait_first': '等待初审',
-  'first_examine': '初审中',
-  'wait_second': '等待复审',
-  'second_examine': '复审中',
-  'finish': '处理完成',
-  'expire': '超时未处理'
+  [APPEAL_STREAM_STATUS.WAIT_FIRST]: '等待初审',
+  [APPEAL_STREAM_STATUS.FIRST_EXAMINE]: '初审中',
+  [APPEAL_STREAM_STATUS.WAIT_SECOND]: '等待复审',
+  [APPEAL_STREAM_STATUS.SECOND_EXAMINE]: '复审中',
+  [APPEAL_STREAM_STATUS.FINISH]: '处理完成',
+  [APPEAL_STREAM_STATUS.EXPIRE]: '超时未处理'
 }
 
 // 申诉审核状态

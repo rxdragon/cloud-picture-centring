@@ -99,8 +99,22 @@
           </el-table-column>
           <el-table-column label="操作" width="200">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="linkto(scope.row.id, 'first')">初审</el-button>
-              <el-button type="primary" size="mini" @click="linkto(scope.row.id, 'second')">复审</el-button>
+              <el-button
+                type="primary"
+                v-if="scope.row.showFirstCheck"
+                size="mini"
+                @click="firstCheck(scope.row)"
+              >
+                初审
+              </el-button>
+              <el-button
+                type="primary"
+                v-if="scope.row.showSecondCheck"
+                size="mini"
+                @click="secondCheck(scope.row)"
+              >
+                复审
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -171,10 +185,44 @@ export default {
   },
   methods: {
     /**
+     * @description 初审
+     */
+    firstCheck (appealItem) {
+      const { id, isSelfFirst, isFirstChecking } = appealItem
+      const linkObj = {
+        id,
+        type: 'first',
+        needBind: !isFirstChecking
+      }
+      if (!isSelfFirst) {
+        this.$newMessage.warning('别人正在审核')
+        return
+      }
+      this.linkto(linkObj)
+    },
+    /**
+     * @description 复审
+     */
+    secondCheck (appealItem) {
+      const { id, isSelfSecond, isSecondChecking } = appealItem
+      const linkObj = {
+        id,
+        type: 'second',
+        needBind: !isSecondChecking
+      }
+      if (!isSelfSecond) {
+        this.$newMessage.warning('别人正在审核')
+        return
+      }
+      this.linkto(linkObj)
+    },
+    /**
      * @description 跳转链接
      */
-    linkto (id, type) {
+    async linkto (linkObj) {
+      const { id, type, needBind } = linkObj
       const query = { id }
+      if (needBind) await Appeal.bindAppeal(query)
       query.type = type
       this.$router.push({
         path: '/appeal-detail',
