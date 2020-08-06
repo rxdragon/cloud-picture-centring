@@ -44,9 +44,10 @@
           <cloud-spot v-model="cloudSpot" clearable />
         </div>
         <!-- 云学院问题标签 -->
-        <div class="cloud-issue-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+        <!-- v-if 兼容设置失败问题 -->
+        <div class="cloud-issue-box search-item" v-if="activeName === SEARCH_TYPE.NORMAL">
           <span>云学院问题标签</span>
-          <issue-label-select v-model="issueValue" />
+          <issue-label-select ref="issueLabelSelect" v-model="issueValue" />
         </div>
         <div class="search-button-box search-item">
           <el-button type="primary" @click="searchList(1)">查询</el-button>
