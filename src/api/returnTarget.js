@@ -120,11 +120,12 @@ export function getStaffStoreReturnQuota (params) {
   })
 }
 
+// 获取图标信息
 export function getStaffReturnChartInfo (params) {
   return axios({
     url: '/project_cloud/retouchLeader/getReworkQuotaGroupByStaff',
     method: 'POST',
-    params
+    data: params
   }).then(msg => {
     const createData = msg.map(retoucherItem => {
       const orderCount = (Number(retoucherItem.storeReturnStreamNumForNormalQuality) || 0) +
