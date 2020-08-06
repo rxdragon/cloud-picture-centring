@@ -480,7 +480,7 @@ export default {
     downing () {
       const pointIndex = this.showPhoto.src.lastIndexOf('!')
       const path = ''
-      let url = pointIndex > 0 ? this.showPhoto.src.substring(0, pointIndex) : this.showPhoto.src
+      const url = pointIndex > 0 ? this.showPhoto.src.substring(0, pointIndex) : this.showPhoto.src
       const data = { url, path }
       this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)

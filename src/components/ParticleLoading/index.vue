@@ -107,7 +107,7 @@ export default {
       this.context.fillRect(0, 0, fillWidth, fillHeight)
       
       for (let i = 0, length = this.particles.length; i < length; i++){
-        let axis = this.particles[i].getAxis2D(this.theta)
+        const axis = this.particles[i].getAxis2D(this.theta)
         
         this.context.beginPath()
         this.context.fillStyle = axis.color

@@ -86,8 +86,8 @@ export default {
      */
     submitAppeal () {
       let checkFail = false
-      let checkArr = []
-      let req = {
+      const checkArr = []
+      const req = {
         streamId: this.streamId,
         photoAppeals: [],
         type: this.appealType
@@ -131,12 +131,12 @@ export default {
      * @description 提交
      */
     async submitAll () {
-      let photoExamines = []
+      const photoExamines = []
       this.photos.forEach((photoItem, photoIndex) => {
         const firstResult = this.$refs[`photoDetail${photoIndex}`][0].$data.firstResult
         const secondResult = this.$refs[`photoDetail${photoIndex}`][0].$data.secondResult
         if (this.checkType === 'first' && firstResult.result) {
-          let firstObj = {
+          const firstObj = {
             photo_appeal_id: firstResult.id,
             result: firstResult.result
           }
@@ -144,7 +144,7 @@ export default {
           photoExamines.push(firstObj)
         }
         if (this.checkType === 'second' && secondResult.result) {
-          let secondObj = {
+          const secondObj = {
             photo_appeal_id: secondResult.id,
             result: secondResult.result
           }

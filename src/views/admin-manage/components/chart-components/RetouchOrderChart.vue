@@ -2,9 +2,9 @@
   <div class="retouch-order-chart">
     <ve-histogram
       :data="chartData"
+      :legend-visible="false"
       :extend="extend"
-      :settings="chartSettings"
-      height="278px"
+      height="300px"
     />
   </div>
 </template>
@@ -19,17 +19,6 @@ export default {
   },
   data () {
     this.extend = {
-      legend: {
-        data: ['单量', '张数'],
-        right: '27',
-        top: '0',
-        selectedMode: 'single',
-        selected: {
-          '单量': false,
-          '张数': true
-        },
-        icon: 'circle'
-      },
       grid: { x: 0, x2: 27, y: 60, y2: 0 },
       series: {
         label: {
@@ -80,17 +69,17 @@ export default {
           color: '#C0C4CC',
           fontSize: '10'
         }
-      }
-    }
-    this.chartSettings = {
-      labelMap: {
-        'orderCount': '单量',
-        'photoCount': '张数'
+      },
+      tooltip: {
+        formatter: (params) => {
+          const data = params[0]
+          return `${data.name}：${data.value}`
+        }
       }
     }
     return {
       chartData: {
-        columns: ['name', 'orderCount', 'photoCount'],
+        columns: ['name', 'count'],
         rows: []
       }
     }
@@ -98,39 +87,24 @@ export default {
   created () {
     this.chartData.rows = [
       {
-        name: '总数量',
-        orderCount: this.chartDatas.retoucherFinishStreamNum,
-        photoCount: this.chartDatas.retoucherFinishPhotoNum
+        name: '修图总单量',
+        count: this.chartDatas.retoucherFinishStreamNum
       },
       {
         name: '超时单量',
-        orderCount: this.chartDatas.overTimeStreamNum,
-        photoCount: 0
+        count: this.chartDatas.overTimeStreamNum
       },
       {
-        name: '利奇马',
-        orderCount: this.chartDatas.lekimaStreamNum,
-        photoCount: this.chartDatas.lekimaPhotoNum
+        name: '修图总张数',
+        count: this.chartDatas.retoucherFinishPhotoNum
       },
       {
-        name: '点赞',
-        orderCount: this.chartDatas.goodStreamNum,
-        photoCount: 0
+        name: '点赞单量',
+        count: this.chartDatas.goodStreamNum
       },
       {
-        name: '门店退单',
-        orderCount: this.chartDatas.storeReturnStreamNum,
-        photoCount: this.chartDatas.storeReturnPhotoNum
-      },
-      {
-        name: '非质量问题\n门店退单',
-        orderCount: this.chartDatas.storeReturnStreamNumForNotQuality,
-        photoCount: this.chartDatas.storeReturnPhotoNumForNotQuality
-      },
-      {
-        name: '质量问题\n门店退单',
-        orderCount: this.chartDatas.storeReturnStreamNumForQuality,
-        photoCount: this.chartDatas.storeReturnPhotoNumForQuality
+        name: '点踩单量',
+        count: this.chartDatas.badStreamNum
       }
     ]
   }

@@ -40,7 +40,7 @@ export function appealDetail (params) {
     params
   }).then(msg => {
     const { id } = msg
-    let photos = []
+    const photos = []
     msg.photo_appeals.forEach(photoAppealItem => {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)

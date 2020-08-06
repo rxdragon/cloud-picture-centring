@@ -78,6 +78,7 @@ export default {
         this.$emit('update:searchType', listItem.query)
       }
       this.$emit('update:isSeachPage', true)
+      this.$emit('showSearchPage')
     }
   }
 }

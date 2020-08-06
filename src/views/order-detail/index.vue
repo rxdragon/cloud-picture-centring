@@ -162,8 +162,8 @@ export default {
      */
     async submitAppeal () {
       let checkFail = false
-      let checkArr = []
-      let req = {
+      const checkArr = []
+      const req = {
         streamId: this.streamId,
         photoAppeals: [],
         type: this.appealType
@@ -204,7 +204,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .order-detail {
   .panel-title {
     margin-bottom: 20px;

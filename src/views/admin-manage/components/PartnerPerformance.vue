@@ -16,29 +16,17 @@
     <div class="table-panel">
       <div class="retouch-order-statistics">
         <div class="panel-title">
-          修图问题统计
+          修图数量统计
           <tip :message="message"></tip>
         </div>
         <retouch-order-chart :chart-datas="orderStatisticsData" />
-      </div>
-      <div class="performance-statistics">
-        <div class="title-box">
-          <div class="panel-title">
-            云学院抽查统计
-            <tip message="统计范围:该时间段修图完成的单子"></tip>
-          </div>
-          <div class="check-avg">抽查平均分：{{ checkData.checkAvgScore }}</div>
-        </div>
-        <div class="chart-box">
-          <pie-chart :chart-data="checkData.checkTags" />
-        </div>
       </div>
     </div>
     <div class="other-data">
       <div class="panel-title">其他数据</div>
       <div v-for="(itemData, itemIndex) in otherData" :key="itemIndex" class="num-box">
         <span class="num">
-          <count-to :end-value="itemData.value" show-point />{{ itemIndex === 'goodRate' ? '%' : '' }}
+          <count-to :end-value="itemData.value" show-point />{{ itemData.type === 'rate' ? '%' : '' }}
         </span>
         <div class="desc">{{ itemData.label }}</div>
       </div>
@@ -50,22 +38,23 @@
 import DatePicker from '@/components/DatePicker'
 import StaffSelect from '@SelectBox/StaffSelect'
 import RetouchOrderChart from './chart-components/RetouchOrderChart'
-import PieChart from '@/components/charts/PieChart'
 import CountTo from '@/components/CountTo'
 import Tip from '@/components/Tip'
 import moment from 'moment'
-import { joinTimeSpan } from '@/utils/timespan.js'
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 import * as WorkManage from '@/api/workManage'
 
 const message = `
-<p><span class="bold">张数统计:</span> 不包含模版照、不计收益和退单张数</p>
-              <p><span class="bold">总数量:</span> 任何情况退单都会会新增总订单和总张数</p>
-              <p><span class="bold">门店退单:</span> 同一修图师接到退单,不会增加</p>
+<p><span class="bold">提示：</span>此处只可查询到正常修图的绩效信息</p>
+<p><span class="bold">修图总单量：</span>流水号以C开头的数量</p>
+<p><span class="bold">超时单量：</span>正常流水超时数量</p>
+<p><span class="bold">修图总张数：</span>正常流水的照片张数，不包含模版照</p>
+<p><span class="bold">点赞量/点踩量：</span>点赞量/点踩量，为流水纬度数量，存在云端审核完成门店未审核情况</p>
 `
 
 export default {
   name: 'PartnerPerformance',
-  components: { DatePicker, StaffSelect, RetouchOrderChart, PieChart, CountTo, Tip },
+  components: { DatePicker, StaffSelect, RetouchOrderChart, CountTo, Tip },
   data () {
     return {
       message,
@@ -75,23 +64,16 @@ export default {
       otherData: {
         exp: { value: '0.00', label: '海草值' },
         income: { value: '0.00', label: '收益' },
-        goodRate: { value: '0.00', label: '门店点赞率(云端完成时间)' },
-        retoucherNpsAvg: { value: '0.00', label: '顾客满意度（顾客评价时间）' }
+        retoucherNpsAvg: { value: '0.00', label: '顾客满意度（顾客评价时间）' },
+        goodRate: { value: '0.00', label: '点赞率', type: 'rate' },
+        badRate: { value: '0.00', label: '点踩率', type: 'rate' }
       },
-      checkData: {},
       orderStatisticsData: {
-        retoucherFinishStreamNum: { value: 0, label: '总单量' },
-        retoucherFinishPhotoNum: { value: 0, label: '总张数' },
+        retoucherFinishStreamNum: { value: 0, label: '修图总单量' },
         overTimeStreamNum: { value: 0, label: '超时单量' },
-        storeReturnStreamNum: { value: 0, label: '门店退单' },
-        storeReturnPhotoNum: { value: 0, label: '门店退单张数' },
-        lekimaStreamNum: { value: 0, label: '利奇马单量' },
-        lekimaPhotoNum: { value: 0, label: '利奇马张数' },
+        retoucherFinishPhotoNum: { value: 0, label: '修图总张数' },
         goodStreamNum: { value: 0, label: '点赞单量' },
-        storeReturnStreamNumForQuality: { value: 0, label: '门店退单（质量问题）' },
-        storeReturnPhotoNumForQuality: { value: 0, label: '门店退单（质量问题）张数' },
-        storeReturnStreamNumForNotQuality: { value: 0, label: '门店退单（非质量问题）' },
-        storeReturnPhotoNumForNotQuality: { value: 0, label: '门店退单（非质量问题）张数' }
+        badStreamNum: { value: 0, label: '点踩单量' }
       }
     }
   },
@@ -113,9 +95,7 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.staffIds.length) {
-        req.staffIds = this.staffIds
-      }
+      if (this.staffIds.length) { req.staffIds = this.staffIds }
       return req
     },
     /**
@@ -127,23 +107,13 @@ export default {
         if (!req) return false
         this.loading = true
         const data = await WorkManage.getRetoucherQuota(req)
-        this.checkData.checkTags = data.retoucherCheckCount
-        this.checkData.childCheckTag = data.childCheckTag
-        this.checkData.checkAvgScore = data.checkAvgScore
         for (const key in data) {
-          if (this.otherData[key]) {
-            this.otherData[key].value = data[key]
-          }
-          if (this.orderStatisticsData[key]) {
-            this.orderStatisticsData[key].value = parseInt(data[key])
-          }
+          if (this.otherData[key]) { this.otherData[key].value = data[key] }
+          if (this.orderStatisticsData[key]) { this.orderStatisticsData[key].value = parseInt(data[key]) }
         }
-      } catch (error) {
-        console.error(error)
       } finally {
-        setTimeout(() => {
-          this.loading = false
-        }, 500)
+        await delayLoading()
+        this.loading = false
       }
     }
   }
@@ -186,26 +156,7 @@ export default {
 
     .retouch-order-statistics {
       position: relative;
-      width: calc(~'50% - 11px');
-      border-right: 1px solid #ebeef5;
-    }
-
-    .performance-statistics {
-      position: relative;
-      width: calc(~'50% - 11px');
-
-      .title-box {
-        .check-avg {
-          float: right;
-          font-size: 13px;
-          color: #45454d;
-        }
-      }
-
-      .chart-box {
-        height: 240px;
-        margin-top: 24px;
-      }
+      width: 100%;
     }
 
     .panel-title {
@@ -225,8 +176,8 @@ export default {
 
     .num-box {
       display: inline-block;
-      padding-right: 49px;
-      padding-left: 80px;
+      width: 20%;
+      padding-left: 20px;
       border-right: 1px solid #ebeef5;
 
       .num {

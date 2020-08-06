@@ -10,7 +10,7 @@ function posix (path) {
     return '.'
   }
   let code = path.charCodeAt(0)
-  let hasRoot = (code === 47/* / */)
+  const hasRoot = (code === 47/* / */)
   let end = -1
   let matchedSlash = true
   for (let i = path.length - 1; i >= 1; --i) {
@@ -37,7 +37,7 @@ function posix (path) {
 
 function win32 (path) {
   assertPath(path)
-  let len = path.length
+  const len = path.length
   if (len === 0) {
     return '.'
   }

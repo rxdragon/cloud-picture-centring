@@ -83,7 +83,7 @@ export function settlePhotoVersion (photoVersion) {
   const timeLine = photoVersion.sort((a, b) => {
     return Number(a.id) - Number(b.id)
   })
-  let createData = []
+  const createData = []
   let storeReturnCount = 0
   timeLine.forEach(versionItem => {
     if (photoVersionArr.includes(versionItem.version)) {
