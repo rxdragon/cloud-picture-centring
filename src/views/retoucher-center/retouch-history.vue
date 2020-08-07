@@ -203,29 +203,32 @@ export default {
    */
   beforeRouteEnter (to, from, next) {
     next(vm => {
+      // 防止重复刷新获取数据
       const keepLiveRoute = ['RetouchHistory', 'orderDetail']
       if (keepLiveRoute.includes(_.get(from, 'name'))) return
-      const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
-      // 重制条件
-      vm.resetSearchParm()
-      if (retouchHistoryTimeSpan) { vm.timeSpan = retouchHistoryTimeSpan.split(',') }
-      if (retouchHistorySearchType) {
-        switch (retouchHistorySearchType) {
-          case SearchType.GoodEvaluation:
-            vm.isGood = true
-            break
-          case SearchType.ReworkPhoto:
-            vm.activeName = SEARCH_TYPE.REWORK
-            break
+
+      vm.$nextTick(() => {
+        const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
+        if (retouchHistoryTimeSpan) { vm.timeSpan = retouchHistoryTimeSpan.split(',') }
+        // 如果如有有带参数，重制条件
+        if (retouchHistorySearchType) {
+          vm.resetSearchParm()
+          switch (retouchHistorySearchType) {
+            case SearchType.GoodEvaluation:
+              vm.isGood = true
+              break
+            case SearchType.ReworkPhoto:
+              vm.activeName = SEARCH_TYPE.REWORK
+              break
+          }
+          vm.resetTabActivePosition(vm.$refs.tabs.$el)
+          vm.searchList(1)
         }
-      }
-      if (!retouchHistorySearchType && vm.activeName !== SEARCH_TYPE.NORMAL) {
-        vm.activeName = SEARCH_TYPE.NORMAL
-      } else {
-        vm.searchList(1)
-      }
-      vm.resetTabActivePosition(vm.$refs.tabs.$el)
+      })
     })
+  },
+  created () {
+    this.searchList(1)
   },
   methods: {
     /**
