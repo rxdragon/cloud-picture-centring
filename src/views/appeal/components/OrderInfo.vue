@@ -47,24 +47,24 @@
         </div>
       </div>
     </div>
-    <div class="panel-require">
+    <div class="panel-require" v-if="appealInfo.appealStatusDesc">
       <div class="panel-title">申诉信息</div>
       <div class="panel-main">
         <div class="panel-main-content">
           <span class="title">申诉类型:</span>
-          <span class="content">门店退单问题</span>
+          <span class="content">{{ appealInfo.appealTypeName }}</span>
         </div>
         <div class="panel-main-content">
           <span class="title">处理状态:</span>
-          <span class="content">处理完成</span>
+          <span class="content">{{ appealInfo.appealStatusDesc }}</span>
           <span>初审人:</span>
-          <span class="content">霍根</span>
+          <span class="content">{{ appealInfo.firstInfo.staffName }}</span>
           <span>初审时间:</span>
-          <span class="content">2020-09-09 13:00</span>
+          <span class="content">{{ appealInfo.firstInfo.time }}</span>
           <span>复审人:</span>
-          <span class="content">崔弗</span>
+          <span class="content">{{ appealInfo.secondInfo.staffName }}</span>
           <span>复审时间:</span>
-          <span class="content">2020-09-09 13:00</span>
+          <span class="content">{{ appealInfo.firstInfo.time }}</span>
         </div>
       </div>
     </div>
@@ -78,7 +78,7 @@ export default {
   name: 'OrderInfo',
   props: {
     orderData: { type: Object, required: true },
-    isWorkBoardInfo: { type: Boolean }
+    appealInfo: { type: Object, required: true }
   },
   computed: {
     orderInfo () {

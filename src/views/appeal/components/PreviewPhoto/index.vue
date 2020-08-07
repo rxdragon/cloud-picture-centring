@@ -202,7 +202,10 @@ import Driver from 'driver.js' // 引导框
 import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
 import guideData from './guideData.js'
+
+import { APPEAL_CHECK_STATUS } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
+
 import 'driver.js/dist/driver.min.css'
 
 export default {
@@ -300,6 +303,19 @@ export default {
     },
     tagShow () {
       return this.mode === 'complete' ? this.showStoreReson : this.showMark
+    },
+    // 删除标签数量
+    delLabelNum () {
+      let num = 0
+      this.showPhoto.storePartReworkReason.forEach(reasonPart => {
+        reasonPart.reasonManage.forEach(reasonItem => {
+          if (reasonItem.cancel) num += 1
+        })
+      })
+      this.showPhoto.storeReworkReasonManage.forEach(reasonItem => {
+        if (reasonItem.cancel) num += 1
+      })
+      return num
     }
   },
   watch: {
@@ -632,6 +648,12 @@ export default {
      * @description 通过
      */
     checkPass (item) {
+      if (this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审一定要勾选删除标签
+        if (!this.delLabelNum) {
+          this.$newMessage.warning('必须要删除至少一个标签')
+          return
+        }
+      }
       this.checkResult = 'accept'
       this.emitResult()
     },

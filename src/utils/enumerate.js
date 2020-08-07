@@ -195,9 +195,20 @@ export const PlantTypeNameEnum = {
   'none': '一般'
 }
 
+// 申诉审核类型
+export const APPEAL_CHECK_STATUS = {
+  FIRST: 'first', // 初审
+  SECOND: 'second' // 复审
+}
+
+// 申诉问题类型
+export const APPEAL_TYPE = {
+  REWORK: 'rework'
+}
+
 // 申诉问题类型
 export const AppealTypeNameEnum = {
-  'rework': '门店退单问题'
+  [APPEAL_TYPE.REWORK]: '门店退单问题'
 }
 
 // 申诉流水状态
@@ -220,8 +231,16 @@ export const AppealStreamStatusEnum = {
   [APPEAL_STREAM_STATUS.EXPIRE]: '超时未处理'
 }
 
-// 申诉审核状态
-export const AppealCheckStatusEnum = {
+// 申诉审核结果状态
+export const APPEAL_RESULT_STATUS = {
+  WAIT: 'wait',
+  ACCEPT: 'accept',
+  PART_ACCEPT: 'part_accept',
+  REFUSE: 'refuse'
+}
+
+// 申诉审核结果状态枚举
+export const AppealResultStatusEnum = {
   'wait': '待审核',
   'accept': '审核通过',
   'part_accept': '部分通过',

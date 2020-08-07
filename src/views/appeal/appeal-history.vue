@@ -123,8 +123,8 @@ export default {
     return {
       timeSpan: null, // 时间
       streamNum: '', // 流水号
-      appealStatus: 'all',
-      appealType: 'all',
+      appealStatus: [],
+      appealType: '',
       tableData: [], // 列表数据
       pager: {
         page: 1,
@@ -167,6 +167,8 @@ export default {
         req.cond.startAtGte = this.timeSpan[0]
         req.cond.endAtLte = this.timeSpan[1]
       }
+      if (this.appealStatus.length) req.cond.stateIn = this.appealStatus
+      if (this.appealType) req.cond.type = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
       this.tableData = await Appeal.getAppealList(req)

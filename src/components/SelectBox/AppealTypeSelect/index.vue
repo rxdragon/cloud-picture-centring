@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { APPEAL_TYPE, AppealTypeNameEnum } from '@/utils/enumerate'
+
 export default {
   name: 'AppealTypeSelect',
   data () {
@@ -19,10 +21,10 @@ export default {
       options: [
         {
           label: '全部',
-          value: 'all'
+          value: ''
         }, {
-          label: '门店退单问题',
-          value: true
+          label: AppealTypeNameEnum[APPEAL_TYPE.REWORK],
+          value: APPEAL_TYPE.REWORK
         }
       ]
     }

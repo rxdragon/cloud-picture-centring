@@ -5,7 +5,7 @@
     </div>
     <div class="order module-panel">
       <div class="panel-title">照片信息</div>
-      <order-info :is-work-board-info="isWorkBoardInfo" :order-data="orderData" />
+      <order-info :appeal-info="appealInfo" :order-data="orderData" />
     </div>
     <!-- 照片列表 -->
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
@@ -46,12 +46,6 @@ export default {
         }
       ],
       appealInfo: {}
-    }
-  },
-  computed: {
-    // 是否是工作看板详情
-    isWorkBoardInfo () {
-      return Boolean(this.$route.query.workBoardStreamNum)
     }
   },
   created () {
@@ -133,8 +127,10 @@ export default {
     async submitAll () {
       const photoExamines = []
       this.photos.forEach((photoItem, photoIndex) => {
-        const firstResult = this.$refs[`photoDetail${photoIndex}`][0].$data.firstResult
-        const secondResult = this.$refs[`photoDetail${photoIndex}`][0].$data.secondResult
+        const photoDetailData = this.$refs[`photoDetail${photoIndex}`][0]
+        const { realPhotoData } = photoDetailData
+        const { firstResult, secondResult } = photoDetailData.photoItem.photoAppeals
+
         if (this.checkType === 'first' && firstResult.result) {
           const firstObj = {
             photo_appeal_id: firstResult.id,
@@ -149,6 +145,19 @@ export default {
             result: secondResult.result
           }
           if (secondResult.reason) secondObj.reason = secondResult.reason
+          secondObj.labels_to_del = []
+          secondObj.parts = []
+          realPhotoData.storeReworkReasonManage.forEach(storeReworkReasonItem => {
+            if (storeReworkReasonItem.cancel) secondObj.labels_to_del.push(storeReworkReasonItem.id)
+          })
+          realPhotoData.storePartReworkReason.forEach(storePartReworkReasonItem => {
+            const partReason = {}
+            partReason.labels_to_del = []
+            storePartReworkReasonItem.reasonManage.forEach(reasonItem => {
+              if (reasonItem.cancel) partReason.labels_to_del.push(reasonItem.id)
+            })
+            secondObj.parts.push(partReason)
+          })
           photoExamines.push(secondObj)
         }
       })

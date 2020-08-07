@@ -60,9 +60,20 @@
       </div>
       <div class="panel-main">
         <div class="panel-content content-one">申诉问题描述: {{ photoItem.photoAppeals.desc }}</div>
-        <div class="panel-content content-one">初审状态: {{ firstResult.resultDesc }}</div>
-        <div class="panel-content content-one">复审状态: {{ secondResult.resultDesc }}</div>
-        <div class="panel-content content-one">拒绝原因: {{ secondResult.reason }}</div>
+        <div class="panel-content content-one">初审状态: {{ photoItem.photoAppeals.firstResult.resultDesc }}</div>
+        <div class="panel-content content-one">复审状态: {{ photoItem.photoAppeals.secondResult.resultDesc }}</div>
+        <div
+          class="panel-content content-one"
+          v-if="photoItem.photoAppeals.firstResult.result === APPEAL_RESULT_STATUS.REFUSE"
+        >
+          拒绝原因: {{ photoItem.photoAppeals.firstResult.reason }}
+        </div>
+        <div
+          class="panel-content content-one"
+          v-if="photoItem.photoAppeals.secondResult.result === APPEAL_RESULT_STATUS.REFUSE"
+        >
+          拒绝原因: {{ photoItem.photoAppeals.secondResult.reason }}
+        </div>
       </div>
     </div>
     <preview-photo
@@ -86,7 +97,7 @@ import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
 
-import { AppealCheckStatusEnum } from '@/utils/enumerate'
+import { AppealResultStatusEnum, APPEAL_RESULT_STATUS } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
@@ -102,13 +113,14 @@ export default {
       imgIndex: 0,
       orderInfo: {},
       firstResult: {
-        resultDesc: '--'
+        resultDesc: '-'
       }, // 初审结果
       secondResult: {
-        resultDesc: '--',
-        reason: '--'
+        resultDesc: '-',
+        reason: '-'
       }, // 复审结果
-      photoVersionId: ''
+      photoVersionId: '',
+      APPEAL_RESULT_STATUS
     }
   },
   computed: {
@@ -171,21 +183,22 @@ export default {
     saveResult (resultObj) {
       const { type, result, reason } = resultObj
       if (type === 'first') {
-        this.firstResult = {
+        this.photoItem.photoAppeals.firstResult = {
           id: this.photoItem.photoAppeals.id,
           result,
           reason,
-          resultDesc: AppealCheckStatusEnum[result]
+          resultDesc: AppealResultStatusEnum[result]
         }
       }
       if (type === 'second') {
-        this.secondResult = {
+        this.photoItem.photoAppeals.secondResult = {
           id: this.photoItem.photoAppeals.id,
           result,
           reason,
-          resultDesc: AppealCheckStatusEnum[result]
+          resultDesc: AppealResultStatusEnum[result]
         }
         this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
+        this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
       }
     }
   }

@@ -1,5 +1,5 @@
 import axios from '@/plugins/axios.js'
-import AppealListItemModel from '@/model/AppealListItemModel.js'
+import StreamAppealModel from '@/model/StreamAppealModel.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import PhotoAppealModel from '@/model/PhotoAppealModel.js'
@@ -53,15 +53,12 @@ export function appealDetail (params) {
     method: 'GET',
     params
   }).then(msg => {
-    const { id } = msg
     const photos = []
+    const { base, ...rest } = new StreamAppealModel(msg)
     msg.photo_appeals.forEach(photoAppealItem => {
-      // todo mock photo_version_id
-      photoAppealItem.photo_version_id = 2121548341
-
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
-      const { baseData, ...rest } = new PhotoAppealModel(photoAppealItem)
+      const { base, ...rest } = new PhotoAppealModel(photoAppealItem)
       const finalPhotoItem = {
         reworkChecked: false, // 申诉的勾选
         appealReason: '', // 申诉的说明
@@ -78,6 +75,10 @@ export function appealDetail (params) {
         finalPhotoItem.photoVersion = ''
       } else {
         finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
+        finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
+          if (versionItem.version !== 'store_rework' || versionItem.id === photoAppealItem.photo_version_id ) finalVersion.push(versionItem)
+          return finalVersion
+        }, [])
       }
       if (finalPhotoItem.photoVersion) photos.push(finalPhotoItem)
     })
@@ -94,9 +95,7 @@ export function appealDetail (params) {
     return {
       orderData,
       photos,
-      appealInfo: {
-        id
-      }
+      appealInfo: { ...rest }
     }
   })
 }
@@ -111,7 +110,7 @@ export function getAppealList (params) {
     data: params
   }).then(msg => {
     const appealList = msg.list.map(appealItem => {
-      const { baseData, ...rest } = new AppealListItemModel(appealItem)
+      const { base, ...rest } = new StreamAppealModel(appealItem)
       const finalAppealItem = { ...rest }
       // 判断展示那种按钮
       if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_FIRST || finalAppealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE ) finalAppealItem.showFirstCheck = true

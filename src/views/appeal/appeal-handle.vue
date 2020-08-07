@@ -14,7 +14,7 @@
         <!-- 申诉时间 -->
         <div class="date-search search-item">
           <span>申诉时间:</span>
-          <el-date-picker v-model="timeSpan" type="datetime" placeholder="选择申诉时间" />
+          <date-picker v-model="timeSpan" />
         </div>
         <!-- 流水号 -->
         <div class="stream-search search-item">
@@ -137,6 +137,7 @@
 import AppealStatusSelect from '@SelectBox/AppealStatusSelect'
 import AppealTypeSelect from '@SelectBox/AppealTypeSelect'
 import StaffSelect from '@SelectBox/StaffSelect'
+import DatePicker from '@/components/DatePicker'
 
 import { allOption, firstOption, secondOption } from './options/index.js'
 
@@ -144,7 +145,7 @@ import * as Appeal from '@/api/appeal.js'
 
 export default {
   name: 'AppealHandle',
-  components: { AppealStatusSelect, AppealTypeSelect, StaffSelect },
+  components: { AppealStatusSelect, AppealTypeSelect, StaffSelect, DatePicker },
   data () {
     return {
       staffId: '',
@@ -240,7 +241,18 @@ export default {
      * @description 获取申诉列表
      */
     async getAppealList () {
-      this.tableData = await Appeal.getAppealList()
+      const req = {
+        page: this.pager.page,
+        pageSize: this.pager.pageSize,
+        cond: {}
+      }
+      if (this.timeSpan) {
+        req.cond.startAtGte = this.timeSpan[0]
+        req.cond.endAtLte = this.timeSpan[1]
+      }
+      if (this.streamNum) req.cond.streamNum = this.streamNum
+      if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
+      this.tableData = await Appeal.getAppealList(req)
     },
     /**
      * @description 页码改变

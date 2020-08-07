@@ -5,9 +5,9 @@ export default class PreviewModel {
   version = 'original_photo'
   path = ''
   mode = 'original'
-  storePartReworkReason = []
+  storePartReworkReason = [] // 局部问题标签对象
   storeReworkReason = []
-  storeReworkReasonManage = []
+  storeReworkReasonManage = [] // 整体问题标签对象
   storeReworkNote = []
   hasStoreReturnTag = false
   commitInfo = {}
@@ -28,31 +28,45 @@ export default class PreviewModel {
   // 获取门店退单信息
   getStoreReaseon (photoItem) {
     if (!photoItem.tags) return
-    // todo 兼容新格式的store_part_rework_reason
     let storePartReworkReason = _.get(photoItem, 'tags.values.store_part_rework_reason') || []
     storePartReworkReason = storePartReworkReason.map(labelItem => {
       const createData = labelItem
-      createData.reason = labelItem.reason ? labelItem.reason.split('+') : []
-      createData.reasonManage = [] // 可以进行操作的reason
-      createData.reason.forEach(reasonName => {
-        createData.reasonManage.push({
-          name: reasonName,
+      // 2.12之后新的局部标签在在labels下面
+      if (createData.labels) {
+        createData.reason = createData.labels.map(labelItem => labelItem.name)
+        createData.reasonManage = [] // 可以进行操作的reason
+        createData.labels.forEach(reasonName => {
+          createData.reasonManage.push({
+            id: reasonName.id,
+            name: reasonName.name,
+            cancel: false
+          })
+        })
+      } else {
+        createData.reason = labelItem.reason ? labelItem.reason.split('+') : []
+        createData.reasonManage = [] // 可以进行操作的reason
+      }
+      
+      return createData
+    })
+    this.storePartReworkReason = storePartReworkReason
+    // 整理标签 2.12之后新的整体标签在values.labels下面
+    if (_.get(photoItem, 'tags.values.labels')) {
+      const storeReworkReason = _.get(photoItem, 'tags.values.labels') || ''
+      this.storeReworkReason = storeReworkReason.map(reasonItem => reasonItem.name)
+      storeReworkReason.forEach(reasonItem => {
+        this.storeReworkReasonManage.push({
+          id: reasonItem.id,
+          name: reasonItem.name,
           cancel: false
         })
       })
 
-      return createData
-    })
-    this.storePartReworkReason = storePartReworkReason
-    // 整理标签
-    const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
-    this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
-    this.storeReworkReason.forEach(reasonName => {
-      this.storeReworkReasonManage.push({
-        name: reasonName,
-        cancel: false
-      })
-    })
+    } else {
+      const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
+      this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
+    }
+    
     // 整体备注
     this.storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note') || '-'
   }

@@ -1,6 +1,11 @@
 <template>
   <div class="appeal-status-select">
-    <el-select v-bind="$attrs" v-on="$listeners">
+    <el-select
+      clearable
+      multiple
+      v-bind="$attrs"
+      v-on="$listeners"
+    >
       <el-option
         v-for="(optionItem, optionIndex) in options"
         :key="optionIndex"
@@ -12,32 +17,31 @@
 </template>
 
 <script>
+import { APPEAL_STREAM_STATUS, AppealStreamStatusEnum } from '@/utils/enumerate'
+
 const defaultOptions = [
   {
-    label: '全部',
-    value: 'all'
+    label: AppealStreamStatusEnum[APPEAL_STREAM_STATUS.WAIT_FIRST],
+    value: APPEAL_STREAM_STATUS.WAIT_FIRST
   }, {
-    label: '待初审',
-    value: true
-  }, {
-    label: '初审中',
-    value: false
+    label: AppealStreamStatusEnum[APPEAL_STREAM_STATUS.FIRST_EXAMINE],
+    value: APPEAL_STREAM_STATUS.FIRST_EXAMINE
   },
   {
-    label: '待复审',
-    value: false
+    label: AppealStreamStatusEnum[APPEAL_STREAM_STATUS.WAIT_SECOND],
+    value: APPEAL_STREAM_STATUS.WAIT_SECOND
   },
   {
-    label: '复审中',
-    value: false
+    label: AppealStreamStatusEnum[APPEAL_STREAM_STATUS.SECOND_EXAMINE],
+    value: APPEAL_STREAM_STATUS.SECOND_EXAMINE
   },
   {
-    label: '处理完成',
-    value: false
+    label: AppealStreamStatusEnum[APPEAL_STREAM_STATUS.FINISH],
+    value: APPEAL_STREAM_STATUS.FINISH
   },
   {
-    label: '过期未处理',
-    value: false
+    label: AppealStreamStatusEnum[APPEAL_STREAM_STATUS.EXPIRE],
+    value: APPEAL_STREAM_STATUS.EXPIRE
   }
 ]
 export default {
