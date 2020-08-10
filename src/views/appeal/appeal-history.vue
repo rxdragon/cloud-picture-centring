@@ -43,54 +43,54 @@
             width="220"
             fixed="left"
           >
-            <template slot-scope="scope">
+            <template slot-scope="{ row }">
               <div>
                 <p class="table-title">时间:</p>
-                {{ scope.row.createdAt }}
+                {{ row.createdAt }}
               </div>
               <div>
                 <p class="table-title">流水号:</p>
-                {{ scope.row.streamNum }}
+                {{ row.streamNum }}
               </div>
             </template>
           </el-table-column>
           <el-table-column label="申诉类型" prop="appealTypeName" width="150" />
           <el-table-column prop="appealStatusDesc" label="处理状态" width="100"/>
           <el-table-column prop="storeReturnNum" label="初审详情">
-            <template slot-scope="scope">
+            <template slot-scope="{ row }">
               <div>
                 <p class="table-title">初审人:</p>
-                {{ scope.row.firstInfo.staffName }}
+                {{ row.firstInfo.staffName }}
               </div>
               <div>
                 <p class="table-title">初审状态:</p>
-                {{ scope.row.firstInfo.status }}
+                {{ row.firstInfo.status }}
               </div>
               <div>
                 <p class="table-title">初审时间:</p>
-                {{ scope.row.firstInfo.time }}
+                {{ row.firstInfo.time }}
               </div>
             </template>
           </el-table-column>
           <el-table-column prop="storeReturnNum" label="复审详情">
-            <template slot-scope="scope">
+            <template slot-scope="{ row }">
               <div>
                 <p class="table-title">复审人:</p>
-                {{ scope.row.secondInfo.staffName }}
+                {{ row.secondInfo.staffName }}
               </div>
               <div>
                 <p class="table-title">复审状态:</p>
-                {{ scope.row.secondInfo.status }}
+                {{ row.secondInfo.status }}
               </div>
               <div>
                 <p class="table-title">复审时间:</p>
-                {{ scope.row.secondInfo.time }}
+                {{ row.secondInfo.time }}
               </div>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="linkto(scope.row.id)">详情</el-button>
+            <template slot-scope="{ row }">
+              <el-button type="primary" size="mini" @click="linkto(row.id)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>

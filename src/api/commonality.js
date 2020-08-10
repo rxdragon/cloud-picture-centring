@@ -80,26 +80,18 @@ export function getStreamInfo (params) {
       // 判断是新的数据还是老的数据,新的数据有part字段
       if (part.length) {
         part.forEach(partItem => {
-          partItem.labels.forEach( labelItem => {
+          partItem.labels.forEach(labelItem => {
             partReason.push(labelItem.name)
-          } )
+            partNote += partItem.note
+          })
         })
       } else {
         storePartReworkReason.forEach(partReasonItem => {
-          partReason = [...partReasonItem.reason.split('+'),...partReason]
+          partReason = [...partReasonItem.reason.split('+'), ...partReason]
+          partReasonItem.note && (partNote += partReasonItem.note + ' ')
         })
       }
       photoItem.partReason = partReason
-      // 处理局部的备注
-      if (part.length) {
-        part.forEach(partItem => {
-          partNote += partItem.note
-        })
-      } else {
-        storePartReworkReason.forEach(item => {
-          item.note && (partNote += item.note + ' ')
-        })
-      }
       photoItem.partNote = partNote || '暂无备注'
       photoItem.wholeNote = storeReworkNote || '暂无备注'
       

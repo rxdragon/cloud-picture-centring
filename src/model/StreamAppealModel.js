@@ -27,6 +27,7 @@ export default class StreamAppealModel {
   isSecondChecking = false // 处于复审中
 
   constructor (appealItem) {
+    const appealInfo = appealItem.stream_appeal_examines || []
     this.base = appealItem
     this.streamId = appealItem.stream_id
     this.id = appealItem.id
@@ -34,8 +35,8 @@ export default class StreamAppealModel {
     this.createdAt = appealItem.created_at
     this.appealTypeName = AppealTypeNameEnum[appealItem.type]
     this.appealStatusDesc = AppealStreamStatusEnum[appealItem.state]
-    if (appealItem.stream_appeal_examines[0]) {
-      const streamAppealExamines = appealItem.stream_appeal_examines[0]
+    if (appealInfo[0]) {
+      const streamAppealExamines = appealInfo[0]
       this.firstInfo = {
         staffName: _.get(streamAppealExamines, 'examine_staff_info.nickname') || '-',
         status: AppealResultStatusEnum[streamAppealExamines.state] || '-',
@@ -43,8 +44,8 @@ export default class StreamAppealModel {
       }
       this.isSelfFirst = streamAppealExamines.examine_staff_id === store.getters.userInfo.id
     }
-    if (appealItem.stream_appeal_examines[1]) {
-      const streamAppealExamines = appealItem.stream_appeal_examines[1]
+    if (appealInfo[1]) {
+      const streamAppealExamines = appealInfo[1]
       this.secondInfo = {
         staffName: _.get(streamAppealExamines, 'examine_staff_info.nickname') || '-',
         status: AppealResultStatusEnum[streamAppealExamines.state] || '-',

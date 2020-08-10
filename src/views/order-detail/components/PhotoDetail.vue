@@ -15,11 +15,13 @@
         </div>
         <div class="panel-content content-one">局部退回备注：{{ photoItem.partNote }}</div>
         <div class="panel-content content-one">
-          整体退回标记：<span
+          整体退回标记：
+          <span
             v-for="(reasonItem, index) in photoItem.wholeReason"
             :key="index"
             class="reason-item"
-          >{{ reasonItem }}
+          >
+            {{ reasonItem }}
           </span>
         </div>
         <div class="panel-content">整体退回备注：{{ photoItem.wholeNote }}</div>

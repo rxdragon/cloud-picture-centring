@@ -64,9 +64,8 @@ export default {
         this.photos = data.photos
         this.appealInfo = data.appealInfo
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -99,14 +98,8 @@ export default {
           })
         }
       })
-      if (!checkArr.length) {
-        this.$newMessage.warning('还没有勾选任何照片')
-        return
-      }
-      if (checkFail) {
-        this.$newMessage.warning('因未勾选问题照片or没有填写问题描述则需要进行提示：请填写完整申诉问题!')
-        return
-      }
+      if (!checkArr.length) return this.$newMessage.warning('还没有勾选任何照片')
+      if (checkFail) return this.$newMessage.warning('因未勾选问题照片or没有填写问题描述则需要进行提示：请填写完整申诉问题!')
       this.dialogAppealVisible = false
     },
     /**
@@ -119,7 +112,10 @@ export default {
      * @description 返回不保存
      */
     cancelAll () {
-      //
+      this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
+      this.$router.push({
+        path: '/appeal-handle'
+      })
     },
     /**
      * @description 提交

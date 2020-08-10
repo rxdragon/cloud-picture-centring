@@ -56,9 +56,6 @@ export default {
   },
   computed: {
     ...mapGetters(['imgCompressDomain'])
-  },
-  methods: {
-    
   }
 }
 </script>

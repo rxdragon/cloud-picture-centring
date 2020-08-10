@@ -239,7 +239,7 @@ export default {
     /**
      * @description 变更代码
      */
-    resetTabActivePosition($el) {
+    resetTabActivePosition ($el) {
       setTimeout(() => {
         const activeEl = $el.querySelector('.el-tabs__item.is-active')
         const lineEl = $el.querySelector('.el-tabs__active-bar')

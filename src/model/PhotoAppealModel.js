@@ -6,29 +6,30 @@ export default class PhotoAppealModel {
   createdAt = ''
   photoId = '' // 对应照片id
   desc = '' // 申诉理由
-  firstResult = {
+  firstResult = { // 初审结果
     result: '',
     resultDesc: '-'
   }
-  secondResult = {
+  secondResult = { // 复审结果
     result: '',
     resultDesc: '-',
     reason: '-'
   }
 
   constructor (photoAppeal) {
+    const appealInfo = photoAppeal.photo_appeal_examines || []
     this.base = photoAppeal
     this.id = photoAppeal.id
     this.createdAt = photoAppeal.created_at
     this.photoId = photoAppeal.photo_id
     this.desc = photoAppeal.desc
-    if (photoAppeal.photo_appeal_examines[0]) {
-      const streamAppealExamines = photoAppeal.photo_appeal_examines[0]
+    if (appealInfo[0]) {
+      const streamAppealExamines = appealInfo[0]
       this.firstResult.resultDesc = AppealResultStatusEnum[streamAppealExamines.result] || '-'
       this.firstResult.result = streamAppealExamines.result || ''
     }
-    if (photoAppeal.photo_appeal_examines[1]) {
-      const streamAppealExamines = photoAppeal.photo_appeal_examines[1]
+    if (appealInfo[1]) {
+      const streamAppealExamines = appealInfo[1]
       this.secondResult.resultDesc = AppealResultStatusEnum[streamAppealExamines.result] || '-'
       this.secondResult.reason = streamAppealExamines.reason || '-'
       this.secondResult.result = streamAppealExamines.result || ''

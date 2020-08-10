@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <photo-list v-else need-preload :photo-data="photoVersionList"  />
+    <photo-list v-else need-preload :photo-data="photoVersionList" />
     <div class="panel-box">
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
@@ -138,27 +138,7 @@ export default {
     realPhotoData () {
       return this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
     },
-    ...mapGetters(['imgDomain', 'imgCompressDomain']),
-    // 判断是否有退单标记
-    hasStoreReturnReason () {
-      return _.get(this.photoItem, 'tags.values.store_rework_reason') || _.get(this.photoItem, 'tags.values.store_part_rework_reason') || false || _.get(this.photoItem, 'tags.values.labels')
-    },
-    // 是否云学院打分
-    hcsCheckTags () {
-      return _.get(this.photoItem, 'tags.values.score') || _.get(this.photoItem, 'tags.values.check_pool_tags') || false
-    },
-    // 云学院评分
-    checkScore () {
-      return _.get(this.photoItem, 'tags.values.score') || 0
-    },
-    // 云学院标记
-    checkTag () {
-      const tagArr = _.get( this.photoItem, 'tags.values.check_pool_tags') || []
-      const tagFilter = tagArr.map(item => {
-        return item.name
-      })
-      return tagFilter
-    }
+    ...mapGetters(['imgDomain', 'imgCompressDomain'])
   },
   created () {
     this.initPhotoList()
