@@ -1,4 +1,4 @@
-# 2.0.0 (2020-08-07)
+# 2.0.0 (2020-08-10)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -292,8 +292,8 @@
 ### 🐛 Bug 修复
 |范围|描述|commitId|
 --|--|--
- codeReview | [b93aae0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b93aae0)
  codeReview | [848c4b8](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/848c4b8)
+ codeReview | [b93aae0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/b93aae0)
  css修改 | [002cc41](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/002cc41)
  dev接口路径恢复 | [4fe3c86](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4fe3c86)
  fixVarError | [fc54fa0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fc54fa0)
@@ -342,6 +342,7 @@
  修复人数显示问题 | [a9eec48](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a9eec48)
  修复代码问题 | [f126079](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f126079)
  修复代码问题 | [1e680e7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1e680e7)
+ 修复优化修图历史记录来回切换标签导致bug | [c91616b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c91616b)
  修复优化部分功能 | [f588c46](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f588c46)
  修复传参 工号为字符串 导致的bug | [79a9014](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/79a9014)
  修复传参错误 | [724cd64](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/724cd64)
@@ -358,8 +359,8 @@
  修复数据显示错误 | [3cffd7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3cffd7c)
  修复数据显示错误问题 | [cdab46f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cdab46f)
  修复数据显示问题 | [9ffe467](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9ffe467)
- 修复数据显示问题 | [6ab5b27](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6ab5b27)
  修复数据显示问题 | [c141cb1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c141cb1)
+ 修复数据显示问题 | [6ab5b27](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6ab5b27)
  修复数据问题 | [7ecc281](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/7ecc281)
  修复日志记录结束时间失败 | [e465727](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e465727)
  修复时间统计纬度计算问题 | [06f5e82](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/06f5e82)
@@ -408,7 +409,6 @@
  修改跳转问题 | [8916086](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8916086)
  兼容 win | [c297ce3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c297ce3)
  兼容jpeg和jpg对应版本' | [6dee0a1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6dee0a1)
- 修复两个订单的时候退单一直弹窗 | 修复门店退单 弹窗问题 | [61a7d4f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61a7d4f)
  删除调试代码 | [2494e20](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2494e20)
  去除修改他人记录表格 | [f365048](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f365048)
  取消默认自动上传 | [4f914c4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4f914c4)
@@ -438,7 +438,6 @@
  校验上传后的照片md5值和上传前的md5对比 | [687dd06](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/687dd06)
  照片张数 过滤模版照片 | [f0c4fb9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f0c4fb9)
  版本更新滚动加载 | [5ecc523](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5ecc523)
- 修复门店退单不显示 | 修复门店退单不显示 | [0f1d87c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0f1d87c)
  版本说明样式修改 | [e8b974b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e8b974b)
  环境变量更改 | [934a2ce](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/934a2ce)
  细节调整 | [01f846c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/01f846c)
@@ -446,13 +445,15 @@
  联调修复 | [f68b6e4](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f68b6e4)
  裁剪图调用删除 | [050e4e3](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/050e4e3)
  调试代码 | [417142c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/417142c)
- 调试调试 | [3d46f7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3d46f7c)
  调试调试 | [81030eb](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/81030eb)
- \ | 优化自动下线，如果有订单不形象判断 | [286b259](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/286b259)
- 上传校验文件错误 | 上传完成md5校验错误 | [df15e3a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/df15e3a)
- 显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
+ 调试调试 | [3d46f7c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3d46f7c)
  重置数据变化 | [29ba78a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/29ba78a)
  页码修复 | [f7880c1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f7880c1)
+ \ | 优化自动下线，如果有订单不形象判断 | [286b259](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/286b259)
+ 上传校验文件错误 | 上传完成md5校验错误 | [df15e3a](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/df15e3a)
+ 修复两个订单的时候退单一直弹窗 | 修复门店退单 弹窗问题 | [61a7d4f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/61a7d4f)
+ 修复门店退单不显示 | 修复门店退单不显示 | [0f1d87c](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0f1d87c)
+ 显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/0b63dc2)
 
 
 ### 📝 文档

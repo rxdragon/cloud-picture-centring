@@ -10,12 +10,10 @@
       <el-tab-pane v-if="showPartnerPerformance" label="伙伴绩效" name="PartnerPerformance" />
       <el-tab-pane v-if="showOverallPerformance" label="总体绩效" name="OverallPerformance" />
       <el-tab-pane v-if="showRetoucherGroupPerformance" label="修图组绩效" name="RetoucherGroupPerformance" />
-      <!-- TODO -->
-      <el-tab-pane label="退单统计" name="RetoucherChargeBackReport" />
+      <el-tab-pane v-if="showRetoucherChargeBackReport" label="退单统计" name="RetoucherChargeBackReport" />
       <el-tab-pane v-if="showTimeStatistics" label="用时统计" name="TimeStatistics" />
       <el-tab-pane v-if="showCheckerEvaluate" label="看片评价" name="CheckerEvaluate" />
-      <!-- TODO -->
-      <el-tab-pane label="云学院报告" name="CloudCollegeReport" />
+      <el-tab-pane v-if="showCloudCollegeReport" label="云学院报告" name="CloudCollegeReport" />
     </el-tabs>
     <div
       class="table-box"
@@ -79,7 +77,9 @@ export default {
       'showOverallPerformance',
       'showTimeStatistics',
       'showCheckerEvaluate',
-      'showRetoucherGroupPerformance'
+      'showRetoucherGroupPerformance',
+      'showRetoucherChargeBackReport',
+      'showCloudCollegeReport'
     ])
   }
 }
