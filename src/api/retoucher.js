@@ -20,12 +20,22 @@ export function getSelfQuota () {
     const overTimePunishExp = Number(_.get(data, 'todayExp.overTimePunish') || 0) // 超时扣除海草
     const todayExp = retouchExp - punishExp - overTimePunishExp // 今日最终海草
 
-    data.punishExp = punishExp.toFixed(2)
+    const todayPunishExp = punishExp + overTimePunishExp
+    data.todayPunishExp = todayPunishExp.toFixed(2)
     data.todayExp = todayExp.toFixed(2)
 
-    const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward
-    data.todayRewordIncome = (todayIncome || 0).toFixed(2)
-    data.punishIncome = (data.todayIncome.punish || 0).toFixed(2)
+    const incomePunish = _.get(data, 'todayIncome.punish') || 0 // 惩罚金额
+    const incomeOverTimePunish = _.get(data, 'todayIncome.overTimePunish') || 0 // 超时惩罚金额
+    const retouchIncome = _.get(data, 'todayIncome.retouch') || 0 // 今日修图收益
+    const impulseIncome = _.get(data, 'todayIncome.impulse') || 0 // 今日冲量奖励收益
+    const rewardIncome = _.get(data, 'todayIncome.reward') || 0 // 今日奖励收益
+
+    const todayIncome = retouchIncome + impulseIncome + rewardIncome - incomePunish - incomeOverTimePunish
+    data.todayRewordIncome = todayIncome.toFixed(2)
+    
+    const punishIncome = incomePunish + incomeOverTimePunish
+    data.punishIncome = punishIncome.toFixed(2)
+
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
     data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
