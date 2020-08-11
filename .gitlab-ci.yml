@@ -5,8 +5,6 @@ stages:
 
 .deploy:
   stage: deploy
-  tags:
-    - nodejs-outwall
   cache:
     key: cache
     paths:
