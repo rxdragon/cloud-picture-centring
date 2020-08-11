@@ -643,6 +643,7 @@
  更新版本说明 | 更新版本说明 | [9a00067](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a00067)
  删除多余文件 | [bc377f1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bc377f1)
  更改ui框架 | [1f975be](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1f975be)
+ 更改配置 | [d127a74](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/d127a74)
  更改配置 | [aafa90f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/aafa90f)
 
 
