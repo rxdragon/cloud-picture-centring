@@ -11,14 +11,22 @@ export function getSelfQuota () {
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
+    const punishExp = _.get(data, 'today.punish') || 0
+    const retouchExp = _.get(data, 'today.retouch') || 0
+    const rollbackExp = _.get(data, 'today.rollback') || 0
+    const todayIncomeRetouch = _.get(data, 'todayIncome.retouch') || 0
+    const todayIncomeImpulse = _.get(data, 'todayIncome.impulse') || 0
+    const todayIncomeReward = _.get(data, 'todayIncome.reward') || 0
+    const todayIncomeRollback = _.get(data, 'todayIncome.rollback') || 0
+    const todayIncomePunish = _.get(data, 'todayIncome.punish') || 0
     for (const key in data.todayIncome) {
       data.todayIncome[key] = Number(data.todayIncome[key])
     }
-    data.punishExp = Number(data.todayExp.punish || 0).toFixed(2)
-    data.todayExp = Number(data.todayExp.retouch || 0).toFixed(2)
-    const todayIncome = data.todayIncome.retouch + data.todayIncome.impulse + data.todayIncome.reward
-    data.todayRewordIncome = (todayIncome || 0).toFixed(2)
-    data.punishIncome = (data.todayIncome.punish || 0).toFixed(2)
+    data.punishExp = Number(punishExp - rollbackExp).toFixed(2)
+    data.todayExp = Number(retouchExp + rollbackExp).toFixed(2)
+    const todayIncome = todayIncomeRetouch + todayIncomeImpulse + todayIncomeReward + todayIncomeRollback
+    data.todayRewordIncome = (todayIncome).toFixed(2)
+    data.punishIncome = (todayIncomePunish - todayIncomeRollback).toFixed(2)
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
     data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
