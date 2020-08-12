@@ -246,20 +246,20 @@ export default {
           margin-right: 10px;
 
           &.plant {
-            color: #44c27e;
-            background-color: #fff;
+            color: #fff;
+            background-color: #44c27e;
             border-color: #44c27e;
           }
 
           &.pull {
-            color: #ff3974;
-            background-color: #fff;
+            color: #fff;
+            background-color: #ff3974;
             border-color: #ff3974;
           }
 
           &.none {
-            color: #4669fb;
-            background-color: #fff;
+            color: #fff;
+            background-color: #4669fb;
             border-color: #4669fb;
           }
         }
@@ -271,10 +271,7 @@ export default {
             margin: 0 10px 10px 0;
             font-size: 12px;
             font-weight: 400;
-            color: #fff;
-            background: #000;
             border-radius: 4px;
-            opacity: 0.6;
           }
         }
       }

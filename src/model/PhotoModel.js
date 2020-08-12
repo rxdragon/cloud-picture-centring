@@ -24,6 +24,9 @@ export default class PhotoModel {
   checkEvaluator = '' // 打分人
 
   constructor (photoData) {
+    if (photoData instanceof Array) {
+      photoData = {}
+    }
     this.baseData = photoData
     this.id = photoData.id
     this.isReturn = _.get(photoData, 'tags.statics', []).includes('return_photo')
@@ -31,9 +34,9 @@ export default class PhotoModel {
     this.isPlant = _.get(photoData, 'tags.statics', []).includes('plant')
 
     const otherPhotoVersion = photoData.other_photo_version || []
-    this.originalPhoto = otherPhotoVersion.find(item => item.version === 'original_photo')
+    this.originalPhoto = otherPhotoVersion.find(item => item.version === 'original_photo') || {}
     this.firstPhoto = photoData.first_photo
-    this.completePhoto = otherPhotoVersion.find(item => item.version === 'complete_photo')
+    this.completePhoto = otherPhotoVersion.find(item => item.version === 'complete_photo') || {}
     if (this.completePhoto) {
       const findLastRetouchPhoto = otherPhotoVersion.find(item => item.version === 'last_retouch_photo')
       if (findLastRetouchPhoto) { findLastRetouchPhoto.version = 'complete_photo' }

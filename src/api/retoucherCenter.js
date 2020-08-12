@@ -164,23 +164,21 @@ export function joinQueue () {
 export function getRetouchQuotaList (params) {
   return axios({
     url: '/project_cloud/retoucher/getRetouchQuotaList',
-    method: 'GET',
-    params
+    method: 'POST',
+    data: params
   }).then(msg => {
     const createData = {
-      page: msg.pages,
       total: msg.total,
       list: []
     }
     msg.list = msg.list.map(listItem => {
       const streamInfo = new StreamModel(listItem)
       return {
-        ...streamInfo,
-        peopleTable: PhotoTool.getPhotoPeopleTabel(listItem.photos)
+        ...streamInfo
       }
     })
     createData.list = msg.list
-    return createData
+    return Object.freeze(createData)
   })
 }
 

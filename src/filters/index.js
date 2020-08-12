@@ -1,6 +1,6 @@
 import { timeFormat } from '@/utils/index.js'
 import { formatTime } from '@/utils/timespan.js'
-import { PhotoEnumName, RetouchStandard, HourGlassSettingEnum, StreamState } from '@/utils/enumerate.js'
+import { PhotoEnumName, retouchStandardToCN, HourGlassSettingEnum, StreamState, PlantTypeNameEnum } from '@/utils/enumerate.js'
 
 /**
  * 10000 => "10,000"
@@ -15,9 +15,9 @@ export function toThousandFilter (num) {
  * @param {number} num
  */
 export function toFixedString (num) {
-  num = Number(num)
-  if (isNaN(num)) return '0.00'
-  return num.toFixed(2)
+  const numValue = Number(num)
+  if (isNaN(numValue)) return num
+  return numValue.toFixed(2)
 }
 
 /**
@@ -33,7 +33,7 @@ export function toPhotoVerName (str) {
  * @param {*} str
  */
 export function toRetouchClass (str) {
-  return RetouchStandard[str] || '异常'
+  return retouchStandardToCN[str] || '异常'
 }
 
 /**
@@ -93,4 +93,12 @@ export function toTimeFormatText (time) {
  */
 export function toTimeSpan (time) {
   return formatTime(time)
+}
+
+/**
+ * @description 格式化中拔草信息
+ * @param {*} time
+ */
+export function toPlantCN (type) {
+  return PlantTypeNameEnum[type]
 }

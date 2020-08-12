@@ -1,25 +1,29 @@
 <template>
-  <ve-bar
+  <ve-histogram
     :data="chartData"
     :legend-visible="false"
     :extend="extend"
     :settings="chartSettings"
-    height="750px"
+    height="400px"
   />
 </template>
 
 <script>
 import { joinTimeSpan } from '@/utils/timespan.js'
+import { CLOUD_ROLE } from '@/utils/enumerate'
+
 import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'GroupChart',
   props: {
     timeSpan: { type: Array, default: () => [] },
-    tags: { type: Array, default: () => [] }
+    tags: { type: Array, default: () => [] },
+    role: { type: String, default: CLOUD_ROLE.OPERATE }
   },
   data () {
     return {
+      CLOUD_ROLE,
       chartSettings: {},
       extend: {
         grid: {
@@ -30,19 +34,19 @@ export default {
         series: {
           label: {
             show: true,
-            position: 'right',
+            position: 'top',
             color: '#4669FB'
           },
           barGap: '10%',
           barWidth: 24,
           itemStyle: {
-            barBorderRadius: [0, 6, 6, 0],
+            barBorderRadius: [6, 6, 0, 0],
             color: {
               type: 'linear',
-              x: 1,
+              x: 0,
               y: 0,
               x2: 0,
-              y2: 0,
+              y2: 1,
               colorStops: [
                 {
                   offset: 0,
@@ -55,6 +59,14 @@ export default {
               ],
               global: false // 缺省为 false
             }
+          }
+        },
+        xAxis: {
+          boundaryGap: ['10%', '10%'],
+          axisLabel: {
+            color: '#45454D',
+            fontSize: '10',
+            interval: 0
           }
         },
         tooltip: {
@@ -74,7 +86,7 @@ export default {
     timeSpan: {
       handler (value) {
         if (value.length) {
-          this.getChartData()
+          this.searchData()
         }
       },
       immediate: true,
@@ -82,13 +94,16 @@ export default {
     },
     tags: {
       handler (value) {
-        this.getChartData()
+        this.searchData()
       },
       immediate: true,
       deep: true
     }
   },
   methods: {
+    searchData () {
+      this.getChartData()
+    },
     /**
      * @description 获取小组数据
      */
@@ -97,10 +112,9 @@ export default {
         startAt: joinTimeSpan(this.timeSpan[0]),
         endAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      if (this.tags.length) {
-        req.tagId = this.tags
-      }
-      this.chartData.rows = await AssessmentCenter.getCloudProblemReportByGroup(req)
+      if (this.tags.length) { req.tagId = this.tags }
+      const roleType = this.role
+      this.chartData.rows = await AssessmentCenter.getCloudProblemReportByGroup(req, roleType)
     }
   }
 }

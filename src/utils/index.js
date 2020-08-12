@@ -103,7 +103,7 @@ export function timeFormat (seconds, type, showZero = false) {
     s = parseInt(s % 60)
   }
   // 补零
-  let zero = function (v) {
+  const zero = function (v) {
     if (showZero) {
       return (v >> 0) < 10 ? '0' + v : v
     } else {
@@ -125,11 +125,11 @@ export function timeFormat (seconds, type, showZero = false) {
  * @param {*} mss
  */
 export function formatDuring (mss) {
-  let days = parseInt(mss / (1000 * 60 * 60 * 24))
-  let hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  let minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
-  let seconds = parseInt((mss % (1000 * 60)) / 1000)
-  let str = ''
+  const days = parseInt(mss / (1000 * 60 * 60 * 24))
+  const hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = parseInt((mss % (1000 * 60)) / 1000)
+  const str = ''
   function isNull (t, v) {
     if (t) str += t + v
   }
@@ -217,7 +217,7 @@ export function isObj (obj) {
  * @param {*} b 基数
  */
 export function getAvg (a, b) {
-  if (!Number(a) || !Number(b)) return 0
+  if (!Number(a) || !Number(b)) return '0.00'
   const avg = (Number(a) / Number(b)).toFixed(2)
   return parseFloat(avg)
 }

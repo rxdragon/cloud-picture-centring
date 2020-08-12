@@ -14,12 +14,10 @@
         <retouch-kind-select v-model="retouchType" placeholder="请选择修图标准"/>
       </div>
       <div class="button-box">
-        <el-button type="primary" @click="getStreamTimesQuota">查询</el-button>
+        <el-button type="primary" @click="getStreamTimesInfo">查询</el-button>
       </div>
     </div>
     <div class="table-panel">
-      <div class="unit">单位：分钟</div>
-      <!-- 第一行 -->
       <div class="list-panel-title row-one">
         <div class="title">
           <span>接单时间</span>
@@ -40,31 +38,36 @@
       </div>
       <div class="list-panel-content">
         <div class="content row-one">
-          <span>{{ tableData.receiptTime | formatDuring }}</span>
-          <span>{{ tableData.retouchAllTimeAvg | formatDuring }}</span>
-          <span>{{ tableData.retouchTimeAvg | formatDuring }}</span>
-          <span>{{ tableData.outerRetouchTimeAvg | formatDuring }}</span>
+          <span>{{ tableData.receiptTime | toTimeFormatText }}</span>
+          <span>{{ tableData.retouchAllTimeAvg | toTimeFormatText }}</span>
+          <span>{{ tableData.retouchTimeAvg | toTimeFormatText }}</span>
+          <span>{{ tableData.outerRetouchTimeAvg | toTimeFormatText }}</span>
         </div>
       </div>
       <div class="list-panel-title row-two">
         <div class="title">
-          <span>审核用时</span>
-          <span class="describe">(审核团审核的平均时长)</span>
+          <span>单张蓝标修图平均时长</span>
+          <span class="describe">(蓝标修图标准的单张修图平均时长)</span>
         </div>
         <div class="title">
-          <span>审核退回重修时长</span>
-          <span class="describe">(审核团退回修图师至修图师再次提交的平均时长)</span>
+          <span>单张大师修图平均时长</span>
+          <span class="describe">(大师修图标准的单张修图平均时长)</span>
         </div>
         <div class="title">
-          <span>门店退回时长</span>
-          <span class="describe">(门店看片师退回质量问题单到修片师重新上传平均用时)</span>
+          <span>单张kids修图总平均时长</span>
+          <span class="describe">(kids修图标准的单张修图平均时长)</span>
+        </div>
+        <div class="title">
+          <span>单张缦图修图总平均时长</span>
+          <span class="describe">(缦图修图标准的单张修图平均时长)</span>
         </div>
       </div>
       <div class="list-panel-content">
         <div class="content row-two">
-          <span>{{ tableData.reviewTimeAvg | formatDuring }}</span>
-          <span>{{ tableData.returnToRebuildTime | formatDuring }}</span>
-          <span>{{ tableData.storeReturnTime | formatDuring }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.BLUE].avg | toTimeFormatText }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.MASTER].avg | toTimeFormatText }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.KIDS].avg | toTimeFormatText }}</span>
+          <span>{{ retouchTimeAvg[RETOUCH_STANDARD.MAINTO].avg | toTimeFormatText }}</span>
         </div>
       </div>
     </div>
@@ -76,29 +79,69 @@ import DatePicker from '@/components/DatePicker'
 import RetoucherGroupSelect from '@SelectBox/RetoucherGroupSelect'
 import RetouchKindSelect from '@SelectBox/RetouchKindSelect'
 import moment from 'moment'
+
 import * as WorkManage from '@/api/workManage'
-import { joinTimeSpan } from '@/utils/timespan.js'
-import { formatDuring } from '@/utils'
+
+import { RETOUCH_STANDARD } from '@/utils/enumerate.js'
+import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 
 export default {
   name: 'TimeStatistics',
   components: { DatePicker, RetoucherGroupSelect, RetouchKindSelect },
-  filters: { formatDuring },
   data () {
     return {
+      RETOUCH_STANDARD,
       loading: false,
       timeSpan: null, // 时间戳
       retouchType: '', // 修图标准
       retoucherGroupValue: '', // 修图组
-      tableData: {}
+      tableData: {},
+      retouchTimeAvg: {
+        [RETOUCH_STANDARD.BLUE]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        },
+        [RETOUCH_STANDARD.MASTER]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        },
+        [RETOUCH_STANDARD.KIDS]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        },
+        [RETOUCH_STANDARD.MAINTO]: {
+          sum: 0,
+          count: 0,
+          avg: 0
+        }
+      }
     }
   },
   created () {
-    const nowAt = moment().locale('zh-cn').format('YYYY-MM-DD')
+    const nowAt = moment().format('YYYY-MM-DD')
     this.timeSpan = [nowAt, nowAt]
-    this.getStreamTimesQuota()
+    this.getStreamTimesInfo()
   },
   methods: {
+    /**
+     * @description 搜索相关信息
+     */
+    async getStreamTimesInfo () {
+      try {
+        this.loading = true
+        await Promise.all([
+          this.getStreamTimesQuota(),
+          this.getOrgStandardTimesQuota()
+        ])
+      } finally {
+        await delayLoading()
+        this.loading = false
+      }
+      
+    },
     /**
      * @description 获取请求参数
      */
@@ -110,30 +153,26 @@ export default {
       }
       req.startAt = joinTimeSpan(this.timeSpan[0])
       req.endAt = joinTimeSpan(this.timeSpan[1], 1)
-      if (this.retoucherGroupValue) {
-        req.retouchGroup = this.retoucherGroupValue
-      }
-      if (this.retouchType) {
-        req.retouchClass = this.retouchType
-      }
+      if (this.retoucherGroupValue) { req.retouchGroup = this.retoucherGroupValue }
+      if (this.retouchType) { req.retouchClass = this.retouchType }
       return req
     },
     /**
      * @description 查询绩效
      */
     async getStreamTimesQuota () {
-      try {
-        const req = this.getParams()
-        if (!req) return
-        this.loading = true
-        this.tableData = await WorkManage.getStreamTimesQuota(req)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setTimeout(() => {
-          this.loading = false
-        }, 500)
-      }
+      const req = this.getParams()
+      if (!req) return
+      this.loading = true
+      this.tableData = await WorkManage.getStreamTimesQuota(req)
+    },
+    /**
+     * @description 获取修图标准时间
+     */
+    async getOrgStandardTimesQuota () {
+      const req = this.getParams()
+      delete req.retouchType
+      this.retouchTimeAvg = await WorkManage.getOrgStandardTimesQuota(req)
     }
   }
 }
@@ -141,27 +180,18 @@ export default {
 
 <style lang="less">
 
-
 .time-statistics {
   .table-panel {
     position: relative;
     margin-top: 32px;
     border-bottom: 1px solid #f2f6fc;
 
-    .unit {
-      position: absolute;
-      top: -30px;
-      right: 0;
-      font-size: 14px;
-      color: #606266;
-    }
-
     .row-one {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .row-two {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .list-panel-title {

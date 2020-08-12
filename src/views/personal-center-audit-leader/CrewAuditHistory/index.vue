@@ -91,7 +91,7 @@ export default {
       auditType: 0, // 审核种拔草
       spotCheckType: 0, // 抽查种拔草
       correcType: 0, // 纠偏冲拔草
-      staffId: 0, // 伙伴id
+      staffId: '', // 伙伴id
       tableData: [], // 列表数据
       pager: {
         page: 1,

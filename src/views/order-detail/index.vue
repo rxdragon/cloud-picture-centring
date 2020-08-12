@@ -108,8 +108,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .order-detail {
   .panel-title {
     margin-bottom: 20px;

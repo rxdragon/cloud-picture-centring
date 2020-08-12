@@ -40,12 +40,6 @@
                 <count-to :end-value="otherInfo.templatePhotoNum.photographOrgUploadTemplatePhotoNum" />
               </div>
             </div>
-            <div class="info-box">
-              <div class="info-title">重修率</div>
-              <div class="info-content">
-                <count-to :end-value="otherInfo.reworkRate" />%
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -86,7 +80,6 @@ export default {
         outerRetouchStreamNum: '0'
       },
       otherInfo: {
-        reworkRate: '0',
         templatePhotoNum: { overTemplatePhotoNum: 0, photographOrgUploadTemplatePhotoNum: 0 },
         photographOrgUploadStreamNum: '0',
         photographyUploadPhotoNum: { single: 0, multi: 0 }

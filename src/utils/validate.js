@@ -143,5 +143,6 @@ export function toFixed (number, point = 2) {
   const numArr = Number(number).toFixed(point + 1).split('.')
   // 判断个位大于等于5，加1
   if (numArr.length > 1 && Number(numArr[1]) % 10 >= 5) numArr[1] = Number(numArr[1]) + 1
-  return Number(numArr.join('.')).toFixed(point)
+  const parseFloatData = Number(numArr.join('.')).toFixed(point)
+  return parseFloat(parseFloatData)
 }

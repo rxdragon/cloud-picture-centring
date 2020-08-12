@@ -27,7 +27,7 @@ export default class Particle {
   }
 
   rotateX (angle){
-    let sin = Math.sin(angle),
+    const sin = Math.sin(angle),
       cos = Math.cos(angle),
       nextY = this.nextY * cos - this.nextZ * sin,
       nextZ = this.nextZ * cos + this.nextY * sin,
@@ -41,7 +41,7 @@ export default class Particle {
   }
 
   rotateY (angle){
-    let sin = Math.sin(angle),
+    const sin = Math.sin(angle),
       cos = Math.cos(angle),
       nextX = this.nextX * cos - this.nextZ * sin,
       nextZ = this.nextZ * cos + this.nextX * sin,
@@ -55,7 +55,7 @@ export default class Particle {
   }
 
   rotateZ (angle){
-    let sin = Math.sin(angle),
+    const sin = Math.sin(angle),
       cos = Math.cos(angle),
       nextX = this.nextX * cos - this.nextY * sin,
       nextY = this.nextY * cos + this.nextX * sin,
@@ -85,7 +85,7 @@ export default class Particle {
   }
   
   getAxis2D (theta){
-    let axis = this.getAxis3D(),
+    const axis = this.getAxis3D(),
       scale = this.FOCUS_POSITION / (this.FOCUS_POSITION + axis.z)
 			
     return {x: this.center.x + axis.x * scale, y: this.center.y - axis.y * scale, color: this.COLOR.replace('%hue', this.hue + theta)}

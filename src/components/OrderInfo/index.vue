@@ -201,8 +201,8 @@ export default {
     grid-template-columns: 4fr 2fr 2fr 2fr 2fr 2fr 2fr;
 
     .stream-state {
-      .el-tag:nth-last-of-type(1) {
-        margin-left: 12px;
+      .el-tag:nth-last-of-type(2) {
+        margin-right: 12px;
       }
 
       .stream-num {

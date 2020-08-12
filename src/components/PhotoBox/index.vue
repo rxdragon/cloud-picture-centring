@@ -28,6 +28,21 @@
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
       <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto('original')">下载照片</el-button>
+      <el-popover
+        v-if="orginLinkPhotoPath"
+        placement="right"
+        width="241"
+        trigger="hover"
+      >
+        <el-image
+          :src="imgCompressDomain + orginLinkPhotoPath"
+          :fit="containPhoto ? 'contain' : 'cover'"
+          :class="{
+            'show-center': containPhoto
+          }"
+        />
+        <el-button type="text" @click.stop.capture="downingOrginLinkPhoto" slot="reference">原始图片下载</el-button>
+      </el-popover>
       <el-button v-if="downComplete" type="text" @click.stop.capture="downingPhoto">下载云端成片</el-button>
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
@@ -40,7 +55,6 @@
       <div class="reason-content">
         <el-tag
           size="medium"
-          type="info"
           class="reason-tag"
           v-for="(tagItem, tagIndex) in storePartReworkReason"
           :key="tagIndex"
@@ -114,6 +128,14 @@ export default {
       } else {
         return null
       }
+    },
+    // 如果模版照，关联是由哪张照片生成的
+    orginLinkPhotoPath () {
+      const isStoreReturn = _.get(this.tags, 'statics', []).includes('store_rework')
+      const isTemplate = this.orginPhotoPath.includes('template')
+      if (!isStoreReturn || !isTemplate) return ''
+      const orginLinkPath = _.get(this.tags, 'values.origin_photo_path') || ''
+      return orginLinkPath
     },
     // 重修理由
     recedeReason () {
@@ -200,6 +222,19 @@ export default {
       const savePath = `/${this.streamNum}`
       let imgSrc = type === 'original' ? this.orginPhotoPath : this.src
       imgSrc = imgSrc || this.src
+      const data = {
+        url: this.imgDomain + imgSrc,
+        path: savePath
+      }
+      this.$newMessage.success('已添加一张照片到下载')
+      DownIpc.addDownloadFile(data)
+    },
+    /**
+     * @description 下载原始图片显示
+     */
+    downingOrginLinkPhoto () {
+      const savePath = `/${this.streamNum}`
+      const imgSrc = this.orginLinkPhotoPath
       const data = {
         url: this.imgDomain + imgSrc,
         path: savePath
@@ -356,14 +391,13 @@ export default {
 
     .reason-tag {
       height: auto;
-      min-height: 28px;
-      padding: 4px 10px 6px;
       font-weight: 400;
       line-height: 20px;
-      color: #fff;
       white-space: inherit;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 4px;
+
+      & + .reason-tag {
+        margin-top: 5px;
+      }
     }
   }
 }
