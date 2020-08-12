@@ -46,6 +46,8 @@ export default class StreamModel {
   receiptAt = '-' // 接单时间
   passAt = '-' // 审核通过时间
   retouchAllTime = '-' // 修图总时长
+  reviewTime = '' // 审核时间
+  hourGlassOverTime = '' // 沙漏结束时间 (分)
 
   // 门店退回相关
   isStoreReturn = false // 是否是门店退回
@@ -62,6 +64,8 @@ export default class StreamModel {
   bothNumForRework = 0 // 退回单门店退回质量问题张数&非质量问题张数
   allReturnPhotoNum = 0 // 全部退单张数
 
+  reworkNum = 0
+
   // 评价相关
   goodEvaluate = '-'
   retoucherNpsAvg = '-'
@@ -76,6 +80,18 @@ export default class StreamModel {
   // 云学院
   isCloudEvaluation = '否' // 是否云学院抽查
   cloudEvaluateTime = '-' // 云学院评价时间
+
+  // 申诉
+  currentStreamAppeal = false // 是否在申诉中
+
+  // 摄影机构信息
+  photographerOrgName = '' // 摄影机构名称
+
+  // 工作人员信息
+  photographerName = '' // 摄影师名字
+
+  // 产品信息
+  productName = '' // 产品名称
 
   constructor (streamData) {
     if (!streamData) return
@@ -122,6 +138,20 @@ export default class StreamModel {
     // 云学院
     this.isCloudEvaluation = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CLOUD_EVALUATION) ? '是' : '否'
     this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
+
+    // 申诉
+    this.currentStreamAppeal = streamData.currentStreamAppeal
+
+    // 摄影机构信息
+    this.photographerOrgName = _.get(streamData, 'order.photographer_org.name') || '-'
+
+    // 产品信息
+    this.productName = _.get(streamData, 'product.name') || '-'
+
+    // 工作人员
+    this.photographerName = _.get(streamData, 'order.tags.values.photographer') || '-'
+
+    this.reworkNum = _.get(streamData, 'tags.values.rework_num') || 0
   }
 
   // 获取沙漏相关信息
@@ -188,6 +218,8 @@ export default class StreamModel {
     this.receiptAt = this.baseData.receipt_at || '-'
     this.passAt = this.baseData.pass_at || '-'
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
+    this.reviewTime = this.baseData.review_time || '-'
+    this.hourGlassOverTime = _.get(this.baseData, 'hour_glass.over_time') || ''
     const retouchTime = _.get(this.baseData, 'retouch_time') || 0
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
     const allTime = retouchTime + reviewReturnRebuildTime

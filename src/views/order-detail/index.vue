@@ -4,12 +4,12 @@
       <h3>修图详情</h3>
       <el-button
         type="primary"
-        v-if="qualityNum && !orderData.currentStreamAppeal"
+        v-if="hasQuality && !orderData.currentStreamAppeal"
         @click="showAppeal"
       >
         我要申诉
       </el-button>
-      <el-button type="info" disabled v-if="qualityNum && orderData.currentStreamAppeal">
+      <el-button type="info" disabled v-if="hasQuality && orderData.currentStreamAppeal">
         申诉中
       </el-button>
     </div>
@@ -42,7 +42,7 @@
       </div>
       <p class="appeal-photo-title">选择问题照片</p>
       <div class="appeal-photos">
-        <rework-photo v-for="(photo) in photos" :photo-item="photo" :key="photo.id"></rework-photo>
+        <rework-photo v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-photo>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="info" @click="cancelAppeal">取消</el-button>
@@ -69,7 +69,6 @@ export default {
       streamId: '', // 流水id
       orderData: {}, // 订单信息
       photos: [],
-      qualityNum: this.$route.query.qualityNum, // 质量问题数量
       dialogAppealVisible: false,
       appealType: 'rework', // 申诉信息
       appealOptions: [
@@ -84,6 +83,12 @@ export default {
     // 是否是工作看板详情
     isWorkBoardInfo () {
       return Boolean(this.$route.query.workBoardStreamNum)
+    },
+    appealPhotos () {
+      return this.photos.filter(item => item.qualityType === 'quality')
+    },
+    hasQuality () {
+      return this.photos.some(item => item.qualityType === 'quality')
     }
   },
   created () {

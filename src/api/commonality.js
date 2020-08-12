@@ -1,8 +1,9 @@
 // commonality
 import axios from '@/plugins/axios.js'
-import store from '@/store' // vuex
 import { keyToHump } from '@/utils/index.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import StreamModel from '@/model/StreamModel.js'
+import PhotoModel from '@/model/PhotoModel.js'
 
 
 /**
@@ -34,70 +35,33 @@ export function getStreamInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
+    const streamData = new StreamModel(msg)
     const data = keyToHump(msg)
     const createData = {}
-    const reworkNum = _.get(data, 'tags.values.rework_num') || 0
-    const storeReworkNum = _.get(data, 'tags.values.store_rework_num') || 0
-    const store_evaluate = _.get(data, 'storeEvaluateStream.store_evaluate') || '-'
-    let retoucherNpsAvg = _.get(data, 'tags.values.retoucher_score') || '-'
     const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
-    retoucherNpsAvg = npsAvgEnum[+retoucherNpsAvg] || `${retoucherNpsAvg}`
-    const retouchAllTime = ((data.retouchTime + data.reviewReturnRebuildTime) / 60).toFixed(2) + 'min'
-    const reviewTime = (data.reviewTime / 60).toFixed(2) + 'min'
+    const photos = []
     data.photos.forEach(photoItem => {
-      let wholeReason = []
-      let partReason = []
-      let partNote = ''
-      const part = _.get( photoItem, 'tags.values.part', [])
-      const storePartReworkReason = _.get( photoItem, 'tags.values.store_part_rework_reason', [])
-      const filmEvaluation = _.get(photoItem, 'tags.values.film_evaluation') || ''
-      const labels = _.get( photoItem, 'tags.values.labels', [])
-      const storeReworkReason = _.get( photoItem, 'tags.values.store_rework_reason', '')
-      const storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note')
-      photoItem.filmEvaluation = filmEvaluation
-      photoItem.reworkNum = reworkNum
-      photoItem.reworkChecked = false // 申诉的勾选
-      photoItem.appealReason = '' // 申诉的说明
-
+      const photoData = new PhotoModel(photoItem)
+      const finalPhotoItem = {
+        filmEvaluation: photoData.photoData,
+        reworkNum: streamData.reworkNum,
+        reworkChecked: false,
+        appealReason: '',
+        qualityType: photoData.qualityType,
+        wholeReason: photoData.wholeReason,
+        partReason: photoData.partReason,
+        partNote: photoData.partNote,
+        wholeNote: photoData.wholeNote
+      }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
         // 过滤看片师新增照片
-        photoItem.photoVersion = ''
+        finalPhotoItem.photoVersion = ''
       } else {
-        photoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
+        finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
       }
-      // 处理整体的退单标记
-      // 判断是新的数据还是老的数据,新的数据有labels字段
-      if (labels.length) {
-        labels.forEach(labelsItem => {
-          wholeReason.push(labelsItem.name)
-        })
-      } else {
-        wholeReason = wholeReason.concat(storeReworkReason ? storeReworkReason.split('+') : [])
-      }
-      photoItem.wholeReason = wholeReason
-      // 处理局部的退单标记
-      // 判断是新的数据还是老的数据,新的数据有part字段
-      if (part.length) {
-        part.forEach(partItem => {
-          partItem.labels.forEach(labelItem => {
-            partReason.push(labelItem.name)
-            partNote += partItem.note
-          })
-        })
-      } else {
-        storePartReworkReason.forEach(partReasonItem => {
-          partReason = [...partReasonItem.reason.split('+'), ...partReason]
-          partReasonItem.note && (partNote += partReasonItem.note + ' ')
-        })
-      }
-      photoItem.partReason = partReason
-      photoItem.partNote = partNote || '暂无备注'
-      photoItem.wholeNote = storeReworkNote || '暂无备注'
-      
-
-      if (photoItem.photoVersion) {
-        photoItem.photoVersion.forEach(versionItem => {
+      if (finalPhotoItem.photoVersion) {
+        finalPhotoItem.photoVersion.forEach(versionItem => {
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
           versionItem.phototag = photoItem.tags
 
@@ -108,29 +72,28 @@ export function getStreamInfo (params) {
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
         })
       }
+      photos.push(finalPhotoItem)
     })
-    data.photos = data.photos.filter(photoItem => Boolean(photoItem.photoVersion))
-    let referencePhoto = _.get(data, 'tags.values.retouch_claim.referenceImg')
-    referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
+    data.photos = photos.filter(photoItem => Boolean(photoItem.photoVersion))
     createData.orderData = {
-      currentStreamAppeal: data.currentStreamAppeal,
-      streamNum: data.streamNum,
-      photographerOrg: data.order ? data.order.photographer_org.name : '-',
-      productName: _.get(data, 'product.name', '-'),
+      currentStreamAppeal: streamData.currentStreamAppeal,
+      streamNum: streamData.streamData,
+      photographerOrg: streamData.photographerOrgName,
+      productName: streamData.productName,
       photoNum: data.photos.filter(item => +item.people_num > 0).length,
-      photographerName: _.get(data, 'order.tags.values.photographer') || '-',
-      reworkNum,
-      storeReworkNum,
-      retouchAllTime,
-      retoucherNpsAvg,
-      reviewTime,
-      store_evaluate,
-      overTime: data.hourGlass ? data.hourGlass.over_time + 'min' : '-',
-      requireLabel: _.get(data, 'tags.values.retouch_claim', {}),
-      referencePhoto,
-      retouchRemark: data.note.retouch_note || '暂无修图备注',
-      backgroundColor: msg.note.color_note || '',
-      reviewerNote: _.get(data, 'tags.values.review_reason', '暂无审核备注')
+      photographerName: streamData.photographerName,
+      reworkNum: streamData.reworkNum,
+      storeReworkNum: streamData.storeReturnNum,
+      retouchAllTime: streamData.retouchAllTime,
+      retoucherNpsAvg: npsAvgEnum[streamData.retoucherNpsAvg] || `${streamData.retoucherNpsAvg}`,
+      reviewTime: (streamData.reviewTime / 60).toFixed(2) + 'min',
+      store_evaluate: streamData.goodEvaluate,
+      overTime: streamData.hourGlassOverTime ? streamData.hourGlassOverTime + 'min' : '-',
+      requireLabel: streamData.requireLabel,
+      referencePhoto: streamData.referencePhoto,
+      retouchRemark: streamData.retouchRemark,
+      backgroundColor: streamData.backgroundColor,
+      reviewerNote: streamData.reviewerNote
     }
     createData.photos = data.photos
     return createData

@@ -255,11 +255,8 @@ export default {
      * @description 跳转链接
      */
     linkto (row) {
-      const { streamId, qualityNum, qualityNumForRework } = row
-      const query = {
-        streamId,
-        qualityNum: qualityNum || qualityNumForRework
-      }
+      const { streamId } = row
+      const query = { streamId }
       if (this.active === 'others') {
         query.searchOther = 1
       }

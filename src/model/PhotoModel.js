@@ -22,10 +22,13 @@ export default class PhotoModel {
   storeReworkNote = '' // 门店退回备注
   storePartReworkReason = [] // 退回标记
   storePartReworkReasonTags = [] // 全部退回标记
+  qualityType = '' // 是否为质量问题
 
   checkPoolScore = '' // 云学院抽片分数
   checkPoolTags = [] // 云学院标记
   checkEvaluator = '' // 打分人
+
+  filmEvaluation = '' // 摄影评价
 
   constructor (photoData) {
     const labels = _.get( photoData, 'tags.values.labels', []) // 整体问题标签new
@@ -50,6 +53,7 @@ export default class PhotoModel {
     
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
+    this.qualityType = _.get(photoData, 'tags.values.store_rework_type') || ''
     this.isStoreReturn = statics.includes('store_rework')
     this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || '-'
     if (labels.length) { // labels有的时候是新数据格式
@@ -72,6 +76,8 @@ export default class PhotoModel {
       }
       this.partNote += partReasonItem.note
     })
+
+    this.filmEvaluation = _.get(photoData, 'tags.values.film_evaluation') || ''
     this.getStoreReturnReason()
   }
 
