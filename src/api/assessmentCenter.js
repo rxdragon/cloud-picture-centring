@@ -144,7 +144,9 @@ export function getSearchHistory (params) {
       item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, pureTag)
       item.issueLabel = item.commitInfo.issueLabel
       item.score = item.commitInfo.score
-      item.photoInfo.photoVersion.forEach(versionItem => { versionItem.commitInfo = item.commitInfo })
+      item.photoInfo.photoVersion.forEach(versionItem => {
+        versionItem.commitInfo = item.commitInfo
+      })
       // 是否复评
       item.isReevaluatePhoto = Boolean(item.oldTakeStaffInfo)
       // 评价人
