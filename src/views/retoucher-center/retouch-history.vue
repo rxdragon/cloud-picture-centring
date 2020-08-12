@@ -76,6 +76,7 @@
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
                   <p>照片海草：<span>{{ row.exp | toFixedString }}</span></p>
+                  <p class="text-red">被退惩罚海草：<span>{{ row.punishExp | toFixedString }}</span></p>
                   <p class="text-red">沙漏超时惩罚海草：<span>{{ row.overtimeExp | toFixedString }}</span></p>
                   <p>实际获得海草：<span>{{ row.actualExp | toFixedString }}</span></p>
                 </div>
