@@ -481,10 +481,11 @@
 --|--|--
  新增审核配置文件 | [9fe0f13](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fe0f13)
  更改ci | [f52ed61](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f52ed61)
- 更改ci | [2949183](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2949183)
+ 更改ci | [e36c1ed](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e36c1ed)
+ 更改ci | [812e6c0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/812e6c0)
  更改ci | [cc08a50](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cc08a50)
  更改ci | [373809e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/373809e)
- 更改ci | [e36c1ed](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/e36c1ed)
+ 更改ci | [2949183](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/2949183)
  更改ci相关配置 | [22884fe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22884fe)
  更改ci脚本 | [c5e7548](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c5e7548)
  更改ci脚本 | [18fb55f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/18fb55f)
