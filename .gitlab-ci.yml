@@ -70,6 +70,10 @@ build-release:
 .deploy:
   stage: deploy
   image: node:12
+  cache:
+    key: cache
+    paths:
+      - node_modules/
   artifacts:
     paths:
       - dist_electron
