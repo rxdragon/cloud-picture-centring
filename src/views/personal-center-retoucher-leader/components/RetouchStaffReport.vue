@@ -79,7 +79,7 @@ export default {
         npsEvaluate: { label: '顾客满意度（平均值）', value: '- / -' }
       },
       chartInfo: [],
-      chartShowKeys: ['finishPhotoNum', 'retouchAvgTime', 'goodStreamNum', 'storeReturnStreamNum']
+      chartShowKeys: ['finishPhotoNum', 'retouchAvgTime', 'goodStreamNum']
     }
   },
   computed: {
