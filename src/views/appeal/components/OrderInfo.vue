@@ -7,32 +7,32 @@
       <div class="content-title">修图师</div>
     </div>
     <div class="table-panel panel-order">
-      <div class="panel-content">12321321</div>
-      <div class="panel-content">12321321</div>
-      <div class="panel-content">123213</div>
-      <div class="panel-content">3123213213</div>
+      <div class="panel-content">{{ orderData.streamNum }}</div>
+      <div class="panel-content">{{ orderData.productName }}</div>
+      <div class="panel-content">{{ orderData.photographerName }}</div>
+      <div class="panel-content">{{ orderData.retoucher }}</div>
     </div>
     <!--修图要求 -->
     <div class="panel-require">
       <div class="panel-title">修图要求</div>
       <div class="panel-main">
-        <div v-if="orderInfo.requireLabel" class="panel-require-concent">
-          <el-tag size="medium">眼睛增大幅度：{{ orderInfo.requireLabel.eye | toLabelName }}</el-tag>
-          <el-tag size="medium">瘦脸幅度：{{ orderInfo.requireLabel.face | toLabelName }}</el-tag>
-          <el-tag v-if="orderInfo.requireLabel.pimples" size="medium">祛痣</el-tag>
+        <div v-if="orderData.requireLabel" class="panel-require-concent">
+          <el-tag size="medium">眼睛增大幅度：{{ orderData.requireLabel.eye | toLabelName }}</el-tag>
+          <el-tag size="medium">瘦脸幅度：{{ orderData.requireLabel.face | toLabelName }}</el-tag>
+          <el-tag v-if="orderData.requireLabel.pimples" size="medium">祛痣</el-tag>
         </div>
         <div class="panel-main-content">
           <span class="title">修图备注：</span>
-          <span class="content">{{ orderInfo.retouchRemark }}</span>
+          <span class="content">{{ orderData.retouchRemark }}</span>
         </div>
-        <div v-if="orderInfo.backgroundColor" class="panel-main-content">
+        <div v-if="orderData.backgroundColor" class="panel-main-content">
           <span class="title">背景图要求：</span>
           <div class="content require-background-color">
-            <img :src="orderInfo.backgroundColor" alt="">
-            <el-button type="text" @click="downPhoto(orderInfo.backgroundColor)">下载背景图</el-button>
+            <img :src="orderData.backgroundColor" alt="">
+            <el-button type="text" @click="downPhoto(orderData.backgroundColor)">下载背景图</el-button>
           </div>
         </div>
-        <div v-if="orderInfo.referencePhoto" class="panel-main-content">
+        <div v-if="orderData.referencePhoto" class="panel-main-content">
           <span class="title">参考图：</span>
           <div class="content require-reference-photo">
             <el-image
@@ -75,19 +75,14 @@
 import DownIpc from '@electronMain/ipc/DownIpc'
 
 export default {
-  name: 'OrderInfo',
+  name: 'orderData',
   props: {
     orderData: { type: Object, required: true },
     appealInfo: { type: Object, required: true }
   },
-  computed: {
-    orderInfo () {
-      return this.orderData
-    }
-  },
   methods: {
     downPhoto (url) {
-      const savePath = `/${this.orderInfo.streamNum}`
+      const savePath = `/${this.orderData.streamNum}`
       const data = {
         url,
         path: savePath

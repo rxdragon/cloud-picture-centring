@@ -103,18 +103,12 @@ export default {
       this.dialogAppealVisible = false
     },
     /**
-     * @description 取消申诉
-     */
-    cancelAppeal () {
-      this.dialogAppealVisible = false
-    },
-    /**
      * @description 返回不保存
      */
     cancelAll () {
       this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
       this.$router.push({
-        path: '/appeal-handle'
+        path: '/admin-manage/appeal-handle'
       })
     },
     /**
@@ -169,6 +163,10 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Appeal.appealExamine(req)
         this.$newMessage.success('提交成功')
+        this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
+        this.$router.push({
+          path: '/admin-manage/appeal-handle'
+        })
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }

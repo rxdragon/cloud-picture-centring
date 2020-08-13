@@ -141,7 +141,7 @@ export default class StreamModel {
     this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
 
     // 申诉
-    this.currentStreamAppeal = streamData.currentStreamAppeal
+    this.currentStreamAppeal = streamData.current_stream_appeal
 
     // 摄影机构信息
     this.photographerOrgName = _.get(streamData, 'order.photographer_org.name') || '-'

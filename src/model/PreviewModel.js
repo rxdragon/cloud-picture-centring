@@ -35,12 +35,16 @@ export default class PreviewModel {
       if (createData.labels) {
         createData.reason = createData.labels.map(labelItem => labelItem.name)
         createData.reasonManage = [] // 可以进行操作的reason
-        createData.labels.forEach(reasonName => {
-          createData.reasonManage.push({
-            id: reasonName.id,
-            name: reasonName.name,
+        createData.labels.forEach(label => {
+          const reasonObj = {
+            id: label.id,
+            name: label.name,
             cancel: false
-          })
+          }
+          if (label.is_del) {
+            reasonObj.cancel = true
+          }
+          createData.reasonManage.push(reasonObj)
         })
       } else {
         createData.reason = labelItem.reason ? labelItem.reason.split('+') : []
@@ -55,11 +59,15 @@ export default class PreviewModel {
       const storeReworkReason = _.get(photoItem, 'tags.values.labels') || ''
       this.storeReworkReason = storeReworkReason.map(reasonItem => reasonItem.name)
       storeReworkReason.forEach(reasonItem => {
-        this.storeReworkReasonManage.push({
+        const reasonObj = {
           id: reasonItem.id,
           name: reasonItem.name,
           cancel: false
-        })
+        }
+        if (reasonItem.is_del) {
+          reasonObj.cancel = true
+        }
+        this.storeReworkReasonManage.push(reasonObj)
       })
 
     } else {

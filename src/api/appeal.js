@@ -82,16 +82,8 @@ export function appealDetail (params) {
       }
       if (finalPhotoItem.photoVersion) photos.push(finalPhotoItem)
     })
-    const streamData = new StreamModel(msg.stream)
-    const orderData = {
-      streamNum: streamData.streamNum,
-      photoNum: streamData.photoNum,
-      requireLabel: streamData.requireLabel,
-      referencePhoto: streamData.referencePhoto,
-      retouchRemark: streamData.retouchRemark,
-      backgroundColor: streamData.backgroundColor,
-      reviewerNote: streamData.reviewerNote
-    }
+    const { baseData, ...restSteamData } = new StreamModel(msg.stream)
+    const orderData = { ...restSteamData }
     return {
       orderData,
       photos,

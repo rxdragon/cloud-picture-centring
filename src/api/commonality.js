@@ -3,6 +3,7 @@ import axios from '@/plugins/axios.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 
 /**
@@ -50,7 +51,8 @@ export function getStreamInfo (params) {
         partReason: photoData.partReason,
         partNote: photoData.partNote,
         wholeNote: photoData.wholeNote,
-        tags: photoItem.tags
+        tags: photoItem.tags,
+        id: photoData.id
       }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -70,7 +72,20 @@ export function getStreamInfo (params) {
           if (!issueLabel.length && !commitInfo.picUrl) return
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
         })
+        // 第一个store_rework才是c流水的退回原因
+        let hasRework = false
+        finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((photoVersionSum, photoVersion) => {
+          if (photoVersion.version === PHOTO_VERSION.STORE_REWORK && !hasRework) {
+            photoVersionSum.push(photoVersion)
+            hasRework = true
+          }
+          if (photoVersion.version !== PHOTO_VERSION.STORE_REWORK) {
+            photoVersionSum.push(photoVersion)
+          }
+          return photoVersionSum
+        }, [])
       }
+
       photos.push(finalPhotoItem)
     })
     msg.photos = photos.filter(photoItem => Boolean(photoItem.photoVersion))

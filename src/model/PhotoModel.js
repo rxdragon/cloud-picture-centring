@@ -59,7 +59,7 @@ export default class PhotoModel {
     const statics = _.get(photoData, 'tags.statics') || []
     this.qualityType = _.get(photoData, 'tags.values.store_rework_type') || ''
     this.isStoreReturn = statics.includes('store_rework')
-    this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || '-'
+    this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || ''
     if (labels.length) { // labels有的时候是新数据格式
       labels.forEach(labelsItem => {
         this.wholeReason.push(labelsItem.name)

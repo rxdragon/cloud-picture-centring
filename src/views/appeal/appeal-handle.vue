@@ -182,6 +182,9 @@ export default {
       return defaultOption
     }
   },
+  activated () {
+    this.getAppealList()
+  },
   created () {
     this.getAppealList()
   },

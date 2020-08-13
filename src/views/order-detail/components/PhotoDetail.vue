@@ -6,25 +6,42 @@
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
         <div class="panel-content content-one">
-          局部退回标记：<span
-            v-for="(reasonItem, index) in photoItem.partReason"
+          局部退回标记：
+          <div
+            v-for="(reasonItem, index) in reworkPhoto.storePartReworkReason"
             :key="index"
-            class="reason-item"
-          >{{ reasonItem }}
+          >
+            <div
+              v-for="(reasonManageItem, index) in reasonItem.reasonManage"
+              :key="index"
+              class="reason-item"
+            >
+              <span>{{ reasonManageItem.name }}</span>
+              <span v-if="reasonManageItem.cancel">(已删除)</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel-content content-one">
+          局部退回备注：
+          <span
+            v-for="(storePartReworkReason, index) in reworkPhoto.storePartReworkReason"
+            :key="index"
+          >
+            {{ storePartReworkReason.note }}
           </span>
         </div>
-        <div class="panel-content content-one">局部退回备注：{{ photoItem.partNote }}</div>
         <div class="panel-content content-one">
           整体退回标记：
-          <span
-            v-for="(reasonItem, index) in photoItem.wholeReason"
+          <div
+            v-for="(reasonItem, index) in reworkPhoto.storeReworkReasonManage"
             :key="index"
             class="reason-item"
           >
-            {{ reasonItem }}
-          </span>
+            <span>{{ reasonItem.name }}</span>
+            <span v-if="reasonItem.cancel">(已删除)</span>
+          </div>
         </div>
-        <div class="panel-content">整体退回备注：{{ photoItem.wholeNote }}</div>
+        <div class="panel-content">整体退回备注：{{ reworkPhoto.storeReworkNote }}</div>
       </div>
     </div>
     <div v-if="hasCheckTags" class="panel-box">
@@ -53,7 +70,10 @@
 
 <script>
 import PhotoList from '@/components/PhotoList'
+import PreviewModel from '@/model/PreviewModel'
+
 import { mapGetters } from 'vuex'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
@@ -71,9 +91,17 @@ export default {
     photoData () {
       return this.photoItem
     },
+    // 退回的那个照片
+    reworkPhoto () {
+      let storeRework = this.photoData.photoVersion.filter(photoVersion => photoVersion.version === PHOTO_VERSION.STORE_REWORK)[0]
+      if (storeRework) {
+        storeRework = new PreviewModel(storeRework)
+      }
+      return storeRework
+    },
     // 判断是否有退单标记
     hasStoreReturnReason () {
-      return this.photoData.partReason.length || this.photoData.wholeReason.length
+      return !!this.reworkPhoto
     },
     // 是否云学院打分
     hasCheckTags () {
@@ -131,6 +159,7 @@ export default {
         padding: 10px 0;
 
         .reason-item {
+          display: inline-block;
           margin: 0 10px 10px 0;
           font-size: 12px;
           border-radius: 5px;
