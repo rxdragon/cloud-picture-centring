@@ -5,7 +5,7 @@ import { getSearchMonth } from '@/utils/exportPerformanceExcel'
 import * as Performance from '@/api/performance.js'
 
 export default {
-  data() {
+  data () {
     return {
       headerKeys: headerCellkeys,
       canEditScore: false,
@@ -146,7 +146,7 @@ export default {
     /**
      * @description 判断能否导入绩效
      */
-    canUpdatePerformance() {
+    canUpdatePerformance () {
       const nowDate = moment(new Date())
       const day = nowDate.date()
       if (day > 10 && day < 20) {

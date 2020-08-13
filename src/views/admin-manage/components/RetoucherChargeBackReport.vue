@@ -65,7 +65,10 @@ export default {
         storeReturnExpForNotQuality: { title: '退单非质量问题获得海草', desc: '', value: '0.00' },
         punishExp: { title: '退单质量问题扣除海草', desc: '', value: '0.00' },
         storeReturnRetouchTime: { title: '门店退回修图时长', desc: '门店退回至云端再次提交的平均修图时长（单）', value: '0.00', type: 'time' },
-        storeReturnPhotoRate: { title: '退张率', desc: '质量问题', value: '0.00' }
+        storeReturnPhotoRate: { title: '退张率', desc: '质量问题', value: '0.00' },
+        // todo 
+        storeReturnRollbackRevenue: { title: '退单回滚收益', desc: '', value: '0.00' },
+        storeReturnRollbackSeaGrass: { title: '退单回滚海草', desc: '', value: '0.00' }
       },
       chatData: [
         {

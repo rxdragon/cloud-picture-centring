@@ -6,17 +6,42 @@
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
         <div class="panel-content content-one">
-          退回标记：
-          <el-tag
-            size="medium"
-            class="reason-item"
-            v-for="(reasonItem, tagIndex) in StoreReturnReason"
-            :key="tagIndex"
+          局部退回标记：
+          <div
+            v-for="(reasonItem, index) in reworkPhoto.storePartReworkReason"
+            :key="index"
           >
-            {{ reasonItem }}
-          </el-tag>
+            <div
+              v-for="(reasonManageItem, index) in reasonItem.reasonManage"
+              :key="index"
+              class="reason-item"
+            >
+              <span>{{ reasonManageItem.name }}</span>
+              <span v-if="reasonManageItem.cancel">(已删除)</span>
+            </div>
+          </div>
         </div>
-        <div class="panel-content">退回备注：{{ wholeNote || partNote ?  wholeNote + ' ' + partNote : '暂无备注' }}</div>
+        <div class="panel-content content-one">
+          局部退回备注：
+          <span
+            v-for="(storePartReworkReason, index) in reworkPhoto.storePartReworkReason"
+            :key="index"
+          >
+            {{ storePartReworkReason.note }}
+          </span>
+        </div>
+        <div class="panel-content content-one">
+          整体退回标记：
+          <div
+            v-for="(reasonItem, index) in reworkPhoto.storeReworkReasonManage"
+            :key="index"
+            class="reason-item"
+          >
+            <span>{{ reasonItem.name }}</span>
+            <span v-if="reasonItem.cancel">(已删除)</span>
+          </div>
+        </div>
+        <div class="panel-content">整体退回备注：{{ reworkPhoto.storeReworkNote }}</div>
       </div>
     </div>
     <div v-if="hasCheckTags" class="panel-box">
@@ -45,7 +70,10 @@
 
 <script>
 import PhotoList from '@/components/PhotoList'
+import PreviewModel from '@/model/PreviewModel'
+
 import { mapGetters } from 'vuex'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
@@ -63,9 +91,17 @@ export default {
     photoData () {
       return this.photoItem
     },
+    // 退回的那个照片
+    reworkPhoto () {
+      let storeRework = this.photoData.photoVersion.filter(photoVersion => photoVersion.version === PHOTO_VERSION.STORE_REWORK)[0]
+      if (storeRework) {
+        storeRework = new PreviewModel(storeRework)
+      }
+      return storeRework
+    },
     // 判断是否有退单标记
     hasStoreReturnReason () {
-      return _.get(this.photoData, 'tags.values.store_rework_reason') || _.get(this.photoData, 'tags.values.store_part_rework_reason') || false
+      return !!this.reworkPhoto
     },
     // 是否云学院打分
     hasCheckTags () {
@@ -90,29 +126,6 @@ export default {
         return item.name
       })
       return tagFilter
-    },
-    // 整体备注
-    wholeNote () {
-      return _.get( this.photoData, 'tags.values.store_rework_note') || ''
-    },
-    // 局部备注数组
-    partNote () {
-      let note = ''
-      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
-      partArr.forEach(item => {
-        item.note && (note += item.note + ' ')
-      })
-      return note
-    },
-    // 退单标记 包括整体标记和局部标记
-    StoreReturnReason () {
-      const wholeReason = _.get( this.photoData, 'tags.values.store_rework_reason', '')
-      const partArr = _.get( this.photoData, 'tags.values.store_part_rework_reason') || []
-      let partReason = []
-      partArr.forEach(item => {
-        partReason = [...item.reason.split('+'),...partReason]
-      })
-      return partReason.concat(wholeReason ? wholeReason.split('+') : [])
     }
   },
   created () {
@@ -146,6 +159,7 @@ export default {
         padding: 10px 0;
 
         .reason-item {
+          display: inline-block;
           margin: 0 10px 10px 0;
           font-size: 12px;
           border-radius: 5px;

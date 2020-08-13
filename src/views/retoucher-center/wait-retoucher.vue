@@ -273,7 +273,7 @@ export default {
       animate: true
     })
   },
-  mounted() {
+  mounted () {
     this.intervalShowMorning()
   },
   beforeDestroy () {

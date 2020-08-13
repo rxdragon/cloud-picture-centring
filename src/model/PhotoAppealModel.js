@@ -1,0 +1,39 @@
+import { AppealResultStatusEnum } from '@/utils/enumerate'
+
+export default class PhotoAppealModel {
+  base = {}
+  id = ''
+  createdAt = ''
+  photoId = '' // 对应照片id
+  desc = '' // 申诉理由
+  firstResult = { // 初审结果
+    result: '',
+    resultDesc: '-'
+  }
+  secondResult = { // 复审结果
+    result: '',
+    resultDesc: '-',
+    reason: '-'
+  }
+
+  constructor (photoAppeal) {
+    const appealInfo = photoAppeal.photo_appeal_examines || []
+    const firstResultInfo = appealInfo[0]
+    const secondResultInfo = appealInfo[1]
+
+    this.base = photoAppeal
+    this.id = photoAppeal.id
+    this.createdAt = photoAppeal.created_at
+    this.photoId = photoAppeal.photo_id
+    this.desc = photoAppeal.desc
+    if (firstResultInfo) {
+      this.firstResult.resultDesc = AppealResultStatusEnum[firstResultInfo.result] || '-'
+      this.firstResult.result = firstResultInfo.result || ''
+    }
+    if (secondResultInfo) {
+      this.secondResult.resultDesc = AppealResultStatusEnum[secondResultInfo.result] || '-'
+      this.secondResult.reason = secondResultInfo.reason || '-'
+      this.secondResult.result = secondResultInfo.result || ''
+    }
+  }
+}

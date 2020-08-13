@@ -1,0 +1,54 @@
+.order-info {
+  box-shadow: @boxShadow;
+
+  .table-panel {
+    display: grid;
+    justify-items: center;
+  }
+
+  .panel-order {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .panel-grade {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+
+  .panel-title {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: #f2f2f1;
+  }
+
+  .panel-content {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    border-right: 2px solid #eee;
+
+    &:last-of-type {
+      border: none;
+    }
+  }
+
+  .panel-require {
+    padding: 10px 0;
+    text-align: center;
+    background-color: #f2f2f1;
+  }
+
+  .panel-require-concent {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    padding: 10px 0;
+    background-color: #fff;
+  }
+
+  .panel-remark-concent {
+    padding: 10px 0;
+    text-align: center;
+    background-color: #fff;
+  }
+}

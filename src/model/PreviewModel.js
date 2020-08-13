@@ -1,11 +1,13 @@
 const completePhoto = ['last_retouch_photo', 'complete_photo']
 
 export default class PreviewModel {
+  id = ''
   version = 'original_photo'
   path = ''
   mode = 'original'
-  storePartReworkReason = []
+  storePartReworkReason = [] // 局部问题标签对象
   storeReworkReason = []
+  storeReworkReasonManage = [] // 整体问题标签对象
   storeReworkNote = []
   hasStoreReturnTag = false
   commitInfo = {}
@@ -13,6 +15,7 @@ export default class PreviewModel {
   versionCache = null
 
   constructor (photoItem) {
+    this.id = photoItem.id
     this.version = photoItem.version
     this.path = photoItem.path
     this.getStoreReaseon(photoItem)
@@ -24,16 +27,54 @@ export default class PreviewModel {
 
   // 获取门店退单信息
   getStoreReaseon (photoItem) {
+    if (!photoItem.tags) return
     let storePartReworkReason = _.get(photoItem, 'tags.values.store_part_rework_reason') || []
     storePartReworkReason = storePartReworkReason.map(labelItem => {
       const createData = labelItem
-      createData.reason = labelItem.reason ? labelItem.reason.split('+') : []
+      // 2.12之后新的局部标签在在labels下面
+      if (createData.labels) {
+        createData.reason = createData.labels.map(labelItem => labelItem.name)
+        createData.reasonManage = [] // 可以进行操作的reason
+        createData.labels.forEach(label => {
+          const reasonObj = {
+            id: label.id,
+            name: label.name,
+            cancel: false
+          }
+          if (label.is_del) {
+            reasonObj.cancel = true
+          }
+          createData.reasonManage.push(reasonObj)
+        })
+      } else {
+        createData.reason = labelItem.reason ? labelItem.reason.split('+') : []
+        createData.reasonManage = [] // 可以进行操作的reason
+      }
+      
       return createData
     })
     this.storePartReworkReason = storePartReworkReason
-    // 整理标签
-    const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
-    this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
+    // 整理标签 2.12之后新的整体标签在values.labels下面
+    if (_.get(photoItem, 'tags.values.labels')) {
+      const storeReworkReason = _.get(photoItem, 'tags.values.labels') || ''
+      this.storeReworkReason = storeReworkReason.map(reasonItem => reasonItem.name)
+      storeReworkReason.forEach(reasonItem => {
+        const reasonObj = {
+          id: reasonItem.id,
+          name: reasonItem.name,
+          cancel: false
+        }
+        if (reasonItem.is_del) {
+          reasonObj.cancel = true
+        }
+        this.storeReworkReasonManage.push(reasonObj)
+      })
+
+    } else {
+      const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
+      this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
+    }
+    
     // 整体备注
     this.storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note') || '-'
   }
