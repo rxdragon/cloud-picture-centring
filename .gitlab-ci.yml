@@ -23,7 +23,7 @@ install:
   tags:
     - nodejs-outwall
   cache:
-    key: npm-cache
+    key: cache
     paths:
       - node_modules/
 

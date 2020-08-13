@@ -479,9 +479,10 @@
 |范围|描述|commitId|
 --|--|--
  新增审核配置文件 | [9fe0f13](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9fe0f13)
- 更改ci | [cc08a50](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cc08a50)
  更改ci | [f52ed61](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f52ed61)
+ 更改ci | [cc08a50](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cc08a50)
  更改ci相关配置 | [22884fe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22884fe)
+ 更改ci脚本 | [697344b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/697344b)
  更改ci脚本 | [18fb55f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/18fb55f)
  更改下载依赖 | [9399065](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9399065)
  更改判断字段 | [99e512f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/99e512f)
