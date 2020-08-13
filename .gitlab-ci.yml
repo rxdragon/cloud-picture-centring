@@ -1,5 +1,3 @@
-image: node:12
-
 stages:
   - install
   - build
@@ -8,6 +6,7 @@ stages:
 # 下载依赖
 install:
   stage: install
+  image: node:12
   tags:
     - nodejs-outwall
   cache:
@@ -19,7 +18,8 @@ install:
 
 # 打包
 .build:
-   stage: build
+  stage: build
+  image: node:12
   tags:
     - nodejs-outwall
   cache:
@@ -69,6 +69,7 @@ build-release:
 # 上传又拍云
 .deploy:
   stage: deploy
+  image: node:12
   artifacts:
     paths:
       - dist_electron
