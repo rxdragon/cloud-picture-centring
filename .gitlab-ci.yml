@@ -75,8 +75,7 @@ build-release:
   stage: deploy
   image: registry-vpc.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
   script:
-    - cd /deploy-scripts
-    - node cloudUpload.js
+    - node /deploy-scripts/cloudUpload.js
     
 deploy-master:
   extends: .deploy
