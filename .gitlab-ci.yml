@@ -74,13 +74,12 @@ build-release:
 .deploy:
   stage: deploy
   image: registry-vpc.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
+  script:
+    - cd /deploy-scripts
+    - node upload.js
     
 deploy-master:
   extends: .deploy
-  script:
-    - cd /deploy-scripts
-    - yarn install
-    - node upload.js
   environment:
     name: master
   only:
@@ -88,8 +87,6 @@ deploy-master:
 
 deploy-dev:
   extends: .deploy
-  script:
-    - node upload.js
   environment:
     name: staging/dev
   only:
@@ -97,8 +94,6 @@ deploy-dev:
 
 deploy-release:
   extends: .deploy
-  script:
-    - node upload.js
   environment:
     name: staging/release
   only:
