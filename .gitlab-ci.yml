@@ -75,7 +75,7 @@ build-release:
   stage: deploy
   image: registry-vpc.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
   script:
-    - cd /deploy-scripts
+    - yarn add upyun --dev
     - node upload.js
     
 deploy-master:
