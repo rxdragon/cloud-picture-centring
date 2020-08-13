@@ -488,13 +488,13 @@
  更改ci | [f52ed61](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/f52ed61)
  更改ci | [cc08a50](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/cc08a50)
  更改ci相关配置 | [22884fe](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/22884fe)
- 更改ci脚本 | [18fb55f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/18fb55f)
  更改ci脚本 | [c5e7548](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c5e7548)
- 更改ci脚本 | [697344b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/697344b)
  更改ci脚本 | [fb2bb5e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fb2bb5e)
+ 更改ci脚本 | [528d7a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/528d7a5)
+ 更改ci脚本 | [18fb55f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/18fb55f)
  更改ci脚本 | [68f12ec](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/68f12ec)
  更改ci脚本 | [c70dc74](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c70dc74)
- 更改ci脚本 | [528d7a5](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/528d7a5)
+ 更改ci脚本 | [697344b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/697344b)
  更改ci脚本 | [8e50eb9](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/8e50eb9)
  更改下载依赖 | [9399065](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9399065)
  更改判断字段 | [99e512f](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/99e512f)
@@ -502,6 +502,7 @@
  更新gitignore | [a557373](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a557373)
  更新项目依赖 | [118078e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/118078e)
  调试ci | [525fd62](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/525fd62)
+ 调试ci | [415a014](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/415a014)
 
 
 ### 🔙 撤销
