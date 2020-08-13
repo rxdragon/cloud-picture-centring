@@ -18,11 +18,11 @@ export function getSelfQuota () {
     const punishExp = Number(_.get(data, 'todayExp.punish') || 0) // 惩罚海草
     const retouchExp = Number(_.get(data, 'todayExp.retouch') || 0) // 今日已修海草
     const overTimePunishExp = Number(_.get(data, 'todayExp.overTimePunish') || 0) // 超时扣除海草
-    const todayExp = retouchExp - punishExp - overTimePunishExp // 今日最终海草
+    const todayExp = retouchExp - overTimePunishExp // 今日最终海草
 
-    const todayPunishExp = punishExp + overTimePunishExp
-    data.todayPunishExp = todayPunishExp.toFixed(2)
-    data.todayExp = todayExp.toFixed(2)
+    data.todayPunishExp = punishExp.toFixed(2) // 退回扣除海草
+    data.overTimePunishExp = overTimePunishExp.toFixed(2) // 超时扣除海草
+    data.todayExp = todayExp.toFixed(2) // 今日最终海草
 
     const incomePunish = _.get(data, 'todayIncome.punish') || 0 // 惩罚金额
     const incomeOverTimePunish = _.get(data, 'todayIncome.overTimePunish') || 0 // 超时惩罚金额

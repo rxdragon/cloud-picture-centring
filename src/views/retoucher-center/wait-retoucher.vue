@@ -107,13 +107,21 @@
               <div class="data-info">
                 <div class="num">
                   <div class="loss-num">
-                    <span class="loss-title">惩罚海草：</span>
+                    <span class="loss-title">退回惩罚海草：</span>
                     <span class="pink-color loss-value">
                       <count-to show-point :end-value="quotaInfo.todayPunishExp" />颗
                     </span>
                   </div>
                   <div class="loss-num">
-                    <span class="loss-title">惩罚收益：</span>
+                    <span class="loss-title">超时惩罚海草：</span>
+                    <span class="pink-color loss-value">
+                      <count-to show-point :end-value="quotaInfo.overTimePunishExp" />颗
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <el-tooltip effect="dark" content="超时扣除收益 + 退回扣除收益" placement="top">
+                      <span class="loss-title">惩罚收益：</span>
+                    </el-tooltip>
                     <span class="pink-color loss-value">
                       <span>¥</span>
                       <count-to show-point :end-value="quotaInfo.punishIncome" />
@@ -196,6 +204,7 @@ export default {
         todayExp: 0.00,
         todayRewordIncome: 0.00,
         todayPunishExp: 0,
+        overTimePunishExp: 0,
         punishIncome: 0.00
       },
       buffInfo: { // buff 信息
