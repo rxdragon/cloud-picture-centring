@@ -83,7 +83,13 @@ export const StoreReturnPhoto = [
 ]
 
 export const PHOTO_VERSION = {
-  STORE_REWORK: 'store_rework' // 门店退回的照片version
+  STORE_REWORK: 'store_rework', // 门店退回的照片version
+  ORIGINAL_PHOTO: 'original_photo', // 原片
+  FIRST_PHOTO: 'first_photo', // 一次成片
+  RETURN_PHOTO: 'return_photo', // 审核退回照片
+  COMPLETE_PHOTO: 'complete_photo', // 审核成片
+  FINISH_PHOTO: 'finish_photo', // 最终成片
+  LAST_RETOUCH_PHOTO: 'last_retouch_photo', // 最新修后成片
 }
 
 export const PhotoEnumName = {

@@ -18,21 +18,22 @@ export default class PhotoAppealModel {
 
   constructor (photoAppeal) {
     const appealInfo = photoAppeal.photo_appeal_examines || []
+    const firstResultInfo = appealInfo[0]
+    const secondResultInfo = appealInfo[1]
+
     this.base = photoAppeal
     this.id = photoAppeal.id
     this.createdAt = photoAppeal.created_at
     this.photoId = photoAppeal.photo_id
     this.desc = photoAppeal.desc
-    if (appealInfo[0]) {
-      const streamAppealExamines = appealInfo[0]
-      this.firstResult.resultDesc = AppealResultStatusEnum[streamAppealExamines.result] || '-'
-      this.firstResult.result = streamAppealExamines.result || ''
+    if (firstResultInfo) {
+      this.firstResult.resultDesc = AppealResultStatusEnum[firstResultInfo.result] || '-'
+      this.firstResult.result = firstResultInfo.result || ''
     }
-    if (appealInfo[1]) {
-      const streamAppealExamines = appealInfo[1]
-      this.secondResult.resultDesc = AppealResultStatusEnum[streamAppealExamines.result] || '-'
-      this.secondResult.reason = streamAppealExamines.reason || '-'
-      this.secondResult.result = streamAppealExamines.result || ''
+    if (secondResultInfo) {
+      this.secondResult.resultDesc = AppealResultStatusEnum[secondResultInfo.result] || '-'
+      this.secondResult.reason = secondResultInfo.reason || '-'
+      this.secondResult.result = secondResultInfo.result || ''
     }
   }
 }

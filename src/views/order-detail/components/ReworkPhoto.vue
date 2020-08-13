@@ -1,11 +1,7 @@
 <template>
   <div class="rework-photo">
     <div class="photo-area">
-      <img
-        class="photo"
-        :src="imgCompressDomain + photoItem.last_store_rework_photo.path"
-        alt=""
-      />
+      <img class="photo" :src="reworkImg" alt=""/>
       <el-checkbox v-model="photoItem.reworkChecked"></el-checkbox>
     </div>
     <div class="info-area">
@@ -43,6 +39,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'ReworkPhoto',
@@ -55,7 +52,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['imgCompressDomain'])
+    ...mapGetters(['imgCompressDomain']),
+    reworkImg () {
+      const reworkPhoto = this.photoItem.photoVersion.filter(photo => photo.version === PHOTO_VERSION.STORE_REWORK)
+      return this.imgCompressDomain + reworkPhoto[0].path
+    }
   }
 }
 </script>

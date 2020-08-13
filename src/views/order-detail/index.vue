@@ -200,10 +200,15 @@ export default {
         this.$newMessage.warning('因未勾选问题照片or没有填写问题描述则需要进行提示：请填写完整申诉问题!')
         return
       }
-      await Appeal.addAppeal(req)
-      this.$newMessage.success('申诉成功')
-      this.dialogAppealVisible = false
-      this.init()
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await Appeal.addAppeal(req)
+        this.$newMessage.success('申诉成功')
+        this.dialogAppealVisible = false
+        this.init()
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 取消申诉

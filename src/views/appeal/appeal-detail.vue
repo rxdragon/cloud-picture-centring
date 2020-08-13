@@ -165,8 +165,13 @@ export default {
         id: this.appealInfo.id,
         photoExamines
       }
-      await Appeal.appealExamine(req)
-      this.$newMessage.success('提交成功')
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await Appeal.appealExamine(req)
+        this.$newMessage.success('提交成功')
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     }
   }
 }

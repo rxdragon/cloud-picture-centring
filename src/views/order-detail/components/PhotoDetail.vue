@@ -73,7 +73,7 @@ export default {
     },
     // 判断是否有退单标记
     hasStoreReturnReason () {
-      return _.get(this.photoData, 'tags.values.store_rework_reason') || _.get(this.photoData, 'tags.values.store_part_rework_reason') || false || _.get(this.photoData, 'tags.values.labels')
+      return this.photoData.partReason.length || this.photoData.wholeReason.length
     },
     // 是否云学院打分
     hasCheckTags () {

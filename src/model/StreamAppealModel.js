@@ -28,6 +28,8 @@ export default class StreamAppealModel {
 
   constructor (appealItem) {
     const appealInfo = appealItem.stream_appeal_examines || []
+    const firstCheckInfo = appealInfo[0]
+    const secondCheckInfo = appealInfo[1]
     this.base = appealItem
     this.streamId = appealItem.stream_id
     this.id = appealItem.id
@@ -35,23 +37,21 @@ export default class StreamAppealModel {
     this.createdAt = appealItem.created_at
     this.appealTypeName = AppealTypeNameEnum[appealItem.type]
     this.appealStatusDesc = AppealStreamStatusEnum[appealItem.state]
-    if (appealInfo[0]) {
-      const streamAppealExamines = appealInfo[0]
+    if (firstCheckInfo) {
       this.firstInfo = {
-        staffName: _.get(streamAppealExamines, 'examine_staff_info.nickname') || '-',
-        status: AppealResultStatusEnum[streamAppealExamines.state] || '-',
-        time: streamAppealExamines.finish_at || '-'
+        staffName: _.get(firstCheckInfo, 'examine_staff_info.nickname') || '-',
+        status: AppealResultStatusEnum[firstCheckInfo.state] || '-',
+        time: firstCheckInfo.finish_at || '-'
       }
-      this.isSelfFirst = streamAppealExamines.examine_staff_id === store.getters.userInfo.id
+      this.isSelfFirst = firstCheckInfo.examine_staff_id === store.getters.userInfo.id
     }
-    if (appealInfo[1]) {
-      const streamAppealExamines = appealInfo[1]
+    if (secondCheckInfo) {
       this.secondInfo = {
-        staffName: _.get(streamAppealExamines, 'examine_staff_info.nickname') || '-',
-        status: AppealResultStatusEnum[streamAppealExamines.state] || '-',
-        time: streamAppealExamines.finish_at || '-'
+        staffName: _.get(secondCheckInfo, 'examine_staff_info.nickname') || '-',
+        status: AppealResultStatusEnum[secondCheckInfo.state] || '-',
+        time: secondCheckInfo.finish_at || '-'
       }
-      this.isSelfSecond = streamAppealExamines.examine_staff_id === store.getters.userInfo.id
+      this.isSelfSecond = secondCheckInfo.examine_staff_id === store.getters.userInfo.id
     }
     this.state = appealItem.state
     if (appealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE) this.isFirstChecking = true

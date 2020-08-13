@@ -46,7 +46,7 @@ export default class StreamModel {
   receiptAt = '-' // 接单时间
   passAt = '-' // 审核通过时间
   retouchAllTime = '-' // 修图总时长
-  reviewTime = '' // 审核时间
+  reviewTime = 0 // 审核时间
   hourGlassOverTime = '' // 沙漏结束时间 (分)
 
   // 门店退回相关
@@ -218,7 +218,7 @@ export default class StreamModel {
     this.receiptAt = this.baseData.receipt_at || '-'
     this.passAt = this.baseData.pass_at || '-'
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
-    this.reviewTime = this.baseData.review_time || '-'
+    this.reviewTime = this.baseData.review_time || 0
     this.hourGlassOverTime = _.get(this.baseData, 'hour_glass.over_time') || ''
     const retouchTime = _.get(this.baseData, 'retouch_time') || 0
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0

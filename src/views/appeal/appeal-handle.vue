@@ -148,6 +148,7 @@ export default {
   components: { AppealStatusSelect, AppealTypeSelect, StaffSelect, DatePicker },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       staffId: '',
       tabCurrent: 'first',
       timeSpan: null, // 时间
@@ -246,7 +247,12 @@ export default {
       }
       if (this.streamNum) req.cond.streamNum = this.streamNum
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
-      this.tableData = await Appeal.getAppealList(req)
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.tableData = await Appeal.getAppealList(req)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 页码改变

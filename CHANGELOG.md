@@ -1,4 +1,4 @@
-# 2.0.0 (2020-08-12)
+# 2.0.0 (2020-08-13)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -550,6 +550,7 @@
  优化饼图和显示颜色调整 | [fb4d2a7](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/fb4d2a7)
  优化默认产品id | [c7950ac](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/c7950ac)
  优化默认显示和限制上传 | [4e94589](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/4e94589)
+ 修图详情api中处理换成dataModel调用 | [3ee0f7e](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/3ee0f7e)
  修改成功显示优化 | [9a32be0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a32be0)
  修改浏览看板 | [23899e0](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/23899e0)
  增加个人绩效 | [ba74181](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/ba74181)

@@ -121,6 +121,7 @@ export default {
   components: { AppealStatusSelect, AppealTypeSelect, DatePicker },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       streamNum: '', // 流水号
       appealStatus: [],
@@ -171,7 +172,13 @@ export default {
       if (this.appealType) req.cond.type = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
-      this.tableData = await Appeal.getAppealList(req)
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        this.tableData = await Appeal.getAppealList(req)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+      
     },
     /**
      * @description 页码改变

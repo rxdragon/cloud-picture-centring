@@ -24,8 +24,8 @@ export function getSelfQuota () {
     }
     data.punishExp = Number(punishExp - rollbackExp).toFixed(2)
     data.todayExp = Number(retouchExp + rollbackExp).toFixed(2)
-    const todayIncome = todayIncomeRetouch + todayIncomeImpulse + todayIncomeReward + todayIncomeRollback
-    data.todayRewordIncome = (todayIncome).toFixed(2)
+    const todayIncome = Number(todayIncomeRetouch) + Number(todayIncomeImpulse) + Number(todayIncomeReward) + Number(todayIncomeRollback)
+    data.todayRewordIncome = todayIncome.toFixed(2)
     data.punishIncome = (todayIncomePunish - todayIncomeRollback).toFixed(2)
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0

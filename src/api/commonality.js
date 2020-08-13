@@ -1,6 +1,5 @@
 // commonality
 import axios from '@/plugins/axios.js'
-import { keyToHump } from '@/utils/index.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
@@ -36,11 +35,10 @@ export function getStreamInfo (params) {
     params
   }).then(msg => {
     const streamData = new StreamModel(msg)
-    const data = keyToHump(msg)
     const createData = {}
     const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
     const photos = []
-    data.photos.forEach(photoItem => {
+    msg.photos.forEach(photoItem => {
       const photoData = new PhotoModel(photoItem)
       const finalPhotoItem = {
         filmEvaluation: photoData.photoData,
@@ -51,7 +49,8 @@ export function getStreamInfo (params) {
         wholeReason: photoData.wholeReason,
         partReason: photoData.partReason,
         partNote: photoData.partNote,
-        wholeNote: photoData.wholeNote
+        wholeNote: photoData.wholeNote,
+        tags: photoItem.tags
       }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -74,13 +73,13 @@ export function getStreamInfo (params) {
       }
       photos.push(finalPhotoItem)
     })
-    data.photos = photos.filter(photoItem => Boolean(photoItem.photoVersion))
+    msg.photos = photos.filter(photoItem => Boolean(photoItem.photoVersion))
     createData.orderData = {
       currentStreamAppeal: streamData.currentStreamAppeal,
-      streamNum: streamData.streamData,
+      streamNum: streamData.streamNum,
       photographerOrg: streamData.photographerOrgName,
       productName: streamData.productName,
-      photoNum: data.photos.filter(item => +item.people_num > 0).length,
+      photoNum: msg.photos.filter(item => +item.people_num > 0).length,
       photographerName: streamData.photographerName,
       reworkNum: streamData.reworkNum,
       storeReworkNum: streamData.storeReturnNum,
@@ -95,7 +94,7 @@ export function getStreamInfo (params) {
       backgroundColor: streamData.backgroundColor,
       reviewerNote: streamData.reviewerNote
     }
-    createData.photos = data.photos
+    createData.photos = msg.photos
     return createData
   })
 }
