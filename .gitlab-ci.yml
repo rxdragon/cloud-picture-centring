@@ -78,7 +78,7 @@ build-release:
 deploy-master:
   extends: .deploy
   script:
-    - node upload.js
+    - cd /deploy-scripts && node upload.js
   environment:
     name: master
   only:
