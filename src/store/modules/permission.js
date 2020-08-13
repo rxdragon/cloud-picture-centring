@@ -1,6 +1,7 @@
 import { asyncRoutes, constantRoutes, lastBaseRoutes } from '@/router'
 import { toCapitalHump } from '@/utils/index.js'
 import store from '@/store'
+import microRouter from '@/micro/microRouter.js'
 import Vue from 'vue'
 import Ws from '@/api/websocket'
 
@@ -137,7 +138,10 @@ const actions = {
       }
       accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
-      commit('SET_ROUTES', accessedRoutes)
+
+      // 增加微前端服务
+      const menuList = [...accessedRoutes, ...microRouter]
+      commit('SET_ROUTES', menuList)
       resolve(accessedRoutes)
     })
   }

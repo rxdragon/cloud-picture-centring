@@ -3,10 +3,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router' // 路由
 import store from './store' // vuex
+
 import * as filters from './filters' // 全局过滤器
+
 import { ipcRenderer } from 'electron'
 import { eventEmitter } from './plugins/eventemitter.js' // ui布局
 import { delayLoading } from '@/utils/timespan.js' // ui布局
+
 import './plugins/element.js' // ui布局
 import './plugins/charts.js' // charts框架
 import './plugins/errorLogSdk.js' // 错误日志监控
@@ -17,6 +20,9 @@ import './styles/variables.less' // 全局样式
 import './guards' // 路由守护
 import './indexDB/index.js'
 import '@/directive'
+
+import startQiankun from './micro'
+startQiankun()
 
 window._ = { get }
 // 注册websocket

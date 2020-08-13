@@ -53,6 +53,9 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 激活扩张功能
+     */
     activeExperiment () {
       const time = 4 * 1000
       if (this.experimentCounts === 0) {

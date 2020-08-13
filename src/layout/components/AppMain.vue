@@ -3,14 +3,15 @@
     v-loading.lock="isLoading"
     element-loading-custom-class="main-loading"
     class="app-main"
-    :class="{'overhidden':isLoading}"
+    :class="{ 'overhidden': isLoading, 'hidden-margin': !$route.name }"
     @scroll="scrollMove"
   >
     <transition :name="transitionName" mode="out-in">
       <keep-alive :include="cachedViews" :max="4">
-        <router-view :key="key" />
+        <router-view v-show="$route.name" :key="key" />
       </keep-alive>
     </transition>
+    <section v-show="!$route.name" id="frame"></section>
   </section>
 </template>
 
@@ -49,7 +50,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 
 .app-main {
   position: relative;
@@ -62,6 +63,11 @@ export default {
   overflow-x: hidden;
   overflow-y: overlay;
   scroll-behavior: smooth;
+
+  &.hidden-margin {
+    padding: 0;
+    margin-top: 0;
+  }
 }
 
 .fixed-header + .app-main {

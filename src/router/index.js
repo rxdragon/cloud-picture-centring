@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Layout from '@/layout' //
+import Home from '@/views/home/home.vue' //
+import NoJurisdiction from '@/views/error-page/401' //
+import NoFoundPage from '@/views/error-page/404' //
 
 Vue.use(Router)
 
@@ -55,7 +58,7 @@ export const constantRoutes = [
       {
         path: 'home',
         name: 'Home',
-        component: () => import('@/views/home/home.vue'),
+        component: Home,
         meta: { title: '概况', icon: 'iconfont iconlogo', affix: true }
       }
     ]
@@ -72,12 +75,29 @@ export const constantRoutes = [
       }
     ]
   }, {
+    path: `/micrApp/micro-app-vue/*`, // 匹配微应用跳转
+    hidden: true,
+    component: Layout,
+    meta: {
+      title: '开发环境',
+      isMicrApp: true,
+    },
+  }, {
+    path: `/micrApp/micro-app-vue/:micrAppRoute`, // 匹配微应用内的路由跳转
+    hidden: true,
+    component: Layout,
+    name: 'VueMicroApp',
+    meta: {
+      title: '开发环境',
+      isMicrApp: true,
+    },
+  }, {
     path: '/401',
-    component: () => import('@/views/error-page/401'),
+    component: NoJurisdiction,
     hidden: true
   }, {
     path: '*',
-    component: () => import('@/views/error-page/404'),
+    component: NoFoundPage,
     hidden: true
   }
 ]
