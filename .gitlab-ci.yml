@@ -26,7 +26,10 @@ install:
     key: cache
     paths:
       - node_modules/
+  artifacts:
+    paths:
       - dist_electron/
+    expire_in: 1 day
 
 build-master:
   extends: .build
@@ -70,13 +73,7 @@ build-release:
 # 上传又拍云
 .deploy:
   stage: deploy
-  image: node:12
-  tags:
-    - nodejs-outwall
-  cache:
-    key: cache
-    paths:
-      - node_modules/
+  image: registry-vpc.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
     
 deploy-master:
   extends: .deploy
