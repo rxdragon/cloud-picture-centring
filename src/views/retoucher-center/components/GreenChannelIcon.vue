@@ -1,7 +1,15 @@
 <template>
   <div class="green-channel-icon" :style="`--size: ${size}px`">
     <!-- 绿色通道 -->
-    <div v-if="buffInfo.greenChannelStatus" class="prop-icon awardmap-greenAisle" />
+    <el-tooltip
+      v-if="buffInfo.greenChannelStatus"
+      class="item"
+      effect="dark"
+      content="绿色通道"
+      placement="top"
+    >
+      <div class="prop-icon awardmap-greenAisle" />
+    </el-tooltip>
   </div>
 </template>
 

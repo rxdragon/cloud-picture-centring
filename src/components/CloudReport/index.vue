@@ -108,7 +108,7 @@ export default {
         [GRADE_TYPE.NONE]: {
           count: 0,
           rate: '0%',
-          lable: '通过张数 / 通过率'
+          lable: '一般张数 / 通过率'
         },
         score: {
           count: 0,

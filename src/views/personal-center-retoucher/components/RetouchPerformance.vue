@@ -1,6 +1,53 @@
 <template>
   <div v-loading="loading" class="module-panel retouch-performance">
-    <div class="panel-title">修图绩效</div>
+    <div class="panel-title">
+      修图绩效
+      <div class="title-plugin">
+        <el-popover placement="bottom-end" width="900" trigger="hover">
+          <div class="tip-plugin-content">
+            <h3>绩效规则：</h3>
+            <p>1、修图单量 / 张数：查询时间范围内所修正常/质量问题/非质量问题/质量&非质量都有的流水单量和照片张数，其中照片张数若不计收入的则不会被统计。</p>
+            <p>2、修图平均用时：查询时间范围内的单张平均修图时长和每单的平均修图时长。</p>
+            <p>3、退张数 / 退张率(质量问题)：</p>
+            <div class="message-content">
+              <ul>
+                <li>查询时间范围内被门店退回的照片张数和占比。该数据统计仅统计照片为质量问题的照片数据以及统计时间无关接单时间，即：3月10日接到一个流水单，退单时间为3月12日，退张数据会统计入3月12日。</li>
+                <li>点击数字可跳转修图历史记录进行查询。</li>
+                <li>退张率公式：(正常流水被退回张数 + 退回流水被退回张数) / (正常流水修图张数 + 退回流水修图张数)</li>
+              </ul>
+            </div>
+            <p>4、修图收益(元)：</p>
+            <div class="message-content">
+              <ul>
+                <li>修图收益(不包含退单)：查询时间范围内的正常修图收益(金币加成也直接计入该数据内)，不包含退单及其他扣除收益。</li>
+                <li>沙漏超时扣除收益：查询时间范围内的流水单超时所扣除的收益。</li>
+                <li>退单获得收益：查询时间范围内接到的其他人的退单所有获得的收益(此类照片收益会继承上一修图伙伴修图对应的的收益)或门店伙伴退回非质量问题照片获得的收益。</li>
+                <li>退单扣除收益：查询时间范围内被门店退回的质量问题所扣除的收益。</li>
+                <li>奖励收益：查询时间范围内所获得的冲量奖励所获得收益。</li>
+                <li>总计=修图收益(不包含退单)-沙漏超时收益+退单获得收益-退单扣除收益+奖励收益</li>
+              </ul>
+            </div>
+            <p>5、修图海草(颗)：</p>
+            <div class="message-content">
+              <ul>
+                <li>修图海草(不包含退单)：查询时间范围内的正常修图海草(经验加成也直接计入该数据内)，不包含退单及其他扣除收海草。</li>
+                <li>沙漏超时扣除海草：查询时间范围内的流水单超时所扣除的海草。</li>
+                <li>退单获得收益：查询时间范围内接到的其他人的退单所有获得的海草(此类照片收益会继承上一修图伙伴修图对应的海草益)或门店伙伴退回非质量问题照片获得的海草。</li>
+                <li>退单扣除海草：查询时间范围内被门店退回的质量问题所扣除的海草。</li>
+                <li>总计=修图海草(不包含退单)-沙漏超时海草+退单获得海草-退单扣除海草。</li>
+              </ul>
+            </div>
+            <p>6、点赞数 / 点赞率：查询时间内被门店伙伴点赞的流水单数量和占比，点击数字可跳转修图历史记录进行查询。</p>
+            <p>7、点踩数 / 点踩率：查询时间内被门店伙伴点踩的流水单数量和占比，点击数字可跳转修图历史记录进行查询。</p>
+            <p>8、顾客满意度：顾客对流水单的修图评价平均值。</p>
+          </div>
+          <div class="tip-box" slot="reference">
+            <i class="el-icon-warning-outline"></i>
+            绩效规则
+          </div>
+        </el-popover>
+      </div>
+    </div>
     <div class="search-box">
       <div class="search-item">
         <span>修图完成时间</span>
@@ -188,6 +235,25 @@ export default {
 </script>
 
 <style lang="less">
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+
+  .title-plugin {
+    .tip-box {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: @blue;
+
+      i {
+        margin-right: 10px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
 .retouch-performance {
   .text-red {
     color: @red;
@@ -236,6 +302,27 @@ export default {
 
     .el-table--scrollable-x .el-table__body-wrapper {
       overflow-x: overlay;
+    }
+  }
+}
+
+.tip-plugin-content {
+  h3 {
+    margin-bottom: 12px;
+  }
+
+  p {
+    padding-left: 12px;
+    line-height: 24px;
+  }
+}
+
+.message-content {
+  ul {
+    margin: 0;
+
+    li {
+      line-height: 24px;
     }
   }
 }

@@ -31,6 +31,9 @@ export default class PhotoModel {
   filmEvaluation = '' // 摄影评价
 
   constructor (photoData) {
+    if (photoData instanceof Array) {
+      photoData = {}
+    }
     const labels = _.get( photoData, 'tags.values.labels', []) // 整体问题标签new
     const otherPhotoVersion = photoData.other_photo_version || []
 
@@ -39,9 +42,10 @@ export default class PhotoModel {
     this.isReturn = _.get(photoData, 'tags.statics', []).includes('return_photo')
     this.isPull = _.get(photoData, 'tags.statics', []).includes('pull')
     this.isPlant = _.get(photoData, 'tags.statics', []).includes('plant')
-    this.originalPhoto = otherPhotoVersion.find(item => item.version === 'original_photo')
+
+    this.originalPhoto = otherPhotoVersion.find(item => item.version === 'original_photo') || {}
     this.firstPhoto = photoData.first_photo
-    this.completePhoto = otherPhotoVersion.find(item => item.version === 'complete_photo')
+    this.completePhoto = otherPhotoVersion.find(item => item.version === 'complete_photo') || {}
     if (this.completePhoto) {
       const findLastRetouchPhoto = otherPhotoVersion.find(item => item.version === 'last_retouch_photo')
       if (findLastRetouchPhoto) { findLastRetouchPhoto.version = 'complete_photo' }

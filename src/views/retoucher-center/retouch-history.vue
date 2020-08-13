@@ -43,6 +43,10 @@
           <span>云学院抽查</span>
           <cloud-spot v-model="cloudSpot" clearable />
         </div>
+        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <span>云学院抽查类型</span>
+          <cloud-spot-grass-select v-model="cloudEvaluateType" clearable />
+        </div>
         <!-- 云学院问题标签 -->
         <!-- v-if 兼容设置失败问题 -->
         <div class="cloud-issue-box search-item" v-if="activeName === SEARCH_TYPE.NORMAL">
@@ -72,6 +76,7 @@
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
                   <p>照片海草：<span>{{ row.exp | toFixedString }}</span></p>
+                  <p class="text-red">被退惩罚海草：<span>{{ row.punishExp | toFixedString }}</span></p>
                   <p class="text-red">沙漏超时惩罚海草：<span>{{ row.overtimeExp | toFixedString }}</span></p>
                   <p>实际获得海草：<span>{{ row.actualExp | toFixedString }}</span></p>
                 </div>
@@ -142,6 +147,7 @@ import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import CloudSpot from '@SelectBox/CloudSpot'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
+import CloudSpotGrassSelect from '@/components/CloudSpotGrassSelect'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
@@ -155,7 +161,7 @@ const SEARCH_TYPE = {
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot, CloudSpotGrassSelect },
   data () {
     return {
       SEARCH_TYPE,
@@ -167,7 +173,8 @@ export default {
       isReturn: '', // 门店退回
       isGood: 'all', // 是否门店点赞
       returnType: '', // 退单类型
-      cloudSpot: '',
+      cloudSpot: '', // 云学院抽查
+      cloudEvaluateType: '', // 云学院种草类型
       issueValue: [], // 云学院问题标签
       activeName: SEARCH_TYPE.NORMAL, // 标签显示类型
       pager: {
@@ -197,29 +204,32 @@ export default {
    */
   beforeRouteEnter (to, from, next) {
     next(vm => {
+      // 防止重复刷新获取数据
       const keepLiveRoute = ['RetouchHistory', 'orderDetail']
       if (keepLiveRoute.includes(_.get(from, 'name'))) return
-      const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
-      // 重制条件
-      vm.resetSearchParm()
-      if (retouchHistoryTimeSpan) { vm.timeSpan = retouchHistoryTimeSpan.split(',') }
-      if (retouchHistorySearchType) {
-        switch (retouchHistorySearchType) {
-          case SearchType.GoodEvaluation:
-            vm.isGood = true
-            break
-          case SearchType.ReworkPhoto:
-            vm.isReturn = 'isReturn'
-            break
+
+      vm.$nextTick(() => {
+        const { retouchHistoryTimeSpan, retouchHistorySearchType } = to.query
+        if (retouchHistoryTimeSpan) { vm.timeSpan = retouchHistoryTimeSpan.split(',') }
+        // 如果如有有带参数，重制条件
+        if (retouchHistorySearchType) {
+          vm.resetSearchParm()
+          switch (retouchHistorySearchType) {
+            case SearchType.GoodEvaluation:
+              vm.isGood = true
+              break
+            case SearchType.ReworkPhoto:
+              vm.activeName = SEARCH_TYPE.REWORK
+              break
+          }
+          vm.resetTabActivePosition(vm.$refs.tabs.$el)
+          vm.searchList(1)
         }
-      }
-      if (vm.activeName !== SEARCH_TYPE.NORMAL) {
-        vm.activeName = SEARCH_TYPE.NORMAL
-        vm.resetTabActivePosition(vm.$refs.tabs.$el)
-      } else {
-        vm.searchList(1)
-      }
+      })
     })
+  },
+  created () {
+    this.searchList(1)
   },
   methods: {
     /**
@@ -234,6 +244,7 @@ export default {
       this.isGood = 'all'
       this.returnType = ''
       this.cloudSpot = ''
+      this.cloudEvaluateType = ''
       this.issueValue = []
     },
     /**
@@ -293,6 +304,7 @@ export default {
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
         if (this.returnType) { reqData.storeReworkType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
+        if (this.cloudEvaluateType) { reqData.cloudEvaluateType = this.cloudEvaluateType }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total

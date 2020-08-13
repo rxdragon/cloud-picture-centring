@@ -11,22 +11,31 @@ export function getSelfQuota () {
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
-    const punishExp = _.get(data, 'today.punish') || 0
-    const retouchExp = _.get(data, 'today.retouch') || 0
-    const rollbackExp = _.get(data, 'today.rollback') || 0
-    const todayIncomeRetouch = _.get(data, 'todayIncome.retouch') || 0
-    const todayIncomeImpulse = _.get(data, 'todayIncome.impulse') || 0
-    const todayIncomeReward = _.get(data, 'todayIncome.reward') || 0
-    const todayIncomeRollback = _.get(data, 'todayIncome.rollback') || 0
-    const todayIncomePunish = _.get(data, 'todayIncome.punish') || 0
     for (const key in data.todayIncome) {
       data.todayIncome[key] = Number(data.todayIncome[key])
     }
-    data.punishExp = Number(punishExp - rollbackExp).toFixed(2)
-    data.todayExp = Number(retouchExp + rollbackExp).toFixed(2)
-    const todayIncome = Number(todayIncomeRetouch) + Number(todayIncomeImpulse) + Number(todayIncomeReward) + Number(todayIncomeRollback)
+
+    const punishExp = Number(_.get(data, 'todayExp.punish') || 0) // 惩罚海草
+    const retouchExp = Number(_.get(data, 'todayExp.retouch') || 0) // 今日已修海草
+    const overTimePunishExp = Number(_.get(data, 'todayExp.overTimePunish') || 0) // 超时扣除海草
+    const todayExp = retouchExp - punishExp - overTimePunishExp // 今日最终海草
+
+    const todayPunishExp = punishExp + overTimePunishExp
+    data.todayPunishExp = todayPunishExp.toFixed(2)
+    data.todayExp = todayExp.toFixed(2)
+
+    const incomePunish = _.get(data, 'todayIncome.punish') || 0 // 惩罚金额
+    const incomeOverTimePunish = _.get(data, 'todayIncome.overTimePunish') || 0 // 超时惩罚金额
+    const retouchIncome = _.get(data, 'todayIncome.retouch') || 0 // 今日修图收益
+    const impulseIncome = _.get(data, 'todayIncome.impulse') || 0 // 今日冲量奖励收益
+    const rewardIncome = _.get(data, 'todayIncome.reward') || 0 // 今日奖励收益
+
+    const todayIncome = retouchIncome + impulseIncome + rewardIncome - incomePunish - incomeOverTimePunish
     data.todayRewordIncome = todayIncome.toFixed(2)
-    data.punishIncome = (todayIncomePunish - todayIncomeRollback).toFixed(2)
+    
+    const punishIncome = incomePunish + incomeOverTimePunish
+    data.punishIncome = punishIncome.toFixed(2)
+
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
     data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
