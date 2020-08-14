@@ -83,7 +83,6 @@ const mutations = {
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
     Vue.prototype.$ws = new Ws()
-    Vue.prototype.$ws.initializeSendMessage(state.isRetoucher)
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
     state.personageRouters = routes
