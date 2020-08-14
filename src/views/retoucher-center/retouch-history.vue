@@ -120,7 +120,7 @@
           </el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="linkto(scope.row.streamId)">详情</el-button>
+              <el-button type="primary" size="mini" @click="linkto(scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -250,7 +250,7 @@ export default {
     /**
      * @description 变更代码
      */
-    resetTabActivePosition($el) {
+    resetTabActivePosition ($el) {
       setTimeout(() => {
         const activeEl = $el.querySelector('.el-tabs__item.is-active')
         const lineEl = $el.querySelector('.el-tabs__active-bar')
@@ -265,9 +265,12 @@ export default {
     /**
      * @description 跳转链接
      */
-    linkto (streamId) {
+    linkto (row) {
+      const { streamId } = row
       const query = { streamId }
-      if (this.active === 'others') { query.searchOther = 1 }
+      if (this.active === 'others') {
+        query.searchOther = 1
+      }
       this.$router.push({
         path: '/order-detail',
         query

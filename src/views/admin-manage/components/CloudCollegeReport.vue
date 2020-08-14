@@ -12,7 +12,7 @@ import { CLOUD_ROLE } from '@/utils/enumerate'
 export default {
   name: 'CloudCollegeReport',
   components: { CloudReport },
-  data() {
+  data () {
     return {
       CLOUD_ROLE
     }

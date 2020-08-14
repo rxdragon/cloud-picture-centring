@@ -90,7 +90,7 @@ import * as RetouchLeader from '@/api/retouchLeader.js'
 
 export default {
   name: 'PersonalCenterAudit',
-  data() {
+  data () {
     return {
       yearValue: null, // 小蜜蜂查询日期
       apisLoading: false, // 小蜜蜂加载动态

@@ -32,6 +32,11 @@ const adminManage = {
       name: 'RetouchDesignate',
       component: () => import('@/views/admin-manage/retouch-designate.vue'),
       meta: { title: '修图指派', icon: '' }
+    }, {
+      path: 'appeal-handle',
+      name: 'AppealHandle',
+      component: () => import('@/views/appeal/appeal-handle.vue'),
+      meta: { title: '申诉处理', icon: '' }
     }
   ]
 }

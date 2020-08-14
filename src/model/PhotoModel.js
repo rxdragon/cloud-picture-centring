@@ -15,25 +15,35 @@ export default class PhotoModel {
  
   isStoreReturn = '' // 是否门店退回
   storeReworkReason = '' // 门店退回理由
+  wholeReason = [] // 整体退回原因
+  partReason = [] // 局部退回原因
+  partNote = '' // 局部备注
+  wholeNote = '' // 整体备注
   storeReworkNote = '' // 门店退回备注
   storePartReworkReason = [] // 退回标记
   storePartReworkReasonTags = [] // 全部退回标记
+  qualityType = '' // 是否为质量问题
+  isRollBack = false // 是否存在回滚收益
 
   checkPoolScore = '' // 云学院抽片分数
   checkPoolTags = [] // 云学院标记
   checkEvaluator = '' // 打分人
 
+  filmEvaluation = '' // 摄影评价
+
   constructor (photoData) {
     if (photoData instanceof Array) {
       photoData = {}
     }
+    const labels = _.get( photoData, 'tags.values.labels', []) // 整体问题标签new
+    const otherPhotoVersion = photoData.other_photo_version || []
+
     this.baseData = photoData
     this.id = photoData.id
     this.isReturn = _.get(photoData, 'tags.statics', []).includes('return_photo')
     this.isPull = _.get(photoData, 'tags.statics', []).includes('pull')
     this.isPlant = _.get(photoData, 'tags.statics', []).includes('plant')
 
-    const otherPhotoVersion = photoData.other_photo_version || []
     this.originalPhoto = otherPhotoVersion.find(item => item.version === 'original_photo') || {}
     this.firstPhoto = photoData.first_photo
     this.completePhoto = otherPhotoVersion.find(item => item.version === 'complete_photo') || {}
@@ -45,13 +55,35 @@ export default class PhotoModel {
 
     this.grassReason = _.get(photoData, 'tags.values.grass_reason') || ''
     this.reworkReason = _.get(photoData, 'tags.values.rework_reason') || ''
-
+    
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
+    this.qualityType = _.get(photoData, 'tags.values.store_rework_type') || ''
     this.isStoreReturn = statics.includes('store_rework')
-    this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || '-'
+    this.isRollBack = statics.includes('rollback')
+    this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || ''
+    if (labels.length) { // labels有的时候是新数据格式
+      labels.forEach(labelsItem => {
+        this.wholeReason.push(labelsItem.name)
+      })
+    } else {
+      this.wholeReason = this.wholeReason.concat(this.storeReworkReason ? this.storeReworkReason.split('+') : [])
+    }
+
     this.storeReworkNote = _.get(photoData, 'tags.values.store_rework_note') || '-'
+    this.wholeNote = this.storeReworkNote
     this.storePartReworkReason = _.get(photoData, 'tags.values.store_part_rework_reason') || []
+    this.storePartReworkReason.forEach(partReasonItem => {
+      if (partReasonItem.labels) {
+        this.partReason = this.partReason.concat(partReasonItem.labels.map(labelItem => labelItem.name))
+
+      } else {
+        this.partReason = [...partReasonItem.reason.split('+'),...this.partReason]
+      }
+      this.partNote += partReasonItem.note
+    })
+
+    this.filmEvaluation = _.get(photoData, 'tags.values.film_evaluation') || ''
     this.getStoreReturnReason()
   }
 
