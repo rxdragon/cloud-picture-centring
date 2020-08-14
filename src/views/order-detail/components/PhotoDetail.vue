@@ -14,7 +14,7 @@
             <div
               v-for="(reasonManageItem, index) in reasonItem.reasonManage"
               :key="index"
-              class="reason-item"
+              :class="['reason-item', reasonManageItem.cancel ? 'del' : '']"
             >
               <span>{{ reasonManageItem.name }}</span>
               <span v-if="reasonManageItem.cancel">(已删除)</span>
@@ -35,7 +35,7 @@
           <div
             v-for="(reasonItem, index) in reworkPhoto.storeReworkReasonManage"
             :key="index"
-            class="reason-item"
+            :class="['reason-item', reasonItem.cancel ? 'del' : '']"
           >
             <span>{{ reasonItem.name }}</span>
             <span v-if="reasonItem.cancel">(已删除)</span>
@@ -160,9 +160,13 @@ export default {
 
         .reason-item {
           display: inline-block;
-          margin: 0 10px 10px 0;
+          padding: 4px 10px;
+          margin-right: 16px;
           font-size: 12px;
-          border-radius: 5px;
+          color: #4669fb;
+          background: rgba(237, 240, 255, 1);
+          border: 1px solid rgba(181, 195, 253, 1);
+          border-radius: 4px;
         }
       }
 

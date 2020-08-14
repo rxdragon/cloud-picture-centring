@@ -178,6 +178,10 @@ export default {
 <style lang="less" scoped>
 
 .appeal-detail {
+  .order {
+    margin-bottom: 24px;
+  }
+
   .footer {
     display: flex;
     justify-content: center;

@@ -1,7 +1,7 @@
 <template>
   <div class="appeal-handle transform-fixed page-class">
     <div class="header">
-      <h3>申诉记录</h3>
+      <h3>申诉处理</h3>
     </div>
     <el-tabs v-model="tabCurrent" @tab-click="getAppealList">
       <el-tab-pane label="初审(1)" name="first"></el-tab-pane>
@@ -149,13 +149,13 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      staffId: '',
+      staffId: [],
       tabCurrent: 'first',
       timeSpan: null, // 时间
       streamNum: '', // 流水号
       justMe: false, // 仅看本人
-      appealStatus: 'all',
-      appealType: 'all',
+      appealStatus: [],
+      appealType: '',
       tableData: [], // 列表数据
       pager: {
         page: 1,
@@ -248,7 +248,11 @@ export default {
         req.cond.startAtGte = this.timeSpan[0]
         req.cond.endAtLte = this.timeSpan[1]
       }
+      if (this.appealStatus.length) req.cond.stateIn = this.appealStatus
+      if (this.staffId.length) req.cond.appealStaffId = this.staffId
+      if (this.appealType) req.cond.type = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
+      if (this.justMe) req.cond.bind = this.justMe
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)

@@ -47,6 +47,7 @@ export function getStreamInfo (params) {
         reworkChecked: false,
         appealReason: '',
         qualityType: photoData.qualityType,
+        isRollBack: photoData.isRollBack,
         wholeReason: photoData.wholeReason,
         partReason: photoData.partReason,
         partNote: photoData.partNote,

@@ -25,7 +25,7 @@
     <el-dialog
       class="appeal-dialog"
       title="我要申诉"
-      width="700px"
+      width="896px"
       :visible.sync="dialogAppealVisible"
     >
       <div class="appeal-item">
@@ -88,7 +88,7 @@ export default {
       return this.photos.filter(item => item.qualityType === 'quality')
     },
     hasQuality () {
-      return this.photos.some(item => item.qualityType === 'quality')
+      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack)
     }
   },
   created () {
@@ -285,6 +285,8 @@ export default {
 
       .item-name {
         margin-right: 10px;
+        font-size: 16px;
+        font-weight: 500;
       }
     }
 
@@ -294,7 +296,9 @@ export default {
     }
 
     .appeal-photo-title {
-      margin-bottom: 10px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      font-weight: 500;
     }
   }
 }
