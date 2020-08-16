@@ -3,7 +3,7 @@
     <div class="header">
       <h3>申诉处理</h3>
     </div>
-    <el-tabs v-model="tabCurrent" @tab-click="getAppealList">
+    <el-tabs v-model="tabCurrent" @tab-click="searchList(1)">
       <el-tab-pane :label="`初审(${pageCounts.firstPhaseCount})`" name="first"></el-tab-pane>
       <el-tab-pane :label="`复审(${pageCounts.secondPhaseCount})`" name="second"></el-tab-pane>
       <el-tab-pane :label="`全部(${pageCounts.totalCount})`" name="all"></el-tab-pane>
@@ -305,7 +305,7 @@ export default {
         const secondPhaseCount = _.get(listInfo, 'counts.second_phase_count') || 0
         const totalCount = _.get(listInfo, 'counts.total_count') || 0
         this.tableData = listInfo.list
-        this.pager.total = totalCount
+        this.pager.total = listInfo.total || 0
         this.pageCounts = {
           firstPhaseCount,
           secondPhaseCount,

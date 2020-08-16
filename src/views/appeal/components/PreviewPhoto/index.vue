@@ -303,11 +303,11 @@ export default {
       let num = 0
       this.showPhoto.storePartReworkReason.forEach(reasonPart => {
         reasonPart.reasonManage.forEach(reasonItem => {
-          if (reasonItem.cancel) num += 1
+          if (reasonItem.cancel && !reasonItem.isDel) num += 1
         })
       })
       this.showPhoto.storeReworkReasonManage.forEach(reasonItem => {
-        if (reasonItem.cancel) num += 1
+        if (reasonItem.cancel && !reasonItem.isDel) num += 1
       })
       return num
     }

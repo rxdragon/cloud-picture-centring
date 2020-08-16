@@ -112,6 +112,8 @@ export default {
       z-index: 1;
       width: 240px;
       height: 240px;
+      object-fit: cover;
+      object-position: top;
       border-radius: 5px;
     }
 

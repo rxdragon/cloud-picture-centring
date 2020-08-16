@@ -117,7 +117,6 @@
                 <span class="span-title">奖励收益：</span>
                 {{ row.income.sunReward }}
               </span>
-              <!-- todo  -->
               <span class="span-row text-money">
                 <span class="span-title">回滚收益：</span>
                 {{ row.income.sunReward }}
@@ -149,7 +148,6 @@
                 <span class="span-title">退单扣除海草：</span>
                 {{ row.exp.punishExp | toFixedString }}
               </span>
-              <!-- todo  -->
               <span class="span-row text-money">
                 <span class="span-title">回滚海草：</span>
                 {{ row.exp.punishExp | toFixedString }}

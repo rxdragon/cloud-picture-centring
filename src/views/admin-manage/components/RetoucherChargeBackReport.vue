@@ -56,8 +56,6 @@ export default {
       staffIds: [],
       loading: false,
       otherInfo: {
-        // todo 一些指标不明确待确认
-
         storeReturnIncome: { title: '退单总收益', desc: '门店退回云端所获得实际收益', value: '0.00', type: 'money' },
         storeReturnIncomeForQuality: { title: '退单质量问题获得收益', desc: '', value: '0.00', type: 'money' },
         storeReturnIncomeForNotQuality: { title: '退单非质量问题获得收益', desc: '', value: '0.00', type: 'money' },
