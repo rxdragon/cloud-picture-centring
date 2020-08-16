@@ -93,9 +93,9 @@ export function getRetoucherQuota (params) {
     // 点赞点踩量
     const storeEvaluateCount = _.get(msg, 'storeEvaluateScoreAvg.count') || 0
     msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
-    msg.goodRate = toFixed(parseFloat(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
+    msg.goodRate = toFixed(getAvg(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
     msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
-    msg.badRate = toFixed(parseFloat(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
+    msg.badRate = toFixed(getAvg(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
 
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     return msg
