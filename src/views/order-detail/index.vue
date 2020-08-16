@@ -4,12 +4,12 @@
       <h3>修图详情</h3>
       <el-button
         type="primary"
-        v-if="hasQuality && !orderData.currentStreamAppeal"
+        v-if="needAppeal && !orderData.currentStreamAppeal"
         @click="showAppeal"
       >
         我要申诉
       </el-button>
-      <el-button type="info" disabled v-if="hasQuality && orderData.currentStreamAppeal">
+      <el-button type="info" disabled v-if="needAppeal && orderData.currentStreamAppeal">
         申诉中
       </el-button>
     </div>
@@ -25,7 +25,7 @@
     <el-dialog
       class="appeal-dialog"
       title="我要申诉"
-      width="896px"
+      width="910px"
       :visible.sync="dialogAppealVisible"
     >
       <div class="appeal-item">
@@ -85,10 +85,10 @@ export default {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
     appealPhotos () {
-      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack)
+      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog)
     },
-    hasQuality () {
-      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack)
+    needAppeal () {
+      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog)
     }
   },
   created () {
