@@ -56,6 +56,8 @@ export default {
       staffIds: [],
       loading: false,
       otherInfo: {
+        // todo 一些指标不明确待确认
+
         storeReturnIncome: { title: '退单总收益', desc: '门店退回云端所获得实际收益', value: '0.00', type: 'money' },
         storeReturnIncomeForQuality: { title: '退单质量问题获得收益', desc: '', value: '0.00', type: 'money' },
         storeReturnIncomeForNotQuality: { title: '退单非质量问题获得收益', desc: '', value: '0.00', type: 'money' },
@@ -66,9 +68,8 @@ export default {
         punishExp: { title: '退单质量问题扣除海草', desc: '', value: '0.00' },
         storeReturnRetouchTime: { title: '门店退回修图时长', desc: '门店退回至云端再次提交的平均修图时长（单）', value: '0.00', type: 'time' },
         storeReturnPhotoRate: { title: '退张率', desc: '质量问题', value: '0.00' },
-        // todo 
-        storeReturnRollbackRevenue: { title: '退单回滚收益', desc: '', value: '0.00' },
-        storeReturnRollbackSeaGrass: { title: '退单回滚海草', desc: '', value: '0.00' }
+        RetoucherAppealRollbackIncome: { title: '退单回滚收益', desc: '申诉成功后的回滚收益', value: '0.00' },
+        RetoucherAppealRollbackExp: { title: '退单回滚海草', desc: '申诉成功后的回滚海草值', value: '0.00' }
       },
       chatData: [
         {

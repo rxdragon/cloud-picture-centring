@@ -109,6 +109,7 @@ export function getAppealList (params) {
       if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_SECOND || finalAppealItem.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE ) finalAppealItem.showSecondCheck = true
       return finalAppealItem
     })
-    return appealList
+    msg.list = appealList
+    return msg
   })
 }

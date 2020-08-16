@@ -9,7 +9,7 @@
         <p class="info-title">整体退回标记:</p>
         <div class="rework-tags">
           <span
-            v-for="(wholeReasonItem, wholeReasonIndex) in photoItem.wholeReason"
+            v-for="(wholeReasonItem, wholeReasonIndex) in showReason.storeReworkReason"
             :key="`label${wholeReasonIndex}`"
             class="tag"
           >
@@ -19,23 +19,32 @@
       </div>
       <div class="info-item">
         <p class="info-title">整体退回备注:</p>
-        <span class="rework-info">{{ photoItem.wholeNote }}</span>
+        <span class="rework-info">{{ showReason.storeReworkNote }}</span>
       </div>
       <div class="info-item">
         <p class="info-title">局部退回标记:</p>
         <div class="rework-tags">
-          <span
-            v-for="(partReasonItem, partReasonIndex) in photoItem.partReason"
-            :key="partReasonIndex"
-            class="tag"
+          <template
+            v-for="(partReasonItem) in showReason.storePartReworkReason"
           >
-            {{ partReasonItem }}
-          </span>
+            <span
+              v-for="(reasonItem, reasonIndex) in partReasonItem.reason"
+              :key="reasonIndex"
+              class="tag"
+            >
+              {{ reasonItem }}
+            </span>
+          </template>
         </div>
       </div>
       <div class="info-item">
         <p class="info-title">局部退回备注:</p>
-        <span class="rework-info">{{ photoItem.partNote }}</span>
+        <span
+          class="rework-info"
+          v-for="(partNote, partNoteIndex) in showReason.storePartReworkReason"
+          :key="partNoteIndex"
+        >{{ partNote.note }}
+        </span>
       </div>
       <div class="info-item">
         <p v-show="photoItem.reworkChecked" class="info-title">问题描述(必填):</p>
@@ -55,6 +64,8 @@
 import { mapGetters } from 'vuex'
 import { PHOTO_VERSION } from '@/utils/enumerate'
 
+import PreviewModel from '@/model/PreviewModel.js'
+
 export default {
   name: 'ReworkPhoto',
   props: {
@@ -68,8 +79,11 @@ export default {
   computed: {
     ...mapGetters(['imgCompressDomain']),
     reworkImg () {
+      return this.imgCompressDomain + this.showReason.path
+    },
+    showReason () {
       const reworkPhoto = this.photoItem.photoVersion.filter(photo => photo.version === PHOTO_VERSION.STORE_REWORK)
-      return this.imgCompressDomain + reworkPhoto[0].path
+      return new PreviewModel(reworkPhoto[0])
     }
   }
 }

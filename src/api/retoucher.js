@@ -18,10 +18,12 @@ export function getSelfQuota () {
     const punishExp = Number(_.get(data, 'todayExp.punish') || 0) // 惩罚海草
     const retouchExp = Number(_.get(data, 'todayExp.retouch') || 0) // 今日已修海草
     const overTimePunishExp = Number(_.get(data, 'todayExp.overTimePunish') || 0) // 超时扣除海草
+    const rollbackExp = Number(_.get(data, 'todayExp.rollback') || 0) // 回滚海草值
     const todayExp = retouchExp - overTimePunishExp // 今日最终海草
 
     data.todayPunishExp = punishExp.toFixed(2) // 退回扣除海草
     data.overTimePunishExp = overTimePunishExp.toFixed(2) // 超时扣除海草
+    data.rollbackExp = rollbackExp.toFixed(2) // 回滚的海草值
     data.todayExp = todayExp.toFixed(2) // 今日最终海草
 
     const incomePunish = _.get(data, 'todayIncome.punish') || 0 // 惩罚金额
@@ -29,12 +31,14 @@ export function getSelfQuota () {
     const retouchIncome = _.get(data, 'todayIncome.retouch') || 0 // 今日修图收益
     const impulseIncome = _.get(data, 'todayIncome.impulse') || 0 // 今日冲量奖励收益
     const rewardIncome = _.get(data, 'todayIncome.reward') || 0 // 今日奖励收益
+    const rollbackIncome = _.get(data, 'todayIncome.rollback') || 0 // 回滚收益
 
-    const todayIncome = retouchIncome + impulseIncome + rewardIncome - incomePunish - incomeOverTimePunish
+    const todayIncome = retouchIncome + impulseIncome + rewardIncome - incomePunish - incomeOverTimePunish + rollbackIncome
     data.todayRewordIncome = todayIncome.toFixed(2)
     
     const punishIncome = incomePunish + incomeOverTimePunish
     data.punishIncome = punishIncome.toFixed(2)
+    data.rollbackIncome = rollbackIncome.toFixed(2)
 
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
