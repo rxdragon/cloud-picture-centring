@@ -39,7 +39,8 @@ export default class PreviewModel {
           const reasonObj = {
             id: label.id,
             name: label.name,
-            cancel: false
+            cancel: false,
+            isDel: label.is_del
           }
           if (label.is_del) {
             reasonObj.cancel = true
@@ -62,7 +63,8 @@ export default class PreviewModel {
         const reasonObj = {
           id: reasonItem.id,
           name: reasonItem.name,
-          cancel: false
+          cancel: false,
+          isDel: reasonItem.is_del
         }
         if (reasonItem.is_del) {
           reasonObj.cancel = true

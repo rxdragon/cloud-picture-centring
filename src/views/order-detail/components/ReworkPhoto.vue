@@ -8,13 +8,14 @@
       <div class="info-item">
         <p class="info-title">整体退回标记:</p>
         <div class="rework-tags">
-          <span
-            v-for="(wholeReasonItem, wholeReasonIndex) in showReason.storeReworkReason"
-            :key="`label${wholeReasonIndex}`"
-            class="tag"
+          <div
+            v-for="(wholeReasonItem, wholeReasonIndex) in showReason.storeReworkReasonManage"
+            :key="wholeReasonIndex"
+            :class="['tag', wholeReasonItem.cancel ? 'del' : '']"
           >
-            {{ wholeReasonItem }}
-          </span>
+            <span>{{ wholeReasonItem.name }}</span>
+            <span v-if="wholeReasonItem.cancel">(已删除)</span>
+          </div>
         </div>
       </div>
       <div class="info-item">
@@ -24,17 +25,20 @@
       <div class="info-item">
         <p class="info-title">局部退回标记:</p>
         <div class="rework-tags">
-          <template
-            v-for="(partReasonItem) in showReason.storePartReworkReason"
+          <div
+            v-for="(partReasonItem, partReasonIndex) in showReason.storePartReworkReason"
+            :key="partReasonIndex"
+            class="part-tags"
           >
-            <span
-              v-for="(reasonItem, reasonIndex) in partReasonItem.reason"
+            <div
+              v-for="(reasonItem, reasonIndex) in partReasonItem.reasonManage"
               :key="reasonIndex"
-              class="tag"
+              :class="['tag', reasonItem.cancel ? 'del' : '']"
             >
-              {{ reasonItem }}
-            </span>
-          </template>
+              <span>{{ reasonItem.name }}</span>
+              <span v-if="reasonItem.cancel">(已删除)</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="info-item">
@@ -126,7 +130,7 @@ export default {
 
     .info-item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 10px;
     }
 
@@ -145,14 +149,27 @@ export default {
       flex-wrap: wrap;
       width: 500px;
 
+      .part-tags {
+        display: flex;
+        margin-bottom: 4px;
+      }
+
       .tag {
+        display: inline;
         padding: 4px 10px;
         margin-right: 16px;
         font-size: 12px;
         color: #4669fb;
+        white-space: nowrap;
         background: rgba(237, 240, 255, 1);
         border: 1px solid rgba(181, 195, 253, 1);
         border-radius: 4px;
+
+        &.del {
+          color: #919199;
+          background: rgba(212, 212, 217, 1);
+          border: none;
+        }
       }
     }
 

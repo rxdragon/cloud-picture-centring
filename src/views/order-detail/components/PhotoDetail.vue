@@ -167,6 +167,12 @@ export default {
           background: rgba(237, 240, 255, 1);
           border: 1px solid rgba(181, 195, 253, 1);
           border-radius: 4px;
+
+          &.del {
+            color: #919199;
+            background: rgba(212, 212, 217, 1);
+            border: none;
+          }
         }
       }
 

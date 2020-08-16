@@ -78,7 +78,6 @@
     </div>
     <preview-photo
       v-if="showPreview"
-      :order-info="orderInfo"
       :imgarray="priviewPhotoData"
       show-return-reson
       :orderindex="imgIndex"
@@ -86,6 +85,7 @@
       :show-preview.sync="showPreview"
       @saveResult="saveResult"
       :check-type="checkType"
+      :photo-appeal="photoItem.photoAppeals"
     />
   </div>
 </template>
@@ -110,7 +110,6 @@ export default {
     return {
       photoVersionList: [],
       showPreview: false,
-      orderInfo: {},
       firstResult: {
         resultDesc: '-'
       }, // 初审结果
@@ -185,8 +184,8 @@ export default {
           reason,
           resultDesc: AppealResultStatusEnum[result]
         }
-        this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
-        this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
+        if (resultObj.storePartReworkReason) this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
+        if (resultObj.storeReworkReasonManage) this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
       }
     }
   }

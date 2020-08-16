@@ -120,6 +120,14 @@
               >
                 复审
               </el-button>
+              <el-button
+                type="primary"
+                v-if="row.showDetail"
+                size="mini"
+                @click="goDetail(row)"
+              >
+                详情
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -224,6 +232,14 @@ export default {
         needBind: !isSecondChecking
       }
       if (!isSelfSecond) return this.$newMessage.warning('别人正在审核')
+      this.linkto(linkObj)
+    },
+    /**
+     * @description 查看详情
+     */
+    goDetail (appealItem) {
+      const { id } = appealItem
+      const linkObj = { id }
       this.linkto(linkObj)
     },
     /**

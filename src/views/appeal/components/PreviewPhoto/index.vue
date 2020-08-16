@@ -2,7 +2,6 @@
   <div class="photoShow">
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}{{ showPhoto.storeReturnCount || '' }}
-      <div class="driver-star" @click.stop="guide">?</div>
       <div class="btn-right">
         <button
           id="closeImg"
@@ -65,11 +64,11 @@
                   <div
                     v-for="(itemsub, indexsub) in labelItem.reasonManage"
                     :key="indexsub"
-                    class="reason-tag-common part-tag"
+                    :class="['reason-tag-common part-tag', itemsub.isDel ? 'deleted' : '']"
                   >
                     <span>{{ itemsub.name }}</span>
                     <span v-if="checkType === 'second' && !itemsub.cancel" @click.stop="delReason(itemsub)" class="red">删除</span>
-                    <span v-if="checkType === 'second' && itemsub.cancel" @click.stop="cancelDelReason(itemsub)" class="red">(已取消)</span>
+                    <span v-if="checkType === 'second' && itemsub.cancel" @click.stop="cancelDelReason(itemsub)" class="red">(已删除)</span>
                   </div>
                 </div>
                 <div class="detail-box" v-if="labelItem.note">
@@ -149,7 +148,7 @@
           <!-- 申诉理由 -->
           <div class="order-label">
             <div class="label-title">申诉问题描述</div>
-            <p>这个很不合理啊,没有这个很不合理啊,没有液化失真啊啊啊啊啊这个很不合理啊,没有液化失真啊啊啊啊啊</p>
+            <p>{{ photoAppeal.desc }}</p>
           </div>
           <div class="order-label store-return-reson" v-if="showPhoto.hasStoreReturnTag">
             <div class="label-title">照片整体原因</div>
@@ -159,11 +158,11 @@
                   <div
                     v-for="(labelItem, labelIndex) in showPhoto.storeReworkReasonManage"
                     :key="labelIndex"
-                    class="reason-tag-common whole-tag"
+                    :class="['reason-tag-common whole-tag', labelItem.isDel ? 'deleted' : '']"
                   >
                     <span>{{ labelItem.name }}</span>
                     <span v-if="checkType === 'second' && !labelItem.cancel" @click.stop="delReason(labelItem)" class="red">删除</span>
-                    <span v-if="checkType === 'second' && labelItem.cancel" @click.stop="cancelDelReason(labelItem)" class="red">(已取消)</span>
+                    <span v-if="checkType === 'second' && labelItem.cancel" @click.stop="cancelDelReason(labelItem)" class="red">(已删除)</span>
                   </div>
                 </template>
                 <span v-else class="reason-note">暂无原因</span>
@@ -198,15 +197,12 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
-import Driver from 'driver.js' // 引导框
 import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
-import guideData from './guideData.js'
 
 import { APPEAL_CHECK_STATUS } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
-import 'driver.js/dist/driver.min.css'
 
 export default {
   name: 'PreviewPhoto',
@@ -244,8 +240,7 @@ export default {
     orderindex: { type: Number, default: 0 },
     checkType: { type: String, default: '' },
     showOrderInfo: { type: Boolean },
-    // 打分信息
-    orderInfo: { type: Object, default: () => ({}) } // 打分信息
+    photoAppeal: { type: Object }
   },
   data () {
     return {
@@ -268,7 +263,6 @@ export default {
         height: 0
       },
       photoArray: [], // 展示数组
-      driver: null,
       inZoomIn: false,
       photoZoomStyle: '',
       showMark: false, // mark图显示
@@ -356,70 +350,6 @@ export default {
         }
       },
       immediate: true
-    }
-  },
-  created () {
-    this.driver = new Driver({
-      nextBtnText: '下一个',
-      prevBtnText: '上一个',
-      doneBtnText: '完成',
-      closeBtnText: '关闭'
-    })
-  },
-  mounted () {
-    /**
-     * @description 监听键盘事件
-     */
-    document.onkeydown = e => {
-      const key = window.event.keyCode
-      switch (key) {
-        case 49:
-        case 50:
-        case 51:
-        case 52:
-        case 53:
-          this.scaleNum = (key - 49) * 25
-          this.judgeHasZoom(e)
-          break
-        case 187:
-        case 69:
-          if (this.scaleNum < 100) {
-            this.scaleNum++
-          }
-          this.judgeHasZoom(e)
-          break
-        case 189:
-        case 81:
-          if (this.scaleNum > 0) {
-            this.scaleNum--
-          }
-          this.judgeHasZoom(e)
-          break
-        case 18:
-        case 83:
-          this.closeShowPhoto()
-          break
-        case 65:
-        case 37:
-          if (this.photoArray.length > 1) {
-            this.prePhoto()
-          }
-          break
-        case 39:
-        case 68:
-          if (this.photoArray.length > 1) {
-            this.nextPhoto()
-          }
-          break
-        case 16:
-          this.isShow = !this.isShow
-          break
-        case 88:
-          this.showMarkPhoto()
-          break
-        default:
-          break
-      }
     }
   },
   beforeDestroy () {
@@ -618,14 +548,6 @@ export default {
       document.getElementsByClassName('orginPhoto')[0].appendChild(imgLayer)
     },
     /**
-     * @description 提示按钮
-     */
-    guide () {
-      const steps = guideData
-      this.driver.defineSteps(steps)
-      this.driver.start()
-    },
-    /**
      * @description 删除标记
      */
     delReason (item) {
@@ -635,6 +557,7 @@ export default {
      * @description 取消删除标记
      */
     cancelDelReason (item) {
+      if (item.isDel) return
       this.resetRefuse()
       item.cancel = false
     },
@@ -655,7 +578,7 @@ export default {
         }
       }
       this.checkResult = 'accept'
-      this.emitResult()
+      this.emitResult('accept')
     },
     /**
      * @description 隐藏拒绝原因输入
@@ -673,18 +596,20 @@ export default {
       }
       this.checkResult = 'refuse'
       this.hideRefuse()
-      this.emitResult()
+      this.emitResult('refuse')
     },
     /**
      * @description 通知审核结果
      */
-    emitResult () {
+    emitResult (type) {
       const result = {
         result: this.checkResult,
         type: this.checkType
       }
-      result.storePartReworkReason = this.showPhoto.storePartReworkReason
-      result.storeReworkReasonManage = this.showPhoto.storeReworkReasonManage
+      if (type === 'accept') {
+        result.storePartReworkReason = this.showPhoto.storePartReworkReason
+        result.storeReworkReasonManage = this.showPhoto.storeReworkReasonManage
+      }
       if (this.refuseTextarea) result.reason = this.refuseTextarea
       this.$emit('saveResult', result)
       this.closeShowPhoto()
@@ -701,10 +626,4 @@ export default {
 
 <style lang="less" scoped>
   @import url('./index.less');
-</style>
-
-<style lang="less">
-#driver-highlighted-element-stage {
-  opacity: 0.3;
-}
 </style>
