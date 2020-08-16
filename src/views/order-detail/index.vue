@@ -85,7 +85,7 @@ export default {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
     appealPhotos () {
-      return this.photos.filter(item => item.qualityType === 'quality')
+      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack)
     },
     hasQuality () {
       return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack)

@@ -39,6 +39,7 @@ export default class StreamModel {
   exp = 0 // 正常海草
   punishExp = 0 // 退回惩罚海草
   overtimeExp = 0 // 沙漏抽出海草
+  rollbackExp = 0 // 回滚海草
   actualExp = 0 // 实获海草
 
   // 时间
@@ -75,6 +76,7 @@ export default class StreamModel {
   retouchIncome = 0 // 修图收益
   overtimeIncome = 0 // 超时惩罚收益
   rewordIncome = 0 // 奖励收益
+  rollbackIncome = 0 // 奖励收益
   punishIncome = 0 // 惩罚收益
   actualIncome = 0 // 实获收益
 
@@ -193,14 +195,17 @@ export default class StreamModel {
     const retouchIncome = parseFloat(this.baseData.income) || 0 // 原始收益
     const overtimeIncome = parseFloat(_.get(this.baseData, 'tags.values.overtime_income')) || 0
     const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword')) || 0
+    const rollbackIncome = parseFloat(_.get(this.baseData, 'tags.values.rollback_income')) || 0
     const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish')) || 0
     const actualIncome = retouchIncome * 100 +
       rewordIncome * 100 -
       punishIncome *100 -
-      overtimeIncome * 100
+      overtimeIncome * 100 +
+      rollbackIncome * 100
     this.retouchIncome = retouchIncome
     this.overtimeIncome = overtimeIncome
     this.rewordIncome = rewordIncome
+    this.rollbackIncome = rollbackIncome
     this.punishIncome = punishIncome
     this.actualIncome = Validate.toFixed(actualIncome / 100)
   }
@@ -210,7 +215,8 @@ export default class StreamModel {
     this.exp = parseFloat(this.baseData.exp) || 0
     this.punishExp = parseFloat(_.get(this.baseData, 'tags.values.punish_exp')) || 0
     this.overtimeExp = parseFloat(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
-    const actualExp = this.exp * 100 - this.overtimeExp * 100 - this.punishExp * 100
+    this.rollbackExp = parseFloat(_.get(this.baseData, 'tags.values.rollback_exp')) || 0
+    const actualExp = this.exp * 100 - this.overtimeExp * 100 - this.punishExp * 100 + this.rollbackExp * 100
     this.actualExp = Validate.toFixed(actualExp / 100)
   }
 

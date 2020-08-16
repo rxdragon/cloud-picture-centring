@@ -174,7 +174,10 @@ export default {
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        this.tableData = await Appeal.getAppealList(req)
+        const listInfo = await Appeal.getAppealList(req)
+        this.tableData = listInfo.list
+        const totalCount = _.get(listInfo, 'counts.total_count') || 0
+        this.pager.total = totalCount
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }

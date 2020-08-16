@@ -97,7 +97,7 @@ export function getRetoucherQuota (params) {
     msg.goodRate = toFixed(parseFloat(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
     msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
     msg.badRate = toFixed(parseFloat(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
-    msg.finalExp = msg.exp.normal - msg.exp.rollback // 最终的海草值
+    msg.finalExp = Number(msg.exp.normal) + Number(msg.exp.rollback) // 最终的海草值
 
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     return msg
