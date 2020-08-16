@@ -59,6 +59,7 @@ import ReworkPhoto from './components/ReworkPhoto'
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
 import * as Appeal from '@/api/appeal.js'
+import store from '@/store' // vuex
 
 export default {
   name: 'OrderDetail',
@@ -80,6 +81,9 @@ export default {
     }
   },
   computed: {
+    retoucherIsSelf () {
+      return store.getters.userInfo.id === this.orderData.retoucherJobNum
+    },
     // 是否是工作看板详情
     isWorkBoardInfo () {
       return Boolean(this.$route.query.workBoardStreamNum)
@@ -88,7 +92,7 @@ export default {
       return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog)
     },
     needAppeal () {
-      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog)
+      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog) && this.retoucherIsSelf
     }
   },
   created () {

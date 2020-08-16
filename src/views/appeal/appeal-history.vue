@@ -176,8 +176,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const listInfo = await Appeal.getAppealList(req)
         this.tableData = listInfo.list
-        const totalCount = _.get(listInfo, 'counts.total_count') || 0
-        this.pager.total = totalCount
+        this.pager.total = listInfo.total || 0
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }

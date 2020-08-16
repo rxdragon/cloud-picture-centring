@@ -125,7 +125,7 @@ export default class StreamModel {
     const retoucher = _.get(streamData, 'retoucher.name') || _.get(streamData, 'retoucher.real_name')
     const outRetoucher = _.get(streamData, 'tags.values.retoucher_name')
     this.retoucher = retoucher || outRetoucher || '-'
-    this.retoucherJobNum = _.get(streamData, 'retoucher.id') || '-'
+    this.retoucherJobNum = _.get(streamData, 'retoucher.id') || streamData.retoucher_id || '-'
     this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.nickname') ||
       _.get(streamData, 'retoucher.retoucher_leader.name') ||
       _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'

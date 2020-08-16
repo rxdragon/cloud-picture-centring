@@ -59,7 +59,9 @@ export default class PhotoModel {
     
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
-    this.qualityType = _.get(photoData, 'tags.values.store_rework_type') || ''
+    const myReworkPhoto = otherPhotoVersion.find(item => item.version === 'store_rework') || {} // 第一个store_rework是申诉的那张照片
+
+    this.qualityType = _.get(myReworkPhoto, 'tags.values.store_rework_type') || ''
     this.isStoreReturn = statics.includes('store_rework')
     this.isRollBack = statics.includes('return_rollback_all')
     this.originReworkPhotoLog = photoData.origin_rework_photo_log || ''
