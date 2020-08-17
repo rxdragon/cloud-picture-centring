@@ -73,7 +73,6 @@ import PhotoList from '@/components/PhotoList'
 import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
-import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
@@ -93,15 +92,15 @@ export default {
     },
     // 退回的那个照片
     reworkPhoto () {
-      let storeRework = this.photoData.photoVersion.filter(photoVersion => photoVersion.version === PHOTO_VERSION.STORE_REWORK)[0]
-      if (storeRework) {
-        storeRework = new PreviewModel(storeRework)
+      let realReworkPhoto = this.photoItem.realReworkPhoto
+      if (Object.keys(realReworkPhoto).length) {
+        realReworkPhoto = new PreviewModel(realReworkPhoto)
       }
-      return storeRework
+      return realReworkPhoto
     },
     // 判断是否有退单标记
     hasStoreReturnReason () {
-      return !!this.reworkPhoto
+      return Object.keys(this.reworkPhoto).length
     },
     // 是否云学院打分
     hasCheckTags () {

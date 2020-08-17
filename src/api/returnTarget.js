@@ -59,6 +59,10 @@ function handerReturnQuota (msg) {
   // 门店退单率
   msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto, finishPhotoNum)
 
+  // 申诉回滚
+  msg.RetoucherAppealRollbackIncome = Number(msg.RetoucherRollbackIncomeForNormalRework) + Number(msg.RetoucherRollbackIncomeForReturnRework) // 收益
+  msg.RetoucherAppealRollbackExp = Number(msg.RetoucherRollbackExpForNormalRework) + Number(msg.RetoucherRollbackExpForReturnRework) // 海草
+
   // 门店退回修图平均时长（单）
   msg.storeReturnRetouchTime = getAvg(msg.storeReturnRetouchTime, msg.finishStoreReturnStream)
   const chatData = [

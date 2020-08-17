@@ -2,7 +2,7 @@
   <div class="rework-photo">
     <div class="photo-area">
       <img class="photo" :src="reworkImg" alt=""/>
-      <el-checkbox v-model="photoItem.reworkChecked"></el-checkbox>
+      <el-checkbox :disabled="showReason.needDisable" v-model="photoItem.reworkChecked"></el-checkbox>
     </div>
     <div class="info-area">
       <div class="info-item">
@@ -50,6 +50,10 @@
         >{{ partNote.note }}
         </span>
       </div>
+      <div class="info-item" v-if="showReason.needDisable">
+        <p class="info-title red">照片退回时间:</p>
+        <span class="red">{{ showReason.originReworkTime }}</span>
+      </div>
       <div class="info-item">
         <p v-show="photoItem.reworkChecked" class="info-title">问题描述(必填):</p>
         <el-input
@@ -66,7 +70,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { PHOTO_VERSION } from '@/utils/enumerate'
 
 import PreviewModel from '@/model/PreviewModel.js'
 
@@ -75,19 +78,19 @@ export default {
   props: {
     photoItem: { type: Object, required: true }
   },
-  data () {
-    return {
-      photoVersionList: []
-    }
-  },
   computed: {
     ...mapGetters(['imgCompressDomain']),
     reworkImg () {
       return this.imgCompressDomain + this.showReason.path
     },
     showReason () {
-      const reworkPhoto = this.photoItem.photoVersion.filter(photo => photo.version === PHOTO_VERSION.STORE_REWORK)
-      return new PreviewModel(reworkPhoto[0])
+      const showReasonPhoto = new PreviewModel(this.photoItem.realReworkPhoto)
+      const originReworkTime = _.get(showReasonPhoto, 'originReworkPhotoLog.created_at')
+      const originReworkMonth = new Date(originReworkTime).getMonth()
+      const nowMonth = new Date().getMonth()
+      showReasonPhoto.needDisable = originReworkMonth !== nowMonth
+      showReasonPhoto.originReworkTime = originReworkTime
+      return showReasonPhoto
     }
   }
 }
@@ -98,6 +101,10 @@ export default {
 @panelTitleWidth: 185px;
 
 .rework-photo {
+  .red {
+    color: red;
+  }
+
   .photo-area {
     position: relative;
     display: inline-block;
@@ -140,6 +147,10 @@ export default {
       width: 100px;
       font-size: 14px;
       color: #303133;
+
+      &.red {
+        color: red;
+      }
     }
 
     .rework-info {
@@ -153,13 +164,14 @@ export default {
 
       .part-tags {
         display: flex;
-        margin-bottom: 4px;
+        flex-wrap: wrap;
       }
 
       .tag {
-        display: inline;
+        display: inline-block;
         padding: 4px 10px;
         margin-right: 16px;
+        margin-bottom: 4px;
         font-size: 12px;
         color: #4669fb;
         white-space: nowrap;
