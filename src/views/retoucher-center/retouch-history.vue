@@ -111,6 +111,7 @@
                 <div class="table-detail-box">
                   <p>质量问题数量：<span>{{ row.qualityNum || row.qualityNumForRework }}</span></p>
                   <p>非质量问题数量：<span>{{ row.notQualityNum || row.notQualityNumForRework }}</span></p>
+                  <p>申诉回滚数量：<span>{{ row.rollbackNumForRework }}</span></p>
                 </div>
                 <span class="hover-class" slot="reference">{{ row.allReturnPhotoNum }}</span>
               </el-popover>

@@ -81,10 +81,12 @@ export function getRetoucherQuota (params) {
       msg.income[key] = Number(msg.income[key])
     }
     const income = msg.income.retouch * 100 +
-      msg.income.impulse * 100 +
-      msg.income.reward * 100 -
-      msg.income.punish * 100 +
-      msg.income.rollback * 100
+      Number(_.get(msg, 'income.impulse') || 0) +
+      Number(_.get(msg, 'income.reward') || 0) -
+      Number(_.get(msg, 'income.punish') || 0) +
+      Number(_.get(msg, 'income.rollbackForNormalRework') || 0) +
+      Number(_.get(msg, 'income.rollbackForReturnRework') || 0)
+
     msg.income = toFixed(income / 100)
 
     // 顾客满意度
@@ -97,7 +99,7 @@ export function getRetoucherQuota (params) {
     msg.goodRate = toFixed(parseFloat(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
     msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
     msg.badRate = toFixed(parseFloat(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
-    msg.finalExp = Number(msg.exp.normal) + Number(msg.exp.rollback) // 最终的海草值
+    msg.finalExp = Number(_.get(msg, 'exp.normal') || 0) + Number(_.get(msg, 'exp.rollbackForNormalRework') || 0) + Number(_.get(msg, 'exp.rollbackForReturnRework') || 0) // 最终的海草值
 
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     return msg
