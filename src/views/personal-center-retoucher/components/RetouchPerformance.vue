@@ -119,7 +119,7 @@
               </span>
               <span class="span-row text-money">
                 <span class="span-title">回滚收益：</span>
-                {{ row.income.sunReward }}
+                {{ row.income.rollbackIncome }}
               </span>
 
               <span class="span-row">
@@ -150,7 +150,7 @@
               </span>
               <span class="span-row text-money">
                 <span class="span-title">回滚海草：</span>
-                {{ row.exp.punishExp | toFixedString }}
+                {{ row.exp.rollbackExp | toFixedString }}
               </span>
               <span class="span-row">
                 <span class="span-title">总计：</span>

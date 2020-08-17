@@ -6,7 +6,7 @@
     </div>
     <div class="info-area">
       <div class="info-item">
-        <p class="info-title" @click="log">整体退回标记:</p>
+        <p class="info-title">整体退回标记:</p>
         <div class="rework-tags">
           <div
             v-for="(wholeReasonItem, wholeReasonIndex) in showReason.storeReworkReasonManage"
@@ -84,24 +84,13 @@ export default {
       return this.imgCompressDomain + this.showReason.path
     },
     showReason () {
-      debugger
       const showReasonPhoto = new PreviewModel(this.photoItem.realReworkPhoto)
-      console.warn('showReasonPhoto', showReasonPhoto)
-      const originReworkTime = _.get(showReasonPhoto, 'originReworkPhotoLog.created_at')
-      console.warn('originReworkTime', originReworkTime)
+      const originReworkTime = _.get(this.photoItem, 'originReworkPhotoLog.created_at')
       const originReworkMonth = new Date(originReworkTime).getMonth()
       const nowMonth = new Date().getMonth()
-      console.warn('originReworkMonth', originReworkMonth)
-      console.warn('nowMonth', nowMonth)
       showReasonPhoto.needDisable = originReworkMonth !== nowMonth
       showReasonPhoto.originReworkTime = originReworkTime
       return showReasonPhoto
-    }
-  },
-  methods: {
-    log () {
-      console.warn(this, 'this')
-      console.warn('this.showReason', this.showReason)
     }
   }
 }

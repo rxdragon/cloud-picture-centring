@@ -32,7 +32,7 @@ function handerReturnQuota (msg) {
   // 门店质量问题退单单数
   const storeReturnForQualityStream = msg.storeReturnStreamNumForNormalQuality + msg.storeReturnStreamNumForReworkQuality
   // 门店质量问题退单张数
-  const storeReturnForQualityPhoto = msg.storeReturnPhotoNumForNormalQuality + msg.storeReturnPhotoNumForReworkQuality
+  const storeReturnForQualityPhoto = msg.storeReturnPhotoNumForNormalQuality + msg.storeReturnPhotoNumForReworkQuality - msg.RetoucherRollbackNormalBothStreamNum - msg.RetoucherRollbackNormalQualityStreamNum
   // 门店非质量问题退单单数
   const storeReturnForNotQualityStream = msg.storeReturnStreamNumForNormalNotQuality + msg.storeReturnStreamNumForReworkNotQuality
   // 门店非质量问题退单张数

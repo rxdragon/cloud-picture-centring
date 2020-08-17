@@ -65,6 +65,8 @@ export default class StreamModel {
   notQualityNumForRework = 0 // 退回单门店退回非质量问题张数
   bothNumForRework = 0 // 退回单门店退回质量问题张数&非质量问题张数
   allReturnPhotoNum = 0 // 全部退单张数
+  
+  rollbackNumForRework = 0 // 回滚的单数
 
   reworkNum = 0
 
@@ -181,13 +183,15 @@ export default class StreamModel {
     this.qualityNumForRework = Number(_.get(this.baseData, 'tags.values.quality_num_for_rework')) || 0
     this.notQualityNumForRework = Number(_.get(this.baseData, 'tags.values.not_quality_num_for_rework')) || 0
     this.bothNumForRework = Number(_.get(this.baseData, 'tags.values.both_num_for_rework')) || 0
+    this.rollbackNumForRework = Number(_.get(this.baseData, 'tags.values.rollback_num_for_rework')) || 0
 
     this.allReturnPhotoNum = this.qualityNum +
       this.notQualityNum +
       this.bothNum +
       this.qualityNumForRework +
       this.notQualityNumForRework +
-      this.bothNumForRework
+      this.bothNumForRework -
+      this.rollbackNumForRework
   }
 
   // 获取收益
@@ -195,7 +199,7 @@ export default class StreamModel {
     const retouchIncome = parseFloat(this.baseData.income) || 0 // 原始收益
     const overtimeIncome = parseFloat(_.get(this.baseData, 'tags.values.overtime_income')) || 0
     const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword')) || 0
-    const rollbackIncome = parseFloat(_.get(this.baseData, 'tags.values.rollback_income')) || 0
+    const rollbackIncome = parseFloat(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
     const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish')) || 0
     const actualIncome = retouchIncome * 100 +
       rewordIncome * 100 -
@@ -215,7 +219,7 @@ export default class StreamModel {
     this.exp = parseFloat(this.baseData.exp) || 0
     this.punishExp = parseFloat(_.get(this.baseData, 'tags.values.punish_exp')) || 0
     this.overtimeExp = parseFloat(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
-    this.rollbackExp = parseFloat(_.get(this.baseData, 'tags.values.rollback_exp')) || 0
+    this.rollbackExp = parseFloat(_.get(this.baseData, 'tags.values.rollback_exp_rework')) || 0
     const actualExp = this.exp * 100 - this.overtimeExp * 100 - this.punishExp * 100 + this.rollbackExp * 100
     this.actualExp = Validate.toFixed(actualExp / 100)
   }
