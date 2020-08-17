@@ -6,7 +6,7 @@
     </div>
     <div class="info-area">
       <div class="info-item">
-        <p class="info-title">整体退回标记:</p>
+        <p class="info-title" @click="log">整体退回标记:</p>
         <div class="rework-tags">
           <div
             v-for="(wholeReasonItem, wholeReasonIndex) in showReason.storeReworkReasonManage"
@@ -91,6 +91,12 @@ export default {
       showReasonPhoto.needDisable = originReworkMonth !== nowMonth
       showReasonPhoto.originReworkTime = originReworkTime
       return showReasonPhoto
+    }
+  },
+  methods: {
+    log () {
+      console.warn(this, 'this')
+      console.warn('this.showReason', this.showReason)
     }
   }
 }
