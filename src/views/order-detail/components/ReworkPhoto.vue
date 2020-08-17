@@ -84,10 +84,15 @@ export default {
       return this.imgCompressDomain + this.showReason.path
     },
     showReason () {
+      debugger
       const showReasonPhoto = new PreviewModel(this.photoItem.realReworkPhoto)
+      console.warn('showReasonPhoto', showReasonPhoto)
       const originReworkTime = _.get(showReasonPhoto, 'originReworkPhotoLog.created_at')
+      console.warn('originReworkTime', originReworkTime)
       const originReworkMonth = new Date(originReworkTime).getMonth()
       const nowMonth = new Date().getMonth()
+      console.warn('originReworkMonth', originReworkMonth)
+      console.warn('nowMonth', nowMonth)
       showReasonPhoto.needDisable = originReworkMonth !== nowMonth
       showReasonPhoto.originReworkTime = originReworkTime
       return showReasonPhoto

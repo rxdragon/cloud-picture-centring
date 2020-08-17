@@ -535,6 +535,7 @@
 |范围|描述|commitId|
 --|--|--
  test | [6c8537b](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/6c8537b)
+ testbug | [5001f91](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/5001f91)
 
 
 ### 🔨 代码重构
