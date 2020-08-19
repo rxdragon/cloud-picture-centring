@@ -37,7 +37,13 @@ export function getSelfQuota () {
     const rollbackReturnIncome = Number(_.get(data, 'todayIncome.rollback_return') || 0) // r流水回滚收益
     const rollbackIncome = rollbackNormalIncome + rollbackReturnIncome // 回滚收益
 
-    const todayIncome = retouchIncome + impulseIncome + rewardIncome - incomePunish - incomeOverTimePunish + rollbackIncome
+    const todayIncome =
+      retouchIncome +
+      impulseIncome +
+      rewardIncome -
+      incomePunish -
+      incomeOverTimePunish +
+      rollbackIncome
     data.todayRewordIncome = todayIncome.toFixed(2)
     
     const punishIncome = incomePunish + incomeOverTimePunish

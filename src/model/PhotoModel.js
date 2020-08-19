@@ -60,7 +60,11 @@ export default class PhotoModel {
     
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
-    const realReworkPhoto = otherPhotoVersion.find(photoVersion => photoVersion.version === 'store_rework' && _.get(photoVersion, 'tags.values.origin_return_labels')) || {} // origin_return_labels有的才是退回标签, 老的数据没有
+    const realReworkPhoto = otherPhotoVersion.find(photoVersion => {
+      const isStoreRework = photoVersion.version === 'store_rework'
+      const hasOriginReturnLabels = _.get(photoVersion, 'tags.values.origin_return_labels')
+      return isStoreRework && hasOriginReturnLabels
+    }) || {} // origin_return_labels有的才是退回标签, 老的数据没有
 
     this.qualityType = _.get(realReworkPhoto, 'tags.values.origin_return_labels.store_rework_type') || ''
     this.realReworkPhoto = realReworkPhoto

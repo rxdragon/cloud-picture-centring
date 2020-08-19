@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import axios from '@/plugins/axios.js'
 import { keyToHump, transformPercentage, getAvg, timeFormat } from '../utils/index.js'
 import { revertTimeSpan } from '@/utils/timespan.js'

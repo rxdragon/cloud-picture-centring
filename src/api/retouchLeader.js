@@ -12,10 +12,11 @@ export function getTodayQuota () {
     method: 'GET'
   }).then(msg => {
     const createData = keyToHump(msg)
+    const { todayFinishedPhotoNum, todayExpectFinishPhotoNum } = createData
     if (!Number(createData.todayFinishedPhotoNum) || !Number(createData.todayExpectFinishPhotoNum)) {
       createData.todayFinishPhotoNumProgress = 0
     } else {
-      createData.todayFinishPhotoNumProgress = Math.floor((createData.todayFinishedPhotoNum / createData.todayExpectFinishPhotoNum * 100), 0)
+      createData.todayFinishPhotoNumProgress = Math.floor((todayFinishedPhotoNum / todayExpectFinishPhotoNum * 100), 0)
     }
     return createData
   })
@@ -76,8 +77,10 @@ export function getStaffQuotaInfoGroupByStaff (params) {
     const createData = []
     for (const staffInfoKey in data) {
       const staffInfoItem = data[staffInfoKey]
+      const rebuildTimeSum = Number(_.get(staffInfoItem, 'retouchTimeAvg.rebuildTime.sum') || 0)
+      const retouchTimeSum = Number(_.get(staffInfoItem, 'retouchTimeAvg.retouchTime.sum') || 0)
       const createItem = {}
-      const retouchAllTime = Number(staffInfoItem.retouchTimeAvg.rebuildTime.sum) + Number(staffInfoItem.retouchTimeAvg.retouchTime.sum)
+      const retouchAllTime = rebuildTimeSum + retouchTimeSum
       const retouchPhotoCount = parseInt(staffInfoItem.finishPhotoNum)
       createItem.name = staffInfoItem.nickname || staffInfoItem.name || '暂无'
       createItem.finishPhotoNum = retouchPhotoCount // 完成张数

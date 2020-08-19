@@ -28,7 +28,9 @@ export default class PreviewModel {
   // 获取门店退单信息
   getStoreReaseon (photoItem) {
     if (!photoItem.tags) return
-    let storePartReworkReason = _.get(photoItem, 'tags.values.origin_return_labels.store_part_rework_reason') || _.get(photoItem, 'tags.values.store_part_rework_reason') || []
+    const newStorePartReworkReason = _.get(photoItem, 'tags.values.origin_return_labels.store_part_rework_reason')
+    const oldStorePartReworkReason = _.get(photoItem, 'tags.values.store_part_rework_reason')
+    let storePartReworkReason = newStorePartReworkReason || oldStorePartReworkReason || []
     storePartReworkReason = storePartReworkReason.map(labelItem => {
       const createData = labelItem
       // 2.12之后新的局部标签在在labels下面
@@ -55,9 +57,10 @@ export default class PreviewModel {
       return createData
     })
     this.storePartReworkReason = storePartReworkReason
-    // 整理标签 2.12之后新的整体标签在values.labels下面
-    if ( _.get(photoItem, 'tags.values.origin_return_labels.labels') || _.get(photoItem, 'tags.values.labels')) {
-      const storeReworkReason = _.get(photoItem, 'tags.values.origin_return_labels.labels') || _.get(photoItem, 'tags.values.labels') || ''
+
+    const originReturnLabels = _.get(photoItem, 'tags.values.origin_return_labels.labels')
+    if (originReturnLabels) {
+      const storeReworkReason = originReturnLabels || ''
       this.storeReworkReason = storeReworkReason.map(reasonItem => reasonItem.name)
       storeReworkReason.forEach(reasonItem => {
         const reasonObj = {

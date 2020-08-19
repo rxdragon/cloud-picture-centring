@@ -76,7 +76,9 @@ export function appealDetail (params) {
       } else {
         finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
         finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
-          if (versionItem.version !== 'store_rework' || versionItem.id === photoAppealItem.photo_version_id ) finalVersion.push(versionItem)
+          const isStoreRework = versionItem.version === 'store_rework'
+          const isCurrentStoreRework = versionItem.id === photoAppealItem.photo_version_id
+          if (!isStoreRework || isCurrentStoreRework ) finalVersion.push(versionItem)
           return finalVersion
         }, [])
       }
@@ -105,9 +107,15 @@ export function getAppealList (params) {
       const { base, ...rest } = new StreamAppealModel(appealItem)
       const finalAppealItem = { ...rest }
       // 判断展示那种按钮
-      if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_FIRST || finalAppealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE ) finalAppealItem.showFirstCheck = true
-      if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_SECOND || finalAppealItem.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE ) finalAppealItem.showSecondCheck = true
-      if (finalAppealItem.state === APPEAL_STREAM_STATUS.FINISH || finalAppealItem.state === APPEAL_STREAM_STATUS.EXPIRE ) finalAppealItem.showDetail = true
+      const isWaitFirst = finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_FIRST
+      const isFirstExamine = finalAppealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE
+      const isWaitSecond = finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_SECOND
+      const isSecondExamine = finalAppealItem.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE
+      const isFinish = finalAppealItem.state === APPEAL_STREAM_STATUS.FINISH
+      const isExpire = finalAppealItem.state === APPEAL_STREAM_STATUS.EXPIRE
+      if (isWaitFirst || isFirstExamine) finalAppealItem.showFirstCheck = true
+      if (isWaitSecond || isSecondExamine ) finalAppealItem.showSecondCheck = true
+      if (isFinish || isExpire ) finalAppealItem.showDetail = true
       return finalAppealItem
     })
     msg.list = appealList

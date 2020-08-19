@@ -22,10 +22,15 @@
             <div
               v-for="(reasonManageItem, index) in reasonItem.reasonManage"
               :key="index"
-              :class="['reason-item', reasonManageItem.cancel ? 'del' : '']"
+              :class="['reason-item', reasonManageItem.cancel && reasonManageItem.isDel ? 'del' : '']"
             >
               <span>{{ reasonManageItem.name }}</span>
-              <span v-if="reasonManageItem.cancel">(已删除)</span>
+              <span v-if="reasonManageItem.cancel && reasonManageItem.isDel">(已删除)</span>
+              <span
+                class="red"
+                v-if="reasonManageItem.cancel && !reasonManageItem.isDel"
+              >(标记删除)
+              </span>
             </div>
           </div>
         </div>
@@ -43,10 +48,11 @@
           <div
             v-for="(reasonItem, index) in realPhotoData.storeReworkReasonManage"
             :key="index"
-            :class="['reason-item', reasonItem.cancel ? 'del' : '']"
+            :class="['reason-item', reasonItem.cancel && reasonItem.isDel ? 'del' : '']"
           >
             <span>{{ reasonItem.name }}</span>
-            <span v-if="reasonItem.cancel">(已删除)</span>
+            <span v-if="reasonItem.cancel && reasonItem.isDel">(已删除)</span>
+            <span class="red" v-if="reasonItem.cancel && !reasonItem.isDel">(标记删除)</span>
           </div>
         </div>
         <div class="panel-content">整体退回备注：{{ realPhotoData.storeReworkNote }}</div>
@@ -253,6 +259,10 @@ export default {
           background: rgba(237, 240, 255, 1);
           border: 1px solid rgba(181, 195, 253, 1);
           border-radius: 4px;
+
+          .red {
+            color: red;
+          }
 
           &.del {
             color: #919199;
