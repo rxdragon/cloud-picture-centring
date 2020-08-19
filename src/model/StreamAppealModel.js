@@ -1,6 +1,11 @@
 import store from '@/store' // vuex
 
-import { AppealTypeNameEnum, AppealStreamStatusEnum, AppealResultStatusEnum, APPEAL_STREAM_STATUS } from '@/utils/enumerate'
+import {
+  AppealTypeNameEnum,
+  AppealStreamStatusEnum,
+  AppealResultStatusEnum,
+  APPEAL_STREAM_STATUS
+} from '@/utils/enumerate'
 
 export default class StreamAppealModel {
   base = {}

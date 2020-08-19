@@ -61,7 +61,15 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Appeal.appealDetail(req)
         this.orderData = data.orderData
-        this.photos = data.photos
+        // 如果是审核页面要剔除初审拒绝的照片
+        if (this.checkType) {
+          this.photos = data.photos.filter(item => {
+            const result = _.get(item, 'photoAppeals.firstResult.result') || ''
+            return result !== 'refuse'
+          })
+        } else {
+          this.photos = data.photos
+        }
         this.appealInfo = data.appealInfo
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } finally {

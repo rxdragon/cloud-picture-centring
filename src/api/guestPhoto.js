@@ -66,6 +66,8 @@ export function getPhotoInfo (params) {
       const originPhoto = createData.otherPhotoVersion.find(item => item.version === 'original_photo')
       createData.photoVersion = [originPhoto]
     }
+    const storeEvaluateStream = _.get(createData, 'stream.store_evaluate_stream')
+    const storeEvaluateStar = _.get(createData, 'stream.store_evaluate_stream.store_evaluate_star')
     createData.workerInfo = {
       storeName: _.get(createData, 'stream.order.tags.values.store_name', '-'),
       photographer: _.get(createData, 'stream.order.tags.values.photographer', '-'),
@@ -74,7 +76,7 @@ export function getPhotoInfo (params) {
       reviewer: _.get(createData, 'stream.reviewer.name') || _.get(createData, 'stream.reviewer.real_name') || '-',
       dresser: _.get(createData, 'stream.order.tags.values.dresser', '-'),
       watcherName: _.get(createData, 'stream.tags.values.watcher_name', '-'),
-      storeEvaluateStar: createData.stream.store_evaluate_stream && createData.stream.store_evaluate_stream.store_evaluate_star,
+      storeEvaluateStar: storeEvaluateStream && storeEvaluateStar,
       storeEvaluateReason: _.get(createData, 'stream.store_evaluate_stream.store_evaluate_reason', '-')
     }
     return createData
@@ -105,8 +107,10 @@ export function getAttitudePhotoList (params) {
   }).then(msg => {
     msg.forEach(listItem => {
       const findCompletePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
+      const retoucherName = _.get(listItem, 'stream.retoucher.name')
+      const retoucherRealName = _.get(listItem, 'stream.retoucher.real_name')
       listItem.src = _.get(findCompletePhoto, 'path', '')
-      listItem.retoucherName = _.get(listItem, 'stream.retoucher.name') || _.get(listItem, 'stream.retoucher.real_name') || '-'
+      listItem.retoucherName = retoucherName || retoucherRealName || '-'
       listItem.retouchGroupName = _.get(listItem, 'stream.retoucher.retouch_group.name', '-')
     })
     msg = msg.filter(listItem => Boolean(listItem.src))
@@ -127,12 +131,16 @@ export function getAttitudePhotoInfo (params) {
     const createData = msg
     const isReturnPhoto = _.get(createData, 'tags.statics', []).includes(PhotoStatics.CheckReturn)
     const isStoreReturn = _.get(createData, 'tags.statics', []).includes(PhotoStatics.StoreReturn)
+    const retoucherName = _.get(createData, 'stream.retoucher.name')
+    const retoucherRealName = _.get(createData, 'stream.retoucher.real_name')
+    const retoucherLeaderNickName = _.get(createData, 'stream.retoucher.retoucher_leader.nickname')
+    const retoucherLeaderName = _.get(createData, 'stream.retoucher.retoucher_leader.name')
     createData.photoVersion = createData.last_first_photo && isReturnPhoto
       ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1, isStoreReturn)
       : settlePhoto([...createData.other_photo_version], 2, isStoreReturn)
     createData.productName = createData.stream.product.name
-    createData.retoucher = _.get(createData, 'stream.retoucher.name') || _.get(createData, 'stream.retoucher.real_name') || '-'
-    createData.retoucherLeader = _.get(createData, 'stream.retoucher.retoucher_leader.nickname') || _.get(createData, 'stream.retoucher.retoucher_leader.name') || '-'
+    createData.retoucher = retoucherName || retoucherRealName || '-'
+    createData.retoucherLeader = retoucherLeaderNickName || retoucherLeaderName || '-'
     createData.retouchGroup = _.get(createData, 'stream.retoucher.retouch_group.name', '')
     return createData
   })

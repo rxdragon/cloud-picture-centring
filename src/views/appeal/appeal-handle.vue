@@ -3,7 +3,7 @@
     <div class="header">
       <h3>申诉处理</h3>
     </div>
-    <el-tabs v-model="tabCurrent" @tab-click="searchList(1)">
+    <el-tabs v-model="tabCurrent" @tab-click="tabClick">
       <el-tab-pane :label="`初审(${pageCounts.firstPhaseCount})`" name="first"></el-tab-pane>
       <el-tab-pane :label="`复审(${pageCounts.secondPhaseCount})`" name="second"></el-tab-pane>
       <el-tab-pane :label="`全部(${pageCounts.totalCount})`" name="all"></el-tab-pane>
@@ -173,7 +173,7 @@ export default {
       tableData: [], // 列表数据
       pager: {
         page: 1,
-        pageSize: 10,
+        pageSize: 20,
         total: 10
       },
       pageCounts: {
@@ -293,7 +293,7 @@ export default {
         }
         if (defaultStateIn.length) req.cond.stateIn = defaultStateIn
       }
-      if (this.staffId.length) req.cond.appealStaffId = this.staffId
+      if (this.staffId.length) req.cond.appealStaffIdIn = this.staffId
       if (this.appealType) req.cond.type = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
       if (this.justMe) req.cond.bind = this.justMe
@@ -320,6 +320,13 @@ export default {
      */
     handleCurrentChange () {
       this.getAppealList()
+    },
+    /**
+     * @description tab点击
+     */
+    tabClick () {
+      this.appealStatus = []
+      this.searchList(1)
     }
   }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
 
 export default class TargetModel {

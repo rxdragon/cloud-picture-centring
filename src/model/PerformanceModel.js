@@ -20,7 +20,7 @@ export default class PerformanceModel {
     this.nickname = _.get(performanceData, 'staffInfo.nickname') || '-'
 
     this.retouchGroupName = _.get(performanceData, 'group_info.name') || '-'
-    this.updatedName = _.get(performanceData, 'operator_info.nickname') || _.get(performanceData, 'operator_info.nickname') || '_'
+    this.updatedName = _.get(performanceData, 'operator_info.nickname') || '_'
 
     this.jobNumber = _.get(performanceData, 'staffInfo.id') || '-'
     this.performanceScode = _.get(performanceData, 'value') || 0

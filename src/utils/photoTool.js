@@ -182,7 +182,8 @@ export function readAllPhoto (photoArr) {
   const allLoad = (loadedPhotoArr && cachePhotoArr.every(photoItem => loadedPhotoArr.includes(photoItem.id))) || false
   // 没有全部加载完成 加载未加载图片
   if (!allLoad) {
-    const notLoadedPhoto = (loadedPhotoArr && cachePhotoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.id))) || cachePhotoArr
+    const notLoadCachePhotoArr = cachePhotoArr.filter(photoItem => !loadedPhotoArr.includes(photoItem.id))
+    const notLoadedPhoto = (loadedPhotoArr && notLoadCachePhotoArr) || cachePhotoArr
     const promises = []
     notLoadedPhoto.forEach(item => {
       promises.push(loadPhoto(item.path))

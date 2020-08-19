@@ -158,6 +158,16 @@ module.exports = {
     "attributes/max-attributes": [2, { "max": 3, "attrStrLimit": 50 }],
     // 属性上'||'和'&&'出现的次数限制
     "attributes/max-attribute-value-logical": [2, { "max": 2 }],
-    "space-before-function-paren": 2 // function后面跟空格
-  }
+    "space-before-function-paren": 2, // function后面跟空格
+    "max-len": ["error", {
+      code: 120,
+      ignoreRegExpLiterals: true
+    }]
+  },
+  "overrides": [{
+    "files": ["*.vue"],
+    "rules": {
+      "max-len": "off"
+    }
+  }]
 }
