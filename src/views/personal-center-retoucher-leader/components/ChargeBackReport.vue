@@ -13,14 +13,12 @@
         <el-button type="primary" @click="searchData">查 询</el-button>
       </div>
     </div>
-    <!-- 退单单量统计 -->
+    <!-- 退单统计 -->
     <div class="charge-back-chat charge-back-module">
-      <div class="panel-title">
-        被退单单量统计
-        <div class="desc">（张数为纯质量问题张数）</div>
-      </div>
-      <charge-back-chat :chart-datas="chatData" />
+      <div class="panel-title">退单统计</div>
+      <charge-back-chat :chart-datas="storeReworkChatData" />
     </div>
+    <!-- 其他数据 -->
     <div class="charge-back-chat charge-back-module">
       <div class="panel-title">其他数据</div>
       <div class="panel-content">
@@ -36,6 +34,14 @@
           </div>
         </div>
       </div>
+    </div>
+    <!-- 退单单量统计 -->
+    <div class="charge-back-chat charge-back-module">
+      <div class="panel-title">
+        被退单单量统计
+        <div class="desc">（张数为纯质量问题张数）</div>
+      </div>
+      <charge-back-chat :chart-datas="chatData" />
     </div>
   </div>
 </template>
@@ -72,7 +78,34 @@ export default {
         RetoucherAppealRollbackIncome: { title: '退单回滚收益', desc: '申诉成功后的回滚收益', value: '0.00' },
         RetoucherAppealRollbackExp: { title: '退单回滚海草', desc: '申诉成功后的回滚海草值', value: '0.00' }
       },
-      chatData: []
+      chatData: [],
+      storeReworkChatData: [
+        {
+          name: '被门店退回（总）',
+          orderCount: 0,
+          photoCount: 0
+        },
+        {
+          name: '云端完成退回订单（总）',
+          orderCount: 0,
+          photoCount: 0
+        },
+        {
+          name: '被退回质量问题',
+          orderCount: 0,
+          photoCount: 0
+        },
+        {
+          name: '被退回非质量问题',
+          orderCount: 0,
+          photoCount: 0
+        },
+        {
+          name: '被退回非质量&质量问退',
+          orderCount: 0,
+          photoCount: 0
+        }
+      ]
     }
   },
   created () {
@@ -117,6 +150,10 @@ export default {
       }
       if (this.staffId) { req.retouchIds = [this.staffId] }
       const data = await ReturnTarget.getStaffStoreReturnQuota(req)
+
+      // 门店图标数据
+      this.storeReworkChatData = data.chatData
+
       for (const key in this.otherInfo) {
         if (key === 'storeReturnExpForNotQuality') {
           this.otherInfo[key].value = data.tableInfo['storeReturnExpForNotQuality'] + data.tableInfo['storeReturnExpForBoth']

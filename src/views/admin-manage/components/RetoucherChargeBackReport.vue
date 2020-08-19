@@ -13,9 +13,9 @@
         <el-button type="primary" @click="searchData">查 询</el-button>
       </div>
     </div>
-    <!-- 退单单量统计 -->
+    <!-- 退单统计 -->
     <div class="charge-back-chat charge-back-module">
-      <div class="panel-title">退单单量统计</div>
+      <div class="panel-title">退单统计</div>
       <charge-back-chat :chart-datas="chatData" />
     </div>
     <div class="charge-back-chat charge-back-module">
