@@ -49,13 +49,13 @@ export default {
     }
   },
   created () {
-    this.getStreamInfo()
+    this.getAppealDetail()
   },
   methods: {
     /**
-     * @description 获取订单详情
+     * @description 获取申诉详情
      */
-    async getStreamInfo () {
+    async getAppealDetail () {
       try {
         const req = { id: this.$route.query.id }
         this.$store.dispatch('setting/showLoading', this.routeName)
@@ -67,40 +67,6 @@ export default {
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
-    },
-    /**
-     * @description 显示申诉弹窗
-     */
-    showAppeal () {
-      this.dialogAppealVisible = true
-    },
-    /**
-     * @description 提交申诉
-     */
-    submitAppeal () {
-      let checkFail = false
-      const checkArr = []
-      const req = {
-        streamId: this.streamId,
-        photoAppeals: [],
-        type: this.appealType
-      }
-      this.photos.forEach(photoItem => {
-        if (photoItem.reworkChecked) {
-          checkArr.push(photoItem.id)
-          if (!photoItem.appealReason) {
-            checkFail = true
-            return
-          }
-          req.photoAppeals.push({
-            photo_id: photoItem.id,
-            desc: photoItem.appealReason
-          })
-        }
-      })
-      if (!checkArr.length) return this.$newMessage.warning('还没有勾选任何照片')
-      if (checkFail) return this.$newMessage.warning('因未勾选问题照片or没有填写问题描述则需要进行提示：请填写完整申诉问题!')
-      this.dialogAppealVisible = false
     },
     /**
      * @description 返回不保存
@@ -144,7 +110,7 @@ export default {
             const partReason = {}
             partReason.labels_to_del = []
             storePartReworkReasonItem.reasonManage.forEach(reasonItem => {
-              if (reasonItem.cancel) partReason.labels_to_del.push(reasonItem.id)
+              if (reasonItem.cancel && !reasonItem.isDel) partReason.labels_to_del.push(reasonItem.id)
             })
             secondObj.parts.push(partReason)
           })
