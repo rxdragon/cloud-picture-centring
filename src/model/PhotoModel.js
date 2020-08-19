@@ -37,7 +37,7 @@ export default class PhotoModel {
     if (photoData instanceof Array) {
       photoData = {}
     }
-    const labels = _.get( photoData, 'tags.values.labels', []) // 整体问题标签new
+    const labels = _.get( photoData, 'tags.values.labels', []) // 2.12之后才有labels
     const otherPhotoVersion = photoData.other_photo_version || []
 
     this.baseData = photoData
@@ -60,7 +60,7 @@ export default class PhotoModel {
     
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
-    const realReworkPhoto = otherPhotoVersion.find(photoVersion => photoVersion.version === 'store_rework' && _.get(photoVersion, 'tags.values.origin_return_labels')) || {} // origin_return_labels有的才是退回标签
+    const realReworkPhoto = otherPhotoVersion.find(photoVersion => photoVersion.version === 'store_rework' && _.get(photoVersion, 'tags.values.origin_return_labels')) || {} // origin_return_labels有的才是退回标签, 老的数据没有
 
     this.qualityType = _.get(realReworkPhoto, 'tags.values.origin_return_labels.store_rework_type') || ''
     this.realReworkPhoto = realReworkPhoto

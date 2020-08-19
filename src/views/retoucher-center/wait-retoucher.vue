@@ -229,7 +229,6 @@ export default {
         goldReward: 0, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
-      hasInitialization: false, // 是否有初始化数据
       driver: null,
       timeId: null,
       showMorningAward: false // 是否显示时间
@@ -278,7 +277,6 @@ export default {
       this.queueInfo.inQueue = false
       this.getStreamQueueInfo()
     })
-    this.hasInitialization = true
     this.initializeData()
     this.driver = new Driver({
       nextBtnText: '下一个',

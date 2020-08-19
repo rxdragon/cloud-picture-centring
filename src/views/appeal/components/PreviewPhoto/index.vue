@@ -68,7 +68,7 @@
                   >
                     <span>{{ itemsub.name }}</span>
                     <span v-if="checkType === 'second' && !itemsub.cancel" @click.stop="delReason(itemsub)" class="red">删除</span>
-                    <span v-if="checkType === 'second' && itemsub.cancel" @click.stop="cancelDelReason(itemsub)" class="red">(已删除)</span>
+                    <span v-if="checkType === 'second' && itemsub.cancel" @click.stop="cancelDelReason(itemsub)" class="red">标记删除</span>
                   </div>
                 </div>
                 <div class="detail-box" v-if="labelItem.note">
@@ -162,7 +162,7 @@
                   >
                     <span>{{ labelItem.name }}</span>
                     <span v-if="checkType === 'second' && !labelItem.cancel" @click.stop="delReason(labelItem)" class="red">删除</span>
-                    <span v-if="checkType === 'second' && labelItem.cancel" @click.stop="cancelDelReason(labelItem)" class="red">(已删除)</span>
+                    <span v-if="checkType === 'second' && labelItem.cancel" @click.stop="cancelDelReason(labelItem)" class="red">标记删除</span>
                   </div>
                 </template>
                 <span v-else class="reason-note">暂无原因</span>

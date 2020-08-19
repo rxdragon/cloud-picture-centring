@@ -71,14 +71,15 @@ export default class PreviewModel {
         }
         this.storeReworkReasonManage.push(reasonObj)
       })
+      // 整体备注
+      this.storeReworkNote = _.get(photoItem, 'tags.values.origin_return_labels.store_rework_note') || '-'
 
     } else {
       const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
       this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
+      // 整体备注
+      this.storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note') || '-'
     }
-    
-    // 整体备注
-    this.storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note') || '-'
   }
 
   // 判断是否显示退单标签
