@@ -107,6 +107,10 @@
           width: max-content;
           max-width: 140px;
 
+          &.deleted {
+            text-decoration: line-through;
+          }
+
           .red {
             color: red;
             cursor: pointer;
@@ -355,6 +359,7 @@
       padding: 14px 10px 40px;
       font-size: 12px;
       color: #eee;
+      word-break: break-all;
 
       .label-title {
         display: flex;
@@ -421,6 +426,10 @@
             color: #eee;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
+
+            &.deleted {
+              text-decoration: line-through;
+            }
 
             .red {
               color: red;

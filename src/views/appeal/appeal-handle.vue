@@ -1,12 +1,12 @@
 <template>
   <div class="appeal-handle transform-fixed page-class">
     <div class="header">
-      <h3>申诉记录</h3>
+      <h3>申诉处理</h3>
     </div>
-    <el-tabs v-model="tabCurrent" @tab-click="getAppealList">
-      <el-tab-pane label="初审(1)" name="first"></el-tab-pane>
-      <el-tab-pane label="复审(1)" name="second"></el-tab-pane>
-      <el-tab-pane label="全部(2)" name="all"></el-tab-pane>
+    <el-tabs v-model="tabCurrent" @tab-click="searchList(1)">
+      <el-tab-pane :label="`初审(${pageCounts.firstPhaseCount})`" name="first"></el-tab-pane>
+      <el-tab-pane :label="`复审(${pageCounts.secondPhaseCount})`" name="second"></el-tab-pane>
+      <el-tab-pane :label="`全部(${pageCounts.totalCount})`" name="all"></el-tab-pane>
     </el-tabs>
     <!-- 列表主要内容 -->
     <div :class="['history-main', 'table-box', tabCurrent === 'first' ? 'no-border' : '']">
@@ -19,7 +19,12 @@
         <!-- 流水号 -->
         <div class="stream-search search-item">
           <span>流水号:</span>
-          <el-input v-model="streamNum" clearable placeholder="请输入流水号" />
+          <el-input
+            @keyup.native.enter="searchList(1)"
+            v-model="streamNum"
+            clearable
+            placeholder="请输入流水号"
+          />
         </div>
         <!-- 修图师 -->
         <div class="stream-search search-item">
@@ -115,6 +120,14 @@
               >
                 复审
               </el-button>
+              <el-button
+                type="primary"
+                v-if="row.showDetail"
+                size="mini"
+                @click="goDetail(row)"
+              >
+                详情
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -140,6 +153,7 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import DatePicker from '@/components/DatePicker'
 
 import { allOption, firstOption, secondOption } from './options/index.js'
+import { APPEAL_STREAM_STATUS } from '@/utils/enumerate'
 
 import * as Appeal from '@/api/appeal.js'
 
@@ -149,18 +163,23 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      staffId: '',
+      staffId: [],
       tabCurrent: 'first',
       timeSpan: null, // 时间
       streamNum: '', // 流水号
       justMe: false, // 仅看本人
-      appealStatus: 'all',
-      appealType: 'all',
+      appealStatus: [],
+      appealType: '',
       tableData: [], // 列表数据
       pager: {
         page: 1,
         pageSize: 10,
         total: 10
+      },
+      pageCounts: {
+        firstPhaseCount: 0,
+        secondPhaseCount: 0,
+        totalCount: 0
       }
     }
   },
@@ -216,6 +235,14 @@ export default {
       this.linkto(linkObj)
     },
     /**
+     * @description 查看详情
+     */
+    goDetail (appealItem) {
+      const { id } = appealItem
+      const linkObj = { id }
+      this.linkto(linkObj)
+    },
+    /**
      * @description 跳转链接
      */
     async linkto (linkObj) {
@@ -248,11 +275,42 @@ export default {
         req.cond.startAtGte = this.timeSpan[0]
         req.cond.endAtLte = this.timeSpan[1]
       }
+      if (this.appealStatus.length){
+        req.cond.stateIn = this.appealStatus
+      } else {
+        let defaultStateIn = []
+        switch (this.tabCurrent) {
+          case 'first':
+            defaultStateIn = [APPEAL_STREAM_STATUS.WAIT_FIRST, APPEAL_STREAM_STATUS.FIRST_EXAMINE]
+            break
+          case 'second':
+            defaultStateIn = [APPEAL_STREAM_STATUS.WAIT_SECOND, APPEAL_STREAM_STATUS.SECOND_EXAMINE]
+            break
+          case 'all':
+            defaultStateIn = []
+            break
+          default:
+        }
+        if (defaultStateIn.length) req.cond.stateIn = defaultStateIn
+      }
+      if (this.staffId.length) req.cond.appealStaffId = this.staffId
+      if (this.appealType) req.cond.type = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
+      if (this.justMe) req.cond.bind = this.justMe
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        this.tableData = await Appeal.getAppealList(req)
+        const listInfo = await Appeal.getAppealList(req)
+        const firstPhaseCount = _.get(listInfo, 'counts.first_phase_count') || 0
+        const secondPhaseCount = _.get(listInfo, 'counts.second_phase_count') || 0
+        const totalCount = _.get(listInfo, 'counts.total_count') || 0
+        this.tableData = listInfo.list
+        this.pager.total = listInfo.total || 0
+        this.pageCounts = {
+          firstPhaseCount,
+          secondPhaseCount,
+          totalCount
+        }
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }

@@ -4,12 +4,12 @@
       <h3>修图详情</h3>
       <el-button
         type="primary"
-        v-if="hasQuality && !orderData.currentStreamAppeal"
+        v-if="needAppeal && !orderData.currentStreamAppeal"
         @click="showAppeal"
       >
         我要申诉
       </el-button>
-      <el-button type="info" disabled v-if="hasQuality && orderData.currentStreamAppeal">
+      <el-button type="info" disabled v-if="needAppeal && orderData.currentStreamAppeal">
         申诉中
       </el-button>
     </div>
@@ -25,7 +25,7 @@
     <el-dialog
       class="appeal-dialog"
       title="我要申诉"
-      width="700px"
+      width="910px"
       :visible.sync="dialogAppealVisible"
     >
       <div class="appeal-item">
@@ -59,6 +59,7 @@ import ReworkPhoto from './components/ReworkPhoto'
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
 import * as Appeal from '@/api/appeal.js'
+import store from '@/store' // vuex
 
 export default {
   name: 'OrderDetail',
@@ -80,15 +81,18 @@ export default {
     }
   },
   computed: {
+    retoucherIsSelf () {
+      return store.getters.userInfo.id === this.orderData.retoucherJobNum
+    },
     // 是否是工作看板详情
     isWorkBoardInfo () {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
     appealPhotos () {
-      return this.photos.filter(item => item.qualityType === 'quality')
+      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog)
     },
-    hasQuality () {
-      return this.photos.some(item => item.qualityType === 'quality')
+    needAppeal () {
+      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog) && this.retoucherIsSelf
     }
   },
   created () {
@@ -285,6 +289,8 @@ export default {
 
       .item-name {
         margin-right: 10px;
+        font-size: 16px;
+        font-weight: 500;
       }
     }
 
@@ -294,7 +300,9 @@ export default {
     }
 
     .appeal-photo-title {
-      margin-bottom: 10px;
+      margin-bottom: 16px;
+      font-size: 16px;
+      font-weight: 500;
     }
   }
 }

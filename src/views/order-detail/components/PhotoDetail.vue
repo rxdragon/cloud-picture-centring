@@ -14,7 +14,7 @@
             <div
               v-for="(reasonManageItem, index) in reasonItem.reasonManage"
               :key="index"
-              class="reason-item"
+              :class="['reason-item', reasonManageItem.cancel ? 'del' : '']"
             >
               <span>{{ reasonManageItem.name }}</span>
               <span v-if="reasonManageItem.cancel">(已删除)</span>
@@ -35,7 +35,7 @@
           <div
             v-for="(reasonItem, index) in reworkPhoto.storeReworkReasonManage"
             :key="index"
-            class="reason-item"
+            :class="['reason-item', reasonItem.cancel ? 'del' : '']"
           >
             <span>{{ reasonItem.name }}</span>
             <span v-if="reasonItem.cancel">(已删除)</span>
@@ -73,7 +73,6 @@ import PhotoList from '@/components/PhotoList'
 import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
-import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
@@ -93,15 +92,15 @@ export default {
     },
     // 退回的那个照片
     reworkPhoto () {
-      let storeRework = this.photoData.photoVersion.filter(photoVersion => photoVersion.version === PHOTO_VERSION.STORE_REWORK)[0]
-      if (storeRework) {
-        storeRework = new PreviewModel(storeRework)
+      let realReworkPhoto = this.photoItem.realReworkPhoto
+      if (Object.keys(realReworkPhoto).length) {
+        realReworkPhoto = new PreviewModel(realReworkPhoto)
       }
-      return storeRework
+      return realReworkPhoto
     },
     // 判断是否有退单标记
     hasStoreReturnReason () {
-      return !!this.reworkPhoto
+      return Object.keys(this.reworkPhoto).length
     },
     // 是否云学院打分
     hasCheckTags () {
@@ -160,9 +159,19 @@ export default {
 
         .reason-item {
           display: inline-block;
-          margin: 0 10px 10px 0;
+          padding: 4px 10px;
+          margin-right: 16px;
           font-size: 12px;
-          border-radius: 5px;
+          color: #4669fb;
+          background: rgba(237, 240, 255, 1);
+          border: 1px solid rgba(181, 195, 253, 1);
+          border-radius: 4px;
+
+          &.del {
+            color: #919199;
+            background: rgba(212, 212, 217, 1);
+            border: none;
+          }
         }
       }
 

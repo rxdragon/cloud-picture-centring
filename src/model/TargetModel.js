@@ -48,6 +48,7 @@ export default class TargetModel {
     reward: 0, // 奖励收益
     impulse: 0, // 冲量奖励
     sunReward: 0, // 奖励总收益
+    rollbackIncome: 0, // 回滚的总收益
     punishIncome: 0, // 退单质量扣除收益
     sumIncome: 0
   }
@@ -61,6 +62,7 @@ export default class TargetModel {
     storeReturnExpForBoth: 0, // 质量&非质量问题收益
     sumStoreReturnExp: 0, // 退单获得海草
     punishExp: 0, // 质量扣除获取收益
+    rollbackExp: 0, // 总回滚海草值
     sumExp: 0
   }
 
@@ -157,6 +159,7 @@ export default class TargetModel {
     let sunReward = this.income.reward * 100 + this.income.impulse * 100
     sunReward = (sunReward / 100).toFixed(2)
     this.income.sunReward = sunReward
+    this.income.rollbackIncome = Number(_.get(this.base, 'income.retoucherRollbackIncomeForNormalRework') || 0) + Number(_.get(this.base, 'income.retoucherRollbackIncomeForReturnRework') || 0)
 
     let storeReturnIncome =
       this.income.storeReturnIncomeForQuality * 100 +
@@ -186,6 +189,7 @@ export default class TargetModel {
     this.exp.storeReturnExpForNotQuality = Number(_.get(this.base, 'exp.storeReturnExpForNotQuality')) || 0
     this.exp.storeReturnExpForBoth = Number(_.get(this.base, 'exp.storeReturnExpForBoth')) || 0
     this.exp.punishExp = Number(_.get(this.base, 'exp.punishExp')) || 0
+    this.exp.rollbackExp = Number(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0) + Number(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
 
     let sumStoreReturnExp =
       this.exp.storeReturnExpForQuality * 100 +

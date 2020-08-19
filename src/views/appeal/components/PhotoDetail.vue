@@ -22,7 +22,7 @@
             <div
               v-for="(reasonManageItem, index) in reasonItem.reasonManage"
               :key="index"
-              class="reason-item"
+              :class="['reason-item', reasonManageItem.cancel ? 'del' : '']"
             >
               <span>{{ reasonManageItem.name }}</span>
               <span v-if="reasonManageItem.cancel">(已删除)</span>
@@ -43,7 +43,7 @@
           <div
             v-for="(reasonItem, index) in realPhotoData.storeReworkReasonManage"
             :key="index"
-            class="reason-item"
+            :class="['reason-item', reasonItem.cancel ? 'del' : '']"
           >
             <span>{{ reasonItem.name }}</span>
             <span v-if="reasonItem.cancel">(已删除)</span>
@@ -78,7 +78,6 @@
     </div>
     <preview-photo
       v-if="showPreview"
-      :order-info="orderInfo"
       :imgarray="priviewPhotoData"
       show-return-reson
       :orderindex="imgIndex"
@@ -86,6 +85,7 @@
       :show-preview.sync="showPreview"
       @saveResult="saveResult"
       :check-type="checkType"
+      :photo-appeal="photoItem.photoAppeals"
     />
   </div>
 </template>
@@ -97,7 +97,7 @@ import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
 
-import { AppealResultStatusEnum, APPEAL_RESULT_STATUS } from '@/utils/enumerate'
+import { AppealResultStatusEnum, APPEAL_RESULT_STATUS, PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
@@ -110,8 +110,6 @@ export default {
     return {
       photoVersionList: [],
       showPreview: false,
-      imgIndex: 0,
-      orderInfo: {},
       firstResult: {
         resultDesc: '-'
       }, // 初审结果
@@ -124,12 +122,21 @@ export default {
     }
   },
   computed: {
+    imgIndex () {
+      let finalIndex = 0
+      this.photoVersionList.forEach((photoVersion, photoVersionIndex) => {
+        if (photoVersion.version === PHOTO_VERSION.STORE_REWORK) {
+          finalIndex = photoVersionIndex
+        }
+      })
+      return finalIndex
+    },
     // 预览数组
     priviewPhotoData () {
       if (!this.photoVersionList.length) return []
-      const previewList = this.photoVersionList.map(item => {
-        const createData = new PreviewModel(item)
-        createData.storeReturnCount = item.storeReturnCount
+      const previewList = this.photoVersionList.map((photoVersion, photoVersionIndex) => {
+        const createData = new PreviewModel(photoVersion)
+        createData.storeReturnCount = photoVersion.storeReturnCount
         createData.src = this.imgDomain + createData.path
         return createData
       })
@@ -177,8 +184,8 @@ export default {
           reason,
           resultDesc: AppealResultStatusEnum[result]
         }
-        this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
-        this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
+        if (resultObj.storePartReworkReason) this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
+        if (resultObj.storeReworkReasonManage) this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
       }
     }
   }
@@ -239,12 +246,19 @@ export default {
 
         .reason-item {
           display: inline-block;
-          padding: 3px 5px;
-          margin: 0 10px 10px 0;
+          padding: 4px 10px;
+          margin-right: 16px;
           font-size: 12px;
-          color: #fff;
-          background-color: #535353;
-          border-radius: 5px;
+          color: #4669fb;
+          background: rgba(237, 240, 255, 1);
+          border: 1px solid rgba(181, 195, 253, 1);
+          border-radius: 4px;
+
+          &.del {
+            color: #919199;
+            background: rgba(212, 212, 217, 1);
+            border: none;
+          }
         }
       }
 

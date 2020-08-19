@@ -32,7 +32,7 @@ function handerReturnQuota (msg) {
   // 门店质量问题退单单数
   const storeReturnForQualityStream = msg.storeReturnStreamNumForNormalQuality + msg.storeReturnStreamNumForReworkQuality
   // 门店质量问题退单张数
-  const storeReturnForQualityPhoto = msg.storeReturnPhotoNumForNormalQuality + msg.storeReturnPhotoNumForReworkQuality
+  const storeReturnForQualityPhoto = msg.storeReturnPhotoNumForNormalQuality + msg.storeReturnPhotoNumForReworkQuality - msg.RetoucherRollbackNormalBothStreamNum - msg.RetoucherRollbackNormalQualityStreamNum
   // 门店非质量问题退单单数
   const storeReturnForNotQualityStream = msg.storeReturnStreamNumForNormalNotQuality + msg.storeReturnStreamNumForReworkNotQuality
   // 门店非质量问题退单张数
@@ -58,6 +58,10 @@ function handerReturnQuota (msg) {
     msg.finishPhotoNumForBoth
   // 门店退单率
   msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto, finishPhotoNum)
+
+  // 申诉回滚
+  msg.RetoucherAppealRollbackIncome = Number(msg.RetoucherRollbackIncomeForNormalRework) + Number(msg.RetoucherRollbackIncomeForReturnRework) // 收益
+  msg.RetoucherAppealRollbackExp = Number(msg.RetoucherRollbackExpForNormalRework) + Number(msg.RetoucherRollbackExpForReturnRework) // 海草
 
   // 门店退回修图平均时长（单）
   msg.storeReturnRetouchTime = getAvg(msg.storeReturnRetouchTime, msg.finishStoreReturnStream)

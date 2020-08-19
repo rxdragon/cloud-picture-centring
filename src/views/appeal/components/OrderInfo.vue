@@ -64,7 +64,7 @@
           <span>复审人:</span>
           <span class="content">{{ appealInfo.secondInfo.staffName }}</span>
           <span>复审时间:</span>
-          <span class="content">{{ appealInfo.firstInfo.time }}</span>
+          <span class="content">{{ appealInfo.secondInfo.time }}</span>
         </div>
       </div>
     </div>

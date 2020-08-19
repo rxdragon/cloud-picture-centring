@@ -455,9 +455,8 @@ export default {
     }
     this.$ipcRenderer.on('win-resize', (e, item) => {
       this.getImgInfo()
-      if (this.showCanvas) {
-        this.$refs['fabric-canvas'].resetCanvas()
-      }
+      if (!this.showCanvas) return
+      this.$nextTick(() => { this.$refs['fabric-canvas'].resetCanvas() })
     })
   },
   beforeDestroy () {

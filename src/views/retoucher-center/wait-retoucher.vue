@@ -119,12 +119,25 @@
                     </span>
                   </div>
                   <div class="loss-num">
+                    <span class="loss-title">回滚海草</span>
+                    <span class="money-color loss-value">
+                      <count-to show-point :end-value="quotaInfo.rollbackExp" />颗
+                    </span>
+                  </div>
+                  <div class="loss-num">
                     <el-tooltip effect="dark" content="超时扣除收益 + 退回扣除收益" placement="top">
                       <span class="loss-title">惩罚收益：</span>
                     </el-tooltip>
                     <span class="pink-color loss-value">
                       <span>¥</span>
                       <count-to show-point :end-value="quotaInfo.punishIncome" />
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">回滚收益</span>
+                    <span class="money-color loss-value">
+                      <span>¥</span>
+                      <count-to show-point :end-value="quotaInfo.rollbackIncome" />
                     </span>
                   </div>
                 </div>
@@ -205,7 +218,9 @@ export default {
         todayRewordIncome: 0.00,
         todayPunishExp: 0,
         overTimePunishExp: 0,
-        punishIncome: 0.00
+        rollbackExp: 0,
+        punishIncome: 0.00,
+        rollbackIncome: 0.00
       },
       buffInfo: { // buff 信息
         expCard: 0, // 经验卡
@@ -214,7 +229,6 @@ export default {
         goldReward: 0, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
-      hasInitialization: false, // 是否有初始化数据
       driver: null,
       timeId: null,
       showMorningAward: false // 是否显示时间
@@ -263,7 +277,6 @@ export default {
       this.queueInfo.inQueue = false
       this.getStreamQueueInfo()
     })
-    this.hasInitialization = true
     this.initializeData()
     this.driver = new Driver({
       nextBtnText: '下一个',

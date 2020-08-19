@@ -107,8 +107,10 @@ export function getAppealList (params) {
       // 判断展示那种按钮
       if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_FIRST || finalAppealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE ) finalAppealItem.showFirstCheck = true
       if (finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_SECOND || finalAppealItem.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE ) finalAppealItem.showSecondCheck = true
+      if (finalAppealItem.state === APPEAL_STREAM_STATUS.FINISH || finalAppealItem.state === APPEAL_STREAM_STATUS.EXPIRE ) finalAppealItem.showDetail = true
       return finalAppealItem
     })
-    return appealList
+    msg.list = appealList
+    return msg
   })
 }

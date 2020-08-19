@@ -23,6 +23,9 @@ export default class PhotoModel {
   storePartReworkReason = [] // 退回标记
   storePartReworkReasonTags = [] // 全部退回标记
   qualityType = '' // 是否为质量问题
+  isRollBack = false // 是否存在回滚收益
+  originReworkPhotoLog = '' // 标记退回的log,存在才是门店标记退回的
+  realReworkPhoto = {} // 被退回的标签所在的version
 
   checkPoolScore = '' // 云学院抽片分数
   checkPoolTags = [] // 云学院标记
@@ -34,7 +37,7 @@ export default class PhotoModel {
     if (photoData instanceof Array) {
       photoData = {}
     }
-    const labels = _.get( photoData, 'tags.values.labels', []) // 整体问题标签new
+    const labels = _.get( photoData, 'tags.values.labels', []) // 2.12之后才有labels
     const otherPhotoVersion = photoData.other_photo_version || []
 
     this.baseData = photoData
@@ -57,8 +60,13 @@ export default class PhotoModel {
     
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
-    this.qualityType = _.get(photoData, 'tags.values.store_rework_type') || ''
+    const realReworkPhoto = otherPhotoVersion.find(photoVersion => photoVersion.version === 'store_rework' && _.get(photoVersion, 'tags.values.origin_return_labels')) || {} // origin_return_labels有的才是退回标签, 老的数据没有
+
+    this.qualityType = _.get(realReworkPhoto, 'tags.values.origin_return_labels.store_rework_type') || ''
+    this.realReworkPhoto = realReworkPhoto
     this.isStoreReturn = statics.includes('store_rework')
+    this.isRollBack = statics.includes('return_rollback_all')
+    this.originReworkPhotoLog = photoData.origin_rework_photo_log || ''
     this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || ''
     if (labels.length) { // labels有的时候是新数据格式
       labels.forEach(labelsItem => {

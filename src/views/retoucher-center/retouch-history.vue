@@ -21,7 +21,12 @@
         <!-- 流水号 -->
         <div class="stream-search search-item">
           <span>流水号</span>
-          <el-input v-model="streamNum" clearable placeholder="请输入流水号" />
+          <el-input
+            @keyup.native.enter="searchList(1)"
+            v-model="streamNum"
+            clearable
+            placeholder="请输入流水号"
+          />
         </div>
         <!-- 门店退回 -->
         <div class="audit-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
@@ -78,6 +83,7 @@
                   <p>照片海草：<span>{{ row.exp | toFixedString }}</span></p>
                   <p class="text-red">被退惩罚海草：<span>{{ row.punishExp | toFixedString }}</span></p>
                   <p class="text-red">沙漏超时惩罚海草：<span>{{ row.overtimeExp | toFixedString }}</span></p>
+                  <p class="text-money">回滚海草：<span>{{ row.rollbackExp | toFixedString }}</span></p>
                   <p>实际获得海草：<span>{{ row.actualExp | toFixedString }}</span></p>
                 </div>
                 <span class="hover-class" slot="reference">{{ row.actualExp | toFixedString }}</span>
@@ -92,6 +98,7 @@
                   <p class="text-red">沙漏惩罚收益：<span>{{ row.overtimeIncome | toFixedString }}</span></p>
                   <p class="text-red">退单惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
                   <p class="text-money">奖励收益：<span>{{ row.rewordIncome | toFixedString }}</span></p>
+                  <p class="text-money">回滚收益：<span>{{ row.rollbackIncome | toFixedString }}</span></p>
                   <p>实获收益：<span>{{ row.actualIncome | toFixedString }}</span></p>
                 </div>
                 <span class="hover-class" slot="reference">{{ row.actualIncome | toFixedString }}</span>
@@ -104,6 +111,7 @@
                 <div class="table-detail-box">
                   <p>质量问题数量：<span>{{ row.qualityNum || row.qualityNumForRework }}</span></p>
                   <p>非质量问题数量：<span>{{ row.notQualityNum || row.notQualityNumForRework }}</span></p>
+                  <p>申诉回滚数量：<span>{{ row.rollbackNumForRework }}</span></p>
                 </div>
                 <span class="hover-class" slot="reference">{{ row.allReturnPhotoNum }}</span>
               </el-popover>

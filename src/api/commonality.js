@@ -40,19 +40,13 @@ export function getStreamInfo (params) {
     const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
     const photos = []
     msg.photos.forEach(photoItem => {
-      const photoData = new PhotoModel(photoItem)
+      const { baseData, ...rest } = new PhotoModel(photoItem)
       const finalPhotoItem = {
-        filmEvaluation: photoData.photoData,
+        ...rest,
         reworkNum: streamData.reworkNum,
         reworkChecked: false,
         appealReason: '',
-        qualityType: photoData.qualityType,
-        wholeReason: photoData.wholeReason,
-        partReason: photoData.partReason,
-        partNote: photoData.partNote,
-        wholeNote: photoData.wholeNote,
-        tags: photoItem.tags,
-        id: photoData.id
+        tags: photoItem.tags
       }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -107,7 +101,8 @@ export function getStreamInfo (params) {
       referencePhoto: streamData.referencePhoto,
       retouchRemark: streamData.retouchRemark,
       backgroundColor: streamData.backgroundColor,
-      reviewerNote: streamData.reviewerNote
+      reviewerNote: streamData.reviewerNote,
+      retoucherJobNum: streamData.retoucherJobNum
     }
     createData.photos = msg.photos
     return createData
