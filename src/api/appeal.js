@@ -13,7 +13,7 @@ import { APPEAL_STREAM_STATUS } from '@/utils/enumerate'
  */
 export function bindFirst (params) {
   return axios({
-    url: '/appeal/bindFirst',
+    url: '/project_cloud/appeal/bindFirst',
     method: 'GET',
     params
   })
@@ -25,7 +25,7 @@ export function bindFirst (params) {
  */
 export function bindSecond (params) {
   return axios({
-    url: '/appeal/bindSecond',
+    url: '/project_cloud/appeal/bindSecond',
     method: 'GET',
     params
   })
