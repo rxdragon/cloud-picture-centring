@@ -88,7 +88,7 @@ export default class PhotoModel {
         this.partReason = this.partReason.concat(partReasonItem.labels.map(labelItem => labelItem.name))
 
       } else {
-        this.partReason = [...partReasonItem.reason.split('+'),...this.partReason]
+        this.partReason = [...partReasonItem.reason.split('+'), ...this.partReason]
       }
       this.partNote += partReasonItem.note
     })

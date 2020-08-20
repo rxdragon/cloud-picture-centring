@@ -20,8 +20,8 @@
             :key="index"
           >
             <div
-              v-for="(reasonManageItem, index) in reasonItem.reasonManage"
-              :key="index"
+              v-for="(reasonManageItem) in reasonItem.reasonManage"
+              :key="reasonManageItem.id"
               :class="['reason-item', reasonManageItem.cancel && reasonManageItem.isDel ? 'del' : '']"
             >
               <span>{{ reasonManageItem.name }}</span>
@@ -46,8 +46,8 @@
         <div class="panel-content content-one">
           整体退回标记：
           <div
-            v-for="(reasonItem, index) in realPhotoData.storeReworkReasonManage"
-            :key="index"
+            v-for="(reasonItem) in realPhotoData.storeReworkReasonManage"
+            :key="reasonItem.id"
             :class="['reason-item', reasonItem.cancel && reasonItem.isDel ? 'del' : '']"
           >
             <span>{{ reasonItem.name }}</span>

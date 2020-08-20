@@ -8,12 +8,24 @@ import * as PhotoTool from '@/utils/photoTool.js'
 
 import { APPEAL_STREAM_STATUS } from '@/utils/enumerate'
 /**
- * @description 申诉绑定
+ * @description 初审绑定
  * @param {*} params
  */
-export function bindAppeal (params) {
+export function bindFirst (params) {
   return axios({
-    url: '/project_cloud/appeal/bind',
+    url: '/appeal/bindFirst',
+    method: 'GET',
+    params
+  })
+}
+
+/**
+ * @description 复审绑定
+ * @param {*} params
+ */
+export function bindSecond (params) {
+  return axios({
+    url: '/appeal/bindSecond',
     method: 'GET',
     params
   })
@@ -97,9 +109,11 @@ export function appealDetail (params) {
 /**
  * @description 查询申诉记录
  */
-export function getAppealList (params) {
+export function getAppealList (params, type) {
+  let url = '/project_cloud/retoucher/appeal/list'
+  if (type === 'handle') url = '/project_cloud/appeal/list'
   return axios({
-    url: '/project_cloud/appeal/list',
+    url,
     method: 'POST',
     data: params
   }).then(msg => {

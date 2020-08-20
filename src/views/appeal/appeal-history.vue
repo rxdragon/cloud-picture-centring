@@ -45,7 +45,7 @@
           >
             <template slot-scope="{ row }">
               <div>
-                <p class="table-title">时间:</p>
+                <p class="table-title">申诉时间:</p>
                 {{ row.createdAt }}
               </div>
               <div>
