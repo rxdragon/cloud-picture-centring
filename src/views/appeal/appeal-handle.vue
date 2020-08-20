@@ -59,7 +59,7 @@
           >
             <template slot-scope="{ row }">
               <div>
-                <p class="table-title">时间:</p>
+                <p class="table-title">申诉时间:</p>
                 {{ row.createdAt }}
               </div>
               <div>
@@ -248,7 +248,8 @@ export default {
     async linkto (linkObj) {
       const { id, type, needBind } = linkObj
       const query = { id }
-      if (needBind) await Appeal.bindAppeal(query)
+      if (needBind && type === 'first') await Appeal.bindFirst(query)
+      if (needBind && type === 'second') await Appeal.bindSecond(query)
       query.type = type
       this.$router.push({
         path: '/appeal-detail',
@@ -300,7 +301,7 @@ export default {
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const listInfo = await Appeal.getAppealList(req)
+        const listInfo = await Appeal.getAppealList(req, 'handle')
         const firstPhaseCount = _.get(listInfo, 'counts.first_phase_count') || 0
         const secondPhaseCount = _.get(listInfo, 'counts.second_phase_count') || 0
         const totalCount = _.get(listInfo, 'counts.total_count') || 0
