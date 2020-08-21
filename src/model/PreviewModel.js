@@ -51,9 +51,8 @@ export default class PreviewModel {
         })
       } else {
         createData.reasonManage = [] // 可以进行操作的reason
-        createData.reason = labelItem.reason
-        const reasonArray = labelItem.reason ? labelItem.reason.split('+') : []
-        reasonArray.forEach(reasonItem => {
+        createData.reason = typeof labelItem.reason === 'string' ? labelItem.reason.split('+') : labelItem.reason
+        createData.reason.forEach(reasonItem => {
           const reasonObj = {
             name: reasonItem,
             cancel: false
@@ -87,9 +86,8 @@ export default class PreviewModel {
 
     } else {
       const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
-      this.storeReworkReason = storeReworkReason
-      const storeReworkReasonArray = storeReworkReason ? storeReworkReason.split('+') : []
-      storeReworkReasonArray.forEach(storeReworkReasonItem => {
+      this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
+      this.storeReworkReason.forEach(storeReworkReasonItem => {
         const reasonObj = {
           name: storeReworkReasonItem,
           cancel: false
