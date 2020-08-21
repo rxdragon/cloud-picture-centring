@@ -31,6 +31,9 @@ export default class StreamAppealModel {
   isFirstChecking = false // 处于初审中
   isSecondChecking = false // 处于复审中
 
+  appealNickName = '' // 申诉申请人
+  appealGroupName = '' // 申诉申请人所属组名
+
   constructor (appealItem) {
     const appealInfo = appealItem.stream_appeal_examines || []
     const firstCheckInfo = appealInfo[0]
@@ -61,5 +64,8 @@ export default class StreamAppealModel {
     this.state = appealItem.state
     if (appealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE) this.isFirstChecking = true
     if (appealItem.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE) this.isSecondChecking = true
+
+    this.appealNickName = _.get(appealItem, 'appeal_staff_info.nickname')
+    this.appealGroupName = _.get(appealItem, 'appeal_staff_info.group_info.name')
   }
 }
