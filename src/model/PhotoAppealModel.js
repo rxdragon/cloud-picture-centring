@@ -6,6 +6,7 @@ export default class PhotoAppealModel {
   createdAt = ''
   photoId = '' // 对应照片id
   desc = '' // 申诉理由
+  appealResult = null // 申诉快照,本次申诉的申诉结果
   firstResult = { // 初审结果
     reason: '-',
     result: '',
@@ -27,6 +28,7 @@ export default class PhotoAppealModel {
     this.createdAt = photoAppeal.created_at
     this.photoId = photoAppeal.photo_id
     this.desc = photoAppeal.desc
+    this.appealResult = photoAppeal.extends
     if (firstResultInfo) {
       this.firstResult.resultDesc = AppealResultStatusEnum[firstResultInfo.result] || '-'
       this.firstResult.result = firstResultInfo.result || ''

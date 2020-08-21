@@ -66,11 +66,11 @@ export function appealDetail (params) {
     params
   }).then(msg => {
     const photos = []
-    const { base, ...rest } = new StreamAppealModel(msg)
+    const { base, isFinished, ...rest } = new StreamAppealModel(msg)
     msg.photo_appeals.forEach(photoAppealItem => {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
-      const { base, ...rest } = new PhotoAppealModel(photoAppealItem)
+      const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(photoAppealItem)
       const finalPhotoItem = {
         reworkChecked: false, // 申诉的勾选
         appealReason: '', // 申诉的说明
@@ -78,7 +78,7 @@ export function appealDetail (params) {
         partReason: photoData.partReason,
         partNote: photoData.partNote,
         wholeNote: photoData.wholeNote,
-        photoAppeals: { ...rest },
+        photoAppeals: { ...photoAppealRest },
         photoVersionId: photoAppealItem.photo_version_id
       }
       // 照片版本
@@ -90,6 +90,10 @@ export function appealDetail (params) {
         finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
           const isStoreRework = versionItem.version === 'store_rework'
           const isCurrentStoreRework = versionItem.id === photoAppealItem.photo_version_id
+          // 如果是完结状态的申诉详情,需要用appealResult替换掉退回的version的tag,展示本次申诉的结果
+          if (isCurrentStoreRework && isFinished) {
+            versionItem.tags.values = appealResult
+          }
           if (!isStoreRework || isCurrentStoreRework ) finalVersion.push(versionItem)
           return finalVersion
         }, [])

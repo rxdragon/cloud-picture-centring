@@ -130,7 +130,7 @@
                 size="mini"
                 @click="goDetail(row)"
               >
-                详情
+                查看
               </el-button>
             </template>
           </el-table-column>
