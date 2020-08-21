@@ -95,9 +95,27 @@
 
     .retouch-reason {
       position: absolute;
-      top: 30%;
-      left: 100%;
       display: flex;
+
+      &.top-left {
+        top: 30%;
+        left: 100%;
+      }
+
+      &.top-right {
+        top: 30%;
+        right: 100%;
+      }
+
+      &.bottom-left {
+        bottom: 30%;
+        left: 100%;
+      }
+
+      &.bottom-right {
+        right: 100%;
+        bottom: 30%;
+      }
 
       .part-reason-list {
         display: flex;

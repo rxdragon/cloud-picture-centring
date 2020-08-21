@@ -59,7 +59,7 @@
               }"
             >
               <div class="circle-box" :style="{ color: labelItem.brushColor} "/>
-              <div class="retouch-reason">
+              <div :class="['retouch-reason', labelItem.labelClass]">
                 <div class="part-reason-list">
                   <div
                     v-for="(itemsub, indexsub) in labelItem.reasonManage"

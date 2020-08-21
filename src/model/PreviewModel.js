@@ -33,6 +33,12 @@ export default class PreviewModel {
     let storePartReworkReason = newStorePartReworkReason || oldStorePartReworkReason || []
     storePartReworkReason = storePartReworkReason.map(labelItem => {
       const createData = labelItem
+      const labelTop = createData.location[0]
+      const labelLeft = createData.location[1]
+      // 判断标记在哪个象限
+      if (labelTop <= 50) createData.labelClass = labelLeft <= 50 ? 'top-left' : 'top-right'
+      if (labelTop > 50) createData.labelClass = labelLeft <= 50 ? 'bottom-left' : 'bottom-right'
+
       // 2.12之后新的局部标签在在labels下面
       if (createData.labels) {
         createData.reason = createData.labels.map(labelItem => labelItem.name)
