@@ -63,6 +63,10 @@
                 {{ row.createdAt }}
               </div>
               <div>
+                <p class="table-title">申诉人:</p>
+                {{ row.appealNickName }}({{ row.appealGroupName }})
+              </div>
+              <div>
                 <p class="table-title">流水号:</p>
                 {{ row.streamNum }}
               </div>
@@ -106,7 +110,7 @@
             <template slot-scope="{ row }">
               <el-button
                 type="primary"
-                v-if="row.showFirstCheck"
+                v-if="row.showFirstCheck && row.isSelfFirst"
                 size="mini"
                 @click="firstCheck(row)"
               >
@@ -114,7 +118,7 @@
               </el-button>
               <el-button
                 type="primary"
-                v-if="row.showSecondCheck"
+                v-if="row.showSecondCheck && row.isSelfSecond"
                 size="mini"
                 @click="secondCheck(row)"
               >
@@ -212,26 +216,24 @@ export default {
      * @description 初审
      */
     firstCheck (appealItem) {
-      const { id, isSelfFirst, isFirstChecking } = appealItem
+      const { id, isFirstChecking } = appealItem
       const linkObj = {
         id,
         type: 'first',
         needBind: !isFirstChecking
       }
-      if (!isSelfFirst) return this.$newMessage.warning('别人正在审核')
       this.linkto(linkObj)
     },
     /**
      * @description 复审
      */
     secondCheck (appealItem) {
-      const { id, isSelfSecond, isSecondChecking } = appealItem
+      const { id, isSecondChecking } = appealItem
       const linkObj = {
         id,
         type: 'second',
         needBind: !isSecondChecking
       }
-      if (!isSelfSecond) return this.$newMessage.warning('别人正在审核')
       this.linkto(linkObj)
     },
     /**

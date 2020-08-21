@@ -50,8 +50,16 @@ export default class PreviewModel {
           createData.reasonManage.push(reasonObj)
         })
       } else {
-        createData.reason = labelItem.reason ? labelItem.reason.split('+') : []
         createData.reasonManage = [] // 可以进行操作的reason
+        createData.reason = labelItem.reason
+        const reasonArray = labelItem.reason ? labelItem.reason.split('+') : []
+        reasonArray.forEach(reasonItem => {
+          const reasonObj = {
+            name: reasonItem,
+            cancel: false
+          }
+          createData.reasonManage.push(reasonObj)
+        })
       }
       
       return createData
@@ -79,7 +87,15 @@ export default class PreviewModel {
 
     } else {
       const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
-      this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
+      this.storeReworkReason = storeReworkReason
+      const storeReworkReasonArray = storeReworkReason ? storeReworkReason.split('+') : []
+      storeReworkReasonArray.forEach(storeReworkReasonItem => {
+        const reasonObj = {
+          name: storeReworkReasonItem,
+          cancel: false
+        }
+        this.storeReworkReasonManage.push(reasonObj)
+      })
       // 整体备注
       this.storeReworkNote = _.get(photoItem, 'tags.values.store_rework_note') || '-'
     }
