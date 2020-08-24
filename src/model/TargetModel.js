@@ -161,7 +161,12 @@ export default class TargetModel {
     let sunReward = this.income.reward * 100 + this.income.impulse * 100
     sunReward = (sunReward / 100).toFixed(2)
     this.income.sunReward = sunReward
-    this.income.rollbackIncome = Number(_.get(this.base, 'income.retoucherRollbackIncomeForNormalRework') || 0) + Number(_.get(this.base, 'income.retoucherRollbackIncomeForReturnRework') || 0)
+
+    // 正常流水的会回补收益
+    const retoucherRollbackIncomeForNormalRework = Number(_.get(this.base, 'income.retoucherRollbackIncomeForNormalRework') || 0)
+    // 退单流水的回补收益
+    const retoucherRollbackIncomeForReturnRework = Number(_.get(this.base, 'income.retoucherRollbackIncomeForReturnRework') || 0)
+    this.income.rollbackIncome = retoucherRollbackIncomeForNormalRework + retoucherRollbackIncomeForReturnRework
 
     let storeReturnIncome =
       this.income.storeReturnIncomeForQuality * 100 +
@@ -191,7 +196,12 @@ export default class TargetModel {
     this.exp.storeReturnExpForNotQuality = Number(_.get(this.base, 'exp.storeReturnExpForNotQuality')) || 0
     this.exp.storeReturnExpForBoth = Number(_.get(this.base, 'exp.storeReturnExpForBoth')) || 0
     this.exp.punishExp = Number(_.get(this.base, 'exp.punishExp')) || 0
-    this.exp.rollbackExp = Number(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0) + Number(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
+
+    // 正常流水的回补海草
+    const retoucherRollbackExpForNormalRework = Number(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0)
+    // 退单流水的回补海草
+    const retoucherRollbackExpForReturnRework = Number(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
+    this.exp.rollbackExp = retoucherRollbackExpForNormalRework + retoucherRollbackExpForReturnRework
 
     let sumStoreReturnExp =
       this.exp.storeReturnExpForQuality * 100 +
