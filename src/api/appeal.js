@@ -47,9 +47,12 @@ export function addAppeal (params) {
  * @description 审核
  * @param {*} params
  */
-export function appealExamine (params) {
+export function appealExamine (params, type) {
+  let url = ''
+  if (type === 'first') url = '/project_cloud/appeal/examineFirst'
+  if (type === 'second') url = '/project_cloud/appeal/examineSecond'
   return axios({
-    url: '/project_cloud/appeal/examine',
+    url,
     method: 'POST',
     data: params
   })

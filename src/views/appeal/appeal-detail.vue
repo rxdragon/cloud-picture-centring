@@ -135,7 +135,7 @@ export default {
       }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        await Appeal.appealExamine(req)
+        await Appeal.appealExamine(req, this.checkType)
         this.$newMessage.success('提交成功')
         this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
         this.$router.push({
