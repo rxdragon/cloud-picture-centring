@@ -102,7 +102,8 @@ export function getStreamInfo (params) {
       retouchRemark: streamData.retouchRemark,
       backgroundColor: streamData.backgroundColor,
       reviewerNote: streamData.reviewerNote,
-      retoucherJobNum: streamData.retoucherJobNum
+      retoucherJobNum: streamData.retoucherJobNum,
+      retouchStandard: streamData.retouchStandard
     }
     createData.photos = msg.photos
     return createData

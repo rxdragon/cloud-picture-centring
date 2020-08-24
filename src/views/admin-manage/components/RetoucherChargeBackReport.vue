@@ -94,6 +94,11 @@ export default {
           name: '被退回非质量&质量问退',
           orderCount: 0,
           photoCount: 0
+        },
+        {
+          name: '回滚的质量问题',
+          orderCount: 0,
+          photoCount: 0
         }
       ]
     }

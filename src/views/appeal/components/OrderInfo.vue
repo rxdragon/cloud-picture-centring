@@ -8,7 +8,14 @@
     </div>
     <div class="table-panel panel-order">
       <div class="panel-content">{{ orderData.streamNum }}</div>
-      <div class="panel-content">{{ orderData.productName }}</div>
+      <div class="panel-content">
+        <div class="standard-box">
+          {{ orderData.productName }}
+          <div class="standard-icon">
+            <div :class="`iconmap-standard-${orderData.retouchStandard}`" />
+          </div>
+        </div>
+      </div>
       <div class="panel-content">{{ orderData.photographerName }}</div>
       <div class="panel-content">{{ orderData.retoucher }}</div>
     </div>

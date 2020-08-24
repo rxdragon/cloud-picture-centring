@@ -97,6 +97,7 @@ export default class StreamModel {
 
   // 产品信息
   productName = '' // 产品名称
+  retouchStandard = '' // 产品修图标准
 
   constructor (streamData) {
     if (!streamData) return
@@ -152,6 +153,7 @@ export default class StreamModel {
 
     // 产品信息
     this.productName = _.get(streamData, 'product.name') || '-'
+    this.retouchStandard = _.get(streamData, 'product.retouch_standard') || '-'
 
     // 工作人员
     this.photographerName = _.get(streamData, 'order.tags.values.photographer') || '-'

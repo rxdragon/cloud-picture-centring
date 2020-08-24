@@ -247,10 +247,10 @@ export const APPEAL_RESULT_STATUS = {
 
 // 申诉审核结果状态枚举
 export const AppealResultStatusEnum = {
-  'wait': '待审核',
-  'accept': '审核通过',
-  'part_accept': '部分通过',
-  'refuse': '审核拒绝'
+  [APPEAL_RESULT_STATUS.WAIT]: '待审核',
+  [APPEAL_RESULT_STATUS.ACCEPT]: '全部审核通过',
+  [APPEAL_RESULT_STATUS.PART_ACCEPT]: '部分审核通过',
+  [APPEAL_RESULT_STATUS.REFUSE]: '审核拒绝'
 }
 
 /**

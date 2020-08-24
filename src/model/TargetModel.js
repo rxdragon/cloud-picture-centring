@@ -31,6 +31,8 @@ export default class TargetModel {
   storeReturnPhotoNumForReworkQuality = 0 // R流水被退质量照片
   storeReturnPhotoNumForReworkNotQuality = 0 // R流水被退非质量照片
   storeReturnPhotoNumForReworkBoth = 0 // R流水被退质量&非质量照片
+  rollbackPhotoNumForReturnRework = 0 // r流水回滚质量照片张数
+  rollbackPhotoNumForNormalRework = 0 // c流水回滚质量照片张数
 
   // 修图时间
   avgRetouchTimeStream = 0 // 修图平均时间（单）
@@ -125,6 +127,8 @@ export default class TargetModel {
     this.storeReturnPhotoNumForNormalBoth = Number(this.base.storeReturnPhotoNumForNormalBoth)
     this.storeReturnPhotoNumForReworkQuality = Number(this.base.storeReturnPhotoNumForReworkQuality)
     this.storeReturnPhotoNumForReworkNotQuality = Number(this.base.storeReturnPhotoNumForReworkNotQuality)
+    this.rollbackPhotoNumForNormalRework = Number(this.base.rollbackPhotoNumForNormalRework)
+    this.rollbackPhotoNumForReturnRework = Number(this.base.rollbackPhotoNumForReturnRework)
     this.storeReturnPhotoNumForReworkBoth = Number(this.base.storeReturnPhotoNumForReworkBoth)
   }
 
@@ -139,7 +143,7 @@ export default class TargetModel {
 
   // 计算退张率
   getStoreReturnPhotoRate () {
-    const returnCount = this.storeReturnPhotoNumForNormalQuality + this.storeReturnPhotoNumForReworkQuality
+    const returnCount = this.storeReturnPhotoNumForNormalQuality + this.storeReturnPhotoNumForReworkQuality - this.rollbackPhotoNumForNormalRework - this.rollbackPhotoNumForReturnRework
     this.finishPhotoNum = this.retouchPhotoNum +
       this.finishPhotoNumForQuality +
       this.finishPhotoNumForNotQuality +
