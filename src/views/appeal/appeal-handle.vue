@@ -110,7 +110,7 @@
             <template slot-scope="{ row }">
               <el-button
                 type="primary"
-                v-if="row.showFirstCheck && row.isSelfFirst"
+                v-if="row.showFirstCheck && row.isSelfFirst && showFirstExamine"
                 size="mini"
                 @click="firstCheck(row)"
               >
@@ -118,7 +118,7 @@
               </el-button>
               <el-button
                 type="primary"
-                v-if="row.showSecondCheck && row.isSelfSecond"
+                v-if="row.showSecondCheck && row.isSelfSecond && showSecondExamine"
                 size="mini"
                 @click="secondCheck(row)"
               >
@@ -158,6 +158,7 @@ import DatePicker from '@/components/DatePicker'
 
 import { allOption, firstOption, secondOption } from './options/index.js'
 import { APPEAL_STREAM_STATUS } from '@/utils/enumerate'
+import { mapGetters } from 'vuex'
 
 import * as Appeal from '@/api/appeal.js'
 
@@ -188,6 +189,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['showFirstExamine', 'showSecondExamine']),
     defaultOptions () {
       let defaultOption = []
       switch (this.tabCurrent) {
@@ -250,8 +252,22 @@ export default {
     async linkto (linkObj) {
       const { id, type, needBind } = linkObj
       const query = { id }
-      if (needBind && type === 'first') await Appeal.bindFirst(query)
-      if (needBind && type === 'second') await Appeal.bindSecond(query)
+      if (needBind && type === 'first') {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        try {
+          await Appeal.bindFirst(query)
+        } finally {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        }
+      }
+      if (needBind && type === 'second') {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        try {
+          await Appeal.bindSecond(query)
+        } finally {
+          this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        }
+      }
       query.type = type
       this.$router.push({
         path: '/appeal-detail',

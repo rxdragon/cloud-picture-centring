@@ -4,12 +4,16 @@
       <h3>修图详情</h3>
       <el-button
         type="primary"
-        v-if="needAppeal && !orderData.currentStreamAppeal"
+        v-if="showAppealAccess && needAppeal && !orderData.currentStreamAppeal"
         @click="showAppeal"
       >
         我要申诉
       </el-button>
-      <el-button type="info" disabled v-if="needAppeal && orderData.currentStreamAppeal">
+      <el-button
+        type="info"
+        disabled
+        v-if="showAppealAccess && needAppeal && orderData.currentStreamAppeal"
+      >
         申诉中
       </el-button>
     </div>
@@ -56,10 +60,13 @@
 import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
 import ReworkPhoto from './components/ReworkPhoto'
+import store from '@/store' // vuex
+
+import { mapGetters } from 'vuex'
+
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
 import * as Appeal from '@/api/appeal.js'
-import store from '@/store' // vuex
 
 export default {
   name: 'OrderDetail',
@@ -81,6 +88,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['showAppealAccess']),
     retoucherIsSelf () {
       return store.getters.userInfo.id === this.orderData.retoucherJobNum
     },

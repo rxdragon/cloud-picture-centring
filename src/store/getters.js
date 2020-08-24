@@ -46,7 +46,11 @@ const permissionGetters = {
   // 云学院
   showSpotRecheck: state => state.permission.showSpotRecheck, // 是否显示重新打分按钮
   showEmptyCheckPool: state => state.permission.showEmptyCheckPool, // 是否显示重新打分按钮
-  canAutoRetouch: state => state.permission.canAutoRetouch // 是否显示自动修图按钮
+  canAutoRetouch: state => state.permission.canAutoRetouch, // 是否显示自动修图按钮
+  // 申诉处理
+  showAppealAccess: state => state.permission.showAppealAccess, // 是否显示我要申诉入口
+  showFirstExamine: state => state.permission.showFirstExamine, // 是否显示初审按钮
+  showSecondExamine: state => state.permission.showSecondExamine // 是否显示复审按钮
 }
 
 const getters = {
