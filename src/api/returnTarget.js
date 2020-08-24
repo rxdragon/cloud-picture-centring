@@ -33,7 +33,7 @@ function handerReturnQuota (msg) {
   // 门店质量问题退单单数
   const storeReturnForQualityStream = msg.storeReturnStreamNumForNormalQuality + msg.storeReturnStreamNumForReworkQuality
   // 门店质量问题退单张数
-  const storeReturnForQualityPhoto = msg.storeReturnPhotoNumForNormalQuality + msg.storeReturnPhotoNumForReworkQuality - msg.RetoucherRollbackNormalBothStreamNum - msg.RetoucherRollbackNormalQualityStreamNum
+  const storeReturnForQualityPhoto = msg.storeReturnPhotoNumForNormalQuality + msg.storeReturnPhotoNumForReworkQuality
   // 门店非质量问题退单单数
   const storeReturnForNotQualityStream = msg.storeReturnStreamNumForNormalNotQuality + msg.storeReturnStreamNumForReworkNotQuality
   // 门店非质量问题退单张数
@@ -58,7 +58,7 @@ function handerReturnQuota (msg) {
     msg.finishPhotoNumForNotQuality +
     msg.finishPhotoNumForBoth
   // 门店退单率
-  msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto, finishPhotoNum)
+  msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto - msg.RollbackPhotoNumForNormalRework - msg.RollbackPhotoNumForReturnRework, finishPhotoNum)
 
   // 申诉回滚
   msg.RetoucherAppealRollbackIncome = Number(msg.RetoucherRollbackIncomeForNormalRework) + Number(msg.RetoucherRollbackIncomeForReturnRework) // 收益
@@ -91,6 +91,11 @@ function handerReturnQuota (msg) {
       name: '被退回非质量&质量问退',
       orderCount: storeReturnForBothStream,
       photoCount: storeReturnForBothPhoto
+    },
+    {
+      name: '回滚的质量问题',
+      orderCount: msg.RetoucherRollbackReturnQualityStreamNum + msg.RetoucherRollbackNormalQualityStreamNum,
+      photoCount: msg.RollbackPhotoNumForNormalRework + msg.RollbackPhotoNumForReturnRework
     }
   ]
   const createData = {
