@@ -190,6 +190,16 @@ export default {
           reason,
           resultDesc: AppealResultStatusEnum[result]
         }
+        if (result === 'refuse') {
+          this.realPhotoData.storePartReworkReason.forEach(partReasonItem => {
+            partReasonItem.reasonManage.forEach(reasonItem => {
+              reasonItem.cancel = false
+            })
+          })
+          this.realPhotoData.storeReworkReasonManage.forEach(reasonItem => {
+            reasonItem.cancel = false
+          })
+        }
         if (resultObj.storePartReworkReason) this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
         if (resultObj.storeReworkReasonManage) this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
       }
