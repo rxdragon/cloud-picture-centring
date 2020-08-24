@@ -80,11 +80,33 @@ export function getRetoucherQuota (params) {
     for (const key in msg.income) {
       msg.income[key] = Number(msg.income[key])
     }
+    // R流水收益
+    const returnIncome = msg.income.storeReturnIncomeForBoth +
+      msg.income.storeReturnIncomeForNotQuality +
+      msg.income.storeReturnIncomeForQuality
+    msg.income.returnIncome = toFixed(returnIncome)
+    // 收益
     const income = msg.income.retouch * 100 +
       msg.income.impulse * 100 +
-      msg.income.reward * 100 -
-      msg.income.punish * 100
-    msg.income = toFixed(income / 100)
+      msg.income.reward * 100 +
+      returnIncome * 100 -
+      msg.income.punish * 100 -
+      msg.income.glassPunishIncome * 100
+
+    msg.incomeInfo = toFixed(income / 100)
+
+    // 惩罚海草
+    const returnExp = msg.exp.storeReturnExpForBoth +
+      msg.exp.storeReturnExpForNotQuality +
+      msg.exp.storeReturnExpForQuality
+    msg.exp.returnExp = toFixed(returnExp)
+    // 海草
+    const exp = msg.exp.normal * 100 +
+      returnExp * 100 +
+      msg.exp.punishExp * 100 -
+      msg.exp.glassPunishExp * 100
+
+    msg.expInfo = toFixed(exp / 100)
 
     // 顾客满意度
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
