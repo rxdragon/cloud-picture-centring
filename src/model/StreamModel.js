@@ -39,6 +39,7 @@ export default class StreamModel {
   exp = 0 // 正常海草
   punishExp = 0 // 退回惩罚海草
   overtimeExp = 0 // 沙漏抽出海草
+  rollbackExp = 0 // 回滚海草
   actualExp = 0 // 实获海草
 
   // 时间
@@ -47,6 +48,8 @@ export default class StreamModel {
   receiptAt = '-' // 接单时间
   passAt = '-' // 审核通过时间
   retouchAllTime = '-' // 修图总时长
+  reviewTime = 0 // 审核时间
+  hourGlassOverTime = '' // 沙漏结束时间 (分)
 
   // 门店退回相关
   isStoreReturn = false // 是否是门店退回
@@ -62,6 +65,10 @@ export default class StreamModel {
   notQualityNumForRework = 0 // 退回单门店退回非质量问题张数
   bothNumForRework = 0 // 退回单门店退回质量问题张数&非质量问题张数
   allReturnPhotoNum = 0 // 全部退单张数
+  
+  rollbackNumForRework = 0 // 回滚的单数
+
+  reworkNum = 0
 
   // 评价相关
   goodEvaluate = '-'
@@ -71,12 +78,26 @@ export default class StreamModel {
   retouchIncome = 0 // 修图收益
   overtimeIncome = 0 // 超时惩罚收益
   rewordIncome = 0 // 奖励收益
+  rollbackIncome = 0 // 奖励收益
   punishIncome = 0 // 惩罚收益
   actualIncome = 0 // 实获收益
 
   // 云学院
   isCloudEvaluation = '否' // 是否云学院抽查
   cloudEvaluateTime = '-' // 云学院评价时间
+
+  // 申诉
+  currentStreamAppeal = false // 是否在申诉中
+
+  // 摄影机构信息
+  photographerOrgName = '' // 摄影机构名称
+
+  // 工作人员信息
+  photographerName = '' // 摄影师名字
+
+  // 产品信息
+  productName = '' // 产品名称
+  retouchStandard = '' // 产品修图标准
 
   constructor (streamData) {
     if (!streamData) return
@@ -107,7 +128,7 @@ export default class StreamModel {
     const retoucher = _.get(streamData, 'retoucher.name') || _.get(streamData, 'retoucher.real_name')
     const outRetoucher = _.get(streamData, 'tags.values.retoucher_name')
     this.retoucher = retoucher || outRetoucher || '-'
-    this.retoucherJobNum = _.get(streamData, 'retoucher.id') || '-'
+    this.retoucherJobNum = _.get(streamData, 'retoucher.id') || streamData.retoucher_id || '-'
     this.retoucherLeader = _.get(streamData, 'retoucher.retoucher_leader.nickname') ||
       _.get(streamData, 'retoucher.retoucher_leader.name') ||
       _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
@@ -123,6 +144,21 @@ export default class StreamModel {
     // 云学院
     this.isCloudEvaluation = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CLOUD_EVALUATION) ? '是' : '否'
     this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
+
+    // 申诉
+    this.currentStreamAppeal = streamData.current_stream_appeal
+
+    // 摄影机构信息
+    this.photographerOrgName = _.get(streamData, 'order.photographer_org.name') || '-'
+
+    // 产品信息
+    this.productName = _.get(streamData, 'product.name') || '-'
+    this.retouchStandard = _.get(streamData, 'product.retouch_standard') || '-'
+
+    // 工作人员
+    this.photographerName = _.get(streamData, 'order.tags.values.photographer') || '-'
+
+    this.reworkNum = _.get(streamData, 'tags.values.rework_num') || 0
   }
 
   // 获取沙漏相关信息
@@ -149,13 +185,15 @@ export default class StreamModel {
     this.qualityNumForRework = Number(_.get(this.baseData, 'tags.values.quality_num_for_rework')) || 0
     this.notQualityNumForRework = Number(_.get(this.baseData, 'tags.values.not_quality_num_for_rework')) || 0
     this.bothNumForRework = Number(_.get(this.baseData, 'tags.values.both_num_for_rework')) || 0
+    this.rollbackNumForRework = Number(_.get(this.baseData, 'tags.values.rollback_num_for_rework')) || 0
 
     this.allReturnPhotoNum = this.qualityNum +
       this.notQualityNum +
       this.bothNum +
       this.qualityNumForRework +
       this.notQualityNumForRework +
-      this.bothNumForRework
+      this.bothNumForRework -
+      this.rollbackNumForRework
   }
 
   // 获取收益
@@ -163,14 +201,17 @@ export default class StreamModel {
     const retouchIncome = parseFloat(this.baseData.income) || 0 // 原始收益
     const overtimeIncome = parseFloat(_.get(this.baseData, 'tags.values.overtime_income')) || 0
     const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword')) || 0
+    const rollbackIncome = parseFloat(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
     const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish')) || 0
     const actualIncome = retouchIncome * 100 +
       rewordIncome * 100 -
       punishIncome *100 -
-      overtimeIncome * 100
+      overtimeIncome * 100 +
+      rollbackIncome * 100
     this.retouchIncome = retouchIncome
     this.overtimeIncome = overtimeIncome
     this.rewordIncome = rewordIncome
+    this.rollbackIncome = rollbackIncome
     this.punishIncome = punishIncome
     this.actualIncome = Validate.toFixed(actualIncome / 100)
   }
@@ -180,7 +221,8 @@ export default class StreamModel {
     this.exp = parseFloat(this.baseData.exp) || 0
     this.punishExp = parseFloat(_.get(this.baseData, 'tags.values.punish_exp')) || 0
     this.overtimeExp = parseFloat(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
-    const actualExp = this.exp * 100 - this.overtimeExp * 100 - this.punishExp * 100
+    this.rollbackExp = parseFloat(_.get(this.baseData, 'tags.values.rollback_exp_rework')) || 0
+    const actualExp = this.exp * 100 - this.overtimeExp * 100 - this.punishExp * 100 + this.rollbackExp * 100
     this.actualExp = Validate.toFixed(actualExp / 100)
   }
 
@@ -190,6 +232,8 @@ export default class StreamModel {
     this.receiptAt = this.baseData.receipt_at || '-'
     this.passAt = this.baseData.pass_at || '-'
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
+    this.reviewTime = this.baseData.review_time || 0
+    this.hourGlassOverTime = _.get(this.baseData, 'hour_glass.over_time') || ''
     const retouchTime = _.get(this.baseData, 'retouch_time') || 0
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
     const allTime = retouchTime + reviewReturnRebuildTime

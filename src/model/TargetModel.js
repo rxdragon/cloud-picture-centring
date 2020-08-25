@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
 
 export default class TargetModel {
@@ -29,6 +31,8 @@ export default class TargetModel {
   storeReturnPhotoNumForReworkQuality = 0 // R流水被退质量照片
   storeReturnPhotoNumForReworkNotQuality = 0 // R流水被退非质量照片
   storeReturnPhotoNumForReworkBoth = 0 // R流水被退质量&非质量照片
+  rollbackPhotoNumForReturnRework = 0 // r流水回滚质量照片张数
+  rollbackPhotoNumForNormalRework = 0 // c流水回滚质量照片张数
 
   // 修图时间
   avgRetouchTimeStream = 0 // 修图平均时间（单）
@@ -48,6 +52,7 @@ export default class TargetModel {
     reward: 0, // 奖励收益
     impulse: 0, // 冲量奖励
     sunReward: 0, // 奖励总收益
+    rollbackIncome: 0, // 回滚的总收益
     punishIncome: 0, // 退单质量扣除收益
     sumIncome: 0
   }
@@ -61,6 +66,7 @@ export default class TargetModel {
     storeReturnExpForBoth: 0, // 质量&非质量问题收益
     sumStoreReturnExp: 0, // 退单获得海草
     punishExp: 0, // 质量扣除获取收益
+    rollbackExp: 0, // 总回滚海草值
     sumExp: 0
   }
 
@@ -121,6 +127,8 @@ export default class TargetModel {
     this.storeReturnPhotoNumForNormalBoth = Number(this.base.storeReturnPhotoNumForNormalBoth)
     this.storeReturnPhotoNumForReworkQuality = Number(this.base.storeReturnPhotoNumForReworkQuality)
     this.storeReturnPhotoNumForReworkNotQuality = Number(this.base.storeReturnPhotoNumForReworkNotQuality)
+    this.rollbackPhotoNumForNormalRework = Number(this.base.rollbackPhotoNumForNormalRework)
+    this.rollbackPhotoNumForReturnRework = Number(this.base.rollbackPhotoNumForReturnRework)
     this.storeReturnPhotoNumForReworkBoth = Number(this.base.storeReturnPhotoNumForReworkBoth)
   }
 
@@ -135,7 +143,7 @@ export default class TargetModel {
 
   // 计算退张率
   getStoreReturnPhotoRate () {
-    const returnCount = this.storeReturnPhotoNumForNormalQuality + this.storeReturnPhotoNumForReworkQuality
+    const returnCount = this.storeReturnPhotoNumForNormalQuality + this.storeReturnPhotoNumForReworkQuality - this.rollbackPhotoNumForNormalRework - this.rollbackPhotoNumForReturnRework
     this.finishPhotoNum = this.retouchPhotoNum +
       this.finishPhotoNumForQuality +
       this.finishPhotoNumForNotQuality +
@@ -157,6 +165,12 @@ export default class TargetModel {
     let sunReward = this.income.reward * 100 + this.income.impulse * 100
     sunReward = (sunReward / 100).toFixed(2)
     this.income.sunReward = sunReward
+
+    // 正常流水的会回补收益
+    const retoucherRollbackIncomeForNormalRework = Number(_.get(this.base, 'income.retoucherRollbackIncomeForNormalRework') || 0)
+    // 退单流水的回补收益
+    const retoucherRollbackIncomeForReturnRework = Number(_.get(this.base, 'income.retoucherRollbackIncomeForReturnRework') || 0)
+    this.income.rollbackIncome = retoucherRollbackIncomeForNormalRework + retoucherRollbackIncomeForReturnRework
 
     let storeReturnIncome =
       this.income.storeReturnIncomeForQuality * 100 +
@@ -186,6 +200,12 @@ export default class TargetModel {
     this.exp.storeReturnExpForNotQuality = Number(_.get(this.base, 'exp.storeReturnExpForNotQuality')) || 0
     this.exp.storeReturnExpForBoth = Number(_.get(this.base, 'exp.storeReturnExpForBoth')) || 0
     this.exp.punishExp = Number(_.get(this.base, 'exp.punishExp')) || 0
+
+    // 正常流水的回补海草
+    const retoucherRollbackExpForNormalRework = Number(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0)
+    // 退单流水的回补海草
+    const retoucherRollbackExpForReturnRework = Number(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
+    this.exp.rollbackExp = retoucherRollbackExpForNormalRework + retoucherRollbackExpForReturnRework
 
     let sumStoreReturnExp =
       this.exp.storeReturnExpForQuality * 100 +

@@ -351,10 +351,15 @@ export function getUpdateHistoryLog (params) {
     data: params
   }).then(msg => {
     const updateList = msg.list.map(listItem => {
+      const retoucherLeaderNickName = _.get(listItem, 'retoucher.retoucher_leader.nickname')
+      const retoucherLeaderName = _.get(listItem, 'retoucher.retoucher_leader.name')
+      const retoucherName = _.get(listItem, 'retoucher.name')
+      const retoucherRealName = _.get(listItem, 'retoucher.real_name')
+
       return {
         ...listItem,
-        retoucherName: _.get(listItem, 'retoucher.name') || _.get(listItem, 'retoucher.real_name') || '-',
-        retoucherLeader: _.get(listItem, 'retoucher.retoucher_leader.nickname') || _.get(listItem, 'retoucher.retoucher_leader.name') || '-',
+        retoucherName: retoucherName || retoucherRealName || '-',
+        retoucherLeader: retoucherLeaderNickName || retoucherLeaderName || '-',
         takeStaff: listItem.take_staff.name || '-'
       }
     })

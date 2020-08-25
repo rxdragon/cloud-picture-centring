@@ -15,25 +15,37 @@ export default class PhotoModel {
  
   isStoreReturn = '' // 是否门店退回
   storeReworkReason = '' // 门店退回理由
+  wholeReason = [] // 整体退回原因
+  partReason = [] // 局部退回原因
+  partNote = '' // 局部备注
+  wholeNote = '' // 整体备注
   storeReworkNote = '' // 门店退回备注
   storePartReworkReason = [] // 退回标记
   storePartReworkReasonTags = [] // 全部退回标记
+  qualityType = '' // 是否为质量问题
+  isRollBack = false // 是否存在回滚收益
+  originReworkPhotoLog = '' // 标记退回的log,存在才是门店标记退回的
+  realReworkPhoto = {} // 被退回的标签所在的version
 
   checkPoolScore = '' // 云学院抽片分数
   checkPoolTags = [] // 云学院标记
   checkEvaluator = '' // 打分人
 
+  filmEvaluation = '' // 摄影评价
+
   constructor (photoData) {
     if (photoData instanceof Array) {
       photoData = {}
     }
+    const labels = _.get( photoData, 'tags.values.labels', []) // 2.12之后才有labels
+    const otherPhotoVersion = photoData.other_photo_version || []
+
     this.baseData = photoData
     this.id = photoData.id
     this.isReturn = _.get(photoData, 'tags.statics', []).includes('return_photo')
     this.isPull = _.get(photoData, 'tags.statics', []).includes('pull')
     this.isPlant = _.get(photoData, 'tags.statics', []).includes('plant')
 
-    const otherPhotoVersion = photoData.other_photo_version || []
     this.originalPhoto = otherPhotoVersion.find(item => item.version === 'original_photo') || {}
     this.firstPhoto = photoData.first_photo
     this.completePhoto = otherPhotoVersion.find(item => item.version === 'complete_photo') || {}
@@ -45,13 +57,50 @@ export default class PhotoModel {
 
     this.grassReason = _.get(photoData, 'tags.values.grass_reason') || ''
     this.reworkReason = _.get(photoData, 'tags.values.rework_reason') || ''
-
+    
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
+
+    // 
+    let realReworkPhoto = {}
+    if (labels.length) {
+      realReworkPhoto = otherPhotoVersion.find(photoVersion => {
+        const isStoreRework = photoVersion.version === 'store_rework'
+        const hasOriginReturnLabels = _.get(photoVersion, 'tags.values.origin_return_labels')
+        return isStoreRework && hasOriginReturnLabels
+      }) || {} // origin_return_labels有的才是退回标签, 老的数据没有
+    } else {
+      realReworkPhoto = otherPhotoVersion.find(photoVersion => photoVersion.version === 'store_rework') || {}
+    }
+
+    this.qualityType = _.get(realReworkPhoto, 'tags.values.origin_return_labels.store_rework_type') || ''
+    this.realReworkPhoto = realReworkPhoto
     this.isStoreReturn = statics.includes('store_rework')
-    this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || '-'
+    this.isRollBack = statics.includes('return_rollback_all')
+    this.originReworkPhotoLog = photoData.origin_rework_photo_log || ''
+    this.storeReworkReason = _.get(photoData, 'tags.values.store_rework_reason') || ''
+    if (labels.length) { // labels有的时候是新数据格式
+      labels.forEach(labelsItem => {
+        this.wholeReason.push(labelsItem.name)
+      })
+    } else {
+      this.wholeReason = this.wholeReason.concat(this.storeReworkReason ? this.storeReworkReason.split('+') : [])
+    }
+
     this.storeReworkNote = _.get(photoData, 'tags.values.store_rework_note') || '-'
+    this.wholeNote = this.storeReworkNote
     this.storePartReworkReason = _.get(photoData, 'tags.values.store_part_rework_reason') || []
+    this.storePartReworkReason.forEach(partReasonItem => {
+      if (partReasonItem.labels) {
+        this.partReason = this.partReason.concat(partReasonItem.labels.map(labelItem => labelItem.name))
+
+      } else {
+        this.partReason = [...partReasonItem.reason.split('+'), ...this.partReason]
+      }
+      this.partNote += partReasonItem.note
+    })
+
+    this.filmEvaluation = _.get(photoData, 'tags.values.film_evaluation') || ''
     this.getStoreReturnReason()
   }
 

@@ -60,11 +60,17 @@
               }"
             >
               <div class="circle-box" :style="{ color: labelItem.brushColor} "/>
-              <div class="retouch-reason">
+              <div :class="['retouch-reason', labelItem.labelClass]">
                 <div class="part-reason-list">
-                  <span v-for="(itemsub, indexsub) in labelItem.reason" :key="indexsub" class="reason-tag-common part-tag">
-                    {{ itemsub }}
-                  </span>
+                  <div
+                    v-for="(itemsub, indexsub) in labelItem.reasonManage"
+                    :key="indexsub"
+                    :class="['reason-tag-common part-tag', itemsub.isDel ? 'deleted' : '']"
+                  >
+                    <span>{{ itemsub.name }}</span>
+                    <span v-if="itemsub.isDel" class="red">(已删除)
+                    </span>
+                  </div>
                 </div>
                 <div class="detail-box" v-if="labelItem.note">
                   <p class="triangle-left"></p>
@@ -164,14 +170,16 @@
             <div class="label-title">照片整体原因</div>
             <div class="reason-contain">
               <div class="whole-reason-list">
-                <template v-if="showPhoto.storeReworkReason.length">
-                  <span
-                    v-for="(labelItem, labelIndex) in showPhoto.storeReworkReason"
+                <template v-if="showPhoto.storeReworkReasonManage.length">
+                  <div
+                    v-for="(labelItem, labelIndex) in showPhoto.storeReworkReasonManage"
                     :key="labelIndex"
-                    class="reason-tag-common whole-tag"
+                    :class="['reason-tag-common whole-tag', labelItem.isDel ? 'deleted' : '']"
                   >
-                    {{ labelItem }}
-                  </span>
+                    <span>{{ labelItem.name }}</span>
+                    <span v-if="labelItem.isDel" class="red">(已删除)
+                    </span>
+                  </div>
                 </template>
                 <span v-else class="reason-note">暂无原因</span>
               </div>

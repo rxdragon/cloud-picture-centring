@@ -86,8 +86,10 @@ export default class Particle {
   
   getAxis2D (theta){
     const axis = this.getAxis3D(),
-      scale = this.FOCUS_POSITION / (this.FOCUS_POSITION + axis.z)
+      scale = this.FOCUS_POSITION / (this.FOCUS_POSITION + axis.z),
+      { x, y } = this.center,
+      color = this.COLOR.replace('%hue', this.hue + theta)
 			
-    return {x: this.center.x + axis.x * scale, y: this.center.y - axis.y * scale, color: this.COLOR.replace('%hue', this.hue + theta)}
+    return {x: x + axis.x * scale, y: y - axis.y * scale, color }
   }
 }

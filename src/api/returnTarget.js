@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import axios from '@/plugins/axios.js'
 import { toFixed } from '@/utils/validate'
 import { transformPercentage, getAvg } from '@/utils'
@@ -57,7 +58,11 @@ function handerReturnQuota (msg) {
     msg.finishPhotoNumForNotQuality +
     msg.finishPhotoNumForBoth
   // 门店退单率
-  msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto, finishPhotoNum)
+  msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto - msg.RollbackPhotoNumForNormalRework - msg.RollbackPhotoNumForReturnRework, finishPhotoNum)
+
+  // 申诉回滚
+  msg.RetoucherAppealRollbackIncome = Number(msg.RetoucherRollbackIncomeForNormalRework) + Number(msg.RetoucherRollbackIncomeForReturnRework) // 收益
+  msg.RetoucherAppealRollbackExp = Number(msg.RetoucherRollbackExpForNormalRework) + Number(msg.RetoucherRollbackExpForReturnRework) // 海草
 
   // 门店退回修图平均时长（单）
   msg.storeReturnRetouchTime = getAvg(msg.storeReturnRetouchTime, msg.finishStoreReturnStream)
@@ -86,6 +91,11 @@ function handerReturnQuota (msg) {
       name: '被退回非质量&质量问退',
       orderCount: storeReturnForBothStream,
       photoCount: storeReturnForBothPhoto
+    },
+    {
+      name: '回滚的质量问题',
+      orderCount: msg.RetoucherRollbackReturnQualityStreamNum + msg.RetoucherRollbackNormalQualityStreamNum,
+      photoCount: msg.RollbackPhotoNumForNormalRework + msg.RollbackPhotoNumForReturnRework
     }
   ]
   const createData = {

@@ -95,6 +95,7 @@ const actions = {
       try {
         const savePermission = SessionTool.getUserPermission()
         const permissions = savePermission || await UserAction.getAuthority()
+
         SessionTool.setUserPermission(permissions)
         const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
         resetRouter()

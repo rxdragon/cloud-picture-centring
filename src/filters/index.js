@@ -1,6 +1,12 @@
 import { timeFormat } from '@/utils/index.js'
 import { formatTime } from '@/utils/timespan.js'
-import { PhotoEnumName, retouchStandardToCN, HourGlassSettingEnum, StreamState, PlantTypeNameEnum } from '@/utils/enumerate.js'
+import {
+  PhotoEnumName,
+  retouchStandardToCN,
+  HourGlassSettingEnum,
+  StreamState,
+  PlantTypeNameEnum
+} from '@/utils/enumerate.js'
 
 /**
  * 10000 => "10,000"

@@ -62,7 +62,7 @@ export default {
       timeSpan: null, // 时间戳
       staffIds: [], // 伙伴id
       otherData: {
-        exp: { value: '0.00', label: '海草值' },
+        finalExp: { value: '0.00', label: '海草值' },
         income: { value: '0.00', label: '收益' },
         retoucherNpsAvg: { value: '0.00', label: '顾客满意度（顾客评价时间）' },
         goodRate: { value: '0.00', label: '点赞率', type: 'rate' },

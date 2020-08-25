@@ -71,6 +71,18 @@ export const constantRoutes = [
         meta: { title: '修图详情', icon: 'el-icon-eleme' }
       }
     ]
+  },{
+    path: '/appeal-detail',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        name: 'appealDetail',
+        component: () => import('@/views/appeal/appeal-detail.vue'),
+        meta: { title: '申诉详情', icon: '' }
+      }
+    ]
   }, {
     path: '/401',
     component: () => import('@/views/error-page/401'),
