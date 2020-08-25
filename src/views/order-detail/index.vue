@@ -97,10 +97,12 @@ export default {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
     appealPhotos () {
-      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog)
+      const isInTime = new Date().getTime() > 1594828800000
+      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack && isInTime)
     },
     needAppeal () {
-      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack && item.originReworkPhotoLog) && this.retoucherIsSelf
+      const isInTime = new Date().getTime() > 1594828800000
+      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack && isInTime) && this.retoucherIsSelf
     }
   },
   created () {
