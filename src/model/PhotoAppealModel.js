@@ -1,4 +1,4 @@
-import { AppealResultStatusEnum } from '@/utils/enumerate'
+import { AppealResultStatusPhotoEnum } from '@/utils/enumerate'
 
 export default class PhotoAppealModel {
   base = {}
@@ -30,12 +30,12 @@ export default class PhotoAppealModel {
     this.desc = photoAppeal.desc
     this.appealResult = photoAppeal.extends
     if (firstResultInfo) {
-      this.firstResult.resultDesc = AppealResultStatusEnum[firstResultInfo.result] || '-'
+      this.firstResult.resultDesc = AppealResultStatusPhotoEnum[firstResultInfo.result] || '-'
       this.firstResult.result = firstResultInfo.result || ''
       this.firstResult.reason = firstResultInfo.reason || '-'
     }
     if (secondResultInfo) {
-      this.secondResult.resultDesc = AppealResultStatusEnum[secondResultInfo.result] || '-'
+      this.secondResult.resultDesc = AppealResultStatusPhotoEnum[secondResultInfo.result] || '-'
       this.secondResult.reason = secondResultInfo.reason || '-'
       this.secondResult.result = secondResultInfo.result || ''
     }
