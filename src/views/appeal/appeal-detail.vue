@@ -156,6 +156,10 @@ export default {
     margin-bottom: 24px;
   }
 
+  .photo-list {
+    margin-bottom: 24px;
+  }
+
   .footer {
     display: flex;
     justify-content: center;
