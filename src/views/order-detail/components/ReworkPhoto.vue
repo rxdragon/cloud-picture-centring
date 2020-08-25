@@ -88,7 +88,8 @@ export default {
       const originReworkTime = _.get(this.photoItem, 'originReworkPhotoLog.created_at')
       const originReworkMonth = new Date(originReworkTime).getMonth()
       const nowMonth = new Date().getMonth()
-      showReasonPhoto.needDisable = originReworkMonth !== nowMonth
+      const appealSystemOnline = 1598371200000
+      showReasonPhoto.needDisable = originReworkMonth !== nowMonth || new Date(originReworkTime).getTime() < appealSystemOnline
       showReasonPhoto.originReworkTime = originReworkTime
       return showReasonPhoto
     }

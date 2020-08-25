@@ -68,8 +68,6 @@ import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
 import * as Appeal from '@/api/appeal.js'
 
-const appealSystemOnLine = 1598371200000
-
 export default {
   name: 'OrderDetail',
   components: { PhotoDetail, OrderInfo, ReworkPhoto },
@@ -99,12 +97,10 @@ export default {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
     appealPhotos () {
-      const isInTime = new Date().getTime() > appealSystemOnLine
-      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack && isInTime)
+      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack)
     },
     needAppeal () {
-      const isInTime = new Date().getTime() > appealSystemOnLine
-      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack && isInTime) && this.retoucherIsSelf
+      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack) && this.retoucherIsSelf
     }
   },
   created () {
