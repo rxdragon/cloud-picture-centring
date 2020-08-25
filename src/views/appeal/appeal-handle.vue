@@ -74,7 +74,7 @@
           </el-table-column>
           <el-table-column label="申诉类型" prop="appealTypeName" width="150" />
           <el-table-column prop="appealStatusDesc" label="处理状态" width="100"/>
-          <el-table-column prop="storeReturnNum" label="初审详情">
+          <el-table-column prop="storeReturnNum" label="初审详情" width="240">
             <template slot-scope="{ row }">
               <div>
                 <p class="table-title">初审人:</p>
@@ -90,7 +90,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="storeReturnNum" label="复审详情">
+          <el-table-column prop="storeReturnNum" label="复审详情" width="240">
             <template slot-scope="{ row }">
               <div>
                 <p class="table-title">复审人:</p>
@@ -106,7 +106,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作">
             <template slot-scope="{ row }">
               <el-button
                 type="primary"
@@ -369,7 +369,7 @@ export default {
       .table-title {
         display: inline-block;
         width: 60px;
-        text-align: right;
+        text-align: left;
       }
     }
 
