@@ -67,18 +67,30 @@
       <div class="panel-main">
         <div class="panel-content content-one">申诉问题描述: {{ photoItem.photoAppeals.desc }}</div>
         <div class="panel-content content-one">初审状态: {{ photoItem.photoAppeals.firstResult.resultDesc }}</div>
-        <div class="panel-content content-one">复审状态: {{ photoItem.photoAppeals.secondResult.resultDesc }}</div>
         <div
           class="panel-content content-one"
           v-if="photoItem.photoAppeals.firstResult.result === APPEAL_RESULT_STATUS.REFUSE"
         >
-          拒绝原因: {{ photoItem.photoAppeals.firstResult.reason }}
+          初审拒绝原因: {{ photoItem.photoAppeals.firstResult.reason }}
         </div>
+        <div
+          class="panel-content content-one"
+          v-if="photoItem.photoAppeals.firstResult.result === APPEAL_RESULT_STATUS.ACCEPT"
+        >
+          初审通过备注: {{ photoItem.photoAppeals.firstResult.reason }}
+        </div>
+        <div class="panel-content content-one">复审状态: {{ photoItem.photoAppeals.secondResult.resultDesc }}</div>
         <div
           class="panel-content content-one"
           v-if="photoItem.photoAppeals.secondResult.result === APPEAL_RESULT_STATUS.REFUSE"
         >
-          拒绝原因: {{ photoItem.photoAppeals.secondResult.reason }}
+          复审拒绝原因: {{ photoItem.photoAppeals.secondResult.reason }}
+        </div>
+        <div
+          class="panel-content content-one"
+          v-if="photoItem.photoAppeals.secondResult.result === APPEAL_RESULT_STATUS.ACCEPT"
+        >
+          复审通过备注: {{ photoItem.photoAppeals.secondResult.reason }}
         </div>
       </div>
     </div>
@@ -103,7 +115,7 @@ import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
 
-import { AppealResultStatusEnum, APPEAL_RESULT_STATUS, PHOTO_VERSION } from '@/utils/enumerate'
+import { APPEAL_RESULT_STATUS, PHOTO_VERSION, AppealResultStatusPhotoEnum } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
@@ -180,7 +192,7 @@ export default {
           id: this.photoItem.photoAppeals.id,
           result,
           reason,
-          resultDesc: AppealResultStatusEnum[result]
+          resultDesc: AppealResultStatusPhotoEnum[result]
         }
       }
       if (type === 'second') {
@@ -188,7 +200,7 @@ export default {
           id: this.photoItem.photoAppeals.id,
           result,
           reason,
-          resultDesc: AppealResultStatusEnum[result]
+          resultDesc: AppealResultStatusPhotoEnum[result]
         }
         if (result === 'refuse') {
           this.realPhotoData.storePartReworkReason.forEach(partReasonItem => {
