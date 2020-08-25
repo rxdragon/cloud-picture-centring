@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import axios from '@/plugins/axios.js'
 import { RETOUCH_STANDARD } from '@/utils/enumerate'
 import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '@/utils'
@@ -81,9 +83,12 @@ export function getRetoucherQuota (params) {
       msg.income[key] = Number(msg.income[key])
     }
     const income = msg.income.retouch * 100 +
-      msg.income.impulse * 100 +
-      msg.income.reward * 100 -
-      msg.income.punish * 100
+      Number(_.get(msg, 'income.impulse') || 0) +
+      Number(_.get(msg, 'income.reward') || 0) -
+      Number(_.get(msg, 'income.punish') || 0) +
+      Number(_.get(msg, 'income.rollbackForNormalRework') || 0) +
+      Number(_.get(msg, 'income.rollbackForReturnRework') || 0)
+
     msg.income = toFixed(income / 100)
 
     // 顾客满意度
@@ -92,10 +97,14 @@ export function getRetoucherQuota (params) {
 
     // 点赞点踩量
     const storeEvaluateCount = _.get(msg, 'storeEvaluateScoreAvg.count') || 0
+    const expRollbackForNormalRework = Number(_.get(msg, 'exp.rollbackForNormalRework') || 0)
+    const expRollbackForReturnRework = Number(_.get(msg, 'exp.rollbackForReturnRework') || 0)
+    const expNormal = Number(_.get(msg, 'exp.normal') || 0)
     msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
     msg.goodRate = toFixed(getAvg(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
     msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
     msg.badRate = toFixed(getAvg(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
+    msg.finalExp = expNormal + expRollbackForNormalRework + expRollbackForReturnRework // 最终的海草值
 
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     return msg
@@ -213,9 +222,13 @@ export function getStoreEvaluate (params) {
     data: params
   }).then(msg => {
     msg.list.forEach(listItem => {
-      listItem.retoucherName = _.get(listItem, 'stream.retoucher') ? listItem.stream.retoucher.name || listItem.stream.retoucher.real_name : '-'
-      listItem.retouchGroupName = _.get(listItem, 'stream.retoucher') && _.get(listItem, 'stream.retoucher.retouch_group') ? listItem.stream.retoucher.retouch_group.name : '-'
-      listItem.retoucherNpsAvg = _.get(listItem, 'stream.tags') && _.get(listItem, 'stream.tags.values') ? listItem.stream.tags.values.retoucher_score : '-'
+      const retoucher = _.get(listItem, 'stream.retoucher')
+      const RetouchGroup = _.get(listItem, 'stream.retoucher.retouch_group')
+      const RetouchGroupName = _.get(listItem, 'stream.retoucher.retouch_group.name')
+      const tagsValues = _.get(listItem, 'stream.tags.values')
+      listItem.retoucherName = retoucher ? listItem.stream.retoucher.name || listItem.stream.retoucher.real_name : '-'
+      listItem.retouchGroupName = retoucher && RetouchGroup ? RetouchGroupName : '-'
+      listItem.retoucherNpsAvg = tagsValues ? listItem.stream.tags.values.retoucher_score : '-'
     })
     return msg
   })
@@ -234,9 +247,12 @@ export function getStreamInfo (params) {
     msg.forEach(listItem => {
       listItem.product = listItem.product || { id: '' }
       listItem.photos.forEach(photoItem => {
+        const tagsValues = _.get(photoItem, 'tags.values')
         photoItem.isDelete = listItem.isOperatorDeletedStream || false
-        photoItem.isJoint = (photoItem.tags && photoItem.tags.values && Boolean(photoItem.tags.values.splice_mark)) || false
-        const findOriginalPhoto = photoItem.other_photo_version.find(photoItem => photoItem.version === 'original_photo')
+        photoItem.isJoint = (tagsValues && Boolean(photoItem.tags.values.splice_mark)) || false
+        const findOriginalPhoto = photoItem.other_photo_version.find(photoItem => {
+          return photoItem.version === 'original_photo'
+        })
         photoItem.path = findOriginalPhoto ? findOriginalPhoto.path : ''
         if (photoItem.isJoint) {
           photoItem.jointClass = photoItem.tags.values.splice_mark

@@ -108,7 +108,7 @@
           <el-table-column label="退回张数">
             <template slot-scope="{ row }">
               <div class="table-detail-box">
-                <p>总张数：{{ row.storeReturnNum }}</p>
+                <p>总张数：{{ row.allReturnPhotoNum }}</p>
                 <p>退回时间：{{ row.storeReturnTime }}</p>
               </div>
             </template>

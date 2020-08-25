@@ -82,6 +82,16 @@ export const StoreReturnPhoto = [
   'store_rework' // 门店退回
 ]
 
+export const PHOTO_VERSION = {
+  STORE_REWORK: 'store_rework', // 门店退回的照片version
+  ORIGINAL_PHOTO: 'original_photo', // 原片
+  FIRST_PHOTO: 'first_photo', // 一次成片
+  RETURN_PHOTO: 'return_photo', // 审核退回照片
+  COMPLETE_PHOTO: 'complete_photo', // 审核成片
+  FINISH_PHOTO: 'finish_photo', // 最终成片
+  LAST_RETOUCH_PHOTO: 'last_retouch_photo', // 最新修后成片
+}
+
 export const PhotoEnumName = {
   OriginalPhoto: '原片',
   FirstPhoto: '一次成片',
@@ -189,6 +199,58 @@ export const PlantTypeNameEnum = {
   'plant': '种草',
   'pull': '拔草',
   'none': '一般'
+}
+
+// 申诉审核类型
+export const APPEAL_CHECK_STATUS = {
+  FIRST: 'first', // 初审
+  SECOND: 'second' // 复审
+}
+
+// 申诉问题类型
+export const APPEAL_TYPE = {
+  REWORK: 'rework'
+}
+
+// 申诉问题类型
+export const AppealTypeNameEnum = {
+  [APPEAL_TYPE.REWORK]: '门店退单问题'
+}
+
+// 申诉流水状态
+export const APPEAL_STREAM_STATUS = {
+  WAIT_FIRST: 'wait_first',
+  FIRST_EXAMINE: 'first_examine',
+  WAIT_SECOND: 'wait_second',
+  SECOND_EXAMINE: 'second_examine',
+  FINISH: 'finish',
+  EXPIRE: 'expire'
+}
+
+// 申诉流水状态
+export const AppealStreamStatusEnum = {
+  [APPEAL_STREAM_STATUS.WAIT_FIRST]: '等待初审',
+  [APPEAL_STREAM_STATUS.FIRST_EXAMINE]: '初审中',
+  [APPEAL_STREAM_STATUS.WAIT_SECOND]: '等待复审',
+  [APPEAL_STREAM_STATUS.SECOND_EXAMINE]: '复审中',
+  [APPEAL_STREAM_STATUS.FINISH]: '处理完成',
+  [APPEAL_STREAM_STATUS.EXPIRE]: '超时未处理'
+}
+
+// 申诉审核结果状态
+export const APPEAL_RESULT_STATUS = {
+  WAIT: 'wait',
+  ACCEPT: 'accept',
+  PART_ACCEPT: 'part_accept',
+  REFUSE: 'refuse'
+}
+
+// 申诉审核结果状态枚举
+export const AppealResultStatusEnum = {
+  [APPEAL_RESULT_STATUS.WAIT]: '待审核',
+  [APPEAL_RESULT_STATUS.ACCEPT]: '全部审核通过',
+  [APPEAL_RESULT_STATUS.PART_ACCEPT]: '部分审核通过',
+  [APPEAL_RESULT_STATUS.REFUSE]: '审核拒绝'
 }
 
 /**

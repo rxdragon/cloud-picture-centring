@@ -77,7 +77,7 @@ export default {
   name: 'RetoucherPerformance',
   components: { StaffSelect, UploadExcel, AlterPerformance },
   mixins: [PerformanceMix],
-  data() {
+  data () {
     return {
       searchType: 'retoucher',
       performancType: 'all',

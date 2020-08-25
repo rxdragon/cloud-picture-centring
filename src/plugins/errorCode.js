@@ -124,6 +124,23 @@ const TagException = [
   [0xA11005002, '非允许字段表']
 ]
 
+const AppealException = [
+  [0xA11015001, '别人正在审核中'],
+  [0xA11015002, '非法操作'],
+  [0xA11015003, '存在未完成的申诉'],
+  [0xA11015004, '照片申诉数据不合法'],
+  [0xA11015005, '照片收益已经回滚'],
+  [0xA11015006, '无法审核该状态单据'],
+  [0xA11015007, '单据未绑定'],
+  [0xA11015008, '当前单据不属于你'],
+  [0xA11015009, '审核数据不合法'],
+  [0xA11015010, '重复回滚'],
+  [0xA11015011, '不是质量问题被退回重修的照片'],
+  [0xA11015012, '不在申诉时间内'],
+  [0xA11015013, '照片已被拒绝'],
+  [0xA11015014, '不是自己组的审批']
+]
+
 export const errText = [
   ...ApiException,
   ...CardException,
@@ -139,7 +156,8 @@ export const errText = [
   ...QueueException,
   ...StaffException,
   ...StreamException,
-  ...TagException
+  ...TagException,
+  ...AppealException
 ]
 
 const errMap = new Map(errText)
