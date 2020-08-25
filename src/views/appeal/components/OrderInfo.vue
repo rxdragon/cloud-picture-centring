@@ -58,19 +58,19 @@
       <div class="panel-title">申诉信息</div>
       <div class="panel-main">
         <div class="panel-main-content">
-          <span class="title">申诉类型:</span>
+          <span class="title">申诉类型：</span>
           <span class="content">{{ appealInfo.appealTypeName }}</span>
         </div>
         <div class="panel-main-content">
-          <span class="title">处理状态:</span>
+          <span class="title">处理状态：</span>
           <span class="content">{{ appealInfo.appealStatusDesc }}</span>
-          <span>初审人:</span>
+          <span>初审人：</span>
           <span class="content">{{ appealInfo.firstInfo.staffName }}</span>
-          <span>初审时间:</span>
+          <span>初审时间：</span>
           <span class="content">{{ appealInfo.firstInfo.time }}</span>
-          <span>复审人:</span>
+          <span>复审人：</span>
           <span class="content">{{ appealInfo.secondInfo.staffName }}</span>
-          <span>复审时间:</span>
+          <span>复审时间：</span>
           <span class="content">{{ appealInfo.secondInfo.time }}</span>
         </div>
       </div>
@@ -107,10 +107,11 @@ export default {
   .table-panel {
     display: grid;
     justify-items: center;
+    width: 100%;
   }
 
   .panel-order {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .panel-grade {

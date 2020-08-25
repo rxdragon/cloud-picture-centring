@@ -6,7 +6,7 @@
     </div>
     <div class="info-area">
       <div class="info-item">
-        <p class="info-title">整体退回标记:</p>
+        <p class="info-title">整体退回标记：</p>
         <div class="rework-tags">
           <div
             v-for="(wholeReasonItem, wholeReasonIndex) in showReason.storeReworkReasonManage"
@@ -19,11 +19,11 @@
         </div>
       </div>
       <div class="info-item">
-        <p class="info-title">整体退回备注:</p>
+        <p class="info-title">整体退回备注：</p>
         <span class="rework-info">{{ showReason.storeReworkNote }}</span>
       </div>
       <div class="info-item">
-        <p class="info-title">局部退回标记:</p>
+        <p class="info-title">局部退回标记：</p>
         <div class="rework-tags">
           <div
             v-for="(partReasonItem, partReasonIndex) in showReason.storePartReworkReason"
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="info-item">
-        <p class="info-title">局部退回备注:</p>
+        <p class="info-title">局部退回备注：</p>
         <span
           class="rework-info"
           v-for="(partNote, partNoteIndex) in showReason.storePartReworkReason"
@@ -51,11 +51,11 @@
         </span>
       </div>
       <div class="info-item" v-if="showReason.needDisable">
-        <p class="info-title red">照片退回时间:</p>
+        <p class="info-title red">照片退回时间：</p>
         <span class="red">{{ showReason.originReworkTime }}</span>
       </div>
       <div class="info-item">
-        <p v-show="photoItem.reworkChecked" class="info-title">问题描述(必填):</p>
+        <p v-show="photoItem.reworkChecked" class="info-title">问题描述(必填)：</p>
         <el-input
           v-show="photoItem.reworkChecked"
           type="textarea"
