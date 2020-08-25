@@ -194,11 +194,14 @@
             </div>
           </div>
           <div class="submit-box">
-            <div class="not-refusing" v-if="!showRefuseTextarea">
+            <div class="not-refusing" v-if="!showRefuseTextarea && !showAcceptTextarea">
               <el-button type="danger" @click="showRefuse">审核拒绝</el-button>
-              <el-button type="primary" @click="checkPass">审核通过</el-button>
+              <el-button type="primary" @click="showAccept">审核通过</el-button>
             </div>
-            <div class="refusing" v-else>
+            <div
+              class="refusing"
+              v-if="showRefuseTextarea && checkResult === 'refuse'"
+            >
               <el-input
                 type="textarea"
                 :rows="4"
@@ -209,6 +212,21 @@
               </el-input>
               <el-button type="info" @click="hideRefuse">取消</el-button>
               <el-button type="primary" @click="saveRefuse">保存并关闭</el-button>
+            </div>
+            <div
+              class="refusing"
+              v-if="showAcceptTextarea && checkResult === 'accept'"
+            >
+              <el-input
+                type="textarea"
+                :rows="4"
+                maxlength="50"
+                placeholder="审核通过备注(非必填), 最多50个字"
+                v-model="acceptTextarea"
+              >
+              </el-input>
+              <el-button type="info" @click="hideAccept">取消</el-button>
+              <el-button type="primary" @click="saveAccept">保存并关闭</el-button>
             </div>
           </div>
         </div>
@@ -289,8 +307,10 @@ export default {
       photoZoomStyle: '',
       showMark: false, // mark图显示
       showStoreReson: false, // 是否显示门店退回标记
-      showRefuseTextarea: false, // 是否在输入状态中
+      showRefuseTextarea: false,
       refuseTextarea: '',
+      showAcceptTextarea: false,
+      acceptTextarea: '',
       checkResult: '' // 审核结果
 
     }
@@ -586,27 +606,28 @@ export default {
     /**
      * @description 展示拒绝原因输入
      */
-    showRefuse (item) {
+    showRefuse () {
+      this.checkResult = 'refuse'
       this.showRefuseTextarea = true
     },
     /**
-     * @description 通过
+     * @description 展示拒绝原因输入
      */
-    checkPass (item) {
-      if (this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审一定要勾选删除标签
-        if (!this.delLabelNum) {
-          this.$newMessage.warning('必须要删除至少一个标签')
-          return
-        }
-      }
+    showAccept () {
       this.checkResult = 'accept'
-      this.emitResult('accept')
+      this.showAcceptTextarea = true
     },
     /**
      * @description 隐藏拒绝原因输入
      */
-    hideRefuse (item) {
+    hideRefuse () {
       this.showRefuseTextarea = false
+    },
+    /**
+     * @description 隐藏拒绝原因输入
+     */
+    hideAccept () {
+      this.showAcceptTextarea = false
     },
     /**
      * @description 保存拒绝原因输入
@@ -616,9 +637,21 @@ export default {
         this.$newMessage.warning('拒绝原因还没有填写')
         return
       }
-      this.checkResult = 'refuse'
       this.hideRefuse()
       this.emitResult('refuse')
+    },
+    /**
+     * @description 保存审核通过备注
+     */
+    saveAccept (item) {
+      if (this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审一定要勾选删除标签
+        if (!this.delLabelNum) {
+          this.$newMessage.warning('必须要删除至少一个标签')
+          return
+        }
+      }
+      this.hideAccept()
+      this.emitResult('accept')
     },
     /**
      * @description 通知审核结果
@@ -633,6 +666,7 @@ export default {
         result.storeReworkReasonManage = this.showPhoto.storeReworkReasonManage
       }
       if (this.refuseTextarea) result.reason = this.refuseTextarea
+      if (this.acceptTextarea) result.reason = this.acceptTextarea
       this.$emit('saveResult', result)
       this.closeShowPhoto()
     },

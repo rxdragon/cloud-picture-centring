@@ -245,12 +245,23 @@ export const APPEAL_RESULT_STATUS = {
   REFUSE: 'refuse'
 }
 
-// 申诉审核结果状态枚举
+// 流水申诉审核结果状态枚举
 export const AppealResultStatusEnum = {
   [APPEAL_RESULT_STATUS.WAIT]: '待审核',
   [APPEAL_RESULT_STATUS.ACCEPT]: '全部审核通过',
   [APPEAL_RESULT_STATUS.PART_ACCEPT]: '部分审核通过',
   [APPEAL_RESULT_STATUS.REFUSE]: '审核拒绝'
+}
+
+// 申诉审核结果状态
+export const APPEAL_RESULT_STATUS_PHOTO = {
+  PHOTO_RESULT_ACCEPT: 'accept',
+  PHOTO_RESULT_REFUSE: 'refuse'
+}
+// 照片申诉审核结果状态枚举
+export const AppealResultStatusPhotoEnum = {
+  [APPEAL_RESULT_STATUS_PHOTO.PHOTO_RESULT_ACCEPT]: '审核通过',
+  [APPEAL_RESULT_STATUS_PHOTO.PHOTO_RESULT_REFUSE]: '审核拒绝'
 }
 
 /**
