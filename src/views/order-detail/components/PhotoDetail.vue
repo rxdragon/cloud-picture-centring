@@ -6,7 +6,7 @@
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
         <div class="panel-content content-one">
-          局部退回标记：
+          <div class="content-title">局部退回标记：</div>
           <div
             v-for="(reasonItem, index) in reworkPhoto.storePartReworkReason"
             :key="index"
@@ -22,26 +22,34 @@
           </div>
         </div>
         <div class="panel-content content-one">
-          局部退回备注：
-          <span
-            v-for="(storePartReworkReason, index) in reworkPhoto.storePartReworkReason"
-            :key="index"
-          >
-            {{ storePartReworkReason.note }}
-          </span>
-        </div>
-        <div class="panel-content content-one">
-          整体退回标记：
-          <div
-            v-for="(reasonItem, index) in reworkPhoto.storeReworkReasonManage"
-            :key="index"
-            :class="['reason-item', reasonItem.cancel ? 'del' : '']"
-          >
-            <span>{{ reasonItem.name }}</span>
-            <span v-if="reasonItem.cancel">(已删除)</span>
+          <div class="content-title">局部退回备注：</div>
+          <div>
+            <span
+              v-for="(storePartReworkReason, index) in reworkPhoto.storePartReworkReason"
+              :key="index"
+              class="content-part-note"
+            >
+              {{ storePartReworkReason.note }}
+            </span>
           </div>
         </div>
-        <div class="panel-content">整体退回备注：{{ reworkPhoto.storeReworkNote }}</div>
+        <div class="panel-content content-one">
+          <div class="content-title">整体退回标记：</div>
+          <div>
+            <div
+              v-for="(reasonItem, index) in reworkPhoto.storeReworkReasonManage"
+              :key="index"
+              :class="['reason-item', reasonItem.cancel ? 'del' : '']"
+            >
+              <span>{{ reasonItem.name }}</span>
+              <span v-if="reasonItem.cancel">(已删除)</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel-content content-one">
+          <div class="content-title">整体退回备注：</div>
+          {{ reworkPhoto.storeReworkNote }}
+        </div>
       </div>
     </div>
     <div v-if="hasCheckTags" class="panel-box">
@@ -161,6 +169,7 @@ export default {
           display: inline-block;
           padding: 4px 10px;
           margin-right: 16px;
+          margin-bottom: 4px;
           font-size: 12px;
           color: #4669fb;
           background: rgba(237, 240, 255, 1);
@@ -177,8 +186,17 @@ export default {
 
       .content-one {
         display: flex;
-        flex-wrap: wrap;
         border-bottom: 1px solid @borderColor;
+      }
+
+      .content-title {
+        flex-shrink: 0;
+        width: 120px;
+      }
+
+      .content-part-note {
+        margin-right: 16px;
+        margin-bottom: 4px;
       }
     }
 

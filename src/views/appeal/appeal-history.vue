@@ -8,12 +8,12 @@
       <div class="search-box">
         <!-- 申诉时间 -->
         <div class="date-search search-item">
-          <span>申诉时间:</span>
+          <span>申诉时间：</span>
           <date-picker v-model="timeSpan" />
         </div>
         <!-- 流水号 -->
         <div class="stream-search search-item">
-          <span>流水号:</span>
+          <span>流水号：</span>
           <el-input
             @keyup.native.enter="searchList(1)"
             v-model="streamNum"
@@ -23,7 +23,7 @@
         </div>
         <!-- 处理状态 -->
         <div class="audit-box search-item">
-          <span>处理状态:</span>
+          <span>处理状态：</span>
           <appeal-status-select v-model="appealStatus" />
         </div>
         <!-- 申诉类型 -->
@@ -45,11 +45,11 @@
           >
             <template slot-scope="{ row }">
               <div>
-                <p class="table-title">申诉时间:</p>
+                <p class="table-title">申诉时间：</p>
                 {{ row.createdAt }}
               </div>
               <div>
-                <p class="table-title">流水号:</p>
+                <p class="table-title">流水号：</p>
                 {{ row.streamNum }}
               </div>
             </template>
@@ -59,15 +59,15 @@
           <el-table-column prop="storeReturnNum" label="初审详情" width="240">
             <template slot-scope="{ row }">
               <div>
-                <p class="table-title">初审人:</p>
+                <p class="table-title">初审人：</p>
                 {{ row.firstInfo.staffName }}
               </div>
               <div>
-                <p class="table-title">初审状态:</p>
+                <p class="table-title">初审状态：</p>
                 {{ row.firstInfo.status }}
               </div>
               <div>
-                <p class="table-title">初审时间:</p>
+                <p class="table-title">初审时间：</p>
                 {{ row.firstInfo.time }}
               </div>
             </template>
@@ -75,15 +75,15 @@
           <el-table-column prop="storeReturnNum" label="复审详情" width="240">
             <template slot-scope="{ row }">
               <div>
-                <p class="table-title">复审人:</p>
+                <p class="table-title">复审人：</p>
                 {{ row.secondInfo.staffName }}
               </div>
               <div>
-                <p class="table-title">复审状态:</p>
+                <p class="table-title">复审状态：</p>
                 {{ row.secondInfo.status }}
               </div>
               <div>
-                <p class="table-title">复审时间:</p>
+                <p class="table-title">复审时间：</p>
                 {{ row.secondInfo.time }}
               </div>
             </template>

@@ -65,32 +65,32 @@
         <el-button type="primary" @click="goCheck('second')" v-if="checkType === 'second'">复审</el-button>
       </div>
       <div class="panel-main">
-        <div class="panel-content content-one">申诉问题描述: {{ photoItem.photoAppeals.desc }}</div>
-        <div class="panel-content content-one">初审状态: {{ photoItem.photoAppeals.firstResult.resultDesc }}</div>
+        <div class="panel-content content-one">申诉问题描述：{{ photoItem.photoAppeals.desc }}</div>
+        <div class="panel-content content-one">初审状态：{{ photoItem.photoAppeals.firstResult.resultDesc }}</div>
         <div
           class="panel-content content-one"
           v-if="photoItem.photoAppeals.firstResult.result === APPEAL_RESULT_STATUS.REFUSE"
         >
-          初审拒绝原因: {{ photoItem.photoAppeals.firstResult.reason }}
+          初审拒绝原因：{{ photoItem.photoAppeals.firstResult.reason }}
         </div>
         <div
           class="panel-content content-one"
           v-if="photoItem.photoAppeals.firstResult.result === APPEAL_RESULT_STATUS.ACCEPT"
         >
-          初审通过备注: {{ photoItem.photoAppeals.firstResult.reason }}
+          初审通过备注：{{ photoItem.photoAppeals.firstResult.reason }}
         </div>
-        <div class="panel-content content-one">复审状态: {{ photoItem.photoAppeals.secondResult.resultDesc }}</div>
+        <div class="panel-content content-one">复审状态：{{ photoItem.photoAppeals.secondResult.resultDesc }}</div>
         <div
           class="panel-content content-one"
           v-if="photoItem.photoAppeals.secondResult.result === APPEAL_RESULT_STATUS.REFUSE"
         >
-          复审拒绝原因: {{ photoItem.photoAppeals.secondResult.reason }}
+          复审拒绝原因：{{ photoItem.photoAppeals.secondResult.reason }}
         </div>
         <div
           class="panel-content content-one"
           v-if="photoItem.photoAppeals.secondResult.result === APPEAL_RESULT_STATUS.ACCEPT"
         >
-          复审通过备注: {{ photoItem.photoAppeals.secondResult.reason }}
+          复审通过备注：{{ photoItem.photoAppeals.secondResult.reason }}
         </div>
       </div>
     </div>
