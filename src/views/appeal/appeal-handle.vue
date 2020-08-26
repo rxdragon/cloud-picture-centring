@@ -38,7 +38,7 @@
         </div>
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
-          <span>申诉类型</span>
+          <span>申诉类型：</span>
           <appeal-type-select v-model="appealType" />
         </div>
         <!-- 是否为本人 -->
@@ -54,7 +54,7 @@
           <el-table-column
             prop="streamNum"
             label="申诉信息"
-            width="220"
+            width="230"
             fixed="left"
           >
             <template slot-scope="{ row }">
@@ -368,13 +368,14 @@ export default {
     .table-module {
       .table-title {
         display: inline-block;
-        width: 60px;
+        width: 70px;
         text-align: left;
       }
     }
 
     .stream-search {
       span {
+        flex-shrink: 0;
         width: 60px;
       }
     }
