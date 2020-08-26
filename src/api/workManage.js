@@ -82,15 +82,20 @@ export function getRetoucherQuota (params) {
     for (const key in msg.income) {
       msg.income[key] = Number(msg.income[key])
     }
+
     // R流水收益
     const returnIncome = msg.income.storeReturnIncomeForBoth +
       msg.income.storeReturnIncomeForNotQuality +
       msg.income.storeReturnIncomeForQuality
     msg.income.returnIncome = toFixed(returnIncome)
+    // 回补收益
+    const rollbackIncome = msg.income.rollbackForNormalRework + msg.income.rollbackForReturnRework
+    msg.income.rollbackIncome = toFixed(rollbackIncome)
     // 收益
     const income = msg.income.retouch * 100 +
       msg.income.impulse * 100 +
       msg.income.reward * 100 +
+      rollbackIncome * 100 +
       returnIncome * 100 -
       msg.income.punish * 100 -
       msg.income.glassPunishIncome * 100
@@ -102,9 +107,12 @@ export function getRetoucherQuota (params) {
       msg.exp.storeReturnExpForNotQuality +
       msg.exp.storeReturnExpForQuality
     msg.exp.returnExp = toFixed(returnExp)
+    const rollbackExp = msg.exp.rollbackForNormalRework + msg.exp.rollbackForReturnRework
+    msg.exp.rollbackExp = toFixed(rollbackExp)
     // 海草
     const exp = msg.exp.normal * 100 +
       returnExp * 100 +
+      rollbackExp * 100 +
       msg.exp.punishExp * 100 -
       msg.exp.glassPunishExp * 100
 

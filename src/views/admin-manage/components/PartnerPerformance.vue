@@ -45,6 +45,10 @@
                   <span>超时惩罚海草：</span>
                   <span>{{ expInfo.glassPunishExp || '0.00' }}</span>
                 </p>
+                <p class="info-row">
+                  <span>回补海草：</span>
+                  <span>{{ expInfo.rollbackExp || '0.00' }}</span>
+                </p>
               </div>
               <div slot="reference" class="content-num">
                 <count-to :end-value="itemData.value" show-point />{{ itemData.type === 'rate' ? '%' : '' }}
@@ -77,6 +81,10 @@
                 <p class="info-row text-red">
                   <span>超时惩罚收益：</span>
                   <span>{{ incomeInfo.glassPunishIncome || '0.00' }}</span>
+                </p>
+                <p class="info-row">
+                  <span>回补收益：</span>
+                  <span>{{ expInfo.returnIncome || '0.00' }}</span>
                 </p>
               </div>
               <div slot="reference" class="content-num">
