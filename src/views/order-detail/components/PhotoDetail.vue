@@ -100,7 +100,7 @@ export default {
     },
     // 退回的那个照片
     reworkPhoto () {
-      let realReworkPhoto = this.photoItem.realReworkPhoto
+      let realReworkPhoto = this.photoItem.realReworkPhoto || {}
       if (Object.keys(realReworkPhoto).length) {
         realReworkPhoto = new PreviewModel(realReworkPhoto)
       }
