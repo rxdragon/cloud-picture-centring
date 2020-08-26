@@ -82,14 +82,41 @@ export function getRetoucherQuota (params) {
     for (const key in msg.income) {
       msg.income[key] = Number(msg.income[key])
     }
-    const income = msg.income.retouch * 100 +
-      Number(_.get(msg, 'income.impulse') || 0) +
-      Number(_.get(msg, 'income.reward') || 0) -
-      Number(_.get(msg, 'income.punish') || 0) +
-      Number(_.get(msg, 'income.rollbackForNormalRework') || 0) +
-      Number(_.get(msg, 'income.rollbackForReturnRework') || 0)
 
-    msg.income = toFixed(income / 100)
+    // R流水收益
+    const returnIncome = msg.income.storeReturnIncomeForBoth +
+      msg.income.storeReturnIncomeForNotQuality +
+      msg.income.storeReturnIncomeForQuality
+    msg.income.returnIncome = toFixed(returnIncome)
+    // 回补收益
+    const rollbackIncome = msg.income.rollbackForNormalRework + msg.income.rollbackForReturnRework
+    msg.income.rollbackIncome = toFixed(rollbackIncome)
+    // 收益
+    const income = msg.income.retouch * 100 +
+      msg.income.impulse * 100 +
+      msg.income.reward * 100 +
+      rollbackIncome * 100 +
+      returnIncome * 100 -
+      msg.income.punish * 100 -
+      msg.income.glassPunishIncome * 100
+
+    msg.incomeInfo = toFixed(income / 100)
+
+    // 惩罚海草
+    const returnExp = msg.exp.storeReturnExpForBoth +
+      msg.exp.storeReturnExpForNotQuality +
+      msg.exp.storeReturnExpForQuality
+    msg.exp.returnExp = toFixed(returnExp)
+    const rollbackExp = msg.exp.rollbackForNormalRework + msg.exp.rollbackForReturnRework
+    msg.exp.rollbackExp = toFixed(rollbackExp)
+    // 海草
+    const exp = msg.exp.normal * 100 +
+      returnExp * 100 +
+      rollbackExp * 100 +
+      msg.exp.punishExp * 100 -
+      msg.exp.glassPunishExp * 100
+
+    msg.expInfo = toFixed(exp / 100)
 
     // 顾客满意度
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
@@ -97,14 +124,10 @@ export function getRetoucherQuota (params) {
 
     // 点赞点踩量
     const storeEvaluateCount = _.get(msg, 'storeEvaluateScoreAvg.count') || 0
-    const expRollbackForNormalRework = Number(_.get(msg, 'exp.rollbackForNormalRework') || 0)
-    const expRollbackForReturnRework = Number(_.get(msg, 'exp.rollbackForReturnRework') || 0)
-    const expNormal = Number(_.get(msg, 'exp.normal') || 0)
     msg.goodStreamNum = parseInt(msg.goodNum || 0) // 门店点赞单量
     msg.goodRate = toFixed(getAvg(msg.goodStreamNum / storeEvaluateCount) * 100) // 门店点赞率
     msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
     msg.badRate = toFixed(getAvg(msg.badStreamNum / storeEvaluateCount) * 100) // 门店点踩率
-    msg.finalExp = expNormal + expRollbackForNormalRework + expRollbackForReturnRework // 最终的海草值
 
     msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
     return msg
