@@ -27,7 +27,7 @@ import ChargePerformance from './PerformanceComponents/ChargePerformance'
 export default {
   name: 'PerformanceManagement',
   components: { RetoucherPerformance, ChargePerformance },
-  data() {
+  data () {
     return {
       activeName: 'RetoucherPerformance'
     }

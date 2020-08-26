@@ -60,7 +60,7 @@ export default {
   name: 'ChargePerformance',
   components: { UploadExcel, AlterPerformance },
   mixins: [PerformanceMix],
-  data() {
+  data () {
     return {
       searchType: 'retoucherLeader',
       routeName: this.$route.name, // 路由名字

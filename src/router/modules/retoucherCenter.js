@@ -20,6 +20,11 @@ const retoucherCenter = {
       name: 'RetouchHistory',
       component: () => import('@/views/retoucher-center/retouch-history.vue'),
       meta: { title: '修图历史记录', icon: '' }
+    }, {
+      path: 'appeal-history',
+      name: 'AppealHistory',
+      component: () => import('@/views/appeal/appeal-history.vue'),
+      meta: { title: '申诉记录', icon: '' }
     }
   ]
 }

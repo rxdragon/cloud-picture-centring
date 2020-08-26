@@ -28,7 +28,7 @@ export default {
     btnText: { type: String, default: '上传表格' },
     headerData: { type: Array, default: null }
   },
-  data() {
+  data () {
     return {
       loading: false,
       excelData: {
@@ -38,15 +38,15 @@ export default {
     }
   },
   methods: {
-    generateData({ header, results }) {
+    generateData ({ header, results }) {
       this.excelData.header = header
       this.excelData.results = results
       this.onSuccess && this.onSuccess(this.excelData)
     },
-    handleUpload() {
+    handleUpload () {
       this.$refs['excel-upload-input'].click()
     },
-    handleClick(e) {
+    handleClick (e) {
       const files = e.target.files
       const rawFile = files[0] // only use files[0]
       if (!rawFile) return
@@ -55,7 +55,7 @@ export default {
     /**
      * @description 上传文件
      */
-    upload(rawFile) {
+    upload (rawFile) {
       this.$refs['excel-upload-input'].value = null // fix can't select the same excel
 
       if (!this.beforeUpload) {
@@ -70,7 +70,7 @@ export default {
     /**
      * @description 读取文件
      */
-    readerData(rawFile) {
+    readerData (rawFile) {
       this.loading = true
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
@@ -89,7 +89,7 @@ export default {
         reader.readAsArrayBuffer(rawFile)
       })
     },
-    getHeaderRow(sheet) {
+    getHeaderRow (sheet) {
       const headers = []
       const range = XLSX.utils.decode_range(sheet['!ref'])
       let C
@@ -104,7 +104,7 @@ export default {
       }
       return headers
     },
-    isExcel(file) {
+    isExcel (file) {
       return /\.(xlsx|xls|csv)$/.test(file.name)
     }
   }

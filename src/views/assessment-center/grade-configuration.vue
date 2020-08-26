@@ -227,8 +227,8 @@ export default {
         }
       } else {
         return {
-          top: '--',
-          bottom: '--'
+          top: '-',
+          bottom: '-'
         }
       }
     }

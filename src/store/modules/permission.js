@@ -54,7 +54,10 @@ const state = {
   showWorkInfo: false, // 是否可以查看工作看板详情按钮
   showSpotRecheck: false, // 是否显示重新打分按钮
   showEmptyCheckPool: false, // 是否显示清空按钮
-  canAutoRetouch: false // 是否显示自动修图按钮
+  canAutoRetouch: false, // 是否显示自动修图按钮
+  showAppealAccess: false, // 是否显示我要申诉按钮
+  showFirstExamine: false, // 是否显示初审按钮
+  showSecondExamine: false // 是否显示复审按钮
 }
 
 const mutations = {
@@ -82,6 +85,9 @@ const mutations = {
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
+    state.showAppealAccess = roles.includes('AdminManage.appealHandle.add')
+    state.showFirstExamine = roles.includes('AdminManage.appealHandle.firstExamine')
+    state.showSecondExamine = roles.includes('AdminManage.appealHandle.secondExamine')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
