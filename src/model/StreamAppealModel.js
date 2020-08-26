@@ -32,8 +32,8 @@ export default class StreamAppealModel {
   isSecondChecking = false // 处于复审中
   isFinished = false // 是否申诉已经完结
 
-  appealNickName = '' // 申诉申请人
-  appealGroupName = '' // 申诉申请人所属组名
+  appealNickName = '-' // 申诉申请人
+  appealGroupName = '-' // 申诉申请人所属组名
 
 
   constructor (appealItem) {
@@ -72,7 +72,7 @@ export default class StreamAppealModel {
     if (appealIsSecondExamine) this.isSecondChecking = true
     if (appealIsFinsh || appealIsExpire) this.isFinished = true
 
-    this.appealNickName = _.get(appealItem, 'appeal_staff_info.nickname')
-    this.appealGroupName = _.get(appealItem, 'appeal_staff_info.group_info.name')
+    this.appealNickName = _.get(appealItem, 'appeal_staff_info.nickname') || '-'
+    this.appealGroupName = _.get(appealItem, 'appeal_staff_info.group_info.name') || '-'
   }
 }
