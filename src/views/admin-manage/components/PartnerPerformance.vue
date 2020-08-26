@@ -26,7 +26,76 @@
       <div class="panel-title">其他数据</div>
       <div v-for="(itemData, itemIndex) in otherData" :key="itemIndex" class="num-box">
         <span class="num">
-          <count-to :end-value="itemData.value" show-point />{{ itemData.type === 'rate' ? '%' : '' }}
+          <template v-if="itemIndex === 'expInfo'">
+            <el-popover placement="top" width="200" trigger="hover">
+              <div class="info-content">
+                <p class="info-row">
+                  <span>C流水修图海草：</span>
+                  <span>{{ expInfo.normal || '0.00' }}</span>
+                </p>
+                <p class="info-row">
+                  <span>R流水修图海草：</span>
+                  <span>{{ expInfo.returnExp || '0.00' }}</span>
+                </p>
+                <p class="info-row text-red">
+                  <span>退单惩罚海草：</span>
+                  <span>{{ expInfo.punishExp || '0.00' }}</span>
+                </p>
+                <p class="info-row text-red">
+                  <span>超时惩罚海草：</span>
+                  <span>{{ expInfo.glassPunishExp || '0.00' }}</span>
+                </p>
+                <p class="info-row">
+                  <span>回补海草：</span>
+                  <span>{{ expInfo.rollbackExp || '0.00' }}</span>
+                </p>
+              </div>
+              <div slot="reference" class="content-num">
+                <count-to :end-value="itemData.value" show-point />{{ itemData.type === 'rate' ? '%' : '' }}
+              </div>
+            </el-popover>
+          </template>
+          <template v-else-if="itemIndex === 'incomeInfo'">
+            <el-popover placement="top" width="300" trigger="hover">
+              <div class="info-content">
+                <p class="info-row">
+                  <span>C流水修图收益：</span>
+                  <span>{{ incomeInfo.retouch || '0.00' }}</span>
+                </p>
+                <p class="info-row">
+                  <span>R流水修图收益：</span>
+                  <span>{{ incomeInfo.returnIncome || '0.00' }}</span>
+                </p>
+                <p class="info-row text-money">
+                  <span>冲量奖励收益：</span>
+                  <span>{{ incomeInfo.impulse || '0.00' }}</span>
+                </p>
+                <p class="info-row text-money">
+                  <span>其他奖励收益：</span>
+                  <span>{{ incomeInfo.reward || '0.00' }}</span>
+                </p>
+                <p class="info-row text-red">
+                  <span>退单惩罚收益：</span>
+                  <span>{{ incomeInfo.punish || '0.00' }}</span>
+                </p>
+                <p class="info-row text-red">
+                  <span>超时惩罚收益：</span>
+                  <span>{{ incomeInfo.glassPunishIncome || '0.00' }}</span>
+                </p>
+                <p class="info-row">
+                  <span>回补收益：</span>
+                  <span>{{ expInfo.returnIncome || '0.00' }}</span>
+                </p>
+              </div>
+              <div slot="reference" class="content-num">
+                <count-to :end-value="itemData.value" show-point />{{ itemData.type === 'rate' ? '%' : '' }}
+              </div>
+            </el-popover>
+          </template>
+          <template v-else>
+            <count-to :end-value="itemData.value" show-point />{{ itemData.type === 'rate' ? '%' : '' }}
+          </template>
+          
         </span>
         <div class="desc">{{ itemData.label }}</div>
       </div>
@@ -62,12 +131,14 @@ export default {
       timeSpan: null, // 时间戳
       staffIds: [], // 伙伴id
       otherData: {
-        finalExp: { value: '0.00', label: '海草值' },
-        income: { value: '0.00', label: '收益' },
+        expInfo: { value: '0.00', label: '海草值' },
+        incomeInfo: { value: '0.00', label: '收益' },
         retoucherNpsAvg: { value: '0.00', label: '顾客满意度（顾客评价时间）' },
         goodRate: { value: '0.00', label: '点赞率', type: 'rate' },
         badRate: { value: '0.00', label: '点踩率', type: 'rate' }
       },
+      expInfo: {},
+      incomeInfo: {},
       orderStatisticsData: {
         retoucherFinishStreamNum: { value: 0, label: '修图总单量' },
         overTimeStreamNum: { value: 0, label: '超时单量' },
@@ -111,6 +182,8 @@ export default {
           if (this.otherData[key]) { this.otherData[key].value = data[key] }
           if (this.orderStatisticsData[key]) { this.orderStatisticsData[key].value = parseInt(data[key]) }
         }
+        this.expInfo = data.exp
+        this.incomeInfo = data.income
       } finally {
         await delayLoading()
         this.loading = false
@@ -205,4 +278,28 @@ export default {
     }
   }
 }
+
+.content-num {
+  display: inline-block;
+}
+
+.info-content {
+  .text-red {
+    color: @red;
+  }
+
+  .text-money {
+    color: @moneyColor;
+  }
+
+  .text-plant {
+    color: @panGreen;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 </style>
