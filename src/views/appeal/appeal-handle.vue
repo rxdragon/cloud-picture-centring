@@ -59,7 +59,7 @@
               </div>
               <div>
                 <p class="table-title">申诉人：</p>
-                {{ row.appealNickName }}({{ row.appealGroupName }})
+                {{ row.appealNickName }}（{{ row.appealGroupName }}）
               </div>
               <div>
                 <p class="table-title">流水号：</p>
