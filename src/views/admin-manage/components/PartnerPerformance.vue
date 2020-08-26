@@ -84,7 +84,7 @@
                 </p>
                 <p class="info-row">
                   <span>回补收益：</span>
-                  <span>{{ expInfo.returnIncome || '0.00' }}</span>
+                  <span>{{ incomeInfo.rollbackIncome || '0.00' }}</span>
                 </p>
               </div>
               <div slot="reference" class="content-num">
