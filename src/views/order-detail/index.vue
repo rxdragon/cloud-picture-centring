@@ -136,10 +136,8 @@ export default {
         const data = await Commonality.getStreamInfo(req)
         this.orderData = data.orderData
         this.photos = data.photos
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -168,10 +166,8 @@ export default {
         const data = await AdminManage.getStreamInfo(req)
         this.orderData = data.orderData
         this.photos = data.photos
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
