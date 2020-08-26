@@ -8,12 +8,12 @@
       <div class="search-box">
         <!-- 申诉时间 -->
         <div class="date-search search-item">
-          <span>申诉时间：</span>
+          <span>申诉时间</span>
           <date-picker v-model="timeSpan" />
         </div>
         <!-- 流水号 -->
         <div class="stream-search search-item">
-          <span>流水号：</span>
+          <span>流水号</span>
           <el-input
             @keyup.native.enter="searchList(1)"
             v-model="streamNum"
@@ -23,12 +23,12 @@
         </div>
         <!-- 处理状态 -->
         <div class="audit-box search-item">
-          <span>处理状态：</span>
+          <span>处理状态</span>
           <appeal-status-select v-model="appealStatus" />
         </div>
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
-          <span>申诉类型：</span>
+          <span>申诉类型</span>
           <appeal-type-select v-model="appealType" />
         </div>
         <div class="search-button-box search-item">
@@ -37,12 +37,7 @@
       </div>
       <div class="table-module">
         <el-table empty-text="暂无申诉记录" :data="tableData" style="width: 100%;">
-          <el-table-column
-            prop="streamNum"
-            label="申诉信息"
-            width="230"
-            fixed="left"
-          >
+          <el-table-column prop="streamNum" label="申诉信息" fixed="left">
             <template slot-scope="{ row }">
               <div>
                 <p class="table-title">申诉时间：</p>
@@ -54,9 +49,9 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="申诉类型" prop="appealTypeName" width="150" />
+          <el-table-column prop="appealTypeName" label="申诉类型" width="150" />
           <el-table-column prop="appealStatusDesc" label="处理状态" width="100"/>
-          <el-table-column prop="storeReturnNum" label="初审详情" width="240">
+          <el-table-column label="初审详情">
             <template slot-scope="{ row }">
               <div>
                 <p class="table-title">初审人：</p>
@@ -72,7 +67,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="storeReturnNum" label="复审详情" width="240">
+          <el-table-column label="复审详情">
             <template slot-scope="{ row }">
               <div>
                 <p class="table-title">复审人：</p>
@@ -88,7 +83,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="100">
             <template slot-scope="{ row }">
               <el-button type="primary" size="mini" @click="linkto(row.id)">详情</el-button>
             </template>
