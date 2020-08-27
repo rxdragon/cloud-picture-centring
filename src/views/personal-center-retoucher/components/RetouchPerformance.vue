@@ -168,7 +168,7 @@
         </el-table-column>
         <el-table-column label="点踩数/点踩率" min-width="120">
           <template slot-scope="{ row }">
-            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.GoodEvaluation">
+            <router-link :to="routeBase + '?retouchHistoryTimeSpan=' + timeSpan + '&retouchHistorySearchType=' + SearchType.BadEvaluation">
               {{ row.storeBadNum }} / {{ row.storeBadRate }}
             </router-link>
           </template>
