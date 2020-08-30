@@ -227,6 +227,9 @@ export default {
             case SearchType.GoodEvaluation:
               vm.isGood = true
               break
+            case SearchType.BadEvaluation:
+              vm.isGood = false
+              break
             case SearchType.ReworkPhoto:
               vm.activeName = SEARCH_TYPE.REWORK
               break
