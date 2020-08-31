@@ -33,6 +33,7 @@ export default {
       showPreview: false,
       routeName: this.$route.name, // 路由名字
       checkType: this.$route.query.type, // 审核类型
+      pageSource: this.$route.query.source, // 页面来源, history: 来自申诉历史记录列表
       streamId: '', // 流水id
       orderData: {}, // 订单信息
       photos: [],
@@ -59,7 +60,7 @@ export default {
       try {
         const req = { id: this.$route.query.id }
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = await Appeal.appealDetail(req)
+        const data = await Appeal.appealDetail(req, this.pageSource)
         this.orderData = data.orderData
         // 如果是审核页面要剔除初审拒绝的照片
         if (this.checkType) {

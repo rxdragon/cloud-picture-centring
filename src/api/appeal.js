@@ -62,9 +62,11 @@ export function appealExamine (params, type) {
  * @description 申诉详情
  * @param {*} params
  */
-export function appealDetail (params) {
+export function appealDetail (params, source) {
+  let url = '/project_cloud/appeal/detail'
+  if (source === 'history') url = '/project_cloud/retoucher/appeal/detail'
   return axios({
-    url: '/project_cloud/appeal/detail',
+    url,
     method: 'GET',
     params
   }).then(msg => {
