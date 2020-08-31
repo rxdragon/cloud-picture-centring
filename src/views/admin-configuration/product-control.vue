@@ -35,7 +35,7 @@
             <el-table-column prop="photographerOrgName" label="机构名称" />
             <el-table-column v-if="isPending" prop="retouch_require" label="修图要求" />
             <el-table-column v-if="!isPending" label="修图标准">
-              <template slot-scope="scope">
+              <template slot-scope="scope" v-if="!isPending">
                 <div class="standard-box">
                   {{ scope.row.retouch_standard | toRetouchClass }}
                   <div class="standard-icon">
