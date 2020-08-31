@@ -88,7 +88,7 @@ export function getStreamInfo (params) {
       streamNum: streamData.streamNum,
       photographerOrg: streamData.photographerOrgName,
       productName: streamData.productName,
-      photoNum: msg.photos.filter(item => +item.people_num > 0).length,
+      photoNum: msg.photos.filter(item => +item.photoNum > 0).length,
       photographerName: streamData.photographerName,
       reworkNum: streamData.reworkNum,
       storeReworkNum: streamData.storeReturnNum,

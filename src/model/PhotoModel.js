@@ -12,6 +12,8 @@ export default class PhotoModel {
   completePhoto = '' // 云端成片
   grassReason = '' // 种草理由
   reworkReason = '' // 重修理由
+
+  photoNum = 0 // 照片人数
  
   isStoreReturn = '' // 是否门店退回
   storeReworkReason = '' // 门店退回理由
@@ -57,6 +59,8 @@ export default class PhotoModel {
 
     this.grassReason = _.get(photoData, 'tags.values.grass_reason') || ''
     this.reworkReason = _.get(photoData, 'tags.values.rework_reason') || ''
+
+    this.photoNum = _.get(photoData, 'people_num') || 0
     
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []

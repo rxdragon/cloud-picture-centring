@@ -137,7 +137,7 @@ export default {
      * @description 跳转链接
      */
     linkto (id) {
-      const query = { id }
+      const query = { id, source: 'history' }
       this.$router.push({
         path: '/appeal-detail',
         query
