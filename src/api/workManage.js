@@ -103,9 +103,9 @@ export function getRetoucherQuota (params) {
     msg.incomeInfo = toFixed(income / 100)
 
     // 惩罚海草
-    const returnExp = msg.exp.storeReturnExpForBoth +
-      msg.exp.storeReturnExpForNotQuality +
-      msg.exp.storeReturnExpForQuality
+    const returnExp = Number(msg.exp.storeReturnExpForBoth) +
+      Number(msg.exp.storeReturnExpForNotQuality) +
+      Number(msg.exp.storeReturnExpForQuality)
     msg.exp.returnExp = toFixed(returnExp)
     const rollbackExp = msg.exp.rollbackForNormalRework + msg.exp.rollbackForReturnRework
     msg.exp.rollbackExp = toFixed(rollbackExp)
