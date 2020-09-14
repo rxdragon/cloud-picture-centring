@@ -3,6 +3,7 @@
 */.DS_Store
 
 .vscode
+.scannerwork
 
 node_modules
 /dist
