@@ -195,7 +195,6 @@ export function getPhotoProblemTagSets () {
       msg[key].forEach(item => {
         item.key = uuidv4()
         item.label = item.name
-        item.id = item.id
         item.type = key === 'photography' ? 'problemTagPhotography' : 'problemTagMakeup'
         item.select = false
       })
