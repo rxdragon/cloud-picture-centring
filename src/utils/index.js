@@ -129,7 +129,7 @@ export function formatDuring (mss) {
   const hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
   const minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60))
   const seconds = parseInt((mss % (1000 * 60)) / 1000)
-  const str = ''
+  let str = ''
   function isNull (t, v) {
     if (t) str += t + v
   }
