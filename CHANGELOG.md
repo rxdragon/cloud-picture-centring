@@ -1,4 +1,4 @@
-# 2.0.0 (2020-09-14)
+# 2.0.0 (2020-09-16)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -585,6 +585,7 @@
 |范围|描述|commitId|
 --|--|--
  更新版本说明 | 更新版本说明 | [9a00067](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9a00067)
+ 删除多余接口 | [a2cb627](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/a2cb627)
  删除多余文件 | [9e73979](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/9e73979)
  删除多余文件 | [bc377f1](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/bc377f1)
  更改ui框架 | [1f975be](https://code.hzmantu.com/mantu-tech/fed/cloud-picture-centring/commits/1f975be)
