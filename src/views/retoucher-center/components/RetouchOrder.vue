@@ -108,10 +108,10 @@
     />
     <!-- 自动修图 -->
     <auto-retouch
+      v-if="showAutoRetouchBtn"
       v-show="showAutoRetouch"
       :photo-list="autoRetouchPhoto"
       :stream-num="orderData.streamNum"
-      :load-retouch="showAutoRetouchBtn"
       @closeAutoRetouch="switchAutoRetouch"
     />
   </div>
@@ -126,7 +126,9 @@ import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
 import AutoRetouch from '@/components/AutoRetouch/index.vue'
+
 import { mapGetters } from 'vuex'
+
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
@@ -183,9 +185,11 @@ export default {
     },
     // 是否显示自动修图按钮
     showAutoRetouchBtn () {
-      const productIdArr = [4, 7, 8, 9, 55, 56, 57, 58, 59, 81, 88, 89, 126, 149]
-      const hasProduct = productIdArr.includes(_.get(this.orderData, 'productInfo.id', 0))
-      return this.canAutoRetouch && hasProduct
+      // const productIdArr = [4, 7, 8, 9, 55, 56, 57, 58, 59, 81, 88, 89, 126, 149]
+      // const hasProduct = productIdArr.includes(_.get(this.orderData, 'productInfo.id', 0))
+      // TODO 调试
+      return true
+      // return this.canAutoRetouch && hasProduct
     }
   },
   watch: {
