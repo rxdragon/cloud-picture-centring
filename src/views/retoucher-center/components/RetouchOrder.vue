@@ -185,11 +185,9 @@ export default {
     },
     // 是否显示自动修图按钮
     showAutoRetouchBtn () {
-      // const productIdArr = [4, 7, 8, 9, 55, 56, 57, 58, 59, 81, 88, 89, 126, 149]
-      // const hasProduct = productIdArr.includes(_.get(this.orderData, 'productInfo.id', 0))
-      // TODO 调试
-      return true
-      // return this.canAutoRetouch && hasProduct
+      const productIdArr = [4, 7, 8, 9, 55, 56, 57, 58, 59, 81, 88, 89, 126, 149]
+      const hasProduct = productIdArr.includes(_.get(this.orderData, 'productInfo.id', 0))
+      return this.canAutoRetouch && hasProduct
     }
   },
   watch: {
