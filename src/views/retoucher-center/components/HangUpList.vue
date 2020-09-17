@@ -1,7 +1,7 @@
 <template>
   <div class="hang-up-list">
     <el-table :data="tableData" style="width: 100%;">
-      <el-table-column label="流水号" width="250">
+      <el-table-column label="流水号" width="220">
         <template slot-scope="scope">
           <div
             class="stream-state"
@@ -17,6 +17,12 @@
       <el-table-column prop="photoNum" label="照片张数" />
       <el-table-column prop="photographerName" label="所属机构" />
       <el-table-column prop="hangTime" label="挂起时长" />
+      <el-table-column label="沙漏剩余时长" width="140">
+        <template slot-scope="scope">
+          <sand-count-down v-if="scope.row.hour_glass" :sand-glass="scope.row.hour_glass" />
+          <div v-else>暂无信息</div>
+        </template>
+      </el-table-column>
       <el-table-column label="摄影师上传时间">
         <template slot-scope="scope">
           {{ scope.row.photographerUpdate | toTimeSpan }}
@@ -32,8 +38,11 @@
 </template>
 
 <script>
+import SandCountDown from './SandCountDown'
+
 export default {
   name: 'HangUpList',
+  components: { SandCountDown },
   props: {
     tableData: { type: Array, default: () => [] }
   },
