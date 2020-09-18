@@ -1,6 +1,11 @@
 <template>
   <div class="login">
-    <iframe ref="login" class="login_iframe" :src="ssoUrl" />
+    <iframe
+      title="Login iframe"
+      ref="login"
+      class="login_iframe"
+      :src="ssoUrl"
+    />
   </div>
 </template>
 

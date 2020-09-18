@@ -38,7 +38,7 @@ export default {
         }
         if (this.pager) {
           this.pager.page = page === 1 ? 1 : this.pager.page
-          req.page = this.pager.page,
+          req.page = this.pager.page
           req.pageSize = this.pager.pageSize
         }
         // 云端绩效管理，查询修图师绩效

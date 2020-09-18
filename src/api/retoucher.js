@@ -107,8 +107,6 @@ export function getRankInfo () {
     method: 'GET'
   }).then(msg => {
     const createData = keyToHump(msg)
-    createData.nearly30DaysGoodNum = createData.nearly30DaysGoodNum
-    createData.nearly30DaysReturnNum = createData.nearly30DaysReturnNum
     createData.nearly30DaysGoodRate = Number((createData.nearly30DaysGoodRate * 100).toFixed(2))
     createData.nearly30DaysReturnRate = Number((createData.nearly30DaysReturnRate * 100).toFixed(2))
     createData.avgRetouchTime = getAvg(createData.retouchPhotoNumTimeSum, createData.retouchFinishPhotoNumCount * 60)

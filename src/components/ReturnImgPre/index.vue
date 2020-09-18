@@ -20,6 +20,7 @@
           <img
             ref="retouch-img"
             id="orginImg"
+            alt="orginImg"
             :src="url"
             :style="imgScale"
             v-show="!preDetail"

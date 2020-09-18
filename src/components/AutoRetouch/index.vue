@@ -4,7 +4,12 @@
       <div class="content-title">自动修图</div>
       <div class="auto-retouch-img-box" v-loading="loading">
         <i class="el-icon-arrow-left img-switch" v-if="showSwitchBtn" @click="switchPhoto('next')"/>
-        <img  :src="url" class="content-img" @load="hiddenLoading" />
+        <img
+          alt="暂无图片"
+          :src="url"
+          class="content-img"
+          @load="hiddenLoading"
+        />
         <i class="el-icon-arrow-right img-switch" v-if="showSwitchBtn" @click="switchPhoto('pre')"/>
       </div>
     </div>

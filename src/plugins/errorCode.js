@@ -17,7 +17,7 @@ const ApiException = [
 ]
 
 const CardException = [
-  [0xA11010001, '此类卡片已使用']
+  [0xA11010001, '此道具卡当前已生效，不能叠加使用']
 ]
 
 const CheckPoolException = [
