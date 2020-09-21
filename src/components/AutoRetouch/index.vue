@@ -205,8 +205,8 @@ export default {
      */
     getImageAutoProcess (url, model) {
       const req = {
-        key: url,
-        processFlag: model
+        url,
+        process_flag: model
       }
       return AutoRetouch.getImageAutoProcess(req)
     },
