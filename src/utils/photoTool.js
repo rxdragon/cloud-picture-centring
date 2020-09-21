@@ -1,6 +1,8 @@
-import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto } from '@/utils/enumerate.js'
+import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto, PHOTO_FLAG } from '@/utils/enumerate.js'
+
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as mPath from '@/utils/selfPath.js'
+
 import uuidv4 from 'uuid'
 import store from '@/store' // vuex
 import QiNiuETag from '@/utils/qetag.js'
@@ -295,7 +297,24 @@ export function photoPathExtToLowerCase (path) {
   return `${name}${ext}`
 }
 
+/**
+ * @description 过滤文件夹位置
+ * @param {*} path 
+ */
 export function realName (path) {
   const pathArr = path.split('/')
   return pathArr[pathArr.length - 1]
+}
+
+/**
+ * @description 过滤自动修图后缀
+ * @param {*} params 
+ */
+export function fixAutoPhotoName (path) {
+  for (const mode in PHOTO_FLAG) {
+    const modeString = PHOTO_FLAG[mode]
+    const replaceMode = `~${modeString}`
+    path = path.replace(replaceMode, '')
+  }
+  return path
 }

@@ -294,3 +294,12 @@ export const qualityTypeToCN = {
   [QUALITY_TYPE.NOT_QUALITY]: '非质量问题',
   [QUALITY_TYPE.BOTH]: '质量&非质量问题'
 }
+
+/**
+ * @description 自动修图模式
+ */
+export const PHOTO_FLAG = {
+  ORIGINAL: 'original',
+  CROP: 'crop',
+  WARP: "warp"
+}
