@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import axios from 'axios'
 import ApiError from '../plugins/ApiError'
-import { Message } from 'element-ui'
+import * as PhotoTool from '@/utils/photoTool'
+
 
 const autoAxios = axios.create()
 autoAxios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -21,13 +22,7 @@ autoAxios.interceptors.response.use(
     return res
   },
   error => {
-    if (!error.response) {
-      // 请求没有任何返回值：网络差，无服务
-      const message = '网络错误，请稍后再试！'
-      errorMessage(message)
-      return Promise.reject(new ApiError(message))
-    }
-
+    return Promise.reject(new ApiError(error))
   }
 )
 
@@ -49,7 +44,7 @@ export async function getImageAutoProcess (params) {
   }
 
   return autoAxios({
-    url: 'https://sc.algo.hzmantu.com/algo/199/',
+    url: 'https://sc.algo.hzmantu.com/algo/99/',
     method: 'POST',
     data: params
   }).then(msg => {
@@ -71,29 +66,15 @@ export async function getImageAutoProcess (params) {
  */
 function hasAutoPhoto (url, mode) {
   const algoDomain = process.env.VUE_APP_ALGO_DOMAIN
-  url = `${algoDomain}${url}_${mode}?imageInfo`
+  const ext = PhotoTool.getFilePostfix(url)
+  const name = url.replace(ext, '')
+  const imageInfoPath = `${algoDomain}${name}_${mode}${ext}?imageInfo`
   return autoAxios({
-    url,
+    url: imageInfoPath,
     method: 'GET'
   }).then(msg => {
-    return `${algoDomain}${url}_${mode}`
+    return `${algoDomain}${name}_${mode}${ext}`
   }).catch(error => {
     return false
-  })
-}
-
-
-function errorMessage (message) {
-  return new Promise((resolve, reject) => {
-    // eslint-disable-next-line new-cap
-    Message({
-      type: 'error',
-      message: message,
-      duration: 1500,
-      offset: 98,
-      onClose: () => {
-        resolve()
-      }
-    })
   })
 }
