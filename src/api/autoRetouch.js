@@ -40,23 +40,20 @@ export async function getImageAutoProcess (params) {
     ...params,
     flag: process.env.ENV === 'production' ? 'production' : 'dev'
   }
-  const hasWrapPhoto = await hasAutoPhoto(params.url, 'warp')
-  const hasCropPhoto = await hasAutoPhoto(params.url, 'crop')
+  const wrapPhotoPath = await hasAutoPhoto(params.url, 'warp')
+  const cropPhotoPath = await hasAutoPhoto(params.url, 'crop')
   // 拦截监听
-  // TODO 增加水印地址
-  if (hasWrapPhoto && hasCropPhoto) return {
-    crop: 'error',
-    warp: 'error'
+  if (wrapPhotoPath && cropPhotoPath) return {
+    crop: cropPhotoPath,
+    warp: wrapPhotoPath
   }
 
   return autoAxios({
     url: 'https://sc.algo.hzmantu.com/algo/199/',
-    headers: {},
     method: 'POST',
     data: params
   }).then(msg => {
     const { result } = msg
-    console.log(msg)
     if (!result.crop) {
       return {
         crop: 'error',
@@ -73,12 +70,13 @@ export async function getImageAutoProcess (params) {
  * @param {*} mode 
  */
 function hasAutoPhoto (url, mode) {
-  url = `https://cloud-dev.cdn-qn.hzmantu.com/compress/2020/06/17/ljlYFjMmWelwE0Jc-Ts6m-OUJEV3.jpg?imageInfo`
+  const algoDomain = process.env.VUE_APP_ALGO_DOMAIN
+  url = `${algoDomain}${url}_${mode}?imageInfo`
   return autoAxios({
     url,
     method: 'GET'
   }).then(msg => {
-    return true
+    return `${algoDomain}${url}_${mode}`
   }).catch(error => {
     return false
   })
