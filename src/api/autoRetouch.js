@@ -44,7 +44,7 @@ export async function getImageAutoProcess (params) {
   }
 
   return autoAxios({
-    url: 'https://sc.algo.hzmantu.com/algo/99/',
+    url: 'https://sc.algo.hzmantu.com/algo1/99/',
     method: 'POST',
     data: params
   }).then(msg => {
