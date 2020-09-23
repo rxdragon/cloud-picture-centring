@@ -2,7 +2,7 @@
 import axios from 'axios'
 import ApiError from '../plugins/ApiError'
 import * as PhotoTool from '@/utils/photoTool'
-
+import * as AutoLog from '@/views/retoucher-center/autoLog'
 
 const autoAxios = axios.create()
 autoAxios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -50,12 +50,15 @@ export async function getImageAutoProcess (params) {
   }).then(msg => {
     const { result } = msg
     if (!result.crop) {
+      AutoLog.handleEmpty(params.url, msg)
       return {
         crop: 'error',
         warp: 'error'
       }
     }
     return result
+  }).catch(error => {
+    AutoLog.autoErr(params.url, error)
   })
 }
 

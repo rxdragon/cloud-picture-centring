@@ -367,6 +367,7 @@ export default {
         const newPhoto = {
           id: findOrginPhoto.id,
           path: filePath,
+          autoKey: findOrginPhoto.path,
           orginPhotoName: uploadedName,
           file
         }

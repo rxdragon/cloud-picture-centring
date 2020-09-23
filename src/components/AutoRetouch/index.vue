@@ -59,6 +59,7 @@ import guideData from './guideData.js' // 引导内容
 
 import * as AutoRetouch from '@/api/autoRetouch'
 import * as PhotoTool from '@/utils/photoTool'
+import * as AutoLog from '@/views/retoucher-center/autoLog.js'
 
 export default {
   name: "AutoRetouch",
@@ -300,6 +301,7 @@ export default {
       if (activeModel !== PHOTO_FLAG.ORIGINAL) {
         rename = `${name}~${activeModel}${ext}`
       }
+      AutoLog.downLog(this.activePhoto.path, activeModel)
       const data = {
         url: this.showImage,
         path: this.streamNum,

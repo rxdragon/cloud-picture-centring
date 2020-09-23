@@ -133,6 +133,7 @@ import { mapGetters } from 'vuex'
 
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
+import * as AutoLog from '../autoLog.js'
 import * as SessionTool from '@/utils/sessionTool'
 
 export default {
@@ -311,9 +312,11 @@ export default {
       const finishPhotoArr = Object.values(this.finishPhoto)
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
       const uploadData = [...cachePhoto, ...finishPhotoArr]
+      AutoLog.uploadLog(uploadData)
       uploadData.forEach(item => {
         delete item.orginPhotoName
         delete item.file
+        delete item.autoKey
       })
       const reqData = {
         streamId: this.realAid,
