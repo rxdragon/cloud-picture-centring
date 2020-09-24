@@ -31,7 +31,7 @@
         <div class="panel-title ">
           <span>
             个人修图等级
-            <el-tag size="medium">{{ gradeInfo.levelName }}</el-tag>
+            <el-tag size="medium">{{ gradeInfo.levelName }}（{{ gradeInfo.level }}级）</el-tag>
           </span>
           <div class="tip">
             <el-popover placement="bottom-end" width="700" trigger="hover">

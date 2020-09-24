@@ -108,10 +108,10 @@
     />
     <!-- 自动修图 -->
     <auto-retouch
+      v-if="showAutoRetouchBtn"
       v-show="showAutoRetouch"
       :photo-list="autoRetouchPhoto"
       :stream-num="orderData.streamNum"
-      :load-retouch="showAutoRetouchBtn"
       @closeAutoRetouch="switchAutoRetouch"
     />
   </div>
@@ -126,9 +126,14 @@ import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
 import AutoRetouch from '@/components/AutoRetouch/index.vue'
+
+import AutoProductIds from '../AutoConfig.js'
+
 import { mapGetters } from 'vuex'
+
 import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
+import * as AutoLog from '../autoLog.js'
 import * as SessionTool from '@/utils/sessionTool'
 
 export default {
@@ -183,7 +188,7 @@ export default {
     },
     // 是否显示自动修图按钮
     showAutoRetouchBtn () {
-      const productIdArr = [4, 7, 8, 9, 55, 56, 57, 58, 59, 81, 88, 89, 126, 149]
+      const productIdArr = AutoProductIds
       const hasProduct = productIdArr.includes(_.get(this.orderData, 'productInfo.id', 0))
       return this.canAutoRetouch && hasProduct
     }
@@ -307,9 +312,11 @@ export default {
       const finishPhotoArr = Object.values(this.finishPhoto)
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
       const uploadData = [...cachePhoto, ...finishPhotoArr]
+      AutoLog.uploadLog(uploadData)
       uploadData.forEach(item => {
         delete item.orginPhotoName
         delete item.file
+        delete item.autoKey
       })
       const reqData = {
         streamId: this.realAid,

@@ -3,7 +3,29 @@ import store from '@/store'
 import Vue from 'vue'
 import * as originalFs from 'original-fs'
 import * as mPath from '@/utils/selfPath.js'
+import * as PhotoTool from '@/utils/photoTool'
+import { PHOTO_FLAG } from '@/utils/enumerate'
 const { ipcRenderer } = require('electron')
+
+/**
+ * @description 获取自动修图图片
+ * 获取优先级，先warp crop 原图
+ */
+function getAutoPHoto (readfilePath, filePath) {
+  const prioritySequence = [PHOTO_FLAG.WARP, PHOTO_FLAG.CROP]
+  const ext = PhotoTool.getFilePostfix(filePath)
+  const name = PhotoTool.fileNameFormat(filePath)
+  let autoLocalPath = ''
+  for (const model of prioritySequence) {
+    const autoPath = `${name}~${model}${ext}`
+    const localPath = mPath.joinPath(readfilePath, autoPath)
+    if (originalFs.existsSync(localPath)) {
+      autoLocalPath = autoPath
+      break
+    }
+  }
+  return autoLocalPath || filePath
+}
 
 /**
  * @description 获取文件
@@ -15,19 +37,28 @@ export function getFiles (streamNum, needUploadPhotos) {
   const noFilePath = []
   const handlerPath = []
   needUploadPhotos.forEach(fileNameItem => {
-    const filePath = mPath.joinPath(readfilePath, fileNameItem)
+    // 获取图片地址
+    const realFileName = getAutoPHoto(readfilePath, fileNameItem)
+    const filePath = mPath.joinPath(readfilePath, realFileName)
+    // 判断文件存不存在
     if (!originalFs.existsSync(filePath)) {
       noFilePath.push(fileNameItem)
     } else {
       handlerPath.push(filePath)
     }
   })
-  if (!handlerPath.length) {
-    throw new Error(`${readfilePath}文件夹不存在`)
-  }
+  if (!handlerPath.length) throw new Error(`${readfilePath}文件夹不存在`)
   if (noFilePath.length) {
-    const errorMessage = `以下文件不存在\n${noFilePath.join(',\n')}`
-    Vue.prototype.$newMessage.error(errorMessage)
+    let errorMessage = `<p>以下文件不存在：</p>`
+    noFilePath.forEach(pathItem => {
+      errorMessage += `<p class="message-p"><i>${ pathItem }</i></p>`
+    })
+    Vue.prototype.$newMessage({
+      type: 'error',
+      message: errorMessage,
+      dangerouslyUseHTMLString: true,
+      duration: 4000
+    })
   }
   ipcRenderer.send('select-file', { filePath: handlerPath })
 }
