@@ -3,23 +3,28 @@
     v-loading.lock="isLoading"
     element-loading-custom-class="main-loading"
     class="app-main"
-    :class="{'overhidden':isLoading}"
+    :class="{ 'overhidden':isLoading,
+              'micro-main': microApp
+    }"
     @scroll="scrollMove"
   >
-    <transition :name="transitionName" mode="out-in">
+    <transition v-show="!microApp" :name="transitionName" mode="out-in">
       <keep-alive :include="cachedViews" :max="4">
         <router-view :key="key" />
       </keep-alive>
     </transition>
+    <div v-show="microApp" id="picture-online"></div>
   </section>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { loadApp } from '@/utils/qiankun.js'
+
 export default {
   name: 'AppMain',
   computed: {
-    ...mapGetters(['loadRoutes']),
+    ...mapGetters(['loadRoutes', 'canAutoRetouch']),
     isLoading () {
       return this.loadRoutes.includes(this.$route.name)
     },
@@ -31,6 +36,17 @@ export default {
     },
     transitionName () {
       return ''
+    },
+    // 是否是微前端
+    microApp () {
+      return _.get(this.$route, 'meta.microApp') || false
+    }
+  },
+  mounted () {
+    // 加载微前端
+    // TODO 判断权限
+    if (this.canAutoRetouch) {
+      loadApp()
     }
   },
   methods: {
@@ -62,6 +78,16 @@ export default {
   overflow-x: hidden;
   overflow-y: overlay;
   scroll-behavior: smooth;
+
+  &.micro-main {
+    height: @microAppMainHeight;
+    padding: 0;
+    margin-top: 0;
+  }
+}
+
+#picture-online {
+  height: 100%;
 }
 
 .fixed-header + .app-main {
