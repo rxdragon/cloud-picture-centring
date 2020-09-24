@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 import axios from 'axios'
-const BASE_URL = 'http://10.20.200.250:18089'
-const algoAxios = axios.create()
-algoAxios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-algoAxios.defaults.withCredentials = false
-algoAxios.defaults.baseURL = BASE_URL
-algoAxios.interceptors.request.use(
+import ApiError from '../plugins/ApiError'
+import * as PhotoTool from '@/utils/photoTool'
+import * as AutoLog from '@/views/retoucher-center/autoLog'
+
+const autoAxios = axios.create()
+autoAxios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+autoAxios.defaults.withCredentials = false
+autoAxios.interceptors.request.use(
   config => {
     return config
   },
@@ -13,88 +15,69 @@ algoAxios.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
-// 对响应数据进行处理
-algoAxios.interceptors.response.use(
+autoAxios.interceptors.response.use(
   response => {
     let res = null
     res = response.data
-    if (res.success) return res.msg
-    return ''
+    return res
   },
   error => {
-    return Promise.reject(error)
+    return Promise.reject(new ApiError(error))
   }
 )
 
 /**
- * @description 获取裁剪图
- * @param {*} params
+ * @description 获取自动修图地址
+ * @param {*} params 
  */
-export function getAutoCropPic (params) {
-  return algoAxios({
-    url: '/algo/id/get_crop/',
+export async function getImageAutoProcess (params) {
+  params = {
+    ...params,
+    flag: process.env.ENV === 'production' ? 'production' : 'dev'
+  }
+  const wrapPhotoPath = await hasAutoPhoto(params.url, 'warp')
+  const cropPhotoPath = await hasAutoPhoto(params.url, 'crop')
+  // 拦截监听
+  if (wrapPhotoPath && cropPhotoPath) return {
+    crop: cropPhotoPath,
+    warp: wrapPhotoPath
+  }
+
+  return autoAxios({
+    url: 'https://sc.algo.hzmantu.com/algo1/99/',
     method: 'POST',
     data: params
   }).then(msg => {
-    return msg
+    const { result } = msg
+    if (!result.crop) {
+      AutoLog.handleEmpty(params.url, msg)
+      return {
+        crop: 'error',
+        warp: 'error'
+      }
+    }
+    return result
+  }).catch(error => {
+    AutoLog.autoErr(params.url, error)
   })
 }
 
 /**
- * @description 获取调整图
- * @param {*} params
+ * @description 判断图片是否存在
+ * @param {*} url 
+ * @param {*} mode 
  */
-export function getAutoAdjuctPic (params) {
-  return algoAxios({
-    url: '/algo/id/get_adjust/',
-    method: 'POST',
-    data: params
+function hasAutoPhoto (url, mode) {
+  const algoDomain = process.env.VUE_APP_ALGO_DOMAIN
+  const ext = PhotoTool.getFilePostfix(url)
+  const name = url.replace(ext, '')
+  const imageInfoPath = `${algoDomain}${name}_${mode}${ext}?imageInfo`
+  return autoAxios({
+    url: imageInfoPath,
+    method: 'GET'
   }).then(msg => {
-    return msg
+    return `${algoDomain}${name}_${mode}${ext}`
+  }).catch(error => {
+    return false
   })
 }
-
-/**
- * @description 获取瘦脸图
- * @param {*} params
- */
-export function getAutoChubbyPic (params) {
-  return algoAxios({
-    url: '/algo/id/get_chubby/',
-    method: 'POST',
-    data: params
-  }).then(msg => {
-    return msg
-  })
-}
-
-/**
- * @description 眼睛
- * @param {*} params
- */
-export function getAutoEyePic (params) {
-  return algoAxios({
-    url: '/algo/id/get_eye/',
-    method: 'POST',
-    data: params
-  }).then(msg => {
-    return msg
-  })
-}
-
-/**
- * @description 微笑
- * @param {*} params
- */
-export function getAutoSmilePic (params) {
-  return algoAxios({
-    url: '/algo/id/get_smile/',
-    method: 'POST',
-    data: params
-  }).then(msg => {
-    return msg
-  })
-}
-export const algoUrl = BASE_URL
-

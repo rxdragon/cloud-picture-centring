@@ -177,7 +177,7 @@ export default {
       event.stopPropagation()
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        this.checkHasUploadingPhoto()
+        this.checkHasUploadingPhoto() // 是否有图片正在上传
         const needUploadPhotos = []
         const finishPhotoArr = Object.values(this.finishPhoto)
         const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
@@ -247,22 +247,24 @@ export default {
      * @description 检查是否和原片名字一样
      */
     checkHasSaveName (file) {
-      const fileName = PhotoTool.photoPathExtToLowerCase(file.name)
+      let fileName = PhotoTool.photoPathExtToLowerCase(file.name)
+      fileName = PhotoTool.fixAutoPhotoName(fileName)
       const hasSameName = this.photos.some(item => {
         const orginPhotoName = PhotoTool.photoPathExtToLowerCase(item.path)
         const orginPhotoNameForJpeg = orginPhotoName.replace('jpeg', 'jpg')
         const orginPhotoNameForUnknow = orginPhotoName.replace('unknow', 'jpg')
+        
         return orginPhotoName === fileName || orginPhotoNameForJpeg === fileName || orginPhotoNameForUnknow === fileName
       })
-      if (!hasSameName) {
-        throw new Error('请上传与原片文件名一致的照片。')
-      }
+
+      if (!hasSameName) throw new Error('请上传与原片文件名一致的照片。')
     },
     /**
      * @description 检查是否已经上传
      */
     checkHasUploadedPhoto (file) {
-      const fileName = PhotoTool.fileNameFormat(file.name)
+      let fileName = PhotoTool.fileNameFormat(file.name)
+      fileName = PhotoTool.fixAutoPhotoName(fileName)
       const finishPhotoArr = Object.values(this.finishPhoto)
       const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
       const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === fileName)
@@ -278,11 +280,10 @@ export default {
      */
     checkPsPhoto (file, uploadPhotoSha1) {
       // 最后一次提交文件名
-      const beforeUploadFilePath = file.name
+      let beforeUploadFilePath = file.name
+      beforeUploadFilePath = PhotoTool.fixAutoPhotoName(beforeUploadFilePath)
       const beforeUploadFileName = PhotoTool.fileNameFormat(beforeUploadFilePath)
-      if (beforeUploadFileName === uploadPhotoSha1) {
-        throw new Error('请修改照片后再进行上传。')
-      }
+      if (beforeUploadFileName === uploadPhotoSha1) throw new Error('请修改照片后再进行上传。')
     },
     /**
      * @description 上传前回调
@@ -356,7 +357,9 @@ export default {
         }
       }
       const uid = file.uid
-      const uploadedName = PhotoTool.fileNameFormat(file.name)
+      let uploadedName = PhotoTool.fileNameFormat(file.name)
+      uploadedName = PhotoTool.fixAutoPhotoName(uploadedName)
+      
       // 上传后的照片名字
       const filePath = file.response ? PhotoTool.handlePicPath(file.response.url) : ''
       const findOrginPhoto = this.photos.find(photoItem => photoItem.path.includes(uploadedName))
@@ -364,6 +367,7 @@ export default {
         const newPhoto = {
           id: findOrginPhoto.id,
           path: filePath,
+          autoKey: findOrginPhoto.path,
           orginPhotoName: uploadedName,
           file
         }
