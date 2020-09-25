@@ -18,6 +18,20 @@ import './guards' // 路由守护
 import './indexDB/index.js'
 import '@/directive'
 
+
+if (typeof exports === 'object' && typeof module === 'object') {
+  console.warn('node环境')
+// eslint-disable-next-line no-undef
+} else if (typeof define === 'function' && define.amd) {
+  console.warn('amd')
+} else if (typeof exports === 'object') {
+  console.warn('commonjs')
+}	else {
+  console.warn('其他浏览器')
+}
+	
+	
+
 window._ = { get }
 // 注册websocket
 Vue.prototype.$eventEmitter = eventEmitter
