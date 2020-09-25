@@ -33,7 +33,7 @@ autoAxios.interceptors.response.use(
 export async function getImageAutoProcess (params) {
   params = {
     ...params,
-    flag: process.env.ENV === 'production' ? 'production' : 'dev'
+    flag: process.env.VUE_APP_ALGO_ENV === 'production' ? 'production' : 'dev'
   }
   const wrapPhotoPath = await hasAutoPhoto(params.url, 'warp')
   const cropPhotoPath = await hasAutoPhoto(params.url, 'crop')
