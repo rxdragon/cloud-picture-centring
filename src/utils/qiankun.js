@@ -5,8 +5,8 @@ import DownIpc from '@electronMain/ipc/DownIpc'
 
 const entryMap = {
   'pictureonline': {
-    local: '//localhost:8081',
-    development: '//fed.dev.hzmantu.com/picture-online-web/index.html',
+    local: 'http://localhost:8081',
+    development: 'http://fed.dev.hzmantu.com/picture-online-web/index.html',
     // TODO
     production: '//release_2_0_0-himo_picture_online_web_v2.fed-dev.hzmantu.com',
   }
