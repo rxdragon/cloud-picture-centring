@@ -2,6 +2,8 @@
 import { prefetchApps, registerMicroApps, loadMicroApp, start, addGlobalUncaughtErrorHandler } from 'qiankun'
 import * as SessionTool from '@/utils/sessionTool'
 import DownIpc from '@electronMain/ipc/DownIpc'
+import { readConfig } from "../utils/electronConfig"
+
 
 const entryMap = {
   'pictureonline': {
@@ -48,7 +50,7 @@ const apps = [
 ]
 
 apps.forEach(app => {
-  app.entry = entryMap[app.name][process.env.VUE_APP_SERVER_MODE]
+  app.entry = readConfig('microWeb') || entryMap[app.name][process.env.VUE_APP_SERVER_MODE]
 })
 
 // 预加载 应用
