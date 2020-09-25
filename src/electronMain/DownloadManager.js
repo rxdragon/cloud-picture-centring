@@ -123,37 +123,14 @@ function _registerListener (win, opts = {}) {
 const download = (options, callback) => {
   const win = BrowserWindow.getFocusedWindow() || lastWindowCreated
   options = Object.assign({}, { path: '' }, options)
-  const request = net.request(options.url)
-  const filename = (options.uuid + '.download') || decodeURIComponent(path.basename(options.url))
   const url = decodeURIComponent(options.url)
+  const filename = (options.uuid + '.download') || decodeURIComponent(path.basename(options.url))
   const folder = options.downloadFolder || downloadFolder
   const filePath = path.join(folder, options.path.toString(), filename.split(/[?#]/)[0])
-  if (options.headers) {
-    options.headers.forEach((h) => { request.setHeader(h.name, h.value) })
 
-    // Modify the user agent for all requests to the following urls.
-    const filter = {
-      urls: [options.url]
-    }
+  // 下载判断
+  function downfile (filePath) {
 
-    session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-      options.headers.forEach((h) => { details.requestHeaders[h.name] = h.value })
-      // details.requestHeaders['User-Agent'] = 'MyAgent'
-      callback({ cancel: false, requestHeaders: details.requestHeaders })
-    })
-  }
-  if (typeof options.onLogin === 'function') {
-    request.on('login', options.onLogin)
-  }
-  request.on('error', function (error) {
-    const finishedDownloadCallback = callback || function () { }
-    const message = `The request for ${filename} was interrupted: ${error}`
-    finishedDownloadCallback(new Error(message), { url: options.url, filePath: filePath })
-  })
-
-  request.on('response', function (response) {
-    // 下载终止
-    request.abort()
     // 添加队列
     queue.push({
       url: url, // 下载地址
@@ -189,8 +166,45 @@ const download = (options, callback) => {
       console.log(filename + '本地未下载，开始下载')
       win.webContents.downloadURL(options.url)
     }
-  })
-  request.end()
+  }
+
+  if (options.url.includes('blob')) {
+    downfile(filePath)
+  } else {
+    // 请求文件存不存在
+    const request = net.request(options.url)
+    if (options.headers) {
+      options.headers.forEach((h) => { request.setHeader(h.name, h.value) })
+
+      // Modify the user agent for all requests to the following urls.
+      const filter = {
+        urls: [options.url]
+      }
+
+      session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+        options.headers.forEach((h) => { details.requestHeaders[h.name] = h.value })
+        // details.requestHeaders['User-Agent'] = 'MyAgent'
+        callback({ cancel: false, requestHeaders: details.requestHeaders })
+      })
+    }
+    if (typeof options.onLogin === 'function') {
+      request.on('login', options.onLogin)
+    }
+    request.on('error', function (error) {
+      const finishedDownloadCallback = callback || function () { }
+      const filename = (options.uuid + '.download') || decodeURIComponent(path.basename(options.url))
+      const message = `The request for ${filename} was interrupted: ${error}`
+      finishedDownloadCallback(new Error(message), { url: options.url, filePath: filePath })
+    })
+
+    request.on('response', function (response) {
+      // 停止请求
+      request.abort()
+
+      downfile(filePath)
+    })
+    request.end()
+  }
 }
 
 // 批量下载
