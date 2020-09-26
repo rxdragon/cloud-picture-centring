@@ -303,3 +303,10 @@ export const PHOTO_FLAG = {
   CROP: 'crop',
   WARP: "warp"
 }
+
+// 通知功能授权状态
+export const NOTIFY_STATUS = {
+  DEFAULT: 'default', // 询问
+  GRANTED: 'granted', // 已授权
+  DENIED: 'denied' // 拒绝授权
+}
