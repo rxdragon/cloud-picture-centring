@@ -56,6 +56,7 @@ export async function getImageAutoProcess (params) {
         warp: 'error'
       }
     }
+    AutoLog.handleInApp(params.url, msg)
     return result
   }).catch(error => {
     AutoLog.autoErr(params.url, error)
