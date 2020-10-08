@@ -5,7 +5,7 @@ import Layout from '@/layout'
 const pictureOnline = {
   path: '/watcher-online',
   component: Layout,
-  name: 'watcherOnline',
+  name: 'WatcherOnline',
   alwaysShow: true,
   meta: { title: '看片师中心', icon: 'iconfont iconcurrent' },
   children: [

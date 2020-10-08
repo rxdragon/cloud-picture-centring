@@ -24,7 +24,7 @@ import { loadApp } from '@/utils/qiankun.js'
 export default {
   name: 'AppMain',
   computed: {
-    ...mapGetters(['loadRoutes', 'canAutoRetouch']),
+    ...mapGetters(['loadRoutes', 'isOnlineWatcher']),
     isLoading () {
       return this.loadRoutes.includes(this.$route.name)
     },
@@ -44,8 +44,9 @@ export default {
   },
   mounted () {
     // 加载微前端
-    // TODO 判断权限
-    if (this.canAutoRetouch) {
+    if (this.isOnlineWatcher) {
+      // eslint-disable-next-line no-console
+      console.log(`%c LOAD_MICRO_WEB`, 'color:#3d91cf; font-weight: bold')
       loadApp()
     }
   },
