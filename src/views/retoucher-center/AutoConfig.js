@@ -49,4 +49,6 @@ export default [
   149, // KIDS	签证照	master
   1016, // KIDS	功能照-证件照	kids
   1017, // KIDS	功能照-签证照	kids
+
+  1061, // dev 测试
 ]

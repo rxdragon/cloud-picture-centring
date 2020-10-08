@@ -252,7 +252,8 @@ export default {
       const hasSameName = this.photos.some(item => {
         const orginPhotoName = PhotoTool.photoPathExtToLowerCase(item.path)
         const orginPhotoNameForJpeg = orginPhotoName.replace('jpeg', 'jpg')
-        const orginPhotoNameForUnknow = orginPhotoName.replace('unknow', 'jpg')
+        let orginPhotoNameForUnknow = orginPhotoName.replace('unknown', 'jpg')
+        orginPhotoNameForUnknow = orginPhotoNameForUnknow.replace('unknow', 'jpg')
         
         return orginPhotoName === fileName || orginPhotoNameForJpeg === fileName || orginPhotoNameForUnknow === fileName
       })

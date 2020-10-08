@@ -64,3 +64,14 @@ export function handleEmpty (key, msg) {
   const data = { key, msg, type }
   logger.log(data)
 }
+
+/**
+ * @description app中处理
+ * @param {*} key 
+ * @param {*} msg 
+ */
+export function handleInApp (key, msg) {
+  const type = 'handle'
+  const data = { key, msg, type }
+  logger.log(data)
+}
