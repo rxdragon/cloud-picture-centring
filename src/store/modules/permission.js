@@ -90,8 +90,7 @@ const mutations = {
     state.showFirstExamine = roles.includes('AdminManage.appealHandle.firstExamine')
     state.showSecondExamine = roles.includes('AdminManage.appealHandle.secondExamine')
 
-    // TODO 在线看片权限
-    state.isOnlineWatcher = roles.includes('WatcherOnline.watchPhotoCenter.pictureOnline.xxxx')
+    state.isOnlineWatcher = roles.includes('WatcherOnline.watchPhotoCenter.pictureOnline.watchRecordList')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
@@ -145,9 +144,7 @@ const actions = {
           }
         ]
       }
-      // TODO 调试过滤权限验证
-      // accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
-      accessedRoutes = [...asyncRoutes, ...lastBaseRoutes]
+      accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
