@@ -50,7 +50,7 @@ export default {
       try {
         if (!this.performanceScore) return this.$newMessage.warning('请输入分数')
         const score = Number(this.performanceScore)
-        if (score > 100 || score < 0) return this.$newMessage.warning('请输入正确的绩效分数')
+        if (score > 200 || score < 0) return this.$newMessage.warning('请输入正确的绩效分数')
         this.loading = true
         const req = {
           id: this.editInfo.id,
