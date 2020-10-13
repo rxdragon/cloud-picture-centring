@@ -38,14 +38,23 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 获取数据
+     */
     generateData ({ header, results }) {
       this.excelData.header = header
       this.excelData.results = results
       this.onSuccess && this.onSuccess(this.excelData)
     },
+    /**
+     * @description 获取上传
+     */
     handleUpload () {
       this.$refs['excel-upload-input'].click()
     },
+    /**
+     * @description 处理点击上传事件
+     */
     handleClick (e) {
       const files = e.target.files
       const rawFile = files[0] // only use files[0]
@@ -89,6 +98,9 @@ export default {
         reader.readAsArrayBuffer(rawFile)
       })
     },
+    /**
+     * @description 获取标题
+     */
     getHeaderRow (sheet) {
       const headers = []
       const range = XLSX.utils.decode_range(sheet['!ref'])
