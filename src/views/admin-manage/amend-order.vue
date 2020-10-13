@@ -3,6 +3,7 @@
     <div class="header">
       <h3>修改照片产品</h3>
     </div>
+    <!-- 搜索模块 -->
     <div class="search-box">
       <div class="caid-search search-item">
         <span>流水号</span>
@@ -28,6 +29,7 @@
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>
       </div>
     </div>
+    <!-- 订单照片显示模块 -->
     <div v-for="(item, index) in dataList" :key="index" class="caid-box module-panel">
       <div class="order-info ">
         <div class="id search-item">
@@ -59,6 +61,8 @@
                 <div class="change-num">
                   <span>人数：</span>
                   <input
+                    :disabled="photoItem.type === PHOTO_TYPE.TEMPLATE_TYPE"
+                    :class="{ 'disabled-input': photoItem.type === PHOTO_TYPE.TEMPLATE_TYPE }"
                     v-model="photoItem.people_num"
                     v-numberOnly
                     class="fake-el-input"
@@ -112,12 +116,14 @@ import NoData from '@/components/NoData'
 import * as WorkManage from '@/api/workManage'
 import * as Product from '@/api/product'
 import { jointClass } from '@/assets/config/jointClass.js'
+import { PHOTO_TYPE } from '@/utils/enumerate.js'
 
 export default {
   name: 'AmendOrder',
   components: { PhotoBox, NoData },
   data () {
     return {
+      PHOTO_TYPE,
       routeName: this.$route.name, // 路由名字
       caid: '', // 流水号
       id: '', // 订单号
@@ -131,6 +137,9 @@ export default {
     this.jointClassOption = jointClass
   },
   methods: {
+    /**
+     * @description 是否全部删除照片
+     */
     isAlldelete (photos) {
       return photos.every(photoItem => photoItem.isDelete)
     },
@@ -214,7 +223,6 @@ export default {
 
 <style lang="less">
 
-
 .amend-order {
   .search-box {
     margin-bottom: 20px;
@@ -261,8 +269,11 @@ export default {
             margin: auto;
             font-size: 12px;
 
-            .el-input {
-              width: calc(~'100% - 48px');
+            .disabled-input {
+              color: #c0c4cc;
+              cursor: not-allowed;
+              background-color: #f5f7fa;
+              border-color: #e4e7ed;
             }
           }
 
