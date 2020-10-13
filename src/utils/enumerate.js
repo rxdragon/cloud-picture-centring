@@ -303,3 +303,12 @@ export const PHOTO_FLAG = {
   CROP: 'crop',
   WARP: "warp"
 }
+
+/**
+ * @description 照片类型
+ */
+export const PHOTO_TYPE = {
+  NORMAL_TYPE: 'normal', // 正常
+  TEMPLATE_TYPE: 'template', // 模版
+  SPLICE_TYPE: 'splice' // 拼接
+}
