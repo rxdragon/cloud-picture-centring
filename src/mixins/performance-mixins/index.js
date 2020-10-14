@@ -102,7 +102,7 @@ export default {
         const hasEveryScore = results.every(item => {
           const hasScore = Boolean(item.score) || item.score === 0 || item.score === '0'
           const isDecimal = reg.test(Number(item.score))
-          const isRightful = Number(item.score) <= 100 && Number(item.score) >= 0
+          const isRightful = Number(item.score) <= 200 && Number(item.score) >= 0
           return hasScore && isDecimal && isRightful
         })
         // 是否有自身分数
