@@ -66,7 +66,7 @@ export default class PreviewModel {
           createData.reasonManage.push(reasonObj)
         })
       }
-      
+      createData.isNeedUpIndex = false // 用于处理问题标记重叠的情况
       return createData
     })
     this.storePartReworkReason = storePartReworkReason
