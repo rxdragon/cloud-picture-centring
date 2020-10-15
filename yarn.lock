@@ -10522,15 +10522,15 @@ q@^1.1.2, q@^1.5.1, q@~1.5.0:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
-qiankun@^2.0.25:
-  version "2.0.25"
-  resolved "https://registry.npm.taobao.org/qiankun/download/qiankun-2.0.25.tgz#c1807ea03dd2ff420a7182469cb8458cae15e80c"
-  integrity sha1-wYB+oD3S/0IKcYJGnLhFjK4V6Aw=
+qiankun@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/qiankun/download/qiankun-2.1.0.tgz?cache=0&sync_timestamp=1602659081139&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fqiankun%2Fdownload%2Fqiankun-2.1.0.tgz#f369ddb9e629dfcfd9d985899963fba88e3d400f"
+  integrity sha1-82ndueYp38/Z2YWJmWP7qI49QA8=
   dependencies:
     "@babel/runtime" "^7.10.5"
     import-html-entry "^1.9.0"
     lodash "^4.17.11"
-    single-spa "^5.3.1"
+    single-spa "^5.6.1"
     tslib "^1.10.0"
 
 qs@6.7.0:
@@ -11562,10 +11562,10 @@ single-line-log@^1.1.2:
   dependencies:
     string-width "^1.0.1"
 
-single-spa@^5.3.1:
-  version "5.6.0"
-  resolved "https://registry.npm.taobao.org/single-spa/download/single-spa-5.6.0.tgz#69bfa4d6885c29b7b5627ca3d145de2af8cff887"
-  integrity sha1-ab+k1ohcKbe1Ynyj0UXeKvjP+Ic=
+single-spa@^5.6.1:
+  version "5.7.0"
+  resolved "https://registry.npm.taobao.org/single-spa/download/single-spa-5.7.0.tgz#aff15729360bff0802d2881a274b8d48a41681fb"
+  integrity sha1-r/FXKTYL/wgC0ogaJ0uNSKQWgfs=
 
 slash@^1.0.0:
   version "1.0.0"

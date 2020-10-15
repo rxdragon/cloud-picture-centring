@@ -4,6 +4,25 @@ import * as SessionTool from '@/utils/sessionTool'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { readConfig } from "../utils/electronConfig"
 
+// 解决 popper 查找父级代码错误问题
+const rawGetComputedStyle = window.getComputedStyle
+window.getComputedStyle = function (el, pseudoElt) {
+  if (el.nodeType === 11) { return {'overflow': 'auto'} }
+  return rawGetComputedStyle(el, pseudoElt)
+}
+// 解决定位问题
+// 既然 popper.js 拿了 document 作为 offsetParent 对象，那将错就错，把 document 对象模拟成 document.documentElement 对象，使它可以正常运作
+Object.defineProperty(document, 'scrollLeft', {
+  get () {
+    return document.documentElement.scrollLeft
+  }
+})
+Object.defineProperty(document, 'scrollTop', {
+  get () {
+    return document.documentElement.scrollTop
+  }
+})
+
 
 const entryMap = {
   'pictureonline': {
