@@ -30,6 +30,7 @@ module.exports = {
     }
     return config
   },
+  transpileDependencies: ['single-spa','qiankun','import-html-entry'],
   chainWebpack: config => {
     if (config.plugins.has('progress') && process.env.CI_RUNNER_ID) {
       config.plugins.delete('progress')

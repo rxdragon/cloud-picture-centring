@@ -42,9 +42,7 @@ export default {
      */
     logout () {
       User.logout()
-        .then(() => {
-          this.$router.push('/login')
-        })
+      this.$router.push('/login')
     }
   }
 }
