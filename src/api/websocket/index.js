@@ -129,6 +129,7 @@ class Ws {
         chat.onFirstConnectCallback = () => {
           this.setState('connected')
           console.warn('连接成功', 'onFirstConnectCallback')
+
           this.initializeSendMessage(store.state.permission.isRetoucher)
           if (this.sendList.length) {
             this.sendList.map(item => this.sendMessage(item))

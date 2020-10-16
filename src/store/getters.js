@@ -25,6 +25,10 @@ const defaultGetters = {
   downloadList: state => state.downloadlist.downloadList // 下载完成列表
 }
 
+const settting = {
+  showRecord: state => state.setting.showRecord, // 是否显示修图师修图数据
+}
+
 const permissionGetters = {
   isRetoucher: state => state.permission.isRetoucher, // 是否是修图师身份
   // 云端绩效信息相关
@@ -57,7 +61,8 @@ const permissionGetters = {
 
 const getters = {
   ...defaultGetters,
-  ...permissionGetters
+  ...permissionGetters,
+  ...settting
 }
 
 export default getters

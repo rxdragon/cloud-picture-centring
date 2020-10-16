@@ -29,6 +29,14 @@ Idb(db_cloud_config)
     if (!guestInfiniteScroll) {
       Setting.setSetting('guestInfiniteScroll', guestInfiniteScroll)
     }
+
+    // 缓存是否显示隐藏数据显示
+    const showRecordObj = await Setting.getSetting('showRecord')
+    const showRecord = showRecordObj ? showRecordObj.settingValue : 0
+    store.dispatch('setting/setShowRecord', showRecord)
+    if (!showRecord) {
+      Setting.setSetting('showRecord', showRecord)
+    }
   })
   .catch(err => {
     console.error(err)
