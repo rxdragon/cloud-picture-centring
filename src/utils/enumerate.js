@@ -310,3 +310,12 @@ export const NOTIFY_STATUS = {
   GRANTED: 'granted', // 已授权
   DENIED: 'denied' // 拒绝授权
 }
+
+/**
+ * @description 照片类型
+ */
+export const PHOTO_TYPE = {
+  NORMAL_TYPE: 'normal', // 正常
+  TEMPLATE_TYPE: 'template', // 模版
+  SPLICE_TYPE: 'splice' // 拼接
+}
