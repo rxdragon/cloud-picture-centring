@@ -57,7 +57,8 @@ const state = {
   canAutoRetouch: false, // 是否显示自动修图按钮
   showAppealAccess: false, // 是否显示我要申诉按钮
   showFirstExamine: false, // 是否显示初审按钮
-  showSecondExamine: false // 是否显示复审按钮
+  showSecondExamine: false, // 是否显示复审按钮
+  isOnlineWatcher: false // 是否是在线看片师
 }
 
 const mutations = {
@@ -88,6 +89,8 @@ const mutations = {
     state.showAppealAccess = roles.includes('RetoucherCenter.appealHistory.add')
     state.showFirstExamine = roles.includes('AdminManage.appealHandle.firstExamine')
     state.showSecondExamine = roles.includes('AdminManage.appealHandle.secondExamine')
+
+    state.isOnlineWatcher = roles.includes('WatcherOnline.watchPhotoCenter.pictureOnline.watchRecordList')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
@@ -106,14 +109,14 @@ const actions = {
       newRoles.forEach(roleItem => {
         if (roleItem.name) {
           const nameArr = roleItem.name.split('.')
+          nameArr.length = nameArr.length - 1
           // 全部权限列表
           newPermissionArr.push(toCapitalHump(roleItem.name))
-          if (nameArr.length !== 3) return
-          const moduleName = toCapitalHump(nameArr[0])
-          const menuName = toCapitalHump(nameArr[1])
-          newRolesArr = [...newRolesArr, moduleName, menuName]
+          const componentNames = nameArr.map(item => toCapitalHump(item))
+          newRolesArr = [...newRolesArr, ...componentNames]
         }
       })
+
       commit('SET_ROLES', newPermissionArr)
       // 如果有修图权限 查询在线状态
       if (newRolesArr.includes('WaitRetoucher')) {
@@ -122,6 +125,7 @@ const actions = {
         })
       }
       newRolesArr = [...new Set(newRolesArr)]
+
       // 开发增加新增版本路由
       const developIds = [605673, 609061, 613495, 612593, 607924, 605268]
       if (developIds.includes(store.getters.staffId)) {

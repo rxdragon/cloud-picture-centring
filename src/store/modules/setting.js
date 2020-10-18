@@ -1,3 +1,5 @@
+import { NOTIFY_STATUS } from '@/utils/enumerate'
+
 const state = {
   imgDomain: process.env.VUE_APP_DOMAIN,
   imgCompressDomain: process.env.VUE_APP_COMPRESS_DOMAIN,
@@ -8,7 +10,8 @@ const state = {
   showOverTag: true,
   savePath: '',
   cacheImageSwitch: 0,
-  guestInfiniteScroll: 0
+  guestInfiniteScroll: 0,
+  notificationStatus: NOTIFY_STATUS.DEFAULT
 }
 
 const mutations = {
@@ -38,6 +41,10 @@ const mutations = {
   },
   SET_GUEST_INFINITE_SCROLL: (state, data) => {
     state.guestInfiniteScroll = data
+  },
+  // 设置权限
+  SET_NOTIFY_STATUS (state, status) {
+    state.notificationStatus = status
   }
 }
 

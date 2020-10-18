@@ -4,11 +4,14 @@ import App from './App.vue'
 import router from './router' // 路由
 import store from './store' // vuex
 import * as filters from './filters' // 全局过滤器
+
 import { ipcRenderer } from 'electron'
 import { eventEmitter } from './plugins/eventemitter.js' // ui布局
 import { delayLoading } from '@/utils/timespan.js' // ui布局
+
 import './plugins/element.js' // ui布局
 import './plugins/charts.js' // charts框架
+import './plugins/notificationApi.js' // charts框架
 import './plugins/errorLogSdk.js' // 错误日志监控
 import './plugins/icon-font/iconfont.css' // ui布局
 import './styles/font.less' // 全局样式
