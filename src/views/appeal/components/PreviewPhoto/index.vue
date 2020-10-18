@@ -48,7 +48,7 @@
           >
             <div
               v-for="(labelItem, labelIndex) in showPhoto.storePartReworkReason"
-              :class="['sign-item', labelItem.isNeedUpIndex ? 'more-index' : '' ]"
+              :class="['sign-item', labelItem.isNeedDownIndex ? 'less-index' : '' ]"
               :key="labelIndex"
               :style="{
                 position: 'absolute',
@@ -58,7 +58,7 @@
                 left: `${labelItem.location[1]}%`,
               }"
             >
-              <div class="circle-box" @click.stop="moreIndex(labelItem)" :style="{ color: labelItem.brushColor} "/>
+              <div class="circle-box" @click.stop="lessIndex(labelItem)" :style="{ color: labelItem.brushColor }"></div>
               <div :class="['retouch-reason', labelItem.labelClass]">
                 <div class="part-reason-list">
                   <div
@@ -677,13 +677,13 @@ export default {
       this.refuseTextarea = ''
     },
     /**
-     * @description 点击后提高层级
+     * @description 点击后降低层级
      */
-    moreIndex (storePartItem) {
+    lessIndex (storePartItem) {
       this.showPhoto.storePartReworkReason.map(partItem => {
-        partItem.isNeedUpIndex = false
+        partItem.isNeedDownIndex = false
       })
-      storePartItem.isNeedUpIndex = true
+      storePartItem.isNeedDownIndex = true
     }
   }
 }
