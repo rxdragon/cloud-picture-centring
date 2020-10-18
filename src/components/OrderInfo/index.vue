@@ -57,19 +57,7 @@
             <el-button type="text" @click="downPhoto(orderData.backgroundColor)">下载背景图</el-button>
           </div>
         </div>
-        <div v-if="orderData.referencePhoto" class="require-remark">
-          <span>参考图：</span>
-          <div class="remark-content require-reference-photo">
-            <el-image
-              class="reference-img"
-              fit="contain"
-              :src="orderData.referencePhoto"
-              :preview-src-list="[orderData.referencePhoto]"
-            >
-            </el-image>
-            <el-button type="text" @click="downPhoto(orderData.referencePhoto)">下载参考图</el-button>
-          </div>
-        </div>
+        <reference-photo v-if="orderData.referencePhoto" :streamNum="orderData.streamNum" :src="orderData.referencePhoto" />
         <div v-if="orderData.reviewerNote" class="require-remark">
           <span>审核备注：</span>
           <div class="remark-content">{{ orderData.reviewerNote }}</div>
@@ -81,9 +69,11 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
+import ReferencePhoto from '@/components/ReferencePhoto'
 
 export default {
   name: 'OrderInfo',
+  components: { ReferencePhoto },
   props: {
     orderData: {
       type: Object,
@@ -130,8 +120,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .order-info {
   .table-info {
     margin-top: 10px;

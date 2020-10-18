@@ -65,6 +65,9 @@ export function getReviewInfo () {
     createData.isStoreReturn = msg.tags && msg.tags.statics && msg.tags.statics.includes(StreamStatics.StoreReturn)
     createData.photos = msg.photos
     createData.retoucherName = (msg.retoucher && (msg.retoucher.name || msg.retoucher.real_name)) || '-'
+    // todo mock
+    // eslint-disable-next-line max-len
+    createData.referencePhoto = 'https://cloud-dev.cdn-qn.hzmantu.com/compress/2020/10/16/FmoHaS4TIY2QyUYAP8cpEoWzAMo3.png'
     return createData
   })
 }
