@@ -57,7 +57,10 @@
             <el-button type="text" @click="downPhoto(orderData.backgroundColor)">下载背景图</el-button>
           </div>
         </div>
-        <reference-photo v-if="orderData.referencePhoto" :streamNum="orderData.streamNum" :src="orderData.referencePhoto" />
+        <div v-if="orderData.referencePhoto" class="require-remark">
+          <span>参考图：</span>
+          <reference-photo :streamNum="orderData.streamNum" :src="orderData.referencePhoto" />
+        </div>
         <div v-if="orderData.reviewerNote" class="require-remark">
           <span>审核备注：</span>
           <div class="remark-content">{{ orderData.reviewerNote }}</div>

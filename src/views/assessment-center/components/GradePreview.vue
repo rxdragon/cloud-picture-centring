@@ -267,15 +267,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import 'driver.js/dist/driver.min.css'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from './OrderInfoModule'
 import guideData from './guideData'
 import Driver from 'driver.js' // 引导框
 import FabricCanvas from './FabricCanvas'
+
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'
+
+import { mapGetters } from 'vuex'
 import { PlantIdTypeEnum } from '@/utils/enumerate'
 
 

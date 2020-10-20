@@ -122,6 +122,9 @@ export default class StreamModel {
 
     const referencePhoto = _.get(streamData, 'tags.values.retouch_claim.referenceImg')
     this.referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
+    // todo mock
+    this.referencePhoto = 'https://cloud-dev.cdn-qn.hzmantu.com/upload_dev/2020/10/08/Fn_8ZYIjIMpXR9lfD29CKVYS9LTo.jpg'
+
     this.photoNum = this.getPhotoNum()
     this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
 

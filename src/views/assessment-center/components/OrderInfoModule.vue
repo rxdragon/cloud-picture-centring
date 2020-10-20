@@ -28,13 +28,20 @@
         <div class="remark-title">特效备注：</div>
         <div class="remark-content">{{ specialEfficacy }}</div>
       </div>
+      <div class="retouch-remark panel-row" v-if="orderInfo.streamInfo.referencePhoto">
+        <div class="remark-title">参考图：</div>
+        <reference-photo :src="orderInfo.streamInfo.referencePhoto" :streamNum="orderInfo.streamInfo.streamNum" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import ReferencePhoto from '@/components/ReferencePhoto'
+
 export default {
   name: 'OrderInfoModule',
+  components: { ReferencePhoto },
   props: {
     orderInfo: { type: Object, required: true }
   },
@@ -97,6 +104,7 @@ export default {
 
   .retouch-remark {
     display: flex;
+    margin-bottom: 10px;
 
     .remark-title {
       width: 60px;

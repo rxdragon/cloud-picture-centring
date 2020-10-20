@@ -1,16 +1,13 @@
 <template>
-  <div class="require-remark">
-    <span>参考图：</span>
-    <div class="remark-content require-reference-photo">
-      <el-image
-        class="reference-img"
-        fit="contain"
-        :src="src"
-        :preview-src-list="[src]"
-      >
-      </el-image>
-      <el-button type="text" @click="downPhoto()">下载参考图</el-button>
-    </div>
+  <div class="reference-photo">
+    <el-image
+      class="reference-img"
+      fit="contain"
+      :src="src"
+      :preview-src-list="[src]"
+    >
+    </el-image>
+    <span class="dowm-text" type="text" @click="downPhoto()">下载参考图</span>
   </div>
 </template>
 
@@ -40,43 +37,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.require-remark {
+.reference-photo {
   display: flex;
-  padding: 20px 0;
-  border-top: 1px solid #dddfe6;
+  align-items: flex-end;
 
-  & > span {
-    width: 90px;
+  .reference-img {
+    width: 100px;
+  }
+
+  .dowm-text {
+    margin-left: 10px;
     font-size: 14px;
-    color: #303133;
-  }
-
-  .remark-content {
-    width: 632px;
-    font-size: 14px;
-    color: #303133;
-    white-space: pre-wrap;
-  }
-
-  .require-background-color {
-    display: flex;
-    align-items: center;
-
-    img {
-      width: 50px;
-      height: 50px;
-      margin-right: 10px;
-    }
-  }
-
-  .require-reference-photo {
-    display: flex;
-    align-items: flex-end;
-
-    .reference-img {
-      width: 200px;
-      height: 200px;
-    }
+    color: #aaa;
+    text-decoration: underline;
   }
 }
 </style>

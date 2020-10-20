@@ -1,6 +1,7 @@
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
 import { keyToHump } from '../utils'
+import { timeRewardStateToCN, TIME_REWARD_STATE } from '@/utils/enumerate.js'
 
 /** 卡片配置 */
 
@@ -423,6 +424,38 @@ export function getAllCloudStream (params) {
       return {
         ...new StreamModel(item)
       }
+    })
+    return msg
+  })
+}
+
+// todo mock
+/**
+ * @description 时段奖励列表
+ * @param {*} params
+ */
+export function getTimeRewardList (params) {
+  return axios({
+    url: '/project_cloud/config/getStaffCardList',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    msg.list.forEach(listItem => {
+      listItem.staffName = _.get(listItem, 'staff.name') || _.get(listItem, 'staff.real_name') || '-'
+      listItem.groupName = _.get(listItem, 'staff.retouch_group.name', '-')
+      listItem.multiple = listItem.card.multiple
+      listItem.createTime = listItem.card.created_at
+      listItem.createStaff = listItem.card.founder_info ? listItem.card.founder_info.name : '-'
+
+      listItem.title = '圣诞节时段奖励'
+      listItem.rewardType = '翻倍奖励'
+      listItem.timeRange = '20:00 ~ 22:00'
+      listItem.state = 'ongoing'
+      listItem.stateStr = timeRewardStateToCN[listItem.state]
+      listItem.timeStr = '2019-09-09 13:00:00'
+      listItem.createStaff = '版纳'
+      listItem.isFinish = listItem.state === TIME_REWARD_STATE.FINISH
+
     })
     return msg
   })

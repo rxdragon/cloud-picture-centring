@@ -312,3 +312,20 @@ export const PHOTO_TYPE = {
   TEMPLATE_TYPE: 'template', // 模版
   SPLICE_TYPE: 'splice' // 拼接
 }
+
+/**
+ * @description 时段奖励设置状态
+ */
+export const TIME_REWARD_STATE = {
+  FINISH: 'finish', // 已结束
+  ONGOING: 'ongoing' // 进行中
+}
+
+/**
+ * @description 时段奖励设置状态转中文
+ */
+export const timeRewardStateToCN = {
+  [TIME_REWARD_STATE.FINISH]: '已结束', // 已结束
+  [TIME_REWARD_STATE.ONGOING]: '进行中' // 进行中
+}
+
