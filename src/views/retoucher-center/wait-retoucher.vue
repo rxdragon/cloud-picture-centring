@@ -237,10 +237,10 @@ export default {
         rollbackIncome: 0.00
       },
       buffInfo: { // buff 信息
-        expCard: 0, // 经验卡
+        expCard: null, // 经验卡
         impulseStatus: false, // 冲量奖
         impulseInfo: [], // 冲量信息
-        goldReward: 0, // 金币卡
+        goldReward: null, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
       driver: null,

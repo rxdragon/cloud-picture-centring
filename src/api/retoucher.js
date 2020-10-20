@@ -74,7 +74,8 @@ export function getSelfBuffInfo () {
   }).then(msg => {
     const data = keyToHump(msg)
     data.impulseInfo = []
-    data.impulse = data.impulse.state === 'using' ? data.impulse : {}
+    
+    data.impulse = (data.impulse && data.impulse.state === 'using') ? data.impulse : {}
     if (Object.keys(data.impulse).length) {
       const creatImpulse = data.impulse.impulse_setting_item.map(item => {
         return {
