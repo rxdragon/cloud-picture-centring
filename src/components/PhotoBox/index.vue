@@ -47,7 +47,7 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
-    <div v-if="specialEffects" class="recede-reason">
+    <div class="recede-reason" v-show="showSpecialEffects">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
     <div v-if="storePartReworkReason.length" class="recede-reason">
@@ -109,7 +109,8 @@ export default {
     useEleImage: { type: Boolean, default: true },
     isLekima: { type: Boolean },
     fileData: { type: Object, default: null },
-    containPhoto: { type: Boolean }
+    containPhoto: { type: Boolean },
+    showSpecialEffects: { type: Boolean, default: true }
   },
   data () {
     return {
@@ -197,7 +198,7 @@ export default {
     },
     // 特效字段
     specialEffects () {
-      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || ''
+      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || '无需特效'
       return special
     }
   },
