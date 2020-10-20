@@ -26,10 +26,14 @@ const template = [{
     click: function (item, focusedWindow) {
       if (focusedWindow) {
         if (focusedWindow.id === 1) {
-          BrowserWindow.getAllWindows().forEach(function (win) {
-            if (win.id > 1) {
-              win.close()
-            }
+          BrowserWindow.getAllWindows().forEach(async function (win) {
+            const ses = win.webContents.session
+            const cacheSize = await ses.getCacheSize()
+            const cacheSizeMB = cacheSize / 1024 / 1024
+            // eslint-disable-next-line no-console
+            console.log(`\x1b[42;30m 当前缓存 \x1b[40;32m ${cacheSizeMB}MB`)
+            await ses.clearCache()
+            if (win.id > 1) { win.close() }
           })
         }
         focusedWindow.reload()

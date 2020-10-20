@@ -37,6 +37,14 @@ async function createWindow () {
     preload: path.join(__dirname, './electronMain/renderer.js')
   })
 
+  // 清空http-cache
+  const ses = win.webContents.session
+  const cacheSize = await ses.getCacheSize()
+  const cacheSizeMB = cacheSize / 1024 / 1024
+  // eslint-disable-next-line no-console
+  console.log(`\x1b[42;30m 当前缓存 \x1b[40;32m ${cacheSizeMB}MB`)
+  await ses.clearCache()
+
   // 窗口关闭前触发
   win.on('close', () => {
     win.webContents.send('closed-win')
