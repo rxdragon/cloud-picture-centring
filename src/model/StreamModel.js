@@ -31,6 +31,8 @@ export default class StreamModel {
   photoNum = 0 // 照片数据
   isGreen = false // 是否是绿色通道
 
+  isChristmasPhoto = false
+
   retoucher = '' // 修图师
   retoucherJobNum = '' // 修图师id
   retoucherLeader = "" // 修图组长
@@ -119,6 +121,9 @@ export default class StreamModel {
 
     this.isCheckReturn = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CHECKRETURN)
     this.reviewerNote = _.get(streamData, 'reviewer_note') || ''
+    
+    // 判断是否是圣诞一人成团订单 
+    this.isChristmasPhoto = _.get(streamData, 'tags.values.need_auto_created_finish_photo') || false
 
     const referencePhoto = _.get(streamData, 'tags.values.retouch_claim.referenceImg')
     this.referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''

@@ -72,6 +72,10 @@ function limitDownCount (uuid) {
 }
 
 // 添加下载
+/**
+ * 
+ * @param {*} fileDownloadConfig { url, path, rename }
+ */
 function addDownloadFile (fileDownloadConfig) {
   const { name, ext } = getFileNameTool(fileDownloadConfig.url)
   const uuid = uuidv4()
