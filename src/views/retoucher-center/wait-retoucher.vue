@@ -9,8 +9,8 @@
             <p class="driver-icon" @click.stop="guide">?</p>
             <div class="header-desc">（以下数据统计纬度为：今早8点～次日早8点）</div>
             <div class="eye-box">
-              <div v-if="showRecord" class="icon hide" @click="toggleShowRecord">隐藏</div>
-              <div v-else class="icon vision" @click="toggleShowRecord">显示</div>
+              <div v-if="showRecord" class="icon hide" @click="toggleShowRecord"><div class="eye eye-open"></div></div>
+              <div v-else class="icon vision" @click="toggleShowRecord"><div class="eye eye-close"></div></div>
             </div>
           </h3>
           <div class="header-left">
@@ -446,12 +446,12 @@ export default {
   // 引导的问号
   .driver-icon {
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     margin-bottom: 4px;
     margin-left: 4px;
     font-size: 12px;
-    line-height: 18px;
+    line-height: 16px;
     color: #edf0ff;
     text-align: center;
     vertical-align: middle;

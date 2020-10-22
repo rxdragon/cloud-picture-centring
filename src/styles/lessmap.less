@@ -11,6 +11,9 @@
 @gold: url(~@/assets/award_maps/gold.png);
 @morningAward: url(~@/assets/award_maps/morning_award.png);
 
+@eyeOpen: url(~@/assets/eye_open.png);
+@eyeClose: url(~@/assets/eye_close.png);
+
 .iconmapBaseSet(@x, @y) {
   display: block;
   width: 100%;
@@ -87,6 +90,21 @@
 
   &-orange {
     background: transparent @sandOrange center left no-repeat;
+  }
+}
+
+.eye {
+  width: 16px;
+  height: 16px;
+  background-position: 0 0;
+  background-size: 100%;
+
+  &-open {
+    background-image: @eyeOpen;
+  }
+
+  &-close {
+    background-image: @eyeClose;
   }
 }
 
