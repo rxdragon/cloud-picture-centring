@@ -27,6 +27,7 @@
     </div>
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
+      <div v-if="rename" class="joint-label">圣诞拼接照 - {{ rename }}</div>
       <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto('original')">下载照片</el-button>
       <el-popover
         v-if="orginLinkPhotoPath"
@@ -47,7 +48,7 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
-    <div v-if="specialEffects" class="recede-reason">
+    <div v-if="!rename && specialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
     <div v-if="storePartReworkReason.length" class="recede-reason">
@@ -79,6 +80,7 @@
 import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewCanvasImg from '@/components/PreviewCanvasImg'
+import * as PhotoTool from '@/utils/photoTool'
 
 export default {
   name: 'PhotoBox',
@@ -109,7 +111,8 @@ export default {
     useEleImage: { type: Boolean, default: true },
     isLekima: { type: Boolean },
     fileData: { type: Object, default: null },
-    containPhoto: { type: Boolean }
+    containPhoto: { type: Boolean },
+    rename: { type: [String, Number], default: '' } // 重命名
   },
   data () {
     return {
@@ -222,10 +225,17 @@ export default {
       const savePath = `/${this.streamNum}`
       let imgSrc = type === 'original' ? this.orginPhotoPath : this.src
       imgSrc = imgSrc || this.src
+
       const data = {
         url: this.imgDomain + imgSrc,
         path: savePath
       }
+
+      if (this.rename) {
+        const ext = PhotoTool.getFilePostfix(imgSrc)
+        data.rename = `${this.rename}${ext}`
+      }
+
       this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)
     },
