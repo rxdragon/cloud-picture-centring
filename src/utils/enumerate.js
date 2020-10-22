@@ -82,6 +82,7 @@ export const StoreReturnPhoto = [
   'store_rework' // 门店退回
 ]
 
+// 照片版本
 export const PHOTO_VERSION = {
   STORE_REWORK: 'store_rework', // 门店退回的照片version
   ORIGINAL_PHOTO: 'original_photo', // 原片
@@ -98,13 +99,13 @@ export const PhotoEnumName = {
   ReturnPhoto: '退回照片',
   CompletePhoto: '云端成片',
   FinishPhoto: '顾客满意片',
-  original_photo: '原片',
-  first_photo: '一次成片',
-  return_photo: '退回照片',
-  complete_photo: '云端成片',
-  finish_photo: '顾客满意片',
-  store_rework: '门店退回',
-  last_retouch_photo: '最新成片'
+  [PHOTO_VERSION.ORIGINAL_PHOTO]: '原片',
+  [PHOTO_VERSION.FIRST_PHOTO]: '一次成片',
+  [PHOTO_VERSION.RETURN_PHOTO]: '退回照片',
+  [PHOTO_VERSION.COMPLETE_PHOTO]: '云端成片',
+  [PHOTO_VERSION.STORE_REWORK]: '门店退回',
+  [PHOTO_VERSION.FINISH_PHOTO]: '顾客满意片',
+  [PHOTO_VERSION.LAST_RETOUCH_PHOTO]: '最新成片'
 }
 
 // 搜索类型
