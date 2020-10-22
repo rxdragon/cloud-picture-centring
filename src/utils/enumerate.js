@@ -313,3 +313,10 @@ export const PHOTO_TYPE = {
   TEMPLATE_TYPE: 'template', // 模版
   SPLICE_TYPE: 'splice' // 拼接
 }
+
+// 通知功能授权状态
+export const NOTIFY_STATUS = {
+  DEFAULT: 'default', // 询问
+  GRANTED: 'granted', // 已授权
+  DENIED: 'denied' // 拒绝授权
+}

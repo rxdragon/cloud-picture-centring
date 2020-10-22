@@ -49,13 +49,14 @@
           <i class="el-icon-error" />
         </span>
       </div>
-      <div v-show="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
+      <div v-if="canUpdatePhoto" key="upload-button" class="crop-upload-box list-photo-item">
         <el-upload
           id="el-upload-file"
           ref="uploadButton"
           class="upload-crop-button"
           accept="image/*"
           multiple
+          drag
           :action="updateDomain"
           :show-file-list="false"
           :before-upload="beforeUpload"
@@ -142,8 +143,7 @@ export default {
     // 是否能添加照片
     canUpdatePhoto () {
       const finishNumSame = this.photos.length === Object.values(this.finishPhoto).length + this.cachePhoto.length
-      const updatePaddingSame = this.photos.length === this.uploadPhoto.length + this.cachePhoto.length
-      return !finishNumSame && !updatePaddingSame
+      return !finishNumSame
     }
   },
   watch: {
@@ -551,6 +551,13 @@ export default {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+      }
+
+      & /deep/ .el-upload-dragger {
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        border: none;
       }
 
       .avatar-upload {

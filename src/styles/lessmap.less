@@ -10,6 +10,11 @@
 @greenAisle: url(~@/assets/award_maps/green_aisle.png);
 @gold: url(~@/assets/award_maps/gold.png);
 @morningAward: url(~@/assets/award_maps/morning_award.png);
+@timeExp: url(~@/assets/award_maps/time_exp.png);
+@timeMoney: url(~@/assets/award_maps/time_money.png);
+
+@eyeOpen: url(~@/assets/eye_open.png);
+@eyeClose: url(~@/assets/eye_close.png);
 
 .iconmapBaseSet(@x, @y) {
   display: block;
@@ -62,6 +67,8 @@
   &-greenAisle { .awardBaseSet(@greenAisle); }
   &-gold { .awardBaseSet(@gold); }
   &-morningAward { .awardBaseSet(@morningAward); }
+  &-timeExp { .awardBaseSet(@timeExp); }
+  &-timeMoney { .awardBaseSet(@timeMoney); }
 }
 
 .home-logo {
@@ -87,6 +94,21 @@
 
   &-orange {
     background: transparent @sandOrange center left no-repeat;
+  }
+}
+
+.eye {
+  width: 16px;
+  height: 16px;
+  background-position: 0 0;
+  background-size: 100%;
+
+  &-open {
+    background-image: @eyeOpen;
+  }
+
+  &-close {
+    background-image: @eyeClose;
   }
 }
 

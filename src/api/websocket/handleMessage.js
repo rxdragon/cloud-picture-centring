@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { eventEmitter } from '@/plugins/eventemitter.js' // ui布局
 import { MessageBox } from 'element-ui'
 import store from '@/store'
@@ -5,6 +6,9 @@ import router from '@/router'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+
+import errorPng from '@/assets/error.png'
+import photocount from '@/assets/photocount.png'
 
 export default function handleMessage (data, chat) {
   if (!data.typeName) return
@@ -42,6 +46,15 @@ async function getRetouchStream (data) {
   const { streamId } = data
   if (SessionTool.getSureRetouchOrder(streamId)) return
   await RetoucherCenter.exitQueue()
+
+  // 桌面通知
+  const notificationMsg = '你有新的订单请及时处理'
+  const notificationData = {
+    title: notificationMsg,
+    icon: photocount
+  }
+  Vue.prototype.$notification(notificationData)
+
   eventEmitter.emit('getRetouchStream')
   MessageBox.confirm('', '你有新的订单请及时处理', {
     confirmButtonText: '确定',
@@ -73,6 +86,19 @@ async function getReturnStream (data, type) {
   const returnMessageText = type === 'StreamReviewerReturn'
     ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
     : '您当前有门店退回订单需要处理，未免影响顾客取片时间请及时处理。'
+
+  // 桌面通知
+  const notificationMsg = type === 'StreamReviewerReturn'
+    ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
+    : '您有门店退回流水需要处理'
+  const notificationData = {
+    title: notificationMsg,
+    // TODO 增加沙漏时间
+    body: '沙漏剩余时间：20:00',
+    icon: errorPng
+  }
+  Vue.prototype.$notification(notificationData)
+
   try {
     await MessageBox.confirm(returnMessageText, '', {
       confirmButtonText: '现在处理',
@@ -85,8 +111,6 @@ async function getReturnStream (data, type) {
     if (router.app.$route.name !== 'WaitRetoucher') {
       router.push({ path: '/retoucher-center' })
     }
-  } catch (error) {
-    console.error(error)
   } finally {
     SessionTool.saveReturnRetouchOrder(streamId)
     LogStream.retoucherRebuildOk(+streamId)
@@ -97,6 +121,14 @@ async function getReturnStream (data, type) {
  * @description 审核人接到订单
  */
 async function getReviewerReceive () {
+  
+  // 桌面通知
+  const notificationMsg = '你有新的审核订单请及时处理'
+  const notificationData = {
+    title: notificationMsg
+  }
+  Vue.prototype.$notification(notificationData)
+
   eventEmitter.emit('getReviewerReceive')
 }
 

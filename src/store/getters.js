@@ -25,6 +25,10 @@ const defaultGetters = {
   downloadList: state => state.downloadlist.downloadList // 下载完成列表
 }
 
+const settting = {
+  showRecord: state => state.setting.showRecord, // 是否显示修图师修图数据
+}
+
 const permissionGetters = {
   isRetoucher: state => state.permission.isRetoucher, // 是否是修图师身份
   // 云端绩效信息相关
@@ -50,12 +54,15 @@ const permissionGetters = {
   // 申诉处理
   showAppealAccess: state => state.permission.showAppealAccess, // 是否显示我要申诉入口
   showFirstExamine: state => state.permission.showFirstExamine, // 是否显示初审按钮
-  showSecondExamine: state => state.permission.showSecondExamine // 是否显示复审按钮
+  showSecondExamine: state => state.permission.showSecondExamine, // 是否显示复审按钮
+  // 在线看片
+  isOnlineWatcher: state => state.permission.isOnlineWatcher // 是否在线看片师
 }
 
 const getters = {
   ...defaultGetters,
-  ...permissionGetters
+  ...permissionGetters,
+  ...settting
 }
 
 export default getters

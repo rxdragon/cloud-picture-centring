@@ -17,6 +17,7 @@ import personalCenterAuditLeader from './modules/personalCenterAuditLeader.js' /
 import personalCenterRetoucher from './modules/personalCenterRetoucher.js' // 个人中心（组员）
 import personalCenterRetoucherLeader from './modules/personalCenterRetoucherLeader.js' // 个人中心（组长）
 import retoucherCenter from './modules/retoucherCenter.js' // 修图师中心
+import pictureOnline from './modules/pictureOnline.js' // 看片师中心
 
 // 实验路由
 export const experimentRoutes = [{
@@ -122,7 +123,8 @@ export const asyncRoutes = [
   personalCenterAudit,
   personalCenterAuditLeader,
   personalCenterRetoucher,
-  personalCenterRetoucherLeader
+  personalCenterRetoucherLeader,
+  pictureOnline
 ]
 
 const createRouter = () => new Router({

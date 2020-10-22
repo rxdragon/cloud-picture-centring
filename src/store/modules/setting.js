@@ -1,3 +1,5 @@
+import { NOTIFY_STATUS } from '@/utils/enumerate'
+
 const state = {
   imgDomain: process.env.VUE_APP_DOMAIN,
   imgCompressDomain: process.env.VUE_APP_COMPRESS_DOMAIN,
@@ -8,7 +10,9 @@ const state = {
   showOverTag: true,
   savePath: '',
   cacheImageSwitch: 0,
-  guestInfiniteScroll: 0
+  guestInfiniteScroll: 0,
+  notificationStatus: NOTIFY_STATUS.DEFAULT,
+  showRecord: 1 // 修图师页面数据显示
 }
 
 const mutations = {
@@ -38,6 +42,14 @@ const mutations = {
   },
   SET_GUEST_INFINITE_SCROLL: (state, data) => {
     state.guestInfiniteScroll = data
+  },
+  // 设置权限
+  SET_NOTIFY_STATUS (state, status) {
+    state.notificationStatus = status
+  },
+  // 开关控制是否显示数据
+  TOGGLE_SHOW_RECORD (state) {
+    state.showRecord = !state.showRecord
   }
 }
 
@@ -64,6 +76,9 @@ const actions = {
   },
   setGuestInfiniteScroll ({ commit }, data) {
     commit('SET_GUEST_INFINITE_SCROLL', data)
+  },
+  setShowRecord ({ state }, data) {
+    state.showRecord = data
   }
 }
 

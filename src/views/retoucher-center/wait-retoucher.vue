@@ -6,8 +6,12 @@
         <div class="header">
           <h3>
             我的待修订单
-            <div class="header-desc">（以下数据统计纬度为：今早8点～次日早8点）</div>
             <p class="driver-icon" @click.stop="guide">?</p>
+            <div class="header-desc">（以下数据统计纬度为：今早8点～次日早8点）</div>
+            <div class="eye-box">
+              <div v-if="showRecord" class="icon hide" @click="toggleShowRecord"><div class="eye eye-open"></div></div>
+              <div v-else class="icon vision" @click="toggleShowRecord"><div class="eye eye-close"></div></div>
+            </div>
           </h3>
           <div class="header-left">
             <span v-if="state !== 2" class="queue-info queue-length">修图排队中流水：{{ queueInfo.waitRetouchStream }}</span>
@@ -37,7 +41,8 @@
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num green-color">
-                    <count-to show-point :end-value="quotaInfo.todayExp" />
+                    <count-to v-if="showRecord" show-point :end-value="quotaInfo.todayExp" />
+                    <div v-else class="hidden-data">.</div>
                   </span>
                   <span class="goal-num">/ 35</span>
                 </div>
@@ -62,7 +67,9 @@
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num purple-color">
-                    <count-to :end-value="quotaInfo.todayFinishNormalPhotoNum" /> /
+                    <count-to v-if="showRecord" :end-value="quotaInfo.todayFinishNormalPhotoNum" />
+                    <div v-else class="photo-hidden-data">*</div>
+                    /
                     <count-to :end-value="quotaInfo.todayFinishReworkPhotoNum" />
                   </span>
                 </div>
@@ -88,7 +95,8 @@
                 <div class="num money-num" :class="{ 'no-income': isNoIncome }">
                   <span class="symbol money-color">¥</span>
                   <span class="actual-num money-color">
-                    <count-to show-point :end-value="quotaInfo.todayRewordIncome" />
+                    <count-to v-if="showRecord" show-point :end-value="quotaInfo.todayRewordIncome" />
+                    <div v-else class="hidden-data">.</div>
                   </span>
                 </div>
                 <div class="prop-icon-big-box">
@@ -109,19 +117,22 @@
                   <div class="loss-num">
                     <span class="loss-title">退回惩罚海草：</span>
                     <span class="pink-color loss-value">
-                      <count-to show-point :end-value="quotaInfo.todayPunishExp" />颗
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.todayPunishExp" />
+                      <div v-else class="loss-hidden-data"> *.**</div>颗
                     </span>
                   </div>
                   <div class="loss-num">
                     <span class="loss-title">超时惩罚海草：</span>
                     <span class="pink-color loss-value">
-                      <count-to show-point :end-value="quotaInfo.overTimePunishExp" />颗
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.overTimePunishExp" />
+                      <div v-else class="loss-hidden-data"> *.**</div>颗
                     </span>
                   </div>
                   <div class="loss-num">
-                    <span class="loss-title">回滚海草</span>
+                    <span class="loss-title">回滚海草：</span>
                     <span class="money-color loss-value">
-                      <count-to show-point :end-value="quotaInfo.rollbackExp" />颗
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackExp" />
+                      <div v-else class="loss-hidden-data"> *.**</div>颗
                     </span>
                   </div>
                   <div class="loss-num">
@@ -130,14 +141,16 @@
                     </el-tooltip>
                     <span class="pink-color loss-value">
                       <span>¥</span>
-                      <count-to show-point :end-value="quotaInfo.punishIncome" />
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.punishIncome" />
+                      <div v-else class="loss-hidden-data"> *.**</div>
                     </span>
                   </div>
                   <div class="loss-num">
-                    <span class="loss-title">回滚收益</span>
+                    <span class="loss-title">回滚收益：</span>
                     <span class="money-color loss-value">
                       <span>¥</span>
-                      <count-to show-point :end-value="quotaInfo.rollbackIncome" />
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackIncome" />
+                      <div v-else class="loss-hidden-data"> *.**</div>
                     </span>
                   </div>
                 </div>
@@ -193,6 +206,7 @@ import { mapGetters } from 'vuex'
 
 import * as Retoucher from '@/api/retoucher.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+import * as Setting from '@/indexDB/getSetting.js'
 
 export default {
   name: 'WaitRetoucher',
@@ -223,10 +237,10 @@ export default {
         rollbackIncome: 0.00
       },
       buffInfo: { // buff 信息
-        expCard: 0, // 经验卡
+        expCard: null, // 经验卡
         impulseStatus: false, // 冲量奖
         impulseInfo: [], // 冲量信息
-        goldReward: 0, // 金币卡
+        goldReward: null, // 金币卡
         greenChannelStatus: false // 绿色通道
       },
       driver: null,
@@ -235,7 +249,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['lineState']),
+    ...mapGetters(['lineState', 'showRecord']),
     // 排队状态
     state () {
       // 1 未接单  2 排队 3 接单中
@@ -414,6 +428,14 @@ export default {
       const steps = guideData
       this.driver.defineSteps(steps)
       this.driver.start()
+    },
+    /**
+     * @description 控制显示开关
+     */
+    toggleShowRecord () {
+      this.$store.commit('setting/TOGGLE_SHOW_RECORD')
+      const data = Boolean(this.showRecord) ? 1 : 0
+      Setting.updateSetting('showRecord', data)
     }
   }
 }
@@ -421,6 +443,31 @@ export default {
 
 <style lang="less" scoped>
 .header {
+  // 引导的问号
+  .driver-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    font-size: 12px;
+    line-height: 16px;
+    color: #edf0ff;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #c0c4cc;
+    border-radius: 50%;
+  }
+
+  .eye-box {
+    font-size: 14px;
+
+    .icon {
+      cursor: pointer;
+    }
+  }
+
   .header-left {
     .queue-info {
       margin-right: 14px;
@@ -474,6 +521,40 @@ export default {
         flex-wrap: wrap;
         align-items: center;
         min-width: 170px;
+
+        .hidden-data {
+          position: relative;
+          display: inline-block;
+          margin-right: 32px;
+          margin-left: 16px;
+
+          &::before {
+            position: absolute;
+            top: 14px;
+            left: -16px;
+            content: '*';
+          }
+
+          &::after {
+            position: absolute;
+            top: 14px;
+            right: -29px;
+            content: '**';
+          }
+        }
+
+        .photo-hidden-data {
+          position: relative;
+          top: 12px;
+          display: inline-block;
+        }
+
+        .loss-hidden-data {
+          display: inline-block;
+          margin-right: 4px;
+          margin-left: 6px;
+          font-size: 14px;
+        }
 
         .num {
           margin-right: 15px;
