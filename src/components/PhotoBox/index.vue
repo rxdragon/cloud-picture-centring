@@ -112,7 +112,8 @@ export default {
     isLekima: { type: Boolean },
     fileData: { type: Object, default: null },
     containPhoto: { type: Boolean },
-    rename: { type: [String, Number], default: '' } // 重命名
+    rename: { type: [String, Number], default: '' }, // 重命名
+    showSpecialEffects: { type: Boolean, default: true }
   },
   data () {
     return {
@@ -200,7 +201,7 @@ export default {
     },
     // 特效字段
     specialEffects () {
-      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || ''
+      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || '无需特效'
       return special
     }
   },

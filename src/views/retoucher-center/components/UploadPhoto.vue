@@ -11,6 +11,7 @@
           photo-name
           preview-breviary
           contain-photo
+          :show-special-effects="false"
           :src="photoItem.path"
         />
         <span class="delete-button" @click="deleteCachePhoto(photoIndex)">
@@ -28,6 +29,7 @@
             v-if="photoItem.status === 'success' && finishPhoto[photoItem.uid]"
             photo-name
             preview-breviary
+            :show-special-effects="false"
             :file-data="finishPhoto[photoItem.uid].file"
             :src="finishPhoto[photoItem.uid].path"
           />

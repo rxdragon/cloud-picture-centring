@@ -24,7 +24,7 @@
         <div class="remark-title">修图备注：</div>
         <div class="remark-content">{{ infoData.streamInfo.retouchRemark || '-' }}</div>
       </div>
-      <div class="retouch-remark panel-row" v-if="specialEfficacy">
+      <div class="retouch-remark panel-row">
         <div class="remark-title">特效备注：</div>
         <div class="remark-content">{{ specialEfficacy }}</div>
       </div>
@@ -45,7 +45,7 @@ export default {
     // 特效备注
     specialEfficacy () {
       const tempSpecialEfficacy = _.get(this.infoData, 'photoData.tags.values.special_efficacy')
-      return tempSpecialEfficacy || ''
+      return tempSpecialEfficacy || '无需特效'
     }
   }
 }
