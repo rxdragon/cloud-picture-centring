@@ -10,13 +10,26 @@
       </div>
       <div class="search-item">
         <span>奖励类型</span>
-        <reward-state-select v-model="rewardInfo.rewardType" />
+        <time-reward-type-select v-model="rewardInfo.rewardType" />
       </div>
-      <div class="search-item">
+      <div
+        class="search-item"
+        v-if="rewardInfo.rewardType === TIME_REWARD_TYPE.EXP_POWER"
+      >
         <span>经验倍数</span>
         <time-reward-exp-select v-model="rewardInfo.expNum" />
       </div>
-      <div class="search-item">
+      <div
+        class="search-item"
+        v-if="rewardInfo.rewardType === TIME_REWARD_TYPE.GOLD"
+      >
+        <span>金币卡</span>
+        <time-reward-gold-select v-model="rewardInfo.goldNum" />
+      </div>
+      <div
+        class="search-item"
+        v-if="rewardInfo.rewardType === TIME_REWARD_TYPE.IMPULSE"
+      >
         <span>冲量奖励</span>
         <div class="award-money">
           <el-checkbox-group v-model="checkList">
@@ -33,12 +46,7 @@
       </div>
       <div class="search-item">
         <span>有效日期</span>
-        <date-picker
-          v-model="rewardInfo.timeSpan"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          future
-          type="datetimerange"
-        />
+        <time-picker v-model="rewardInfo.timeSpan" value-format="HH:mm:ss" />
       </div>
       <div class="sure-button">
         <el-button type="primary" plain @click="goBack">返回</el-button>
@@ -79,9 +87,12 @@
 
 <script>
 import StaffPanel from '@/components/StaffPanel'
-import RewardStateSelect from '@SelectBox/RewardStateSelect'
+import TimeRewardTypeSelect from '@SelectBox/TimeRewardTypeSelect'
 import TimeRewardExpSelect from '@SelectBox/TimeRewardExpSelect'
-import DatePicker from '@/components/DatePicker'
+import TimeRewardGoldSelect from '@SelectBox/TimeRewardGoldSelect'
+import TimePicker from '@/components/TimePicker'
+
+import { TIME_REWARD_TYPE } from '@/utils/enumerate.js'
 
 import * as Util from '@/utils/validate'
 import * as OperationManage from '@/api/operationManage.js'
@@ -103,7 +114,7 @@ const checkTwoDecimals = (rule, value, callback) => {
 
 export default {
   name: 'AddTimeRewardConfig',
-  components: { StaffPanel, RewardStateSelect, TimeRewardExpSelect, DatePicker },
+  components: { StaffPanel, TimeRewardTypeSelect, TimeRewardExpSelect, TimeRewardGoldSelect, TimePicker },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -112,8 +123,9 @@ export default {
       goldValue: '',// 配置信息
 
       rewardInfo: {
-        rewardType: 0,
+        rewardType: TIME_REWARD_TYPE.EXP,
         expNum: '',
+        goldNum: '',
         timeSpan: ''
       },
       checkList: [],
@@ -131,6 +143,7 @@ export default {
           { validator: checkTwoDecimals, required: true, trigger: 'change' }
         ]
       },
+      TIME_REWARD_TYPE
     }
   },
   methods: {

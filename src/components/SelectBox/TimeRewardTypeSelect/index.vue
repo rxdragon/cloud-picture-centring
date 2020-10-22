@@ -17,25 +17,30 @@
 </template>
 
 <script>
+import { TIME_REWARD_TYPE, timeRewardTypeToCN } from '@/utils/enumerate.js'
+
 export default {
   name: 'TimeRewardTypeSelect',
+  props: {
+    needAll: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      options: [
-        {
-          label: '全部',
-          value: 0
-        }, {
-          label: '翻倍奖励',
-          value: 1
-        }, {
-          label: '冲量奖励',
-          value: 2
-        }, {
-          label: '经验奖励',
-          value: 3
-        }
-      ]
+      options: []
+    }
+  },
+  mounted () {
+    for (const type in TIME_REWARD_TYPE) {
+      this.options.push({
+        label: timeRewardTypeToCN[TIME_REWARD_TYPE[type]],
+        value: TIME_REWARD_TYPE[type]
+      })
+    }
+    if (this.needAll) {
+      this.options.unshift({ label: '全部', value: '' })
     }
   }
 }

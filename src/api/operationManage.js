@@ -1,7 +1,8 @@
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
+import TimeAwardModel from '@/model/TimeAwardModel.js'
+
 import { keyToHump } from '../utils'
-import { timeRewardStateToCN, TIME_REWARD_STATE } from '@/utils/enumerate.js'
 
 /** 卡片配置 */
 
@@ -440,23 +441,52 @@ export function getTimeRewardList (params) {
     method: 'POST',
     data: params
   }).then(msg => {
-    msg.list.forEach(listItem => {
-      listItem.staffName = _.get(listItem, 'staff.name') || _.get(listItem, 'staff.real_name') || '-'
-      listItem.groupName = _.get(listItem, 'staff.retouch_group.name', '-')
-      listItem.multiple = listItem.card.multiple
-      listItem.createTime = listItem.card.created_at
-      listItem.createStaff = listItem.card.founder_info ? listItem.card.founder_info.name : '-'
-
+    msg.list = msg.list.map(listItem => {
+      listItem.id = 3213213131
       listItem.title = '圣诞节时段奖励'
-      listItem.rewardType = '翻倍奖励'
-      listItem.timeRange = '20:00 ~ 22:00'
-      listItem.state = 'ongoing'
-      listItem.stateStr = timeRewardStateToCN[listItem.state]
-      listItem.timeStr = '2019-09-09 13:00:00'
-      listItem.createStaff = '版纳'
-      listItem.isFinish = listItem.state === TIME_REWARD_STATE.FINISH
-
+      listItem.type = 'exp_power'
+      listItem.state = 'wait'
+      listItem.begin_at = '13:00:00'
+      listItem.end_at = '14:00:00'
+      listItem.creator = {
+        name: '迈克'
+      }
+      listItem.creator_id = '613495'
+      listItem.created_at = '2020-10-24 00:00:00'
+      listItem.updated_at = '2020-10-24 00:00:00'
+      const { base, ...rest } = new TimeAwardModel(listItem)
+      return { ...rest }
     })
     return msg
+  })
+}
+
+// todo mock
+/**
+ * @description 时段奖励详情
+ * @param {*} params
+ */
+export function getTimeRewardDetail (params) {
+  return axios({
+    url: 'project_cloud/config/getImpulseInfo',
+    method: 'GET',
+    params
+  }).then(msg => {
+    msg = {
+      id: 3213213131,
+      title: '圣诞节时段奖励',
+      type: 'exp_power',
+      state: 'wait',
+      begin_at: '13:00:00',
+      end_at: '14:00:00',
+      creator: {
+        name: '迈克'
+      },
+      creator_id: '613495',
+      created_at: '2020-10-24 00:00:00',
+      updated_at: '2020-10-24 00:00:00'
+    }
+    const { base, ...rest } = new TimeAwardModel(msg)
+    return { ...rest }
   })
 }
