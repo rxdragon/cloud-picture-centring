@@ -8,6 +8,12 @@
       </div>
       <div v-show="showGoldReward" slot="reference" class="prop-icon awardmap-gold" />
     </el-popover>
+
+    <!-- 时段奖励 -->
+    <el-popover placement="bottom" trigger="hover">
+      <div class="impulse-info">1.5倍经验加成</div>
+      <div slot="reference" class="prop-icon awardmap-timeMoney" />
+    </el-popover>
   </div>
 </template>
 
