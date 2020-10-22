@@ -30,12 +30,7 @@
       <div class="photo-panel-title panel-title">
         <span>圣诞拼接照</span>
         <div class="button-box">
-          <el-button
-            v-if="isReturnOrder"
-            type="primary"
-            size="small"
-            @click="oneRenamePhoto(true)"
-          >
+          <el-button type="primary" size="small" @click="oneRenamePhoto">
             一键下载
           </el-button>
         </div>
@@ -270,7 +265,7 @@ export default {
         const ext = PhotoTool.getFilePostfix(photoItem.path)
         const rename = `${photoItem.position}${ext}`
         return {
-          url: this.imgDomain + photoItem.path,
+          url: photoItem.path,
           path: savePath,
           rename
         }
