@@ -25,10 +25,23 @@
       <div v-show="showMorningAward" slot="reference" class="prop-icon awardmap-morningAward" />
     </el-popover>
 
-    <!-- 时段奖励 -->
+    <!-- 时段经验奖励 -->
     <el-popover placement="bottom" trigger="hover">
       <div class="impulse-info">1.5倍经验加成</div>
       <div slot="reference" class="prop-icon awardmap-timeExp" />
+    </el-popover>
+
+    <!-- 时段冲量奖励 -->
+    <el-popover placement="bottom" trigger="hover">
+      <!-- <div
+        v-for="(infoItem, infoIndex) in buffInfo.impulseInfo"
+        :key="infoIndex"
+        class="impulse-info"
+      >
+        {{ `当前海草值达到${infoItem.reachExp} 奖励${infoItem.reward}` }}
+      </div> -->
+      <div class="impulse-info">1.5倍经验加成</div>
+      <div slot="reference" class="prop-icon awardmap-timeImpulse" />
     </el-popover>
   </div>
 </template>

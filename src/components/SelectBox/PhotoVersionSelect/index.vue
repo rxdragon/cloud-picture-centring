@@ -4,7 +4,6 @@
       :popper-append-to-body="false"
       v-bind="$attrs"
       v-on="$listeners"
-      clearable
       collapse-tags
       placeholder="请选择照片类型"
     >
