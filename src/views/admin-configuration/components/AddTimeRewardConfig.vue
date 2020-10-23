@@ -4,9 +4,13 @@
       <h3>新增</h3>
     </div>
     <div class="module-panel">
+      <div class="search-item title">
+        <span>标题</span>
+        <el-input v-model.trim="rewardInfo.title" maxlength="15" placeholder="请输入时段奖励标题,最多15个字符" />
+      </div>
       <div class="search-item">
         <span>配置伙伴</span>
-        <staff-panel :default-checked-keys="defaultCheckedKeys" :to-data.sync="toData"/>
+        <staff-panel :to-data.sync="toData"/>
       </div>
       <div class="search-item">
         <span>奖励类型</span>
@@ -45,7 +49,7 @@
         </div>
       </div>
       <div class="search-item">
-        <span>有效日期</span>
+        <span>生效时段</span>
         <time-picker v-model="rewardInfo.timeSpan" value-format="HH:mm:ss" />
       </div>
       <div class="sure-button">
@@ -79,7 +83,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="info" @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSumbit">确 定</el-button>
+        <el-button type="primary" @click="addImpulseConfig">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -119,11 +123,10 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       toData: [], // 伙伴信息
-      defaultCheckedKeys: [], // 默认选中伙伴
-      goldValue: '',// 配置信息
 
       rewardInfo: {
-        rewardType: TIME_REWARD_TYPE.EXP,
+        title: '',
+        rewardType: TIME_REWARD_TYPE.IMPULSE,
         expNum: '',
         goldNum: '',
         timeSpan: ''
@@ -146,14 +149,84 @@ export default {
       TIME_REWARD_TYPE
     }
   },
+  created () {
+    if (this.rewardInfo.rewardType === TIME_REWARD_TYPE.IMPULSE) {
+      this.getImpulseSettingItemList()
+    }
+  },
   methods: {
     /**
-     * @description 监听添加按钮
+     * @description 获取冲量配置项列表
+     */
+    async getImpulseSettingItemList () {
+      this.awardList = await OperationManage.getImpulseSettingItemList({ type: 'time_interval' })
+    },
+    /**
+     * @description 提交检测
+     */
+    submitCheck () {
+      const { title, rewardType, expNum, goldNum, timeSpan } = this.rewardInfo
+      if (!title) {
+        this.$newMessage.warning('请输入标题')
+        return false
+      }
+      if (!rewardType) {
+        this.$newMessage.warning('请选择奖励类型')
+        return false
+      }
+      if (timeSpan.length < 2) {
+        this.$newMessage.warning('请选择生效时段')
+        return false
+      }
+      const hasStaff = this.toData.some(item => {
+        return item.children.length
+      })
+      if (!hasStaff) {
+        this.$newMessage.warning('请配置伙伴')
+        return false
+      }
+      let warnText = ''
+      switch (rewardType) {
+        case TIME_REWARD_TYPE.EXP_POWER:
+          if (!expNum) warnText = '请选择经验倍数'
+          break
+        case TIME_REWARD_TYPE.GOLD:
+          if (!goldNum) warnText = '请选择金币倍数'
+          break
+        case TIME_REWARD_TYPE.IMPULSE:
+          if (!this.checkList.length) warnText = '请选择至少一个冲量奖励'
+          break
+        default:
+      }
+      if (warnText) {
+        this.$newMessage.warning(warnText)
+        return false
+      }
+      return true
+    },
+    /**
+     * @description 提交
      */
     async onSubmit () {
+      if (!this.submitCheck()) return
+      const { title, rewardType, expNum, goldNum, timeSpan } = this.rewardInfo
       const reqData = {
-        type: 'gold_reward',
-        multiple: this.goldValue
+        title,
+        type: rewardType,
+        beginAt: timeSpan[0],
+        endAt: timeSpan[1]
+      }
+      switch (rewardType) {
+        case TIME_REWARD_TYPE.EXP_POWER:
+          reqData.exp = expNum
+          break
+        case TIME_REWARD_TYPE.GOLD:
+          reqData.gold = goldNum
+          break
+        case TIME_REWARD_TYPE.IMPULSE:
+          reqData.settingItemIds = this.checkList
+          break
+        default:
       }
       reqData.staffIds = []
       this.toData.forEach(groupItem => {
@@ -161,19 +234,11 @@ export default {
           reqData.staffIds.push(staffItem.id)
         })
       })
-      if (!this.goldValue) {
-        this.$newMessage.warning('请选择金币倍数')
-        return false
-      }
-      if (!reqData.staffIds.length) {
-        this.$newMessage.warning('请选择组员')
-        return false
-      }
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
-        await OperationManage.addCard(reqData)
+        await OperationManage.addTimeIntervalRewardConfig(reqData)
         this.$newMessage({
-          message: '添加金币配置成功',
+          message: '时段奖励配置成功',
           type: 'success',
           duration: 1500,
           onClose: () => {
@@ -217,10 +282,11 @@ export default {
     /**
      * @description 提交冲量配置
      */
-    onSumbit () {
+    addImpulseConfig () {
       this.$refs['addAwardConfig'].validate((valid) => {
         if (valid) {
           const reqData = this.addAwardConfig
+          reqData.type = 'time_interval'
           this.$store.dispatch('setting/showLoading', this.routeName)
           OperationManage.addImpulseSettingItem(reqData)
             .then(() => {
@@ -246,6 +312,12 @@ export default {
   .search-item {
     align-items: flex-start;
     margin-bottom: 24px;
+
+    &.title {
+      .el-input {
+        width: 319px;
+      }
+    }
 
     & > span {
       width: 80px;

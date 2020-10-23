@@ -53,7 +53,7 @@ export default {
   name: 'TimeAwardInfo',
   components: { StaffInfo },
   props: {
-    editId: { type: [String, Number], default: '' }
+    configId: { type: [String, Number], default: '' }
   },
   data () {
     return {
@@ -72,7 +72,7 @@ export default {
     }
   },
   created () {
-    if (this.editId) {
+    if (this.configId) {
       this.getImpulseInfo()
     }
   },
@@ -88,13 +88,27 @@ export default {
      */
     async getImpulseInfo () {
       try {
-        const reqData = { impulseId: 4424 }
+        const reqData = { id: this.configId }
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = await OperationManage.getTimeRewardDetail(reqData)
+        const data = await OperationManage.getTimeIntervalRewardConfigDetail(reqData)
         this.title = data.title
         this.type = data.type
         this.typeStr = data.typeStr
         this.rangeAt = data.rangeAt
+        // todo 待后端提供
+        // data.staffs.forEach(staffItem => {
+        //   const findGroup = this.staffList.find(item => item.lable === staffItem.retouch_group)
+        //   const createData = { label: staffItem.name }
+        //   if (findGroup) {
+        //     findGroup.children = [...findGroup.children, createData]
+        //   } else {
+        //     this.staffList.push({
+        //       label: staffItem.retouch_group.name,
+        //       children: [createData]
+        //     })
+        //   }
+        // })
+        this.awardList = data.impulseSettingItems
 
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {

@@ -16,6 +16,8 @@ export default class TimeAwardModel {
   configItems = [] // todo 待定
   createdAt = ''
   updatedAt = ''
+  staffs = []
+  impulseSettingItems = []
 
   constructor (timeRewardItem) {
     this.base = timeRewardItem
@@ -33,5 +35,7 @@ export default class TimeAwardModel {
     this.configItems = timeRewardItem.config_items || []
     this.createdAt = timeRewardItem.created_at || '-'
     this.updatedAt = timeRewardItem.updated_at || '-'
+    this.staffs = timeRewardItem.staffs || []
+    this.impulseSettingItems = timeRewardItem.impulse_setting_items || []
   }
 }

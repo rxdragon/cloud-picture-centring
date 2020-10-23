@@ -49,7 +49,7 @@
                   详情
                 </el-button>
                 <el-button
-                  v-if="!scope.row.isFinish"
+                  v-if="scope.row.state !== TIME_REWARD_STATE.END"
                   type="danger"
                   size="mini"
                   @click="finishReward(scope.row)"
@@ -75,7 +75,7 @@
       <!-- 新增配置 -->
       <add-time-reward-config v-if="isAddConfig" :isAddConfig.sync="isAddConfig" />
       <!-- 配置详情 -->
-      <time-award-info :editId="4424" v-if="showTimeAwardInfo" :showTimeAwardInfo.sync="showTimeAwardInfo" />
+      <time-award-info :configId="configId" v-if="showTimeAwardInfo" :showTimeAwardInfo.sync="showTimeAwardInfo" />
     </transition>
   </div>
 </template>
@@ -101,12 +101,11 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      stateType: 0, // 卡片状态
       searchInfo: {
         title: '',
         staffId: [],
         rewardType: '',
-        stateType: 0
+        stateType: ''
       },
       isAddConfig: false, // 是够添加配置
       showTimeAwardInfo: false, // 配置详情
@@ -116,7 +115,7 @@ export default {
         pageSize: 10,
         total: 100
       },
-
+      configId: '',
       TIME_REWARD_STATE,
     }
   },
@@ -155,9 +154,9 @@ export default {
       }).then(async () => {
         try {
           this.$store.dispatch('setting/showLoading', this.routeName)
-          const reqData = { staffCardId: cardItem.id }
-          await OperationManage.deleteCard(reqData)
-          this.$newMessage.success('删除成功')
+          const reqData = { id: cardItem.id }
+          await OperationManage.stopTimeIntervalRewardConfig(reqData)
+          this.$newMessage.success('设置成功')
           this.getTimeRewardList()
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
         } catch (error) {
@@ -174,17 +173,26 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.pager.page = page || this.pager.page
         const reqData = {
-          type: 'gold_reward',
+          conds: {},
           page: this.pager.page,
           pageSize: this.pager.pageSize
         }
         if (this.searchInfo.staffId.length) {
-          reqData.staffIds = this.searchInfo.staffId
+          reqData.conds.creatorId = this.searchInfo.staffId
         }
-        if (this.stateType) {
-          reqData.state = this.stateType
+        if (this.searchInfo.title) {
+          reqData.conds.titleLike = this.searchInfo.title
         }
-        const data = await OperationManage.getTimeRewardList(reqData)
+        if (this.searchInfo.rewardType) {
+          reqData.conds.typeEqual = this.searchInfo.rewardType
+        }
+        if (this.searchInfo.rewardType) {
+          reqData.conds.typeEqual = this.searchInfo.rewardType
+        }
+        if (this.searchInfo.stateType) {
+          reqData.conds.stateEqual = this.searchInfo.stateType
+        }
+        const data = await OperationManage.getTimeIntervalRewardConfigList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -197,6 +205,7 @@ export default {
      * @description 奖励设置详情
      */
     timeRewardDetail (listItem) {
+      this.configId = listItem.id
       this.showTimeAwardInfo = true
     }
   }

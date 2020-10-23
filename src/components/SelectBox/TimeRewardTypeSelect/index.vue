@@ -32,7 +32,7 @@ export default {
       options: []
     }
   },
-  mounted () {
+  created () {
     for (const type in TIME_REWARD_TYPE) {
       this.options.push({
         label: timeRewardTypeToCN[TIME_REWARD_TYPE[type]],

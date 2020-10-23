@@ -152,7 +152,7 @@ export function getImpulseSettingItemList (params) {
   return axios({
     url: '/project_cloud/config/getImpulseSettingItemList',
     method: 'GET',
-    data: params
+    params
   }).then(msg => {
     const data = msg.sort((a, b) => a.reach_exp - b.reach_exp)
     return data
@@ -177,7 +177,7 @@ export function addImpulseSettingItem (params) {
  * @description 获取绿色通道
  * @param {*} params
  */
-export function getGreenChannelInfo (params) {
+export function getGreenChannelInfo () {
   return axios({
     url: '/project_cloud/config/getGreenChannelInfo',
     method: 'GET'
@@ -435,25 +435,13 @@ export function getAllCloudStream (params) {
  * @description 时段奖励列表
  * @param {*} params
  */
-export function getTimeRewardList (params) {
+export function getTimeIntervalRewardConfigList (params) {
   return axios({
-    url: '/project_cloud/config/getStaffCardList',
+    url: '/project_cloud/config/timeIntervalRewardConfig/list',
     method: 'POST',
     data: params
   }).then(msg => {
     msg.list = msg.list.map(listItem => {
-      listItem.id = 3213213131
-      listItem.title = '圣诞节时段奖励'
-      listItem.type = 'exp_power'
-      listItem.state = 'wait'
-      listItem.begin_at = '13:00:00'
-      listItem.end_at = '14:00:00'
-      listItem.creator = {
-        name: '迈克'
-      }
-      listItem.creator_id = '613495'
-      listItem.created_at = '2020-10-24 00:00:00'
-      listItem.updated_at = '2020-10-24 00:00:00'
       const { base, ...rest } = new TimeAwardModel(listItem)
       return { ...rest }
     })
@@ -461,32 +449,41 @@ export function getTimeRewardList (params) {
   })
 }
 
-// todo mock
 /**
  * @description 时段奖励详情
  * @param {*} params
  */
-export function getTimeRewardDetail (params) {
+export function getTimeIntervalRewardConfigDetail (params) {
   return axios({
-    url: 'project_cloud/config/getImpulseInfo',
+    url: 'project_cloud/config/timeIntervalRewardConfig/detail',
     method: 'GET',
     params
   }).then(msg => {
-    msg = {
-      id: 3213213131,
-      title: '圣诞节时段奖励',
-      type: 'exp_power',
-      state: 'wait',
-      begin_at: '13:00:00',
-      end_at: '14:00:00',
-      creator: {
-        name: '迈克'
-      },
-      creator_id: '613495',
-      created_at: '2020-10-24 00:00:00',
-      updated_at: '2020-10-24 00:00:00'
-    }
     const { base, ...rest } = new TimeAwardModel(msg)
     return { ...rest }
+  })
+}
+
+/**
+ * @description 创建时段奖励
+ * @param {*} params
+ */
+export function addTimeIntervalRewardConfig (params) {
+  return axios({
+    url: '/project_cloud/config/timeIntervalRewardConfig/add',
+    method: 'POST',
+    data: params
+  })
+}
+
+/**
+ * @description 停止时段奖励
+ * @param {*} params
+ */
+export function stopTimeIntervalRewardConfig (params) {
+  return axios({
+    url: '/project_cloud/config/timeIntervalRewardConfig/stop',
+    method: 'GET',
+    params
   })
 }

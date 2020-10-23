@@ -17,6 +17,9 @@
 </template>
 
 <script>
+import { timeRewardStateToCN, TIME_REWARD_STATE } from '@/utils/enumerate.js'
+
+
 export default {
   name: 'TimeRewardStateSelect',
   data () {
@@ -24,15 +27,17 @@ export default {
       options: [ // 状态选项
         {
           label: '全部',
-          value: 0
-        }, {
-          label: '生效中',
-          value: 1
-        }, {
-          label: '已结束',
-          value: 2
+          value: ''
         }
       ]
+    }
+  },
+  created () {
+    for (const state in TIME_REWARD_STATE) {
+      this.options.push({
+        label: timeRewardStateToCN[TIME_REWARD_STATE[state]],
+        value: TIME_REWARD_STATE[state]
+      })
     }
   }
 }
