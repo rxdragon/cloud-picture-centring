@@ -9,15 +9,20 @@
       <div v-show="showGoldReward" slot="reference" class="prop-icon awardmap-gold" />
     </el-popover>
 
-    <!-- 时段奖励 -->
+    <!-- 时段金币奖励 -->
     <el-popover placement="bottom" trigger="hover">
-      <div class="impulse-info">1.5倍经验加成</div>
-      <div slot="reference" class="prop-icon awardmap-timeMoney" />
+      <div class="popover-content">
+        <p>金币奖励：{{ timeMoneyMultiple }}倍</p>
+        <p>截止时间：{{ timeMoneyEndat }}</p>
+      </div>
+      <div v-show="timeMoneyMultiple" slot="reference" class="prop-icon awardmap-timeMoney" />
     </el-popover>
   </div>
 </template>
 
 <script>
+import * as Validate from '@/utils/validate'
+
 export default {
   name: 'MoneyAwardIcon',
   props: {
@@ -44,6 +49,18 @@ export default {
     goldRewardEndat () {
       const endat = _.get(this.buffInfo, 'goldReward.end_at') || ''
       return endat
+    },
+    // 时段金币奖励
+    timeMoneyMultiple () {
+      const gold = _.get(this.buffInfo, 'timeIntervalReward.gold.gold') || ''
+      return gold
+    },
+    // 时段金币奖励截止时间
+    timeMoneyEndat () {
+      const endat = _.get(this.buffInfo, 'timeIntervalReward.gold.stop_at') || ''
+      const nowTime = new Date().getTime()
+      const waitTime = Validate.waitTime(nowTime, endat)
+      return waitTime
     }
   },
 }

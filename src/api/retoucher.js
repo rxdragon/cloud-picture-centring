@@ -17,11 +17,12 @@ export function getSelfQuota () {
 
     const punishExp = Number(_.get(data, 'todayExp.punish') || 0) // 惩罚海草
     const retouchExp = Number(_.get(data, 'todayExp.retouch') || 0) // 今日已修海草
+    const timeIntervalRewardExp = Number(_.get(data, 'todayExp.timeIntervalReward') || 0) // 今日时段奖励海草
     const overTimePunishExp = Number(_.get(data, 'todayExp.overTimePunish') || 0) // 超时扣除海草
     const rollbackNormalExp = Number(_.get(data, 'todayExp.rollback_normal') || 0) // c流水回滚海草值
     const rollbackReturnExp = Number(_.get(data, 'todayExp.rollback_return') || 0) // r流水回滚海草值
-    const rollbackExp = rollbackNormalExp + rollbackReturnExp// 回滚海草值
-    const todayExp = retouchExp - overTimePunishExp // 今日最终海草
+    const rollbackExp = rollbackNormalExp + rollbackReturnExp // 回滚海草值
+    const todayExp = retouchExp + timeIntervalRewardExp - overTimePunishExp // 今日最终海草
 
     data.todayPunishExp = punishExp.toFixed(2) // 退回扣除海草
     data.overTimePunishExp = overTimePunishExp.toFixed(2) // 超时扣除海草
@@ -32,6 +33,8 @@ export function getSelfQuota () {
     const incomeOverTimePunish = _.get(data, 'todayIncome.overTimePunish') || 0 // 超时惩罚金额
     const retouchIncome = _.get(data, 'todayIncome.retouch') || 0 // 今日修图收益
     const impulseIncome = _.get(data, 'todayIncome.impulse') || 0 // 今日冲量奖励收益
+    const timeIntervalRewardIncome = _.get(data, 'todayIncome.timeIntervalReward') || 0 // 今日时段奖励收益
+    const timeIntervalImpulseIncome = _.get(data, 'todayIncome.timeIntervalImpulse') || 0 // 今日时段冲量奖励收益
     const rewardIncome = _.get(data, 'todayIncome.reward') || 0 // 今日奖励收益
     const rollbackNormalIncome = Number(_.get(data, 'todayIncome.rollback_normal') || 0) // c流水回滚收益
     const rollbackReturnIncome = Number(_.get(data, 'todayIncome.rollback_return') || 0) // r流水回滚收益
@@ -40,6 +43,8 @@ export function getSelfQuota () {
     const todayIncome =
       retouchIncome +
       impulseIncome +
+      timeIntervalRewardIncome +
+      timeIntervalImpulseIncome +
       rewardIncome -
       incomePunish -
       incomeOverTimePunish +
@@ -69,7 +74,9 @@ export function getSelfQuota () {
  */
 export function getSelfBuffInfo () {
   return axios({
-    url: '/project_cloud/retoucher/getSelfBuffInfo',
+    // TODO 调试 时段冲量奖，缺少截止时间
+    url: 'https://doc.pre.hzmantu.com/project_cloud/release-2-9-10/project_cloud/retoucher/getSelfBuffInfo',
+    // url: '/project_cloud/retoucher/getSelfBuffInfo',
     method: 'GET'
   }).then(msg => {
     const data = keyToHump(msg)
