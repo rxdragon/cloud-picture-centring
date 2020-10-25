@@ -1,4 +1,6 @@
 import axios from '@/plugins/axios.js'
+import store from '@/store' // vuex
+
 import { keyToHump, timeFormat } from '@/utils/index.js'
 import { waitTime } from '@/utils/validate.js'
 import { StreamStatics } from '@/utils/enumerate.js'
@@ -65,7 +67,8 @@ export function getReviewInfo () {
     createData.isStoreReturn = msg.tags && msg.tags.statics && msg.tags.statics.includes(StreamStatics.StoreReturn)
     createData.photos = msg.photos
     createData.retoucherName = (msg.retoucher && (msg.retoucher.name || msg.retoucher.real_name)) || '-'
-    createData.referencePhoto = _.get(msg, 'tags.values.retouch_claim.reference_img') || ''
+    createData.referencePhoto = _.get(msg, 'tags.values.retouch_claim.referenceImg') || ''
+    createData.referencePhoto = createData.referencePhoto ? store.getters.imgDomain + createData.referencePhoto : ''
     return createData
   })
 }

@@ -18,6 +18,7 @@ export default class TimeAwardModel {
   updatedAt = ''
   staffs = []
   impulseSettingItems = []
+  rewardValue = ''
 
   constructor (timeRewardItem) {
     this.base = timeRewardItem
@@ -31,11 +32,12 @@ export default class TimeAwardModel {
     this.endAt = timeRewardItem.end_at || '-'
     this.rangeAt = `${this.beginAt} - ${this.endAt}`
     this.creatorId = timeRewardItem.creator_id || ''
-    this.creatorName = _.get(timeRewardItem, 'creator.name') || '-'
+    this.creatorName = _.get(timeRewardItem, 'creator.nickname') || '-'
     this.configItems = timeRewardItem.config_items || []
     this.createdAt = timeRewardItem.created_at || '-'
     this.updatedAt = timeRewardItem.updated_at || '-'
     this.staffs = timeRewardItem.staffs || []
     this.impulseSettingItems = timeRewardItem.impulse_setting_items || []
+    this.rewardValue = timeRewardItem.value || ''
   }
 }

@@ -87,17 +87,12 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import TimeRewardStateSelect from '@SelectBox/TimeRewardStateSelect'
 import TimeRewardTypeSelect from '@SelectBox/TimeRewardTypeSelect'
 
-import { CardEnum, TIME_REWARD_STATE } from '@/utils/enumerate.js'
+import { TIME_REWARD_STATE } from '@/utils/enumerate.js'
 import * as OperationManage from '@/api/operationManage.js'
 
 export default {
   name: 'TimeRewardConfig',
   components: { AddTimeRewardConfig, StaffSelect, TimeRewardStateSelect, TimeRewardTypeSelect, TimeAwardInfo },
-  filters: {
-    changeStateName (value) {
-      return CardEnum[value]
-    }
-  },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -107,7 +102,7 @@ export default {
         rewardType: '',
         stateType: ''
       },
-      isAddConfig: false, // 是够添加配置
+      isAddConfig: false, // 是否添加配置
       showTimeAwardInfo: false, // 配置详情
       tableData: [],
       pager: {
@@ -131,7 +126,7 @@ export default {
   },
   methods: {
     /**
-     * @description 添加经验配置
+     * @description 添加时段奖励配置
      */
     addConfig () {
       this.isAddConfig = true
@@ -140,7 +135,7 @@ export default {
      * @description 监听页面切换
      */
     handleCurrentChange () {
-      this.getTime()
+      this.getTimeRewardList()
     },
     /**
      * @description 结束活动
@@ -163,7 +158,7 @@ export default {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
           console.error(error)
         }
-      }).catch()
+      })
     },
     /**
      * @description 获取时段奖励配置列表
@@ -182,9 +177,6 @@ export default {
         }
         if (this.searchInfo.title) {
           reqData.conds.titleLike = this.searchInfo.title
-        }
-        if (this.searchInfo.rewardType) {
-          reqData.conds.typeEqual = this.searchInfo.rewardType
         }
         if (this.searchInfo.rewardType) {
           reqData.conds.typeEqual = this.searchInfo.rewardType

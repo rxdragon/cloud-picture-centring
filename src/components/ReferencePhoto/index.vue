@@ -50,6 +50,7 @@ export default {
     font-size: 14px;
     color: #aaa;
     text-decoration: underline;
+    cursor: pointer;
   }
 }
 </style>

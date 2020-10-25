@@ -26,11 +26,11 @@
       </div>
       <div v-if="type === TIME_REWARD_TYPE.EXP_POWER" class="info-box info-title">
         <span>经验倍数：</span>
-        <p>1.5倍</p>
+        <p>{{ rewardValue }}倍</p>
       </div>
       <div v-if="type === TIME_REWARD_TYPE.GOLD" class="info-box info-title">
         <span>金币倍数：</span>
-        <p>1.5倍</p>
+        <p>{{ rewardValue }}倍</p>
       </div>
       <div class="info-box info-title">
         <span>有效日期：</span>
@@ -48,6 +48,7 @@ import StaffInfo from '@/components/StaffInfo'
 
 import { TIME_REWARD_TYPE } from '@/utils/enumerate.js'
 
+import * as SessionTool from '@/utils/sessionTool.js'
 import * as OperationManage from '@/api/operationManage.js'
 export default {
   name: 'TimeAwardInfo',
@@ -61,14 +62,11 @@ export default {
       title: '', // 冲量奖标题
       type: '',
       typeStr: '', // 奖励类型中文
+      rewardValue: '',
       TIME_REWARD_TYPE,
       rangeAt: '',
-
       awardList: [], // 冲量配置列表
-      retoucherOrg: '', // 外包机构
-      staffList: [], // 伙伴列表
-      startTime: '', // 开始时间
-      endTime: '' // 结束时间
+      staffList: [] // 伙伴列表
     }
   },
   created () {
@@ -95,19 +93,26 @@ export default {
         this.type = data.type
         this.typeStr = data.typeStr
         this.rangeAt = data.rangeAt
-        // todo 待后端提供
-        // data.staffs.forEach(staffItem => {
-        //   const findGroup = this.staffList.find(item => item.lable === staffItem.retouch_group)
-        //   const createData = { label: staffItem.name }
-        //   if (findGroup) {
-        //     findGroup.children = [...findGroup.children, createData]
-        //   } else {
-        //     this.staffList.push({
-        //       label: staffItem.retouch_group.name,
-        //       children: [createData]
-        //     })
-        //   }
-        // })
+        this.rewardValue = data.rewardValue
+        // 处理staffid
+        const staffArr = SessionTool.getStaffList()
+        const staffObj = staffArr.reduce((sumObj, staff) => {
+          sumObj[staff.id] = staff
+          return sumObj
+        }, {})
+
+        data.staffs.forEach(staffItem => {
+          const findGroup = this.staffList.find(item => item.label === staffObj[staffItem.id].department.name)
+          const createData = { label: staffObj[staffItem.id].nickname }
+          if (findGroup) {
+            findGroup.children = [...findGroup.children, createData]
+          } else {
+            this.staffList.push({
+              label: staffObj[staffItem.id].department.name,
+              children: [createData]
+            })
+          }
+        })
         this.awardList = data.impulseSettingItems
 
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

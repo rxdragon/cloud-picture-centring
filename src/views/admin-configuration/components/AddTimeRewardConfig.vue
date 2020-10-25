@@ -123,7 +123,6 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       toData: [], // 伙伴信息
-
       rewardInfo: {
         title: '',
         rewardType: TIME_REWARD_TYPE.IMPULSE,
@@ -218,10 +217,10 @@ export default {
       }
       switch (rewardType) {
         case TIME_REWARD_TYPE.EXP_POWER:
-          reqData.exp = expNum
+          reqData.value = expNum
           break
         case TIME_REWARD_TYPE.GOLD:
-          reqData.gold = goldNum
+          reqData.value = goldNum
           break
         case TIME_REWARD_TYPE.IMPULSE:
           reqData.settingItemIds = this.checkList
@@ -230,9 +229,7 @@ export default {
       }
       reqData.staffIds = []
       this.toData.forEach(groupItem => {
-        groupItem.children.forEach(staffItem => {
-          reqData.staffIds.push(staffItem.id)
-        })
+        groupItem.children.forEach(staffItem => reqData.staffIds.push(staffItem.id))
       })
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
