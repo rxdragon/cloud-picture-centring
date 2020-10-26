@@ -7,17 +7,19 @@ import { PhotoStatics } from '@/utils/enumerate.js'
 /**
  * @description 获取客片列表
  * @param {*} params
+ * @param {*} version 照片版本
  */
-export function getPhotoList (params) {
+export function getPhotoList (params, version = 'complete_photo') {
   return axios({
     url: '/project_cloud/photoPool/getPhotoList',
     method: 'POST',
     data: params
   }).then(msg => {
     msg.forEach(listItem => {
-      const completePhoto = listItem.other_photo_version.find(item => item.version === 'complete_photo')
+      const completePhoto = listItem.other_photo_version.find(item => item.version === version)
       listItem.src = _.get(completePhoto, 'path', '')
     })
+
     msg = msg.filter(listItem => Boolean(listItem.src))
     return msg
   })
@@ -55,6 +57,7 @@ export function getPhotoInfo (params) {
       const isAttitude = isAttitudeScore.includes(createData.attitude.attitude)
       createData.canAttitude = createData.isAttitudeBySelf || !isAttitude
     }
+
     if (createData.isPass) {
       const reworkNum = _.get(createData, 'stream.tags.values.rework_num', 0)
       const isReturnPhoto = _.get(createData, 'tags.statics', []).includes(PhotoStatics.CheckReturn)
@@ -66,6 +69,10 @@ export function getPhotoInfo (params) {
       const originPhoto = createData.otherPhotoVersion.find(item => item.version === 'original_photo')
       createData.photoVersion = [originPhoto]
     }
+    
+    // 兼容单个版本的照片不显示`照片标记提交按钮`
+    if (createData.photoVersion.length === 1) { createData.canAttitude = false }
+
     const storeEvaluateStream = _.get(createData, 'stream.store_evaluate_stream')
     const storeEvaluateStar = _.get(createData, 'stream.store_evaluate_stream.store_evaluate_star')
     createData.workerInfo = {

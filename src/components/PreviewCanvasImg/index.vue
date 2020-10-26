@@ -66,5 +66,9 @@ export default {
   height: 100%;
   object-position: top;
   object-fit: cover;
+
+  & /deep/ img {
+    object-position: center !important;
+  }
 }
 </style>
