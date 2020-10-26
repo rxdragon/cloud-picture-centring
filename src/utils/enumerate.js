@@ -348,3 +348,11 @@ export const timeRewardTypeToCN = {
   [TIME_REWARD_TYPE.IMPULSE]: '冲量奖励', // 冲量奖励
   [TIME_REWARD_TYPE.GOLD]: '金币奖励' // 金币奖励
 }
+
+/**
+ * @description 冲量奖励配置类型
+ */
+export const IMPULSE_SETTING_TYPE = {
+  NORMAL: 'normal', // 常规
+  TIME_INTERVAL: 'time_interval' // 时段奖励
+}

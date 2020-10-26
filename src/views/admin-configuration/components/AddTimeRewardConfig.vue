@@ -96,7 +96,7 @@ import TimeRewardExpSelect from '@SelectBox/TimeRewardExpSelect'
 import TimeRewardGoldSelect from '@SelectBox/TimeRewardGoldSelect'
 import TimePicker from '@/components/TimePicker'
 
-import { TIME_REWARD_TYPE } from '@/utils/enumerate.js'
+import { TIME_REWARD_TYPE, IMPULSE_SETTING_TYPE } from '@/utils/enumerate.js'
 
 import * as Util from '@/utils/validate'
 import * as OperationManage from '@/api/operationManage.js'
@@ -158,7 +158,7 @@ export default {
      * @description 获取冲量配置项列表
      */
     async getImpulseSettingItemList () {
-      this.awardList = await OperationManage.getImpulseSettingItemList({ type: 'time_interval' })
+      this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.TIME_INTERVAL })
     },
     /**
      * @description 提交检测
@@ -283,7 +283,7 @@ export default {
       this.$refs['addAwardConfig'].validate((valid) => {
         if (valid) {
           const reqData = this.addAwardConfig
-          reqData.type = 'time_interval'
+          reqData.type = IMPULSE_SETTING_TYPE.TIME_INTERVAL
           this.$store.dispatch('setting/showLoading', this.routeName)
           OperationManage.addImpulseSettingItem(reqData)
             .then(() => {
