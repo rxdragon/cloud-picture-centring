@@ -111,7 +111,7 @@ export default {
         rewardType: TIME_REWARD_TYPE.IMPULSE,
         expNum: '',
         goldNum: '',
-        timeSpan: ''
+        timeSpan: ['10:00:00', '12:00:00']
       },
       checkList: [],
       awardList: [], // 冲量列表
@@ -123,9 +123,14 @@ export default {
       TIME_REWARD_TYPE
     }
   },
-  created () {
+  async created () {
     if (this.rewardInfo.rewardType === TIME_REWARD_TYPE.IMPULSE) {
-      this.getImpulseSettingItemList()
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      try {
+        await this.getImpulseSettingItemList()
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     }
   },
   methods: {
@@ -133,12 +138,7 @@ export default {
      * @description 获取冲量配置项列表
      */
     async getImpulseSettingItemList () {
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      try {
-        this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.TIME_INTERVAL })
-      } finally {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      }
+      this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.TIME_INTERVAL })
     },
     /**
      * @description 提交检测
