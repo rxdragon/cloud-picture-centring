@@ -95,13 +95,6 @@ const actions = {
       try {
         const savePermission = SessionTool.getUserPermission()
         const permissions = savePermission || await UserAction.getAuthority()
-        // todo mock
-        permissions.push({
-          id: 10140,
-          name: "admin_configuration.time_reward_config.set",
-          title: "云端运营配置-修图师时段奖励配置-配置",
-          application: 888
-        })
 
         SessionTool.setUserPermission(permissions)
         const accessRoutes = await store.dispatch('permission/generateRoutes', permissions)
