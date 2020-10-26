@@ -170,7 +170,7 @@ export default {
           pageSize: this.pager.pageSize
         }
         if (this.searchInfo.staffId.length) {
-          reqData.conds.staffId = this.searchInfo.staffId
+          reqData.conds.staffIds = this.searchInfo.staffId
         }
         if (this.searchInfo.title) {
           reqData.conds.titleLike = this.searchInfo.title
