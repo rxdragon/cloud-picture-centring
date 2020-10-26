@@ -23,7 +23,7 @@
           </div>
           <div class="search-item">
             <span>奖励类型</span>
-            <time-reward-type-select needAll v-model="searchInfo.rewardType" />
+            <time-reward-type-select placeholder="全部" v-model="searchInfo.rewardType" />
           </div>
           <div class="search-item">
             <span>状态</span>
@@ -153,10 +153,8 @@ export default {
           await OperationManage.stopTimeIntervalRewardConfig(reqData)
           this.$newMessage.success('设置成功')
           this.getTimeRewardList()
+        } finally {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        } catch (error) {
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-          console.error(error)
         }
       })
     },
@@ -187,10 +185,8 @@ export default {
         const data = await OperationManage.getTimeIntervalRewardConfigList(reqData)
         this.tableData = data.list
         this.pager.total = data.total
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**

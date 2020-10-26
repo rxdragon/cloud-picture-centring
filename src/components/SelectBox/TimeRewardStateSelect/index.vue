@@ -2,7 +2,7 @@
   <div class="state-select">
     <el-select
       v-bind="$attrs"
-      placeholder="请选择状态"
+      placeholder="全部"
       :popper-append-to-body="false"
       v-on="$listeners"
     >
@@ -24,12 +24,7 @@ export default {
   name: 'TimeRewardStateSelect',
   data () {
     return {
-      options: [ // 状态选项
-        {
-          label: '全部',
-          value: ''
-        }
-      ]
+      options: []
     }
   },
   created () {

@@ -69,15 +69,14 @@
           ref="addAwardConfig"
           :model="addAwardConfig"
           status-icon
-          :rules="rules"
           label-position="left"
           label-width="120px"
         >
           <el-form-item prop="reachExp" label="当前达到海草：">
-            <el-input v-model="addAwardConfig.reachExp" placeholder="请输入达到海草数，最多2位小数" />
+            <el-input v-decimalOnly v-model="addAwardConfig.reachExp" placeholder="请输入达到海草数，最多2位小数" />
           </el-form-item>
           <el-form-item prop="reward" label="奖励：">
-            <el-input v-model="addAwardConfig.reward" placeholder="请输入奖励金额数值，最多2位小数" />
+            <el-input v-decimalOnly v-model="addAwardConfig.reward" placeholder="请输入奖励金额数值，最多2位小数" />
           </el-form-item>
         </el-form>
       </div>
@@ -98,23 +97,7 @@ import TimePicker from '@/components/TimePicker'
 
 import { TIME_REWARD_TYPE, IMPULSE_SETTING_TYPE } from '@/utils/enumerate.js'
 
-import * as Util from '@/utils/validate'
 import * as OperationManage from '@/api/operationManage.js'
-
-const checkTwoDecimals = (rule, value, callback) => {
-  if (!value) return callback(new Error('填写内容不能为空'))
-  setTimeout(() => {
-    if (!Util.isTwoDecimals(value)) {
-      callback(new Error('请输入两位小数数字值'))
-    } else {
-      if (Number(value) <= 0) {
-        callback(new Error('请输入正数'))
-      } else {
-        callback()
-      }
-    }
-  }, 500)
-}
 
 export default {
   name: 'AddTimeRewardConfig',
@@ -137,14 +120,6 @@ export default {
         reward: ''
       },
       dialogVisible: false,
-      rules: {
-        reachExp: [
-          { validator: checkTwoDecimals, required: true, trigger: 'change' }
-        ],
-        reward: [
-          { validator: checkTwoDecimals, required: true, trigger: 'change' }
-        ]
-      },
       TIME_REWARD_TYPE
     }
   },
@@ -158,7 +133,12 @@ export default {
      * @description 获取冲量配置项列表
      */
     async getImpulseSettingItemList () {
-      this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.TIME_INTERVAL })
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      try {
+        this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.TIME_INTERVAL })
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 提交检测
@@ -173,7 +153,7 @@ export default {
         this.$newMessage.warning('请选择奖励类型')
         return false
       }
-      if (timeSpan.length < 2) {
+      if (!timeSpan || timeSpan.length < 2) {
         this.$newMessage.warning('请选择生效时段')
         return false
       }
@@ -196,6 +176,7 @@ export default {
           if (!this.checkList.length) warnText = '请选择至少一个冲量奖励'
           break
         default:
+          break
       }
       if (warnText) {
         this.$newMessage.warning(warnText)
@@ -226,6 +207,7 @@ export default {
           reqData.settingItemIds = this.checkList
           break
         default:
+          break
       }
       reqData.staffIds = []
       this.toData.forEach(groupItem => {
@@ -242,10 +224,8 @@ export default {
             this.goBack()
           }
         })
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -264,10 +244,8 @@ export default {
         await OperationManage.delImpulseSettingItem(req)
         this.$newMessage.success('删除成功')
         await this.getImpulseSettingItemList()
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -279,26 +257,24 @@ export default {
     /**
      * @description 提交冲量配置
      */
-    addImpulseConfig () {
-      this.$refs['addAwardConfig'].validate((valid) => {
-        if (valid) {
-          const reqData = this.addAwardConfig
-          reqData.type = IMPULSE_SETTING_TYPE.TIME_INTERVAL
-          this.$store.dispatch('setting/showLoading', this.routeName)
-          OperationManage.addImpulseSettingItem(reqData)
-            .then(() => {
-              this.$newMessage.success('添加成功')
-              this.addAwardConfig.reachExp = ''
-              this.addAwardConfig.reward = ''
-              this.dialogVisible = false
-              this.getImpulseSettingItemList()
-            }).finally(() => {
-              this.$store.dispatch('setting/hiddenLoading', this.routeName)
-            })
-        } else {
-          return false
-        }
-      })
+    async addImpulseConfig () {
+      const reqData = this.addAwardConfig
+      if (!reqData.reachExp || !reqData.reward) {
+        this.$newMessage.warning('请输入海草值门槛和对应奖励')
+        return
+      }
+      reqData.type = IMPULSE_SETTING_TYPE.TIME_INTERVAL
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      try {
+        await OperationManage.addImpulseSettingItem(reqData)
+        this.$newMessage.success('添加成功')
+        this.addAwardConfig.reachExp = ''
+        this.addAwardConfig.reward = ''
+        this.dialogVisible = false
+        this.getImpulseSettingItemList()
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     }
   }
 }

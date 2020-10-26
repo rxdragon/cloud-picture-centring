@@ -1,11 +1,6 @@
 <template>
   <div>
-    <el-select
-      v-bind="$attrs"
-      placeholder=""
-      :popper-append-to-body="false"
-      v-on="$listeners"
-    >
+    <el-select v-bind="$attrs" :popper-append-to-body="false" v-on="$listeners">
       <el-option
         v-for="(optionItem, optionIndex) in options"
         :key="optionIndex"
@@ -38,9 +33,6 @@ export default {
         label: timeRewardTypeToCN[TIME_REWARD_TYPE[type]],
         value: TIME_REWARD_TYPE[type]
       })
-    }
-    if (this.needAll) {
-      this.options.unshift({ label: '全部', value: '' })
     }
   }
 }

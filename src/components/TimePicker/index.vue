@@ -1,5 +1,5 @@
 <template>
-  <div class="date-picker">
+  <div class="time-picker">
     <el-time-picker
       is-range
       range-separator="至"
@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style lang="less">
-.date-picker {
+.time-picker {
   .el-date-editor {
     .el-range-separator {
       padding: 0;
