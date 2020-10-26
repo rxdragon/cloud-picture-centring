@@ -127,6 +127,7 @@ export default class StreamModel {
 
     const referencePhoto = _.get(streamData, 'tags.values.retouch_claim.referenceImg')
     this.referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
+
     this.photoNum = this.getPhotoNum()
     this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
 

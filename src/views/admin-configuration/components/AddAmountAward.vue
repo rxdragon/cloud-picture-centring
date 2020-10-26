@@ -81,6 +81,9 @@
 import StaffPanel from '@/components/StaffPanel'
 import DatePicker from '@/components/DatePicker'
 import InstitutionSelect from '@SelectBox/InstitutionSelect'
+
+import { IMPULSE_SETTING_TYPE } from '@/utils/enumerate.js'
+
 import * as Util from '@/utils/validate'
 import * as OperationManage from '@/api/operationManage.js'
 export default {
@@ -139,7 +142,7 @@ export default {
      * @description 获取冲量配置项列表
      */
     async getImpulseSettingItemList () {
-      this.awardList = await OperationManage.getImpulseSettingItemList()
+      this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.NORMAL })
     },
     /**
      * @description 删除冲量奖励配置项
@@ -170,6 +173,7 @@ export default {
       this.$refs['addAwardConfig'].validate((valid) => {
         if (valid) {
           const reqData = this.addAwardConfig
+          reqData.type = IMPULSE_SETTING_TYPE.NORMAL
           this.$store.dispatch('setting/showLoading', this.routeName)
           OperationManage.addImpulseSettingItem(reqData)
             .then(() => {

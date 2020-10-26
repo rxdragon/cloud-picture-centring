@@ -305,6 +305,13 @@ export const PHOTO_FLAG = {
   WARP: "warp"
 }
 
+// 通知功能授权状态
+export const NOTIFY_STATUS = {
+  DEFAULT: 'default', // 询问
+  GRANTED: 'granted', // 已授权
+  DENIED: 'denied' // 拒绝授权
+}
+
 /**
  * @description 照片类型
  */
@@ -314,9 +321,46 @@ export const PHOTO_TYPE = {
   SPLICE_TYPE: 'splice' // 拼接
 }
 
-// 通知功能授权状态
-export const NOTIFY_STATUS = {
-  DEFAULT: 'default', // 询问
-  GRANTED: 'granted', // 已授权
-  DENIED: 'denied' // 拒绝授权
+/**
+ * @description 时段奖励设置状态
+ */
+export const TIME_REWARD_STATE = {
+  END: 'end', // 已结束
+  EFFECT: 'effect', // 进行中
+  WAIT: 'wait' // 未开始
+}
+
+/**
+ * @description 时段奖励设置状态转中文
+ */
+export const timeRewardStateToCN = {
+  [TIME_REWARD_STATE.END]: '已结束', // 已结束
+  [TIME_REWARD_STATE.EFFECT]: '进行中', // 进行中
+  [TIME_REWARD_STATE.WAIT]: '未开始' // 进行中
+}
+
+/**
+ * @description 时段奖励类型
+ */
+export const TIME_REWARD_TYPE = {
+  EXP_POWER: 'exp_power', // 经验翻倍
+  IMPULSE: 'impulse', // 冲量奖励
+  GOLD: 'gold' // 金币奖励
+}
+
+/**
+ * @description 时段奖励类型对应中文
+ */
+export const timeRewardTypeToCN = {
+  [TIME_REWARD_TYPE.EXP_POWER]: '翻倍经验', // 经验翻倍
+  [TIME_REWARD_TYPE.IMPULSE]: '冲量奖励', // 冲量奖励
+  [TIME_REWARD_TYPE.GOLD]: '金币奖励' // 金币奖励
+}
+
+/**
+ * @description 冲量奖励配置类型
+ */
+export const IMPULSE_SETTING_TYPE = {
+  NORMAL: 'normal', // 常规
+  TIME_INTERVAL: 'time_interval' // 时段奖励
 }

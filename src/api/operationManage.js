@@ -1,5 +1,7 @@
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
+import TimeAwardModel from '@/model/TimeAwardModel.js'
+
 import { keyToHump } from '../utils'
 
 /** 卡片配置 */
@@ -150,7 +152,7 @@ export function getImpulseSettingItemList (params) {
   return axios({
     url: '/project_cloud/config/getImpulseSettingItemList',
     method: 'GET',
-    data: params
+    params
   }).then(msg => {
     const data = msg.sort((a, b) => a.reach_exp - b.reach_exp)
     return data
@@ -175,7 +177,7 @@ export function addImpulseSettingItem (params) {
  * @description 获取绿色通道
  * @param {*} params
  */
-export function getGreenChannelInfo (params) {
+export function getGreenChannelInfo () {
   return axios({
     url: '/project_cloud/config/getGreenChannelInfo',
     method: 'GET'
@@ -425,5 +427,62 @@ export function getAllCloudStream (params) {
       }
     })
     return msg
+  })
+}
+
+/**
+ * @description 时段奖励列表
+ * @param {*} params
+ */
+export function getTimeIntervalRewardConfigList (params) {
+  return axios({
+    url: '/project_cloud/config/timeIntervalRewardConfig/list',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    msg.list = msg.list.map(listItem => {
+      const { base, ...rest } = new TimeAwardModel(listItem)
+      return { ...rest }
+    })
+    return msg
+  })
+}
+
+/**
+ * @description 时段奖励详情
+ * @param {*} params
+ */
+export function getTimeIntervalRewardConfigDetail (params) {
+  return axios({
+    url: 'project_cloud/config/timeIntervalRewardConfig/detail',
+    method: 'GET',
+    params
+  }).then(msg => {
+    const { base, ...rest } = new TimeAwardModel(msg)
+    return { ...rest }
+  })
+}
+
+/**
+ * @description 创建时段奖励
+ * @param {*} params
+ */
+export function addTimeIntervalRewardConfig (params) {
+  return axios({
+    url: '/project_cloud/config/timeIntervalRewardConfig/add',
+    method: 'POST',
+    data: params
+  })
+}
+
+/**
+ * @description 停止时段奖励
+ * @param {*} params
+ */
+export function stopTimeIntervalRewardConfig (params) {
+  return axios({
+    url: '/project_cloud/config/timeIntervalRewardConfig/stop',
+    method: 'GET',
+    params
   })
 }
