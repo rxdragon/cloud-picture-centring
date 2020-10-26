@@ -271,9 +271,9 @@ export default {
         this.addAwardConfig.reachExp = ''
         this.addAwardConfig.reward = ''
         this.dialogVisible = false
-        this.getImpulseSettingItemList()
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        this.getImpulseSettingItemList()
       }
     }
   }
