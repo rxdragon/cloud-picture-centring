@@ -125,12 +125,7 @@ export default {
   },
   async created () {
     if (this.rewardInfo.rewardType === TIME_REWARD_TYPE.IMPULSE) {
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      try {
-        await this.getImpulseSettingItemList()
-      } finally {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      }
+      this.getImpulseSettingItemList()
     }
   },
   methods: {
@@ -138,7 +133,12 @@ export default {
      * @description 获取冲量配置项列表
      */
     async getImpulseSettingItemList () {
-      this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.TIME_INTERVAL })
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      try {
+        this.awardList = await OperationManage.getImpulseSettingItemList({ type: IMPULSE_SETTING_TYPE.TIME_INTERVAL })
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 提交检测
@@ -243,9 +243,9 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await OperationManage.delImpulseSettingItem(req)
         this.$newMessage.success('删除成功')
-        await this.getImpulseSettingItemList()
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        this.getImpulseSettingItemList()
       }
     },
     /**

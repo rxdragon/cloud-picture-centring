@@ -141,22 +141,21 @@ export default {
      * @description 结束活动
      */
     async finishReward (cardItem) {
-      this.$confirm('确认结束该奖励活动吗？', '', {
+      await this.$confirm('确认结束该奖励活动吗？', '', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning',
         center: true
-      }).then(async () => {
-        try {
-          this.$store.dispatch('setting/showLoading', this.routeName)
-          const reqData = { id: cardItem.id }
-          await OperationManage.stopTimeIntervalRewardConfig(reqData)
-          this.$newMessage.success('设置成功')
-          this.getTimeRewardList()
-        } finally {
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        }
       })
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const reqData = { id: cardItem.id }
+        await OperationManage.stopTimeIntervalRewardConfig(reqData)
+        this.$newMessage.success('设置成功')
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+        this.getTimeRewardList()
+      }
     },
     /**
      * @description 获取时段奖励配置列表
