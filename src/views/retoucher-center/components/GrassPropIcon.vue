@@ -29,7 +29,7 @@
     <el-popover placement="bottom" trigger="hover">
       <div class="popover-content">
         <p>经验奖励：{{ timeExpMultiple }}倍</p>
-        <p>截止时间：{{ timeExpEndat }}</p>
+        <p>剩余时间：{{ timeExpEndat }}</p>
       </div>
       <div v-show="timeExpMultiple" slot="reference" class="prop-icon awardmap-timeExp" />
     </el-popover>
@@ -39,13 +39,15 @@
       <div v-for="(infoItem, infoIndex) in timeImpulseInfo" :key="infoIndex" class="impulse-info">
         {{ `当前海草值达到${infoItem.reach_exp}海草 奖励${infoItem.reward}元` }}
       </div>
-      <div v-show="timeImpulseInfo" slot="reference" class="prop-icon awardmap-timeImpulse" />
+      <p>剩余时间：{{ timeImpulseEndat }}</p>
+      <div v-show="timeImpulseInfo.length" slot="reference" class="prop-icon awardmap-timeImpulse" />
     </el-popover>
   </div>
 </template>
 
 <script>
 import * as Validate from '@/utils/validate'
+import { getNowDate } from '@/utils/timespan'
 
 export default {
   name: 'GrassPropIcon',
@@ -77,20 +79,29 @@ export default {
     },
     // 时段经验奖励 
     timeExpMultiple () {
-      const timeExpMultiple = _.get(this.buffInfo, 'timeIntervalReward.exp_power.exp') || ''
+      const timeExpMultiple = _.get(this.buffInfo, 'timeIntervalReward.exp_power.value') || ''
       return timeExpMultiple
     },
     // 时间截止
     timeExpEndat () {
-      const endat = _.get(this.buffInfo, 'timeIntervalReward.exp_power.stop_at') || ''
+      let endat = _.get(this.buffInfo, 'timeIntervalReward.exp_power.end_at') || ''
+      if (endat) { endat = getNowDate() + ' ' + endat }
       const nowTime = new Date().getTime()
       const waitTime = Validate.waitTime(nowTime, endat)
       return waitTime
     },
     // 时段冲量奖励
     timeImpulseInfo () {
-      const timeImpulseInfo = _.get(this.buffInfo, 'timeIntervalReward.impulse') || ''
+      const timeImpulseInfo = _.get(this.buffInfo, 'timeIntervalReward.impulse.impulse_setting_items') || []
       return timeImpulseInfo
+    },
+    // 时段冲量剩余
+    timeImpulseEndat () {
+      let endat = _.get(this.buffInfo, 'timeIntervalReward.impulse.end_at') || ''
+      if (endat) { endat = getNowDate() + ' ' + endat }
+      const nowTime = new Date().getTime()
+      const waitTime = Validate.waitTime(nowTime, endat)
+      return waitTime
     }
   }
 }

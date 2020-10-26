@@ -13,7 +13,7 @@
     <el-popover placement="bottom" trigger="hover">
       <div class="popover-content">
         <p>金币奖励：{{ timeMoneyMultiple }}倍</p>
-        <p>截止时间：{{ timeMoneyEndat }}</p>
+        <p>剩余时间：{{ timeMoneyEndat }}</p>
       </div>
       <div v-show="timeMoneyMultiple" slot="reference" class="prop-icon awardmap-timeMoney" />
     </el-popover>
@@ -22,6 +22,7 @@
 
 <script>
 import * as Validate from '@/utils/validate'
+import { getNowDate } from '@/utils/timespan'
 
 export default {
   name: 'MoneyAwardIcon',
@@ -52,12 +53,13 @@ export default {
     },
     // 时段金币奖励
     timeMoneyMultiple () {
-      const gold = _.get(this.buffInfo, 'timeIntervalReward.gold.gold') || ''
+      const gold = _.get(this.buffInfo, 'timeIntervalReward.gold.value') || ''
       return gold
     },
     // 时段金币奖励截止时间
     timeMoneyEndat () {
-      const endat = _.get(this.buffInfo, 'timeIntervalReward.gold.stop_at') || ''
+      let endat = _.get(this.buffInfo, 'timeIntervalReward.gold.end_at') || ''
+      if (endat) { endat = getNowDate() + ' ' + endat }
       const nowTime = new Date().getTime()
       const waitTime = Validate.waitTime(nowTime, endat)
       return waitTime

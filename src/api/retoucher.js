@@ -74,14 +74,12 @@ export function getSelfQuota () {
  */
 export function getSelfBuffInfo () {
   return axios({
-    // TODO 调试 时段冲量奖，缺少截止时间
-    url: 'https://doc.pre.hzmantu.com/project_cloud/release-2-9-10/project_cloud/retoucher/getSelfBuffInfo',
-    // url: '/project_cloud/retoucher/getSelfBuffInfo',
+    url: '/project_cloud/retoucher/getSelfBuffInfo',
     method: 'GET'
   }).then(msg => {
     const data = keyToHump(msg)
     data.impulseInfo = []
-    
+
     data.impulse = (data.impulse && data.impulse.state === 'using') ? data.impulse : {}
     if (Object.keys(data.impulse).length) {
       const creatImpulse = data.impulse.impulse_setting_item.map(item => {
