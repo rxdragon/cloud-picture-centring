@@ -326,8 +326,7 @@ export const PHOTO_TYPE = {
  */
 export const TIME_REWARD_STATE = {
   END: 'end', // 已结束
-  EFFECT: 'effect', // 进行中
-  WAIT: 'wait' // 未开始
+  EFFECT: 'effect' // 进行中
 }
 
 /**
@@ -335,8 +334,7 @@ export const TIME_REWARD_STATE = {
  */
 export const timeRewardStateToCN = {
   [TIME_REWARD_STATE.END]: '已结束', // 已结束
-  [TIME_REWARD_STATE.EFFECT]: '进行中', // 进行中
-  [TIME_REWARD_STATE.WAIT]: '未开始' // 进行中
+  [TIME_REWARD_STATE.EFFECT]: '进行中' // 进行中
 }
 
 /**

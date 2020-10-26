@@ -1,6 +1,7 @@
 <template>
   <div class="state-select">
     <el-select
+      clearable
       v-bind="$attrs"
       placeholder="全部"
       :popper-append-to-body="false"
