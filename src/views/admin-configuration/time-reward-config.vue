@@ -173,7 +173,7 @@ export default {
           reqData.conds.staffIds = this.searchInfo.staffId
         }
         if (this.searchInfo.title) {
-          reqData.conds.titleLike = this.searchInfo.title
+          reqData.conds.titleEqual = this.searchInfo.title
         }
         if (this.searchInfo.rewardType) {
           reqData.conds.typeEqual = this.searchInfo.rewardType
