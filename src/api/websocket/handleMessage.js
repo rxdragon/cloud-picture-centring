@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { eventEmitter } from '@/plugins/eventemitter.js' // ui布局
 import { MessageBox } from 'element-ui'
+import { timeFormat } from '@/utils/index.js'
 import store from '@/store'
 import router from '@/router'
 import * as LogStream from '@/api/logStream'
@@ -81,7 +82,7 @@ async function getRetouchStream (data) {
  * @description 退单通知
  */
 async function getReturnStream (data, type) {
-  const { streamId } = data
+  const { streamId, hourglass } = data
   if (SessionTool.getReturnRetouchOrder(streamId)) return
   const returnMessageText = type === 'StreamReviewerReturn'
     ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
@@ -91,10 +92,17 @@ async function getReturnStream (data, type) {
   const notificationMsg = type === 'StreamReviewerReturn'
     ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
     : '您有门店退回流水需要处理'
+  
+  // 处理沙漏时间显示
+  const residueTime = Number(hourglass.green_time) + Number(hourglass.orange_time) // 剩余时间
+  const overTime = Number(hourglass.over_time) // 超时时间
+  const isOver = overTime >= 0 || residueTime === 0 // 是否超时
+  const residueTimeCN = timeFormat(residueTime)
+  const overTimeCN = timeFormat(overTime)
+
   const notificationData = {
     title: notificationMsg,
-    // TODO 增加沙漏时间
-    body: '沙漏剩余时间：20:00',
+    body: isOver ? `沙漏超时时间：${overTimeCN}` : `沙漏剩余时间：${residueTimeCN}`,
     icon: errorPng
   }
   Vue.prototype.$notification(notificationData)
