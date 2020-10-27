@@ -1,4 +1,4 @@
-# 2.0.0 (2020-10-26)
+# 2.0.0 (2020-10-27)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -32,6 +32,7 @@
  数据modeltest | [cf1183f](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/cf1183f)
  新增修图背景备注 | [0512e32](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0512e32)
  新增参考图 | [dbb1b29](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/dbb1b29)
+ 新增更新修改与滚动加载 | [1db2561](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/1db2561)
  新增评分项目 | [8bcbc95](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/8bcbc95)
  新增问题标签 | [2e1ac88](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/2e1ac88)
  更改lodash获取凡事 | [ef6bcac](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/ef6bcac)
@@ -70,7 +71,6 @@
  增加猎奇马显示组员报告 | [ee0fd31](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/ee0fd31)
  增加花名 | [d68a9fa](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/d68a9fa)
  完成bi布局 | [57603cc](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/57603cc)
- 完成部分 ui布局 | [8351ad5](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/8351ad5)
  完成部分bi | [e6ddb4e](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/e6ddb4e)
  新增上传功能 | [29adcbe](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/29adcbe)
  新增利奇马接口链条 | [09e9808](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/09e9808)
@@ -110,6 +110,7 @@
  增加审核权限管理 | [9a76716](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/9a76716)
  增加更改修复说明 | [81564e6](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/81564e6)
  增加版本更新说明 | [eb7ce67](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/eb7ce67)
+ 完成部分 ui布局 | [8351ad5](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/8351ad5)
  客片池新增订单查询 | [b21aa4b](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/b21aa4b)
  客片池无限下拉 | [ba066bd](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/ba066bd)
  开启服务器 | [c2a46b9](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/c2a46b9)
@@ -234,7 +235,6 @@
  新增功能 | [0730e8c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0730e8c)
  新增回补指标 | [399eccd](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/399eccd)
  新增时段冲量，修复客片池塞选问题 | [4b5d004](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/4b5d004)
- 新增更新修改与滚动加载 | [1db2561](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/1db2561)
  新增照片版本 | [30e0531](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/30e0531)
  新增照片类型判断 | [07af4c5](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/07af4c5)
  新增缓存队列 | [26e1ed6](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/26e1ed6)
@@ -255,6 +255,7 @@
  更改修图历史记录ui | [b017f05](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/b017f05)
  更改列表问题 | [79a1242](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/79a1242)
  更改协议 | [e74f941](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/e74f941)
+ 更改参数 | [8be3fcf](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/8be3fcf)
  更改变量 | [e8eac5b](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/e8eac5b)
  更改后端地址 | [685805c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/685805c)
  更改微前端线上地址 | [313eeaf](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/313eeaf)
