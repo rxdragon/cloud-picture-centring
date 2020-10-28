@@ -108,7 +108,6 @@ import TimeRewardTypeSelect from '@SelectBox/TimeRewardTypeSelect'
 import TimeRewardExpSelect from '@SelectBox/TimeRewardExpSelect'
 import TimeRewardGoldSelect from '@SelectBox/TimeRewardGoldSelect'
 import TimePicker from '@/components/TimePicker'
-import moment from 'moment'
 
 import { TIME_REWARD_TYPE, IMPULSE_SETTING_TYPE } from '@/utils/enumerate.js'
 
@@ -263,8 +262,8 @@ export default {
       const finalInterSectionList = interSectionList.reduce((sumList, interSection) => {
         const tempObj = {}
         const overlapStaffIds = interSection.overlap_staff_ids
-        tempObj.overlapBegin = moment(interSection.overlap_begin).format('HH:mm:ss')
-        tempObj.overlapEnd = moment(interSection.overlap_end).format('HH:mm:ss')
+        tempObj.overlapBegin = interSection.overlap_begin
+        tempObj.overlapEnd = interSection.overlap_end
         tempObj.staffName = []
         if (Utils.isObj(overlapStaffIds)) { // 返回时obj的话
           for (const staffKey in overlapStaffIds) {
