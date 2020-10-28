@@ -86,7 +86,7 @@
       </span>
     </el-dialog>
 
-    <!--  -->
+    <!-- 配置冲突弹窗 -->
     <el-dialog title="存在配置冲突人员" :visible.sync="interSectionShow" width="30%">
       <div v-for="(interSection, index) in interSectionList" :key="index">
         <span>{{ interSection.staffName }}</span>
