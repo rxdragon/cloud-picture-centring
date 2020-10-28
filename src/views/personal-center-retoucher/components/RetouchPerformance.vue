@@ -114,7 +114,15 @@
                 {{ row.income.punishIncome }}
               </span>
               <span class="span-row text-money">
-                <span class="span-title">奖励收益：</span>
+                <span class="span-title">时段冲量收益：</span>
+                {{ row.income.timeIntervalImpulse }}
+              </span>
+              <span class="span-row text-money">
+                <span class="span-title">时段金币收益：</span>
+                {{ row.income.timeIntervalReward }}
+              </span>
+              <span class="span-row text-money">
+                <span class="span-title">其他奖励收益：</span>
                 {{ row.income.sunReward }}
               </span>
               <span class="span-row text-money">
@@ -147,6 +155,10 @@
               <span class="span-row text-red">
                 <span class="span-title">退单扣除海草：</span>
                 {{ row.exp.punishExp | toFixedString }}
+              </span>
+              <span class="span-row text-money">
+                <span class="span-title">时段奖励海草：</span>
+                {{ row.exp.timeIntervalReward | toFixedString }}
               </span>
               <span class="span-row text-money">
                 <span class="span-title">回滚海草：</span>
