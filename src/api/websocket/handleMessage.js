@@ -82,7 +82,7 @@ async function getRetouchStream (data) {
  * @description 退单通知
  */
 async function getReturnStream (data, type) {
-  const { streamId, hourglass } = data
+  const { streamId, hourglass = {} } = data
   if (SessionTool.getReturnRetouchOrder(streamId)) return
   const returnMessageText = type === 'StreamReviewerReturn'
     ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
