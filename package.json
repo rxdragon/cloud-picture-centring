@@ -50,7 +50,7 @@
     "mainto-jssdk": "^1.8.385-beta.release.1.1.0.246",
     "md5.js": "^1.3.5",
     "mime": "^2.4.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.1",
     "mousetrap": "^1.6.3",
     "node-rsa": "^1.0.6",
     "nprogress": "^0.2.0",
