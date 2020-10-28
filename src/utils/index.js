@@ -212,6 +212,14 @@ export function isObj (obj) {
 }
 
 /**
+ * @description 是否为数组
+ */
+export function isArr (arr) {
+  if (!arr) return false
+  return Object.prototype.toString.call(arr) === '[object Array]'
+}
+
+/**
  * @description 求平均值
  * @param {*} a 总数
  * @param {*} b 基数

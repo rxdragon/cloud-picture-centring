@@ -23,11 +23,11 @@ export default {
     return {
       options: [ // 状态选项
         {
+          label: '1.2倍',
+          value: 1.2
+        }, {
           label: '1.5倍',
           value: 1.5
-        }, {
-          label: '2倍',
-          value: 2
         }
       ]
     }
