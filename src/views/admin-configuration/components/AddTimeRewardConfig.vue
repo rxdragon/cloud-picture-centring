@@ -85,6 +85,20 @@
         <el-button type="primary" @click="addImpulseConfig">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 配置冲突弹窗 -->
+    <el-dialog title="存在配置冲突人员" :visible.sync="interSectionShow" width="30%">
+      <div v-for="(interSection, index) in interSectionList" :key="index">
+        <span>{{ interSection.staffName }}</span>
+        已经配置了
+        <span>{{ interSection.overlapBegin }}</span>
+        -
+        <span>{{ interSection.overlapEnd }}</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="interSectionShow = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -97,6 +111,8 @@ import TimePicker from '@/components/TimePicker'
 
 import { TIME_REWARD_TYPE, IMPULSE_SETTING_TYPE } from '@/utils/enumerate.js'
 
+import * as SessionTool from '@/utils/sessionTool.js'
+import * as Utils from '@/utils/index.js'
 import * as OperationManage from '@/api/operationManage.js'
 
 export default {
@@ -120,7 +136,9 @@ export default {
         reward: ''
       },
       dialogVisible: false,
-      TIME_REWARD_TYPE
+      TIME_REWARD_TYPE,
+      interSectionList: [], // 发生配置冲突人员
+      interSectionShow: false
     }
   },
   async created () {
@@ -215,18 +233,56 @@ export default {
       })
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
-        await OperationManage.addTimeIntervalRewardConfig(reqData)
-        this.$newMessage({
-          message: '时段奖励配置成功',
-          type: 'success',
-          duration: 1500,
-          onClose: () => {
-            this.goBack()
-          }
-        })
+        const result = await OperationManage.addTimeIntervalRewardConfig(reqData)
+        if (result.length) { // length存在说明存在交集配置
+          this.handleIntersection(result)
+        } else {
+          this.$newMessage({
+            message: '时段奖励配置成功',
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.goBack()
+            }
+          })
+        }
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
+    },
+    /**
+     * @description 处理配置交集的情况
+     */
+    handleIntersection (interSectionList) {
+      const staffArr = SessionTool.getStaffList()
+      const staffObj = staffArr.reduce((sumObj, staff) => {
+        sumObj[staff.id] = staff
+        return sumObj
+      }, {})
+      const finalInterSectionList = interSectionList.reduce((sumList, interSection) => {
+        const tempObj = {}
+        const overlapStaffIds = interSection.overlap_staff_ids
+        tempObj.overlapBegin = interSection.overlap_begin
+        tempObj.overlapEnd = interSection.overlap_end
+        tempObj.staffName = []
+        if (Utils.isObj(overlapStaffIds)) { // 返回时obj的话
+          for (const staffKey in overlapStaffIds) {
+            tempObj.staffName.push(staffObj[overlapStaffIds[staffKey]].nickname)
+          }
+        }
+
+        if (Utils.isArr(overlapStaffIds)) { // 返回时arr的话
+          tempObj.staffName = overlapStaffIds.reduce((sumStaff, staffId) => {
+            sumStaff.push(staffObj[staffId].nickname)
+            return sumStaff
+          }, [])
+        }
+        tempObj.staffName = tempObj.staffName.join(',')
+        sumList.push(tempObj)
+        return sumList
+      }, [])
+      this.interSectionList = finalInterSectionList
+      this.interSectionShow = true
     },
     /**
      * @description 返回上一级
