@@ -334,7 +334,7 @@ export const TIME_REWARD_STATE = {
  */
 export const timeRewardStateToCN = {
   [TIME_REWARD_STATE.END]: '已结束', // 已结束
-  [TIME_REWARD_STATE.EFFECT]: '进行中' // 进行中
+  [TIME_REWARD_STATE.EFFECT]: '生效中' // 进行中
 }
 
 /**
