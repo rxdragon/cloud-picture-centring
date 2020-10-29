@@ -103,7 +103,7 @@ export default {
 
         data.staffs.forEach(staffItem => {
           const findGroup = this.staffList.find(item => item.label === staffObj[staffItem.id].department.name)
-          const createData = { label: staffObj[staffItem.id].nickname }
+          const createData = { label: staffObj[staffItem.id].nickname || staffObj[staffItem.id].name }
           if (findGroup) {
             findGroup.children = [...findGroup.children, createData]
           } else {
