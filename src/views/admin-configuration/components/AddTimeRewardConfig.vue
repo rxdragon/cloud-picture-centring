@@ -267,13 +267,13 @@ export default {
         tempObj.staffName = []
         if (Utils.isObj(overlapStaffIds)) { // 返回时obj的话
           for (const staffKey in overlapStaffIds) {
-            tempObj.staffName.push(staffObj[overlapStaffIds[staffKey]].nickname)
+            tempObj.staffName.push(staffObj[overlapStaffIds[staffKey]].nickname || staffObj[overlapStaffIds[staffKey]].name)
           }
         }
 
         if (Utils.isArr(overlapStaffIds)) { // 返回时arr的话
           tempObj.staffName = overlapStaffIds.reduce((sumStaff, staffId) => {
-            sumStaff.push(staffObj[staffId].nickname)
+            sumStaff.push(staffObj[staffId].nickname || staffObj[staffId].name)
             return sumStaff
           }, [])
         }
