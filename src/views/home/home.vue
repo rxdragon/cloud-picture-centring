@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="logo-tip" v-if="isAnniversary">
+    <div class="logo-tip" v-if="!isAnniversary">
       <div class="logo-img home-logo" />
       <div class="logo-desc">
         <span class="black">欢迎来到</span>
@@ -8,8 +8,7 @@
       </div>
     </div>
     <div class="anniversary-main" v-else>
-      <div ref="lottie-box" class="lottie-box"></div>
-      <div class="anniversary-logo anniversary-logo-img" />
+      <div class="anniversary-logo anniversary-logo-img" @click="playAnimation" />
       <div class="anniversary-message">
         <div class="content">
           <p>你已经入职云端 <span class="days"><count-to :end-value="days" /></span> 天，</p>
@@ -19,6 +18,7 @@
           <p class="bold-msg"><strong>以梦为马，砥砺前行</strong></p>
         </div>
       </div>
+      <div v-show="show" ref="lottie-box" class="lottie-box"></div>
     </div>
   </div>
 </template>
@@ -36,24 +36,57 @@ export default {
     return {
       isAnniversary: false,
       days: 0,
-      retouchPhoto: 0
+      retouchPhoto: 0,
+      lottieAnimation: null,
+      show: false
     }
-  },
-  created () {
-    setTimeout(() => {
-      this.days = 520
-      this.retouchPhoto = 10000
-    }, 1000)
   },
   mounted () {
     const element = this.$refs['lottie-box']
-    lottie.loadAnimation({
+    this.lottieAnimation = lottie.loadAnimation({
       container: element, // the dom element that will contain the animation
       renderer: 'svg',
       loop: false,
-      autoplay: true,
+      autoplay: false,
       animationData: animationData // the path to the animation json
     })
+    this.lottieAnimation.onComplete = () => {
+      this.lottieAnimation.stop()
+      this.show = false
+    }
+    this.judgeIsAnniversaryDay()
+  },
+  activated () {
+    this.judgeIsAnniversaryDay()
+  },
+  methods: {
+    /**
+     * @description 判断是否是周年庆
+     */
+    judgeIsAnniversaryDay () {
+      // 11月 12日
+      const startTime = 1605110400000
+      const endTime = 1606752000000
+      const nowTime = new Date().getTime()
+      this.isAnniversary = startTime <= nowTime && nowTime < endTime
+      if (this.isAnniversary) this.getStaffInfo()
+    },
+    /**
+     * @description 获取信息
+     */
+    getStaffInfo () {
+      setTimeout(() => {
+        this.days = 520
+        this.retouchPhoto = 10000
+      }, 1000)
+    },
+    /**
+     * @description 播放动画
+     */
+    playAnimation () {
+      this.show = true
+      this.lottieAnimation.play()
+    }
   }
 }
 </script>
@@ -108,6 +141,7 @@ export default {
       width: 418px;
       height: 362px;
       margin-right: 40px;
+      cursor: pointer;
     }
 
     .anniversary-message {

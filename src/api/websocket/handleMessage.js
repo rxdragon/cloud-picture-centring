@@ -96,9 +96,9 @@ async function getReturnStream (data, type) {
   // 处理沙漏时间显示
   const residueTime = Number(hourglass.green_time) + Number(hourglass.orange_time) // 剩余时间
   const overTime = Number(hourglass.over_time) // 超时时间
-  const isOver = overTime >= 0 || residueTime === 0 // 是否超时
-  const residueTimeCN = timeFormat(residueTime)
-  const overTimeCN = timeFormat(overTime)
+  const isOver = overTime > 0 || residueTime === 0 // 是否超时
+  const residueTimeCN = timeFormat(residueTime, 'text')
+  const overTimeCN = timeFormat(overTime, 'text')
 
   const notificationData = {
     title: notificationMsg,
