@@ -562,7 +562,7 @@ export default {
 
           .actual-num {
             font-size: 34px;
-            font-weight: 500px;
+            font-weight: 500;
           }
 
           .goal-num {

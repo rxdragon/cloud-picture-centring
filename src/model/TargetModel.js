@@ -54,6 +54,8 @@ export default class TargetModel {
     sunReward: 0, // 奖励总收益
     rollbackIncome: 0, // 回滚的总收益
     punishIncome: 0, // 退单质量扣除收益
+    timeIntervalImpulse: 0, // 时段冲量奖励
+    timeIntervalReward: 0, // 时段金币奖励
     sumIncome: 0
   }
   

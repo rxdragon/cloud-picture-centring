@@ -4,7 +4,8 @@
     element-loading-custom-class="main-loading"
     class="app-main"
     :class="{ 'overhidden':isLoading,
-              'micro-main': microApp
+              'micro-main': microApp,
+              'home-main': isHome
     }"
     @scroll="scrollMove"
   >
@@ -36,6 +37,12 @@ export default {
     },
     transitionName () {
       return ''
+    },
+    /**
+     * @description 是否是首页
+     */
+    isHome () {
+      return this.$route.name === 'Home'
     },
     // 是否是微前端
     microApp () {
@@ -79,10 +86,16 @@ export default {
   overflow-x: hidden;
   overflow-y: overlay;
   scroll-behavior: smooth;
+  transition: all 0.3s;
 
   &.micro-main {
     height: @microAppMainHeight;
     padding: 0;
+    margin-top: 0;
+  }
+
+  &.home-main {
+    height: @microAppMainHeight;
     margin-top: 0;
   }
 }
