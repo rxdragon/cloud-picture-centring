@@ -28,6 +28,7 @@ const template = [{
         if (focusedWindow.id === 1) {
           BrowserWindow.getAllWindows().forEach(async function (win) {
             const ses = win.webContents.session
+            await ses.clearHostResolverCache()
             const cacheSize = await ses.getCacheSize()
             const cacheSizeMB = cacheSize / 1024 / 1024
             // eslint-disable-next-line no-console
