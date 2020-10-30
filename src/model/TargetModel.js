@@ -54,6 +54,8 @@ export default class TargetModel {
     sunReward: 0, // 奖励总收益
     rollbackIncome: 0, // 回滚的总收益
     punishIncome: 0, // 退单质量扣除收益
+    timeIntervalImpulse: 0, // 时段冲量奖励
+    timeIntervalReward: 0, // 时段金币奖励
     sumIncome: 0
   }
   
@@ -67,6 +69,7 @@ export default class TargetModel {
     sumStoreReturnExp: 0, // 退单获得海草
     punishExp: 0, // 质量扣除获取收益
     rollbackExp: 0, // 总回滚海草值
+    timeIntervalReward: 0, // 时段海草奖励
     sumExp: 0
   }
 
@@ -161,6 +164,8 @@ export default class TargetModel {
     this.income.reward = Number(_.get(this.base, 'income.reward')) || 0
     this.income.impulse = Number(_.get(this.base, 'income.impulse')) || 0
     this.income.punishIncome = Number(_.get(this.base, 'income.punishIncome')) || 0
+    this.income.timeIntervalImpulse = Number(_.get(this.base, 'income.timeIntervalImpulse')) || 0
+    this.income.timeIntervalReward = Number(_.get(this.base, 'income.timeIntervalReward')) || 0
 
     let sunReward = this.income.reward * 100 + this.income.impulse * 100
     sunReward = (sunReward / 100).toFixed(2)
@@ -185,6 +190,8 @@ export default class TargetModel {
       this.income.storeReturnIncomeForQuality * 100 +
       this.income.storeReturnIncomeForNotQuality * 100 +
       this.income.storeReturnIncomeForBoth * 100 +
+      this.income.timeIntervalImpulse * 100 +
+      this.income.timeIntervalReward * 100 +
       this.income.reward * 100 +
       this.income.impulse * 100 -
       this.income.punishIncome * 100
@@ -200,6 +207,7 @@ export default class TargetModel {
     this.exp.storeReturnExpForNotQuality = Number(_.get(this.base, 'exp.storeReturnExpForNotQuality')) || 0
     this.exp.storeReturnExpForBoth = Number(_.get(this.base, 'exp.storeReturnExpForBoth')) || 0
     this.exp.punishExp = Number(_.get(this.base, 'exp.punishExp')) || 0
+    this.exp.timeIntervalReward = Number(_.get(this.base, 'exp.timeIntervalReward')) || 0
 
     // 正常流水的回补海草
     const retoucherRollbackExpForNormalRework = Number(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0)
@@ -219,7 +227,8 @@ export default class TargetModel {
       this.exp.glassPunishExp * 100 +
       this.exp.storeReturnExpForQuality * 100 +
       this.exp.storeReturnExpForNotQuality * 100 +
-      this.exp.storeReturnExpForBoth * 100 -
+      this.exp.storeReturnExpForBoth * 100 +
+      this.exp.timeIntervalReward * 100 -
       this.exp.punishExp * 100
     sumExp = (sumExp / 100).toFixed(2)
     this.exp.sumExp = sumExp

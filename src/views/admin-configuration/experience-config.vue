@@ -210,7 +210,6 @@ export default {
 
 <style lang="less">
 
-
 .experience-config {
   .no-data {
     padding: 40px 0;

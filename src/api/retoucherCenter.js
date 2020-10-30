@@ -68,6 +68,14 @@ export function getStreamInfo (params) {
       photographer: _.get(msg, 'order.tags.values.photographer') || '-', // 摄影
       photoNum: streamOrder.photoNum
     }
+
+    // 获取订单是否一人成团
+    if (streamOrder.isChristmasPhoto) {
+      const firstPhoto = msg.photos[0]
+      if (!firstPhoto) return
+      createData.christmasSplicePhotos = _.get(firstPhoto, 'tags.values.splice_photos') || []
+    }
+
     msg.photos.forEach(photoItem => {
       const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)

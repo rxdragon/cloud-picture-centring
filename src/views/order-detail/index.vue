@@ -21,6 +21,36 @@
       <div class="panel-title">照片信息</div>
       <order-info :is-work-board-info="isWorkBoardInfo" :order-data="orderData" />
     </div>
+
+    <!-- 圣诞拼接信息 -->
+    <div class="christmas-photos module-panel" v-if="christmasSplicePhotos.length">
+      <div class="photo-panel-title panel-title">
+        <span>圣诞拼接照</span>
+        <div class="button-box">
+          <el-button type="primary" size="small" @click="oneRenamePhoto">
+            一键下载
+          </el-button>
+        </div>
+      </div>
+      <div class="photo-panel">
+        <div
+          v-for="(photoItem, photoIndex) in christmasSplicePhotos"
+          :key="photoIndex"
+          class="photo-box"
+        >
+          <photo-box
+            downing
+            photo-name
+            preload-photo
+            show-joint-label
+            :stream-num="orderData.streamNum"
+            :rename="photoItem.position"
+            :src="photoItem.path"
+          />
+        </div>
+      </div>
+    </div>
+
     <!-- 照片列表 -->
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
       <div class="panel-title">照片{{ photoIndex + 1 }}</div>
@@ -61,21 +91,26 @@ import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
 import ReworkPhoto from './components/ReworkPhoto'
 import store from '@/store' // vuex
+import DownIpc from '@electronMain/ipc/DownIpc'
+import PhotoBox from '@/components/PhotoBox'
 
 import { mapGetters } from 'vuex'
 
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
 import * as Appeal from '@/api/appeal.js'
+import * as PhotoTool from '@/utils/photoTool'
+
 
 export default {
   name: 'OrderDetail',
-  components: { PhotoDetail, OrderInfo, ReworkPhoto },
+  components: { PhotoDetail, OrderInfo, ReworkPhoto, PhotoBox },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       streamId: '', // 流水id
       orderData: {}, // 订单信息
+      christmasSplicePhotos: [], // 圣诞拼接照信息
       photos: [],
       dialogAppealVisible: false,
       appealType: 'rework', // 申诉信息
@@ -134,6 +169,7 @@ export default {
         const req = { streamId: this.streamId }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Commonality.getStreamInfo(req)
+        this.christmasSplicePhotos = data.christmasSplicePhotos || []
         this.orderData = data.orderData
         this.photos = data.photos
       } finally {
@@ -164,6 +200,7 @@ export default {
         const req = { streamNum: this.streamId }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await AdminManage.getStreamInfo(req)
+        this.christmasSplicePhotos = data.christmasSplicePhotos || []
         this.orderData = data.orderData
         this.photos = data.photos
       } finally {
@@ -223,6 +260,22 @@ export default {
      */
     cancelAppeal () {
       this.dialogAppealVisible = false
+    },
+    /**
+     * @description 一键下载重命名成片
+     */
+    oneRenamePhoto () {
+      const savePath = `/${this.orderData.streamNum}`
+      const photoArr = this.christmasSplicePhotos.map(photoItem => {
+        const ext = PhotoTool.getFilePostfix(photoItem.path)
+        const rename = `${photoItem.position}${ext}`
+        return {
+          url: photoItem.path,
+          path: savePath,
+          rename
+        }
+      })
+      DownIpc.addDownloadFiles(photoArr)
     }
   }
 }
@@ -236,6 +289,59 @@ export default {
 
   .order {
     margin-bottom: 24px;
+  }
+
+  .christmas-photos {
+    margin: 20px 0;
+
+    .photo-panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+
+      .button-box {
+        display: flex;
+        align-items: center;
+
+        .el-button {
+          margin-left: 24px;
+        }
+      }
+    }
+
+    .photo-panel {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-right: -24px;
+
+      .photo-box {
+        width: 253px;
+        margin-right: 24px;
+        margin-bottom: 24px;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        .handle-box {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .progress {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 241px;
+          height: 241px;
+        }
+
+        .error-photo {
+          color: @red;
+        }
+      }
+    }
   }
 
   .photo-list {

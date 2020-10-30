@@ -21,8 +21,39 @@
         <el-button type="primary" @click="setIssueLabel">提交审核</el-button>
       </div>
     </div>
+
     <!-- 照片信息 -->
     <order-info :order-data="orderData" />
+
+    <!-- 圣诞拼接信息 -->
+    <div class="christmas-photos module-panel" v-if="christmasSplicePhotos.length">
+      <div class="photo-panel-title panel-title">
+        <span>圣诞拼接照</span>
+        <div class="button-box">
+          <el-button type="primary" size="small" @click="oneRenamePhoto">
+            一键下载
+          </el-button>
+        </div>
+      </div>
+      <div class="photo-panel">
+        <div
+          v-for="(photoItem, photoIndex) in christmasSplicePhotos"
+          :key="photoIndex"
+          class="photo-box"
+        >
+          <photo-box
+            downing
+            photo-name
+            preload-photo
+            show-joint-label
+            :stream-num="orderData.streamNum"
+            :rename="photoItem.position"
+            :src="photoItem.path"
+          />
+        </div>
+      </div>
+    </div>
+
     <!-- 成片信息 -->
     <div class="photo-module module-panel">
       <div class="photo-panel-title panel-title">
@@ -78,6 +109,7 @@
         </div>
       </div>
     </div>
+
     <!-- 修图上传 -->
     <div class="photo-module module-panel upload-module">
       <div class="photo-panel-title panel-title"><span>修图上传</span></div>
@@ -135,6 +167,7 @@ import * as RetoucherCenter from '@/api/retoucherCenter'
 import * as LogStream from '@/api/logStream'
 import * as AutoLog from '../autoLog.js'
 import * as SessionTool from '@/utils/sessionTool'
+import * as PhotoTool from '@/utils/photoTool'
 
 export default {
   name: 'RetouchOrder',
@@ -151,6 +184,7 @@ export default {
         orderInfo: {},
         requireLabel: {}
       },
+      christmasSplicePhotos: [], // 拼接照信息
       photos: [], // 照片数组
       reviewerNote: '', // 审核备注
       finishPhoto: {}, // 最后提交成片
@@ -223,6 +257,22 @@ export default {
       DownIpc.addDownloadFiles(photoArr)
     },
     /**
+     * @description 重命名凭借下载
+     */
+    oneRenamePhoto () {
+      const savePath = `/${this.orderData.streamNum}`
+      const photoArr = this.christmasSplicePhotos.map(photoItem => {
+        const ext = PhotoTool.getFilePostfix(photoItem.path)
+        const rename = `${photoItem.position}${ext}`
+        return {
+          url: photoItem.path,
+          path: savePath,
+          rename
+        }
+      })
+      DownIpc.addDownloadFiles(photoArr)
+    },
+    /**
      * @description 挂起订单
      */
     hangUp () {
@@ -243,10 +293,12 @@ export default {
     async getStreamInfo () {
       try {
         const reqData = { streamId: this.realAid }
+        // const reqData = { streamId: 20006793 }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
         this.hourGlass = data.hourGlass
+        this.christmasSplicePhotos = data.christmasSplicePhotos || []
         this.isReturnOrder = data.isReturnOrder
         if (this.isSandClockOpen) {
           this.overTime = +this.hourGlass.over_time
@@ -461,6 +513,59 @@ export default {
 
       .el-button {
         border-radius: 8px;
+      }
+    }
+  }
+
+  .christmas-photos {
+    margin-top: 20px;
+
+    .photo-panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+
+      .button-box {
+        display: flex;
+        align-items: center;
+
+        .el-button {
+          margin-left: 24px;
+        }
+      }
+    }
+
+    .photo-panel {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-right: -24px;
+
+      .photo-box {
+        width: 253px;
+        margin-right: 24px;
+        margin-bottom: 24px;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        .handle-box {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .progress {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 241px;
+          height: 241px;
+        }
+
+        .error-photo {
+          color: @red;
+        }
       }
     }
   }

@@ -23,6 +23,11 @@ const adminConfiguration = {
       component: () => import('@/views/admin-configuration/gold-config.vue'),
       meta: { title: '修图师金币奖励配置', icon: '' }
     }, {
+      path: 'time-reward-config',
+      name: 'TimeRewardConfig',
+      component: () => import('@/views/admin-configuration/time-reward-config.vue'),
+      meta: { title: '修图师时段奖励配置', icon: '' }
+    }, {
       path: 'sand-clock-config',
       name: 'SandClockConfig',
       component: () => import('@/views/admin-configuration/sand-clock-config.vue'),

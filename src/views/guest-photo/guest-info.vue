@@ -208,8 +208,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .guest-info {
   .header {
     line-height: 40px;

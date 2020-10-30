@@ -188,6 +188,15 @@ export function getStreamInfo (params) {
     })
     let referencePhoto = _.get(data, 'tags.values.retouch_claim.referenceImg')
     referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
+
+    // 获取订单是否一人成团
+    const isChristmasPhoto = _.get(data, 'tags.values.need_auto_created_finish_photo') || false
+    if (isChristmasPhoto) {
+      const firstPhoto = data.photos[0]
+      if (!firstPhoto) return
+      createData.christmasSplicePhotos = _.get(firstPhoto, 'tags.values.splice_photos') || []
+    }
+
     createData.orderData = {
       streamNum: data.streamNum,
       photographerOrg: _.get(data, 'order.photographer_org.name', '-'),

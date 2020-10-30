@@ -70,7 +70,7 @@ export default {
         finishPhotoNum: { label: '修图张数（正常）', value: '-' },
         overTimeStreamNum: { label: '超时单量', value: '-', componentSwitch: true },
         avgRetouchTime: { label: '修图平均用时', value: '-' },
-        income: { label: '正常收益', labelDesc: '未扣除负收益', value: '-' },
+        income: { label: '正常收益', labelDesc: '未扣除负收益（正常订单）', value: '-' },
         notReachStandardDays: { label: '未完成指标（天）', value: '-' }
       },
       tableDataRate: {
