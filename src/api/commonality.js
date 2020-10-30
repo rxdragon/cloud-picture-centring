@@ -26,6 +26,17 @@ export function getAllRetouchClass () {
 }
 
 /**
+ * @description 获取周年庆相关信息
+ * @param {*} params 
+ */
+export function getAnniversaryInfo (params) {
+  return axios({
+    url: '/project_cloud/common/getAnniversaryInfo',
+    method: 'GET'
+  })
+}
+
+/**
  * @description 获取流水信息
  * @param {*} params
  */

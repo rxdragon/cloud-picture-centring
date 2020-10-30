@@ -27,7 +27,7 @@
 import lottie from 'lottie-web'
 import CountTo from '@/components/CountTo'
 import animationData from './fireworks.json'
-
+import * as Commonality from '@/api/commonality'
 
 export default {
   name: 'Home',
@@ -42,18 +42,6 @@ export default {
     }
   },
   mounted () {
-    const element = this.$refs['lottie-box']
-    this.lottieAnimation = lottie.loadAnimation({
-      container: element, // the dom element that will contain the animation
-      renderer: 'svg',
-      loop: false,
-      autoplay: false,
-      animationData: animationData // the path to the animation json
-    })
-    this.lottieAnimation.onComplete = () => {
-      this.lottieAnimation.stop()
-      this.show = false
-    }
     this.judgeIsAnniversaryDay()
   },
   activated () {
@@ -61,24 +49,44 @@ export default {
   },
   methods: {
     /**
+     * @description 初始化box
+     */
+    initLottieBox () {
+      if (this.lottieAnimation) return
+      const element = this.$refs['lottie-box']
+      this.lottieAnimation = lottie.loadAnimation({
+        container: element, // the dom element that will contain the animation
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        animationData: animationData // the path to the animation json
+      })
+
+      this.lottieAnimation.onComplete = () => {
+        this.lottieAnimation.stop()
+        this.show = false
+      }
+    },
+    /**
      * @description 判断是否是周年庆
      */
-    judgeIsAnniversaryDay () {
+    async judgeIsAnniversaryDay () {
       // 11月 12日
       const startTime = 1605110400000
       const endTime = 1606752000000
       const nowTime = new Date().getTime()
       this.isAnniversary = startTime <= nowTime && nowTime < endTime
+      await this.$nextTick()
+      this.initLottieBox()
       if (this.isAnniversary) this.getStaffInfo()
     },
     /**
      * @description 获取信息
      */
-    getStaffInfo () {
-      setTimeout(() => {
-        this.days = 520
-        this.retouchPhoto = 10000
-      }, 1000)
+    async getStaffInfo () {
+      const { entryDays, photoCount } = await Commonality.getAnniversaryInfo()
+      this.days = entryDays
+      this.retouchPhoto = photoCount
     },
     /**
      * @description 播放动画
