@@ -256,7 +256,8 @@ export default class StreamModel {
     this.passAt = this.baseData.pass_at || '-'
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
     this.reviewTime = this.baseData.review_time || 0
-    this.hourGlassOverTime = _.get(this.baseData, 'hour_glass.over_time') || ''
+    const hourGlassOverTime = _.get(this.baseData, 'hour_glass.over_time')
+    this.hourGlassOverTime = hourGlassOverTime ? (hourGlassOverTime / 60).toFixed(2) : ''
     const retouchTime = _.get(this.baseData, 'retouch_time') || 0
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
     const allTime = retouchTime + reviewReturnRebuildTime
