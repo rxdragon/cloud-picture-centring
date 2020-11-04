@@ -71,8 +71,8 @@ export default {
      * @description 判断是否是周年庆
      */
     async judgeIsAnniversaryDay () {
-      // 11月 12日
-      const startTime = 1605110400000
+      // 11月 16日
+      const startTime = 1605456000000
       const endTime = 1606752000000
       const nowTime = new Date().getTime()
       this.isAnniversary = startTime <= nowTime && nowTime < endTime
