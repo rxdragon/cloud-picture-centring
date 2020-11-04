@@ -207,14 +207,15 @@ export default class StreamModel {
 
   // 获取收益
   getIncome () {
-    const retouchIncome = parseFloat(this.baseData.income) || 0 // 原始收益
-    const overtimeIncome = parseFloat(_.get(this.baseData, 'tags.values.overtime_income')) || 0
-    const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword')) || 0
-    const rollbackIncome = parseFloat(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
+    const retouchIncome = Validate.toFixed(this.baseData.income) || 0 // 原始收益
+    const overtimeIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.overtime_income')) || 0
+    const rewordIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.reword')) || 0
+    const rollbackIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
     // eslint-disable-next-line max-len
-    const timeIntervalImpulseIncome = parseFloat(_.get(this.baseData, 'tags.values.time_interval_reward_impulse_income')) || 0
-    const timeIntervalRewardIncome = parseFloat(_.get(this.baseData, 'tags.values.time_interval_reward_income')) || 0
-    const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish')) || 0
+    const timeIntervalImpulseIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_impulse_income')) || 0
+    // eslint-disable-next-line max-len
+    const timeIntervalRewardIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_income')) || 0
+    const punishIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.punish')) || 0
 
     const actualIncome = retouchIncome * 100 +
       rewordIncome * 100 -
@@ -235,11 +236,12 @@ export default class StreamModel {
 
   // 获取海草
   getExp () {
-    this.exp = parseFloat(this.baseData.exp) || 0
-    this.punishExp = parseFloat(_.get(this.baseData, 'tags.values.punish_exp')) || 0
-    this.overtimeExp = parseFloat(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
-    this.rollbackExp = parseFloat(_.get(this.baseData, 'tags.values.rollback_exp_rework')) || 0
-    this.timeIntervalRewardExp = parseFloat(_.get(this.baseData, 'tags.values.time_interval_reward_exp')) || 0
+    this.exp = Validate.toFixed(this.baseData.exp) || 0
+    this.punishExp = Validate.toFixed(_.get(this.baseData, 'tags.values.punish_exp')) || 0
+    this.overtimeExp = Validate.toFixed(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
+    this.rollbackExp = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_exp_rework')) || 0
+    this.timeIntervalRewardExp = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_exp')) || 0
+
     const actualExp =
       this.exp * 100 -
       this.overtimeExp * 100 -

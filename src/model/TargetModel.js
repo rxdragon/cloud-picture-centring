@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 
 import { transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
+import * as Validate from '@/utils/validate.js'
 
 export default class TargetModel {
   base = {}
@@ -156,32 +157,32 @@ export default class TargetModel {
 
   // 获取收益相关信息
   getIncomeInfo () {
-    this.income.retouchIncome = Number(_.get(this.base, 'income.retouchIncome')) || 0
-    this.income.glassPunishIncome = Number(_.get(this.base, 'income.glassPunishIncome')) || 0
-    this.income.storeReturnIncomeForQuality = Number(_.get(this.base, 'income.storeReturnIncomeForQuality')) || 0
-    this.income.storeReturnIncomeForNotQuality = Number(_.get(this.base, 'income.storeReturnIncomeForNotQuality')) || 0
-    this.income.storeReturnIncomeForBoth = Number(_.get(this.base, 'income.storeReturnIncomeForBoth')) || 0
-    this.income.reward = Number(_.get(this.base, 'income.reward')) || 0
-    this.income.impulse = Number(_.get(this.base, 'income.impulse')) || 0
-    this.income.punishIncome = Number(_.get(this.base, 'income.punishIncome')) || 0
-    this.income.timeIntervalImpulse = Number(_.get(this.base, 'income.timeIntervalImpulse')) || 0
-    this.income.timeIntervalReward = Number(_.get(this.base, 'income.timeIntervalReward')) || 0
+    this.income.retouchIncome = Validate.toFixed(_.get(this.base, 'income.retouchIncome')) || 0
+    this.income.glassPunishIncome = Validate.toFixed(_.get(this.base, 'income.glassPunishIncome')) || 0
+    this.income.storeReturnIncomeForQuality = Validate.toFixed(_.get(this.base, 'income.storeReturnIncomeForQuality')) || 0
+    this.income.storeReturnIncomeForNotQuality = Validate.toFixed(_.get(this.base, 'income.storeReturnIncomeForNotQuality')) || 0
+    this.income.storeReturnIncomeForBoth = Validate.toFixed(_.get(this.base, 'income.storeReturnIncomeForBoth')) || 0
+    this.income.reward = Validate.toFixed(_.get(this.base, 'income.reward')) || 0
+    this.income.impulse = Validate.toFixed(_.get(this.base, 'income.impulse')) || 0
+    this.income.punishIncome = Validate.toFixed(_.get(this.base, 'income.punishIncome')) || 0
+    this.income.timeIntervalImpulse = Validate.toFixed(_.get(this.base, 'income.timeIntervalImpulse')) || 0
+    this.income.timeIntervalReward = Validate.toFixed(_.get(this.base, 'income.timeIntervalReward')) || 0
 
     let sunReward = this.income.reward * 100 + this.income.impulse * 100
-    sunReward = (sunReward / 100).toFixed(2)
+    sunReward = Validate.toFixed(sunReward / 100)
     this.income.sunReward = sunReward
 
     // 正常流水的会回补收益
-    const retoucherRollbackIncomeForNormalRework = Number(_.get(this.base, 'income.retoucherRollbackIncomeForNormalRework') || 0)
+    const retoucherRollbackIncomeForNormalRework = Validate.toFixed(_.get(this.base, 'income.retoucherRollbackIncomeForNormalRework') || 0)
     // 退单流水的回补收益
-    const retoucherRollbackIncomeForReturnRework = Number(_.get(this.base, 'income.retoucherRollbackIncomeForReturnRework') || 0)
+    const retoucherRollbackIncomeForReturnRework = Validate.toFixed(_.get(this.base, 'income.retoucherRollbackIncomeForReturnRework') || 0)
     this.income.rollbackIncome = retoucherRollbackIncomeForNormalRework + retoucherRollbackIncomeForReturnRework
 
     let storeReturnIncome =
       this.income.storeReturnIncomeForQuality * 100 +
       this.income.storeReturnIncomeForNotQuality * 100 +
       this.income.storeReturnIncomeForBoth * 100
-    storeReturnIncome = (storeReturnIncome / 100).toFixed(2)
+    storeReturnIncome = Validate.toFixed(storeReturnIncome / 100)
     this.income.storeReturnIncome = storeReturnIncome
 
     let sumIncome =
@@ -195,31 +196,31 @@ export default class TargetModel {
       this.income.reward * 100 +
       this.income.impulse * 100 -
       this.income.punishIncome * 100
-    sumIncome = (sumIncome / 100).toFixed(2)
+    sumIncome = Validate.toFixed(sumIncome / 100)
     this.income.sumIncome = sumIncome
   }
 
   // 获取经验相关
   getExpInfo () {
-    this.exp.retouchExp = Number(_.get(this.base, 'exp.retouchExp')) || 0
-    this.exp.glassPunishExp = Number(_.get(this.base, 'exp.glassPunishExp')) || 0
-    this.exp.storeReturnExpForQuality = Number(_.get(this.base, 'exp.storeReturnExpForQuality')) || 0
-    this.exp.storeReturnExpForNotQuality = Number(_.get(this.base, 'exp.storeReturnExpForNotQuality')) || 0
-    this.exp.storeReturnExpForBoth = Number(_.get(this.base, 'exp.storeReturnExpForBoth')) || 0
-    this.exp.punishExp = Number(_.get(this.base, 'exp.punishExp')) || 0
-    this.exp.timeIntervalReward = Number(_.get(this.base, 'exp.timeIntervalReward')) || 0
+    this.exp.retouchExp = Validate.toFixed(_.get(this.base, 'exp.retouchExp')) || 0
+    this.exp.glassPunishExp = Validate.toFixed(_.get(this.base, 'exp.glassPunishExp')) || 0
+    this.exp.storeReturnExpForQuality = Validate.toFixed(_.get(this.base, 'exp.storeReturnExpForQuality')) || 0
+    this.exp.storeReturnExpForNotQuality = Validate.toFixed(_.get(this.base, 'exp.storeReturnExpForNotQuality')) || 0
+    this.exp.storeReturnExpForBoth = Validate.toFixed(_.get(this.base, 'exp.storeReturnExpForBoth')) || 0
+    this.exp.punishExp = Validate.toFixed(_.get(this.base, 'exp.punishExp')) || 0
+    this.exp.timeIntervalReward = Validate.toFixed(_.get(this.base, 'exp.timeIntervalReward')) || 0
 
     // 正常流水的回补海草
-    const retoucherRollbackExpForNormalRework = Number(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0)
+    const retoucherRollbackExpForNormalRework = Validate.toFixed(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0)
     // 退单流水的回补海草
-    const retoucherRollbackExpForReturnRework = Number(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
+    const retoucherRollbackExpForReturnRework = Validate.toFixed(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
     this.exp.rollbackExp = retoucherRollbackExpForNormalRework + retoucherRollbackExpForReturnRework
 
     let sumStoreReturnExp =
       this.exp.storeReturnExpForQuality * 100 +
       this.exp.storeReturnExpForNotQuality * 100 +
       this.exp.storeReturnExpForBoth * 100
-    sumStoreReturnExp = (sumStoreReturnExp / 100).toFixed(2)
+    sumStoreReturnExp = Validate.toFixed(sumStoreReturnExp / 100)
     this.exp.sumStoreReturnExp = sumStoreReturnExp
 
     let sumExp =
@@ -230,7 +231,7 @@ export default class TargetModel {
       this.exp.storeReturnExpForBoth * 100 +
       this.exp.timeIntervalReward * 100 -
       this.exp.punishExp * 100
-    sumExp = (sumExp / 100).toFixed(2)
+    sumExp = Validate.toFixed(sumExp / 100)
     this.exp.sumExp = sumExp
   }
 }
