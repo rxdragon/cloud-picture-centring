@@ -48,7 +48,7 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
-    <div v-if="!rename && specialEffects" class="recede-reason">
+    <div v-if="!rename && showSpecialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
     <div v-if="storePartReworkReason.length" class="recede-reason">

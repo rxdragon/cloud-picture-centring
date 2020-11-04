@@ -99,7 +99,6 @@
                   <p class="text-red">沙漏惩罚收益：<span>{{ row.overtimeIncome | toFixedString }}</span></p>
                   <p class="text-red">退单惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
                   <p class="text-money">奖励收益：<span>{{ row.rewordIncome | toFixedString }}</span></p>
-                  <p class="text-money">时段冲量收益：<span>{{ row.timeIntervalImpulseIncome | toFixedString }}</span></p>
                   <p class="text-money">时段金币收益：<span>{{ row.timeIntervalRewardIncome | toFixedString }}</span></p>
                   <p class="text-money">回滚收益：<span>{{ row.rollbackIncome | toFixedString }}</span></p>
                   <p>实获收益：<span>{{ row.actualIncome | toFixedString }}</span></p>

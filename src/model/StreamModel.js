@@ -82,7 +82,6 @@ export default class StreamModel {
   overtimeIncome = 0 // 超时惩罚收益
   rewordIncome = 0 // 奖励收益
   rollbackIncome = 0 // 奖励收益
-  timeIntervalImpulse = 0 // 时段冲量奖励
   timeIntervalReward = 0 // 时段金币奖励
   punishIncome = 0 // 惩罚收益
   actualIncome = 0 // 实获收益
@@ -212,7 +211,6 @@ export default class StreamModel {
     const rewordIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.reword')) || 0
     const rollbackIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
     // eslint-disable-next-line max-len
-    const timeIntervalImpulseIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_impulse_income')) || 0
     // eslint-disable-next-line max-len
     const timeIntervalRewardIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_income')) || 0
     const punishIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.punish')) || 0
@@ -221,14 +219,12 @@ export default class StreamModel {
       rewordIncome * 100 -
       punishIncome *100 -
       overtimeIncome * 100 +
-      timeIntervalImpulseIncome * 100 +
       timeIntervalRewardIncome * 100 +
       rollbackIncome * 100
     this.retouchIncome = retouchIncome
     this.overtimeIncome = overtimeIncome
     this.rewordIncome = rewordIncome
     this.rollbackIncome = rollbackIncome
-    this.timeIntervalImpulseIncome = timeIntervalImpulseIncome
     this.timeIntervalRewardIncome = timeIntervalRewardIncome
     this.punishIncome = punishIncome
     this.actualIncome = Validate.toFixed(actualIncome / 100)
