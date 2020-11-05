@@ -82,6 +82,7 @@ export const StoreReturnPhoto = [
   'store_rework' // 门店退回
 ]
 
+// 照片版本
 export const PHOTO_VERSION = {
   STORE_REWORK: 'store_rework', // 门店退回的照片version
   ORIGINAL_PHOTO: 'original_photo', // 原片
@@ -98,13 +99,13 @@ export const PhotoEnumName = {
   ReturnPhoto: '退回照片',
   CompletePhoto: '云端成片',
   FinishPhoto: '顾客满意片',
-  original_photo: '原片',
-  first_photo: '一次成片',
-  return_photo: '退回照片',
-  complete_photo: '云端成片',
-  finish_photo: '顾客满意片',
-  store_rework: '门店退回',
-  last_retouch_photo: '最新成片'
+  [PHOTO_VERSION.ORIGINAL_PHOTO]: '原片',
+  [PHOTO_VERSION.FIRST_PHOTO]: '一次成片',
+  [PHOTO_VERSION.RETURN_PHOTO]: '退回照片',
+  [PHOTO_VERSION.COMPLETE_PHOTO]: '云端成片',
+  [PHOTO_VERSION.STORE_REWORK]: '门店退回',
+  [PHOTO_VERSION.FINISH_PHOTO]: '顾客满意片',
+  [PHOTO_VERSION.LAST_RETOUCH_PHOTO]: '最新成片'
 }
 
 // 搜索类型
@@ -318,4 +319,46 @@ export const PHOTO_TYPE = {
   NORMAL_TYPE: 'normal', // 正常
   TEMPLATE_TYPE: 'template', // 模版
   SPLICE_TYPE: 'splice' // 拼接
+}
+
+/**
+ * @description 时段奖励设置状态
+ */
+export const TIME_REWARD_STATE = {
+  END: 'end', // 已结束
+  EFFECT: 'effect' // 进行中
+}
+
+/**
+ * @description 时段奖励设置状态转中文
+ */
+export const timeRewardStateToCN = {
+  [TIME_REWARD_STATE.END]: '已结束', // 已结束
+  [TIME_REWARD_STATE.EFFECT]: '生效中' // 进行中
+}
+
+/**
+ * @description 时段奖励类型
+ */
+export const TIME_REWARD_TYPE = {
+  EXP_POWER: 'exp_power', // 经验翻倍
+  IMPULSE: 'impulse', // 冲量奖励
+  GOLD: 'gold' // 金币奖励
+}
+
+/**
+ * @description 时段奖励类型对应中文
+ */
+export const timeRewardTypeToCN = {
+  [TIME_REWARD_TYPE.EXP_POWER]: '翻倍经验', // 经验翻倍
+  [TIME_REWARD_TYPE.IMPULSE]: '冲量奖励', // 冲量奖励
+  [TIME_REWARD_TYPE.GOLD]: '金币奖励' // 金币奖励
+}
+
+/**
+ * @description 冲量奖励配置类型
+ */
+export const IMPULSE_SETTING_TYPE = {
+  NORMAL: 'normal', // 常规
+  TIME_INTERVAL: 'time_interval' // 时段奖励
 }

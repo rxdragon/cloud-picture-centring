@@ -141,6 +141,14 @@ const AppealException = [
   [0xA11015014, '不是自己组的审批']
 ]
 
+const TimeIntervalRewardConfigException = [
+  [0xA11017001, '配置项不存在或不合法'],
+  [0xA11017002, '经验倍率不合法'],
+  [0xA11017003, '金币倍率不合法'],
+  [0xA11017004, '配置类型不合法'],
+  [0xA11017005, '配置的伙伴中,存在生效时间重叠']
+]
+
 export const errText = [
   ...ApiException,
   ...CardException,
@@ -157,7 +165,8 @@ export const errText = [
   ...StaffException,
   ...StreamException,
   ...TagException,
-  ...AppealException
+  ...AppealException,
+  ...TimeIntervalRewardConfigException
 ]
 
 const errMap = new Map(errText)

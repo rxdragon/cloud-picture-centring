@@ -35,13 +35,17 @@ async function initNotification () {
         body,
         tag: uuid.v4(),
         icon,
+        renotify: true,
         requireInteraction: true //表示通知应保持有效，直到用户点击或关闭它，而不是自动关闭。默认值为false。 
-      } 
+      }
+      console.log(options)
       const notification = new Notification(title, options)
       notification.onclick = clickCB ? clickCB : (event) => {
         window.focus()
         event.target.close()
       }
+      console.log(notification)
+
       notification.onshow = (event) => {
         console.warn(`${event.target.title}`, 'onshow')
       }

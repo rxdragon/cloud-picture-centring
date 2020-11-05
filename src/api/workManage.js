@@ -91,12 +91,18 @@ export function getRetoucherQuota (params) {
     // 回补收益
     const rollbackIncome = msg.income.rollbackForNormalRework + msg.income.rollbackForReturnRework
     msg.income.rollbackIncome = toFixed(rollbackIncome)
+    // 时段奖励收益
+    msg.income.timeIntervalImpulse = toFixed(_.get(msg, 'income.timeIntervalImpulse') || 0)
+    msg.income.timeIntervalReward = toFixed(_.get(msg, 'income.timeIntervalReward') || 0)
+
     // 收益
     const income = msg.income.retouch * 100 +
       msg.income.impulse * 100 +
       msg.income.reward * 100 +
       rollbackIncome * 100 +
-      returnIncome * 100 -
+      returnIncome * 100 +
+      msg.income.timeIntervalImpulse * 100 +
+      msg.income.timeIntervalReward * 100 -
       msg.income.punish * 100 -
       msg.income.glassPunishIncome * 100
 
@@ -106,13 +112,16 @@ export function getRetoucherQuota (params) {
     const returnExp = Number(msg.exp.storeReturnExpForBoth) +
       Number(msg.exp.storeReturnExpForNotQuality) +
       Number(msg.exp.storeReturnExpForQuality)
+
     msg.exp.returnExp = toFixed(returnExp)
     const rollbackExp = msg.exp.rollbackForNormalRework + msg.exp.rollbackForReturnRework
     msg.exp.rollbackExp = toFixed(rollbackExp)
+    msg.exp.timeIntervalReward = Number(_.get(msg, 'exp.timeIntervalReward') || 0) // 时段海草奖励
     // 海草
     const exp = msg.exp.normal * 100 +
       returnExp * 100 +
-      rollbackExp * 100 +
+      msg.exp.timeIntervalReward * 100 +
+      rollbackExp * 100 -
       msg.exp.punishExp * 100 -
       msg.exp.glassPunishExp * 100
 

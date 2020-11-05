@@ -46,6 +46,10 @@
                   <span>{{ expInfo.glassPunishExp || '0.00' }}</span>
                 </p>
                 <p class="info-row">
+                  <span>时段奖励海草：</span>
+                  <span>{{ expInfo.timeIntervalReward || '0.00' }}</span>
+                </p>
+                <p class="info-row">
                   <span>回补海草：</span>
                   <span>{{ expInfo.rollbackExp || '0.00' }}</span>
                 </p>
@@ -69,6 +73,14 @@
                 <p class="info-row text-money">
                   <span>冲量奖励收益：</span>
                   <span>{{ incomeInfo.impulse || '0.00' }}</span>
+                </p>
+                <p class="info-row text-money">
+                  <span>时段冲量收益：</span>
+                  <span>{{ incomeInfo.timeIntervalImpulse || '0.00' }}</span>
+                </p>
+                <p class="info-row text-money">
+                  <span>时段金币奖励收益：</span>
+                  <span>{{ incomeInfo.timeIntervalReward || '0.00' }}</span>
                 </p>
                 <p class="info-row text-money">
                   <span>其他奖励收益：</span>

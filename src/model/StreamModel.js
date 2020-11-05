@@ -31,6 +31,8 @@ export default class StreamModel {
   photoNum = 0 // 照片数据
   isGreen = false // 是否是绿色通道
 
+  isChristmasPhoto = false
+
   retoucher = '' // 修图师
   retoucherJobNum = '' // 修图师id
   retoucherLeader = "" // 修图组长
@@ -41,6 +43,7 @@ export default class StreamModel {
   overtimeExp = 0 // 沙漏抽出海草
   rollbackExp = 0 // 回滚海草
   actualExp = 0 // 实获海草
+  timeIntervalRewardExp = 0 // 时段海草
 
   // 时间
   waitTime = '' // 流水号等待时间
@@ -79,6 +82,7 @@ export default class StreamModel {
   overtimeIncome = 0 // 超时惩罚收益
   rewordIncome = 0 // 奖励收益
   rollbackIncome = 0 // 奖励收益
+  timeIntervalReward = 0 // 时段金币奖励
   punishIncome = 0 // 惩罚收益
   actualIncome = 0 // 实获收益
 
@@ -119,9 +123,13 @@ export default class StreamModel {
 
     this.isCheckReturn = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CHECKRETURN)
     this.reviewerNote = _.get(streamData, 'reviewer_note') || ''
+    
+    // 判断是否是圣诞一人成团订单 
+    this.isChristmasPhoto = _.get(streamData, 'tags.values.need_auto_created_finish_photo') || false
 
     const referencePhoto = _.get(streamData, 'tags.values.retouch_claim.referenceImg')
     this.referencePhoto = referencePhoto ? store.getters.imgDomain + referencePhoto : ''
+
     this.photoNum = this.getPhotoNum()
     this.isGreen = _.get(streamData, 'tags.statics', []).includes('green_stream')
 
@@ -198,31 +206,44 @@ export default class StreamModel {
 
   // 获取收益
   getIncome () {
-    const retouchIncome = parseFloat(this.baseData.income) || 0 // 原始收益
-    const overtimeIncome = parseFloat(_.get(this.baseData, 'tags.values.overtime_income')) || 0
-    const rewordIncome = parseFloat(_.get(this.baseData, 'tags.values.reword')) || 0
-    const rollbackIncome = parseFloat(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
-    const punishIncome = parseFloat(_.get(this.baseData, 'tags.values.punish')) || 0
+    const retouchIncome = Validate.toFixed(this.baseData.income) || 0 // 原始收益
+    const overtimeIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.overtime_income')) || 0
+    const rewordIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.reword')) || 0
+    const rollbackIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line max-len
+    const timeIntervalRewardIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_income')) || 0
+    const punishIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.punish')) || 0
+
     const actualIncome = retouchIncome * 100 +
       rewordIncome * 100 -
       punishIncome *100 -
       overtimeIncome * 100 +
+      timeIntervalRewardIncome * 100 +
       rollbackIncome * 100
     this.retouchIncome = retouchIncome
     this.overtimeIncome = overtimeIncome
     this.rewordIncome = rewordIncome
     this.rollbackIncome = rollbackIncome
+    this.timeIntervalRewardIncome = timeIntervalRewardIncome
     this.punishIncome = punishIncome
     this.actualIncome = Validate.toFixed(actualIncome / 100)
   }
 
   // 获取海草
   getExp () {
-    this.exp = parseFloat(this.baseData.exp) || 0
-    this.punishExp = parseFloat(_.get(this.baseData, 'tags.values.punish_exp')) || 0
-    this.overtimeExp = parseFloat(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
-    this.rollbackExp = parseFloat(_.get(this.baseData, 'tags.values.rollback_exp_rework')) || 0
-    const actualExp = this.exp * 100 - this.overtimeExp * 100 - this.punishExp * 100 + this.rollbackExp * 100
+    this.exp = Validate.toFixed(this.baseData.exp) || 0
+    this.punishExp = Validate.toFixed(_.get(this.baseData, 'tags.values.punish_exp')) || 0
+    this.overtimeExp = Validate.toFixed(_.get(this.baseData, 'tags.values.overtime_exp')) || 0
+    this.rollbackExp = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_exp_rework')) || 0
+    this.timeIntervalRewardExp = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_exp')) || 0
+
+    const actualExp =
+      this.exp * 100 -
+      this.overtimeExp * 100 -
+      this.punishExp * 100 +
+      this.timeIntervalRewardExp * 100 +
+      this.rollbackExp * 100
     this.actualExp = Validate.toFixed(actualExp / 100)
   }
 
@@ -233,7 +254,8 @@ export default class StreamModel {
     this.passAt = this.baseData.pass_at || '-'
     this.waitTime = Validate.waitTime(this.baseData.created_at, this.baseData.pass_at)
     this.reviewTime = this.baseData.review_time || 0
-    this.hourGlassOverTime = _.get(this.baseData, 'hour_glass.over_time') || ''
+    const hourGlassOverTime = _.get(this.baseData, 'hour_glass.over_time')
+    this.hourGlassOverTime = hourGlassOverTime ? (hourGlassOverTime / 60).toFixed(2) : ''
     const retouchTime = _.get(this.baseData, 'retouch_time') || 0
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
     const allTime = retouchTime + reviewReturnRebuildTime

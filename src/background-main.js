@@ -43,7 +43,7 @@ async function createWindow () {
   const cacheSize = await ses.getCacheSize()
   const cacheSizeMB = cacheSize / 1024 / 1024
   // eslint-disable-next-line no-console
-  console.log(`\x1b[42;30m 当前缓存 \x1b[40;32m ${cacheSizeMB}MB`)
+  console.log(`\x1b[42;30m 当前缓存 \x1b[40;32m ${cacheSizeMB}MB\x1B[0m`)
   await ses.clearCache()
 
   // 窗口关闭前触发

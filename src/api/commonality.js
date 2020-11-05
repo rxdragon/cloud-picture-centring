@@ -26,6 +26,17 @@ export function getAllRetouchClass () {
 }
 
 /**
+ * @description 获取周年庆相关信息
+ * @param {*} params 
+ */
+export function getAnniversaryInfo (params) {
+  return axios({
+    url: '/project_cloud/common/getAnniversaryInfo',
+    method: 'GET'
+  })
+}
+
+/**
  * @description 获取流水信息
  * @param {*} params
  */
@@ -39,6 +50,14 @@ export function getStreamInfo (params) {
     const createData = {}
     const npsAvgEnum = { 10: `超满意（10分）`, 6: `基本满意（6分）`, 2: `不满意（2分）` }
     const photos = []
+
+    // 获取订单是否一人成团
+    if (streamData.isChristmasPhoto) {
+      const firstPhoto = msg.photos[0]
+      if (!firstPhoto) return
+      createData.christmasSplicePhotos = _.get(firstPhoto, 'tags.values.splice_photos') || []
+    }
+
     msg.photos.forEach(photoItem => {
       const { baseData, ...rest } = new PhotoModel(photoItem)
       const finalPhotoItem = {

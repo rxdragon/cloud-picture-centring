@@ -434,8 +434,6 @@ export default {
 </script>
 
 <style lang="less">
-
-
 .audit-center {
   .header {
     .el-button {

@@ -30,6 +30,7 @@
         <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
           <photo-box
             contain-photo
+            :show-special-effects="false"
             :tags="photoItem.tags"
             :src="photoItem.src"
             @click.native="goToDetails(photoItem)"
@@ -200,7 +201,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 .evaluate-photo {
   .search-box {

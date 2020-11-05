@@ -48,7 +48,12 @@
               class="photo-box"
               @click="goToDetails(photoItem)"
             >
-              <photo-box contain-photo :use-ele-image="false" :src="photoItem.src" />
+              <photo-box
+                :show-special-effects="false"
+                contain-photo
+                :use-ele-image="false"
+                :src="photoItem.src"
+              />
               <div class="staff-name">修图师：{{ photoItem.retoucherName }}</div>
               <div class="group-name">修图小组：{{ photoItem.retouchGroupName }}</div>
             </div>
@@ -233,7 +238,6 @@ export default {
 </script>
 
 <style lang="less">
-
 
 .evaluate-photo-scroll {
   .search-box {

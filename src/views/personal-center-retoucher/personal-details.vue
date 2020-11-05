@@ -148,12 +148,19 @@
       <div class="panel-title">
         <tip message="有效期15天,请尽快使用">我的道具</tip>
       </div>
+      <div class="prop-tip">
+        <el-alert type="warning" :closable="false">
+          <p>1、不可同时激活同类奖励道具。例：已激活了一张1.5倍收益奖励，不可再激活另一张1.2/1.5倍收益奖励，需等待前一张收益奖励失效后方可激活另一张收益奖励。</p>
+          <p>2、请在奖励道具过期前使用该道具，过期未激活道具将会自动消失。</p>
+        </el-alert>
+      </div>
       <div class="panel-main">
         <template v-if="Object.keys(propData).length">
           <el-badge
             v-for="(propItem, propIndex) in propData"
             :key="propIndex"
             :value="propItem.count"
+            :hidden="propItem.count === 1"
             class="prop-badge"
           >
             <div class="prop-box">
@@ -162,7 +169,7 @@
               </div>
               <div class="prop-content">
                 <div class="content-title">{{ propItem.multiple + propItem.multipleText }}</div>
-                <div class="content-describe">24小时内仅可用1次</div>
+                <div class="content-describe">过期时间：{{ propItem.endAt | toTimeSpan }}</div>
               </div>
               <div class="prop-right">
                 <el-popover v-model="propItem.showProp" placement="top" width="160">
@@ -486,6 +493,10 @@ export default {
 
   .prop-panel {
     margin-top: 24px;
+
+    .prop-tip {
+      margin-top: 12px;
+    }
 
     .prop-icon {
       width: 44px;
