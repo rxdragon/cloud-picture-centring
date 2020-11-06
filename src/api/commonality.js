@@ -59,7 +59,9 @@ export function getStreamInfo (params) {
     }
 
     msg.photos.forEach(photoItem => {
-      const { baseData, ...rest } = new PhotoModel(photoItem)
+      const photoInfo = new PhotoModel(photoItem)
+      photoInfo.getCheckPoolTags()
+      const { baseData, ...rest } = photoInfo
       const finalPhotoItem = {
         ...rest,
         reworkNum: streamData.reworkNum,

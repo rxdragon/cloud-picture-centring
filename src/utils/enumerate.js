@@ -210,12 +210,16 @@ export const APPEAL_CHECK_STATUS = {
 
 // 申诉问题类型
 export const APPEAL_TYPE = {
-  REWORK: 'rework'
+  REWORK: 'rework',
+  TIMEOUT: 'timeout',
+  EVALUATE: 'evaluate'
 }
 
 // 申诉问题类型
 export const AppealTypeNameEnum = {
-  [APPEAL_TYPE.REWORK]: '门店退单问题'
+  [APPEAL_TYPE.REWORK]: '门店退单问题',
+  [APPEAL_TYPE.TIMEOUT]: '沙漏超时',
+  [APPEAL_TYPE.EVALUATE]: '抽查评分'
 }
 
 // 申诉流水状态

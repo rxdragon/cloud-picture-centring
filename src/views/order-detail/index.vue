@@ -64,19 +64,17 @@
     >
       <div class="appeal-item">
         <span class="item-name">申诉类型</span>
-        <el-select v-model="appealType" placeholder="请选择">
-          <el-option
-            v-for="item in appealOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
+        <appeal-type-select v-model="appealType" />
       </div>
-      <p class="appeal-photo-title">选择问题照片</p>
-      <div class="appeal-photos">
-        <rework-photo v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-photo>
+      <p class="appeal-photo-title" v-if="appealType !== APPEAL_TYPE.TIMEOUT">选择问题照片</p>
+      <div class="appeal-photos" v-if="appealType === APPEAL_TYPE.REWORK">
+        <rework-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal>
+      </div>
+      <div class="appeal-photos" v-if="appealType === APPEAL_TYPE.EVALUATE">
+        <rework-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal>
+      </div>
+      <div class="timeout-appeal" v-if="appealType === APPEAL_TYPE.TIMEOUT">
+        <timeout-appeal />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="info" @click="cancelAppeal">取消</el-button>
@@ -89,12 +87,15 @@
 <script>
 import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
-import ReworkPhoto from './components/ReworkPhoto'
+import ReworkAppeal from './components/ReworkAppeal'
+import TimeoutAppeal from './components/TimeOutAppeal'
 import store from '@/store' // vuex
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PhotoBox from '@/components/PhotoBox'
+import AppealTypeSelect from '@SelectBox/AppealTypeSelect'
 
 import { mapGetters } from 'vuex'
+import { APPEAL_TYPE } from '@/utils/enumerate.js'
 
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
@@ -104,7 +105,7 @@ import * as PhotoTool from '@/utils/photoTool'
 
 export default {
   name: 'OrderDetail',
-  components: { PhotoDetail, OrderInfo, ReworkPhoto, PhotoBox },
+  components: { PhotoDetail, OrderInfo, ReworkAppeal, PhotoBox, AppealTypeSelect, TimeoutAppeal },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -114,12 +115,7 @@ export default {
       photos: [],
       dialogAppealVisible: false,
       appealType: 'rework', // 申诉信息
-      appealOptions: [
-        {
-          value: 'rework',
-          name: '门店退单问题'
-        }
-      ]
+      APPEAL_TYPE
     }
   },
   computed: {
@@ -395,6 +391,8 @@ export default {
     }
 
     .appeal-item {
+      display: flex;
+      align-items: center;
       margin-bottom: 20px;
 
       .item-name {
