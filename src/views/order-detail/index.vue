@@ -71,7 +71,7 @@
         <rework-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal>
       </div>
       <div class="appeal-photos" v-if="appealType === APPEAL_TYPE.EVALUATE">
-        <rework-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal>
+        <evaluate-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></evaluate-appeal>
       </div>
       <div class="timeout-appeal" v-if="appealType === APPEAL_TYPE.TIMEOUT">
         <timeout-appeal />
@@ -89,6 +89,7 @@ import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
 import ReworkAppeal from './components/ReworkAppeal'
 import TimeoutAppeal from './components/TimeOutAppeal'
+import EvaluateAppeal from './components/EvaluateAppeal'
 import store from '@/store' // vuex
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PhotoBox from '@/components/PhotoBox'
@@ -105,7 +106,7 @@ import * as PhotoTool from '@/utils/photoTool'
 
 export default {
   name: 'OrderDetail',
-  components: { PhotoDetail, OrderInfo, ReworkAppeal, PhotoBox, AppealTypeSelect, TimeoutAppeal },
+  components: { PhotoDetail, OrderInfo, ReworkAppeal, PhotoBox, AppealTypeSelect, TimeoutAppeal, EvaluateAppeal },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -114,7 +115,7 @@ export default {
       christmasSplicePhotos: [], // 圣诞拼接照信息
       photos: [],
       dialogAppealVisible: false,
-      appealType: 'rework', // 申诉信息
+      appealType: 'evaluate', // 申诉信息
       APPEAL_TYPE
     }
   },

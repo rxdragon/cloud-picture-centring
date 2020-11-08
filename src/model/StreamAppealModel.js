@@ -13,7 +13,8 @@ export default class StreamAppealModel {
   streamId = ''
   streamNum = ''
   createdAt = '' // 申诉时间
-  appealTypeName = '' // 申诉类型
+  appealType = '' // 申诉类型
+  appealTypeName = '' // 申诉类型中文
   appealStatusDesc = '' // 审核进度
   firstInfo = { // 初审信息
     staffName: '-',
@@ -34,9 +35,22 @@ export default class StreamAppealModel {
 
   appealNickName = '-' // 申诉申请人
   appealGroupName = '-' // 申诉申请人所属组名
+  
+  hourglassTime = '15min' // 沙漏时长
+  retouchTime = '15min' // 修图时长
+
 
 
   constructor (appealItem) {
+    // todo mock
+    appealItem.type = 'timeout'
+    appealItem.hour_glass_records = {
+      green_time: '123',
+      orange_time: '123',
+      over_time: '123',
+      suggest_time: '123'
+    }
+
     const appealInfo = appealItem.stream_appeal_examines || []
     const firstCheckInfo = appealInfo[0]
     const secondCheckInfo = appealInfo[1]
@@ -49,6 +63,7 @@ export default class StreamAppealModel {
     this.id = appealItem.id
     this.streamNum = _.get(appealItem, 'stream.stream_num') || ''
     this.createdAt = appealItem.created_at
+    this.appealType = appealItem.type
     this.appealTypeName = AppealTypeNameEnum[appealItem.type]
     this.appealStatusDesc = AppealStreamStatusEnum[appealItem.state]
     if (firstCheckInfo) {

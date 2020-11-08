@@ -12,16 +12,50 @@
       <div class="panel-title">申诉照片{{ photoIndex + 1 }}</div>
       <photo-detail :ref="`photoDetail${photoIndex}`" :check-type="checkType" :photo-item="photoItem"/>
     </div>
-    <div class="footer" v-if="checkType">
+    <div
+      class="footer"
+      v-if="checkType && appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
+    >
       <el-button type="info" @click="cancelAll">返回</el-button>
       <el-button type="primary" @click="submitAll">提交</el-button>
     </div>
+    <div
+      class="footer"
+      v-if="checkType && appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
+    >
+      <el-button type="info" @click="cancelAll">返回</el-button>
+      <div class="timeout-appeal-operation">
+        <el-button type="danger" @click="showTimeoutDialog">审核拒绝</el-button>
+        <el-button type="primary" @click="acceptAppeal">审核通过</el-button>
+      </div>
+    </div>
+    <!-- timeout-dialog -->
+    <el-dialog
+      title="审核拒绝"
+      class="alter-performance-dialog"
+      :visible.sync="refuseReasonShow"
+      width="30%"
+    >
+      <el-input
+        type="textarea"
+        :rows="2"
+        placeholder="请填写审核拒绝的原因"
+        v-model="refuseReason"
+      >
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelRefuse">取 消</el-button>
+        <el-button type="primary" @click="refuseAppeal">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
+
+import { APPEAL_TYPE } from '@/utils/enumerate'
 
 import * as Appeal from '@/api/appeal.js'
 
@@ -46,7 +80,10 @@ export default {
           name: '门店退单问题'
         }
       ],
-      appealInfo: {}
+      appealInfo: {},
+      APPEAL_TYPE,
+      refuseReasonShow: false,
+      refuseReason: ''
     }
   },
   created () {
@@ -145,6 +182,32 @@ export default {
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
+    },
+    /**
+     * @description 沙漏审核通过
+     */
+    acceptAppeal () {
+      // do something
+    },
+    /**
+     * @description 展示沙漏拒绝理由
+     */
+    showTimeoutDialog () {
+      this.refuseReasonShow = true
+    },
+    /**
+     * @description 取消拒绝
+     */
+    cancelRefuse () {
+      // do something
+      this.refuseReasonShow = false
+      this.refuseReason = ''
+    },
+    /**
+     * @description 确定拒绝
+     */
+    refuseAppeal () {
+      // do something
     }
   }
 }
@@ -166,6 +229,10 @@ export default {
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 20px;
+
+    .timeout-appeal-operation {
+      margin-left: 40px;
+    }
   }
 }
 </style>
