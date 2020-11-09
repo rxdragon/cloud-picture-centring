@@ -72,7 +72,7 @@ export function appealDetail (params, source) {
   }).then(msg => {
     const photos = []
     const { base, isFinished, ...rest } = new StreamAppealModel(msg)
-    msg.photo_appeals.forEach(photoAppealItem => {
+    msg.photo_appeals && msg.photo_appeals.forEach(photoAppealItem => {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
       const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(photoAppealItem)

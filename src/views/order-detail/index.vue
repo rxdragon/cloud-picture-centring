@@ -2,19 +2,8 @@
   <div class="order-detail page-class">
     <div class="header">
       <h3>修图详情</h3>
-      <el-button
-        type="primary"
-        v-if="showAppealAccess && needAppeal && !orderData.currentStreamAppeal"
-        @click="showAppeal"
-      >
+      <el-button type="primary" @click="showAppeal">
         我要申诉
-      </el-button>
-      <el-button
-        type="info"
-        disabled
-        v-if="showAppealAccess && needAppeal && orderData.currentStreamAppeal"
-      >
-        申诉中
       </el-button>
     </div>
     <div class="order module-panel">
@@ -66,15 +55,33 @@
         <span class="item-name">申诉类型</span>
         <appeal-type-select v-model="appealType" />
       </div>
-      <p class="appeal-photo-title" v-if="appealType !== APPEAL_TYPE.TIMEOUT">选择问题照片</p>
-      <div class="appeal-photos" v-if="appealType === APPEAL_TYPE.REWORK">
+      <!-- 质量退单 -->
+      <p
+        class="appeal-photo-title"
+        v-if="appealType === APPEAL_TYPE.REWORK && appealPhotos.length"
+      >
+        选择问题照片
+      </p>
+      <p
+        class="appeal-photo-title"
+        v-if="appealType === APPEAL_TYPE.REWORK && !appealPhotos.length"
+      >
+        没有可以申诉的质量问题照片
+      </p>
+      <div
+        class="appeal-photos"
+        v-if="appealType === APPEAL_TYPE.REWORK && appealPhotos.length"
+      >
         <rework-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal>
       </div>
+      <!-- 云学院评分 -->
+      <p class="appeal-photo-title" v-if="appealType === APPEAL_TYPE.EVALUATE">选择问题照片</p>
       <div class="appeal-photos" v-if="appealType === APPEAL_TYPE.EVALUATE">
         <evaluate-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></evaluate-appeal>
       </div>
+      <!-- 沙漏超时 -->
       <div class="timeout-appeal" v-if="appealType === APPEAL_TYPE.TIMEOUT">
-        <timeout-appeal />
+        <timeout-appeal :order-data="orderData" />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="info" @click="cancelAppeal">取消</el-button>
@@ -88,7 +95,7 @@
 import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
 import ReworkAppeal from './components/ReworkAppeal'
-import TimeoutAppeal from './components/TimeOutAppeal'
+import TimeoutAppeal from './components/TimeoutAppeal'
 import EvaluateAppeal from './components/EvaluateAppeal'
 import store from '@/store' // vuex
 import DownIpc from '@electronMain/ipc/DownIpc'
@@ -115,7 +122,7 @@ export default {
       christmasSplicePhotos: [], // 圣诞拼接照信息
       photos: [],
       dialogAppealVisible: false,
-      appealType: 'evaluate', // 申诉信息
+      appealType: '', // 申诉信息
       APPEAL_TYPE
     }
   },
@@ -211,36 +218,73 @@ export default {
       this.dialogAppealVisible = true
     },
     /**
+     * @description 检查是否可以申诉
+     */
+    checkCanAppeal () {
+      const checkArr = []
+      if (!this.appealType) {
+        this.$newMessage.warning('没有选择任何申诉类型')
+        return false
+      }
+      // 质量问题退单的情况校验
+      if (this.appealType === APPEAL_TYPE.REWORK) {
+        if (!this.appealPhotos.length) {
+          this.$newMessage.warning('没有勾选要申诉的照片')
+          return false
+        }
+        this.photos.forEach(photoItem => {
+          if (photoItem.reworkChecked) checkArr.push(photoItem)
+        })
+        if (!checkArr.length) {
+          this.$newMessage.warning('没有勾选要申诉的照片')
+          return false
+        }
+        const hasEmptyReason = checkArr.some(photoItem => !photoItem.appealReason)
+        if (hasEmptyReason) {
+          this.$newMessage.warning('存在勾选的问题,没有填写申诉理由')
+          return false
+        }
+      }
+      // 沙漏超时
+      if (this.appealType === APPEAL_TYPE.TIMEOUT) {
+        if (!this.orderData.timeoutAppealReason) {
+          this.$newMessage.warning('没有填写沙漏超时申诉的理由')
+          return false
+        }
+        if (this.orderData.overTime <= 0) {
+          this.$newMessage.warning('沙漏并未超时')
+          return false
+        }
+      }
+      return true
+    },
+    /**
      * @description 提交申诉
      */
     async submitAppeal () {
-      let checkFail = false
-      const checkArr = []
+      if (!this.checkCanAppeal()) return
       const req = {
         streamId: this.streamId,
-        photoAppeals: [],
         type: this.appealType
       }
-      this.photos.forEach(photoItem => {
-        if (photoItem.reworkChecked) {
-          checkArr.push(photoItem.id)
-          if (!photoItem.appealReason) {
-            checkFail = true
-            return
-          }
-          req.photoAppeals.push({
-            photo_id: photoItem.id,
-            desc: photoItem.appealReason
+      // 根据不同申诉类型,处理不同情况
+      // 质量问题申诉
+      switch (this.appealType) {
+        case APPEAL_TYPE.REWORK:
+          req.photoAppeals = []
+          const filterPhoto = this.photos.filter(photoItem => photoItem.reworkChecked)
+          filterPhoto.forEach(photoItem => {
+            req.photoAppeals.push({
+              photo_id: photoItem.id,
+              desc: photoItem.appealReason
+            })
           })
-        }
-      })
-      if (!checkArr.length) {
-        this.$newMessage.warning('还没有勾选任何照片')
-        return
-      }
-      if (checkFail) {
-        this.$newMessage.warning('因未勾选问题照片or没有填写问题描述则需要进行提示：请填写完整申诉问题!')
-        return
+          break
+        case APPEAL_TYPE.TIMEOUT:
+          req.desc = this.orderData.timeoutAppealReason
+          break
+        default:
+          break
       }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)

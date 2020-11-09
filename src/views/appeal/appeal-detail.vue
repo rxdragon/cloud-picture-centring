@@ -10,7 +10,12 @@
     <!-- 照片列表 -->
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
       <div class="panel-title">申诉照片{{ photoIndex + 1 }}</div>
-      <photo-detail :ref="`photoDetail${photoIndex}`" :check-type="checkType" :photo-item="photoItem"/>
+      <photo-detail
+        :ref="`photoDetail${photoIndex}`"
+        :check-type="checkType"
+        :photo-item="photoItem"
+        :appeal-info="appealInfo"
+      />
     </div>
     <div
       class="footer"
@@ -186,8 +191,22 @@ export default {
     /**
      * @description 沙漏审核通过
      */
-    acceptAppeal () {
-      // do something
+    async acceptAppeal () {
+      try {
+        const req = {
+          id: this.appealInfo.id,
+          photoExamines: []
+        }
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await Appeal.appealExamine(req, this.checkType)
+        this.$newMessage.success('提交成功')
+        this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
+        this.$router.push({
+          path: '/admin-manage/appeal-handle'
+        })
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 展示沙漏拒绝理由

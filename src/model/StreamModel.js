@@ -103,6 +103,9 @@ export default class StreamModel {
   productName = '' // 产品名称
   retouchStandard = '' // 产品修图标准
 
+  // 沙漏信息
+  hourGlassAllTime = '' // 沙漏总时长
+
   constructor (streamData) {
     if (!streamData) return
     this.baseData = streamData
@@ -260,6 +263,8 @@ export default class StreamModel {
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
     const allTime = retouchTime + reviewReturnRebuildTime
     this.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
+    const hourGlassAllTime = _.get(this.baseData, 'hour_glass.suggest_time') || 0
+    this.hourGlassAllTime = (hourGlassAllTime / 60).toFixed(0) + 'min'
   }
 
   // 获取照片数量

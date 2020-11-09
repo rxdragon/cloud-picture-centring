@@ -114,6 +114,7 @@ export function getStreamInfo (params) {
       reworkNum: streamData.reworkNum,
       storeReworkNum: streamData.storeReturnNum,
       retouchAllTime: streamData.retouchAllTime,
+      hourGlassAllTime: streamData.hourGlassAllTime,
       retoucherNpsAvg: npsAvgEnum[streamData.retoucherNpsAvg] || `${streamData.retoucherNpsAvg}`,
       reviewTime: (streamData.reviewTime / 60).toFixed(2) + 'min',
       store_evaluate: streamData.goodEvaluate,
@@ -124,7 +125,8 @@ export function getStreamInfo (params) {
       backgroundColor: streamData.backgroundColor,
       reviewerNote: streamData.reviewerNote,
       retoucherJobNum: streamData.retoucherJobNum,
-      retouchStandard: streamData.retouchStandard
+      retouchStandard: streamData.retouchStandard,
+      timeoutAppealReason: '' // 沙漏超时申诉理由
     }
     createData.photos = msg.photos
     return createData

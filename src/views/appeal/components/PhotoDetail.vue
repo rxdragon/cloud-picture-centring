@@ -10,7 +10,11 @@
       </div>
     </div>
     <photo-list v-else need-preload :photo-data="photoVersionList" />
-    <div class="panel-box">
+    <!-- 质量问题标签 -->
+    <div
+      class="panel-box"
+      v-if="appealInfo.appealType === APPEAL_TYPE.REWORK"
+    >
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
         <div class="panel-content content-one">
@@ -58,6 +62,32 @@
         <div class="panel-content">整体退回备注：{{ realPhotoData.storeReworkNote }}</div>
       </div>
     </div>
+    <!-- 云学院评分详情 -->
+    <div
+      v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
+      class="panel-box"
+    >
+      <div class="panel-title">云学院评价</div>
+      <div class="panel-main">
+        <div class="panel-content content-one">
+          总分：{{ checkScore }}
+          <el-tag :class="['type-tag', evaluatorType]" size="medium">{{ evaluatorType | toPlantCN }}</el-tag>
+        </div>
+        <div class="panel-content">
+          问题标记：
+          <el-tag
+            size="medium"
+            class="reason-item"
+            v-for="(tagItem, tagIndex) in checkTag"
+            :key="tagIndex"
+          >
+            {{ tagItem }}
+          </el-tag>
+          <span v-if="!checkTag.length">暂无标记</span>
+        </div>
+      </div>
+    </div>
+    <!-- 申诉信息 -->
     <div class="panel-box">
       <div class="panel-title">
         申诉处理
@@ -115,13 +145,14 @@ import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
 
-import { APPEAL_RESULT_STATUS, PHOTO_VERSION, AppealResultStatusPhotoEnum } from '@/utils/enumerate'
+import { APPEAL_RESULT_STATUS, PHOTO_VERSION, AppealResultStatusPhotoEnum, APPEAL_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
   components: { PhotoList, PreviewPhoto },
   props: {
     photoItem: { type: Object, required: true },
+    appealInfo: { type: Object, required: true },
     checkType: { type: String, default: '' }
   },
   data () {
@@ -136,7 +167,8 @@ export default {
         reason: '-'
       }, // 复审结果
       photoVersionId: '',
-      APPEAL_RESULT_STATUS
+      APPEAL_RESULT_STATUS,
+      APPEAL_TYPE
     }
   },
   computed: {
@@ -163,7 +195,31 @@ export default {
     realPhotoData () {
       return this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
     },
-    ...mapGetters(['imgDomain', 'imgCompressDomain'])
+    ...mapGetters(['imgDomain', 'imgCompressDomain']),
+    // 是否云学院打分
+    hasCheckTags () {
+      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
+      const hasEvaluatorScore = _.get(this.photoData, 'tags.values.score')
+      const hasCheckPoolTags = _.get(this.photoData, 'tags.values.check_pool_tags')
+      return hasEvaluatorType || hasEvaluatorScore || hasCheckPoolTags || false
+    },
+    // 云学院评价类型
+    evaluatorType () {
+      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
+      return hasEvaluatorType
+    },
+    // 云学院评分
+    checkScore () {
+      return _.get(this.photoData, 'tags.values.score') || 0
+    },
+    // 云学院标记
+    checkTag () {
+      const tagArr = _.get( this.photoData, 'tags.values.check_pool_tags') || []
+      const tagFilter = tagArr.map(item => {
+        return item.name
+      })
+      return tagFilter
+    }
   },
   created () {
     this.initPhotoList()

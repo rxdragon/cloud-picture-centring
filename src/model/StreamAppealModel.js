@@ -43,13 +43,13 @@ export default class StreamAppealModel {
 
   constructor (appealItem) {
     // todo mock
-    appealItem.type = 'timeout'
-    appealItem.hour_glass_records = {
-      green_time: '123',
-      orange_time: '123',
-      over_time: '123',
-      suggest_time: '123'
-    }
+    appealItem.type = 'evaluate'
+    // appealItem.hour_glass = {
+    //   green_time: '123',
+    //   orange_time: '123',
+    //   over_time: '123',
+    //   suggest_time: '123'
+    // }
 
     const appealInfo = appealItem.stream_appeal_examines || []
     const firstCheckInfo = appealInfo[0]
