@@ -184,6 +184,7 @@ export function getStreamInfo (params) {
     const data = keyToHump(msg)
     const createData = {}
     data.photos.forEach(photoItem => {
+      photoItem.specialEfficacy = _.get(photoItem, 'tags.values.special_efficacy') || '无需特效'
       photoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
     })
     let referencePhoto = _.get(data, 'tags.values.retouch_claim.referenceImg')
