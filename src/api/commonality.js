@@ -65,7 +65,8 @@ export function getStreamInfo (params) {
         reworkNum: streamData.reworkNum,
         reworkChecked: false,
         appealReason: '',
-        tags: photoItem.tags
+        tags: photoItem.tags,
+        specialEfficacy: _.get(photoItem, 'tags.values.special_efficacy') || '无需特效'
       }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
