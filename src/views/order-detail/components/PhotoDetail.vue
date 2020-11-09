@@ -1,7 +1,7 @@
 <template>
   <div class="photo-detail">
     <!-- 图片列表 -->
-    <photo-list need-preload :photo-data="photoVersionList"  />
+    <photo-list need-preload :show-special-effects="false"  :photo-data="photoVersionList"  />
     <div v-if="hasStoreReturnReason" class="panel-box">
       <div class="panel-title">门店退回</div>
       <div class="panel-main">

@@ -33,7 +33,7 @@
     </div>
     <div class="panel-box module-panel">
       <div class="panel-title">照片信息</div>
-      <photo-list :photo-data="photoVersion" />
+      <photo-list :show-special-effects="false" :photo-data="photoVersion" />
     </div>
   </div>
 </template>

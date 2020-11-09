@@ -5,6 +5,7 @@
         downing
         :preload-photo="needPreload"
         :src="photoItem.path"
+        :show-special-effects="showSpecialEffects"
         @click.native="showPriviewPhoto(photoIndex)"
         show-yun-check
       >
@@ -74,6 +75,7 @@ export default {
     photoData: { type: Array, default: () => [] }, // 照片数据
     needGrade: { type: Boolean }, // 是否需要打分,
     showOrderInfo: { type: Boolean }, // 是否显示订单信息
+    showSpecialEffects: { type: Boolean, default: true }, // 是否显示特效
     gradeInfo: { type: Object, default: () => ({}) }, // 是否打分
     orderInfo: { type: Object, default: () => ({}) } // 打分信息
   },
