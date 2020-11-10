@@ -70,8 +70,13 @@
       <div class="panel-title">云学院评价</div>
       <div class="panel-main">
         <div class="panel-content content-one">
-          总分：{{ checkScore }}
-          <el-tag :class="['type-tag', evaluatorType]" size="medium">{{ evaluatorType | toPlantCN }}</el-tag>
+          总分：{{ photoItem.photoAppeals.checkPoolScore }}
+          <el-tag
+            :class="['type-tag', photoItem.photoAppeals.evaluatorType]"
+            size="medium"
+          >
+            {{ photoItem.photoAppeals.evaluatorType | toPlantCN }}
+          </el-tag>
         </div>
         <div class="panel-content">
           问题标记：
@@ -88,7 +93,10 @@
       </div>
     </div>
     <!-- 申诉信息 -->
-    <div class="panel-box">
+    <div
+      class="panel-box"
+      v-if="appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
+    >
       <div class="panel-title">
         申诉处理
         <el-button type="primary" @click="goCheck('first')" v-if="checkType === 'first'">初审</el-button>
@@ -134,6 +142,7 @@
       @saveResult="saveResult"
       :check-type="checkType"
       :photo-appeal="photoItem.photoAppeals"
+      :appeal-info="appealInfo"
     />
   </div>
 </template>
@@ -196,25 +205,9 @@ export default {
       return this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
     },
     ...mapGetters(['imgDomain', 'imgCompressDomain']),
-    // 是否云学院打分
-    hasCheckTags () {
-      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
-      const hasEvaluatorScore = _.get(this.photoData, 'tags.values.score')
-      const hasCheckPoolTags = _.get(this.photoData, 'tags.values.check_pool_tags')
-      return hasEvaluatorType || hasEvaluatorScore || hasCheckPoolTags || false
-    },
-    // 云学院评价类型
-    evaluatorType () {
-      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
-      return hasEvaluatorType
-    },
-    // 云学院评分
-    checkScore () {
-      return _.get(this.photoData, 'tags.values.score') || 0
-    },
     // 云学院标记
     checkTag () {
-      const tagArr = _.get( this.photoData, 'tags.values.check_pool_tags') || []
+      const tagArr = this.photoItem.photoAppeals.checkPoolTags
       const tagFilter = tagArr.map(item => {
         return item.name
       })
@@ -318,6 +311,28 @@ export default {
     margin-top: 20px;
     font-size: 14px;
     color: #303133;
+
+    .type-tag {
+      margin: 0 10px 10px;
+
+      &.plant {
+        color: #fff;
+        background-color: #44c27e;
+        border-color: #44c27e;
+      }
+
+      &.pull {
+        color: #fff;
+        background-color: #ff3974;
+        border-color: #ff3974;
+      }
+
+      &.none {
+        color: #fff;
+        background-color: #4669fb;
+        border-color: #4669fb;
+      }
+    }
 
     .panel-main {
       padding: 20px;

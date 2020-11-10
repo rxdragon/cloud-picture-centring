@@ -227,7 +227,7 @@ export default {
         return false
       }
       // 质量问题退单的情况校验
-      if (this.appealType === APPEAL_TYPE.REWORK) {
+      if (this.appealType === APPEAL_TYPE.REWORK || this.appealType === APPEAL_TYPE.EVALUATE) {
         if (!this.appealPhotos.length) {
           this.$newMessage.warning('没有勾选要申诉的照片')
           return false
@@ -267,12 +267,11 @@ export default {
         streamId: this.streamId,
         type: this.appealType
       }
+      const filterPhoto = this.photos.filter(photoItem => photoItem.reworkChecked)
       // 根据不同申诉类型,处理不同情况
-      // 质量问题申诉
       switch (this.appealType) {
-        case APPEAL_TYPE.REWORK:
+        case APPEAL_TYPE.REWORK: // 质量问题申诉
           req.photoAppeals = []
-          const filterPhoto = this.photos.filter(photoItem => photoItem.reworkChecked)
           filterPhoto.forEach(photoItem => {
             req.photoAppeals.push({
               photo_id: photoItem.id,
@@ -280,8 +279,17 @@ export default {
             })
           })
           break
-        case APPEAL_TYPE.TIMEOUT:
+        case APPEAL_TYPE.TIMEOUT: // 沙漏申诉
           req.desc = this.orderData.timeoutAppealReason
+          break
+        case APPEAL_TYPE.EVALUATE: // 云学院评分申诉
+          req.photoAppeals = []
+          filterPhoto.forEach(photoItem => {
+            req.photoAppeals.push({
+              photo_id: photoItem.id,
+              desc: photoItem.appealReason
+            })
+          })
           break
         default:
           break

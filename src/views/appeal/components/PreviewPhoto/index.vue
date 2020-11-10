@@ -161,6 +161,64 @@
             <div class="label-title">申诉问题描述</div>
             <p>{{ photoAppeal.desc }}</p>
           </div>
+          <!-- 云学院评分类型 -->
+          <div class="order-label">
+            <div class="label-title">评分信息</div>
+            <div>
+              得分：80
+              <el-tag>一般</el-tag>
+            </div>
+            <template v-for="(labelClassItem, labelClassIndex) in resultLabelData">
+              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
+                <div class="label-class-title">{{ labelClassItem.name }}</div>
+                <div class="label-content">
+                  <el-tag
+                    v-for="issueItem in labelClassItem.child"
+                    :key="'issue' + issueItem.id"
+                    :class="issueItem.isSelect ? 'active' : ''"
+                    size="medium"
+                    disable-transitions
+                  >
+                    {{ issueItem.name }}
+                  </el-tag>
+                </div>
+              </div>
+            </template>
+          </div>
+          <!-- 云学院复审时的重评 -->
+          <!-- 种拔草设置 -->
+          <div class="label-top" v-if="labelDataTop.length">
+            <div
+              v-for="(item, index) in labelDataTop"
+              :key="index"
+              :class="[item.isSelect ? 'active' : '', item.class, 'type-tag']"
+              @click="selectTLabelData(item)"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+          <!-- 问题标签 -->
+          <div class="order-label" v-if="labelData.length">
+            <div class="label-title">标签栏</div>
+            <template v-for="(labelClassItem, labelClassIndex) in labelData">
+              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
+                <div class="label-class-title">{{ labelClassItem.name }}</div>
+                <div class="label-content">
+                  <el-tag
+                    v-for="issueItem in labelClassItem.child"
+                    :key="'issue' + issueItem.id"
+                    :class="issueItem.isSelect ? 'active' : ''"
+                    size="medium"
+                    disable-transitions
+                    @click="setLabel(issueItem)"
+                  >
+                    {{ issueItem.name }}
+                  </el-tag>
+                </div>
+              </div>
+            </template>
+          </div>
+          <!-- 质量退单类型 -->
           <div class="order-label store-return-reson" v-if="showPhoto.hasStoreReturnTag">
             <div class="label-title">照片整体原因</div>
             <div class="reason-contain">
@@ -240,9 +298,14 @@ import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
 
-import { APPEAL_CHECK_STATUS } from '@/utils/enumerate'
+import * as AssessmentCenter from '@/api/assessmentCenter'
+import * as GradeConfiguration from '@/api/gradeConfiguration'
+
+import { APPEAL_CHECK_STATUS, APPEAL_TYPE } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
+let allLabel = null
+let goodWord = []
 
 export default {
   name: 'PreviewPhoto',
@@ -280,7 +343,8 @@ export default {
     orderindex: { type: Number, default: 0 },
     checkType: { type: String, default: '' },
     showOrderInfo: { type: Boolean },
-    photoAppeal: { type: Object }
+    photoAppeal: { type: Object },
+    appealInfo: { type: Object }
   },
   data () {
     return {
@@ -311,8 +375,9 @@ export default {
       refuseTextarea: '',
       showAcceptTextarea: false,
       acceptTextarea: '',
-      checkResult: '' // 审核结果
-
+      checkResult: '', // 审核结果
+      labelDataTop: [], // 种拔草标签, 选了这个以后才能展示对应的标签数据
+      labelData: [] // 标签数据
     }
   },
   computed: {
@@ -326,7 +391,7 @@ export default {
       return this.showPhoto.mode || 'original'
     },
     // 标签数据
-    labelData () {
+    resultLabelData () {
       return _.get(this.showPhoto, 'commitInfo.issueLabel')
     },
     // 标记图片
@@ -394,10 +459,88 @@ export default {
       immediate: true
     }
   },
+  mounted () {
+    if (this.appealInfo.appealType === APPEAL_TYPE.EVALUATE && this.checkType === 'second') { // 复审云学院评分时候,要重评
+      this.getLabelData()
+      this.fetchGoodWord()
+    }
+  },
   beforeDestroy () {
     document.onkeydown = null
   },
   methods: {
+    /**
+     * @description 设置标签
+     */
+    setLabel (issueItem) {
+      this.$nextTick(() => {
+        this.labelData.forEach(classItem => {
+          const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
+          if (findIssueLabel) {
+            if (!findIssueLabel.isSelect) {
+              findIssueLabel.isSelect = true
+            } else {
+              this.tagClose(issueItem)
+            }
+          }
+        })
+      })
+    },
+    /**
+     * @description 获取激励词列表
+     */
+    async fetchGoodWord () {
+      const words = await GradeConfiguration.getExcitationDirList()
+      words.forEach(wordsItem => {
+        wordsItem.isSelect = false
+        wordsItem.type = 'goodWord'
+      })
+      goodWord = words
+    },
+    /**
+     * @description 根据种拔草,选择对应的标签
+     */
+    selectTLabelData (selItem) {
+      const { id } = selItem
+      if (id === this.currentId) {
+        return
+      }
+      this.resetLabelData()
+      this.labelDataTop.forEach((item) => {
+        item.isSelect = item.id === id
+      })
+      this.currentId = id
+      this.labelData = allLabel[id]
+      if (id === 1 && !this.hasPushGoodWord) { // 种草情况下,将激励词推进标签中
+        this.labelData.push({
+          name: '激励词',
+          child: goodWord
+        })
+        this.hasPushGoodWord = true
+      }
+      this.showCanvas = false
+    },
+    /**
+     * @description 获取所有数据
+     */
+    async getLabelData () {
+      const labelInfo = await AssessmentCenter.getScoreConfigList()
+      this.labelDataTop = labelInfo.typeArr
+      allLabel = labelInfo.allLabel
+    },
+    /**
+     * @description 重制标签
+     */
+    resetLabelData () {
+      this.labelDataTop.forEach(item => {
+        item.isSelect = false
+      })
+      this.labelData.forEach(item => {
+        item.child.forEach(issItem => { issItem.isSelect = false })
+      })
+      this.currentId = ''
+      this.labelData = []
+    },
     /**
      * @description 显示标记
      */
