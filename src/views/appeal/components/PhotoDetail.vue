@@ -183,8 +183,13 @@ export default {
   computed: {
     imgIndex () {
       let finalIndex = 0
+      const appealType = this.appealInfo.appealType
       this.photoVersionList.forEach((photoVersion, photoVersionIndex) => {
-        if (photoVersion.version === PHOTO_VERSION.STORE_REWORK) {
+        // 默认预览index: 质量申诉为质量照片 评分评分申诉为成片
+        if (appealType === APPEAL_TYPE.REWORK && photoVersion.version === PHOTO_VERSION.STORE_REWORK) {
+          finalIndex = photoVersionIndex
+        }
+        if (appealType === APPEAL_TYPE.EVALUATE && photoVersion.version === PHOTO_VERSION.COMPLETE_PHOTO) {
           finalIndex = photoVersionIndex
         }
       })

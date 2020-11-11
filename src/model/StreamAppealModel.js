@@ -43,7 +43,7 @@ export default class StreamAppealModel {
 
   constructor (appealItem) {
     // todo mock
-    appealItem.type = 'evaluate'
+    // appealItem.type = 'evaluate'
     // appealItem.hour_glass = {
     //   green_time: '123',
     //   orange_time: '123',

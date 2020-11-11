@@ -35,7 +35,16 @@
             :src="showPhoto.src"
             :alt="showPhoto.title"
             @load="loadingPhoto"
-          >
+          />
+          <fabric-canvas
+            v-if="showCanvas"
+            ref="fabric-canvas"
+            :style="photoZoomStyle"
+            :option-obj="canvasOption"
+            :show-canvas="isFinishPhoto"
+            @cancelDeleteLabel="addDeleteLabel"
+            @click.native="zoom"
+          />
           <!-- 门店退回显示 -->
           <div
             v-if="showPhoto.hasStoreReturnTag"
@@ -67,15 +76,20 @@
                     :class="['reason-tag-common part-tag', itemsub.isDel ? 'deleted' : '']"
                   >
                     <span>{{ itemsub.name }}</span>
-                    <span v-if="checkType === 'second' && !itemsub.cancel" @click.stop="delReason(itemsub)" class="red">删除</span>
                     <span
-                      v-if="checkType === 'second' && itemsub.cancel && !itemsub.isDel"
+                      v-if="checkType === APPEAL_CHECK_STATUS.SECOND && !itemsub.cancel"
+                      @click.stop="delReason(itemsub)"
+                      class="red"
+                    >删除
+                    </span>
+                    <span
+                      v-if="checkType === APPEAL_CHECK_STATUS.SECOND && itemsub.cancel && !itemsub.isDel"
                       @click.stop="cancelDelReason(itemsub)"
                       class="red"
                     >(标记删除)
                     </span>
                     <span
-                      v-if="checkType === 'second' && itemsub.cancel && itemsub.isDel"
+                      v-if="checkType === APPEAL_CHECK_STATUS.SECOND && itemsub.cancel && itemsub.isDel"
                       @click.stop="cancelDelReason(itemsub)"
                       class="red"
                     >(已删除)
@@ -162,11 +176,11 @@
             <p>{{ photoAppeal.desc }}</p>
           </div>
           <!-- 云学院评分类型 -->
-          <div class="order-label">
+          <div class="order-label" v-if="isFinishPhoto">
             <div class="label-title">评分信息</div>
             <div>
-              得分：80
-              <el-tag>一般</el-tag>
+              得分：{{ photoAppeal.checkPoolScore }}
+              <el-tag :class="['type-tag', photoAppeal.evaluatorType]">{{ photoAppeal.evaluatorType | toPlantCN }}</el-tag>
             </div>
             <template v-for="(labelClassItem, labelClassIndex) in resultLabelData">
               <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
@@ -187,7 +201,7 @@
           </div>
           <!-- 云学院复审时的重评 -->
           <!-- 种拔草设置 -->
-          <div class="label-top" v-if="labelDataTop.length">
+          <div class="label-top" v-if="labelDataTop.length && showLabelDataTop">
             <div
               v-for="(item, index) in labelDataTop"
               :key="index"
@@ -218,7 +232,7 @@
               </div>
             </template>
           </div>
-          <!-- 质量退单类型 -->
+          <!-- 质量问题类型 -->
           <div class="order-label store-return-reson" v-if="showPhoto.hasStoreReturnTag">
             <div class="label-title">照片整体原因</div>
             <div class="reason-contain">
@@ -230,15 +244,20 @@
                     :class="['reason-tag-common whole-tag', labelItem.isDel ? 'deleted' : '']"
                   >
                     <span>{{ labelItem.name }}</span>
-                    <span v-if="checkType === 'second' && !labelItem.cancel" @click.stop="delReason(labelItem)" class="red">删除</span>
                     <span
-                      v-if="checkType === 'second' && labelItem.cancel && !labelItem.isDel"
+                      v-if="checkType === APPEAL_CHECK_STATUS.SECOND && !labelItem.cancel"
+                      @click.stop="delReason(labelItem)"
+                      class="red"
+                    >删除
+                    </span>
+                    <span
+                      v-if="checkType === APPEAL_CHECK_STATUS.SECOND && labelItem.cancel && !labelItem.isDel"
                       @click.stop="cancelDelReason(labelItem)"
                       class="red"
                     >(标记删除)
                     </span>
                     <span
-                      v-if="checkType === 'second' && labelItem.cancel && labelItem.isDel"
+                      v-if="checkType === APPEAL_CHECK_STATUS.SECOND && labelItem.cancel && labelItem.isDel"
                       @click.stop="cancelDelReason(labelItem)"
                       class="red"
                     >(已删除)
@@ -252,10 +271,19 @@
             </div>
           </div>
           <div class="submit-box">
-            <div class="not-refusing" v-if="!showRefuseTextarea && !showAcceptTextarea">
+            <div
+              class="not-refusing"
+              v-if="!showRefuseTextarea && !showAcceptTextarea && !showLabelDataTop"
+            >
               <el-button type="danger" @click="showRefuse">审核拒绝</el-button>
               <el-button type="primary" @click="showAccept">审核通过</el-button>
             </div>
+            <!-- 评分问题复审通过操作 -->
+            <div class="refusing" v-if="showLabelDataTop">
+              <el-button type="info" @click="hideAccept">取消</el-button>
+              <el-button type="primary" @click="saveEvaluateAccept">保存并关闭</el-button>
+            </div>
+            <!-- 质量问题和评分问题拒绝操作 -->
             <div
               class="refusing"
               v-if="showRefuseTextarea && checkResult === 'refuse'"
@@ -271,8 +299,9 @@
               <el-button type="info" @click="hideRefuse">取消</el-button>
               <el-button type="primary" @click="saveRefuse">保存并关闭</el-button>
             </div>
+            <!-- 质量问题和评分问题通过操作 -->
             <div
-              class="refusing"
+              class="accepting"
               v-if="showAcceptTextarea && checkResult === 'accept'"
             >
               <el-input
@@ -284,7 +313,7 @@
               >
               </el-input>
               <el-button type="info" @click="hideAccept">取消</el-button>
-              <el-button type="primary" @click="saveAccept">保存并关闭</el-button>
+              <el-button type="primary" @click="saveReworkAccept">保存并关闭</el-button>
             </div>
           </div>
         </div>
@@ -297,11 +326,12 @@
 import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
+import FabricCanvas from './FabricCanvas'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'
 
-import { APPEAL_CHECK_STATUS, APPEAL_TYPE } from '@/utils/enumerate'
+import { APPEAL_CHECK_STATUS, APPEAL_TYPE, PHOTO_VERSION, PlantIdTypeEnum } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
 let allLabel = null
@@ -309,7 +339,7 @@ let goodWord = []
 
 export default {
   name: 'PreviewPhoto',
-  components: { OrderInfoModule, ModeSwitchBox },
+  components: { OrderInfoModule, ModeSwitchBox, FabricCanvas },
   model: {
     prop: 'orderindex',
     event: 'change'
@@ -377,7 +407,20 @@ export default {
       acceptTextarea: '',
       checkResult: '', // 审核结果
       labelDataTop: [], // 种拔草标签, 选了这个以后才能展示对应的标签数据
-      labelData: [] // 标签数据
+      labelData: [], // 标签数据
+      APPEAL_TYPE,
+      PHOTO_VERSION,
+      APPEAL_CHECK_STATUS,
+      showLabelDataTop: false,
+      showEvaluateSecondAccept: false,
+      showCanvas: false,
+      canvasOption: { // canvas 信息
+        width: 200,
+        height: 200,
+        penColor: '#E34F51',
+        lineWidth: 2,
+        drawType: ''
+      }
     }
   },
   computed: {
@@ -404,6 +447,10 @@ export default {
     },
     tagShow () {
       return this.mode === 'complete' ? this.showStoreReson : this.showMark
+    },
+    // 是否最新修片
+    isFinishPhoto () {
+      return this.showPhoto.version === PHOTO_VERSION.COMPLETE_PHOTO
     },
     // 删除标签数量
     delLabelNum () {
@@ -460,7 +507,7 @@ export default {
     }
   },
   mounted () {
-    if (this.appealInfo.appealType === APPEAL_TYPE.EVALUATE && this.checkType === 'second') { // 复审云学院评分时候,要重评
+    if (this.appealInfo.appealType === APPEAL_TYPE.EVALUATE && this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审云学院评分时候,要重评
       this.getLabelData()
       this.fetchGoodWord()
     }
@@ -479,8 +526,6 @@ export default {
           if (findIssueLabel) {
             if (!findIssueLabel.isSelect) {
               findIssueLabel.isSelect = true
-            } else {
-              this.tagClose(issueItem)
             }
           }
         })
@@ -758,19 +803,44 @@ export default {
      */
     showAccept () {
       this.checkResult = 'accept'
-      this.showAcceptTextarea = true
+      const appeealType = this.appealInfo.appealType
+      switch (appeealType) {
+        case APPEAL_TYPE.REWORK:
+          this.showAcceptTextarea = true
+          break
+        case APPEAL_TYPE.EVALUATE:
+          if (this.checkType === APPEAL_CHECK_STATUS.FIRST) {
+            this.showAcceptTextarea = true
+          }
+          if (this.checkType === APPEAL_CHECK_STATUS.SECOND) {
+            this.showLabelDataTop = true
+          }
+          break
+        default:
+          break
+      }
     },
     /**
      * @description 隐藏拒绝原因输入
      */
     hideRefuse () {
-      this.showRefuseTextarea = false
+      this.showAcceptTextarea = false
     },
     /**
      * @description 隐藏拒绝原因输入
      */
     hideAccept () {
-      this.showAcceptTextarea = false
+      const appeealType = this.appealInfo.appealType
+      switch (appeealType) {
+        case APPEAL_TYPE.REWORK:
+          this.showAcceptTextarea = false
+          break
+        case APPEAL_TYPE.EVALUATE:
+          this.showAcceptTextarea = false
+          break
+        default:
+          break
+      }
     },
     /**
      * @description 保存拒绝原因输入
@@ -784,9 +854,9 @@ export default {
       this.emitResult('refuse')
     },
     /**
-     * @description 保存审核通过备注
+     * @description 保存质量问题申诉复核通过备注
      */
-    saveAccept (item) {
+    saveReworkAccept () {
       if (this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审一定要勾选删除标签
         if (!this.delLabelNum) {
           this.$newMessage.warning('必须要删除至少一个标签')
@@ -797,21 +867,87 @@ export default {
       this.emitResult('accept')
     },
     /**
+     * @description 保存评分问题申诉复核通过
+     */
+    saveEvaluateAccept () {
+      const hasReEvaluate = this.labelDataTop.some(label => label.isSelect)
+      if (!hasReEvaluate) {
+        this.$newMessage.warning('必须要进行重评才能审核通过')
+        return
+      }
+      this.emitResult('accept')
+    },
+    /**
      * @description 通知审核结果
      */
     emitResult (type) {
+      const appealType = this.appealInfo.appealType
       const result = {
-        result: this.checkResult,
-        type: this.checkType
+        result: this.checkResult, // 审核结果
+        type: this.checkType, // 初审或者复审
+        appealType
       }
-      if (type === 'accept') {
+      const isAcceptAndSecond = type === 'accept' && this.checkType === APPEAL_CHECK_STATUS.SECOND
+      // 质量复审
+      if (isAcceptAndSecond && appealType === APPEAL_TYPE.REWORK) {
         result.storePartReworkReason = this.showPhoto.storePartReworkReason
         result.storeReworkReasonManage = this.showPhoto.storeReworkReasonManage
+      }
+      // 评分申诉
+      if (isAcceptAndSecond && appealType === APPEAL_TYPE.EVALUATE) {
+        result.labelDataTop = this.labelDataTop
+        result.labelData = this.labelData
       }
       if (this.refuseTextarea) result.reason = this.refuseTextarea
       if (this.acceptTextarea) result.reason = this.acceptTextarea
       this.$emit('saveResult', result)
       this.closeShowPhoto()
+    },
+    /**
+     * @description 处理重新评分的标签
+     */
+    async handleLabel () {
+      try {
+        const issuesLabel = this.getIssuesData()
+        const issuesLabelId = issuesLabel.reduce((sumArr, item) => {
+          if (item.type !== 'goodWord') { sumArr.push({ id: item.id }) }
+          return sumArr
+        }, [])
+        const typeLabelId = issuesLabel.reduce((sumArr, item) => {
+          if (item.type === 'goodWord') { sumArr.push(item.id) }
+          return sumArr
+        }, [])
+        this.isSubmit = true
+        let markPhotoImg = ''
+        if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
+          markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
+        }
+        this.showCanvas = false
+        this.canvasOption.drawType = ''
+        const sendData = {
+          issuesLabelId,
+          markPhotoImg,
+          typeLabelId,
+          type: PlantIdTypeEnum[this.currentId]
+        }
+        return sendData
+        this.$emit('submit', sendData)
+        this.resetLabelData()
+      } catch (error) {
+        console.error(error)
+        this.$newMessage.error('上传标记图失败')
+      }
+    },
+    /**
+     * @description 获取选中标签
+     */
+    getIssuesData () {
+      let selectData = []
+      this.labelData.forEach(item => {
+        const itemSelectLabel = item.child.filter(issueItem => issueItem.isSelect)
+        selectData = [...selectData, ...itemSelectLabel]
+      })
+      return selectData
     },
     /**
      * @description 重置拒绝原因
@@ -827,6 +963,30 @@ export default {
         partItem.isNeedDownIndex = false
       })
       storePartItem.isNeedDownIndex = true
+    },
+    /**
+     * @description 创建canvas
+     */
+    createCanvas () {
+      if (!this.isFinishPhoto) {
+        this.$newMessage.warning('请在成片上进行评分')
+        return false
+      }
+      if (!this.showCanvas) {
+        this.getImgInfo()
+        this.showCanvas = true
+      }
+      return true
+    },
+    /**
+     * @description 获取图片信息
+     */
+    getImgInfo () {
+      const orginImgDom = this.$refs['orgin-img']
+      if (orginImgDom) {
+        this.canvasOption.width = orginImgDom.clientWidth
+        this.canvasOption.height = orginImgDom.clientHeight
+      }
     }
   }
 }

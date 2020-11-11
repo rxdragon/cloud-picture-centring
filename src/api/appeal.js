@@ -74,34 +74,6 @@ export function appealDetail (params, source) {
     const { base, isFinished, ...rest } = new StreamAppealModel(msg)
     const appealInfo = { ...rest }
     msg.photo_appeals && msg.photo_appeals.forEach(photoAppealItem => {
-      // todo mock
-      photoAppealItem.photo.tags = {}
-      photoAppealItem.photo.tags.values = {}
-      photoAppealItem.photo.tags.values.evaluator_type = 'pull'
-      photoAppealItem.photo.tags.values.score = 39
-      photoAppealItem.photo.tags.values.cloud_pic_url = '2020/11/06/FmO5s7p6sL94vvqarfGj--AxPT67.png'
-      photoAppealItem.photo.tags.values.check_pool_tags = [
-        {
-          "id": 91,
-          "name": "身型/脖子",
-          "parent_id": 87,
-          "parent": {
-            "id": 87,
-            "name": "液化拔草扣分项目"
-          }
-        },
-        {
-          "id": 94,
-          "name": "磨皮过/不足/平/脏",
-          "parent_id": 93,
-          "parent": {
-            "id": 93,
-            "name": "磨皮拔草扣分项"
-          }
-        }
-      ]
-
-
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
       const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(photoAppealItem)

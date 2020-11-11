@@ -122,7 +122,7 @@ export default {
       christmasSplicePhotos: [], // 圣诞拼接照信息
       photos: [],
       dialogAppealVisible: false,
-      appealType: '', // 申诉信息
+      appealType: APPEAL_TYPE.REWORK, // 申诉信息
       APPEAL_TYPE
     }
   },
@@ -136,7 +136,19 @@ export default {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
     appealPhotos () {
-      return this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack)
+      // 区分评分申诉和质量问题申诉
+      let finalPhotos = []
+      switch (this.appealType) {
+        case APPEAL_TYPE.REWORK:
+          finalPhotos = this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack)
+          break
+        case APPEAL_TYPE.EVALUATE:
+          finalPhotos = this.photos.filter(item => item.checkPoolTags && item.checkPoolTags.length)
+          break
+        default:
+          break
+      }
+      return finalPhotos
     },
     needAppeal () {
       return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack) && this.retoucherIsSelf
