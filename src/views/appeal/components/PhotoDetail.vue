@@ -207,7 +207,15 @@ export default {
       return previewList
     },
     realPhotoData () {
-      return this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
+      const appealType = this.appealInfo.appealType
+      let finalPhoto = {}
+      if (appealType === APPEAL_TYPE.REWORK) {
+        finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
+      }
+      if (appealType === APPEAL_TYPE.EVALUATE) {
+        finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.version === PHOTO_VERSION.COMPLETE_PHOTO)[0]
+      }
+      return finalPhoto
     },
     ...mapGetters(['imgDomain', 'imgCompressDomain']),
     // 云学院标记
@@ -240,7 +248,7 @@ export default {
      * @description 接受预览组件的审核结果
      */
     saveResult (resultObj) {
-      const { type, result, reason } = resultObj
+      const { type, result, reason, appealType, labelData, labelDataTop, sendData } = resultObj
       if (type === 'first') {
         this.photoItem.photoAppeals.firstResult = {
           id: this.photoItem.photoAppeals.id,
@@ -249,7 +257,8 @@ export default {
           resultDesc: AppealResultStatusPhotoEnum[result]
         }
       }
-      if (type === 'second') {
+      // 质量问题复审
+      if (type === 'second' && appealType === APPEAL_TYPE.REWORK) {
         this.photoItem.photoAppeals.secondResult = {
           id: this.photoItem.photoAppeals.id,
           result,
@@ -268,6 +277,19 @@ export default {
         }
         if (resultObj.storePartReworkReason) this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
         if (resultObj.storeReworkReasonManage) this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
+      }
+      // 评分问题复审
+      if (type === 'second' && appealType === APPEAL_TYPE.EVALUATE) {
+        this.photoItem.photoAppeals.secondResult = {
+          id: this.photoItem.photoAppeals.id,
+          result,
+          reason,
+          resultDesc: AppealResultStatusPhotoEnum[result]
+        }
+        this.realPhotoData.sendData = sendData
+        this.realPhotoData.oherData = {} // 存放选中的标签对象
+        this.realPhotoData.oherData.labelData = labelData
+        this.realPhotoData.oherData.labelDataTop = labelDataTop
       }
     }
   }

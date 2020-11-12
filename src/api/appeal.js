@@ -80,6 +80,7 @@ export function appealDetail (params, source) {
       const finalPhotoItem = {
         reworkChecked: false, // 申诉的勾选
         appealReason: '', // 申诉的说明
+        uuid: photoData.uuid,
         wholeReason: photoData.wholeReason,
         partReason: photoData.partReason,
         partNote: photoData.partNote,

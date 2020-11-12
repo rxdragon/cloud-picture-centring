@@ -103,16 +103,6 @@
               </div>
             </div>
           </div>
-          <div class="mask-photo" v-if="showPhoto.hasCommitInfo" v-show="showMark">
-            <img
-              :src="markPhoto"
-              alt=""
-              :style="{
-                width: `${showImageRect.width}px`,
-                height: `${showImageRect.height}px`
-              }"
-            >
-          </div>
           <div id="_magnifier_layer" />
         </div>
         <button
@@ -520,15 +510,36 @@ export default {
      * @description 设置标签
      */
     setLabel (issueItem) {
+      if (!this.createCanvas()) return false
       this.$nextTick(() => {
         this.labelData.forEach(classItem => {
           const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
           if (findIssueLabel) {
             if (!findIssueLabel.isSelect) {
+              this.$refs['fabric-canvas'].createLabel(findIssueLabel)
               findIssueLabel.isSelect = true
+            } else {
+              this.tagClose(issueItem)
             }
           }
         })
+      })
+    },
+    /**
+     * @description 标签关闭
+     */
+    tagClose (tagInfo) {
+      this.$refs['fabric-canvas'].deleteLabel(tagInfo)
+    },
+    /**
+     * @description 撤销删除标签
+     */
+    addDeleteLabel (issueItem) {
+      this.labelData.forEach(classItem => {
+        const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
+        if (findIssueLabel) {
+          findIssueLabel.isSelect = false
+        }
       })
     },
     /**
@@ -880,7 +891,7 @@ export default {
     /**
      * @description 通知审核结果
      */
-    emitResult (type) {
+    async emitResult (type) {
       const appealType = this.appealInfo.appealType
       const result = {
         result: this.checkResult, // 审核结果
@@ -897,6 +908,7 @@ export default {
       if (isAcceptAndSecond && appealType === APPEAL_TYPE.EVALUATE) {
         result.labelDataTop = this.labelDataTop
         result.labelData = this.labelData
+        result.sendData = await this.handleLabel()
       }
       if (this.refuseTextarea) result.reason = this.refuseTextarea
       if (this.acceptTextarea) result.reason = this.acceptTextarea
@@ -925,14 +937,13 @@ export default {
         this.showCanvas = false
         this.canvasOption.drawType = ''
         const sendData = {
-          issuesLabelId,
-          markPhotoImg,
-          typeLabelId,
+          tags: issuesLabelId,
+          picUrl: markPhotoImg,
+          exTags: typeLabelId,
           type: PlantIdTypeEnum[this.currentId]
         }
         return sendData
-        this.$emit('submit', sendData)
-        this.resetLabelData()
+        // this.resetLabelData()
       } catch (error) {
         console.error(error)
         this.$newMessage.error('上传标记图失败')

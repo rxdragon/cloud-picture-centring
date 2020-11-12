@@ -78,7 +78,6 @@ export default {
       photos: [],
       qualityNum: this.$route.query.qualityNum, // 质量问题数量
       dialogAppealVisible: false,
-      appealType: 'rework', // 申诉信息
       appealOptions: [
         {
           value: 'rework',
@@ -132,6 +131,7 @@ export default {
      * @description 提交
      */
     async submitAll () {
+      const appealInfo = this.appealInfo
       const photoExamines = []
       this.photos.forEach((photoItem, photoIndex) => {
         const photoDetailData = this.$refs[`photoDetail${photoIndex}`][0]
@@ -146,7 +146,8 @@ export default {
           if (firstResult.reason) firstObj.reason = firstResult.reason
           photoExamines.push(firstObj)
         }
-        if (this.checkType === 'second' && secondResult.result) {
+        // 质量问题复审数据
+        if (this.checkType === 'second' && secondResult.result && appealInfo.appealType === APPEAL_TYPE.REWORK) {
           const secondObj = {
             photo_appeal_id: secondResult.id,
             result: secondResult.result
@@ -167,6 +168,18 @@ export default {
           })
           photoExamines.push(secondObj)
         }
+        // 评分问题复审数据
+        if (this.checkType === 'second' && secondResult.result && appealInfo.appealType === APPEAL_TYPE.EVALUATE) {
+          const secondObj = {
+            photo_appeal_id: secondResult.id,
+            result: secondResult.result
+          }
+          if (secondResult.reason) secondObj.reason = secondResult.reason
+          secondObj.new_check_pool_history = realPhotoData.sendData
+          secondObj.new_check_pool_history.uuid = photoItem.uuid
+          photoExamines.push(secondObj)
+        }
+
       })
       if (photoExamines.length !== this.photos.length) {
         this.$newMessage.warning('还存在未审核的申诉照片')

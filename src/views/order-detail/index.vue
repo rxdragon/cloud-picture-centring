@@ -263,7 +263,7 @@ export default {
           this.$newMessage.warning('没有填写沙漏超时申诉的理由')
           return false
         }
-        if (this.orderData.overTime <= 0) {
+        if (isNaN(this.orderData.overTime) || this.orderData.overTime <= 0) {
           this.$newMessage.warning('沙漏并未超时')
           return false
         }
