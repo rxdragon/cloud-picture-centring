@@ -105,6 +105,7 @@ export default class StreamModel {
 
   // 沙漏信息
   hourGlassAllTime = '' // 沙漏总时长
+  timeoutRollbackLog = '' // 沙漏回滚记录
 
   constructor (streamData) {
     if (!streamData) return
@@ -170,6 +171,8 @@ export default class StreamModel {
     this.photographerName = _.get(streamData, 'order.tags.values.photographer') || '-'
 
     this.reworkNum = _.get(streamData, 'tags.values.rework_num') || 0
+
+    this.timeoutRollbackLog = streamData.timeout_rollback_log || ''
   }
 
   // 获取沙漏相关信息

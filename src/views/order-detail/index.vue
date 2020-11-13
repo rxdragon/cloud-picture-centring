@@ -75,8 +75,22 @@
         <rework-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal>
       </div>
       <!-- 云学院评分 -->
-      <p class="appeal-photo-title" v-if="appealType === APPEAL_TYPE.EVALUATE">选择问题照片</p>
-      <div class="appeal-photos" v-if="appealType === APPEAL_TYPE.EVALUATE">
+      <p
+        class="appeal-photo-title"
+        v-if="appealType === APPEAL_TYPE.EVALUATE && appealPhotos.length"
+      >
+        选择问题照片
+      </p>
+      <p
+        class="appeal-photo-title"
+        v-if="appealType === APPEAL_TYPE.EVALUATE && !appealPhotos.length"
+      >
+        没有可以申诉的评分问题照片
+      </p>
+      <div
+        class="appeal-photos"
+        v-if="appealType === APPEAL_TYPE.EVALUATE && appealPhotos.length"
+      >
         <evaluate-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></evaluate-appeal>
       </div>
       <!-- 沙漏超时 -->
@@ -263,8 +277,12 @@ export default {
           this.$newMessage.warning('没有填写沙漏超时申诉的理由')
           return false
         }
-        if (isNaN(this.orderData.overTime) || this.orderData.overTime <= 0) {
+        if (this.orderData.overTimeNum <= 0) {
           this.$newMessage.warning('沙漏并未超时')
+          return false
+        }
+        if (this.orderData.timeoutRollbackLog) {
+          this.$newMessage.warning('该沙漏超时已经申诉成功了')
           return false
         }
       }

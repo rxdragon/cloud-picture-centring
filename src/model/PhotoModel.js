@@ -4,7 +4,6 @@ import uuidv4 from 'uuid'
 export default class PhotoModel {
   baseData = null
   id = ''
-  uuid = ''
   isReturn = false // 是否审核退回
   isPull = false // 是否拔草
   isPlant = false // 是否种草
@@ -46,7 +45,6 @@ export default class PhotoModel {
 
     this.baseData = photoData
     this.id = photoData.id
-    this.uuid = photoData.uuid
     this.isReturn = _.get(photoData, 'tags.statics', []).includes('return_photo')
     this.isPull = _.get(photoData, 'tags.statics', []).includes('pull')
     this.isPlant = _.get(photoData, 'tags.statics', []).includes('plant')

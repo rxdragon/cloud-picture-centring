@@ -119,6 +119,7 @@ export function getStreamInfo (params) {
       reviewTime: (streamData.reviewTime / 60).toFixed(2) + 'min',
       store_evaluate: streamData.goodEvaluate,
       overTime: streamData.hourGlassOverTime ? streamData.hourGlassOverTime + 'min' : '-',
+      overTimeNum: streamData.hourGlassOverTime,
       requireLabel: streamData.requireLabel,
       referencePhoto: streamData.referencePhoto,
       retouchRemark: streamData.retouchRemark,
@@ -126,7 +127,8 @@ export function getStreamInfo (params) {
       reviewerNote: streamData.reviewerNote,
       retoucherJobNum: streamData.retoucherJobNum,
       retouchStandard: streamData.retouchStandard,
-      timeoutAppealReason: '' // 沙漏超时申诉理由
+      timeoutAppealReason: '', // 沙漏超时申诉理由
+      timeoutRollbackLog: streamData.timeoutRollbackLog
     }
     createData.photos = msg.photos
     return createData

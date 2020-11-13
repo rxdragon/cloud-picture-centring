@@ -176,7 +176,6 @@ export default {
           }
           if (secondResult.reason) secondObj.reason = secondResult.reason
           secondObj.new_check_pool_history = realPhotoData.sendData
-          secondObj.new_check_pool_history.uuid = photoItem.uuid
           photoExamines.push(secondObj)
         }
 
@@ -208,7 +207,7 @@ export default {
       try {
         const req = {
           id: this.appealInfo.id,
-          photoExamines: []
+          result: 'accept'
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Appeal.appealExamine(req, this.checkType)
@@ -236,10 +235,29 @@ export default {
       this.refuseReason = ''
     },
     /**
-     * @description 确定拒绝
+     * @description 沙漏拒绝
      */
-    refuseAppeal () {
-      // do something
+    async refuseAppeal () {
+      if (!this.refuseReason) {
+        this.$newMessage.warning('拒绝的理由还没有填写')
+        return
+      }
+      try {
+        const req = {
+          id: this.appealInfo.id,
+          result: 'refuse',
+          reason: this.refuseReason
+        }
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await Appeal.appealExamine(req, this.checkType)
+        this.$newMessage.success('提交成功')
+        this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
+        this.$router.push({
+          path: '/admin-manage/appeal-handle'
+        })
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     }
   }
 }
