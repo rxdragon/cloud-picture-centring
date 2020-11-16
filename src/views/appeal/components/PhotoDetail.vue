@@ -372,7 +372,6 @@ export default {
 
         .reason-item {
           display: inline-block;
-          padding: 4px 10px;
           margin-right: 16px;
           font-size: 12px;
           color: #4669fb;

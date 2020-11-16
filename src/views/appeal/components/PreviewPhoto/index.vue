@@ -166,29 +166,7 @@
             <p>{{ photoAppeal.desc }}</p>
           </div>
           <!-- 云学院评分类型 -->
-          <div class="order-label" v-if="isFinishPhoto">
-            <div class="label-title">评分信息</div>
-            <div>
-              得分：{{ photoAppeal.checkPoolScore }}
-              <el-tag :class="['type-tag', photoAppeal.evaluatorType]">{{ photoAppeal.evaluatorType | toPlantCN }}</el-tag>
-            </div>
-            <template v-for="(labelClassItem, labelClassIndex) in resultLabelData">
-              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
-                <div class="label-class-title">{{ labelClassItem.name }}</div>
-                <div class="label-content">
-                  <el-tag
-                    v-for="issueItem in labelClassItem.child"
-                    :key="'issue' + issueItem.id"
-                    :class="issueItem.isSelect ? 'active' : ''"
-                    size="medium"
-                    disable-transitions
-                  >
-                    {{ issueItem.name }}
-                  </el-tag>
-                </div>
-              </div>
-            </template>
-          </div>
+          <evaluate-info v-if="isFinishPhoto" :photo-appeal="photoAppeal" :result-label-data="resultLabelData" />
           <!-- 云学院复审时的重评 -->
           <!-- 种拔草设置 -->
           <div class="label-top" v-if="labelDataTop.length && showLabelDataTop">
@@ -317,6 +295,7 @@ import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
 import FabricCanvas from './FabricCanvas'
+import EvaluateInfo from '../EvaluateInfo'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'
@@ -329,7 +308,7 @@ let goodWord = []
 
 export default {
   name: 'PreviewPhoto',
-  components: { OrderInfoModule, ModeSwitchBox, FabricCanvas },
+  components: { OrderInfoModule, ModeSwitchBox, FabricCanvas, EvaluateInfo },
   model: {
     prop: 'orderindex',
     event: 'change'
@@ -835,7 +814,7 @@ export default {
      * @description 隐藏拒绝原因输入
      */
     hideRefuse () {
-      this.showAcceptTextarea = false
+      this.showRefuseTextarea = false
     },
     /**
      * @description 隐藏拒绝原因输入

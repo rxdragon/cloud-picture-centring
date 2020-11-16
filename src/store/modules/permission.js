@@ -58,7 +58,11 @@ const state = {
   showAppealAccess: false, // 是否显示我要申诉按钮
   showFirstExamine: false, // 是否显示初审按钮
   showSecondExamine: false, // 是否显示复审按钮
-  isOnlineWatcher: false // 是否是在线看片师
+  isOnlineWatcher: false, // 是否是在线看片师
+  showAddStaff: false, // 账号配置是否显示添加按钮
+  showDisableStaff: false, // 账号配置是否显示禁用按钮
+  showEditStaff: false, // 账号配置是否显示编辑按钮
+  showEnableStaff: false // 账号配置是否显示启用按钮
 }
 
 const mutations = {
@@ -91,6 +95,11 @@ const mutations = {
     state.showSecondExamine = roles.includes('AdminManage.appealHandle.secondExamine')
 
     state.isOnlineWatcher = roles.includes('WatcherOnline.watchPhotoCenter.pictureOnline.watchRecordList')
+
+    state.showAddStaff = roles.includes('AccountManage.accountConfig.addStaff')
+    state.showDisableStaff = roles.includes('AccountManage.accountConfig.disableStaff')
+    state.showEditStaff = roles.includes('AccountManage.accountConfig.editStaff')
+    state.showEnableStaff = roles.includes('AccountManage.accountConfig.enableStaff')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {

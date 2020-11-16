@@ -4,7 +4,7 @@
       <div v-if="!showEdit" class="main">
         <div class="header">
           <h3>账号配置</h3>
-          <el-button type="primary" @click="creationAccount()">添加账号</el-button>
+          <el-button type="primary" v-if="showAddStaff" @click="creationAccount()">添加账号</el-button>
         </div>
         <div class="search-box">
           <div class="staff-box search-item">
@@ -32,9 +32,16 @@
             <el-table-column prop="status" label="状态" />
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click="creationAccount(scope.row)">编辑</el-button>
                 <el-button
-                  v-if="!scope.row.account_available"
+                  type="primary"
+                  v-if="showEditStaff"
+                  size="mini"
+                  @click="creationAccount(scope.row)"
+                >
+                  编辑
+                </el-button>
+                <el-button
+                  v-if="!scope.row.account_available && showEnableStaff"
                   type="success"
                   size="mini"
                   @click="enableStaff(scope.row.id)"
@@ -42,7 +49,7 @@
                   启动
                 </el-button>
                 <el-button
-                  v-else
+                  v-if="showDisableStaff && scope.row.account_available"
                   type="danger"
                   size="mini"
                   @click="disableStaff(scope.row.id)"
@@ -78,6 +85,9 @@
 <script>
 import AddAccount from './components/AddAccount'
 import RoleSelect from '@SelectBox/RoleSelect'
+
+import { mapGetters } from 'vuex'
+
 import * as AccountManage from '@/api/accountManage.js'
 
 export default {
@@ -98,6 +108,9 @@ export default {
       showEdit: false,
       editData: null
     }
+  },
+  computed: {
+    ...mapGetters(['showAddStaff', 'showDisableStaff', 'showEnableStaff', 'showEditStaff'])
   },
   created () {
     this.getStaffListByPage()
