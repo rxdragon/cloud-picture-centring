@@ -103,6 +103,10 @@ export default class StreamModel {
   productName = '' // 产品名称
   retouchStandard = '' // 产品修图标准
 
+  // 沙漏信息
+  hourGlassAllTime = '' // 沙漏总时长
+  timeoutRollbackLog = '' // 沙漏回滚记录
+
   constructor (streamData) {
     if (!streamData) return
     this.baseData = streamData
@@ -167,6 +171,8 @@ export default class StreamModel {
     this.photographerName = _.get(streamData, 'order.tags.values.photographer') || '-'
 
     this.reworkNum = _.get(streamData, 'tags.values.rework_num') || 0
+
+    this.timeoutRollbackLog = streamData.timeout_rollback_log || ''
   }
 
   // 获取沙漏相关信息
@@ -260,6 +266,8 @@ export default class StreamModel {
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
     const allTime = retouchTime + reviewReturnRebuildTime
     this.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
+    const hourGlassAllTime = _.get(this.baseData, 'hour_glass.suggest_time') || 0
+    this.hourGlassAllTime = (hourGlassAllTime / 60).toFixed(0) + 'min'
   }
 
   // 获取照片数量

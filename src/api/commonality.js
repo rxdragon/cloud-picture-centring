@@ -59,7 +59,9 @@ export function getStreamInfo (params) {
     }
 
     msg.photos.forEach(photoItem => {
-      const { baseData, ...rest } = new PhotoModel(photoItem)
+      const photoInfo = new PhotoModel(photoItem)
+      photoInfo.getCheckPoolTags()
+      const { baseData, ...rest } = photoInfo
       const finalPhotoItem = {
         ...rest,
         reworkNum: streamData.reworkNum,
@@ -112,17 +114,21 @@ export function getStreamInfo (params) {
       reworkNum: streamData.reworkNum,
       storeReworkNum: streamData.storeReturnNum,
       retouchAllTime: streamData.retouchAllTime,
+      hourGlassAllTime: streamData.hourGlassAllTime,
       retoucherNpsAvg: npsAvgEnum[streamData.retoucherNpsAvg] || `${streamData.retoucherNpsAvg}`,
       reviewTime: (streamData.reviewTime / 60).toFixed(2) + 'min',
       store_evaluate: streamData.goodEvaluate,
       overTime: streamData.hourGlassOverTime ? streamData.hourGlassOverTime + 'min' : '-',
+      overTimeNum: streamData.hourGlassOverTime,
       requireLabel: streamData.requireLabel,
       referencePhoto: streamData.referencePhoto,
       retouchRemark: streamData.retouchRemark,
       backgroundColor: streamData.backgroundColor,
       reviewerNote: streamData.reviewerNote,
       retoucherJobNum: streamData.retoucherJobNum,
-      retouchStandard: streamData.retouchStandard
+      retouchStandard: streamData.retouchStandard,
+      timeoutAppealReason: '', // 沙漏超时申诉理由
+      timeoutRollbackLog: streamData.timeoutRollbackLog
     }
     createData.photos = msg.photos
     return createData

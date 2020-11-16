@@ -74,7 +74,7 @@ import { mapGetters } from 'vuex'
 import PreviewModel from '@/model/PreviewModel.js'
 
 export default {
-  name: 'ReworkPhoto',
+  name: 'ReworkAppeal',
   props: {
     photoItem: { type: Object, required: true }
   },

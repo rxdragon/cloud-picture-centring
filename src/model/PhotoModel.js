@@ -30,6 +30,7 @@ export default class PhotoModel {
   realReworkPhoto = {} // 被退回的标签所在的version
 
   checkPoolScore = '' // 云学院抽片分数
+  evaluatorType = '' // 种拔草type
   checkPoolTags = [] // 云学院标记
   checkEvaluator = '' // 打分人
 
@@ -128,8 +129,8 @@ export default class PhotoModel {
 
   // 获取云学院分数
   getCheckPoolTags () {
-    this.checkPoolScore = _.get(this.baseData, 'tags.values.score')
-    this.checkPoolScore = Number(this.checkPoolScore) === 0 ? 0 : '-'
+    this.checkPoolScore = _.get(this.baseData, 'tags.values.score') || '-'
+    this.evaluatorType = _.get(this.baseData, 'tags.values.evaluator_type') || ''
     this.checkEvaluator = _.get(this.baseData, 'tags.values.evaluator') || '-'
     const checkPoolTags = _.get(this.baseData, 'tags.values.check_pool_tags') || []
     const parentData = []
