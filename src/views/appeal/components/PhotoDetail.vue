@@ -91,6 +91,26 @@
           <span v-if="!checkTag.length">暂无标记</span>
         </div>
       </div>
+      <!-- 复审后的评分 -->
+      <div class="panel-main" v-if="secondEvaluateResult.hasSecond">
+        <div class="panel-content content-one">
+          复审后评分
+          <el-tag :class="['type-tag', secondEvaluateResult.class]" size="medium">
+            {{ secondEvaluateResult.name }}
+          </el-tag>
+        </div>
+        <div class="panel-content">
+          问题标记：
+          <el-tag
+            size="medium"
+            class="reason-item"
+            v-for="(tagItem, tagIndex) in secondEvaluateResult.tags"
+            :key="tagIndex"
+          >
+            {{ tagItem }}
+          </el-tag>
+        </div>
+      </div>
     </div>
     <!-- 申诉信息 -->
     <div
@@ -177,7 +197,8 @@ export default {
       }, // 复审结果
       photoVersionId: '',
       APPEAL_RESULT_STATUS,
-      APPEAL_TYPE
+      APPEAL_TYPE,
+      secondEvaluateResult: {} // 复审后的数据
     }
   },
   computed: {
@@ -287,9 +308,22 @@ export default {
           resultDesc: AppealResultStatusPhotoEnum[result]
         }
         this.realPhotoData.sendData = sendData
-        this.realPhotoData.oherData = {} // 存放选中的标签对象
-        this.realPhotoData.oherData.labelData = labelData
-        this.realPhotoData.oherData.labelDataTop = labelDataTop
+        this.realPhotoData.otherData = {} // 存放选中的标签对象
+        if (result === 'accept') {
+          const finalLabelType = labelDataTop.filter(labelDataTopItem => labelDataTopItem.isSelect)[0]
+          const child = []
+          this.secondEvaluateResult.hasSecond = true
+          this.secondEvaluateResult.name = finalLabelType.name
+          this.secondEvaluateResult.class = finalLabelType.class
+          labelData.forEach(labelDataItem => {
+            labelDataItem.child.forEach(childItem => {
+              if (childItem.isSelect) child.push(childItem.name)
+            })
+          })
+          this.secondEvaluateResult.tags = child
+        } else { // 拒绝的话reset secondEvaluateResult
+          this.secondEvaluateResult = {}
+        }
       }
     }
   }

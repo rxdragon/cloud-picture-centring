@@ -53,49 +53,25 @@
     >
       <div class="appeal-item">
         <span class="item-name">申诉类型</span>
-        <appeal-type-select v-model="appealType" />
+        <appeal-type-select @selectChange="appealTypeChange" v-model="appealType" />
       </div>
       <!-- 质量退单 -->
-      <p
-        class="appeal-photo-title"
-        v-if="appealType === APPEAL_TYPE.REWORK && appealPhotos.length"
-      >
-        选择问题照片
-      </p>
-      <p
-        class="appeal-photo-title"
-        v-if="appealType === APPEAL_TYPE.REWORK && !appealPhotos.length"
-      >
-        没有可以申诉的质量问题照片
-      </p>
-      <div
-        class="appeal-photos"
-        v-if="appealType === APPEAL_TYPE.REWORK && appealPhotos.length"
-      >
-        <rework-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal>
-      </div>
+      <rework-appeal
+        ref="rework-appeal"
+        v-if="appealType === APPEAL_TYPE.REWORK"
+        :order-data="orderData"
+        :appeal-photos="appealPhotos"
+      />
       <!-- 云学院评分 -->
-      <p
-        class="appeal-photo-title"
-        v-if="appealType === APPEAL_TYPE.EVALUATE && appealPhotos.length"
-      >
-        选择问题照片
-      </p>
-      <p
-        class="appeal-photo-title"
-        v-if="appealType === APPEAL_TYPE.EVALUATE && !appealPhotos.length"
-      >
-        没有可以申诉的评分问题照片
-      </p>
-      <div
-        class="appeal-photos"
-        v-if="appealType === APPEAL_TYPE.EVALUATE && appealPhotos.length"
-      >
-        <evaluate-appeal v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></evaluate-appeal>
-      </div>
+      <evaluate-appeal
+        ref="evaluate-appeal"
+        v-if="appealType === APPEAL_TYPE.EVALUATE"
+        :order-data="orderData"
+        :appeal-photos="appealPhotos"
+      />
       <!-- 沙漏超时 -->
       <div class="timeout-appeal" v-if="appealType === APPEAL_TYPE.TIMEOUT">
-        <timeout-appeal :order-data="orderData" />
+        <timeout-appeal ref="timeout-appeal" :order-data="orderData" />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="info" @click="cancelAppeal">取消</el-button>
@@ -172,6 +148,15 @@ export default {
     this.init()
   },
   methods: {
+    /**
+     * @description 申诉类型更换
+     */
+    appealTypeChange () {
+      this.photos.forEach(item => {
+        item.reworkChecked = false
+        item.appealReason = ''
+      })
+    },
     /**
      * @description 初始化
      */
@@ -252,6 +237,27 @@ export default {
         this.$newMessage.warning('没有选择任何申诉类型')
         return false
       }
+      // 沙漏超时
+      if (this.appealType === APPEAL_TYPE.TIMEOUT) {
+        const canTimeoutAppeal = this.$refs['timeout-appeal'].canAppeal
+        if (!canTimeoutAppeal) {
+          this.$newMessage.warning('沙漏未超时或者已存在申诉')
+          return false
+        }
+        if (!this.orderData.timeoutAppealReason) {
+          this.$newMessage.warning('没有填写沙漏超时申诉的理由')
+          return false
+        }
+      }
+      // 评分问题
+      if (this.appealType === APPEAL_TYPE.EVALUATE) {
+        const canEvaluateAppeal = this.$refs['evaluate-appeal'].canAppeal
+        if (!canEvaluateAppeal) {
+          this.$newMessage.warning('没有可以申诉的评分照片或者该评分申诉正在进行中')
+          return false
+        }
+
+      }
       // 质量问题退单的情况校验
       if (this.appealType === APPEAL_TYPE.REWORK || this.appealType === APPEAL_TYPE.EVALUATE) {
         if (!this.appealPhotos.length) {
@@ -268,21 +274,6 @@ export default {
         const hasEmptyReason = checkArr.some(photoItem => !photoItem.appealReason)
         if (hasEmptyReason) {
           this.$newMessage.warning('存在勾选的问题,没有填写申诉理由')
-          return false
-        }
-      }
-      // 沙漏超时
-      if (this.appealType === APPEAL_TYPE.TIMEOUT) {
-        if (!this.orderData.timeoutAppealReason) {
-          this.$newMessage.warning('没有填写沙漏超时申诉的理由')
-          return false
-        }
-        if (this.orderData.overTimeNum <= 0) {
-          this.$newMessage.warning('沙漏并未超时')
-          return false
-        }
-        if (this.orderData.timeoutRollbackLog) {
-          this.$newMessage.warning('该沙漏超时已经申诉成功了')
           return false
         }
       }

@@ -1,6 +1,7 @@
 <template>
   <div class="appeal-type-select">
     <el-select
+      @change="selectChange"
       v-bind="$attrs"
       v-on="$listeners"
       :multiple="isMulti"
@@ -37,6 +38,14 @@ export default {
         label: AppealTypeNameEnum[APPEAL_TYPE[type]],
         value: APPEAL_TYPE[type]
       })
+    }
+  },
+  methods: {
+    /**
+     * @description 状态更改
+     */
+    selectChange () {
+      this.$emit('selectChange')
     }
   }
 }

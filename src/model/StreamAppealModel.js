@@ -35,22 +35,8 @@ export default class StreamAppealModel {
 
   appealNickName = '-' // 申诉申请人
   appealGroupName = '-' // 申诉申请人所属组名
-  
-  hourglassTime = '15min' // 沙漏时长
-  retouchTime = '15min' // 修图时长
-
-
 
   constructor (appealItem) {
-    // todo mock
-    // appealItem.type = 'evaluate'
-    // appealItem.hour_glass = {
-    //   green_time: '123',
-    //   orange_time: '123',
-    //   over_time: '123',
-    //   suggest_time: '123'
-    // }
-
     const appealInfo = appealItem.stream_appeal_examines || []
     const firstCheckInfo = appealInfo[0]
     const secondCheckInfo = appealInfo[1]

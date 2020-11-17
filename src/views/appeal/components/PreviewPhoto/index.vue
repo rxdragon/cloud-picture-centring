@@ -827,6 +827,8 @@ export default {
           break
         case APPEAL_TYPE.EVALUATE:
           this.showAcceptTextarea = false
+          this.showLabelDataTop = false
+          this.resetLabelData()
           break
         default:
           break

@@ -105,7 +105,7 @@ export function getStreamInfo (params) {
     })
     msg.photos = photos.filter(photoItem => Boolean(photoItem.photoVersion))
     createData.orderData = {
-      currentStreamAppeal: streamData.currentStreamAppeal,
+      currentStreamAppeals: streamData.currentStreamAppeals,
       streamNum: streamData.streamNum,
       photographerOrg: streamData.photographerOrgName,
       productName: streamData.productName,
