@@ -63,12 +63,12 @@
           <span
             v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
             class="content"
-          >沙漏时长：{{ appealInfo.hourglassTime }}
+          >沙漏时长：{{ orderData.hourGlassAllTime }}
           </span>
           <span
             v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
             class="content"
-          >修图时长：{{ appealInfo.retouchTime }}
+          >修图时长：{{ orderData.retouchAllTime }}
           </span>
         </div>
         <div class="panel-main-content">

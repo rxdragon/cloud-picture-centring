@@ -1,6 +1,6 @@
 <template>
   <div class="timeout-area">
-    <div v-if="!orderData.timeoutRollbackLog">
+    <div v-if="canAppeal">
       <p class="info-item">沙漏预计时长：{{ orderData.hourGlassAllTime }}</p>
       <p class="info-item">实际修图时长：{{ orderData.retouchAllTime }}</p>
       <div class="info-item">
@@ -13,16 +13,38 @@
         />
       </div>
     </div>
-    <p v-else class="not-timeout">该沙漏超时已经申诉成功</p>
+    <p v-else class="not-timeout">{{ reasonText }}</p>
   </div>
 </template>
 
 <script>
+import { APPEAL_TYPE } from '@/utils/enumerate.js'
 
 export default {
   name: 'TimeoutAppeal',
   props: {
     orderData: { type: Object, required: true }
+  },
+  computed: {
+    canAppeal () {
+      let canAppeal = true
+
+      this.orderData.currentStreamAppeals.forEach(item => { // 是否在申诉中
+        if (item.type === APPEAL_TYPE.TIMEOUT) canAppeal = false
+      })
+      if (this.orderData.timeoutRollbackLog) {
+        canAppeal = false
+      }
+      if (this.orderData.overTimeNum > 0) canAppeal = false
+      return canAppeal
+    },
+    reasonText () {
+      let reasonText = '沙漏未超时'
+      this.orderData.currentStreamAppeals.forEach(item => { // 是否在申诉中
+        if (item.type === APPEAL_TYPE.TIMEOUT) reasonText = '该流水存在进行中的沙漏申诉'
+      })
+      return reasonText
+    }
   }
 }
 </script>

@@ -18,6 +18,8 @@ export default class PhotoAppealModel {
     reason: '-'
   }
   checkPoolTags = []
+  evaluatorType = ''
+  checkPoolScore = '-'
 
 
   constructor (photoAppeal) {
@@ -45,6 +47,9 @@ export default class PhotoAppealModel {
   }
   // 获取云学院分数
   getCheckPoolTags () {
+    if (this.appealResult) { // 如果有appealResult说明是历史快照
+      this.base.photo.tags.values = this.appealResult
+    }
     this.checkPoolScore = _.get(this.base, 'photo.tags.values.score') || '-'
     this.evaluatorType = _.get(this.base, 'photo.tags.values.evaluator_type') || ''
     this.checkPoolTags = _.get(this.base, 'photo.tags.values.check_pool_tags') || []

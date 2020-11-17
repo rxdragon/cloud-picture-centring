@@ -91,7 +91,7 @@ export default class StreamModel {
   cloudEvaluateTime = '-' // 云学院评价时间
 
   // 申诉
-  currentStreamAppeal = false // 是否在申诉中
+  currentStreamAppeals = [] // 处在申诉状态的列表
 
   // 摄影机构信息
   photographerOrgName = '' // 摄影机构名称
@@ -158,7 +158,7 @@ export default class StreamModel {
     this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
 
     // 申诉
-    this.currentStreamAppeal = streamData.current_stream_appeal
+    this.currentStreamAppeals = streamData.current_stream_appeals || []
 
     // 摄影机构信息
     this.photographerOrgName = _.get(streamData, 'order.photographer_org.name') || '-'
