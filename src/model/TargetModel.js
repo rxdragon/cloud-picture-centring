@@ -53,7 +53,8 @@ export default class TargetModel {
     reward: 0, // 奖励收益
     impulse: 0, // 冲量奖励
     sunReward: 0, // 奖励总收益
-    rollbackIncome: 0, // 回滚的总收益
+    rollbackIncomeRework: 0, // 退单回滚的总收益
+    rollbackIncomeOvertime: 0, // 沙漏回滚的总收益
     punishIncome: 0, // 退单质量扣除收益
     timeIntervalImpulse: 0, // 时段冲量奖励
     timeIntervalReward: 0, // 时段金币奖励
@@ -69,7 +70,8 @@ export default class TargetModel {
     storeReturnExpForBoth: 0, // 质量&非质量问题收益
     sumStoreReturnExp: 0, // 退单获得海草
     punishExp: 0, // 质量扣除获取收益
-    rollbackExp: 0, // 总回滚海草值
+    rollbackExpRework: 0, // 退单滚海草值
+    rollbackExpOvertime: 0, // 沙漏滚海草值
     timeIntervalReward: 0, // 时段海草奖励
     sumExp: 0
   }
@@ -176,7 +178,8 @@ export default class TargetModel {
     const retoucherRollbackIncomeForNormalRework = Validate.toFixed(_.get(this.base, 'income.retoucherRollbackIncomeForNormalRework') || 0)
     // 退单流水的回补收益
     const retoucherRollbackIncomeForReturnRework = Validate.toFixed(_.get(this.base, 'income.retoucherRollbackIncomeForReturnRework') || 0)
-    this.income.rollbackIncome = retoucherRollbackIncomeForNormalRework + retoucherRollbackIncomeForReturnRework
+    this.income.rollbackIncomeRework = retoucherRollbackIncomeForNormalRework + retoucherRollbackIncomeForReturnRework
+    this.income.rollbackIncomeOvertime = Validate.toFixed(_.get(this.base, 'income.retoucherRollbackIncomeForOverTime') || 0)
 
     let storeReturnIncome =
       this.income.storeReturnIncomeForQuality * 100 +
@@ -214,7 +217,8 @@ export default class TargetModel {
     const retoucherRollbackExpForNormalRework = Validate.toFixed(_.get(this.base, 'exp.retoucherRollbackExpForNormalRework') || 0)
     // 退单流水的回补海草
     const retoucherRollbackExpForReturnRework = Validate.toFixed(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
-    this.exp.rollbackExp = retoucherRollbackExpForNormalRework + retoucherRollbackExpForReturnRework
+    this.exp.rollbackExpRework = retoucherRollbackExpForNormalRework + retoucherRollbackExpForReturnRework
+    this.exp.rollbackExpOvertime = Validate.toFixed(_.get(this.base, 'exp.retoucherRollbackExpForOverTime') || 0)
 
     let sumStoreReturnExp =
       this.exp.storeReturnExpForQuality * 100 +

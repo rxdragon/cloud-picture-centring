@@ -19,14 +19,16 @@ export function getSelfQuota () {
     const retouchExp = Number(_.get(data, 'todayExp.retouch') || 0) // 今日已修海草
     const timeIntervalRewardExp = Number(_.get(data, 'todayExp.timeIntervalReward') || 0) // 今日时段奖励海草
     const overTimePunishExp = Number(_.get(data, 'todayExp.overTimePunish') || 0) // 超时扣除海草
-    const rollbackNormalExp = Number(_.get(data, 'todayExp.rollback_normal') || 0) // c流水回滚海草值
-    const rollbackReturnExp = Number(_.get(data, 'todayExp.rollback_return') || 0) // r流水回滚海草值
-    const rollbackExp = rollbackNormalExp + rollbackReturnExp // 回滚海草值
+    const rollbackNormalExp = Number(_.get(data, 'todayExp.rollback_normal') || 0) // c流水退单回滚海草值
+    const rollbackReturnExp = Number(_.get(data, 'todayExp.rollback_return') || 0) // r流水退单回滚海草值
+    const rollbackExpRework = rollbackNormalExp + rollbackReturnExp // 退单回滚海草值
+    const rollbackExpOvertime = Number(_.get(data, 'todayExp.rollback_overtime') || 0) // 沙漏回滚海草值
     const todayExp = retouchExp + timeIntervalRewardExp - overTimePunishExp // 今日最终海草
 
     data.todayPunishExp = punishExp.toFixed(2) // 退回扣除海草
     data.overTimePunishExp = overTimePunishExp.toFixed(2) // 超时扣除海草
-    data.rollbackExp = rollbackExp.toFixed(2) // 回滚的海草值
+    data.rollbackExpRework = rollbackExpRework.toFixed(2) // 退单回滚的海草值
+    data.rollbackExpOvertime = rollbackExpOvertime.toFixed(2) // 沙漏回滚的海草值
     data.todayExp = todayExp.toFixed(2) // 今日最终海草
 
     const incomePunish = _.get(data, 'todayIncome.punish') || 0 // 惩罚金额
@@ -38,7 +40,9 @@ export function getSelfQuota () {
     const rewardIncome = _.get(data, 'todayIncome.reward') || 0 // 今日奖励收益
     const rollbackNormalIncome = Number(_.get(data, 'todayIncome.rollback_normal') || 0) // c流水回滚收益
     const rollbackReturnIncome = Number(_.get(data, 'todayIncome.rollback_return') || 0) // r流水回滚收益
-    const rollbackIncome = rollbackNormalIncome + rollbackReturnIncome // 回滚收益
+    const rollbackOvertimeIncome = Number(_.get(data, 'todayIncome.rollback_overtime') || 0) // 沙漏回滚收益
+    const rollbackIncomeRework = rollbackNormalIncome + rollbackReturnIncome // 退单回滚收益
+    const rollbackIncomeOvertime = rollbackOvertimeIncome // 沙漏回滚收益
 
     const todayIncome =
       retouchIncome +
@@ -48,12 +52,13 @@ export function getSelfQuota () {
       rewardIncome -
       incomePunish -
       incomeOverTimePunish +
-      rollbackIncome
+      rollbackIncomeRework
     data.todayRewordIncome = todayIncome.toFixed(2)
     
     const punishIncome = incomePunish + incomeOverTimePunish
     data.punishIncome = punishIncome.toFixed(2)
-    data.rollbackIncome = rollbackIncome.toFixed(2)
+    data.rollbackIncomeRework = rollbackIncomeRework.toFixed(2)
+    data.rollbackIncomeOvertime = rollbackIncomeOvertime.toFixed(2)
 
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0

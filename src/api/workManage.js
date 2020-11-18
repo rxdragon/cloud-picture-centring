@@ -88,9 +88,11 @@ export function getRetoucherQuota (params) {
       msg.income.storeReturnIncomeForNotQuality +
       msg.income.storeReturnIncomeForQuality
     msg.income.returnIncome = toFixed(returnIncome)
-    // 回补收益
-    const rollbackIncome = msg.income.rollbackForNormalRework + msg.income.rollbackForReturnRework
-    msg.income.rollbackIncome = toFixed(rollbackIncome)
+    // 退单回补收益
+    const rollbackIncomeRework = Number(msg.income.rollbackForNormalRework || 0) + Number(msg.income.rollbackForReturnRework || 0)
+    const rollbackIncomeOvertime = Number(msg.income.rollbackForOvertime || 0)
+    msg.income.rollbackIncomeRework = toFixed(rollbackIncomeRework)
+    msg.income.rollbackIncomeOvertime = toFixed(rollbackIncomeOvertime)
     // 时段奖励收益
     msg.income.timeIntervalImpulse = toFixed(_.get(msg, 'income.timeIntervalImpulse') || 0)
     msg.income.timeIntervalReward = toFixed(_.get(msg, 'income.timeIntervalReward') || 0)
@@ -99,7 +101,8 @@ export function getRetoucherQuota (params) {
     const income = msg.income.retouch * 100 +
       msg.income.impulse * 100 +
       msg.income.reward * 100 +
-      rollbackIncome * 100 +
+      rollbackIncomeRework * 100 +
+      rollbackIncomeOvertime * 100 +
       returnIncome * 100 +
       msg.income.timeIntervalImpulse * 100 +
       msg.income.timeIntervalReward * 100 -
@@ -114,14 +117,17 @@ export function getRetoucherQuota (params) {
       Number(msg.exp.storeReturnExpForQuality)
 
     msg.exp.returnExp = toFixed(returnExp)
-    const rollbackExp = msg.exp.rollbackForNormalRework + msg.exp.rollbackForReturnRework
-    msg.exp.rollbackExp = toFixed(rollbackExp)
+    const rollbackExpRework = msg.exp.rollbackForNormalRework + msg.exp.rollbackForReturnRework
+    const rollbackExpOvertime = msg.exp.rollbackForOvertime
+    msg.exp.rollbackExpRework = toFixed(rollbackExpRework)
+    msg.exp.rollbackExpOvertime = toFixed(rollbackExpOvertime)
     msg.exp.timeIntervalReward = Number(_.get(msg, 'exp.timeIntervalReward') || 0) // 时段海草奖励
     // 海草
     const exp = msg.exp.normal * 100 +
       returnExp * 100 +
       msg.exp.timeIntervalReward * 100 +
-      rollbackExp * 100 -
+      rollbackExpRework * 100 +
+      rollbackExpOvertime * 100 -
       msg.exp.punishExp * 100 -
       msg.exp.glassPunishExp * 100
 
@@ -138,7 +144,7 @@ export function getRetoucherQuota (params) {
     msg.badStreamNum = parseInt(msg.badNum || 0) // 门店点踩量
     msg.badRate = toFixed(getAvg(msg.badStreamNum * 100, storeEvaluateCount)) // 门店点踩率
 
-    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) // 超时单量
+    msg.overTimeStreamNum = parseInt(msg.overTimeStreamNum || 0) - parseInt(msg.overTimeStreamRollbackNum || 0) // 超时单量
     return msg
   })
 }

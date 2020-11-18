@@ -83,7 +83,8 @@
                   <p>照片海草：<span>{{ row.exp | toFixedString }}</span></p>
                   <p class="text-red">被退惩罚海草：<span>{{ row.punishExp | toFixedString }}</span></p>
                   <p class="text-red">沙漏超时惩罚海草：<span>{{ row.overtimeExp | toFixedString }}</span></p>
-                  <p class="text-money">回滚海草：<span>{{ row.rollbackExp | toFixedString }}</span></p>
+                  <p class="text-money">退单回滚海草：<span>{{ row.rollbackExpRework | toFixedString }}</span></p>
+                  <p class="text-money">沙漏回滚海草：<span>{{ row.rollbackExpOvertime | toFixedString }}</span></p>
                   <p class="text-money">时段奖励海草：<span>{{ row.timeIntervalRewardExp | toFixedString }}</span></p>
                   <p>实际获得海草：<span>{{ row.actualExp | toFixedString }}</span></p>
                 </div>
@@ -100,7 +101,8 @@
                   <p class="text-red">退单惩罚收益：<span>{{ row.punishIncome | toFixedString }}</span></p>
                   <p class="text-money">奖励收益：<span>{{ row.rewordIncome | toFixedString }}</span></p>
                   <p class="text-money">时段金币收益：<span>{{ row.timeIntervalRewardIncome | toFixedString }}</span></p>
-                  <p class="text-money">回滚收益：<span>{{ row.rollbackIncome | toFixedString }}</span></p>
+                  <p class="text-money">退单回滚收益：<span>{{ row.rollbackIncomeRework | toFixedString }}</span></p>
+                  <p class="text-money">沙漏回滚收益：<span>{{ row.rollbackIncomeOvertime | toFixedString }}</span></p>
                   <p>实获收益：<span>{{ row.actualIncome | toFixedString }}</span></p>
                 </div>
                 <span class="hover-class" slot="reference">{{ row.actualIncome | toFixedString }}</span>

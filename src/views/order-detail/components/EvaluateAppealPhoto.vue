@@ -56,10 +56,12 @@ export default {
     // 云学院标记
     checkTag () {
       const tagArr = this.photoItem.checkPoolTags
-      const tagFilter = tagArr.map(item => {
-        return item.name
-      })
-      return tagFilter
+      const finalTag = tagArr.reduce((sumArr, tagItem) => {
+        const tagChild = tagItem.child.map(childItem => childItem.name)
+        sumArr = sumArr.concat(tagChild)
+        return sumArr
+      }, [])
+      return finalTag
     }
   }
 }

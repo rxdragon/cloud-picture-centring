@@ -129,9 +129,16 @@
                     </span>
                   </div>
                   <div class="loss-num">
-                    <span class="loss-title">回滚海草：</span>
+                    <span class="loss-title">退单回滚海草：</span>
                     <span class="money-color loss-value">
-                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackExp" />
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackExpRework" />
+                      <div v-else class="loss-hidden-data"> *.**</div>颗
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">沙漏回滚海草：</span>
+                    <span class="money-color loss-value">
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackExpOvertime" />
                       <div v-else class="loss-hidden-data"> *.**</div>颗
                     </span>
                   </div>
@@ -146,10 +153,18 @@
                     </span>
                   </div>
                   <div class="loss-num">
-                    <span class="loss-title">回滚收益：</span>
+                    <span class="loss-title">退单回滚收益：</span>
                     <span class="money-color loss-value">
                       <span>¥</span>
-                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackIncome" />
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackIncomeRework" />
+                      <div v-else class="loss-hidden-data"> *.**</div>
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">沙漏回滚收益：</span>
+                    <span class="money-color loss-value">
+                      <span>¥</span>
+                      <count-to v-if="showRecord" show-point :end-value="quotaInfo.rollbackIncomeOvertime" />
                       <div v-else class="loss-hidden-data"> *.**</div>
                     </span>
                   </div>
@@ -232,9 +247,11 @@ export default {
         todayRewordIncome: 0.00,
         todayPunishExp: 0,
         overTimePunishExp: 0,
-        rollbackExp: 0,
+        rollbackExpRework: 0,
+        rollbackExpOvertime: 0,
         punishIncome: 0.00,
-        rollbackIncome: 0.00
+        rollbackIncomeRework: 0.00,
+        rollbackIncomeOvertime: 0.00
       },
       buffInfo: { // buff 信息
         expCard: null, // 经验卡
