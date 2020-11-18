@@ -52,7 +52,8 @@ export function getSelfQuota () {
       rewardIncome -
       incomePunish -
       incomeOverTimePunish +
-      rollbackIncomeRework
+      rollbackIncomeRework +
+      rollbackIncomeOvertime
     data.todayRewordIncome = todayIncome.toFixed(2)
     
     const punishIncome = incomePunish + incomeOverTimePunish
