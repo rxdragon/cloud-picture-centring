@@ -35,7 +35,7 @@ export default {
       if (this.orderData.timeoutRollbackLog) {
         canAppeal = false
       }
-      if (this.orderData.overTimeNum > 0) canAppeal = false
+      if (this.orderData.overTimeNum <= 0) canAppeal = false
       return canAppeal
     },
     reasonText () {

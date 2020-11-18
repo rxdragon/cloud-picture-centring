@@ -133,7 +133,7 @@ export default {
           finalPhotos = this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack)
           break
         case APPEAL_TYPE.EVALUATE:
-          finalPhotos = this.photos.filter(item => item.checkPoolTags && item.checkPoolTags.length)
+          finalPhotos = this.photos.filter(item => item.evaluatorType)
           break
         default:
           break
