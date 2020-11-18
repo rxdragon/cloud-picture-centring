@@ -198,7 +198,9 @@ export default class TargetModel {
       this.income.timeIntervalReward * 100 +
       this.income.reward * 100 +
       this.income.impulse * 100 -
-      this.income.punishIncome * 100
+      this.income.punishIncome * 100 +
+      this.income.rollbackIncomeRework * 100 +
+      this.income.rollbackIncomeOvertime * 100
     sumIncome = Validate.toFixed(sumIncome / 100)
     this.income.sumIncome = sumIncome
   }
@@ -234,7 +236,9 @@ export default class TargetModel {
       this.exp.storeReturnExpForNotQuality * 100 +
       this.exp.storeReturnExpForBoth * 100 +
       this.exp.timeIntervalReward * 100 -
-      this.exp.punishExp * 100
+      this.exp.punishExp * 100 +
+      this.exp.rollbackExpRework * 100 +
+      this.exp.rollbackExpOvertime * 100
     sumExp = Validate.toFixed(sumExp / 100)
     this.exp.sumExp = sumExp
   }
