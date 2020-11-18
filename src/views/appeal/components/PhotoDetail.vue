@@ -82,7 +82,7 @@
           问题标记：
           <el-tag
             size="medium"
-            class="reason-item"
+            class="evaluate-item"
             v-for="(tagItem, tagIndex) in checkTag"
             :key="tagIndex"
           >
@@ -404,8 +404,14 @@ export default {
       .panel-content {
         padding: 10px 0;
 
+        .evaluate-item {
+          margin-right: 16px;
+          margin-bottom: 10px;
+        }
+
         .reason-item {
           display: inline-block;
+          padding: 4px;
           margin-right: 16px;
           font-size: 12px;
           color: #4669fb;
