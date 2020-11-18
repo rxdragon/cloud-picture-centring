@@ -47,7 +47,8 @@ export default class PhotoAppealModel {
   }
   // 获取云学院分数
   getCheckPoolTags () {
-    if (this.appealResult) { // 如果有appealResult说明是历史快照
+    const tags = _.get(this.base, 'photo.tags.values')
+    if (this.appealResult && tags) { // 如果有appealResult说明是历史快照,云学院评分情况下
       this.base.photo.tags.values = this.appealResult
     }
     this.checkPoolScore = _.get(this.base, 'photo.tags.values.score') || '-'

@@ -218,6 +218,7 @@ export default class StreamModel {
     const overtimeIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.overtime_income')) || 0
     const rewordIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.reword')) || 0
     const rollbackIncomeRework = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_income_rework')) || 0
+    const rollbackIncomeOvertime = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_income_overtime')) || 0
     // eslint-disable-next-line max-len
     // eslint-disable-next-line max-len
     const timeIntervalRewardIncome = Validate.toFixed(_.get(this.baseData, 'tags.values.time_interval_reward_income')) || 0
@@ -228,12 +229,13 @@ export default class StreamModel {
       punishIncome *100 -
       overtimeIncome * 100 +
       timeIntervalRewardIncome * 100 +
-      rollbackIncomeRework * 100
+      rollbackIncomeRework * 100 +
+      rollbackIncomeOvertime * 100
     this.retouchIncome = retouchIncome
     this.overtimeIncome = overtimeIncome
     this.rewordIncome = rewordIncome
     this.rollbackIncomeRework = rollbackIncomeRework
-    this.rollbackIncomeOvertime = Validate.toFixed(_.get(this.baseData, 'tags.values.rollback_income_overtime')) || 0
+    this.rollbackIncomeOvertime = rollbackIncomeOvertime
     this.timeIntervalRewardIncome = timeIntervalRewardIncome
     this.punishIncome = punishIncome
     this.actualIncome = Validate.toFixed(actualIncome / 100)
@@ -253,7 +255,8 @@ export default class StreamModel {
       this.overtimeExp * 100 -
       this.punishExp * 100 +
       this.timeIntervalRewardExp * 100 +
-      this.rollbackExpRework * 100
+      this.rollbackExpRework * 100 +
+      this.rollbackExpOvertime * 100
     this.actualExp = Validate.toFixed(actualExp / 100)
   }
 
