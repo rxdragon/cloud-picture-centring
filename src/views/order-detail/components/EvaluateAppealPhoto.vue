@@ -12,7 +12,7 @@
         <span class="evaluate-score">{{ photoItem.checkPoolScore }}分</span>
         <el-tag :class="['type-tag', photoItem.evaluatorType]" size="medium">{{ photoItem.evaluatorType | toPlantCN }}</el-tag>
       </div>
-      <div class="info-item">
+      <div class="info-item" v-if="checkTag.length">
         <p class="info-title">扣分项</p>
       </div>
       <div class="info-item">
