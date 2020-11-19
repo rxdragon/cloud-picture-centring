@@ -17,6 +17,10 @@ export default class PhotoAppealModel {
     resultDesc: '-',
     reason: '-'
   }
+  checkPoolTags = []
+  evaluatorType = ''
+  checkPoolScore = '-'
+
 
   constructor (photoAppeal) {
     const appealInfo = photoAppeal.photo_appeal_examines || []
@@ -39,5 +43,16 @@ export default class PhotoAppealModel {
       this.secondResult.reason = secondResultInfo.reason || '-'
       this.secondResult.result = secondResultInfo.result || ''
     }
+    this.getCheckPoolTags()
+  }
+  // 获取云学院分数
+  getCheckPoolTags () {
+    const tags = _.get(this.base, 'photo.tags.values')
+    if (this.appealResult && tags) { // 如果有appealResult说明是历史快照,云学院评分情况下
+      this.base.photo.tags.values = this.appealResult
+    }
+    this.checkPoolScore = _.get(this.base, 'photo.tags.values.score') || '-'
+    this.evaluatorType = _.get(this.base, 'photo.tags.values.evaluator_type') || ''
+    this.checkPoolTags = _.get(this.base, 'photo.tags.values.check_pool_tags') || []
   }
 }

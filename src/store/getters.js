@@ -52,11 +52,15 @@ const permissionGetters = {
   showEmptyCheckPool: state => state.permission.showEmptyCheckPool, // 是否显示重新打分按钮
   canAutoRetouch: state => state.permission.canAutoRetouch, // 是否显示自动修图按钮
   // 申诉处理
-  showAppealAccess: state => state.permission.showAppealAccess, // 是否显示我要申诉入口
   showFirstExamine: state => state.permission.showFirstExamine, // 是否显示初审按钮
   showSecondExamine: state => state.permission.showSecondExamine, // 是否显示复审按钮
   // 在线看片
-  isOnlineWatcher: state => state.permission.isOnlineWatcher // 是否在线看片师
+  isOnlineWatcher: state => state.permission.isOnlineWatcher, // 是否在线看片师
+  // 账号管理
+  showAddStaff: state => state.permission.showAddStaff, // 账号配置是否显示添加按钮
+  showDisableStaff: state => state.permission.showDisableStaff, // 账号配置是否显示禁用按钮
+  showEnableStaff: state => state.permission.showEnableStaff, // 账号配置是否显示启用按钮
+  showEditStaff: state => state.permission.showEditStaff // 账号配置是否显示编辑按钮
 }
 
 const getters = {

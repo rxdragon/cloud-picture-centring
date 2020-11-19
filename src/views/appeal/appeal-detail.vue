@@ -10,18 +10,57 @@
     <!-- 照片列表 -->
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
       <div class="panel-title">申诉照片{{ photoIndex + 1 }}</div>
-      <photo-detail :ref="`photoDetail${photoIndex}`" :check-type="checkType" :photo-item="photoItem"/>
+      <photo-detail
+        :ref="`photoDetail${photoIndex}`"
+        :check-type="checkType"
+        :photo-item="photoItem"
+        :appeal-info="appealInfo"
+      />
     </div>
-    <div class="footer" v-if="checkType">
+    <div
+      class="footer"
+      v-if="checkType && appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
+    >
       <el-button type="info" @click="cancelAll">返回</el-button>
       <el-button type="primary" @click="submitAll">提交</el-button>
     </div>
+    <div
+      class="footer"
+      v-if="checkType && appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
+    >
+      <el-button type="info" @click="cancelAll">返回</el-button>
+      <div class="timeout-appeal-operation">
+        <el-button type="danger" @click="showTimeoutDialog">审核拒绝</el-button>
+        <el-button type="primary" @click="acceptAppeal">审核通过</el-button>
+      </div>
+    </div>
+    <!-- timeout-dialog -->
+    <el-dialog
+      title="审核拒绝"
+      class="alter-performance-dialog"
+      :visible.sync="refuseReasonShow"
+      width="30%"
+    >
+      <el-input
+        type="textarea"
+        :rows="2"
+        placeholder="请填写审核拒绝的原因"
+        v-model="refuseReason"
+      >
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelRefuse">取 消</el-button>
+        <el-button type="primary" @click="refuseAppeal">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
+
+import { APPEAL_TYPE } from '@/utils/enumerate'
 
 import * as Appeal from '@/api/appeal.js'
 
@@ -37,16 +76,11 @@ export default {
       streamId: '', // 流水id
       orderData: {}, // 订单信息
       photos: [],
-      qualityNum: this.$route.query.qualityNum, // 质量问题数量
       dialogAppealVisible: false,
-      appealType: 'rework', // 申诉信息
-      appealOptions: [
-        {
-          value: 'rework',
-          name: '门店退单问题'
-        }
-      ],
-      appealInfo: {}
+      appealInfo: {},
+      APPEAL_TYPE,
+      refuseReasonShow: false,
+      refuseReason: ''
     }
   },
   created () {
@@ -90,6 +124,7 @@ export default {
      * @description 提交
      */
     async submitAll () {
+      const appealInfo = this.appealInfo
       const photoExamines = []
       this.photos.forEach((photoItem, photoIndex) => {
         const photoDetailData = this.$refs[`photoDetail${photoIndex}`][0]
@@ -104,7 +139,8 @@ export default {
           if (firstResult.reason) firstObj.reason = firstResult.reason
           photoExamines.push(firstObj)
         }
-        if (this.checkType === 'second' && secondResult.result) {
+        // 质量问题复审数据
+        if (this.checkType === 'second' && secondResult.result && appealInfo.appealType === APPEAL_TYPE.REWORK) {
           const secondObj = {
             photo_appeal_id: secondResult.id,
             result: secondResult.result
@@ -125,6 +161,17 @@ export default {
           })
           photoExamines.push(secondObj)
         }
+        // 评分问题复审数据
+        if (this.checkType === 'second' && secondResult.result && appealInfo.appealType === APPEAL_TYPE.EVALUATE) {
+          const secondObj = {
+            photo_appeal_id: secondResult.id,
+            result: secondResult.result
+          }
+          if (secondResult.reason) secondObj.reason = secondResult.reason
+          secondObj.new_check_pool_history = realPhotoData.sendData
+          photoExamines.push(secondObj)
+        }
+
       })
       if (photoExamines.length !== this.photos.length) {
         this.$newMessage.warning('还存在未审核的申诉照片')
@@ -139,9 +186,61 @@ export default {
         await Appeal.appealExamine(req, this.checkType)
         this.$newMessage.success('提交成功')
         this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
-        this.$router.push({
-          path: '/admin-manage/appeal-handle'
-        })
+        this.$router.push({ path: '/admin-manage/appeal-handle' })
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+    },
+    /**
+     * @description 沙漏审核通过
+     */
+    async acceptAppeal () {
+      try {
+        const req = {
+          id: this.appealInfo.id,
+          result: 'accept'
+        }
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await Appeal.appealExamine(req, this.checkType)
+        this.$newMessage.success('提交成功')
+        this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
+        this.$router.push({ path: '/admin-manage/appeal-handle' })
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+    },
+    /**
+     * @description 展示沙漏拒绝理由
+     */
+    showTimeoutDialog () {
+      this.refuseReasonShow = true
+    },
+    /**
+     * @description 取消拒绝
+     */
+    cancelRefuse () {
+      this.refuseReasonShow = false
+      this.refuseReason = ''
+    },
+    /**
+     * @description 沙漏拒绝
+     */
+    async refuseAppeal () {
+      if (!this.refuseReason) {
+        this.$newMessage.warning('拒绝的理由还没有填写')
+        return
+      }
+      try {
+        const req = {
+          id: this.appealInfo.id,
+          result: 'refuse',
+          reason: this.refuseReason
+        }
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await Appeal.appealExamine(req, this.checkType)
+        this.$newMessage.success('提交成功')
+        this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
+        this.$router.push({ path: '/admin-manage/appeal-handle' })
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -166,6 +265,10 @@ export default {
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 20px;
+
+    .timeout-appeal-operation {
+      margin-left: 40px;
+    }
   }
 }
 </style>

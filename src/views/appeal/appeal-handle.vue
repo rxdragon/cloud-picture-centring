@@ -39,7 +39,7 @@
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select v-model="appealType" />
+          <appeal-type-select needAll isMulti v-model="appealType" />
         </div>
         <!-- 是否为本人 -->
         <div class="audit-box search-item">
@@ -308,7 +308,7 @@ export default {
         if (defaultStateIn.length) req.cond.stateIn = defaultStateIn
       }
       if (this.staffId.length) req.cond.appealStaffIdIn = this.staffId
-      if (this.appealType) req.cond.type = this.appealType
+      if (this.appealType) req.cond.typeIn = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
       if (this.justMe) req.cond.bind = this.justMe
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond

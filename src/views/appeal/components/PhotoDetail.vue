@@ -10,7 +10,11 @@
       </div>
     </div>
     <photo-list v-else need-preload :photo-data="photoVersionList" />
-    <div class="panel-box">
+    <!-- 质量问题标签 -->
+    <div
+      class="panel-box"
+      v-if="appealInfo.appealType === APPEAL_TYPE.REWORK"
+    >
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
         <div class="panel-content content-one">
@@ -58,7 +62,61 @@
         <div class="panel-content">整体退回备注：{{ realPhotoData.storeReworkNote }}</div>
       </div>
     </div>
-    <div class="panel-box">
+    <!-- 云学院评分详情 -->
+    <div
+      v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
+      class="panel-box"
+    >
+      <div class="panel-title">云学院评价</div>
+      <div class="panel-main">
+        <div class="panel-content content-one">
+          总分：{{ photoItem.photoAppeals.checkPoolScore }}
+          <el-tag
+            :class="['type-tag', photoItem.photoAppeals.evaluatorType]"
+            size="medium"
+          >
+            {{ photoItem.photoAppeals.evaluatorType | toPlantCN }}
+          </el-tag>
+        </div>
+        <div class="panel-content" v-if="checkTag.length">
+          问题标记：
+          <el-tag
+            size="medium"
+            class="evaluate-item"
+            v-for="(tagItem, tagIndex) in checkTag"
+            :key="tagIndex"
+          >
+            {{ tagItem }}
+          </el-tag>
+          <span v-if="!checkTag.length">暂无标记</span>
+        </div>
+      </div>
+      <!-- 复审后的评分 -->
+      <div class="panel-main" v-if="secondEvaluateResult.hasSecond">
+        <div class="panel-content content-one">
+          复审后评分
+          <el-tag :class="['type-tag', secondEvaluateResult.class]" size="medium">
+            {{ secondEvaluateResult.name }}
+          </el-tag>
+        </div>
+        <div class="panel-content">
+          问题标记：
+          <el-tag
+            size="medium"
+            class="reason-item"
+            v-for="(tagItem, tagIndex) in secondEvaluateResult.tags"
+            :key="tagIndex"
+          >
+            {{ tagItem }}
+          </el-tag>
+        </div>
+      </div>
+    </div>
+    <!-- 申诉信息 -->
+    <div
+      class="panel-box"
+      v-if="appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
+    >
       <div class="panel-title">
         申诉处理
         <el-button type="primary" @click="goCheck('first')" v-if="checkType === 'first'">初审</el-button>
@@ -104,6 +162,7 @@
       @saveResult="saveResult"
       :check-type="checkType"
       :photo-appeal="photoItem.photoAppeals"
+      :appeal-info="appealInfo"
     />
   </div>
 </template>
@@ -115,13 +174,14 @@ import PreviewModel from '@/model/PreviewModel'
 
 import { mapGetters } from 'vuex'
 
-import { APPEAL_RESULT_STATUS, PHOTO_VERSION, AppealResultStatusPhotoEnum } from '@/utils/enumerate'
+import { APPEAL_RESULT_STATUS, PHOTO_VERSION, AppealResultStatusPhotoEnum, APPEAL_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoDetail',
   components: { PhotoList, PreviewPhoto },
   props: {
     photoItem: { type: Object, required: true },
+    appealInfo: { type: Object, required: true },
     checkType: { type: String, default: '' }
   },
   data () {
@@ -136,14 +196,21 @@ export default {
         reason: '-'
       }, // 复审结果
       photoVersionId: '',
-      APPEAL_RESULT_STATUS
+      APPEAL_RESULT_STATUS,
+      APPEAL_TYPE,
+      secondEvaluateResult: {} // 复审后的数据
     }
   },
   computed: {
     imgIndex () {
       let finalIndex = 0
+      const appealType = this.appealInfo.appealType
       this.photoVersionList.forEach((photoVersion, photoVersionIndex) => {
-        if (photoVersion.version === PHOTO_VERSION.STORE_REWORK) {
+        // 默认预览index: 质量申诉为质量照片 评分评分申诉为成片
+        if (appealType === APPEAL_TYPE.REWORK && photoVersion.version === PHOTO_VERSION.STORE_REWORK) {
+          finalIndex = photoVersionIndex
+        }
+        if (appealType === APPEAL_TYPE.EVALUATE && photoVersion.version === PHOTO_VERSION.COMPLETE_PHOTO) {
           finalIndex = photoVersionIndex
         }
       })
@@ -161,9 +228,23 @@ export default {
       return previewList
     },
     realPhotoData () {
-      return this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
+      const appealType = this.appealInfo.appealType
+      let finalPhoto = {}
+      if (appealType === APPEAL_TYPE.REWORK) {
+        finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
+      }
+      if (appealType === APPEAL_TYPE.EVALUATE) {
+        finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.version === PHOTO_VERSION.COMPLETE_PHOTO)[0]
+      }
+      return finalPhoto
     },
-    ...mapGetters(['imgDomain', 'imgCompressDomain'])
+    ...mapGetters(['imgDomain', 'imgCompressDomain']),
+    // 云学院标记
+    checkTag () {
+      const tagArr = this.photoItem.photoAppeals.checkPoolTags
+      const tagFilter = tagArr.map(item => item.name)
+      return tagFilter
+    }
   },
   created () {
     this.initPhotoList()
@@ -186,7 +267,7 @@ export default {
      * @description 接受预览组件的审核结果
      */
     saveResult (resultObj) {
-      const { type, result, reason } = resultObj
+      const { type, result, reason, appealType, labelData, labelDataTop, sendData } = resultObj
       if (type === 'first') {
         this.photoItem.photoAppeals.firstResult = {
           id: this.photoItem.photoAppeals.id,
@@ -195,7 +276,8 @@ export default {
           resultDesc: AppealResultStatusPhotoEnum[result]
         }
       }
-      if (type === 'second') {
+      // 质量问题复审
+      if (type === 'second' && appealType === APPEAL_TYPE.REWORK) {
         this.photoItem.photoAppeals.secondResult = {
           id: this.photoItem.photoAppeals.id,
           result,
@@ -214,6 +296,32 @@ export default {
         }
         if (resultObj.storePartReworkReason) this.realPhotoData.storePartReworkReason = resultObj.storePartReworkReason
         if (resultObj.storeReworkReasonManage) this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
+      }
+      // 评分问题复审
+      if (type === 'second' && appealType === APPEAL_TYPE.EVALUATE) {
+        this.photoItem.photoAppeals.secondResult = {
+          id: this.photoItem.photoAppeals.id,
+          result,
+          reason,
+          resultDesc: AppealResultStatusPhotoEnum[result]
+        }
+        this.realPhotoData.sendData = sendData
+        this.realPhotoData.otherData = {} // 存放选中的标签对象
+        if (result === 'accept') {
+          const finalLabelType = labelDataTop.filter(labelDataTopItem => labelDataTopItem.isSelect)[0]
+          const child = []
+          this.secondEvaluateResult.hasSecond = true
+          this.secondEvaluateResult.name = finalLabelType.name
+          this.secondEvaluateResult.class = finalLabelType.class
+          labelData.forEach(labelDataItem => {
+            labelDataItem.child.forEach(childItem => {
+              if (childItem.isSelect) child.push(childItem.name)
+            })
+          })
+          this.secondEvaluateResult.tags = child
+        } else { // 拒绝的话reset secondEvaluateResult
+          this.secondEvaluateResult = {}
+        }
       }
     }
   }
@@ -263,6 +371,28 @@ export default {
     font-size: 14px;
     color: #303133;
 
+    .type-tag {
+      margin: 0 10px 10px;
+
+      &.plant {
+        color: #fff;
+        background-color: #44c27e;
+        border-color: #44c27e;
+      }
+
+      &.pull {
+        color: #fff;
+        background-color: #ff3974;
+        border-color: #ff3974;
+      }
+
+      &.none {
+        color: #fff;
+        background-color: #4669fb;
+        border-color: #4669fb;
+      }
+    }
+
     .panel-main {
       padding: 20px;
       margin-top: 12px;
@@ -272,9 +402,14 @@ export default {
       .panel-content {
         padding: 10px 0;
 
+        .evaluate-item {
+          margin-right: 16px;
+          margin-bottom: 10px;
+        }
+
         .reason-item {
           display: inline-block;
-          padding: 4px 10px;
+          padding: 4px;
           margin-right: 16px;
           font-size: 12px;
           color: #4669fb;
