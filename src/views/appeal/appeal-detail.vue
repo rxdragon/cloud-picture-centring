@@ -76,14 +76,7 @@ export default {
       streamId: '', // 流水id
       orderData: {}, // 订单信息
       photos: [],
-      qualityNum: this.$route.query.qualityNum, // 质量问题数量
       dialogAppealVisible: false,
-      appealOptions: [
-        {
-          value: 'rework',
-          name: '门店退单问题'
-        }
-      ],
       appealInfo: {},
       APPEAL_TYPE,
       refuseReasonShow: false,
@@ -193,9 +186,7 @@ export default {
         await Appeal.appealExamine(req, this.checkType)
         this.$newMessage.success('提交成功')
         this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
-        this.$router.push({
-          path: '/admin-manage/appeal-handle'
-        })
+        this.$router.push({ path: '/admin-manage/appeal-handle' })
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -213,9 +204,7 @@ export default {
         await Appeal.appealExamine(req, this.checkType)
         this.$newMessage.success('提交成功')
         this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
-        this.$router.push({
-          path: '/admin-manage/appeal-handle'
-        })
+        this.$router.push({ path: '/admin-manage/appeal-handle' })
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -230,7 +219,6 @@ export default {
      * @description 取消拒绝
      */
     cancelRefuse () {
-      // do something
       this.refuseReasonShow = false
       this.refuseReason = ''
     },
@@ -252,9 +240,7 @@ export default {
         await Appeal.appealExamine(req, this.checkType)
         this.$newMessage.success('提交成功')
         this.$store.dispatch('tagsView/delView', { path: '/appeal-detail' })
-        this.$router.push({
-          path: '/admin-manage/appeal-handle'
-        })
+        this.$router.push({ path: '/admin-manage/appeal-handle' })
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }

@@ -92,7 +92,6 @@ import DownIpc from '@electronMain/ipc/DownIpc'
 import PhotoBox from '@/components/PhotoBox'
 import AppealTypeSelect from '@SelectBox/AppealTypeSelect'
 
-import { mapGetters } from 'vuex'
 import { APPEAL_TYPE } from '@/utils/enumerate.js'
 
 import * as AdminManage from '@/api/adminManage'
@@ -117,7 +116,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['showAppealAccess']),
     retoucherIsSelf () {
       return store.getters.userInfo.id === this.orderData.retoucherJobNum
     },
@@ -139,9 +137,6 @@ export default {
           break
       }
       return finalPhotos
-    },
-    needAppeal () {
-      return this.photos.some(item => item.qualityType === 'quality' && !item.isRollBack) && this.retoucherIsSelf
     }
   },
   created () {

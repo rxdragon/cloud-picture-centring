@@ -37,9 +37,6 @@ export default {
     return {
       APPEAL_TYPE
     }
-  },
-  methods: {
-    
   }
 }
 </script>

@@ -39,7 +39,7 @@
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select isMulti v-model="appealType" />
+          <appeal-type-select needAll isMulti v-model="appealType" />
         </div>
         <!-- 是否为本人 -->
         <div class="audit-box search-item">

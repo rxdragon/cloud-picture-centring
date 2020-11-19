@@ -24,8 +24,8 @@ import { APPEAL_TYPE, AppealTypeNameEnum } from '@/utils/enumerate'
 export default {
   name: 'AppealTypeSelect',
   props: {
-    isMulti: { type: Boolean, default: false},
-    needAll: { type: Boolean, default: false}
+    isMulti: { type: Boolean, default: false },
+    needAll: { type: Boolean, default: false }
   },
   data () {
     return {

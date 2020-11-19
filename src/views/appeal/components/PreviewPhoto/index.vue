@@ -294,7 +294,7 @@
 import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
-import FabricCanvas from './FabricCanvas'
+import FabricCanvas from '@/views/assessment-center/components/FabricCanvas.vue'
 import EvaluateInfo from '../EvaluateInfo'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
@@ -516,9 +516,7 @@ export default {
     addDeleteLabel (issueItem) {
       this.labelData.forEach(classItem => {
         const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
-        if (findIssueLabel) {
-          findIssueLabel.isSelect = false
-        }
+        if (findIssueLabel) findIssueLabel.isSelect = false
       })
     },
     /**
@@ -537,9 +535,7 @@ export default {
      */
     selectTLabelData (selItem) {
       const { id } = selItem
-      if (id === this.currentId) {
-        return
-      }
+      if (id === this.currentId) return
       this.resetLabelData()
       this.labelDataTop.forEach((item) => {
         item.isSelect = item.id === id
@@ -567,9 +563,7 @@ export default {
      * @description 重制标签
      */
     resetLabelData () {
-      this.labelDataTop.forEach(item => {
-        item.isSelect = false
-      })
+      this.labelDataTop.forEach(item => { item.isSelect = false })
       this.labelData.forEach(item => {
         item.child.forEach(issItem => { issItem.isSelect = false })
       })
@@ -580,12 +574,8 @@ export default {
      * @description 显示标记
      */
     showMarkPhoto () {
-      if (this.mode === 'complete') {
-        this.showStoreReson = !this.showStoreReson
-      }
-      if (this.mode === 'cloudLabel') {
-        this.showMark = !this.showMark
-      }
+      if (this.mode === 'complete') this.showStoreReson = !this.showStoreReson
+      if (this.mode === 'cloudLabel') this.showMark = !this.showMark
     },
     /**
      * @description 取消加载
@@ -799,12 +789,8 @@ export default {
           this.showAcceptTextarea = true
           break
         case APPEAL_TYPE.EVALUATE:
-          if (this.checkType === APPEAL_CHECK_STATUS.FIRST) {
-            this.showAcceptTextarea = true
-          }
-          if (this.checkType === APPEAL_CHECK_STATUS.SECOND) {
-            this.showLabelDataTop = true
-          }
+          if (this.checkType === APPEAL_CHECK_STATUS.FIRST) this.showAcceptTextarea = true
+          if (this.checkType === APPEAL_CHECK_STATUS.SECOND) this.showLabelDataTop = true
           break
         default:
           break
@@ -924,7 +910,6 @@ export default {
           type: PlantIdTypeEnum[this.currentId]
         }
         return sendData
-        // this.resetLabelData()
       } catch (error) {
         console.error(error)
         this.$newMessage.error('上传标记图失败')
