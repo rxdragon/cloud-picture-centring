@@ -78,7 +78,7 @@
             {{ photoItem.photoAppeals.evaluatorType | toPlantCN }}
           </el-tag>
         </div>
-        <div class="panel-content">
+        <div class="panel-content" v-if="checkTag.length">
           问题标记：
           <el-tag
             size="medium"
@@ -242,9 +242,7 @@ export default {
     // 云学院标记
     checkTag () {
       const tagArr = this.photoItem.photoAppeals.checkPoolTags
-      const tagFilter = tagArr.map(item => {
-        return item.name
-      })
+      const tagFilter = tagArr.map(item => item.name)
       return tagFilter
     }
   },

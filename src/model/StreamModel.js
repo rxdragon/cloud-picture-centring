@@ -272,9 +272,9 @@ export default class StreamModel {
     const retouchTime = _.get(this.baseData, 'retouch_time') || 0
     const reviewReturnRebuildTime = _.get(this.baseData, 'review_return_rebuild_time') || 0
     const allTime = retouchTime + reviewReturnRebuildTime
-    this.retouchAllTime = (allTime / 60).toFixed(0) + 'min'
+    this.retouchAllTime = (allTime / 60).toFixed(2) + 'min'
     const hourGlassAllTime = _.get(this.baseData, 'hour_glass.init_surplus_time') || 0
-    this.hourGlassAllTime = ((hourGlassAllTime) / 60).toFixed(0) + 'min'
+    this.hourGlassAllTime = ((hourGlassAllTime) / 60).toFixed(2) + 'min'
   }
 
   // 获取照片数量

@@ -461,6 +461,7 @@
  更改经验数值,返回配置交集 | [47e7893](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/47e7893)
  更改配置 | [3e5887f](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/3e5887f)
  沙漏时长x2 | [539c62a](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/539c62a)
+ 沙漏时长字段更滑 | [2d37f9f](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/2d37f9f)
  活动状态文案修改 | [ec64def](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/ec64def)
  测试bug修复 | [3d4916f](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/3d4916f)
  申诉问题勾选优化 | [7880487](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/7880487)
