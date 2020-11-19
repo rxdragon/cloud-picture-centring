@@ -23,7 +23,8 @@ export default class PhotoAppealModel {
 
 
   constructor (photoAppeal) {
-    const appealInfo = photoAppeal.photo_appeal_examines || []
+    // 沙漏超时结果在stream_appeal_examines, 其他照片维度的在photo_appeal_examines
+    const appealInfo = photoAppeal.stream_appeal_examines || photoAppeal.photo_appeal_examines || []
     const firstResultInfo = appealInfo[0]
     const secondResultInfo = appealInfo[1]
 

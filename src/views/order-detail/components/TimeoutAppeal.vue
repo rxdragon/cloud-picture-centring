@@ -32,9 +32,7 @@ export default {
       this.orderData.currentStreamAppeals.forEach(item => { // 是否在申诉中
         if (item.type === APPEAL_TYPE.TIMEOUT) canAppeal = false
       })
-      if (this.orderData.timeoutRollbackLog) {
-        canAppeal = false
-      }
+      if (this.orderData.timeoutRollbackLog) canAppeal = false
       if (this.orderData.overTimeNum <= 0) canAppeal = false
       return canAppeal
     },
@@ -43,6 +41,7 @@ export default {
       this.orderData.currentStreamAppeals.forEach(item => { // 是否在申诉中
         if (item.type === APPEAL_TYPE.TIMEOUT) reasonText = '该流水存在进行中的沙漏申诉'
       })
+      if (this.orderData.timeoutRollbackLog) reasonText = '申诉超时已通过'
       return reasonText
     }
   }

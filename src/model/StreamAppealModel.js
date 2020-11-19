@@ -10,6 +10,7 @@ import {
 export default class StreamAppealModel {
   base = {}
   id = ''
+  desc = ''
   streamId = ''
   streamNum = ''
   createdAt = '' // 申诉时间
@@ -47,6 +48,7 @@ export default class StreamAppealModel {
     this.base = appealItem
     this.streamId = appealItem.stream_id
     this.id = appealItem.id
+    this.desc = appealItem.desc
     this.streamNum = _.get(appealItem, 'stream.stream_num') || ''
     this.createdAt = appealItem.created_at
     this.appealType = appealItem.type

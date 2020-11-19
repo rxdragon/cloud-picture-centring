@@ -9,7 +9,12 @@
         </div>
       </div>
     </div>
-    <photo-list v-else need-preload :photo-data="photoVersionList" />
+    <photo-list
+      v-else
+      need-preload
+      :photo-data="photoVersionList"
+      :show-special-effects="false"
+    />
     <!-- 质量问题标签 -->
     <div
       class="panel-box"
