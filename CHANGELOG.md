@@ -1,4 +1,4 @@
-# 2.0.0 (2020-11-18)
+# 2.0.0 (2020-11-19)
 
 ### 🌟 新功能
 |范围|描述|commitId|
@@ -418,9 +418,9 @@
  add errorcode 代码cr修改 | [0a6d1d1](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0a6d1d1)
  css修改 | [002cc41](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/002cc41)
  photoDetail样式调整 | [8635719](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/8635719)
+ 个人修图概述合计加上回滚值 | [d4be8d4](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/d4be8d4)
  优化申诉复审选择操作 | [bda789b](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/bda789b)
  修复4舍5入问题 | [0da8a8c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0da8a8c)
- 修复产讯标签增加云学院标签限制时间 | [3216608](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/3216608)
  修复优化修图历史记录来回切换标签导致bug | [c91616b](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/c91616b)
  修复伙伴绩效查询，类型转换错误问题 | [9126c96](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/9126c96)
  修复修图历史中质量问题和非质量张数展示 | [bdfbf06](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/bdfbf06)
@@ -513,6 +513,7 @@
  修复云学院平均分显示问题 | [4b654cd](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/4b654cd)
  修复云学院照片退役后显示问题 | [cb693e5](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/cb693e5)
  修复云端工作看板查询分页问题 | [6ed5ba5](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/6ed5ba5)
+ 修复产讯标签增加云学院标签限制时间 | [3216608](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/3216608)
  修复人数显示问题 | [a9eec48](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/a9eec48)
  修复代码问题 | [f126079](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/f126079)
  修复代码问题 | [1e680e7](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/1e680e7)
