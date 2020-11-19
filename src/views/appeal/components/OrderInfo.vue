@@ -71,6 +71,13 @@
           >修图时长：{{ orderData.retouchAllTime }}
           </span>
         </div>
+        <div
+          class="panel-main-content"
+          v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT && checkType"
+        >
+          <span class="title">申诉理由：</span>
+          <span class="content">{{ appealInfo.desc }}</span>
+        </div>
         <div class="panel-main-content">
           <span class="title">处理状态：</span>
           <span class="content">{{ appealInfo.appealStatusDesc }}</span>
@@ -100,7 +107,8 @@ export default {
   },
   data () {
     return {
-      APPEAL_TYPE
+      APPEAL_TYPE,
+      checkType: this.$route.query.type // 审核类型
     }
   },
   methods: {

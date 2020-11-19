@@ -238,8 +238,9 @@ export default {
       // 沙漏超时
       if (this.appealType === APPEAL_TYPE.TIMEOUT) {
         const canTimeoutAppeal = this.$refs['timeout-appeal'].canAppeal
+        const reasonText = this.$refs['timeout-appeal'].reasonText
         if (!canTimeoutAppeal) {
-          this.$newMessage.warning('沙漏未超时或者已存在申诉')
+          this.$newMessage.warning(reasonText || '不可申诉')
           return false
         }
         if (!this.orderData.timeoutAppealReason) {

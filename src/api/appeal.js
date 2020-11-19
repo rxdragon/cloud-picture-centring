@@ -77,6 +77,7 @@ export function appealDetail (params, source) {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
       const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(photoAppealItem)
+
       const finalPhotoItem = {
         reworkChecked: false, // 申诉的勾选
         appealReason: '', // 申诉的说明
@@ -85,7 +86,8 @@ export function appealDetail (params, source) {
         partNote: photoData.partNote,
         wholeNote: photoData.wholeNote,
         photoAppeals: { ...photoAppealRest },
-        photoVersionId: photoAppealItem.photo_version_id
+        photoVersionId: photoAppealItem.photo_version_id,
+        specialEfficacy: _.get(photoAppealItem, 'tags.values.special_efficacy') || '无需特效'
       }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -112,17 +114,21 @@ export function appealDetail (params, source) {
       }
       if (finalPhotoItem.photoVersion) photos.push(finalPhotoItem)
     })
+    const { baseData, ...restSteamData } = new StreamModel(msg.stream)
+    const orderData = { ...restSteamData }
     // msg.photo_appeals没有的话,是沙漏申诉,photo去取stream中的
     if (appealInfo.appealType === APPEAL_TYPE.TIMEOUT) {
+      const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(msg)
+      orderData.timeoutAppeal = { ...photoAppealRest }
+
       msg.stream.photos.forEach(photo => {
         const { baseData, ...rest } = new PhotoModel(photo)
         const photoData = { ...rest }
+        photoData.specialEfficacy = _.get(photo, 'tags.values.special_efficacy') || '无需特效'
         photoData.photoVersion = PhotoTool.settlePhotoVersion(photo.photo_version)
         photos.push(photoData)
       })
     }
-    const { baseData, ...restSteamData } = new StreamModel(msg.stream)
-    const orderData = { ...restSteamData }
     return {
       orderData,
       photos,
