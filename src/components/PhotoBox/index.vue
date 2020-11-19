@@ -201,7 +201,7 @@ export default {
     },
     // 特效字段
     specialEffects () {
-      const special = (this.tags && this.tags.values && this.tags.values.special_efficacy) || '无需特效'
+      const special = _.get(this.tags, 'values.special_efficacy') || '无需特效'
       return special
     }
   },

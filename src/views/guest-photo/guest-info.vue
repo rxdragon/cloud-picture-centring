@@ -43,7 +43,7 @@
             </div>
             <div class="panel-main-content" v-if="specialEfficacy">
               <span class="title">选定特效：</span>
-              <span class="content">{{ specialEfficacy }}</span>
+              <span class="content special-efficacy">{{ specialEfficacy }}</span>
             </div>
           </div>
         </div>
@@ -96,6 +96,7 @@
         need-grade
         :grade-info="gradeInfo"
         :photo-data="photoVersion"
+        :show-special-effects="false"
         @gradeChange="onGradeChange"
       />
     </div>
@@ -284,6 +285,10 @@ export default {
 
           .content {
             width: 632px;
+          }
+
+          .special-efficacy {
+            color: @red;
           }
         }
       }

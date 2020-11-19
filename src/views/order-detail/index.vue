@@ -42,7 +42,10 @@
 
     <!-- 照片列表 -->
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">
-      <div class="panel-title">照片{{ photoIndex + 1 }}</div>
+      <div class="panel-title">
+        照片{{ photoIndex + 1 }}
+        <span v-if="photoItem.specialEfficacy" class="special-efficacy panel-slot">{{ photoItem.specialEfficacy }}</span>
+      </div>
       <photo-detail :photo-item="photoItem" />
     </div>
     <el-dialog
@@ -411,6 +414,11 @@ export default {
 
   .photo-list {
     margin-bottom: 24px;
+
+    .special-efficacy {
+      font-weight: 400;
+      color: @red;
+    }
   }
 
   .check-evaluate {
