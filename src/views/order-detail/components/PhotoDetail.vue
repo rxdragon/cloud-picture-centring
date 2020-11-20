@@ -53,6 +53,33 @@
       </div>
     </div>
     <div v-if="hasCheckTags" class="panel-box">
+      <div class="panel-title">
+        <span>云学院评分</span>
+        <span>总分：{{ checkScore }}</span>
+      </div>
+      <div class="panel-main">
+        <div class="issue-class-box panel-row">
+          <el-tag :class="['type-tag', evaluatorType]" size="medium">
+            {{ evaluatorType | toPlantCN }}
+          </el-tag>
+          <el-tag
+            :class="['type-tag', item.type]"
+            size="medium"
+            v-for="(item, index) in typeTags"
+            :key="index"
+          >
+            {{ item.name }}
+          </el-tag>
+        </div>
+        <div class="issue-class-box panel-row" v-for="checkItem in checkTag" :key="checkItem.id">
+          <div class="label-title">{{ checkItem.name }}</div>
+          <div class="label-box">
+            <el-tag size="medium" v-for="issueItem in checkItem.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div v-if="hasCheckTags" class="panel-box">
       <div class="panel-title">云学院评价</div>
       <div class="panel-main">
         <div class="panel-content content-one">
@@ -72,13 +99,14 @@
           <span v-if="!checkTag.length">暂无标记</span>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import PhotoList from '@/components/PhotoList'
 import PreviewModel from '@/model/PreviewModel'
+import uuidv4 from 'uuid'
 
 import { mapGetters } from 'vuex'
 
@@ -126,13 +154,35 @@ export default {
     checkScore () {
       return _.get(this.photoData, 'tags.values.score') || 0
     },
+    // 激励词
+    typeTags () {
+      const typeTags = _.get(this.photoData, 'tags.values.check_pool_ex_tags') || []
+      return typeTags
+    },
     // 云学院标记
     checkTag () {
-      const tagArr = _.get( this.photoData, 'tags.values.check_pool_tags') || []
-      const tagFilter = tagArr.map(item => {
-        return item.name
+      const checkPoolTags = _.get(this.photoData, 'tags.values.check_pool_tags') || []
+      const parentData = []
+      checkPoolTags.forEach(issueItem => {
+        const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
+        if (findClass) {
+          findClass.child.push({
+            id: issueItem.id,
+            name: issueItem.name
+          })
+        } else {
+          const newClass = {
+            id: _.get(issueItem, 'parent.id') || uuidv4(),
+            name: _.get(issueItem, 'parent.name') || '-',
+            child: [{
+              id: issueItem.id,
+              name: issueItem.name,
+            }]
+          }
+          parentData.push(newClass)
+        }
       })
-      return tagFilter
+      return parentData
     }
   },
   created () {
@@ -155,6 +205,66 @@ export default {
     margin-top: 20px;
     font-size: 14px;
     color: #303133;
+
+    .issue-class-box {
+      display: flex;
+
+      .label-title {
+        flex-shrink: 0;
+        margin: 0 20px 0 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 28px;
+        color: #303133;
+      }
+
+      .type-tag {
+        margin-right: 10px;
+
+        &.plant {
+          color: #fff;
+          background-color: #44c27e;
+          border-color: #44c27e;
+        }
+
+        &.pull {
+          color: #fff;
+          background-color: #ff3974;
+          border-color: #ff3974;
+        }
+
+        &.none {
+          color: #fff;
+          background-color: #4669fb;
+          border-color: #4669fb;
+        }
+      }
+
+      .label-box {
+        margin-bottom: -10px;
+
+        .el-tag {
+          margin: 0 10px 10px 0;
+          font-size: 12px;
+          font-weight: 400;
+          border-radius: 4px;
+        }
+      }
+    }
+
+    .panel-row {
+      padding: 20px 0;
+      font-size: 14px;
+      line-height: 22px;
+      color: #303133;
+      border-bottom: 1px solid @borderColor;
+
+      .order-info {
+        .order-info-title {
+          display: inline-block;
+        }
+      }
+    }
 
     .panel-main {
       padding: 20px;
@@ -202,28 +312,6 @@ export default {
       .content-part-note {
         margin-right: 16px;
         margin-bottom: 4px;
-      }
-    }
-
-    .type-tag {
-      margin: 0 10px 10px;
-
-      &.plant {
-        color: #fff;
-        background-color: #44c27e;
-        border-color: #44c27e;
-      }
-
-      &.pull {
-        color: #fff;
-        background-color: #ff3974;
-        border-color: #ff3974;
-      }
-
-      &.none {
-        color: #fff;
-        background-color: #4669fb;
-        border-color: #4669fb;
       }
     }
   }
