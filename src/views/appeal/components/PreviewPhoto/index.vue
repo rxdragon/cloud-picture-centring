@@ -3,6 +3,9 @@
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}{{ showPhoto.storeReturnCount || '' }}
       <div class="btn-right">
+        <!-- todo 2.14之后后续注释去掉,解决照片问题标记被右边栏覆盖 -->
+        <!-- <i @click="changeRightShow" class="el-icon-view" /> -->
+        <div class="for-todo"></div>
         <button
           id="closeImg"
           type="button"
@@ -123,7 +126,7 @@
         </button>
       </div>
       <!-- 右边栏 -->
-      <div class="photo-mark">
+      <div :class="['photo-mark', photoMarkShow ? 'up' : 'down']">
         <div class="scroll-box">
           <!-- 缩略图 -->
           <div id="smallImg" v-loading="loading" class="small-img">
@@ -390,7 +393,8 @@ export default {
         penColor: '#E34F51',
         lineWidth: 2,
         drawType: ''
-      }
+      },
+      photoMarkShow: true
     }
   },
   computed: {
@@ -541,6 +545,7 @@ export default {
       this.labelData = allLabel[id]
       if (id === 1 && !this.hasPushGoodWord) { // 种草情况下,将激励词推进标签中
         this.labelData.push({
+          isGoodWord: true, // 区分激励词
           name: '激励词',
           child: goodWord
         })
@@ -964,6 +969,12 @@ export default {
         this.canvasOption.width = orginImgDom.clientWidth
         this.canvasOption.height = orginImgDom.clientHeight
       }
+    },
+    /**
+     * @description 右边栏层级切换
+     */
+    changeRightShow () {
+      this.photoMarkShow = !this.photoMarkShow
     }
   }
 }

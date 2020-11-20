@@ -69,33 +69,46 @@
     </div>
     <!-- 云学院评分详情 -->
     <div
-      v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
       class="panel-box"
+      v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
     >
-      <div class="panel-title">云学院评价</div>
+      <div class="panel-title evaluate">
+        <span>评价信息</span>
+        <span>总分：{{ photoItem.photoAppeals.checkPoolScore }}</span>
+      </div>
       <div class="panel-main">
-        <div class="panel-content content-one">
-          总分：{{ photoItem.photoAppeals.checkPoolScore }}
+        <div class="issue-class-box panel-row">
           <el-tag
             :class="['type-tag', photoItem.photoAppeals.evaluatorType]"
             size="medium"
           >
             {{ photoItem.photoAppeals.evaluatorType | toPlantCN }}
           </el-tag>
-        </div>
-        <div class="panel-content" v-if="checkTag.length">
-          问题标记：
           <el-tag
+            :class="['type-tag', item.type]"
             size="medium"
-            class="evaluate-item"
-            v-for="(tagItem, tagIndex) in checkTag"
-            :key="tagIndex"
+            v-for="(item, index) in photoItem.photoAppeals.typeTags"
+            :key="index"
           >
-            {{ tagItem }}
+            {{ item.name }}
           </el-tag>
-          <span v-if="!checkTag.length">暂无标记</span>
+        </div>
+        <div
+          class="issue-class-box panel-row"
+          v-for="checkItem in photoItem.photoAppeals.checkPoolTags"
+          :key="checkItem.id"
+        >
+          <div class="label-title">{{ checkItem.name }}</div>
+          <div class="label-box">
+            <el-tag size="medium" v-for="issueItem in checkItem.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
+          </div>
         </div>
       </div>
+    </div>
+    <div
+      v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
+      class="panel-box"
+    >
       <!-- 复审后的评分 -->
       <div class="panel-main" v-if="secondEvaluateResult.hasSecond">
         <div class="panel-content content-one">
@@ -103,17 +116,20 @@
           <el-tag :class="['type-tag', secondEvaluateResult.class]" size="medium">
             {{ secondEvaluateResult.name }}
           </el-tag>
-        </div>
-        <div class="panel-content">
-          问题标记：
           <el-tag
+            v-for="(typeTagItem, index) in secondEvaluateResult.typeTag"
+            :key="index"
+            class="type-tag"
             size="medium"
-            class="reason-item"
-            v-for="(tagItem, tagIndex) in secondEvaluateResult.tags"
-            :key="tagIndex"
           >
-            {{ tagItem }}
+            {{ typeTagItem }}
           </el-tag>
+        </div>
+        <div class="issue-class-box panel-row" v-for="tagItem in secondEvaluateResult.tags" :key="tagItem.id">
+          <div class="label-title">{{ tagItem.name }}</div>
+          <div class="label-box">
+            <el-tag size="medium" v-for="issueItem in tagItem.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
+          </div>
         </div>
       </div>
     </div>
@@ -330,16 +346,27 @@ export default {
         this.realPhotoData.otherData = {} // 存放选中的标签对象
         if (result === 'accept') {
           const finalLabelType = labelDataTop.filter(labelDataTopItem => labelDataTopItem.isSelect)[0]
-          const child = []
+          const tempTag = []
+          const tempTypeTag = []
           this.secondEvaluateResult.hasSecond = true
           this.secondEvaluateResult.name = finalLabelType.name
           this.secondEvaluateResult.class = finalLabelType.class
           labelData.forEach(labelDataItem => {
-            labelDataItem.child.forEach(childItem => {
-              if (childItem.isSelect) child.push(childItem.name)
-            })
+            if (!labelDataItem.isGoodWord) { // 普通标签
+              const filterLabelArr = labelDataItem.child.filter(childItem => childItem.isSelect)
+              if (filterLabelArr.length) {
+                labelDataItem.child = filterLabelArr
+                tempTag.push(labelDataItem)
+              }
+            }
+            if (labelDataItem.isGoodWord) { // 激励词
+              labelDataItem.child.forEach(childItem => {
+                if (childItem.isSelect) tempTypeTag.push(childItem.name)
+              })
+            }
           })
-          this.secondEvaluateResult.tags = child
+          this.secondEvaluateResult.tags = tempTag // 普通问题标签
+          this.secondEvaluateResult.typeTag = tempTypeTag // 激励词
         } else { // 拒绝的话reset secondEvaluateResult
           this.secondEvaluateResult = {}
         }
@@ -355,6 +382,13 @@ export default {
 
 .photo-detail {
   .panel-title {
+    margin-bottom: 20px;
+
+    &.evaluate {
+      display: flex;
+      justify-content: space-between;
+    }
+
     .el-button {
       margin-left: 10px;
     }
@@ -392,25 +426,63 @@ export default {
     font-size: 14px;
     color: #303133;
 
-    .type-tag {
-      margin: 0 10px 10px;
+    .issue-class-box {
+      display: flex;
 
-      &.plant {
-        color: #fff;
-        background-color: #44c27e;
-        border-color: #44c27e;
+      .label-title {
+        flex-shrink: 0;
+        margin: 0 20px 0 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 28px;
+        color: #303133;
       }
 
-      &.pull {
-        color: #fff;
-        background-color: #ff3974;
-        border-color: #ff3974;
+      .type-tag {
+        margin-right: 10px;
+
+        &.plant {
+          color: #fff;
+          background-color: #44c27e;
+          border-color: #44c27e;
+        }
+
+        &.pull {
+          color: #fff;
+          background-color: #ff3974;
+          border-color: #ff3974;
+        }
+
+        &.none {
+          color: #fff;
+          background-color: #4669fb;
+          border-color: #4669fb;
+        }
       }
 
-      &.none {
-        color: #fff;
-        background-color: #4669fb;
-        border-color: #4669fb;
+      .label-box {
+        margin-bottom: -10px;
+
+        .el-tag {
+          margin: 0 10px 10px 0;
+          font-size: 12px;
+          font-weight: 400;
+          border-radius: 4px;
+        }
+      }
+    }
+
+    .panel-row {
+      padding: 20px 0;
+      font-size: 14px;
+      line-height: 22px;
+      color: #303133;
+      border-bottom: 1px solid @borderColor;
+
+      .order-info {
+        .order-info-title {
+          display: inline-block;
+        }
       }
     }
 
