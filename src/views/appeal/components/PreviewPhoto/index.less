@@ -44,8 +44,12 @@
     position: absolute;
     top: 0;
     right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 280px;
     height: 100%;
+    padding: 10px;
     text-align: right;
     background-color: #535353;
 
@@ -53,7 +57,6 @@
       width: 30px;
       height: 30px;
       padding: 0;
-      margin-right: 10px;
       cursor: pointer;
       background-color: #535353;
       border: none;
@@ -312,9 +315,16 @@
 
   .photo-mark {
     position: relative;
-    z-index: 5000;
     width: 280px;
     background-color: #535353;
+
+    &.up {
+      z-index: 5000;
+    }
+
+    &.down {
+      z-index: 1000;
+    }
 
     .scroll-box {
       width: 100%;

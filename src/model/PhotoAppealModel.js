@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid'
+
 import { AppealResultStatusPhotoEnum } from '@/utils/enumerate'
 
 export default class PhotoAppealModel {
@@ -18,6 +20,7 @@ export default class PhotoAppealModel {
     reason: '-'
   }
   checkPoolTags = []
+  typeTags = [] // 激励词
   evaluatorType = ''
   checkPoolScore = '-'
 
@@ -54,6 +57,28 @@ export default class PhotoAppealModel {
     }
     this.checkPoolScore = _.get(this.base, 'photo.tags.values.score') || '-'
     this.evaluatorType = _.get(this.base, 'photo.tags.values.evaluator_type') || ''
-    this.checkPoolTags = _.get(this.base, 'photo.tags.values.check_pool_tags') || []
+    this.typeTags = _.get(this.base, 'photo.tags.values.check_pool_ex_tags') || []
+    const checkPoolTags = _.get(this.base, 'photo.tags.values.check_pool_tags') || []
+    const parentData = []
+    checkPoolTags.forEach(issueItem => {
+      const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
+      if (findClass) {
+        findClass.child.push({
+          id: issueItem.id,
+          name: issueItem.name
+        })
+      } else {
+        const newClass = {
+          id: _.get(issueItem, 'parent.id') || uuidv4(),
+          name: _.get(issueItem, 'parent.name') || '-',
+          child: [{
+            id: issueItem.id,
+            name: issueItem.name,
+          }]
+        }
+        parentData.push(newClass)
+      }
+    })
+    this.checkPoolTags = parentData
   }
 }
