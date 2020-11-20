@@ -380,6 +380,7 @@
  去除测试样式文字 | [ffaccc0](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/ffaccc0)
  去除自动上传扩展功能 | [09f8234](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/09f8234)
  增加eslint规范 | [c5da50c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/c5da50c)
+ 增加化妆等备注 | [23906bd](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/23906bd)
  增加文件夹icon | [421c2c7](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/421c2c7)
  增加标签秒速 | [7a6b29f](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/7a6b29f)
  完成云学院ui布局 | [6c9e12c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/6c9e12c)

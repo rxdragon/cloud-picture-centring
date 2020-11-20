@@ -787,7 +787,10 @@ export default {
           break
         case APPEAL_TYPE.EVALUATE:
           if (this.checkType === APPEAL_CHECK_STATUS.FIRST) this.showAcceptTextarea = true
-          if (this.checkType === APPEAL_CHECK_STATUS.SECOND) this.showLabelDataTop = true
+          if (this.checkType === APPEAL_CHECK_STATUS.SECOND) {
+            this.showLabelDataTop = true
+            document.getElementsByClassName('scroll-box')[0].scrollTop = 1000
+          }
           break
         default:
           break
