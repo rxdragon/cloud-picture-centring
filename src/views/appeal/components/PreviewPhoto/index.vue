@@ -159,11 +159,18 @@
               </div>
             </div>
           </div>
-          <order-info-module v-if="showOrderInfo" :order-info="photoInfo" />
+          <order-info-module v-if="showOrderInfo" :order-info="photoInfo" show-other-note />
           <!-- 申诉理由 -->
           <div class="order-label">
-            <div class="label-title">申诉问题描述</div>
-            <p>{{ photoAppeal.desc }}</p>
+            <div class="label-title">申诉问题</div>
+            <div class="appeal-item">
+              <div class="name">申诉类型：</div>
+              <div>{{ appealInfo.appealTypeName }}</div>
+            </div>
+            <div class="appeal-item">
+              <div class="name">问题描述：</div>
+              <div>{{ photoAppeal.desc }}</div>
+            </div>
           </div>
           <!-- 云学院复审时的重评 -->
           <!-- 种拔草设置 -->
