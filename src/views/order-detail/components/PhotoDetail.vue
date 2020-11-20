@@ -79,27 +79,6 @@
         </div>
       </div>
     </div>
-    <!-- <div v-if="hasCheckTags" class="panel-box">
-      <div class="panel-title">云学院评价</div>
-      <div class="panel-main">
-        <div class="panel-content content-one">
-          总分：{{ checkScore }}
-          <el-tag :class="['type-tag', evaluatorType]" size="medium">{{ evaluatorType | toPlantCN }}</el-tag>
-        </div>
-        <div class="panel-content">
-          问题标记：
-          <el-tag
-            size="medium"
-            class="problem-item"
-            v-for="(tagItem, tagIndex) in checkTag"
-            :key="tagIndex"
-          >
-            {{ tagItem }}
-          </el-tag>
-          <span v-if="!checkTag.length">暂无标记</span>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
