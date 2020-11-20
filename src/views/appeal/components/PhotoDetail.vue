@@ -124,8 +124,22 @@
     >
       <div class="panel-title">
         申诉处理
-        <el-button type="primary" @click="goCheck('first')" v-if="checkType === 'first'">初审</el-button>
-        <el-button type="primary" @click="goCheck('second')" v-if="checkType === 'second'">复审</el-button>
+        <el-button
+          size="mini"
+          type="primary"
+          @click="goCheck('first')"
+          v-if="checkType === 'first'"
+        >
+          初审
+        </el-button>
+        <el-button
+          size="mini"
+          type="primary"
+          @click="goCheck('second')"
+          v-if="checkType === 'second'"
+        >
+          复审
+        </el-button>
       </div>
       <div class="panel-main">
         <div class="panel-content content-one">申诉问题描述：{{ photoItem.photoAppeals.desc }}</div>
@@ -162,12 +176,13 @@
       :imgarray="priviewPhotoData"
       show-return-reson
       :orderindex="imgIndex"
-      :show-order-info="false"
+      show-order-info
       :show-preview.sync="showPreview"
       @saveResult="saveResult"
       :check-type="checkType"
       :photo-appeal="photoItem.photoAppeals"
       :appeal-info="appealInfo"
+      :photo-info="photoInfo"
     />
   </div>
 </template>
@@ -187,7 +202,8 @@ export default {
   props: {
     photoItem: { type: Object, required: true },
     appealInfo: { type: Object, required: true },
-    checkType: { type: String, default: '' }
+    checkType: { type: String, default: '' },
+    photoInfo: { type: Object, required: true }
   },
   data () {
     return {

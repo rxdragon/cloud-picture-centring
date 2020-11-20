@@ -37,6 +37,8 @@ export default class StreamAppealModel {
   appealNickName = '-' // 申诉申请人
   appealGroupName = '-' // 申诉申请人所属组名
 
+  photographerOrgName = '-' // 机构名称
+
   constructor (appealItem) {
     const appealInfo = appealItem.stream_appeal_examines || []
     const firstCheckInfo = appealInfo[0]
@@ -77,5 +79,6 @@ export default class StreamAppealModel {
 
     this.appealNickName = _.get(appealItem, 'appeal_staff_info.nickname') || '-'
     this.appealGroupName = _.get(appealItem, 'appeal_staff_info.group_info.name') || '-'
+    this.photographerOrgName = _.get(appealItem, 'stream.order.photographer_org.name') || '-'
   }
 }

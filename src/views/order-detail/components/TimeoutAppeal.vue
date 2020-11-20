@@ -50,6 +50,9 @@ export default {
 
 <style lang="less" scoped>
 .timeout-area {
+  min-height: 282px;
+  overflow: hidden;
+
   .info-item {
     display: flex;
     align-items: flex-start;

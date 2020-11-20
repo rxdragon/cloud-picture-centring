@@ -159,14 +159,12 @@
               </div>
             </div>
           </div>
-          <order-info-module v-if="showOrderInfo" :order-info="orderInfo" />
+          <order-info-module v-if="showOrderInfo" :order-info="photoInfo" />
           <!-- 申诉理由 -->
           <div class="order-label">
             <div class="label-title">申诉问题描述</div>
             <p>{{ photoAppeal.desc }}</p>
           </div>
-          <!-- 云学院评分类型 -->
-          <evaluate-info v-if="isFinishPhoto" :photo-appeal="photoAppeal" :result-label-data="resultLabelData" />
           <!-- 云学院复审时的重评 -->
           <!-- 种拔草设置 -->
           <div class="label-top" v-if="labelDataTop.length && showLabelDataTop">
@@ -295,7 +293,6 @@ import DownIpc from '@electronMain/ipc/DownIpc'
 import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
 import FabricCanvas from '@/views/assessment-center/components/FabricCanvas.vue'
-import EvaluateInfo from '../EvaluateInfo'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'
@@ -308,11 +305,7 @@ let goodWord = []
 
 export default {
   name: 'PreviewPhoto',
-  components: { OrderInfoModule, ModeSwitchBox, FabricCanvas, EvaluateInfo },
-  model: {
-    prop: 'orderindex',
-    event: 'change'
-  },
+  components: { OrderInfoModule, ModeSwitchBox, FabricCanvas },
   props: {
     configs: {
       type: Object,
@@ -341,9 +334,10 @@ export default {
     },
     orderindex: { type: Number, default: 0 },
     checkType: { type: String, default: '' },
-    showOrderInfo: { type: Boolean },
-    photoAppeal: { type: Object },
-    appealInfo: { type: Object }
+    showOrderInfo: { type: Boolean, default: false },
+    photoAppeal: { type: Object, require: true },
+    appealInfo: { type: Object, require: true },
+    photoInfo: { type: Object, require: true }
   },
   data () {
     return {
@@ -401,10 +395,6 @@ export default {
     // original 原片 complete 门店退回 cloudLabel 云学院
     mode () {
       return this.showPhoto.mode || 'original'
-    },
-    // 标签数据
-    resultLabelData () {
-      return _.get(this.showPhoto, 'commitInfo.issueLabel')
     },
     // 标记图片
     markPhoto () {

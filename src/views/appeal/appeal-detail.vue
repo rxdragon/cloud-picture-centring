@@ -18,6 +18,7 @@
         :check-type="checkType"
         :photo-item="photoItem"
         :appeal-info="appealInfo"
+        :photo-info="photoInfo"
       />
     </div>
     <div
@@ -121,7 +122,8 @@ export default {
       APPEAL_TYPE,
       refuseReasonShow: false,
       refuseReason: '',
-      APPEAL_RESULT_STATUS
+      APPEAL_RESULT_STATUS,
+      photoInfo: {}
     }
   },
   created () {
@@ -137,6 +139,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await Appeal.appealDetail(req, this.pageSource)
         this.orderData = data.orderData
+        this.photoInfo = data.photoInfo
         // 如果是审核页面要剔除初审拒绝的照片
         if (this.checkType) {
           this.photos = data.photos.filter(item => {

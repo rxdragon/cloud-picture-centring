@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="rework-area">
     <p class="appeal-photo-title" v-if="canAppeal">
       选择问题照片
     </p>
@@ -45,6 +45,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.rework-area {
+  min-height: 282px;
+}
+
 .appeal-photo-title {
   margin-bottom: 16px;
   font-size: 16px;

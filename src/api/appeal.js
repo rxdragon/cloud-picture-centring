@@ -3,6 +3,7 @@ import StreamAppealModel from '@/model/StreamAppealModel.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import PhotoAppealModel from '@/model/PhotoAppealModel.js'
+import ProductModel from '@/model/ProductModel.js'
 
 import * as PhotoTool from '@/utils/photoTool.js'
 
@@ -73,6 +74,7 @@ export function appealDetail (params, source) {
     const photos = []
     const { base, isFinished, ...rest } = new StreamAppealModel(msg)
     const appealInfo = { ...rest }
+    const photoInfo = {}
     msg.photo_appeals && msg.photo_appeals.forEach(photoAppealItem => {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
@@ -129,7 +131,11 @@ export function appealDetail (params, source) {
         photos.push(photoData)
       })
     }
+    // 获取照片信息photoInfo
+    photoInfo.productInfo = new ProductModel(msg.stream.product)
+    photoInfo.streamInfo = { ...restSteamData }
     return {
+      photoInfo,
       orderData,
       photos,
       appealInfo
