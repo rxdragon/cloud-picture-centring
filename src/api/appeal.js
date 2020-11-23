@@ -3,10 +3,11 @@ import StreamAppealModel from '@/model/StreamAppealModel.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import PhotoAppealModel from '@/model/PhotoAppealModel.js'
+import ProductModel from '@/model/ProductModel.js'
 
 import * as PhotoTool from '@/utils/photoTool.js'
 
-import { APPEAL_STREAM_STATUS } from '@/utils/enumerate'
+import { APPEAL_STREAM_STATUS, APPEAL_TYPE } from '@/utils/enumerate'
 /**
  * @description 初审绑定
  * @param {*} params
@@ -72,10 +73,13 @@ export function appealDetail (params, source) {
   }).then(msg => {
     const photos = []
     const { base, isFinished, ...rest } = new StreamAppealModel(msg)
-    msg.photo_appeals.forEach(photoAppealItem => {
+    const appealInfo = { ...rest }
+    const photoInfo = {}
+    msg.photo_appeals && msg.photo_appeals.forEach(photoAppealItem => {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
       const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(photoAppealItem)
+
       const finalPhotoItem = {
         reworkChecked: false, // 申诉的勾选
         appealReason: '', // 申诉的说明
@@ -84,7 +88,8 @@ export function appealDetail (params, source) {
         partNote: photoData.partNote,
         wholeNote: photoData.wholeNote,
         photoAppeals: { ...photoAppealRest },
-        photoVersionId: photoAppealItem.photo_version_id
+        photoVersionId: photoAppealItem.photo_version_id,
+        specialEfficacy: _.get(photoAppealItem, 'tags.values.special_efficacy') || '无需特效'
       }
       // 照片版本
       if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
@@ -95,6 +100,12 @@ export function appealDetail (params, source) {
         finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
           const isStoreRework = versionItem.version === 'store_rework'
           const isCurrentStoreRework = versionItem.id === photoAppealItem.photo_version_id
+
+          // 获取云学院评价
+          const commitInfo = { picUrl: _.get(photoItem, 'tags.values.cloud_pic_url') || '' }
+          const issueLabel = _.get(photoItem, 'tags.values.check_pool_tags') || []
+          versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
+
           // 如果是完结状态的申诉详情,需要用appealResult替换掉退回的version的tag,展示本次申诉的结果
           if (isCurrentStoreRework && isFinished) {
             versionItem.tags.values = appealResult
@@ -107,10 +118,27 @@ export function appealDetail (params, source) {
     })
     const { baseData, ...restSteamData } = new StreamModel(msg.stream)
     const orderData = { ...restSteamData }
+    // msg.photo_appeals没有的话,是沙漏申诉,photo去取stream中的
+    if (appealInfo.appealType === APPEAL_TYPE.TIMEOUT) {
+      const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(msg)
+      orderData.timeoutAppeal = { ...photoAppealRest }
+
+      msg.stream.photos.forEach(photo => {
+        const { baseData, ...rest } = new PhotoModel(photo)
+        const photoData = { ...rest }
+        photoData.specialEfficacy = _.get(photo, 'tags.values.special_efficacy') || '无需特效'
+        photoData.photoVersion = PhotoTool.settlePhotoVersion(photo.photo_version)
+        photos.push(photoData)
+      })
+    }
+    // 获取照片信息photoInfo
+    photoInfo.productInfo = new ProductModel(msg.stream.product)
+    photoInfo.streamInfo = { ...restSteamData }
     return {
+      photoInfo,
       orderData,
       photos,
-      appealInfo: { ...rest }
+      appealInfo
     }
   })
 }

@@ -10,10 +10,12 @@ import {
 export default class StreamAppealModel {
   base = {}
   id = ''
+  desc = ''
   streamId = ''
   streamNum = ''
   createdAt = '' // 申诉时间
-  appealTypeName = '' // 申诉类型
+  appealType = '' // 申诉类型
+  appealTypeName = '' // 申诉类型中文
   appealStatusDesc = '' // 审核进度
   firstInfo = { // 初审信息
     staffName: '-',
@@ -35,6 +37,7 @@ export default class StreamAppealModel {
   appealNickName = '-' // 申诉申请人
   appealGroupName = '-' // 申诉申请人所属组名
 
+  photographerOrgName = '-' // 机构名称
 
   constructor (appealItem) {
     const appealInfo = appealItem.stream_appeal_examines || []
@@ -47,8 +50,10 @@ export default class StreamAppealModel {
     this.base = appealItem
     this.streamId = appealItem.stream_id
     this.id = appealItem.id
+    this.desc = appealItem.desc
     this.streamNum = _.get(appealItem, 'stream.stream_num') || ''
     this.createdAt = appealItem.created_at
+    this.appealType = appealItem.type
     this.appealTypeName = AppealTypeNameEnum[appealItem.type]
     this.appealStatusDesc = AppealStreamStatusEnum[appealItem.state]
     if (firstCheckInfo) {
@@ -74,5 +79,6 @@ export default class StreamAppealModel {
 
     this.appealNickName = _.get(appealItem, 'appeal_staff_info.nickname') || '-'
     this.appealGroupName = _.get(appealItem, 'appeal_staff_info.group_info.name') || '-'
+    this.photographerOrgName = _.get(appealItem, 'stream.order.photographer_org.name') || '-'
   }
 }

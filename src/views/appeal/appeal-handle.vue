@@ -39,7 +39,12 @@
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select v-model="appealType" />
+          <appeal-type-select needAll isMulti v-model="appealType" />
+        </div>
+        <!-- 摄影机构 -->
+        <div class="search-item">
+          <span>摄影机构</span>
+          <institution-select isMulti v-model="psOrganization" institution-class="photographe" />
         </div>
         <!-- 是否为本人 -->
         <div class="audit-box search-item">
@@ -64,6 +69,10 @@
               <div>
                 <p class="table-title">流水号：</p>
                 {{ row.streamNum }}
+              </div>
+              <div>
+                <p class="table-title">机构：</p>
+                {{ row.photographerOrgName }}
               </div>
             </template>
           </el-table-column>
@@ -146,6 +155,7 @@
 </template>
 
 <script>
+import InstitutionSelect from '@SelectBox/InstitutionSelect'
 import AppealStatusSelect from '@SelectBox/AppealStatusSelect'
 import AppealTypeSelect from '@SelectBox/AppealTypeSelect'
 import StaffSelect from '@SelectBox/StaffSelect'
@@ -159,7 +169,7 @@ import * as Appeal from '@/api/appeal.js'
 
 export default {
   name: 'AppealHandle',
-  components: { AppealStatusSelect, AppealTypeSelect, StaffSelect, DatePicker },
+  components: { AppealStatusSelect, AppealTypeSelect, StaffSelect, DatePicker, InstitutionSelect },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -170,6 +180,7 @@ export default {
       justMe: false, // 仅看本人
       appealStatus: [],
       appealType: '',
+      psOrganization: [],
       tableData: [], // 列表数据
       pager: {
         page: 1,
@@ -285,6 +296,7 @@ export default {
         pageSize: this.pager.pageSize,
         cond: {}
       }
+      if (this.psOrganization.length) req.cond.photographerOrgIdsIn = this.psOrganization
       if (this.timeSpan) {
         req.cond.startAtGte = this.timeSpan[0]
         req.cond.endAtLte = this.timeSpan[1]
@@ -308,7 +320,7 @@ export default {
         if (defaultStateIn.length) req.cond.stateIn = defaultStateIn
       }
       if (this.staffId.length) req.cond.appealStaffIdIn = this.staffId
-      if (this.appealType) req.cond.type = this.appealType
+      if (this.appealType) req.cond.typeIn = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
       if (this.justMe) req.cond.bind = this.justMe
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond

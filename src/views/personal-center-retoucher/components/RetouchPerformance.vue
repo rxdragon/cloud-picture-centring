@@ -126,8 +126,12 @@
                 {{ row.income.sunReward }}
               </span>
               <span class="span-row text-money">
-                <span class="span-title">回滚收益：</span>
-                {{ row.income.rollbackIncome }}
+                <span class="span-title">退单回滚收益：</span>
+                {{ row.income.rollbackIncomeRework }}
+              </span>
+              <span class="span-row text-money">
+                <span class="span-title">沙漏回滚收益：</span>
+                {{ row.income.rollbackIncomeOvertime }}
               </span>
 
               <span class="span-row">
@@ -161,8 +165,12 @@
                 {{ row.exp.timeIntervalReward | toFixedString }}
               </span>
               <span class="span-row text-money">
-                <span class="span-title">回滚海草：</span>
-                {{ row.exp.rollbackExp | toFixedString }}
+                <span class="span-title">退单回滚海草：</span>
+                {{ row.exp.rollbackExpRework | toFixedString }}
+              </span>
+              <span class="span-row text-money">
+                <span class="span-title">沙漏回滚海草：</span>
+                {{ row.exp.rollbackExpOvertime | toFixedString }}
               </span>
               <span class="span-row">
                 <span class="span-title">总计：</span>

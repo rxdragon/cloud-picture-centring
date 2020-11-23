@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid'
+
 import { AppealResultStatusPhotoEnum } from '@/utils/enumerate'
 
 export default class PhotoAppealModel {
@@ -17,9 +19,15 @@ export default class PhotoAppealModel {
     resultDesc: '-',
     reason: '-'
   }
+  checkPoolTags = []
+  typeTags = [] // 激励词
+  evaluatorType = ''
+  checkPoolScore = '-'
+
 
   constructor (photoAppeal) {
-    const appealInfo = photoAppeal.photo_appeal_examines || []
+    // 沙漏超时结果在stream_appeal_examines, 其他照片维度的在photo_appeal_examines
+    const appealInfo = photoAppeal.stream_appeal_examines || photoAppeal.photo_appeal_examines || []
     const firstResultInfo = appealInfo[0]
     const secondResultInfo = appealInfo[1]
 
@@ -39,5 +47,38 @@ export default class PhotoAppealModel {
       this.secondResult.reason = secondResultInfo.reason || '-'
       this.secondResult.result = secondResultInfo.result || ''
     }
+    this.getCheckPoolTags()
+  }
+  // 获取云学院分数
+  getCheckPoolTags () {
+    const tags = _.get(this.base, 'photo.tags.values')
+    if (this.appealResult && tags) { // 如果有appealResult说明是历史快照,云学院评分情况下
+      this.base.photo.tags.values = this.appealResult
+    }
+    this.checkPoolScore = _.get(this.base, 'photo.tags.values.score') || '-'
+    this.evaluatorType = _.get(this.base, 'photo.tags.values.evaluator_type') || ''
+    this.typeTags = _.get(this.base, 'photo.tags.values.check_pool_ex_tags') || []
+    const checkPoolTags = _.get(this.base, 'photo.tags.values.check_pool_tags') || []
+    const parentData = []
+    checkPoolTags.forEach(issueItem => {
+      const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
+      if (findClass) {
+        findClass.child.push({
+          id: issueItem.id,
+          name: issueItem.name
+        })
+      } else {
+        const newClass = {
+          id: _.get(issueItem, 'parent.id') || uuidv4(),
+          name: _.get(issueItem, 'parent.name') || '-',
+          child: [{
+            id: issueItem.id,
+            name: issueItem.name,
+          }]
+        }
+        parentData.push(newClass)
+      }
+    })
+    this.checkPoolTags = parentData
   }
 }

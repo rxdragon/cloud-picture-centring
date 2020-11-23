@@ -4,6 +4,7 @@
       :disabled="disableState"
       filterable
       v-bind="$attrs"
+      :multiple="isMulti"
       clearable
       :popper-append-to-body="false"
       placeholder="请选择机构"
@@ -25,7 +26,8 @@ import * as Institution from '@/api/institution.js'
 export default {
   name: 'InstitutionSelect',
   props: {
-    institutionClass: { type: String, default: 'retouch' }
+    institutionClass: { type: String, default: 'retouch' },
+    isMulti: { type: Boolean, default: false }
   },
   data () {
     return {

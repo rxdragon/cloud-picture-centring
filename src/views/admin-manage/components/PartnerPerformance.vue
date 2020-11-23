@@ -50,8 +50,12 @@
                   <span>{{ expInfo.timeIntervalReward || '0.00' }}</span>
                 </p>
                 <p class="info-row">
-                  <span>回补海草：</span>
-                  <span>{{ expInfo.rollbackExp || '0.00' }}</span>
+                  <span>退单回补海草：</span>
+                  <span>{{ expInfo.rollbackExpRework || '0.00' }}</span>
+                </p>
+                <p class="info-row">
+                  <span>沙漏回补海草：</span>
+                  <span>{{ expInfo.rollbackExpOvertime || '0.00' }}</span>
                 </p>
               </div>
               <div slot="reference" class="content-num">
@@ -95,8 +99,12 @@
                   <span>{{ incomeInfo.glassPunishIncome || '0.00' }}</span>
                 </p>
                 <p class="info-row">
-                  <span>回补收益：</span>
-                  <span>{{ incomeInfo.rollbackIncome || '0.00' }}</span>
+                  <span>退单回补收益：</span>
+                  <span>{{ incomeInfo.rollbackIncomeRework || '0.00' }}</span>
+                </p>
+                <p class="info-row">
+                  <span>沙漏回补收益：</span>
+                  <span>{{ incomeInfo.rollbackIncomeOvertime || '0.00' }}</span>
                 </p>
               </div>
               <div slot="reference" class="content-num">

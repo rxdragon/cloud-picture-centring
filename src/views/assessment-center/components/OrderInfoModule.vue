@@ -20,6 +20,18 @@
         <div class="require-tag">瘦脸幅度：{{ infoData.streamInfo.requireLabel.face | toLabelName }}</div>
         <div v-if="infoData.streamInfo.requireLabel.pimples" class="require-tag">祛痣</div>
       </div>
+      <div class="retouch-remark panel-row" v-if="showOtherNote">
+        <div class="remark-title">订单备注：</div>
+        <div class="remark-content">{{ infoData.streamInfo.orderNote || '-' }}</div>
+      </div>
+      <div class="retouch-remark panel-row" v-if="showOtherNote">
+        <div class="remark-title">化妆备注：</div>
+        <div class="remark-content">{{ infoData.streamInfo.dresserNote || '-' }}</div>
+      </div>
+      <div class="retouch-remark panel-row" v-if="showOtherNote">
+        <div class="remark-title">摄影备注：</div>
+        <div class="remark-content">{{ infoData.streamInfo.photographyNote || '-' }}</div>
+      </div>
       <div class="retouch-remark panel-row">
         <div class="remark-title">修图备注：</div>
         <div class="remark-content">{{ infoData.streamInfo.retouchRemark || '-' }}</div>
@@ -43,7 +55,8 @@ export default {
   name: 'OrderInfoModule',
   components: { ReferencePhoto },
   props: {
-    orderInfo: { type: Object, required: true }
+    orderInfo: { type: Object, required: true },
+    showOtherNote: { type: Boolean, defautl: false }
   },
   computed: {
     infoData () {
