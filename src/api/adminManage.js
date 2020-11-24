@@ -246,7 +246,6 @@ export function getOrderInfoForCloud (params) {
     const orderList = msg.order_info.map(listItem => {
       const productArr = listItem.order_sale
       
-      // TODO 待确认结构
       let productInfo = productArr.map(item => {
         const productName = _.get(item, 'sale_extend.product_name') || ''
         return productName
