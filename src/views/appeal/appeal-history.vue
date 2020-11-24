@@ -29,7 +29,7 @@
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select v-model="appealType" />
+          <appeal-type-select needAll isMulti v-model="appealType" />
         </div>
         <div class="search-button-box search-item">
           <el-button type="primary" @click="searchList(1)">查询</el-button>
@@ -120,7 +120,7 @@ export default {
       timeSpan: null, // 时间
       streamNum: '', // 流水号
       appealStatus: [],
-      appealType: '',
+      appealType: [],
       tableData: [], // 列表数据
       pager: {
         page: 1,
@@ -164,7 +164,7 @@ export default {
         req.cond.endAtLte = this.timeSpan[1]
       }
       if (this.appealStatus.length) req.cond.stateIn = this.appealStatus
-      if (this.appealType) req.cond.type = this.appealType
+      if (this.appealType.length) req.cond.typeIn = this.appealType
       if (this.streamNum) req.cond.streamNum = this.streamNum
       if (!Object.keys(req.cond).length) delete req.cond // 后端{}报错,如果是{}去掉cond
       try {

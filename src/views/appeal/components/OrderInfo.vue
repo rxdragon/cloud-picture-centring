@@ -60,6 +60,23 @@
         <div class="panel-main-content">
           <span class="title">申诉类型：</span>
           <span class="content">{{ appealInfo.appealTypeName }}</span>
+          <span
+            v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
+            class="content"
+          >沙漏时长：{{ orderData.hourGlassAllTime }}
+          </span>
+          <span
+            v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
+            class="content"
+          >修图时长：{{ orderData.retouchAllTime }}
+          </span>
+        </div>
+        <div
+          class="panel-main-content"
+          v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT && checkType"
+        >
+          <span class="title">申诉理由：</span>
+          <span class="content">{{ appealInfo.desc }}</span>
         </div>
         <div class="panel-main-content">
           <span class="title">处理状态：</span>
@@ -80,12 +97,19 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
+import { APPEAL_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'orderData',
   props: {
     orderData: { type: Object, required: true },
     appealInfo: { type: Object, required: true }
+  },
+  data () {
+    return {
+      APPEAL_TYPE,
+      checkType: this.$route.query.type // 审核类型
+    }
   },
   methods: {
     downPhoto (url) {
@@ -172,7 +196,7 @@ export default {
         }
 
         .content {
-          margin-right: 20px;
+          margin-right: 40px;
         }
 
         .require-background-color {
