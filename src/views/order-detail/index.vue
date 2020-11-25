@@ -108,6 +108,7 @@ import PhotoBox from '@/components/PhotoBox'
 import AppealTypeSelect from '@SelectBox/AppealTypeSelect'
 
 import { APPEAL_TYPE } from '@/utils/enumerate.js'
+import { mapGetters } from 'vuex'
 
 import * as AdminManage from '@/api/adminManage'
 import * as Commonality from '@/api/commonality.js'
@@ -131,6 +132,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['showAppealAccess']),
     retoucherIsSelf () {
       return store.getters.userInfo.id === this.orderData.retoucherJobNum
     },
