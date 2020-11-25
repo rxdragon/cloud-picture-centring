@@ -55,6 +55,7 @@ const state = {
   showSpotRecheck: false, // 是否显示重新打分按钮
   showEmptyCheckPool: false, // 是否显示清空按钮
   canAutoRetouch: false, // 是否显示自动修图按钮
+  showAppealAccess: false, // 是否显示审核权限
   showFirstExamine: false, // 是否显示初审按钮
   showSecondExamine: false, // 是否显示复审按钮
   isOnlineWatcher: false, // 是否是在线看片师
@@ -89,6 +90,8 @@ const mutations = {
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
+    // 审核权限
+    state.showAppealAccess = roles.includes('RetoucherCenter.appealHistory.add')
     state.showFirstExamine = roles.includes('AdminManage.appealHandle.firstExamine')
     state.showSecondExamine = roles.includes('AdminManage.appealHandle.secondExamine')
 

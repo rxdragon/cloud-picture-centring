@@ -2,7 +2,7 @@
   <div class="search-retouch-record">
     <!-- 修图记录 -->
     <el-button type="primary" @click="openShowSearchPage">{{ searchRole === SEARCH_ROLE.GROUP_LEADER ? '组员修图记录' : '云端全流水查询' }}</el-button>
-    <div class="search-page" v-if="showSearchPage" v-loading="loading">
+    <div class="search-page" v-if="searchPage" v-loading="loading">
       <div class="header-box">
         <h3>{{ searchRole === SEARCH_ROLE.GROUP_LEADER ? '组员修图记录' : '云端全流水查询' }}</h3>
         <div class="header-plugin">
@@ -171,13 +171,13 @@ export default {
   name: 'SearchRetouchRecord',
   components: { DatePicker, IssueLabelSelect, EvaluateSelect, QualitySelect, CrewSelect, StaffSelect, ShowEvaluate },
   props: {
-    searchRole: { type: String, required: true }
+    searchRole: { type: String, required: true },
+    searchPage: { type: Boolean, required: true }
   },
   data () {
     return {
       SEARCH_ROLE,
       loading: false,
-      showSearchPage: false,
       reworkTimeSpan: null, // 门店退单时间
       storeEvaluateTimeSpan: null, // 门店评价时间
       cloudAuditTimeSpan: null, // 云端审核时间
@@ -297,13 +297,13 @@ export default {
      * @description 打开搜索页面
      */
     openShowSearchPage () {
-      this.showSearchPage = true
+      this.$emit('update:searchPage', true)
     },
     /**
      * @description 打开搜索页面
      */
     closeShowSearchPage () {
-      this.showSearchPage = false
+      this.$emit('update:searchPage', false)
     },
     /**
      * @description 是否能选中日期

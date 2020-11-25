@@ -3,7 +3,7 @@
     <div class="header">
       <h3>{{ activeName | filterActiveName }}</h3>
       <div class="header-plugin">
-        <search-retouch-record :search-role="SEARCH_ROLE.OPERATE" />
+        <search-retouch-record :searchPage.sync="showSearchPage" :search-role="SEARCH_ROLE.OPERATE" />
       </div>
     </div>
     <el-tabs v-model="activeName">
@@ -18,6 +18,7 @@
     <div
       class="table-box"
       :class="{'no-border': activeName === 'PartnerPerformance'}"
+      v-show="!showSearchPage"
     >
       <transition name="fade-transform" mode="out-in">
         <keep-alive>
@@ -68,7 +69,8 @@ export default {
   data () {
     return {
       SEARCH_ROLE,
-      activeName: 'PartnerPerformance'
+      activeName: 'PartnerPerformance',
+      showSearchPage: false
     }
   },
   computed: {

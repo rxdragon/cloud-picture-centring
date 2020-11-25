@@ -20,14 +20,17 @@ function initDownloadManager (win, ipcMain) {
    * @param downloadConfig
    */
   function onNeedDownload (event, { uuid, downloadConfig }) {
+    // 添加进度回调
     downloadConfig = Object.assign(downloadConfig, {
+
       onProgress: (progress, downInfo, item) => {
         if (!(uuid in downingInfo)) downingInfo[uuid] = item
+
         win.webContents.send('download-manage:process', {
           uuid,
           progress,
           downInfo,
-          status: item.getState(), // 状态
+          status: downInfo.state, // 状态
           canResume: item.canResume()
         })
       }
@@ -73,7 +76,7 @@ function initDownloadManager (win, ipcMain) {
       event.returnValue = 'fail'
       return
     }
-    if (downloadItem.isPaused()) downloadItem.resume()
+    downloadItem.resume()
     event.returnValue = 'success'
   }
 
