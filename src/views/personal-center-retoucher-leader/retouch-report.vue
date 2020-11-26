@@ -3,7 +3,7 @@
     <div class="header">
       <h3>组员报告</h3>
       <div class="header-plugin">
-        <search-retouch-record ref="searchRetouchRecord" :search-role="SEARCH_ROLE.GROUP_LEADER" />
+        <search-retouch-record :searchPage.sync="showSearchPage" ref="searchRetouchRecord" :search-role="SEARCH_ROLE.GROUP_LEADER" />
       </div>
     </div>
     <el-tabs v-model="activeName">
@@ -12,7 +12,7 @@
       <el-tab-pane label="退单报告" name="ChargeBackReport" />
       <el-tab-pane label="组员绩效管理" name="CrewPerformanceManagement" />
     </el-tabs>
-    <keep-alive>
+    <keep-alive v-show="!showSearchPage">
       <component :is="activeName" @showSearchPage="onShowSearchPage"/>
     </keep-alive>
   </div>
@@ -32,7 +32,8 @@ export default {
   data () {
     return {
       SEARCH_ROLE,
-      activeName: 'RetouchStaffReport'
+      activeName: 'RetouchStaffReport',
+      showSearchPage: false
     }
   },
   methods: {
