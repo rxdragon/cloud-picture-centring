@@ -1,14 +1,17 @@
+/* eslint-disable no-console */
 'use strict'
 const path = require('path')
 const electron = require('electron')
-const { BrowserWindow, net, session } = electron
 const fs = require('fs')
+const console = require('console')
+
+const { BrowserWindow, net, session } = electron
 
 const app = electron.app
-let downloadFolder = ''
+let downloadFolder = '' // 下载路径
 let lastWindowCreated
 
-const queue = []
+const queue = [] // 队列信息
 
 // 查看是否在队列中
 const _popQueueItem = (url) => {
@@ -20,21 +23,11 @@ const _popQueueItem = (url) => {
 // 转换数据大小格式
 const _bytesToSize = (bytes, decimals) => {
   if (bytes === 0) return '0 Bytes'
-  var k = 1000
-  var dm = decimals || 2
-  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  var i = Math.floor(Math.log(bytes) / Math.log(k))
+  const k = 1000
+  const dm = decimals || 2
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
-}
-
-// 格式化时间
-const _convertTime = (input, separator) => {
-  var pad = function (input) { return input < 10 ? '0' + input : input }
-  return [
-    pad(Math.floor(input / 3600)),
-    pad(Math.floor(input % 3600 / 60)),
-    pad(Math.floor(input % 60))
-  ].join(typeof separator !== 'undefined' ? separator : ':')
 }
 
 // 注册监听事件
@@ -47,28 +40,34 @@ function _registerListener (win, opts = {}) {
     const queueItem = _popQueueItem(itemUrl)
     const ReceivedBytesArr = []
 
+    console.log(queue, 'queue')
+
     if (queueItem) {
       const folder = queueItem.downloadFolder || downloadFolder
       const itemFilename = queueItem.filename
       const filePath = path.join(folder, queueItem.path, itemFilename)
       const totalBytes = item.getTotalBytes()
       let speedValue = 0
-      let receivedBytes
+      let receivedBytes // 下载项目的接收字节
       let PreviousReceivedBytes
       item.setSavePath(filePath)
 
-      // 如果下载终端
+      // 如果下载中断
+      console.log(item.getState())
       if (item.getState() === 'interrupted') {
         item.resume()
       }
 
-      item.on('updated', () => {
-        receivedBytes = item.getReceivedBytes()
+      item.on('updated', (event, state) => {
+
+        receivedBytes = item.getReceivedBytes() // 下载项目的接收字节
         ReceivedBytesArr.push(receivedBytes)
+
         if (ReceivedBytesArr.length >= 2) {
           PreviousReceivedBytes = ReceivedBytesArr.shift()
           speedValue = Math.max(PreviousReceivedBytes, ReceivedBytesArr[0]) - Math.min(PreviousReceivedBytes, ReceivedBytesArr[0])
         }
+
         const progress = {
           progress: receivedBytes * 100 / totalBytes, // 进度
           speedBytes: speedValue, // 速度
@@ -88,7 +87,8 @@ function _registerListener (win, opts = {}) {
           hasUserGesture: item.hasUserGesture(), // 是否具有用户手势
           filename: item.getFilename(), // 下载文件名
           contentDisposition: item.getContentDisposition(), // 响应头中的Content-Disposition字段
-          startTime: item.getStartTime() // 开始下载时间
+          startTime: item.getStartTime(), // 开始下载时间
+          state
         }
 
         if (typeof queueItem.onProgress === 'function') {
@@ -99,17 +99,15 @@ function _registerListener (win, opts = {}) {
       item.on('done', (e, state) => {
         const finishedDownloadCallback = queueItem.callback || function () {}
 
-        if (!win.isDestroyed()) {
-          win.setProgressBar(-1)
-        }
+        if (!win.isDestroyed()) { win.setProgressBar(-1) }
         // 如果下载中断
+        console.log('down', state, item.getURL())
+
         if (state === 'interrupted') {
           const message = `该文件${item.getFilename()} 下载中断`
           finishedDownloadCallback(new Error(message), { url: item.getURL(), filePath })
         } else if (state === 'completed') {
-          if (process.platform === 'darwin') {
-            app.dock.downloadFinished(filePath)
-          }
+          if (process.platform === 'darwin') { app.dock.downloadFinished(filePath) }
           finishedDownloadCallback(null, { url: item.getURL(), filePath })
         }
       })
@@ -124,15 +122,18 @@ const download = (options, callback) => {
   const win = BrowserWindow.getFocusedWindow() || lastWindowCreated
   options = Object.assign({}, { path: '' }, options)
   const url = decodeURIComponent(options.url)
+  // 文件名字
   const filename = (options.uuid + '.download') || decodeURIComponent(path.basename(options.url))
+  // 保存文件夹
   const folder = options.downloadFolder || downloadFolder
+  // 保存路径
   const filePath = path.join(folder, options.path.toString(), filename.split(/[?#]/)[0])
 
-  // 下载判断
-  function downfile (filePath) {
+  // 下载文件
+  function downfile (filePath, response) {
 
     // 添加队列
-    queue.push({
+    const createQueueItem = {
       url: url, // 下载地址
       filename: filename, // 文件名字
       rename: options.rename, // 是否重命名
@@ -140,11 +141,16 @@ const download = (options, callback) => {
       path: options.path.toString(), // 储存地址
       callback: callback, // 回调函数
       onProgress: options.onProgress // 监听下载
-    })
+    }
+    queue.push(createQueueItem)
 
-    if (fs.existsSync(filePath)) {
+    // 检查是否存在文件
+    if (fs.existsSync(filePath) && response) {
+      console.log('检查是否存在文件')
       const stats = fs.statSync(filePath)
       const fileOffset = stats.size
+
+      // 服务器文件大小
       const serverFileSize = parseInt(response.headers['content-length'])
 
       // 判断本地文件和服务器文件大小
@@ -158,40 +164,39 @@ const download = (options, callback) => {
         }
         win.webContents.session.createInterruptedDownload(options)
       } else {
-        console.log(filename + '本地文件大于等于服务器文件，不需要下载')
+        console.log(url + '本地文件大于等于服务器文件，不需要下载')
         const finishedDownloadCallback = callback || function () {}
         finishedDownloadCallback(null, { url, filePath })
       }
     } else {
-      console.log(filename + '本地未下载，开始下载')
+      // 下载文件
+      console.log(filename + url + '本地未下载，将要开始下载')
       win.webContents.downloadURL(options.url)
     }
   }
 
-  if (options.url.includes('blob')) {
-    downfile(filePath)
-  } else {
-    // 请求文件存不存在
+  // 请求文件存不存在
+  function checkOnlineHasFile () {
+    // 发起链接
     const request = net.request(options.url)
+    
     if (options.headers) {
       options.headers.forEach((h) => { request.setHeader(h.name, h.value) })
-
       // Modify the user agent for all requests to the following urls.
-      const filter = {
-        urls: [options.url]
-      }
-
+      const filter = { urls: [options.url] }
       session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         options.headers.forEach((h) => { details.requestHeaders[h.name] = h.value })
         // details.requestHeaders['User-Agent'] = 'MyAgent'
         callback({ cancel: false, requestHeaders: details.requestHeaders })
       })
     }
+
     if (typeof options.onLogin === 'function') {
       request.on('login', options.onLogin)
     }
+
     request.on('error', function (error) {
-      const finishedDownloadCallback = callback || function () { }
+      const finishedDownloadCallback = callback || function () {}
       const filename = (options.uuid + '.download') || decodeURIComponent(path.basename(options.url))
       const message = `The request for ${filename} was interrupted: ${error}`
       finishedDownloadCallback(new Error(message), { url: options.url, filePath: filePath })
@@ -199,11 +204,18 @@ const download = (options, callback) => {
 
     request.on('response', function (response) {
       // 停止请求
-      request.abort()
-
-      downfile(filePath)
+      request.abort() // 取消继续获取数据
+      downfile(filePath, response)
     })
+
     request.end()
+  }
+
+  // 判断是否是本地文件
+  if (options.url.includes('blob')) {
+    downfile(filePath)
+  } else {
+    checkOnlineHasFile()
   }
 }
 
