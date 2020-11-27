@@ -55,6 +55,8 @@ const state = {
   showSpotRecheck: false, // 是否显示重新打分按钮
   showEmptyCheckPool: false, // 是否显示清空按钮
   canAutoRetouch: false, // 是否显示自动修图按钮
+  autoBuffingA: false, // 是否显示磨皮A
+  autoBuffingB: false, // 是否显示液化B
   showAppealAccess: false, // 是否显示审核权限
   showFirstExamine: false, // 是否显示初审按钮
   showSecondExamine: false, // 是否显示复审按钮
@@ -89,7 +91,10 @@ const mutations = {
     state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
+    // 自动修图
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
+    state.autoBuffingA = roles.includes('RetoucherCenter.waitRetoucher.autoBuffingA')
+    state.autoBuffingB = roles.includes('RetoucherCenter.waitRetoucher.autoBuffingB')
     // 审核权限
     state.showAppealAccess = roles.includes('RetoucherCenter.appealHistory.add')
     state.showFirstExamine = roles.includes('AdminManage.appealHandle.firstExamine')

@@ -222,6 +222,8 @@ export default {
     },
     // 是否显示自动修图按钮
     showAutoRetouchBtn () {
+      // TODO 调试
+      return true
       const productIdArr = AutoProductIds
       const hasProduct = productIdArr.includes(_.get(this.orderData, 'productInfo.id', 0))
       return this.canAutoRetouch && hasProduct

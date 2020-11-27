@@ -31,16 +31,34 @@
         <i id="guideclose" class="el-icon-circle-close" @click="closeAutoRetouch" />
       </div>
       <div id="guidemode" class="btn-box">
-        <el-button
-          :type="activePhoto[funItem.value] === 'error' ? 'danger' : 'primary'"
-          v-for="(funItem, funIndex) in funList"
-          :key="funIndex"
-          :loading="!activePhoto[funItem.value]"
-          :disabled="activePhoto.activeModel === funItem.value || !activePhoto[funItem.value] || activePhoto[funItem.value] === 'error'"
-          @click="changeActiveModel(funItem.value)"
-        >
-          {{ activePhoto[funItem.value] === 'error' ? `${funItem.name}失败` : funItem.name }}
-        </el-button>
+        <div class="fun-module" v-for="(funItem, funIndex) in funList" :key="funIndex">
+          <el-button
+            size="medium"
+            @click="changeActiveModel(funItem.value)"
+            :type="activePhoto[funItem.value] === 'error' ? 'danger' : 'primary'"
+            :loading="!activePhoto[funItem.value]"
+            :disabled="activePhoto.activeModel === funItem.value || !activePhoto[funItem.value] || activePhoto[funItem.value] === 'error'"
+          >
+            {{ activePhoto[funItem.value] === 'error' ? `${funItem.name}失败` : funItem.name }}
+          </el-button>
+          <!-- 磨皮按钮 -->
+          <template v-if="(funItem.value === PHOTO_FLAG.CROP || funItem.value === PHOTO_FLAG.WARP) && showBufferBtn">
+            <template
+              v-for="(childrenItem, childrenIndex) in funItem.childrenFun"
+            >
+              <el-button
+                :key="childrenIndex"
+                size="medium"
+                @click="changeActiveModel(childrenItem.value)"
+                :type="activePhoto[childrenItem.value] === 'error' ? 'danger' : 'primary'"
+                :loading="!activePhoto[childrenItem.value]"
+                :disabled="activePhoto.activeModel === childrenItem.value || !activePhoto[childrenItem.value] || activePhoto[childrenItem.value] === 'error'"
+              >
+                {{ activePhoto[childrenItem.value] === 'error' ? `${childrenItem.name}失败` : childrenItem.name }}
+              </el-button>
+            </template>
+          </template>
+        </div>
       </div>
       <div id="guidedown" class="back-box">
         <el-button type="info" @click="downloadPhoto" :disabled="loading">下载照片</el-button>
@@ -69,6 +87,7 @@ export default {
   },
   data () {
     return {
+      PHOTO_FLAG,
       photoPreviewList: [],
       funList: [
         {
@@ -77,20 +96,36 @@ export default {
         },
         {
           name: '裁剪图',
-          value: PHOTO_FLAG.CROP
+          value: PHOTO_FLAG.CROP,
+          childrenFun: [
+            {
+              name: '裁剪磨皮',
+              value: PHOTO_FLAG.CROP_BUFFING
+            }
+          ]
         },
         {
           name: '液化图',
-          value: PHOTO_FLAG.WARP
+          value: PHOTO_FLAG.WARP,
+          childrenFun: [
+            {
+              name: '液化磨皮',
+              value: PHOTO_FLAG.WARP_BUFFING
+            }
+          ]
         }
-      ],
+      ], // 按钮列表
       activeIndex: 0, // 当前展示图片索引
       loading: false,
       driver: null
     }
   },
   computed: {
-    ...mapGetters(['imgDomain']),
+    ...mapGetters(['imgDomain', 'autoBuffingA', 'autoBuffingB']),
+    // 显示磨皮按钮
+    showBufferBtn () {
+      return this.autoBuffingA || this.autoBuffingB
+    },
     isSingle () {
       return this.photoList.length === 1
     },
@@ -140,7 +175,9 @@ export default {
           path: photoUrl,
           [PHOTO_FLAG.ORIGINAL]: this.imgDomain + photoUrl,
           [PHOTO_FLAG.CROP]: '',
-          [PHOTO_FLAG.WARP]: ''
+          [PHOTO_FLAG.WARP]: '',
+          [PHOTO_FLAG.CROP_BUFFING]: '',
+          [PHOTO_FLAG.WARP_BUFFING]: ''
         }
         this.photoPreviewList.push(createPhoto)
       })
@@ -173,32 +210,49 @@ export default {
      * @description 上一个模式
      */
     preMode () {
-      const modeIndex = this.funList.findIndex(modelItem => modelItem.value === this.activePhoto.activeModel)
-      const len = this.funList.length
+      const allFunList = this.funList.reduce((accumulator, currentValue) => {
+        if (currentValue.childrenFun && this.showBufferBtn) return [...accumulator, currentValue, ...currentValue.childrenFun]
+        return [...accumulator, currentValue]
+      }, [])
+      const modeIndex = allFunList.findIndex(modelItem => modelItem.value === this.activePhoto.activeModel)
+      const len = allFunList.length
       const preIndex = (modeIndex - 1 + len) % len
-      const preModeType = this.funList[preIndex].value
+      const preModeType = allFunList[preIndex].value
       this.changeActiveModel(preModeType)
     },
     /**
      * @description 下一个模式
      */
     nextMode () {
-      const modeIndex = this.funList.findIndex(modelItem => modelItem.value === this.activePhoto.activeModel)
-      const len = this.funList.length
+      const allFunList = this.funList.reduce((accumulator, currentValue) => {
+        if (currentValue.childrenFun && this.showBufferBtn) return [...accumulator, currentValue, ...currentValue.childrenFun]
+        return [...accumulator, currentValue]
+      }, [])
+      const modeIndex = allFunList.findIndex(modelItem => modelItem.value === this.activePhoto.activeModel)
+      const len = allFunList.length
       const nextIndex = (modeIndex + 1) % len
-      const nextModeType = this.funList[nextIndex].value
+      const nextModeType = allFunList[nextIndex].value
       this.changeActiveModel(nextModeType)
     },
     /**
-     * @description 预处理图片
+     * @description 预处理图片液化-裁切图
      */
     async beforehandLoadPhoto () {
       const handleList = this.photoPreviewList
       handleList.forEach(async photoItem => {
         const baseUrl = photoItem.path
-        const data = await this.getImageAutoProcess(baseUrl, PHOTO_FLAG.WARP)
-        photoItem[PHOTO_FLAG.CROP] = data[PHOTO_FLAG.CROP]
-        photoItem[PHOTO_FLAG.WARP] = data[PHOTO_FLAG.WARP]
+        this.getImageAutoProcess(baseUrl, PHOTO_FLAG.WARP)
+          .then(data => {
+            photoItem[PHOTO_FLAG.CROP] = data[PHOTO_FLAG.CROP]
+            photoItem[PHOTO_FLAG.WARP] = data[PHOTO_FLAG.WARP]
+          })
+        if (this.showBufferBtn) {
+          this.getImageAutoBuffing(baseUrl)
+            .then(buffData => {
+              photoItem[PHOTO_FLAG.CROP_BUFFING] = buffData[PHOTO_FLAG.CROP_BUFFING]
+              photoItem[PHOTO_FLAG.WARP_BUFFING] = buffData[PHOTO_FLAG.WARP_BUFFING]
+            })
+        }
       })
     },
     /**
@@ -210,6 +264,18 @@ export default {
         process_flag: model
       }
       return AutoRetouch.getImageAutoProcess(req)
+    },
+    /**
+     * @description 获取自动磨皮接口
+     */
+    getImageAutoBuffing (url) {
+      const req = {
+        url,
+        process_flag: 'retouch',
+        retouch_flag: this.autoBuffingA ? 'A' : 'B'
+      }
+
+      return AutoRetouch.getImageAutoBuffing(req)
     },
     /**
      * @description 注册监听事件
@@ -410,9 +476,15 @@ export default {
       justify-content: center;
       text-align: center;
 
-      .el-button {
-        width: 140px;
-        margin: 0 0 20px 0;
+      .fun-module {
+        width: 100%;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #8a8a8a;
+
+        .el-button {
+          width: 140px;
+          margin: 0 0 20px 0;
+        }
       }
     }
 
