@@ -306,7 +306,9 @@ export const qualityTypeToCN = {
 export const PHOTO_FLAG = {
   ORIGINAL: 'original',
   CROP: 'crop',
-  WARP: "warp"
+  WARP: 'warp',
+  CROP_BUFFING: 'crop_retouch',
+  WARP_BUFFING: 'warp_retouch',
 }
 
 // 通知功能授权状态

@@ -63,6 +63,47 @@ export async function getImageAutoProcess (params) {
   })
 }
 
+
+/**
+ * @description 获取自动修图地址
+ * @param {*} params 
+ */
+export async function getImageAutoBuffing (params) {
+  params = {
+    ...params,
+    flag: process.env.VUE_APP_ALGO_ENV === 'production' ? 'production' : 'dev'
+  }
+
+  const wrapBuffingPhotoPath = await hasAutoPhoto(params.url, 'warp_retouch')
+  const cropBuffingPhotoPath = await hasAutoPhoto(params.url, 'crop_retouch')
+
+  // 拦截监听
+  if (wrapBuffingPhotoPath && cropBuffingPhotoPath) return {
+    crop_retouch: cropBuffingPhotoPath,
+    warp_retouch: wrapBuffingPhotoPath
+  }
+
+  return autoAxios({
+    url: 'http://114.55.139.240:18081/algo1/101/',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    const { result } = msg
+    if (!result.warp_retouch) {
+      AutoLog.handleBuffingEmpty(params.url, msg)
+      return {
+        crop_retouch: 'error',
+        warp_retouch: 'error'
+      }
+    }
+
+    AutoLog.handleBuffingInApp(params.url, msg)
+    return result
+  }).catch(error => {
+    AutoLog.autoErr(params.url, error)
+  })
+}
+
 /**
  * @description 判断图片是否存在
  * @param {*} url 

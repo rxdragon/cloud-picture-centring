@@ -66,6 +66,17 @@ export function handleEmpty (key, msg) {
 }
 
 /**
+ * @description 处理为空磨皮
+ * @param {*} key 
+ * @param {*} msg 
+ */
+export function handleBuffingEmpty (key, msg) {
+  const type = 'empty_buffing'
+  const data = { key, msg, type }
+  logger.log(data)
+}
+
+/**
  * @description app中处理
  * @param {*} key 
  * @param {*} msg 
@@ -75,3 +86,15 @@ export function handleInApp (key, msg) {
   const data = { key, msg, type }
   logger.log(data)
 }
+
+/**
+ * @description app中处理
+ * @param {*} key 
+ * @param {*} msg 
+ */
+export function handleBuffingInApp (key, msg) {
+  const type = 'handle_buffing'
+  const data = { key, msg, type }
+  logger.log(data)
+}
+
