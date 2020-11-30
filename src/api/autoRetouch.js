@@ -84,7 +84,6 @@ export async function getImageAutoBuffing (params) {
   }
 
   return autoAxios({
-    // TODO 服务地址
     url: 'http://114.55.139.240:18081/algo1/101/',
     method: 'POST',
     data: params
