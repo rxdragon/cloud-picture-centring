@@ -32,7 +32,9 @@ export function uploadLog (uploadArr) {
     if (!file) return
     const localFileName = file.name
     const uploadedName = _.get(file, 'response.url') || ''
-    if (localFileName.includes(`~${PHOTO_FLAG.CROP}`) || localFileName.includes(`~${PHOTO_FLAG.WARP}`)) {
+    const flagTypes = [PHOTO_FLAG.WARP_BUFFING, PHOTO_FLAG.CROP_BUFFING, PHOTO_FLAG.WARP, PHOTO_FLAG.CROP]
+    const hasUploadAutoPhoto = flagTypes.some(flag => localFileName.includes(`~${flag}`))
+    if (hasUploadAutoPhoto) {
       const key = photoItem.autoKey
       const orginPhotoName = photoItem.orginPhotoName
       const localFileNameNotExt = PhotoTool.fileNameFormat(localFileName)

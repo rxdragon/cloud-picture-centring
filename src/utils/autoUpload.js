@@ -12,7 +12,7 @@ const { ipcRenderer } = require('electron')
  * 获取优先级，先warp crop 原图
  */
 function getAutoPHoto (readfilePath, filePath) {
-  const prioritySequence = [PHOTO_FLAG.WARP, PHOTO_FLAG.CROP]
+  const prioritySequence = [PHOTO_FLAG.WARP_BUFFING, PHOTO_FLAG.CROP_BUFFING, PHOTO_FLAG.WARP, PHOTO_FLAG.CROP]
   const ext = PhotoTool.getFilePostfix(filePath)
   const name = PhotoTool.fileNameFormat(filePath)
   let autoLocalPath = ''
