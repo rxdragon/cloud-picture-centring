@@ -304,11 +304,11 @@ export const qualityTypeToCN = {
  * @description 自动修图模式
  */
 export const PHOTO_FLAG = {
+  WARP_BUFFING: 'warp_retouch',
+  CROP_BUFFING: 'crop_retouch',
   ORIGINAL: 'original',
   CROP: 'crop',
   WARP: 'warp',
-  CROP_BUFFING: 'crop_retouch',
-  WARP_BUFFING: 'warp_retouch',
 }
 
 // 通知功能授权状态
