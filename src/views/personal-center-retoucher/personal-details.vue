@@ -84,7 +84,10 @@
               <div class="main-content">
                 <span class="num">
                   <count-to :end-value="gradeInfo.avgRetouchTime | getInteger" />
-                  <i>.<count-to decimals :end-value="gradeInfo.avgRetouchTime | getPoint" /></i>
+                  <i>.<count-to
+                    decimals
+                    :end-value="gradeInfo.avgRetouchTime | getPointThree"
+                  /></i>
                 </span>
                 <span>平均单张修图时长（分钟）</span>
               </div>
@@ -219,6 +222,13 @@ export default {
       const num = Number(value).toFixed(2)
       const pointIndex = num.indexOf('.')
       const result = num.substring(pointIndex + 1, pointIndex + 3)
+      return result
+    },
+    getPointThree (value) {
+      if (!value) return '00'
+      const num = Number(value).toFixed(3)
+      const pointIndex = num.indexOf('.')
+      const result = num.substring(pointIndex + 1, pointIndex + 4)
       return result
     },
     // 获取整数
