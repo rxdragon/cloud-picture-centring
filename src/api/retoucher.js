@@ -121,7 +121,7 @@ export function getRankInfo () {
     const createData = keyToHump(msg)
     createData.nearly30DaysGoodRate = Number((createData.nearly30DaysGoodRate * 100).toFixed(2))
     createData.nearly30DaysReturnRate = Number((createData.nearly30DaysReturnRate * 100).toFixed(2))
-    createData.avgRetouchTime = getAvg(createData.retouchPhotoNumTimeSum, createData.retouchFinishPhotoNumCount * 60)
+    createData.avgRetouchTime = getAvg(createData.retouchPhotoNumTimeSum, createData.retouchFinishPhotoNumCount * 60, 3)
     createData.nearly30DaysPlantRate = (createData.nearly30DaysPlantRate * 100).toFixed(2)
     createData.nearlyPlantRate = Math.floor(createData.nearly30DaysPlantRate)
     createData.nearly30DaysPullRate = (createData.nearly30DaysPullRate * 100).toFixed(2)

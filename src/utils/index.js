@@ -224,8 +224,8 @@ export function isArr (arr) {
  * @param {*} a 总数
  * @param {*} b 基数
  */
-export function getAvg (a, b) {
+export function getAvg (a, b, size = 2) {
   if (!Number(a) || !Number(b)) return '0.00'
-  const avg = (Number(a) / Number(b)).toFixed(2)
+  const avg = (Number(a) / Number(b)).toFixed(size)
   return parseFloat(avg)
 }
