@@ -76,7 +76,7 @@ export async function getImageAutoBuffing (params) {
 
   const wrapBuffingPhotoPath = await hasAutoPhoto(params.url, 'warp_retouch')
   const cropBuffingPhotoPath = await hasAutoPhoto(params.url, 'crop_retouch')
-
+  
   // 拦截监听
   if (wrapBuffingPhotoPath && cropBuffingPhotoPath) return {
     crop_retouch: cropBuffingPhotoPath,
@@ -84,7 +84,7 @@ export async function getImageAutoBuffing (params) {
   }
 
   return autoAxios({
-    url: 'http://114.55.139.240:18081/algo1/101/',
+    url: 'https://sc.algo.hzmantu.com/algo-fix/101/',
     method: 'POST',
     data: params
   }).then(msg => {
