@@ -86,6 +86,7 @@
                   <count-to :end-value="gradeInfo.avgRetouchTime | getInteger" />
                   <i>.<count-to
                     decimals
+                    decimalsCount="3"
                     :end-value="gradeInfo.avgRetouchTime | getPointThree"
                   /></i>
                 </span>

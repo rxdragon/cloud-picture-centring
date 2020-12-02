@@ -11,6 +11,7 @@ export default {
   props: {
     endValue: { type: [String, Number], required: true },
     decimals: { type: Boolean }, // 是否是小数动画
+    decimalsCount: { type: [String, Number], default: 2 }, // 3位小树
     showPoint: { type: Boolean } // 是否显示小数点
   },
   watch: {
@@ -24,7 +25,8 @@ export default {
         update: () => {
           if (this.decimals) {
             let data = myObject.prop
-            data = +data < 10 ? ('0' + String(data)) : data
+            const maxNum = Math.pow(10, Number(this.decimalsCount) - 1)
+            data = +data < maxNum ? ('0' + String(data)) : data
             this.$el.innerHTML = data
           } else {
             this.$el.innerHTML = this.showPoint ? myObject.prop.toFixed(2) : myObject.prop
