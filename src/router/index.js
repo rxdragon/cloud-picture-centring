@@ -50,11 +50,18 @@ export const constantRoutes = [
         component: () => import('@/views/redirect/index')
       }
     ]
-  }, {
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/login.vue'),
     hidden: true
-  }, {
+  },
+  {
+    path: '/network-debug',
+    component: () => import('@/views/network-debug/network-debug.vue'),
+    hidden: true
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/home',
@@ -66,7 +73,8 @@ export const constantRoutes = [
         meta: { title: '概况', icon: 'iconfont iconlogo', affix: true }
       }
     ]
-  }, {
+  },
+  {
     path: '/order-detail',
     component: Layout,
     hidden: true,
@@ -78,7 +86,8 @@ export const constantRoutes = [
         meta: { title: '修图详情', icon: 'el-icon-eleme' }
       }
     ]
-  },{
+  },
+  {
     path: '/appeal-detail',
     component: Layout,
     hidden: true,
@@ -90,11 +99,13 @@ export const constantRoutes = [
         meta: { title: '申诉详情', icon: '' }
       }
     ]
-  }, {
+  },
+  {
     path: '/401',
     component: () => import('@/views/error-page/401'),
     hidden: true
-  }, {
+  },
+  {
     path: '*',
     component: () => import('@/views/error-page/404'),
     hidden: true
