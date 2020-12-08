@@ -12,7 +12,8 @@
       >
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
-          <span>加载失败...</span>
+          <span class="image-error-tip">加载失败...</span>
+          <el-button @click.capture.stop="debugNetWork" class="debug-network-button" type="text">诊断网络</el-button>
         </div>
       </el-image>
       <preview-canvas-img contain-photo v-else-if="showCanvas" :file="fileData" />
@@ -179,7 +180,8 @@ export default {
     imageSrc () {
       // 不是上传显示
       if (!this.fileData) {
-        return this.src.includes('http') ? this.src : this.imgCompressDomain + this.src
+        const imageUrl = this.src.includes('http') ? this.src : this.imgCompressDomain + this.src
+        return imageUrl
       } else {
         return ''
       }
@@ -218,6 +220,12 @@ export default {
     head.removeChild(this.linkTag)
   },
   methods: {
+    /**
+     * @description 排查问题
+     */
+    async debugNetWork () {
+      await this.$ipcRenderer.sendSync('network-debug', this.imageSrc)
+    },
     /**
      * @description 下载成功
      * @param {String} type [original]
@@ -340,9 +348,13 @@ export default {
     color: #909399;
     background-color: #f5f7fa;
 
-    span {
+    .image-error-tip {
       margin-top: 20px;
       font-size: 16px;
+    }
+
+    .debug-network-button {
+      font-size: 12px;
     }
   }
 
