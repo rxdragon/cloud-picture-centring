@@ -1,7 +1,7 @@
 import { startWindow } from "./base"
 
 /**
- * @deprecated 开启debug 窗口
+ * @description 开启debug 窗口
  */
 export async function startNetworkDebugWindow (url) {
   await startWindow("network-debug", `/network-debug?imageUrl=${url}`, {
