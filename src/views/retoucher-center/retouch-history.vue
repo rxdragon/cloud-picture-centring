@@ -64,12 +64,31 @@
       </div>
       <div class="table-module">
         <el-table :data="tableData" style="width: 100%;">
-          <el-table-column
-            prop="streamNum"
-            label="流水号"
-            width="160"
-            fixed="left"
-          />
+          <el-table-column label="流水号" width="200" fixed="left">
+            <template slot-scope="{ row }">
+              <div>
+                <p>{{ row.streamNum }}</p>
+                <el-tag
+                  v-if="row.isStoreReturned"
+                  class="stream-tag"
+                  effect="plain"
+                  size="mini"
+                  type="danger"
+                >
+                  被退
+                </el-tag>
+                <el-tag
+                  v-if="row.hasOvertimeIncome"
+                  class="stream-tag"
+                  effect="plain"
+                  size="mini"
+                  type="warning"
+                >
+                  沙漏超时
+                </el-tag>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="接单时间" width="150">
             <template slot-scope="scope">
               {{ scope.row.receiptAt | toTimeSpan }}
@@ -343,6 +362,10 @@ export default {
 
 <style lang="less" scoped>
 .retouch-history {
+  .stream-tag {
+    margin-right: 6px;
+  }
+
   .history-main {
     margin-top: 0;
 

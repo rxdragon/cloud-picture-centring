@@ -181,6 +181,8 @@ export function getRetouchQuotaList (params) {
     }
     msg.list = msg.list.map(listItem => {
       const streamInfo = new StreamModel(listItem)
+      streamInfo.hasOvertimeIncome = Number(streamInfo.overtimeIncome) + Number(streamInfo.rollbackIncomeOvertime)
+      streamInfo.hasOvertimeIncome = Boolean(streamInfo.hasOvertimeIncome)
       return {
         ...streamInfo
       }
