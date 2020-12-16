@@ -3,7 +3,8 @@ import store from '@/store' // vuex
 
 // 标记枚举
 export const STREAM_TAG = {
-  STORERETURN: 'store_rework',
+  STORERETURN: 'store_rework', // 退回标记，可能是退回生成标记
+  STORE_RETURNED: 'is_returned', // 被退回
   CHECKRETURN: 'rework',
   CLOUD_EVALUATION: 'cloud_evaluation'
 }
@@ -57,6 +58,7 @@ export default class StreamModel {
 
   // 门店退回相关
   isStoreReturn = false // 是否是门店退回
+  isStoreReturned = false // 是否门店被退回
   storeReturnNum = 0 // 门店退回次数
   storeReturnTime = '-' // 门店退回时间
   lekimaCount = '-' // 利奇马樟树
@@ -148,6 +150,7 @@ export default class StreamModel {
       _.get(streamData, 'retoucher.retoucher_leader.real_name') || '-'
 
     this.isStoreReturn = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.STORERETURN)
+    this.isStoreReturned = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.STORE_RETURNED)
     this.storeReturnNum = _.get(streamData, 'tags.values.store_rework_num') || 0
     this.storeReturnTime = _.get(streamData, 'tags.values.store_return_time') || '-'
 
