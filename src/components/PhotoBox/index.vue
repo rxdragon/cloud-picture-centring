@@ -1,6 +1,7 @@
 <template>
   <div class="photo">
-    <div class="img-box">
+    <div class="img-box" :class="{ 'image-load': loading }">
+      <div v-show="loading" class="image-loading-model"></div>
       <el-image
         v-if="useEleImage && !showCanvas"
         :src="imageSrc"
@@ -9,6 +10,8 @@
           'show-center': containPhoto
         }"
         :preview-src-list="getPreviewPhoto"
+        @load="onLoadImageSuccess"
+        @error="onLoadImageError"
       >
         <div slot="error" class="image-slot">
           <i class="el-icon-picture-outline" />
@@ -26,6 +29,7 @@
       <span v-if="photoName" class="photo-name" @click.stop="">{{ photoRealName }}</span>
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
     </div>
+    <!-- 拼接照信息 -->
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
       <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
       <div v-if="rename" class="joint-label">圣诞拼接照 - {{ rename }}</div>
@@ -49,9 +53,11 @@
       <span v-if="peopleNum" class="people-num">人数：{{ peopleNum }}</span>
       <slot name="title" />
     </div>
+    <!-- 选定特效 -->
     <div v-if="!rename && showSpecialEffects" class="recede-reason">
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
+    <!-- 门店退回标记 -->
     <div v-if="storePartReworkReason.length" class="recede-reason">
       <div class="recede-title">门店退回标记：</div>
       <div class="reason-content">
@@ -65,12 +71,15 @@
         </el-tag>
       </div>
     </div>
+    <!-- 门店退回原因 -->
     <div v-if="storeReworkReason" class="recede-reason">
       门店退回原因： <span class="reason-content">{{ storeReworkReason }}</span>
     </div>
+    <!-- 门店退回备注 -->
     <div v-if="storeReworkNote" class="recede-reason">
       门店退回备注： <span class="reason-content">{{ storeReworkNote }}</span>
     </div>
+    <!-- 审核退回原因 -->
     <div v-if="recedeReason" class="recede-reason">
       审核退回原因： <span class="reason-content">{{ recedeReason }}</span>
     </div>
@@ -121,7 +130,9 @@ export default {
       breviary: '!thumb.small.50',
       linkTag: null,
       limitSize: 20 * 1024 * 1024,
-      showCanvas: false
+      loading: false, // 是否加载中
+      errorReplaceUrl: '', // 重新加载图片
+      errorCount: 0 // 加载错误次数
     }
   },
   computed: {
@@ -180,8 +191,10 @@ export default {
     imageSrc () {
       // 不是上传显示
       if (!this.fileData) {
-        const imageUrl = this.src.includes('http') ? this.src : this.imgCompressDomain + this.src
-        return imageUrl
+        if (this.src.includes('http')) return this.src
+        const errorReplaceUrl = `${this.imgCompressDomain}${this.errorReplaceUrl}`
+        const imageUrl = `${this.imgCompressDomain}${this.src}`
+        return this.errorReplaceUrl ? errorReplaceUrl : imageUrl
       } else {
         return ''
       }
@@ -205,11 +218,23 @@ export default {
     specialEffects () {
       const special = _.get(this.tags, 'values.special_efficacy') || '无需特效'
       return special
+    },
+    // 是否显示作图
+    showCanvas () {
+      return Boolean(this.fileData)
+    }
+  },
+  watch: {
+    src: {
+      handler (value) {
+        if (this.showCanvas) return
+        this.errorCount = 0
+        this.loading = true
+      }
     }
   },
   created () {
-    if (!this.fileData) return
-    this.showCanvas = true
+    if (this.useEleImage && !this.fileData) { this.loading = true }
   },
   mounted () {
     this.preloadImg()
@@ -274,6 +299,25 @@ export default {
         this.linkTag.setAttribute('as', 'image')
         head.appendChild(this.linkTag)
       }
+    },
+    /**
+     * @description 图片加载成功
+     */
+    onLoadImageSuccess () {
+      this.loading = false
+    },
+    /**
+     * @description 图片加载失败
+     */
+    onLoadImageError () {
+      if (this.errorCount < 4) {
+        setTimeout(() => {
+          this.errorCount++
+          this.errorReplaceUrl = `${this.src}?errorCounnnt=${this.errorCount}`
+        }, 2000)
+      } else {
+        this.loading = false
+      }
     }
   }
 }
@@ -289,6 +333,27 @@ export default {
   padding-bottom: 100%;
   overflow: hidden;
   border-radius: 4px;
+
+  &.image-load {
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      margin: -16px 0 0 -16px;
+      font-family: @elementIcons !important;
+      font-size: 32px;
+      color: #606266;
+      content: '\e6cf';
+      animation: rotating 2s linear infinite;
+    }
+
+    .image-loading-model {
+      width: 100%;
+      padding-bottom: 100%;
+      background-color: #f1f1f1;
+    }
+  }
 
   .photo-name {
     position: absolute;

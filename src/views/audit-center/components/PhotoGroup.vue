@@ -37,7 +37,6 @@
     <div class="grade-box">
       <div class="button-list" v-if="showGrade">
         <el-button
-          
           :disabled="!streamCanGlass || +photos.people_num === 0"
           :icon="isPlant ? 'el-icon-check' : ''"
           type="success"

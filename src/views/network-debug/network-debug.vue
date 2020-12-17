@@ -24,10 +24,19 @@
       <div class="code-loading" v-if="debugInfo.curlImage === 'loading'"><span class="dotting"></span></div>
       <div class="code-module" v-else>{{ debugInfo.curlImage }}</div>
     </div>
+    <el-button
+      class="copy-button"
+      size="small"
+      icon="el-icon-document-copy"
+      @click="copyInfo"
+    >
+    </el-button>
   </div>
 </template>
 
 <script>
+import handleClipboard from '@/utils/clipboard.js'
+
 export default {
   name: 'NetworkDebug',
   data () {
@@ -89,6 +98,23 @@ export default {
       this.debugInfo.curlImage = 'loading'
       const res = await this.$ipcRenderer.sendSync('network-curl-imageInfo', imageUrl)
       this.debugInfo.curlImage = res
+    },
+    /**
+     * @description 拷贝信息
+     */
+    copyInfo (event) {
+      const copyValue = `
+nslookup cloud.cdn-qn.hzmantu.com
+${this.debugInfo.nslookupBySelf}
+nslookup cloud.cdn-qn.hzmantu.com 10.0.0.1
+${this.debugInfo.nslookupByTelecom}
+dig cloud.cdn-qn.hzmantu.com
+${this.debugInfo.digInfo}
+${this.imageUrl}
+curl -o /dev/null -s -w %{time_connect}:%{time_starttransfer}:%{time_total}:%{time_namelookup}:%{speed_download} ${this.imageUrl} -v
+${this.debugInfo.curlImage}
+      `
+      handleClipboard(copyValue, event)
     }
   }
 }
@@ -135,5 +161,11 @@ export default {
 .code-module {
   font-size: 13px;
   white-space: pre-wrap;
+}
+
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>
