@@ -53,8 +53,11 @@ export default {
      * @description 获取全部伙伴
      */
     async getIssueList () {
+      const req = {
+        withWeightsZero: true
+      }
       const data = await Promise.all([
-        AssessmentCenter.getIssueList(),
+        AssessmentCenter.getIssueList(req),
         AssessmentCenter.getOldIssueList()
       ])
       const list = data[0]
