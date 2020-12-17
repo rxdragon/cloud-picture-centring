@@ -22,9 +22,14 @@ export default {
       src: ''
     }
   },
-  created () {
-    this.fileData = this.file.raw
-    this.pressImg()
+  watch: {
+    'file.raw': {
+      handler (value) {
+        this.fileData = value
+        this.pressImg()
+      },
+      immediate: true
+    }
   },
   methods: {
     /**
