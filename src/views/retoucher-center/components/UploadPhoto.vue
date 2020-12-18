@@ -68,7 +68,7 @@
         >
           <div class="avatar-upload">
             <i class="el-icon-plus" />
-            <span>上传照片</span>
+            <span>将文件拖到此处<br/>或点击上传</span>
           </div>
         </el-upload>
       </div>

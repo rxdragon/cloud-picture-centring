@@ -109,6 +109,19 @@
         </div>
       </div>
     </div>
+    
+    <transition name="app-transform" mode="out-in">
+      <el-alert
+        class="tip-module"
+        type="info"
+        effect="dark"
+        v-if="showTip"
+      >
+        <div class="tip-title" slot="title">
+          如果原片后缀为<code>jpeg</code><code>unknown</code><code>unknow</code>，请保存为<code>jpg</code>手动上传，<code>不要</code>一键上传
+        </div>
+      </el-alert>
+    </transition>
 
     <!-- 修图上传 -->
     <div class="photo-module module-panel upload-module">
@@ -210,7 +223,8 @@ export default {
       priviewPhotoData: [], // 预览数组
       imgIndex: 0, // 照片索引
       showAutoRetouch: false, // 显示自动修图页面
-      autoRetouchPhoto: []
+      autoRetouchPhoto: [],
+      showTip: false // 是否显示提示框
     }
   },
   computed: {
@@ -293,7 +307,6 @@ export default {
     async getStreamInfo () {
       try {
         const reqData = { streamId: this.realAid }
-        // const reqData = { streamId: 20006793 }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
@@ -308,6 +321,9 @@ export default {
           this.countDown()
         }
         this.photos = data.photos
+        // 判断是否显示上传提示框
+        this.checkHasSpecialExt(data.photos)
+
         const filterPhotos = data.photos.filter(item => item.type !== 'template')
         this.autoRetouchPhoto = filterPhotos.map(item => item.orginPhotoPath)
         this.reviewerNote = data.reviewerNote
@@ -322,6 +338,19 @@ export default {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
       }
+    },
+    /**
+     * @description 判断是否含有特殊后缀照片
+     */
+    checkHasSpecialExt (photos) {
+      const hasSpecialExt = photos.some(photoItem => {
+        const isJPEG = photoItem.path.includes('jpeg')
+        const isUNKNOWN = photoItem.path.includes('unknown')
+        const isUNKNOW = photoItem.path.includes('unknow')
+        return isUNKNOW || isUNKNOWN || isJPEG
+      })
+      this.showTip = hasSpecialExt
+      return hasSpecialExt
     },
     /**
      * @description 时间倒计时
@@ -395,23 +424,13 @@ export default {
      */
     canUploadPhoto () {
       const finishPhotoArr = Object.values(this.finishPhoto)
-      if (!finishPhotoArr.every(item => Boolean(item.path))) {
-        throw new Error('请等待照片上传完成')
-      }
+      if (!finishPhotoArr.every(item => Boolean(item.path))) throw new Error('请等待照片上传完成')
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
       const uploadData = [...cachePhoto, ...finishPhotoArr]
-      if (uploadData.length > this.photos.length) {
-        throw new Error('上传照片数量超过限制，请重新上传。')
-      }
-      if (uploadData.length < this.photos.length) {
-        throw new Error('请检查照片上传张数后再提交审核。')
-      }
-      if (!uploadData.length) {
-        throw new Error('请检查照片上传张数后再提交审核。')
-      }
-      if (!this.photos.some(item => item.id === uploadData[0].id)) {
-        throw new Error('找不到流水号对应的id，请刷新页面重新上传')
-      }
+      if (uploadData.length > this.photos.length) throw new Error('上传照片数量超过限制，请重新上传。')
+      if (uploadData.length < this.photos.length) throw new Error('请检查照片上传张数后再提交审核。')
+      if (!uploadData.length) throw new Error('请检查照片上传张数后再提交审核。')
+      if (!this.photos.some(item => item.id === uploadData[0].id)) throw new Error('找不到流水号对应的id，请刷新页面重新上传')
     },
     /**
      * @description 设置问题标签
@@ -566,6 +585,17 @@ export default {
         .error-photo {
           color: @red;
         }
+      }
+    }
+  }
+
+  .tip-module {
+    margin-top: 20px;
+
+    .tip-title {
+      code {
+        margin: 0 5px;
+        color: @red;
       }
     }
   }
