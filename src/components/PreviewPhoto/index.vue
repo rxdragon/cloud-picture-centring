@@ -417,13 +417,13 @@ export default {
       }
     },
     /**
-     * @description 取消加载
+     * @description 加载完图片
      */
     loadingPhoto (e) {
       this.imgObj = this.$refs['compress-img']
       this.imgBigObj = this.$refs['orgin-img']
-      this.showImageRect.width = this.imgBigObj.clientWidth
-      this.showImageRect.height = this.imgBigObj.clientHeight
+      this.showImageRect.width = this.imgBigObj && this.imgBigObj.clientWidth
+      this.showImageRect.height = this.imgBigObj && this.imgBigObj.clientHeight
       this.loading = false
     },
     /**

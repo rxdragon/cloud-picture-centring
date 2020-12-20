@@ -585,8 +585,8 @@ export default {
     loadingPhoto (e) {
       this.imgObj = this.$refs['compress-img']
       this.imgBigObj = this.$refs['orgin-img']
-      this.showImageRect.width = this.imgBigObj.clientWidth
-      this.showImageRect.height = this.imgBigObj.clientHeight
+      this.showImageRect.width = this.imgBigObj && this.imgBigObj.clientWidth
+      this.showImageRect.height = this.imgBigObj && this.imgBigObj.clientHeight
       this.loading = false
     },
     /**
