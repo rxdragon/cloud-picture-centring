@@ -60,16 +60,15 @@
                 <photo-box :src="photoItem.path" />
                 <div class="change-num">
                   <span>人数：</span>
-                  <input
+                  <el-input
                     :disabled="photoItem.type === PHOTO_TYPE.TEMPLATE_TYPE"
                     :class="{ 'disabled-input': photoItem.type === PHOTO_TYPE.TEMPLATE_TYPE }"
                     v-model="photoItem.people_num"
                     v-numberOnly
-                    class="fake-el-input"
                     min="0"
                     size="mini"
                     placeholder="请输入人数"
-                  >
+                  />
                 </div>
                 <!-- 拼接信息 -->
                 <div v-if="photoItem.isJoint" class="joint-box">
@@ -149,15 +148,9 @@ export default {
     async getStreamInfo () {
       try {
         const req = {}
-        if (this.id) {
-          req.externalNum = this.id
-        }
-        if (this.caid) {
-          req.streamNum = this.caid
-        }
-        if (!Object.keys(req).length) {
-          return this.$newMessage.warning('请输入订单号或流水号')
-        }
+        if (this.id) { req.externalNum = this.id }
+        if (this.caid) { req.streamNum = this.caid }
+        if (!Object.keys(req).length) return this.$newMessage.warning('请输入订单号或流水号')
         this.$store.dispatch('setting/showLoading', this.routeName)
         this.productsList = []
         this.dataList = await WorkManage.getStreamInfo(req)
@@ -166,9 +159,8 @@ export default {
           this.productsList = await Product.getAllProductSelect(retouchStandard)
         }
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -185,15 +177,22 @@ export default {
         const createdData = {}
         createdData.photoId = photoItem.id
         createdData.peopleNum = photoItem.people_num
+
         if (photoItem.isJoint) {
           createdData.spliceMark = photoItem.jointClass
           createdData.splicePosition = photoItem.jointClassNum
         }
-        if (photoItem.isDelete) {
-          createdData.isDelete = true
-        }
+
+        createdData.isDelete = Boolean(photoItem.isDelete)
         return createdData
       })
+
+      const hasEveryNumber = photoData.every(item => {
+        const isString = item.peopleNum === ''
+        return !isString && !item.isDelete
+      })
+
+      if (!hasEveryNumber) throw new Error('请输入人数')
       const req = {
         streamId: item.id,
         photos: photoData,
@@ -211,9 +210,10 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await WorkManage.modifyStream(req)
         this.$newMessage.success('操作成功!')
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$newMessage.success('操作成功!')
+        this.$newMessage.warning(error.message || error)
+      } finally {
+        await this.$delayLoading()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     }
