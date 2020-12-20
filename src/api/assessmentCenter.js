@@ -219,14 +219,17 @@ export function getScoreConfigList () {
  * @author cf 2020/04/10
  * @version @version 2.4.0
  */
-export function getIssueList () {
+export function getIssueList (params) {
   return axios({
     url: '/project_cloud/checkPool/getScoreConfigList',
-    method: 'GET'
+    method: 'GET',
+    params
   }).then(msg => {
     const createData = msg.map(item => {
       item.children = item.score_config.map(configItem => {
-        configItem.children = configItem.child.map(chilItem => {
+        // 特殊处理没有权限的参数
+        const child = configItem.child_with_zero || configItem.child
+        configItem.children = child.map(chilItem => {
           return {
             value: chilItem.id,
             label: chilItem.name

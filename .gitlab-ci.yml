@@ -33,6 +33,7 @@ install:
   artifacts:
     paths:
       - dist_electron/
+      - dist_vue/
     expire_in: 1 day
 
 build-master:
@@ -80,12 +81,15 @@ build-release:
   image: registry-vpc.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
   script:
     - node /deploy-scripts/cloudUpload.js
+
     
 deploy-master:
   extends: .deploy
   when: manual
   environment:
     name: master
+  script:
+    - node /deploy-scripts/cloudDeployUpyun.js
   only:
     - master
 
