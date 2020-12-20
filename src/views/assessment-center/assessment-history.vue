@@ -123,12 +123,8 @@ export default {
       const sameTimeSpan = (routerTimeSpan[0] === this.cacheTimeSpan[0] && routerTimeSpan[1] === this.cacheTimeSpan[1])
       const sameSendStaff = sendStaff === this.cacheSendStaff
       if (sameTimeSpan && sameSendStaff) return false
-      if (searchTimeSpan) {
-        this.timeSpan = searchTimeSpan.split(',')
-      }
-      if (sendStaff) {
-        this.staffIds = sendStaff.split(',')
-      }
+      if (searchTimeSpan) { this.timeSpan = searchTimeSpan.split(',') }
+      if (sendStaff) { this.staffIds = sendStaff.split(',') }
       this.getSearchHistory(1)
     },
     /**

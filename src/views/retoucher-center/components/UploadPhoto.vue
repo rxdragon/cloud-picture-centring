@@ -166,7 +166,8 @@ export default {
   beforeDestroy () {
     const findUploadingPhotoArr = this.uploadPhoto.filter(item => !item.response)
     for (const uploadingItem of findUploadingPhotoArr) {
-      this.$refs.uploadButton.abort(uploadingItem)
+      if (!this.$refs['uploadButton']) return
+      this.$refs['uploadButton'].abort(uploadingItem)
       logUpload(uploadingItem, 'refresh')
     }
   },
@@ -400,8 +401,8 @@ export default {
      */
     deleteUploadPhoto (photoItem, index) {
       const isPending = !photoItem.response
-      if (isPending) {
-        this.$refs.uploadButton.abort(this.uploadPhoto[index])
+      if (isPending && this.$refs['uploadButton']) {
+        this.$refs['uploadButton'].abort(this.uploadPhoto[index])
       }
       this.uploadPhoto.splice(index, 1)
       const uid = photoItem.uid

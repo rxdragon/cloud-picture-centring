@@ -27,8 +27,10 @@ export default {
             let data = myObject.prop
             const maxNum = Math.pow(10, Number(this.decimalsCount) - 1)
             data = +data < maxNum ? ('0' + String(data)) : data
+            if (!this.$el) return
             this.$el.innerHTML = data
           } else {
+            if (!this.$el) return
             this.$el.innerHTML = this.showPoint ? myObject.prop.toFixed(2) : myObject.prop
           }
         }

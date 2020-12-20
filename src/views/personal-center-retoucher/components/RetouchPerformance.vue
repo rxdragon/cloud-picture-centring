@@ -224,7 +224,7 @@ export default {
       routeBase: '/retoucher-center/retouch-history'
     }
   },
-  created () {
+  mounted () {
     const nowTime = moment().format('YYYY-MM-DD')
     this.timeSpan = [nowTime, nowTime]
     this.getRetouchQuota()
