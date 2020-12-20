@@ -52,8 +52,8 @@ build-master:
 build-dev:
   extends: .build
   script:
-    - yarn run build-dev
-    - yarn run build-background-dev
+    - yarn build
+    - yarn run build-background
     - yarn run pack-vue
     - node print_version.js
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
