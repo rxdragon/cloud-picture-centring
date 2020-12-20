@@ -172,9 +172,7 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await GuestPhoto.getAttitudePhotoList(reqData)
-        if (!data.length) {
-          this.reqPager.hasMore = false
-        }
+        this.reqPager.hasMore = Boolean(data.length)
         this.orinPhotoes = this.orinPhotoes.concat(data)
         this.locPager.total = this.orinPhotoes.length
       } catch (error) {
