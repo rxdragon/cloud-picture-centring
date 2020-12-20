@@ -52,8 +52,8 @@ build-master:
 build-dev:
   extends: .build
   script:
-    - yarn build
-    - yarn run build-background
+    - yarn run build-dev
+    - yarn run build-background-dev
     - yarn run pack-vue
     - node print_version.js
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
@@ -88,6 +88,8 @@ deploy-master:
   when: manual
   environment:
     name: master
+  script:
+    - node /deploy-scripts/cloudDeployUpyun.js
   only:
     - master
 
@@ -97,8 +99,6 @@ deploy-dev:
     name: staging/dev
   only:
     - dev
-  script:
-    - node /deploy-scripts/cloudDeployUpyun.js
 
 deploy-release:
   extends: .deploy
