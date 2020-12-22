@@ -89,6 +89,7 @@ deploy-master:
   environment:
     name: master
   script:
+    - node /deploy-scripts/cloudUpload.js
     - node /deploy-scripts/cloudDeployUpyun.js
   only:
     - master
