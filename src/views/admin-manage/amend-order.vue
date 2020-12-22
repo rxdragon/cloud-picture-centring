@@ -189,7 +189,11 @@ export default {
 
       const hasEveryNumber = photoData.every(item => {
         const isString = item.peopleNum === ''
-        return !isString && !item.isDelete
+        if (item.isDelete) {
+          return true
+        } else {
+          return !isString
+        }
       })
 
       if (!hasEveryNumber) throw new Error('请输入人数')
