@@ -2,7 +2,7 @@
 import axios from '@/plugins/axios.js'
 import { toFixed } from '@/utils/validate'
 import { transformPercentage, getAvg } from '@/utils'
-
+import * as MathUtil from '@/utils/mathUtil'
 
 function handerReturnQuota (msg) {
   for (const key in msg) {
@@ -141,14 +141,21 @@ export function getStaffReturnChartInfo (params) {
     data: params
   }).then(msg => {
     const createData = msg.map(retoucherItem => {
-      const orderCount = (Number(retoucherItem.storeReturnStreamNumForNormalQuality) || 0) +
-        (Number(retoucherItem.storeReturnStreamNumForReworkQuality) || 0)
-      const photoCount = (Number(retoucherItem.storeReturnPhotoNumForNormalQuality) || 0) +
-        (Number(retoucherItem.storeReturnPhotoNumForReworkQuality) || 0)
+      const orderSumFun = MathUtil.summation(retoucherItem.storeReturnStreamNumForNormalQuality)
+      orderSumFun(retoucherItem.storeReturnStreamNumForReworkQuality)
+
+      const photoCountSumFun = MathUtil.summation(retoucherItem.storeReturnPhotoNumForNormalQuality)
+      photoCountSumFun(retoucherItem.storeReturnPhotoNumForReworkQuality)
+
+      const orderCount = orderSumFun.toResult()
+      const photoCount = photoCountSumFun.toResult()
+      // TODO 调试
+      const returnRate = 10
       return {
         name: retoucherItem.nickName || retoucherItem.name || '-',
         orderCount,
-        photoCount
+        photoCount,
+        returnRate
       }
     })
     return createData
