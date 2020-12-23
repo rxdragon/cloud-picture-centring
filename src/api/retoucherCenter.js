@@ -184,7 +184,10 @@ export function getRetouchQuotaList (params) {
       streamInfo.hasOvertimeIncome = Number(streamInfo.overtimeIncome) + Number(streamInfo.rollbackIncomeOvertime)
       streamInfo.hasOvertimeIncome = Boolean(streamInfo.hasOvertimeIncome)
       return {
-        ...streamInfo
+        ...streamInfo,
+        isExpanded: false,
+        loading: true,
+        listShowPhotoList: []
       }
     })
     createData.list = msg.list

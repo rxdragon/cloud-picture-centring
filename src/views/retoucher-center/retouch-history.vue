@@ -55,7 +55,7 @@
         <!-- 云学院问题标签 -->
         <!-- v-if 兼容设置失败问题 -->
         <div class="cloud-issue-box search-item" v-if="activeName === SEARCH_TYPE.NORMAL">
-          <span>云学院问题标签</span>
+          <span>问题标签</span>
           <issue-label-select ref="issueLabelSelect" v-model="issueValue" />
         </div>
         <div class="search-button-box search-item">
@@ -63,7 +63,12 @@
         </div>
       </div>
       <div class="table-module">
-        <el-table :data="tableData" style="width: 100%;">
+        <el-table :data="tableData" style="width: 100%;" @expand-change="onTableRowChange">
+          <el-table-column type="expand" fixed="left">
+            <template slot-scope="{ row }">
+              <div class="photo-list" v-loading="row.loading">123123</div>
+            </template>
+          </el-table-column>
           <el-table-column label="流水号" width="200" fixed="left">
             <template slot-scope="{ row }">
               <div>
@@ -355,6 +360,14 @@ export default {
      */
     handleCurrentChange () {
       this.searchList()
+    },
+    onTableRowChange (row, expandedRows) {
+      row.isExpanded = !row.isExpanded
+      if (!row.listShowPhotoList.length) {
+        row.loading = true
+        // TODO 获取图片信息
+      }
+      row.loading = false
     }
   }
 }
@@ -373,7 +386,7 @@ export default {
       flex-wrap: wrap;
 
       .search-item {
-        margin-right: 30px;
+        margin-right: 26px;
         margin-bottom: 20px;
       }
 
