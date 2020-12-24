@@ -12,9 +12,6 @@ export default function registerIpc () {
   })
 
 
-  ipcMain.on('config:get', (event, name) => {
-    event.returnValue = global.config(name)
-  })
 
   // 当用户触发升级操作
   ipcMain.on('version:do-upgrade', () => {
