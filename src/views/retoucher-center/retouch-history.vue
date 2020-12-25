@@ -66,7 +66,22 @@
         <el-table :data="tableData" style="width: 100%;" @expand-change="onTableRowChange">
           <el-table-column type="expand" fixed="left">
             <template slot-scope="{ row }">
-              <div class="photo-list" v-loading="row.loading">123123</div>
+              <div class="photo-module" v-loading="row.loading">
+                <div class="photo-list" v-if="row.listShowPhotoList.length">
+                  <template v-for="(photoItem, photoIndex) in row.listShowPhotoList">
+                    <div class="photo-chunk" :key="photoIndex">
+                      <photo-box
+                        :tags="photoItem.baseData.tags"
+                        contain-photo
+                        :src="photoItem.completePhoto.path"
+                        :show-special-effects="false"
+                        :show-store-part-rework-reason="false"
+                      />
+                    </div>
+                  </template>
+                </div>
+                <div class="no-data" v-else>暂无可申诉照片</div>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="流水号" width="200" fixed="left">
@@ -185,11 +200,13 @@ import CloudSpot from '@SelectBox/CloudSpot'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import CloudSpotGrassSelect from '@/components/CloudSpotGrassSelect'
+import PhotoBox from '@/components/PhotoBox'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
 
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+import * as Commonality from '@/api/commonality.js'
 
 const SEARCH_TYPE = {
   NORMAL: 'normal', // 正常流水
@@ -198,7 +215,7 @@ const SEARCH_TYPE = {
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot, CloudSpotGrassSelect },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot, CloudSpotGrassSelect, PhotoBox },
   data () {
     return {
       SEARCH_TYPE,
@@ -361,13 +378,25 @@ export default {
     handleCurrentChange () {
       this.searchList()
     },
-    onTableRowChange (row, expandedRows) {
+    /**
+     * @description 监听表格框展开缩小
+     */
+    async onTableRowChange (row, expandedRows) {
       row.isExpanded = !row.isExpanded
       if (!row.listShowPhotoList.length) {
         row.loading = true
-        // TODO 获取图片信息
+        const photos = await this.getIssuePhotos(row.streamId)
+        row.listShowPhotoList = photos
       }
       row.loading = false
+    },
+    /**
+     * @description 获取问题照片
+     */
+    async getIssuePhotos (streamId) {
+      const req = { streamId }
+      const photos = await Commonality.getIssuePhotos(req)
+      return photos
     }
   }
 }
@@ -408,6 +437,26 @@ export default {
     .stream-search {
       span {
         width: 60px;
+      }
+    }
+
+    .photo-module {
+      .photo-list {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-right: -10px;
+        margin-bottom: -10px;
+
+        .photo-chunk {
+          width: 141px;
+          height: 141px;
+          padding: 6px;
+          margin-right: 10px;
+          margin-bottom: 10px;
+          background-color: #f5f7fa;
+          border-radius: 4px;
+        }
       }
     }
   }

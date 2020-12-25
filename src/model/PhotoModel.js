@@ -7,9 +7,9 @@ export default class PhotoModel {
   isReturn = false // 是否审核退回
   isPull = false // 是否拔草
   isPlant = false // 是否种草
-  originalPhoto = '' // 原片信息
-  firstPhoto = '' // 第一次成片
-  completePhoto = '' // 云端成片
+  originalPhoto = null // 原片信息
+  firstPhoto = null // 第一次成片
+  completePhoto = null // 云端成片
   grassReason = '' // 种草理由
   reworkReason = '' // 重修理由
 
@@ -24,7 +24,7 @@ export default class PhotoModel {
   storeReworkNote = '' // 门店退回备注
   storePartReworkReason = [] // 退回标记
   storePartReworkReasonTags = [] // 全部退回标记
-  qualityType = '' // 是否为质量问题
+  qualityType = '' // 退单类型
   isRollBack = false // 是否存在回滚收益
   originReworkPhotoLog = '' // 标记退回的log,存在才是门店标记退回的
   realReworkPhoto = {} // 被退回的标签所在的version

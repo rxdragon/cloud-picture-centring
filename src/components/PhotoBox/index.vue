@@ -28,6 +28,22 @@
       >
       <span v-if="photoName" class="photo-name" @click.stop="">{{ photoRealName }}</span>
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
+      <div class="photo-tags">
+        <div
+          v-if="storeReturnQualityType === QUALITY_TYPE.QUALITY || storeReturnQualityType === QUALITY_TYPE.BOTH"
+          class="tag warning-tag"
+        >
+          门店质量问题
+        </div>
+        <div
+          v-if="storeReturnQualityType === QUALITY_TYPE.NOT_QUALITY || storeReturnQualityType === QUALITY_TYPE.BOTH"
+          class="tag blue-tag"
+        >
+          门店非质量问题
+        </div>
+        <div v-if="cloudEvaluatorType === GRADE_TYPE.PLANT" class="tag green-tag">种草</div>
+        <div v-if="cloudEvaluatorType === GRADE_TYPE.PULL" class="tag red-tag">拔草</div>
+      </div>
     </div>
     <!-- 拼接照信息 -->
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
@@ -58,7 +74,10 @@
       选定特效： <span class="reason-content">{{ specialEffects }}</span>
     </div>
     <!-- 门店退回标记 -->
-    <div v-if="storePartReworkReason.length" class="recede-reason">
+    <div
+      v-if="showStorePartReworkReason && storePartReworkReason.length"
+      class="recede-reason"
+    >
       <div class="recede-title">门店退回标记：</div>
       <div class="reason-content">
         <el-tag
@@ -91,6 +110,7 @@ import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewCanvasImg from '@/components/PreviewCanvasImg'
 import * as PhotoTool from '@/utils/photoTool'
+import { QUALITY_TYPE, GRADE_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoBox',
@@ -121,12 +141,15 @@ export default {
     useEleImage: { type: Boolean, default: true },
     isLekima: { type: Boolean },
     fileData: { type: Object, default: null },
-    containPhoto: { type: Boolean },
+    containPhoto: { type: Boolean }, // 显示全部图片图像
     rename: { type: [String, Number], default: '' }, // 重命名
-    showSpecialEffects: { type: Boolean, default: true }
+    showSpecialEffects: { type: Boolean, default: true }, // 是否显示特效
+    showStorePartReworkReason: { type: Boolean, default: true }
   },
   data () {
     return {
+      QUALITY_TYPE,
+      GRADE_TYPE,
       breviary: '!thumb.small.50',
       linkTag: null,
       limitSize: 20 * 1024 * 1024,
@@ -161,6 +184,16 @@ export default {
       } else {
         return ''
       }
+    },
+    // 门店退回类型
+    storeReturnQualityType () {
+      const qualityType = _.get(this.tags, 'values.store_rework_type') || ''
+      return qualityType
+    },
+    // 云学院评价类型
+    cloudEvaluatorType () {
+      const evaluatorType = _.get(this.tags, 'values.evaluator_type') || ''
+      return evaluatorType
     },
     // 门店退回标记
     storePartReworkReason () {
@@ -199,6 +232,7 @@ export default {
         return ''
       }
     },
+    // 照片去除后缀名字
     photoRealName () {
       const photoFileNam = this.src.split('/')
       return photoFileNam[photoFileNam.length - 1]
@@ -380,6 +414,39 @@ export default {
     text-align: center;
     background: linear-gradient(51deg, rgb(255, 126, 0) 0%, rgb(255, 0, 0) 100%);
     border-radius: 0 0 6px 0;
+  }
+
+  .photo-tags {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+
+    .tag {
+      display: inline-block;
+      width: max-content;
+      padding: 3px 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+      border-radius: 0 8px 0 0;
+
+      &.red-tag {
+        background: @red;
+      }
+
+      &.warning-tag {
+        background: @orange;
+      }
+
+      &.blue-tag {
+        background: @sky-blue;
+      }
+
+      &.green-tag {
+        background: @green;
+      }
+    }
   }
 
   .el-image {

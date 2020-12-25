@@ -3,7 +3,7 @@ import axios from '@/plugins/axios.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
-import { PHOTO_VERSION } from '@/utils/enumerate'
+import { PHOTO_VERSION, GRADE_TYPE } from '@/utils/enumerate'
 
 
 /**
@@ -173,4 +173,27 @@ export function createPhotoVersion (params) {
     method: 'GET',
     params
   })
+}
+
+/**
+ * @description 获取问题照片
+ * @param {*} params 
+ */
+export async function getIssuePhotos (params) {
+  const res = await axios({
+    url: '/project_cloud/common/getStreamInfo',
+    method: 'GET',
+    params
+  })
+  const photos = res.photos.map(photoItem => {
+    const photoInfo = new PhotoModel(photoItem)
+    photoInfo.getCheckPoolTags()
+    return photoInfo
+  })
+  const issueTag = item => {
+    const hasTag = (item.isStoreReturn || (item.evaluatorType && item.evaluatorType !== GRADE_TYPE.NONE))
+    return item.completePhoto && hasTag
+  }
+  const hasCompletePhotos = photos.filter(issueTag)
+  return hasCompletePhotos || []
 }
