@@ -4,13 +4,12 @@ const { ipcMain } = require('electron')
 export default function registerIpc () {
   // 当需要获取配置项时
   ipcMain.on('config:get', (event, name) => {
-    if (!global.config || !global.config[name]) {
+    if (!global.config || !global.config(name)) {
       event.returnValue = ''
       return
     }
-    event.returnValue = global.config[name]
+    event.returnValue = global.config(name)
   })
-
 
 
   // 当用户触发升级操作
