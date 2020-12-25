@@ -141,16 +141,24 @@ export function getStaffReturnChartInfo (params) {
     data: params
   }).then(msg => {
     const createData = msg.map(retoucherItem => {
+      // 修图总数
+      const retoucherFinishPhotoNum = retoucherItem.retoucherFinishPhotoNum
+
       const orderSumFun = MathUtil.summation(retoucherItem.storeReturnStreamNumForNormalQuality)
       orderSumFun(retoucherItem.storeReturnStreamNumForReworkQuality)
+      orderSumFun(-1 * (retoucherItem.reworkRollbackStreamNumQuality))
+      orderSumFun(-1 * (retoucherItem.normalRollbackStreamNumQuality))
 
       const photoCountSumFun = MathUtil.summation(retoucherItem.storeReturnPhotoNumForNormalQuality)
       photoCountSumFun(retoucherItem.storeReturnPhotoNumForReworkQuality)
+      photoCountSumFun(-1 * (retoucherItem.normalRollbackPhotoNumRework))
+      photoCountSumFun(-1 * (retoucherItem.reworkRollbackPhotoNumRework))
 
       const orderCount = orderSumFun.toResult()
       const photoCount = photoCountSumFun.toResult()
-      // TODO 调试
-      const returnRate = 10
+      const returnRate = retoucherFinishPhotoNum
+        ? MathUtil.toFixed((photoCount / retoucherFinishPhotoNum * 100), 2)
+        : 0
       return {
         name: retoucherItem.nickName || retoucherItem.name || '-',
         orderCount,
