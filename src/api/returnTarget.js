@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import axios from '@/plugins/axios.js'
-import { toFixed } from '@/utils/validate'
 import { transformPercentage, getAvg } from '@/utils'
 import * as MathUtil from '@/utils/mathUtil'
 
@@ -9,63 +8,123 @@ function handerReturnQuota (msg) {
     msg[key] = Number(msg[key])
   }
   // 门店总单数
-  msg.storeReturnAllStream = msg.storeReturnStreamNumForNormalQuality +
-    msg.storeReturnStreamNumForNormalNotQuality +
-    msg.storeReturnStreamNumForNormalBoth +
-    msg.storeReturnStreamNumForReworkQuality +
-    msg.storeReturnStreamNumForReworkNotQuality +
-    msg.storeReturnStreamNumForReworkBoth
+  const sumStoreReturnAllStreamFun = MathUtil.summation()
+  sumStoreReturnAllStreamFun(msg.storeReturnStreamNumForNormalQuality)
+  sumStoreReturnAllStreamFun(msg.storeReturnStreamNumForNormalNotQuality)
+  sumStoreReturnAllStreamFun(msg.storeReturnStreamNumForNormalBoth)
+  sumStoreReturnAllStreamFun(msg.storeReturnStreamNumForReworkQuality)
+  sumStoreReturnAllStreamFun(msg.storeReturnStreamNumForReworkNotQuality)
+  sumStoreReturnAllStreamFun(msg.storeReturnStreamNumForReworkBoth)
+  msg.storeReturnAllStream = sumStoreReturnAllStreamFun.toResult()
+
   // 门店总退张数
-  msg.storeReturnAllPhoto = msg.storeReturnPhotoNumForNormalQuality +
-    msg.storeReturnPhotoNumForNormalNotQuality +
-    msg.storeReturnPhotoNumForNormalBoth +
-    msg.storeReturnPhotoNumForReworkQuality +
-    msg.storeReturnPhotoNumForReworkNotQuality +
-    msg.storeReturnPhotoNumForReworkBoth
+  const sumStoreReturnAllPhotoFun = MathUtil.summation()
+  sumStoreReturnAllPhotoFun(msg.storeReturnPhotoNumForNormalQuality)
+  sumStoreReturnAllPhotoFun(msg.storeReturnPhotoNumForNormalNotQuality)
+  sumStoreReturnAllPhotoFun(msg.storeReturnPhotoNumForNormalBoth)
+  sumStoreReturnAllPhotoFun(msg.storeReturnPhotoNumForReworkQuality)
+  sumStoreReturnAllPhotoFun(msg.storeReturnPhotoNumForReworkNotQuality)
+  sumStoreReturnAllPhotoFun(msg.storeReturnPhotoNumForReworkBoth)
+  msg.storeReturnAllPhoto = sumStoreReturnAllPhotoFun.toResult()
+
   // 门店完成退回数量
-  msg.finishStoreReturnStream = msg.finishStreamNumForQuality +
-    msg.finishStreamNumForNotQuality +
-    msg.finishStreamNumForBoth
+  const sumFinishStoreReturnStreamFun = MathUtil.summation()
+  sumFinishStoreReturnStreamFun(msg.finishStreamNumForQuality)
+  sumFinishStoreReturnStreamFun(msg.finishStreamNumForNotQuality)
+  sumFinishStoreReturnStreamFun(msg.finishStreamNumForBoth)
+  msg.finishStoreReturnStream = sumFinishStoreReturnStreamFun.toResult()
+
   // 门店完成退回张数
-  msg.finishStoreReturnPhoto = msg.finishPhotoNumForQuality +
-    msg.finishPhotoNumForNotQuality +
-    msg.finishPhotoNumForBoth
+  const sumFinishStoreReturnPhotoFun = MathUtil.summation()
+  sumFinishStoreReturnPhotoFun(msg.finishPhotoNumForQuality)
+  sumFinishStoreReturnPhotoFun(msg.finishPhotoNumForNotQuality)
+  sumFinishStoreReturnPhotoFun(msg.finishPhotoNumForBoth)
+  msg.finishStoreReturnPhoto = sumFinishStoreReturnPhotoFun.toResult()
+
   // 门店质量问题退单单数
-  const storeReturnForQualityStream = msg.storeReturnStreamNumForNormalQuality + msg.storeReturnStreamNumForReworkQuality
+  const sumStoreReturnForQualityStreamFun = MathUtil.summation()
+  sumStoreReturnForQualityStreamFun(msg.storeReturnStreamNumForNormalQuality)
+  sumStoreReturnForQualityStreamFun(msg.storeReturnStreamNumForReworkQuality)
+  const storeReturnForQualityStream = sumStoreReturnForQualityStreamFun.toResult()
+
   // 门店质量问题退单张数
-  const storeReturnForQualityPhoto = msg.storeReturnPhotoNumForNormalQuality + msg.storeReturnPhotoNumForReworkQuality
+  const sumStoreReturnForQualityPhotoFun = MathUtil.summation()
+  sumStoreReturnForQualityPhotoFun(msg.storeReturnPhotoNumForNormalQuality)
+  sumStoreReturnForQualityPhotoFun(msg.storeReturnPhotoNumForReworkQuality)
+  const storeReturnForQualityPhoto = sumStoreReturnForQualityPhotoFun.toResult()
+
   // 门店非质量问题退单单数
-  const storeReturnForNotQualityStream = msg.storeReturnStreamNumForNormalNotQuality + msg.storeReturnStreamNumForReworkNotQuality
+  const sumStoreReturnForNotQualityStreamFun = MathUtil.summation()
+  sumStoreReturnForNotQualityStreamFun(msg.storeReturnStreamNumForNormalNotQuality)
+  sumStoreReturnForNotQualityStreamFun(msg.storeReturnStreamNumForReworkNotQuality)
+  const storeReturnForNotQualityStream = sumStoreReturnForNotQualityStreamFun.toResult()
+
   // 门店非质量问题退单张数
-  const storeReturnForNotQualityPhoto = msg.storeReturnPhotoNumForNormalNotQuality + msg.storeReturnPhotoNumForReworkNotQuality
+  const sumStoreReturnForNotQualityPhotoFun = MathUtil.summation()
+  sumStoreReturnForNotQualityPhotoFun(msg.storeReturnPhotoNumForNormalNotQuality)
+  sumStoreReturnForNotQualityPhotoFun(msg.storeReturnPhotoNumForReworkNotQuality)
+  const storeReturnForNotQualityPhoto = sumStoreReturnForNotQualityPhotoFun.toResult()
+
   // 门店质量&非质量问题退单单数
-  const storeReturnForBothStream = msg.storeReturnStreamNumForNormalBoth + msg.storeReturnStreamNumForReworkBoth
+  const sumStoreReturnForBothStreamFun = MathUtil.summation()
+  sumStoreReturnForBothStreamFun(msg.storeReturnStreamNumForNormalBoth)
+  sumStoreReturnForBothStreamFun(msg.storeReturnStreamNumForReworkBoth)
+  const storeReturnForBothStream = sumStoreReturnForBothStreamFun.toResult()
+
   // 门店质量&非质量问题退单张数
-  const storeReturnForBothPhoto = msg.storeReturnPhotoNumForNormalBoth + msg.storeReturnPhotoNumForReworkBoth
+  const sumStoreReturnForBothPhotoFun = MathUtil.summation()
+  sumStoreReturnForBothPhotoFun(msg.storeReturnPhotoNumForNormalBoth)
+  sumStoreReturnForBothPhotoFun(msg.storeReturnPhotoNumForReworkBoth)
+  const storeReturnForBothPhoto = sumStoreReturnForBothPhotoFun.toResult()
+
   // 退单总收益
-  const storeReturnIncome = msg.storeReturnIncomeForQuality * 100 +
-    msg.storeReturnIncomeForNotQuality * 100 +
-    msg.storeReturnIncomeForBoth * 100
-  msg.storeReturnIncome = toFixed(storeReturnIncome / 100)
+  const sumStoreReturnIncomeFun = MathUtil.summation()
+  sumStoreReturnIncomeFun(msg.storeReturnIncomeForQuality)
+  sumStoreReturnIncomeFun(msg.storeReturnIncomeForNotQuality)
+  sumStoreReturnIncomeFun(msg.storeReturnIncomeForBoth)
+  const storeReturnIncome = sumStoreReturnIncomeFun.toResult()
+  msg.storeReturnIncome = MathUtil.toFixed(storeReturnIncome)
+
   // 退单总海草
-  const storeReturnExp = msg.storeReturnExpForQuality * 100 +
-    msg.storeReturnExpForNotQuality * 100 +
-    msg.storeReturnExpForBoth * 100
-  msg.storeReturnExp = toFixed(storeReturnExp / 100)
+  const sumStoreReturnExpFun = MathUtil.summation()
+  sumStoreReturnExpFun(msg.storeReturnExpForQuality)
+  sumStoreReturnExpFun(msg.storeReturnExpForNotQuality)
+  sumStoreReturnExpFun(msg.storeReturnExpForBoth)
+  const storeReturnExp = sumStoreReturnExpFun.toResult()
+  msg.storeReturnExp = MathUtil.toFixed(storeReturnExp)
+
   // 修图总张数
-  const finishPhotoNum = (msg.retouchPhotoNum || 0) +
-    msg.finishPhotoNumForQuality +
-    msg.finishPhotoNumForNotQuality +
-    msg.finishPhotoNumForBoth
+  const sumFinishPhotoNumFun = MathUtil.summation()
+  sumFinishPhotoNumFun(msg.retouchPhotoNum || 0)
+  sumFinishPhotoNumFun(msg.finishPhotoNumForQuality || 0)
+  sumFinishPhotoNumFun(msg.finishPhotoNumForNotQuality || 0)
+  sumFinishPhotoNumFun(msg.finishPhotoNumForBoth || 0)
+  const finishPhotoNum = sumFinishPhotoNumFun.toResult()
+
   // 门店退单率
-  msg.storeReturnPhotoRate = transformPercentage(storeReturnForQualityPhoto - msg.RollbackPhotoNumForNormalRework - msg.RollbackPhotoNumForReturnRework, finishPhotoNum)
+  // 实际退张数，减去回滚
+  const sumRealStoreReturnForQualityPhotoFun = MathUtil.summation()
+  sumRealStoreReturnForQualityPhotoFun(storeReturnForQualityPhoto)
+  sumRealStoreReturnForQualityPhotoFun(-1 * msg.RollbackPhotoNumForNormalRework)
+  sumRealStoreReturnForQualityPhotoFun(-1 * msg.RollbackPhotoNumForReturnRework)
+  const realStoreReturnForQualityPhoto = sumRealStoreReturnForQualityPhotoFun.toResult()
+  msg.storeReturnPhotoRate = transformPercentage(realStoreReturnForQualityPhoto, finishPhotoNum)
 
   // 申诉回滚
-  msg.RetoucherAppealRollbackIncome = Number(msg.RetoucherRollbackIncomeForNormalRework) + Number(msg.RetoucherRollbackIncomeForReturnRework) // 收益
-  msg.RetoucherAppealRollbackExp = Number(msg.RetoucherRollbackExpForNormalRework) + Number(msg.RetoucherRollbackExpForReturnRework) // 海草
+  const sumRetoucherAppealRollbackIncomeFun = MathUtil.summation()
+  sumRetoucherAppealRollbackIncomeFun(msg.RetoucherRollbackIncomeForNormalRework)
+  sumRetoucherAppealRollbackIncomeFun(msg.RetoucherRollbackIncomeForReturnRework)
+  // 申诉回滚收益
+  msg.RetoucherAppealRollbackIncome = sumRetoucherAppealRollbackIncomeFun.toResult()
+  // 申诉回滚海草
+  const sumRetoucherAppealRollbackExpFun = MathUtil.summation()
+  sumRetoucherAppealRollbackExpFun(msg.RetoucherRollbackExpForNormalRework)
+  sumRetoucherAppealRollbackExpFun(msg.RetoucherRollbackExpForReturnRework)
+  msg.RetoucherAppealRollbackExp = sumRetoucherAppealRollbackExpFun.toResult()
 
   // 门店退回修图平均时长（单）
   msg.storeReturnRetouchTime = getAvg(msg.storeReturnRetouchTime, msg.finishStoreReturnStream)
+
   const chatData = [
     {
       name: '被门店退回（总）',
