@@ -28,7 +28,7 @@
       >
       <span v-if="photoName" class="photo-name" @click.stop="">{{ photoRealName }}</span>
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
-      <div class="photo-tags">
+      <div class="photo-tags" v-if="showLabelInfo">
         <div
           v-if="storeReturnQualityType === QUALITY_TYPE.QUALITY || storeReturnQualityType === QUALITY_TYPE.BOTH"
           class="tag warning-tag"
@@ -144,7 +144,8 @@ export default {
     containPhoto: { type: Boolean }, // 显示全部图片图像
     rename: { type: [String, Number], default: '' }, // 重命名
     showSpecialEffects: { type: Boolean, default: true }, // 是否显示特效
-    showStorePartReworkReason: { type: Boolean, default: true }
+    showStorePartReworkReason: { type: Boolean, default: true },
+    showLabelInfo: { type: Boolean } // 显示标记信息
   },
   data () {
     return {

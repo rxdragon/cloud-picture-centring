@@ -76,6 +76,7 @@
                         :src="photoItem.completePhoto.path"
                         :show-special-effects="false"
                         :show-store-part-rework-reason="false"
+                        show-label-info
                       />
                     </div>
                   </template>

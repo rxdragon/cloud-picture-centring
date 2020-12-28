@@ -368,3 +368,11 @@ export const IMPULSE_SETTING_TYPE = {
   NORMAL: 'normal', // 常规
   TIME_INTERVAL: 'time_interval' // 时段奖励
 }
+
+/**
+ * @description 照片标记
+ */
+export const PHOTO_TAG = {
+  STORE_REWORK: 'store_rework', // 门店退回的照片version
+  TEMP_RELATION: 'temp_relation', // 被动牵扯退回照片
+}
