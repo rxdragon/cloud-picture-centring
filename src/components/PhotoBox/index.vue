@@ -126,7 +126,7 @@ export default {
     src: { type: String, default: '' }, // 地址图片
     orginPhotoPath: { type: String, default: '' },
     photoName: { type: Boolean },
-    peopleNum: { type: [String, Number], default: () => '' }, // 是够显示照片人数
+    peopleNum: { type: [String, Number], default: () => '' }, // 是否显示照片人数
     downing: { type: Boolean }, // 是够开启下载功能
     preview: { type: Boolean }, // 是否开启单张预览功能
     previewBreviary: { type: Boolean }, // 开启单张缩略预览功能
