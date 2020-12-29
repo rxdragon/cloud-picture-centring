@@ -7,7 +7,7 @@ import ProductModel from '@/model/ProductModel.js'
 
 import * as PhotoTool from '@/utils/photoTool.js'
 
-import { APPEAL_STREAM_STATUS, APPEAL_TYPE } from '@/utils/enumerate'
+import { PHOTO_VERSION, APPEAL_STREAM_STATUS, APPEAL_TYPE } from '@/utils/enumerate'
 /**
  * @description 初审绑定
  * @param {*} params
@@ -92,13 +92,18 @@ export function appealDetail (params, source) {
         specialEfficacy: _.get(photoAppealItem, 'tags.values.special_efficacy') || '无需特效'
       }
       // 照片版本
-      if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
-        // 过滤看片师新增照片
+      const storeAddNewVersion = photoItem.other_photo_version.length === 1
+        && photoItem.other_photo_version[0].version === PHOTO_VERSION.FINISH_PHOTO
+
+      // 过滤看片师新增照片
+      if (storeAddNewVersion) {
         finalPhotoItem.photoVersion = ''
       } else {
-        finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
+        const allVersionPhoto = [...photoItem.other_photo_version, ...photoItem.photo_version]
+        finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(allVersionPhoto)
+
         finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
-          const isStoreRework = versionItem.version === 'store_rework'
+          const isStoreRework = versionItem.version === PHOTO_VERSION.STORE_REWORK
           const isCurrentStoreRework = versionItem.id === photoAppealItem.photo_version_id
 
           // 获取云学院评价

@@ -118,6 +118,11 @@ export default class PhotoModel {
     }
   }
 
+  // 获取云学院抽片版本
+  get photoSpotCheckVersion () {
+    return [this.originalPhoto, this.firstPhoto]
+  }
+
   getStoreReturnReason () {
     let storePartReworkReasonString = ''
     this.storePartReworkReason.forEach(item => {

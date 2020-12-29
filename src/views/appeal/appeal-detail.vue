@@ -150,7 +150,6 @@ export default {
           this.photos = data.photos
         }
         this.appealInfo = data.appealInfo
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
