@@ -110,7 +110,7 @@ import { mapGetters } from 'vuex'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewCanvasImg from '@/components/PreviewCanvasImg'
 import * as PhotoTool from '@/utils/photoTool'
-import { QUALITY_TYPE, GRADE_TYPE } from '@/utils/enumerate'
+import { QUALITY_TYPE, GRADE_TYPE, PHOTO_TAG } from '@/utils/enumerate'
 
 export default {
   name: 'PhotoBox',
@@ -171,7 +171,7 @@ export default {
     },
     // 如果模版照，关联是由哪张照片生成的
     orginLinkPhotoPath () {
-      const isStoreReturn = _.get(this.tags, 'statics', []).includes('store_rework')
+      const isStoreReturn = _.get(this.tags, 'statics', []).includes(PHOTO_TAG.STORE_REWORK)
       const isTemplate = this.orginPhotoPath.includes('template')
       if (!isStoreReturn || !isTemplate) return ''
       const orginLinkPath = _.get(this.tags, 'values.origin_photo_path') || ''
@@ -525,7 +525,7 @@ export default {
     font-size: 12px;
     font-weight: 400;
     line-height: 17px;
-    color: #606266;
+    color: @red;
   }
 }
 

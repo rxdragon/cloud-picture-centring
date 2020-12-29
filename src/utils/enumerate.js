@@ -88,6 +88,7 @@ export const PHOTO_VERSION = {
   ORIGINAL_PHOTO: 'original_photo', // 原片
   FIRST_PHOTO: 'first_photo', // 一次成片
   RETURN_PHOTO: 'return_photo', // 审核退回照片
+  RETURN_SHOW: 'return_show', // 退回展示
   COMPLETE_PHOTO: 'complete_photo', // 审核成片
   FINISH_PHOTO: 'finish_photo', // 最终成片
   LAST_RETOUCH_PHOTO: 'last_retouch_photo', // 最新修后成片
