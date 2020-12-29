@@ -247,7 +247,7 @@ export default {
         if (appealType === APPEAL_TYPE.REWORK && photoVersion.version === PHOTO_VERSION.STORE_REWORK) {
           finalIndex = photoVersionIndex
         }
-        if (appealType === APPEAL_TYPE.EVALUATE && photoVersion.version === PHOTO_VERSION.COMPLETE_PHOTO) {
+        if (appealType === APPEAL_TYPE.EVALUATE && photoVersion.version === PHOTO_VERSION.FIRST_PHOTO) {
           finalIndex = photoVersionIndex
         }
       })
@@ -271,7 +271,7 @@ export default {
         finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.id === this.photoVersionId)[0]
       }
       if (appealType === APPEAL_TYPE.EVALUATE) {
-        finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.version === PHOTO_VERSION.COMPLETE_PHOTO)[0]
+        finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.version === PHOTO_VERSION.FIRST_PHOTO)[0]
       }
       return finalPhoto
     },

@@ -91,6 +91,7 @@ export function appealDetail (params, source) {
         photoVersionId: photoAppealItem.photo_version_id,
         specialEfficacy: _.get(photoAppealItem, 'tags.values.special_efficacy') || '无需特效'
       }
+
       // 照片版本
       const storeAddNewVersion = photoItem.other_photo_version.length === 1
         && photoItem.other_photo_version[0].version === PHOTO_VERSION.FINISH_PHOTO
@@ -99,9 +100,8 @@ export function appealDetail (params, source) {
       if (storeAddNewVersion) {
         finalPhotoItem.photoVersion = ''
       } else {
-        const allVersionPhoto = [...photoItem.other_photo_version, ...photoItem.photo_version]
+        const allVersionPhoto = [...photoItem.other_photo_version, ..._.get(photoItem, 'photo_version', [])]
         finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(allVersionPhoto)
-
         finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
           const isStoreRework = versionItem.version === PHOTO_VERSION.STORE_REWORK
           const isCurrentStoreRework = versionItem.id === photoAppealItem.photo_version_id
