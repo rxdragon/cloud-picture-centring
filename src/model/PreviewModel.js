@@ -1,4 +1,5 @@
-const completePhoto = ['last_retouch_photo', 'complete_photo']
+import { PHOTO_VERSION } from '@/utils/enumerate'
+const completePhoto = [PHOTO_VERSION.FIRST_PHOTO]
 
 export default class PreviewModel {
   id = ''

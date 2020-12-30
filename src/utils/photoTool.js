@@ -1,4 +1,11 @@
-import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto, PHOTO_FLAG } from '@/utils/enumerate.js'
+import {
+  PhotoEnum,
+  NoReturnPhotoEnum,
+  ReturnOnePhotoEnum,
+  StoreReturnPhoto,
+  PHOTO_FLAG,
+  PHOTO_VERSION
+} from '@/utils/enumerate.js'
 
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as mPath from '@/utils/selfPath.js'
@@ -81,7 +88,13 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
  * @param photoVersion
  */
 export function settlePhotoVersion (photoVersion) {
-  const photoVersionArr = ['original_photo', 'complete_photo', 'store_rework', 'finish_photo']
+  const photoVersionArr = [
+    PHOTO_VERSION.ORIGINAL_PHOTO,
+    PHOTO_VERSION.FIRST_PHOTO,
+    PHOTO_VERSION.COMPLETE_PHOTO,
+    PHOTO_VERSION.STORE_REWORK,
+    PHOTO_VERSION.FINISH_PHOTO
+  ]
   const timeLine = photoVersion.sort((a, b) => {
     return Number(a.id) - Number(b.id)
   })
@@ -89,19 +102,19 @@ export function settlePhotoVersion (photoVersion) {
   let storeReturnCount = 0
   timeLine.forEach(versionItem => {
     if (photoVersionArr.includes(versionItem.version)) {
-      if (versionItem.version === 'store_rework') {
+      if (versionItem.version === PHOTO_VERSION.STORE_REWORK) {
         storeReturnCount++
         versionItem.storeReturnCount = storeReturnCount
       }
-      if (versionItem.version === 'complete_photo') {
+      if (versionItem.version === PHOTO_VERSION.COMPLETE_PHOTO) {
         // 兼容老数据，没有last_retouch_photo
-        versionItem = timeLine.find(item => item.version === 'last_retouch_photo') || versionItem
+        versionItem = timeLine.find(item => item.version === PHOTO_VERSION.LAST_RETOUCH_PHOTO) || versionItem
       }
       createData.push(versionItem)
-      const findVersionIndex = versionItem.version === 'last_retouch_photo'
-        ? photoVersionArr.findIndex(item => item === 'complete_photo')
+      const findVersionIndex = versionItem.version === PHOTO_VERSION.LAST_RETOUCH_PHOTO
+        ? photoVersionArr.findIndex(item => item === PHOTO_VERSION.COMPLETE_PHOTO)
         : photoVersionArr.findIndex(item => item === versionItem.version)
-      if (findVersionIndex > -1 && versionItem.version !== 'store_rework') {
+      if (findVersionIndex > -1 && versionItem.version !== PHOTO_VERSION.STORE_REWORK) {
         photoVersionArr.splice(findVersionIndex, 1)
       }
     }

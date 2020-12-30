@@ -3,8 +3,7 @@ import axios from '@/plugins/axios.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
-import { PHOTO_VERSION } from '@/utils/enumerate'
-
+import { PHOTO_VERSION, GRADE_TYPE } from '@/utils/enumerate'
 
 /**
  * @description 获取修图类型
@@ -70,13 +69,18 @@ export function getStreamInfo (params) {
         tags: photoItem.tags,
         specialEfficacy: _.get(photoItem, 'tags.values.special_efficacy') || '无需特效'
       }
+
       // 照片版本
-      if (photoItem.other_photo_version.length === 1 && photoItem.other_photo_version[0].version === 'finish_photo') {
-        // 过滤看片师新增照片
+      const storeAddNewVersion = photoItem.other_photo_version.length === 1
+        && photoItem.other_photo_version[0].version === PHOTO_VERSION.FINISH_PHOTO
+      // 过滤看片师新增照片
+      if (storeAddNewVersion) {
         finalPhotoItem.photoVersion = ''
       } else {
-        finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(photoItem.other_photo_version)
+        const allVersionPhoto = [...photoItem.other_photo_version, photoItem.first_photo]
+        finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(allVersionPhoto)
       }
+
       if (finalPhotoItem.photoVersion) {
         finalPhotoItem.photoVersion.forEach(versionItem => {
           versionItem.isLekima = _.get(versionItem, 'tags.statics', []).includes('lichma')
@@ -173,4 +177,27 @@ export function createPhotoVersion (params) {
     method: 'GET',
     params
   })
+}
+
+/**
+ * @description 获取问题照片
+ * @param {*} params 
+ */
+export async function getIssuePhotos (params) {
+  const res = await axios({
+    url: '/project_cloud/common/getStreamInfo',
+    method: 'GET',
+    params
+  })
+  const photos = res.photos.map(photoItem => {
+    const photoInfo = new PhotoModel(photoItem)
+    photoInfo.getCheckPoolTags()
+    return photoInfo
+  })
+  const issueTag = item => {
+    const hasTag = (item.isStoreReturn || (item.evaluatorType && item.evaluatorType !== GRADE_TYPE.NONE))
+    return item.completePhoto && hasTag
+  }
+  const hasCompletePhotos = photos.filter(issueTag)
+  return hasCompletePhotos || []
 }

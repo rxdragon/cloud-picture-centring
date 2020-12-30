@@ -2,7 +2,6 @@
   <div class="order-detail page-class">
     <div class="header">
       <h3>修图详情</h3>
-
       <el-button
         type="primary"
         v-if="showAppealAccess && retoucherIsSelf && !orderData.currentStreamAppeal"
@@ -60,6 +59,7 @@
       </div>
       <photo-detail :photo-item="photoItem" />
     </div>
+
     <el-dialog
       class="appeal-dialog"
       title="我要申诉"

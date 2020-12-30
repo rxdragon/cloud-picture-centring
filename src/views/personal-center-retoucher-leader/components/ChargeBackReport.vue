@@ -41,7 +41,7 @@
         被退单单量统计
         <div class="desc">（张数为纯质量问题张数）</div>
       </div>
-      <charge-back-chat :chart-datas="chatData" />
+      <charge-back-chat show-rate :chart-datas="chatData" />
     </div>
   </div>
 </template>
