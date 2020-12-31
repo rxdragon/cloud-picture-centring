@@ -29,6 +29,10 @@
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>
       </div>
     </div>
+    <!-- 提示 -->
+    <div class="tip-box">
+      <el-alert title="修改产品，只能更改相同修图标准的产品。" type="warning" effect="dark"></el-alert>
+    </div>
     <!-- 订单照片显示模块 -->
     <div v-for="(item, index) in dataList" :key="index" class="caid-box module-panel">
       <div class="order-info">
@@ -340,6 +344,10 @@ export default {
 <style lang="less">
 
 .amend-order {
+  .tip-box {
+    margin-bottom: 20px;
+  }
+
   .search-box {
     margin-bottom: 20px;
 

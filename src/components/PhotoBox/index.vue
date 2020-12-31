@@ -43,6 +43,7 @@
         </div>
         <div v-if="cloudEvaluatorType === GRADE_TYPE.PLANT" class="tag green-tag">种草</div>
         <div v-if="cloudEvaluatorType === GRADE_TYPE.PULL" class="tag red-tag">拔草</div>
+        <div v-if="cloudEvaluatorType === GRADE_TYPE.NONE" class="tag gray-tag">通过</div>
       </div>
     </div>
     <!-- 拼接照信息 -->
@@ -438,6 +439,10 @@ export default {
 
       &.warning-tag {
         background: @orange;
+      }
+
+      &.gray-tag {
+        background: @gray;
       }
 
       &.blue-tag {

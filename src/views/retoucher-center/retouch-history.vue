@@ -67,7 +67,10 @@
           <el-table-column type="expand" fixed="left">
             <template slot-scope="{ row }">
               <div class="photo-module" v-loading="row.loading">
-                <div class="photo-list" v-if="row.listShowPhotoList.length">
+                <div
+                  class="photo-list"
+                  v-if="(row.isStoreReturned || row.isCloudEvaluation) && row.listShowPhotoList.length"
+                >
                   <template v-for="(photoItem, photoIndex) in row.listShowPhotoList">
                     <div class="photo-chunk" :key="photoIndex">
                       <photo-box
@@ -162,7 +165,11 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="isCloudEvaluation" label="云学院抽查" width="100" />
+          <el-table-column label="云学院抽查" width="100">
+            <template slot-scope="{ row }">
+              <div :class="row.isCloudEvaluation && 'spot-class'">{{ row.isCloudEvaluation ? '是' : '否' }}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="门店评价" width="120">
             <template slot-scope="{ row }">
               <div class="table-detail-box">
@@ -467,6 +474,10 @@ export default {
   color: @blue;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.spot-class {
+  color: @green;
 }
 </style>
 
