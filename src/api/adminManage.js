@@ -242,14 +242,17 @@ export function getOrderInfoForCloud (params) {
   }).then(msg => {
     const storeName = _.get(msg, 'store_info.name') || '-'
     const retouchType = _.get(msg, 'store_info.store_type') || '-'
+
     const orderList = msg.order_info.map(listItem => {
-      let productArr = []
-      listItem.sub_orders.forEach(subOrderItem => {
-        const productItems = _.get(subOrderItem, 'items') || []
-        productArr = [...productArr, ...productItems]
+      const productArr = listItem.order_sale
+      
+      let productInfo = productArr.map(item => {
+        const productName = _.get(item, 'sale_extend.product_name') || ''
+        return productName
       })
-      let productInfo = productArr.map(item => item.product_name)
+
       productInfo = productInfo.join('，')
+
       return {
         orderNo: listItem.order_no,
         userName: listItem.user_name,
