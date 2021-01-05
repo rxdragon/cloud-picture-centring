@@ -12,56 +12,78 @@
       class="history-main table-box"
       :class="{'no-border': activeName === SEARCH_TYPE.NORMAL }"
     >
-      <div class="search-box">
+      <!-- 搜索内容 -->
+      <el-row class="search-box">
         <!-- 修图完成时间 -->
-        <div class="date-search search-item">
-          <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成时间' : '退单时间' }}</span>
-          <date-picker v-model="timeSpan" />
-        </div>
+        <el-col :span="8" :xl="6">
+          <div class="date-search search-item">
+            <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成时间' : '退单时间' }}</span>
+            <date-picker v-model="timeSpan" />
+          </div>
+        </el-col>
         <!-- 流水号 -->
-        <div class="stream-search search-item">
-          <span>流水号</span>
-          <el-input
-            @keyup.native.enter="searchList(1)"
-            v-model="streamNum"
-            clearable
-            placeholder="请输入流水号"
-          />
-        </div>
+        <el-col :span="8" :xl="6">
+          <div class="stream-search search-item">
+            <span>流水号</span>
+            <el-input
+              @keyup.native.enter="searchList(1)"
+              v-model="streamNum"
+              clearable
+              placeholder="请输入流水号"
+            />
+          </div>
+        </el-col>
         <!-- 门店退回 -->
-        <div class="audit-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
-          <span>门店退回</span>
-          <return-select v-model="isReturn" />
-        </div>
+        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <div class="audit-box search-item">
+            <span>门店退回</span>
+            <return-select v-model="isReturn" />
+          </div>
+        </el-col>
         <!-- 门店评价 -->
-        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
-          <span>门店评价</span>
-          <evaluate-select v-model="isGood" />
-        </div>
+        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <div class="spot-check-box search-item">
+            <span>门店评价</span>
+            <evaluate-select v-model="isGood" />
+          </div>
+        </el-col>
         <!-- 退单类型 -->
-        <div class="audit-box search-item">
-          <span>退单类型</span>
-          <quality-select v-model="returnType" />
-        </div>
-        <!-- 是否云学院抽查 -->
-        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
-          <span>云学院抽查</span>
-          <cloud-spot v-model="cloudSpot" clearable />
-        </div>
-        <div class="spot-check-box search-item" v-show="activeName === SEARCH_TYPE.NORMAL">
-          <span>云学院抽查类型</span>
-          <cloud-spot-grass-select v-model="cloudEvaluateType" clearable />
-        </div>
+        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 6" :xl="6">
+          <div class="audit-box search-item">
+            <span>退单类型</span>
+            <quality-select v-model="returnType" />
+          </div>
+        </el-col>
+        <!-- 云学院抽查类型 -->
+        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <div class="spot-check-box search-item">
+            <span>抽查类型</span>
+            <cloud-spot-grass-select v-model="cloudEvaluateType" clearable />
+          </div>
+        </el-col>
         <!-- 云学院问题标签 -->
-        <!-- v-if 兼容设置失败问题 -->
-        <div class="cloud-issue-box search-item" v-if="activeName === SEARCH_TYPE.NORMAL">
-          <span>问题标签</span>
-          <issue-label-select ref="issueLabelSelect" v-model="issueValue" />
-        </div>
-        <div class="search-button-box search-item">
-          <el-button type="primary" @click="searchList(1)">查询</el-button>
-        </div>
-      </div>
+        <el-col :span="8" :xl="6" v-if="activeName === SEARCH_TYPE.NORMAL">
+          <div class="cloud-issue-box search-item">
+            <span>问题标签</span>
+            <issue-label-select ref="issueLabelSelect" v-model="issueValue" />
+          </div>
+        </el-col>
+        <!-- 是否云学院抽查 -->
+        <el-col :span="8" :xl="4" v-show="activeName === SEARCH_TYPE.NORMAL">
+          <div class="spot-check-box search-item">
+            <span>云学院抽查</span>
+            <cloud-spot v-model="cloudSpot" clearable />
+          </div>
+        </el-col>
+        <!-- 查询按钮 -->
+        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 2" :xl="2">
+          <div class="search-button-box search-item">
+            <el-button type="primary" @click="searchList(1)">查询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+      
+      <!-- 表格内容 -->
       <div class="table-module">
         <el-table :data="tableData" style="width: 100%;" @expand-change="onTableRowChange">
           <el-table-column type="expand" fixed="left">
@@ -113,13 +135,14 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="接单时间" width="150">
+          <el-table-column label="接单时间" min-width="70">
             <template slot-scope="scope">
+              <span class="time-block"></span>
               {{ scope.row.receiptAt | toTimeSpan }}
             </template>
           </el-table-column>
           <el-table-column prop="retouchAllTime" label="修图总时长" width="100" />
-          <el-table-column label="海草值（颗）">
+          <el-table-column label="海草值(颗)">
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
@@ -135,7 +158,7 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="实际收益（元）">
+          <el-table-column label="实际收益(元)">
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
@@ -423,12 +446,35 @@ export default {
       flex-wrap: wrap;
 
       .search-item {
-        margin-right: 26px;
+        margin-right: 0;
         margin-bottom: 20px;
+
+        & span {
+          display: inline-block;
+          flex-shrink: 0;
+          width: 98px;
+          text-align: right;
+        }
+
+        & /deep/ .el-range-editor.el-input__inner {
+          width: 100% !important;
+        }
+
+        & /deep/ .date-picker,
+        & /deep/ .issue-label-select,
+        & /deep/ .evaluate-select,
+        & /deep/ .cloud-spot-grass-select,
+        & /deep/ .quality-select,
+        & /deep/ .el-select,
+        & /deep/ .return-select,
+        & /deep/ .cloud-spot,
+        & /deep/ .el-cascader {
+          width: 100%;
+        }
       }
 
       .search-button-box {
-        margin-right: 0;
+        justify-content: flex-end;
       }
     }
 
@@ -439,12 +485,6 @@ export default {
         &::-webkit-scrollbar {
           height: 8px;
         }
-      }
-    }
-
-    .stream-search {
-      span {
-        width: 60px;
       }
     }
 
