@@ -112,9 +112,7 @@ export function appealDetail (params, source) {
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
 
           // 如果是完结状态的申诉详情,需要用appealResult替换掉退回的version的tag,展示本次申诉的结果
-          if (isCurrentStoreRework && isFinished) {
-            versionItem.tags.values = appealResult
-          }
+          if (isCurrentStoreRework && isFinished) versionItem.tags.values = appealResult
           if (!isStoreRework || isCurrentStoreRework ) finalVersion.push(versionItem)
           return finalVersion
         }, [])

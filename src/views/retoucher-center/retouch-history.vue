@@ -97,10 +97,11 @@
                     <div class="photo-chunk" :key="photoIndex">
                       <photo-box
                         :tags="photoItem.baseData.tags"
-                        contain-photo
                         :src="photoItem.completePhoto.path"
+                        :return-quality-type="photoItem.returnQualityType"
                         :show-special-effects="false"
                         :show-store-part-rework-reason="false"
+                        contain-photo
                         show-label-info
                       />
                     </div>

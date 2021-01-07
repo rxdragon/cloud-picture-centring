@@ -2,13 +2,26 @@
   <div class="photo-detail">
     <!-- 图片列表 -->
     <div v-if="!checkType" class="normal-photo-list">
-      <div class="normal-photo-item" v-for="(photo, photoIndex) in photoVersionList" :key="photoIndex">
-        <el-image fit="cover" :src="imgCompressDomain + photo.path" />
-        <div class="normal-photo-name">
-          <span>{{ photo.version | toPhotoVerName }}</span>
-        </div>
+      <div
+        class="normal-photo-item"
+        v-for="(photoItem, photoIndex) in photoVersionList"
+        :key="photoIndex"
+      >
+        <photo-box
+          :src="photoItem.path"
+          :show-store-part-rework-reason="false"
+          :showSpecialEffects="false"
+          downing
+          contain-photo
+          show-label-info
+        >
+          <template v-slot:title>
+            <span class="lable-title">{{ photoItem.version | toPhotoVerName }}{{ photoItem.storeReturnCount || '' }}</span>
+          </template>
+        </photo-box>
       </div>
     </div>
+
     <photo-list
       v-else
       need-preload
@@ -207,6 +220,7 @@
 import PhotoList from '@/components/PhotoList'
 import PreviewPhoto from './PreviewPhoto/index.vue'
 import PreviewModel from '@/model/PreviewModel'
+import PhotoBox from '@/components/PhotoBox'
 
 import { mapGetters } from 'vuex'
 
@@ -214,7 +228,7 @@ import { APPEAL_RESULT_STATUS, PHOTO_VERSION, AppealResultStatusPhotoEnum, APPEA
 
 export default {
   name: 'PhotoDetail',
-  components: { PhotoList, PreviewPhoto },
+  components: { PhotoList, PreviewPhoto, PhotoBox },
   props: {
     photoItem: { type: Object, required: true },
     appealInfo: { type: Object, required: true },
@@ -396,14 +410,17 @@ export default {
 
   .normal-photo-list {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    margin-right: -24px;
+    margin-bottom: -24px;
 
     .normal-photo-item {
       box-sizing: border-box;
-      width: 254px;
-      height: 290px;
+      width: 253px;
       padding: 6px;
       margin-right: 24px;
+      margin-bottom: 24px;
       background-color: #f5f7fa;
       border-radius: 4px;
     }

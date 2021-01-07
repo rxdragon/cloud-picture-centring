@@ -39,7 +39,12 @@
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select needAll isMulti v-model="appealType" />
+          <appeal-type-select
+            needAll
+            clearable
+            isMulti
+            v-model="appealType"
+          />
         </div>
         <!-- 摄影机构 -->
         <div class="search-item">

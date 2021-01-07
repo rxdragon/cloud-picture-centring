@@ -72,25 +72,39 @@ export default class PreviewModel {
     })
     this.storePartReworkReason = storePartReworkReason
 
-    const originReturnLabels = _.get(photoItem, 'tags.values.origin_return_labels.labels')
+    const originReturnLabels = _.get(photoItem, 'tags.values.origin_return_labels')
     if (originReturnLabels) {
-      const storeReworkReason = originReturnLabels || ''
-      this.storeReworkReason = storeReworkReason.map(reasonItem => reasonItem.name)
-      storeReworkReason.forEach(reasonItem => {
-        const reasonObj = {
-          id: reasonItem.id,
-          name: reasonItem.name,
-          cancel: false,
-          isDel: reasonItem.is_del
-        }
-        if (reasonItem.is_del) {
-          reasonObj.cancel = true
-        }
-        this.storeReworkReasonManage.push(reasonObj)
-      })
       // 整体备注
       this.storeReworkNote = _.get(photoItem, 'tags.values.origin_return_labels.store_rework_note') || '-'
 
+      // 整体退单标记
+      const originReturnLabelsLabels = originReturnLabels.labels
+      if (!originReturnLabelsLabels) {
+        const storeReworkReason = originReturnLabels.store_rework_reason
+        this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []
+        this.storeReworkReason.forEach(storeReworkReasonItem => {
+          const reasonObj = {
+            name: storeReworkReasonItem,
+            cancel: false
+          }
+          this.storeReworkReasonManage.push(reasonObj)
+        })
+      } else {
+        const storeReworkReason = originReturnLabels || ''
+        this.storeReworkReason = storeReworkReason.map(reasonItem => reasonItem.name)
+        storeReworkReason.forEach(reasonItem => {
+          const reasonObj = {
+            id: reasonItem.id,
+            name: reasonItem.name,
+            cancel: false,
+            isDel: reasonItem.is_del
+          }
+          if (reasonItem.is_del) {
+            reasonObj.cancel = true
+          }
+          this.storeReworkReasonManage.push(reasonObj)
+        })
+      }
     } else {
       const storeReworkReason = _.get(photoItem, 'tags.values.store_rework_reason') || ''
       this.storeReworkReason = storeReworkReason ? storeReworkReason.split('+') : []

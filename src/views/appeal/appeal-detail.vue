@@ -21,6 +21,7 @@
         :photo-info="photoInfo"
       />
     </div>
+    <!-- 申诉结果 -->
     <div
       class="module-panel"
       v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT && !checkType"
@@ -58,6 +59,7 @@
         </div>
       </div>
     </div>
+    <!-- 提交 -->
     <div
       class="footer"
       v-if="checkType && appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
@@ -65,6 +67,7 @@
       <el-button type="info" @click="cancelAll">返回</el-button>
       <el-button type="primary" @click="submitAll">提交</el-button>
     </div>
+    <!-- 审核 -->
     <div
       class="footer"
       v-if="checkType && appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
@@ -75,7 +78,7 @@
         <el-button type="primary" @click="acceptAppeal">审核通过</el-button>
       </div>
     </div>
-    <!-- timeout-dialog -->
+    <!-- 审核拒绝-dialog -->
     <el-dialog
       title="审核拒绝"
       class="alter-performance-dialog"
@@ -305,6 +308,10 @@ export default {
     .special-efficacy {
       font-weight: 400;
       color: @red;
+    }
+
+    .panel-title {
+      margin-bottom: 20px;
     }
   }
 

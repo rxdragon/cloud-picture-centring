@@ -30,13 +30,13 @@
       <div v-if="isLekima" class="lekima-tag">利奇马</div>
       <div class="photo-tags" v-if="showLabelInfo">
         <div
-          v-if="storeReturnQualityType === QUALITY_TYPE.QUALITY || storeReturnQualityType === QUALITY_TYPE.BOTH"
+          v-if="returnStoreQualityType === QUALITY_TYPE.QUALITY || returnStoreQualityType === QUALITY_TYPE.BOTH"
           class="tag warning-tag"
         >
           门店质量问题
         </div>
         <div
-          v-if="storeReturnQualityType === QUALITY_TYPE.NOT_QUALITY || storeReturnQualityType === QUALITY_TYPE.BOTH"
+          v-if="returnStoreQualityType === QUALITY_TYPE.NOT_QUALITY || returnStoreQualityType === QUALITY_TYPE.BOTH"
           class="tag blue-tag"
         >
           门店非质量问题
@@ -146,7 +146,8 @@ export default {
     rename: { type: [String, Number], default: '' }, // 重命名
     showSpecialEffects: { type: Boolean, default: true }, // 是否显示特效
     showStorePartReworkReason: { type: Boolean, default: true },
-    showLabelInfo: { type: Boolean } // 显示标记信息
+    showLabelInfo: { type: Boolean }, // 显示标记信息
+    returnQualityType: { type: String } // 被退回标记
   },
   data () {
     return {
@@ -191,6 +192,10 @@ export default {
     storeReturnQualityType () {
       const qualityType = _.get(this.tags, 'values.store_rework_type') || ''
       return qualityType
+    },
+    // 门店被退类型
+    returnStoreQualityType () {
+      return this.returnQualityType
     },
     // 云学院评价类型
     cloudEvaluatorType () {
@@ -531,6 +536,13 @@ export default {
     font-weight: 400;
     line-height: 17px;
     color: @red;
+  }
+
+  .lable-title {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #606266;
   }
 }
 
