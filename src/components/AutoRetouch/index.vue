@@ -1,23 +1,16 @@
 <template>
   <div class="auto-retouch">
+    <!-- 照片列表区 -->
+    <photo-map :listWidth="listWidth">
+      <div class="test" v-for="item in 8" :key="item">{{ item }}</div>
+    </photo-map>
+
     <div class="content-box">
       <div class="content-title">
         自动修图 {{ activeIndex + 1 }} / {{ photoPreviewList.length }}
         <i @click="guideInfo" class="info-tool el-icon-info"></i>
       </div>
       <div class="auto-retouch-img-box" v-loading="loading">
-        <i
-          id="guideleft"
-          class="el-icon-arrow-left img-switch"
-          v-if="!isSingle"
-          @click="prePhoto"
-        />
-        <i
-          id="guideright"
-          class="el-icon-arrow-right img-switch"
-          v-if="!isSingle"
-          @click="nextPhoto"
-        />
         <img
           alt="暂无图片"
           :src="showImage"
@@ -70,6 +63,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { PHOTO_FLAG } from '@/utils/enumerate.js'
+import PhotoMap from './PhotoMap'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import uuidv4 from 'uuid'
 import Driver from 'driver.js' // 引导框
@@ -81,6 +75,7 @@ import * as AutoLog from '@/views/retoucher-center/autoLog.js'
 
 export default {
   name: "AutoRetouch",
+  components: { PhotoMap },
   props: {
     photoList: { type: Array, default: () => [] },
     streamNum: { type: String, default: '' }
@@ -88,6 +83,7 @@ export default {
   data () {
     return {
       PHOTO_FLAG,
+      listWidth: 224,
       photoPreviewList: [],
       funList: [
         {
@@ -124,6 +120,8 @@ export default {
     ...mapGetters(['imgDomain', 'autoBuffingA', 'autoBuffingB']),
     // 显示磨皮按钮
     showBufferBtn () {
+      // TODO 调试
+      return true
       return this.autoBuffingA || this.autoBuffingB
     },
     isSingle () {
@@ -374,7 +372,7 @@ export default {
         rename
       }
       DownIpc.addDownloadFile(data, rename)
-    }
+    },
   }
 }
 </script>
@@ -394,9 +392,14 @@ export default {
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.8);
 
+  .test {
+    color: @red;
+  }
+
   .content-box {
     width: calc(100vw - 240px);
     height: 100%;
+    transition: all 0.3s;
 
     .content-title {
       height: 40px;
@@ -456,6 +459,7 @@ export default {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     width: 240px;
     height: 100%;
     border-left: 1px solid #8a8a8a;
