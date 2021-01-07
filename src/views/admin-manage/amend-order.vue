@@ -289,7 +289,9 @@ export default {
      * @description 打开修复人数弹窗
      */
     showFixPeopleDialog (streamInfo) {
-      this.selectStreamPhotos = streamInfo.photos.filter(photoItem => !photoItem.isDelete)
+      this.selectStreamPhotos = streamInfo.photos.filter(photoItem => {
+        return !photoItem.isDelete && photoItem.type !== PHOTO_TYPE.TEMPLATE_TYPE
+      })
       this.batchFixVisible = true
     },
     /**

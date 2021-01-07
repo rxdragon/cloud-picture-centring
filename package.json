@@ -15,6 +15,7 @@
     "ebuild": "vue-cli-service electron:build",
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "eserve-dev": "vue-cli-service electron:serve --mode development",
+    "eserve-pre": "vue-cli-service electron:serve --mode pre",
     "eserve-release": "vue-cli-service electron:serve --mode release",
     "log": "conventional-changelog --config ./node_modules/vue-cli-plugin-commitlint/lib/log -i CHANGELOG.md -s -r 0",
     "new": "plop",
