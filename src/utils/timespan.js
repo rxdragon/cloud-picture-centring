@@ -43,10 +43,10 @@ export function getNowDate () {
 /**
  * @description 获取现在时间
  */
-export function delayLoading () {
+export function delayLoading (time = 300) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve()
-    }, 300)
+    }, time)
   })
 }

@@ -2,24 +2,43 @@
   <div class="auto-retouch">
     <!-- 照片列表区 -->
     <photo-map :listWidth="listWidth">
-      <div class="test" v-for="item in 8" :key="item">{{ item }}</div>
+      <div class="map-content">
+        <div
+          v-for="(photoItem, photoIndex) in photoPreviewList"
+          :key="photoIndex"
+          class="photo-module"
+        >
+          <photo-box
+            v-if="photoItem"
+            :src="photoItem.showPath"
+            :showSpecialEffects="false"
+            :class="photoItem.activate && 'photo-box-active'"
+            @click.native="selectPhoto(photoIndex)"
+            class="photo-box"
+          />
+          <div class="photo-index">{{ photoIndex + 1 }} / {{ photoPreviewList.length }}</div>
+        </div>
+      </div>
     </photo-map>
 
     <div class="content-box">
-      <div class="content-title">
+      <auto-image :autoImageInfo="activePhoto" />
+      <!-- <div class="content-title">
         自动修图 {{ activeIndex + 1 }} / {{ photoPreviewList.length }}
         <i @click="guideInfo" class="info-tool el-icon-info"></i>
-      </div>
-      <div class="auto-retouch-img-box" v-loading="loading">
+      </div> -->
+      <!-- <div class="auto-retouch-img-box" v-loading="loading">
         <img
           alt="暂无图片"
           :src="showImage"
           class="content-img"
           @load="onImageLoaded"
         />
-      </div>
+      </div> -->
     </div>
-    <div class="fun-box">
+    <!-- 操作 -->
+    <operation-box class="operation-module" :handleSwtich="activePhoto.handleSwtich" />
+    <!-- <div class="fun-box">
       <div class="close-box">
         <i id="guideclose" class="el-icon-circle-close" @click="closeAutoRetouch" />
       </div>
@@ -34,7 +53,6 @@
           >
             {{ activePhoto[funItem.value] === 'error' ? `${funItem.name}失败` : funItem.name }}
           </el-button>
-          <!-- 磨皮按钮 -->
           <template v-if="(funItem.value === PHOTO_FLAG.CROP || funItem.value === PHOTO_FLAG.WARP) && showBufferBtn">
             <template
               v-for="(childrenItem, childrenIndex) in funItem.childrenFun"
@@ -56,7 +74,7 @@
       <div id="guidedown" class="back-box">
         <el-button type="info" @click="downloadPhoto" :disabled="loading">下载照片</el-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -64,18 +82,21 @@
 import { mapGetters } from 'vuex'
 import { PHOTO_FLAG } from '@/utils/enumerate.js'
 import PhotoMap from './PhotoMap'
-import DownIpc from '@electronMain/ipc/DownIpc'
-import uuidv4 from 'uuid'
-import Driver from 'driver.js' // 引导框
-import guideData from './guideData.js' // 引导内容
+import OperationBox from './OperationBox'
+import AutoImage from './AutoImage'
+import PhotoBox from '@/components/PhotoBox'
+import Vue from 'vue'
 
-import * as AutoRetouch from '@/api/autoRetouch'
+import DownIpc from '@electronMain/ipc/DownIpc'
+
+
+import { OperationBit, OPERATION_TYPE, AutoRetouchModel, changeToCompress } from '@/api/autoRetouch'
 import * as PhotoTool from '@/utils/photoTool'
 import * as AutoLog from '@/views/retoucher-center/autoLog.js'
 
 export default {
   name: "AutoRetouch",
-  components: { PhotoMap },
+  components: { PhotoMap, OperationBox, PhotoBox, AutoImage },
   props: {
     photoList: { type: Array, default: () => [] },
     streamNum: { type: String, default: '' }
@@ -85,6 +106,7 @@ export default {
       PHOTO_FLAG,
       listWidth: 224,
       photoPreviewList: [],
+
       funList: [
         {
           name: '原图',
@@ -118,239 +140,46 @@ export default {
   },
   computed: {
     ...mapGetters(['imgDomain', 'autoBuffingA', 'autoBuffingB']),
-    // 显示磨皮按钮
-    showBufferBtn () {
-      // TODO 调试
-      return true
-      return this.autoBuffingA || this.autoBuffingB
-    },
-    isSingle () {
-      return this.photoList.length === 1
-    },
-    // 当前激活图片
+    // 当前激活照片
     activePhoto () {
-      return this.photoPreviewList[this.activeIndex] || {}
-    },
-    // 展示图片
-    showImage () {
-      if (!this.activePhoto) return ''
-      return this.activePhoto[this.activePhoto.activeModel]
+      const findActivePhoto = this.photoPreviewList.find(item => _.get(item, 'activate'))
+      return findActivePhoto || {}
     }
   },
   watch: {
-    activeIndex: {
-      handler () {
-        this.loading = true
-      }
-    },
     photoList: {
       handler () {
         this.handlePhotoList()
-        this.beforehandLoadPhoto()
+        // this.beforehandLoadPhoto()
       },
       immediate: true
     }
-  },
-  created () {
-    this.guideInstall()
-  },
-  mounted () {
-    this.deviceSupportInstall()
-  },
-  beforeDestroy () {
-    this.deviceSupportUninstall()
   },
   methods: {
     /**
      * @description 处理图片列表
      */
-    handlePhotoList () {
-      this.photoPreviewList = []
-      this.photoList.forEach(photoUrl => {
-        const createPhoto = {
-          uuid: uuidv4(),
-          activeModel: PHOTO_FLAG.ORIGINAL,
-          path: photoUrl,
-          [PHOTO_FLAG.ORIGINAL]: this.imgDomain + photoUrl,
-          [PHOTO_FLAG.CROP]: '',
-          [PHOTO_FLAG.WARP]: '',
-          [PHOTO_FLAG.CROP_BUFFING]: '',
-          [PHOTO_FLAG.WARP_BUFFING]: ''
+    async handlePhotoList () {
+      const photoPreviewList = Vue.observable([])
+      this.photoPreviewList = photoPreviewList
+      this.photoList.forEach(async (photoUrl, photoIndex) => {
+        const autoRetouchModel = new AutoRetouchModel(photoUrl)
+        await autoRetouchModel.getAutoList()
+        autoRetouchModel.showPath = changeToCompress(autoRetouchModel.autoFixPhotoList[OperationBit[OPERATION_TYPE.CROP]])
+        if (photoIndex === 0) {
+          autoRetouchModel.activate = true
         }
-        this.photoPreviewList.push(createPhoto)
+        this.$set(photoPreviewList, photoIndex, autoRetouchModel)
       })
     },
     /**
-     * @description 上一张
+     * @description 选中照片
      */
-    prePhoto () {
-      const len = this.photoPreviewList.length
-      this.activeIndex = (this.activeIndex - 1 + len) % len
-    },
-    /**
-     * @description 下一张
-     */
-    nextPhoto () {
-      const len = this.photoPreviewList.length
-      this.activeIndex = (this.activeIndex + 1) % len
-    },
-    /**
-     * @description 激活模式
-     */
-    changeActiveModel (model) {
-      const activePhoto = this.photoPreviewList[this.activeIndex]
-      if (!activePhoto) return
-      if (!activePhoto[model] || activePhoto[model] === 'error') return
-      this.loading = true
-      activePhoto.activeModel = model
-    },
-    /**
-     * @description 上一个模式
-     */
-    preMode () {
-      const allFunList = this.funList.reduce((accumulator, currentValue) => {
-        if (currentValue.childrenFun && this.showBufferBtn) return [...accumulator, currentValue, ...currentValue.childrenFun]
-        return [...accumulator, currentValue]
-      }, [])
-      const modeIndex = allFunList.findIndex(modelItem => modelItem.value === this.activePhoto.activeModel)
-      const len = allFunList.length
-      const preIndex = (modeIndex - 1 + len) % len
-      const preModeType = allFunList[preIndex].value
-      this.changeActiveModel(preModeType)
-    },
-    /**
-     * @description 下一个模式
-     */
-    nextMode () {
-      const allFunList = this.funList.reduce((accumulator, currentValue) => {
-        if (currentValue.childrenFun && this.showBufferBtn) return [...accumulator, currentValue, ...currentValue.childrenFun]
-        return [...accumulator, currentValue]
-      }, [])
-      const modeIndex = allFunList.findIndex(modelItem => modelItem.value === this.activePhoto.activeModel)
-      const len = allFunList.length
-      const nextIndex = (modeIndex + 1) % len
-      const nextModeType = allFunList[nextIndex].value
-      this.changeActiveModel(nextModeType)
-    },
-    /**
-     * @description 预处理图片液化-裁切图
-     */
-    async beforehandLoadPhoto () {
-      const handleList = this.photoPreviewList
-      handleList.forEach(async photoItem => {
-        const baseUrl = photoItem.path
-        this.getImageAutoProcess(baseUrl, PHOTO_FLAG.WARP)
-          .then(data => {
-            photoItem[PHOTO_FLAG.CROP] = data[PHOTO_FLAG.CROP]
-            photoItem[PHOTO_FLAG.WARP] = data[PHOTO_FLAG.WARP]
-          })
-        if (this.showBufferBtn) {
-          this.getImageAutoBuffing(baseUrl)
-            .then(buffData => {
-              photoItem[PHOTO_FLAG.CROP_BUFFING] = buffData[PHOTO_FLAG.CROP_BUFFING]
-              photoItem[PHOTO_FLAG.WARP_BUFFING] = buffData[PHOTO_FLAG.WARP_BUFFING]
-            })
-        }
+    selectPhoto (photoIndex) {
+      this.photoPreviewList.forEach(item => {
+        item.activate = false
       })
-    },
-    /**
-     * @description 获取自动修图
-     */
-    getImageAutoProcess (url, model) {
-      const req = {
-        url,
-        process_flag: model
-      }
-      return AutoRetouch.getImageAutoProcess(req)
-    },
-    /**
-     * @description 获取自动磨皮接口
-     */
-    getImageAutoBuffing (url) {
-      const req = {
-        url,
-        process_flag: 'retouch',
-        retouch_flag: this.autoBuffingA ? 'A' : 'B'
-      }
-
-      return AutoRetouch.getImageAutoBuffing(req)
-    },
-    /**
-     * @description 注册监听事件
-     */
-    deviceSupportInstall () {
-      document.onkeydown = e => {
-        if (!this.$parent._data.showAutoRetouch) return
-        const key = window.event.keyCode
-        switch (key) {
-          // 左右键图片切换
-          case 37:
-          case 65:
-            if (this.isSingle) return
-            this.prePhoto()
-            break
-          case 39:
-          case 68:
-            if (this.isSingle) return
-            this.nextPhoto()
-            break
-          case 38:
-          case 87:
-            this.preMode()
-            break
-          case 83:
-          case 40:
-            this.nextMode()
-            break
-          case 27:
-            this.closeAutoRetouch()
-            break
-          case 88:
-            this.downloadPhoto()
-            break
-          default:
-            break
-        }
-      }
-    },
-    /**
-     * @description 取消订单注册
-     */
-    deviceSupportUninstall () {
-      document.onkeydown = null
-    },
-    /**
-     * @description 图片加载成功
-     */
-    onImageLoaded () {
-      this.loading = false
-    },
-    /**
-     * @description 关闭页面
-     */
-    closeAutoRetouch () {
-      this.$emit('closeAutoRetouch', false)
-    },
-    /**
-     * @description 注册引导插件
-     */
-    guideInstall () {
-      this.driver = new Driver({
-        nextBtnText: '下一个',
-        prevBtnText: '上一个',
-        doneBtnText: '完成',
-        closeBtnText: '关闭',
-        animate: true
-      })
-    },
-    /**
-     * @description 注册事件
-     */
-    guideInfo () {
-      this.driver.defineSteps(guideData)
-      setTimeout(() => {
-        this.driver.start()
-      }, 100)
+      this.photoPreviewList[photoIndex].activate = true
     },
     /**
      * @description 下载图片
@@ -379,6 +208,7 @@ export default {
 
 <style lang="less" scoped>
 @navtop: 42px;
+@operationWidth: 240px;
 
 .auto-retouch {
   position: fixed;
@@ -392,8 +222,29 @@ export default {
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.8);
 
-  .test {
-    color: @red;
+  .map-content {
+    padding: 20px 20px 0 20px;
+
+    .photo-module {
+      margin: 0 0 20px 0;
+      border-bottom: 1px solid #ebeef530;
+
+      .photo-index {
+        padding: 8px 0 12px 0;
+        font-size: 14px;
+        color: #fff;
+      }
+
+      .photo-box {
+        cursor: pointer;
+        border: 4px solid transparent;
+        transition: all 0.3s;
+      }
+
+      .photo-box-active {
+        border: 4px solid @blue;
+      }
+    }
   }
 
   .content-box {
@@ -453,6 +304,14 @@ export default {
         max-height: 100%;
       }
     }
+  }
+
+  .operation-module {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: @operationWidth;
+    height: 100%;
+    background: #535353;
   }
 
   .fun-box {

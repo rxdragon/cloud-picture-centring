@@ -311,12 +311,9 @@ export default {
         const reqData = { id: data.id }
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Retoucher.useProp(reqData)
-        this.$store.dispatch('setting/showLoading', this.routeName)
         this.getProps()
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     }
   }

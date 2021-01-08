@@ -29,7 +29,7 @@
             y="-3.1%"
             filterUnits="objectBoundingBox"
           ><feOffset dy="5" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset><feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"></feGaussianBlur><feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"></feColorMatrix><feMerge><feMergeNode in="shadowMatrixOuter1"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
-          </filter></defs><g fill="#FFF" filter="url(#svg167130974__filter-1)" transform="translate(-213 -418)"><path d="M0 1h224v952H0z"></path><path d="M207 0h16v414.328a11.55 11.55 0 007 10.615 11.55 11.55 0 017 10.616v46.882a11.55 11.55 0 01-7 10.616 11.55 11.55 0 00-7 10.615V953h-16V0z"></path></g>
+          </filter></defs><g fill="#535353" filter="url(#svg167130974__filter-1)" transform="translate(-213 -418)"><path d="M0 1h224v952H0z"></path><path d="M207 0h16v414.328a11.55 11.55 0 007 10.615 11.55 11.55 0 017 10.616v46.882a11.55 11.55 0 01-7 10.616 11.55 11.55 0 00-7 10.615V953h-16V0z"></path></g>
           </svg>
         </span>
       </div>
@@ -81,7 +81,7 @@ export default {
     z-index: 1;
     width: var(--constListWidth);
     height: 100%;
-    background-color: #fff;
+    background-color: #535353;
     transition: all 0.3s;
 
     .flexible-button {
