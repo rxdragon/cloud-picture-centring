@@ -87,7 +87,23 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
  * @description 过滤照片版本
  * @param photoVersion
  */
-export function settlePhotoVersion (photoVersion) {
+export function settlePhotoVersion (oldPhotoVersion) {
+  let idList = oldPhotoVersion.map(item => item.id)
+  idList = [...new Set(idList)]
+  const idListMap = {}
+  idList.forEach(idItem => {
+    idListMap[idItem] = true
+  })
+  const photoVersion = []
+
+  oldPhotoVersion.forEach(item => {
+    if (idListMap[item.id]) {
+      photoVersion.push(item)
+      delete idListMap[item.id]
+    }
+  })
+
+
   const photoVersionArr = [
     PHOTO_VERSION.ORIGINAL_PHOTO,
     PHOTO_VERSION.FIRST_PHOTO,
