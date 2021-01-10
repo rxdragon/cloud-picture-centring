@@ -200,8 +200,13 @@ export function getStaffReturnChartInfo (params) {
     data: params
   }).then(msg => {
     const createData = msg.map(retoucherItem => {
-      // 修图总数
-      const retoucherFinishPhotoNum = retoucherItem.retoucherFinishPhotoNum
+      // 修图总张数
+      const sumFinishPhotoNumFun = MathUtil.summation()
+      sumFinishPhotoNumFun(retoucherItem.retoucherFinishPhotoNum || 0)
+      sumFinishPhotoNumFun(retoucherItem.finishPhotoNumForBoth || 0)
+      sumFinishPhotoNumFun(retoucherItem.finishPhotoNumForNotQuality || 0)
+      sumFinishPhotoNumFun(retoucherItem.finishPhotoNumForQuality || 0)
+      const retoucherFinishPhotoNum = sumFinishPhotoNumFun.toResult()
 
       const orderSumFun = MathUtil.summation(retoucherItem.storeReturnStreamNumForNormalQuality)
       orderSumFun(retoucherItem.storeReturnStreamNumForReworkQuality)
@@ -215,6 +220,7 @@ export function getStaffReturnChartInfo (params) {
 
       const orderCount = orderSumFun.toResult()
       const photoCount = photoCountSumFun.toResult()
+
       const returnRate = retoucherFinishPhotoNum
         ? MathUtil.toFixed((photoCount / retoucherFinishPhotoNum * 100), 2)
         : 0
