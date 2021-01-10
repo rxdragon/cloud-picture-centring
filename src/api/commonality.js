@@ -3,7 +3,7 @@ import axios from '@/plugins/axios.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import StreamModel from '@/model/StreamModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
-import { PHOTO_VERSION, GRADE_TYPE } from '@/utils/enumerate'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 /**
  * @description 获取修图类型
@@ -195,7 +195,7 @@ export async function getIssuePhotos (params) {
     return photoInfo
   })
   const issueTag = item => {
-    const hasTag = (item.isStoreReturn || (item.evaluatorType && item.evaluatorType !== GRADE_TYPE.NONE))
+    const hasTag = (item.returnQualityType || item.evaluatorType)
     return item.completePhoto && hasTag
   }
   const hasCompletePhotos = photos.filter(issueTag)
