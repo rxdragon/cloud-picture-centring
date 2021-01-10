@@ -90,7 +90,7 @@ export default class PreviewModel {
           this.storeReworkReasonManage.push(reasonObj)
         })
       } else {
-        const storeReworkReason = originReturnLabels || ''
+        const storeReworkReason = originReturnLabels.labels || ''
         this.storeReworkReason = storeReworkReason.map(reasonItem => reasonItem.name)
         storeReworkReason.forEach(reasonItem => {
           const reasonObj = {
