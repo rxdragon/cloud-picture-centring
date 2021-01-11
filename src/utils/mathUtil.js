@@ -4,11 +4,24 @@
  * @param {Number} point
  */
 export function toFixed (number, point = 2) {
-  const numArr = Number(number).toFixed(point + 1).split('.')
-  // 判断个位大于等于5，加1
-  if (numArr.length > 1 && Number(numArr[1]) % 10 >= 5) numArr[1] = Number(numArr[1]) + 1
-  const parseFloatData = Number(numArr.join('.')).toFixed(point)
-  return parseFloat(parseFloatData)
+  if (isNaN(number)) {
+    number = 0
+  }
+  let result = Number(number).toString()
+  const arr = result.split('.')
+  const integer = arr[0]
+  const decimal = arr[1] || '0'
+  result = integer + '.' + decimal.substr(0, point)
+  const last = decimal.substr(point, 1)
+
+  // 四舍五入，转换为整数再处理，避免浮点数精度的损失
+  if (parseInt(last, 10) >= 5) {
+    const x = Math.pow(10, point)
+    result = ((parseFloat(result) * x) + 1) / x
+    result = result.toFixed(point)
+  }
+
+  return Number(result)
 }
 
 /**
