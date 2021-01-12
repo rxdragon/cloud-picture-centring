@@ -375,10 +375,7 @@ export default {
      */
     defaultGrass () {
       const type = this.productConfig.standard
-      if (!type) {
-        this.$newMessage.warning('请选择修图标准')
-        return false
-      }
+      if (!type) return this.$newMessage.warning('请选择修图标准')
       this.productConfig.grassData = JSON.parse(JSON.stringify(defaultGrass[type + 'Grass']))
     },
     /**
@@ -386,10 +383,7 @@ export default {
      */
     defaultJoinGrass () {
       const type = this.productConfig.standard
-      if (!type) {
-        this.$newMessage.warning('请选择修图标准')
-        return false
-      }
+      if (!type) return this.$newMessage.warning('请选择修图标准')
       this.productConfig.joinGrassData = JSON.parse(JSON.stringify(defaultGrass[type + 'ConcatGrass']))
     },
     /**
@@ -397,10 +391,7 @@ export default {
      */
     defaultNotJointMoney () {
       const type = this.productConfig.standard
-      if (!type) {
-        this.$newMessage.warning('请选择修图标准')
-        return false
-      }
+      if (!type) return this.$newMessage.warning('请选择修图标准')
       if (type === 'blue') {
         this.productConfig.blueNotJointMoney = JSON.parse(JSON.stringify(defaultMoney[type + 'Money']))
       } else {
