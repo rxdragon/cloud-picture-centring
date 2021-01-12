@@ -6,6 +6,7 @@ const request = require('request')
 const exp = express()
 const userDir = global.userDir
 const imageCachePath = path.join(userDir, 'imageCache')
+const baseBackgroundPath = path.join(userDir, 'background_photo')
 const uuidv4 = require('uuid/v4')
 
 const MaxFileCount = 10
@@ -40,6 +41,12 @@ exp.get('/image/*', (req, res, next) => {
   } else {
     res.download(imageLocalPath)
   }
+})
+
+exp.get('/background_photo/*', (req, res, next) => {
+  const imageName = path.basename(req.originalUrl)
+  const imageLocalPath = path.join(baseBackgroundPath, imageName) // 本地
+  res.download(imageLocalPath)
 })
 
 /**

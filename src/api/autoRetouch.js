@@ -65,10 +65,12 @@ export function changeToCompress (url) {
 }
 
 export class AutoRetouchModel {
-  uuid = ''
-  path = ''
-  showPath = ''
-  activate = false
+  uuid = '' // 标示id
+  path = '' // 路径
+  isLoaded = false // 是否加载完毕
+  showPath = '' // 展示图片
+  activate = false // 是否激活
+
   handleSwtich = {
     [OPERATION_TYPE.CROP]: true,
     [OPERATION_TYPE.WARP]: false,
@@ -134,8 +136,12 @@ export class AutoRetouchModel {
     const { canvas, context } = MattingImageClass.createCanvas(canvasWidth, canvasHeight)
     const mattingImage = await MattingImageClass.drawImage(canvas, context)
     // TODO mattingImage
-    const compoundImage = await MattingImageClass.addBackground(canvas, context, mattingImage)
-    return compoundImage
+    // backgroundImage
+    // const compoundImage = await MattingImageClass.addBackground(canvas, context, mattingImage)
+    return async (backgroundImage) => {
+      const compoundImage = await MattingImageClass.addBackground(canvas, context, mattingImage, backgroundImage)
+      return compoundImage
+    }
   }
 }
 
@@ -155,6 +161,7 @@ export async function getImageAutoProcess (params) {
   //   method: 'POST',
   //   data: params
   // })
+
   const res = {
     code: 1,
     msg: "UploadRegulator cwm_compress successfully, result is: 	https://cloud-dev.cdn-qn.hzmantu.com/algo/2020/06/17/lkLb5AfrSqhmamZTsZ_XqzFDnSdv_cwm_compress.png",
@@ -174,6 +181,7 @@ export async function getImageAutoProcess (params) {
     },
     success: true
   }
+
   if (res.code === 1) {
     return res.result
   } else {

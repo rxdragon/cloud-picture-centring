@@ -157,7 +157,6 @@
       v-show="showAutoRetouch"
       :photo-list="autoRetouchPhoto"
       :stream-num="orderData.streamNum"
-      @closeAutoRetouch="switchAutoRetouch"
     />
   </div>
 </template>
@@ -255,6 +254,7 @@ export default {
     if (!this.retouchId) {
       this.$emit('update:showDetail', false)
     }
+    this.$bus.$on('autoretouch-close', this.switchAutoRetouch.bind(false))
   },
   methods: {
     /**

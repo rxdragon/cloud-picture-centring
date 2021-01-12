@@ -3,78 +3,32 @@
     <!-- 照片列表区 -->
     <photo-map :listWidth="listWidth">
       <div class="map-content">
-        <div
-          v-for="(photoItem, photoIndex) in photoPreviewList"
-          :key="photoIndex"
-          class="photo-module"
-        >
-          <photo-box
-            v-if="photoItem"
-            :src="photoItem.showPath"
-            :showSpecialEffects="false"
-            :class="photoItem.activate && 'photo-box-active'"
-            @click.native="selectPhoto(photoIndex)"
-            class="photo-box"
-          />
-          <div class="photo-index">{{ photoIndex + 1 }} / {{ photoPreviewList.length }}</div>
+        <div v-for="(photoItem, uuid) in photoPreviewList" :key="uuid" class="photo-module">
+          <transition name="fade" mode="out-in">
+            <photo-box
+              v-if="photoItem.isLoaded"
+              :src="photoItem.showPath"
+              :showSpecialEffects="false"
+              :class="photoItem.activate && 'photo-box-active'"
+              @click.native="selectPhoto(uuid)"
+              class="photo-box"
+            />
+            <div class="skeleton-photo" v-else>
+              <div class="image-content"></div>
+              <div class="text-content"></div>
+              <div class="text-content"></div>
+            </div>
+          </transition>
+          <div class="photo-index">{{ photoItem.photoIndex }} / {{ photoList.length }}</div>
         </div>
       </div>
     </photo-map>
 
     <div class="content-box">
       <auto-image :autoImageInfo="activePhoto" />
-      <!-- <div class="content-title">
-        自动修图 {{ activeIndex + 1 }} / {{ photoPreviewList.length }}
-        <i @click="guideInfo" class="info-tool el-icon-info"></i>
-      </div> -->
-      <!-- <div class="auto-retouch-img-box" v-loading="loading">
-        <img
-          alt="暂无图片"
-          :src="showImage"
-          class="content-img"
-          @load="onImageLoaded"
-        />
-      </div> -->
     </div>
     <!-- 操作 -->
     <operation-box class="operation-module" :handleSwtich="activePhoto.handleSwtich" />
-    <!-- <div class="fun-box">
-      <div class="close-box">
-        <i id="guideclose" class="el-icon-circle-close" @click="closeAutoRetouch" />
-      </div>
-      <div id="guidemode" class="btn-box">
-        <div class="fun-module" v-for="(funItem, funIndex) in funList" :key="funIndex">
-          <el-button
-            size="medium"
-            @click="changeActiveModel(funItem.value)"
-            :type="activePhoto[funItem.value] === 'error' ? 'danger' : 'primary'"
-            :loading="!activePhoto[funItem.value]"
-            :disabled="activePhoto.activeModel === funItem.value || !activePhoto[funItem.value] || activePhoto[funItem.value] === 'error'"
-          >
-            {{ activePhoto[funItem.value] === 'error' ? `${funItem.name}失败` : funItem.name }}
-          </el-button>
-          <template v-if="(funItem.value === PHOTO_FLAG.CROP || funItem.value === PHOTO_FLAG.WARP) && showBufferBtn">
-            <template
-              v-for="(childrenItem, childrenIndex) in funItem.childrenFun"
-            >
-              <el-button
-                :key="childrenIndex"
-                size="medium"
-                @click="changeActiveModel(childrenItem.value)"
-                :type="activePhoto[childrenItem.value] === 'error' ? 'danger' : 'primary'"
-                :loading="!activePhoto[childrenItem.value]"
-                :disabled="activePhoto.activeModel === childrenItem.value || !activePhoto[childrenItem.value] || activePhoto[childrenItem.value] === 'error'"
-              >
-                {{ activePhoto[childrenItem.value] === 'error' ? `${childrenItem.name}失败` : childrenItem.name }}
-              </el-button>
-            </template>
-          </template>
-        </div>
-      </div>
-      <div id="guidedown" class="back-box">
-        <el-button type="info" @click="downloadPhoto" :disabled="loading">下载照片</el-button>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -85,7 +39,6 @@ import PhotoMap from './PhotoMap'
 import OperationBox from './OperationBox'
 import AutoImage from './AutoImage'
 import PhotoBox from '@/components/PhotoBox'
-import Vue from 'vue'
 
 import DownIpc from '@electronMain/ipc/DownIpc'
 
@@ -105,44 +58,15 @@ export default {
     return {
       PHOTO_FLAG,
       listWidth: 224,
-      photoPreviewList: [],
-
-      funList: [
-        {
-          name: '原图',
-          value: PHOTO_FLAG.ORIGINAL
-        },
-        {
-          name: '裁剪图',
-          value: PHOTO_FLAG.CROP,
-          childrenFun: [
-            {
-              name: '裁剪磨皮',
-              value: PHOTO_FLAG.CROP_BUFFING
-            }
-          ]
-        },
-        {
-          name: '液化图',
-          value: PHOTO_FLAG.WARP,
-          childrenFun: [
-            {
-              name: '液化磨皮',
-              value: PHOTO_FLAG.WARP_BUFFING
-            }
-          ]
-        }
-      ], // 按钮列表
-      activeIndex: 0, // 当前展示图片索引
-      loading: false,
-      driver: null
+      photoPreviewList: {}
     }
   },
   computed: {
     ...mapGetters(['imgDomain', 'autoBuffingA', 'autoBuffingB']),
     // 当前激活照片
     activePhoto () {
-      const findActivePhoto = this.photoPreviewList.find(item => _.get(item, 'activate'))
+      const photoPreviewListArr = Object.values(this.photoPreviewList)
+      const findActivePhoto = photoPreviewListArr.find(item => _.get(item, 'activate'))
       return findActivePhoto || {}
     }
   },
@@ -160,26 +84,27 @@ export default {
      * @description 处理图片列表
      */
     async handlePhotoList () {
-      const photoPreviewList = Vue.observable([])
-      this.photoPreviewList = photoPreviewList
+      this.photoPreviewList = {}
       this.photoList.forEach(async (photoUrl, photoIndex) => {
         const autoRetouchModel = new AutoRetouchModel(photoUrl)
+        const uuid = autoRetouchModel.uuid
+        autoRetouchModel.photoIndex = photoIndex + 1
+        this.$set(this.photoPreviewList, uuid, autoRetouchModel)
         await autoRetouchModel.getAutoList()
+        autoRetouchModel.isLoaded = true
         autoRetouchModel.showPath = changeToCompress(autoRetouchModel.autoFixPhotoList[OperationBit[OPERATION_TYPE.CROP]])
-        if (photoIndex === 0) {
-          autoRetouchModel.activate = true
-        }
-        this.$set(photoPreviewList, photoIndex, autoRetouchModel)
+        if (photoIndex === 0) { autoRetouchModel.activate = true }
       })
     },
     /**
      * @description 选中照片
      */
-    selectPhoto (photoIndex) {
-      this.photoPreviewList.forEach(item => {
+    selectPhoto (uuid) {
+      const photoPreviewListArr = Object.values(this.photoPreviewList)
+      photoPreviewListArr.forEach(item => {
         item.activate = false
       })
-      this.photoPreviewList[photoIndex].activate = true
+      this.photoPreviewList[uuid].activate = true
     },
     /**
      * @description 下载图片
@@ -217,7 +142,6 @@ export default {
   z-index: 1000 !important;
   display: flex;
   width: 100vw;
-  height: 100vh;
   height: calc(100vh - @navtop);
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.8);
@@ -243,6 +167,51 @@ export default {
 
       .photo-box-active {
         border: 4px solid @blue;
+      }
+
+      .skeleton-photo {
+        --loading-grey: #ededed;
+
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        overflow: hidden;
+        background-color: #fff;
+        border: 10px solid #fff;
+        border-radius: 4px;
+
+        .image-content {
+          width: 100%;
+          height: 0;
+          padding-bottom: 55%;
+          margin-bottom: 15%;
+          background-color: #ededed;
+          border-radius: 4px;
+        }
+
+        .text-content {
+          width: 100%;
+          height: 0;
+          padding-bottom: 15%;
+          margin-bottom: 8%;
+          background-color: #ededed;
+          border-radius: 4px;
+        }
+
+        .text-content,
+        .image-content {
+          background: linear-gradient(100deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 60%) var(--loading-grey);
+          background-color: var(--loading-grey);
+          background-position-x: 180%;
+          background-size: 200% 100%;
+          animation: 1s loading ease-in-out infinite;
+        }
+
+        @keyframes loading {
+          to {
+            background-position-x: -20%;
+          }
+        }
       }
     }
   }

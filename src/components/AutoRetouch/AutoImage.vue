@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { OperationBit, changeToCompress } from '@/api/autoRetouch'
+import { OperationBit, changeToCompress, OPERATION_TYPE } from '@/api/autoRetouch'
 
 export default {
   name: 'AutoImage',
@@ -32,13 +32,22 @@ export default {
           typeBit = typeBit | OperationBit[key]
         }
       }
+      // 没有找到对应类型
       if (!typeBit) return ''
-      const url = this.autoImageInfo.autoFixPhotoList[typeBit]
-      if (!url) return ''
-      const compressUrl = changeToCompress(url)
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.loading = true
-      return compressUrl
+      if ((typeBit & OperationBit[OPERATION_TYPE.MATTING]) !== OperationBit[OPERATION_TYPE.MATTING]) {
+        // 不是抠图
+        const url = this.autoImageInfo.autoFixPhotoList[typeBit]
+        if (!url) return ''
+        const compressUrl = changeToCompress(url)
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.loading = true
+        return compressUrl
+      } else {
+        // 是抠图
+        // 。。。
+        // const
+        return ''
+      }
     }
   },
   methods: {

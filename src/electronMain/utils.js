@@ -75,9 +75,15 @@ function initUtils (win, ipcMain) {
     }
   }
 
+  // 获取路径地址
+  function getUserDir (event) {
+    event.returnValue = userDir
+  }
+
   ipcMain.on('utils:OpenFile', openFile)
   ipcMain.on('utils:clean-image-cache', cleanImageCache)
   ipcMain.on('utils:get-image-cache', getImageCache)
+  ipcMain.on('utils:get-userDir', getUserDir)
   ipcMain.on('select-file', selectFile)
 }
 
