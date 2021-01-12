@@ -328,12 +328,9 @@ export default {
     oneTempRelationPhoto () {
       const savePath = `/${this.orderData.streamNum}`
       const photoArr = this.tempRelationPhotos.map(photoItem => {
-        const ext = PhotoTool.getFilePostfix(photoItem.path)
-        const rename = `${photoItem.position}${ext}`
         return {
           url: photoItem.path,
           path: savePath,
-          rename
         }
       })
       DownIpc.addDownloadFiles(photoArr)

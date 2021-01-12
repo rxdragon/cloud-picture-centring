@@ -2,6 +2,7 @@
   <div class="photo">
     <div class="img-box" :class="{ 'image-load': loading }">
       <div v-show="loading" class="image-loading-model"></div>
+      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
       <el-image
         v-if="useEleImage && !showCanvas"
         :src="imageSrc"
@@ -48,7 +49,6 @@
     </div>
     <!-- 拼接照信息 -->
     <div v-if="downing || peopleNum" class="handle-box" @click.stop="">
-      <div v-if="jointLabel" class="joint-label">拼接照{{ jointLabel | filterJointLabel }}</div>
       <div v-if="rename" class="joint-label">圣诞拼接照 - {{ rename }}</div>
       <el-button v-if="downing" type="text" @click.stop.capture="downingPhoto('original')">下载照片</el-button>
       <el-popover
@@ -396,6 +396,24 @@ export default {
     }
   }
 
+  .joint-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 20px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    color: @red;
+    background-color: #eee;
+    opacity: 0.8;
+  }
+
   .photo-name {
     position: absolute;
     bottom: 0;
@@ -529,13 +547,6 @@ export default {
     font-weight: 400;
     line-height: 17px;
     color: #606266;
-  }
-
-  .joint-label {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 17px;
-    color: @red;
   }
 
   .lable-title {
