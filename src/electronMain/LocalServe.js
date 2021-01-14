@@ -9,6 +9,8 @@ const imageCachePath = path.join(userDir, 'imageCache')
 const baseBackgroundPath = path.join(userDir, 'background_photo')
 const uuidv4 = require('uuid/v4')
 
+const { checkBackGroundMapJson } = require('./getBackgroudFile')
+
 const MaxFileCount = 10
 const clearCacheTime = 60 * 60 * 1000
 const isProduction = !global.config('microApi') && !global.isDevelopment
@@ -118,4 +120,5 @@ function hasImageCache (imagePath) {
 
 exp.listen(3000, () => {
   console.log('link contont')
+  checkBackGroundMapJson()
 })
