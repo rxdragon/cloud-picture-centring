@@ -44,7 +44,7 @@
             ref="fabric-canvas"
             :style="photoZoomStyle"
             :option-obj="canvasOption"
-            :show-canvas="isFinishPhoto"
+            :show-canvas="isFirstPhoto"
             @cancelDeleteLabel="addDeleteLabel"
             @click.native="zoom"
           />
@@ -419,8 +419,8 @@ export default {
       return this.mode === 'complete' ? this.showStoreReson : this.showMark
     },
     // 是否最新修片
-    isFinishPhoto () {
-      return this.showPhoto.version === PHOTO_VERSION.COMPLETE_PHOTO
+    isFirstPhoto () {
+      return this.showPhoto.version === PHOTO_VERSION.FIRST_PHOTO
     },
     // 删除标签数量
     delLabelNum () {
@@ -458,19 +458,19 @@ export default {
           if (!this.showPhoto.versionCache) return false
           const originalPhotoPath = this.showPhoto.versionCache.original_photo.path
           this.showPhoto.src = this.imgDomain + originalPhotoPath
-          this.showPhoto.version = 'original_photo'
+          this.showPhoto.version = PHOTO_VERSION.ORIGINAL_PHOTO
         } else if (val === 'complete') {
           this.showStoreReson = true
           if (!this.showPhoto.versionCache) return false
           const completePhotoPath = this.showPhoto.versionCache.store_rework.path
           this.showPhoto.src = this.imgDomain + completePhotoPath
-          this.showPhoto.version = 'store_rework'
+          this.showPhoto.version = PHOTO_VERSION.STORE_REWORK
         } else {
           this.showMark = true
           if (!this.showPhoto.versionCache) return false
           const completePhotoPath = this.showPhoto.versionCache.store_rework.path
           this.showPhoto.src = this.imgDomain + completePhotoPath
-          this.showPhoto.version = 'complete_photo'
+          this.showPhoto.version = PHOTO_VERSION.FIRST_PHOTO
         }
       },
       immediate: true
@@ -950,8 +950,8 @@ export default {
      * @description 创建canvas
      */
     createCanvas () {
-      if (!this.isFinishPhoto) {
-        this.$newMessage.warning('请在成片上进行评分')
+      if (!this.isFirstPhoto) {
+        this.$newMessage.warning('请在一次成片上进行评分')
         return false
       }
       if (!this.showCanvas) {

@@ -299,6 +299,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-top: 20px;
+    margin-right: -24px;
 
     .photo-box {
       width: 241px;

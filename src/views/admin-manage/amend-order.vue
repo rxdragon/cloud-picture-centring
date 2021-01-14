@@ -29,9 +29,13 @@
         <el-button type="primary" @click="getStreamInfo">查 询</el-button>
       </div>
     </div>
+    <!-- 提示 -->
+    <div class="tip-box">
+      <el-alert title="修改产品，只能更改相同修图标准的产品。" type="warning" effect="dark"></el-alert>
+    </div>
     <!-- 订单照片显示模块 -->
     <div v-for="(item, index) in dataList" :key="index" class="caid-box module-panel">
-      <div class="order-info ">
+      <div class="order-info">
         <div class="id search-item">
           <span>流水号{{ index + 1 }}</span> {{ item.stream_num }}
         </div>
@@ -50,6 +54,9 @@
               :value="optionItem.id"
             />
           </el-select>
+        </div>
+        <div class="batch-fix-people">
+          <el-button @click="showFixPeopleDialog(item)" type="primary">批量更改人数</el-button>
         </div>
       </div>
       <div class="photo-list">
@@ -105,6 +112,57 @@
         <el-button type="primary" @click="modifyStream(item)">提交修改</el-button>
       </div>
     </div>
+    <!-- 批量修改人数dialog -->
+    <el-dialog
+      title="批量修改人数"
+      center
+      width="40%"
+      :close-on-click-modal="false"
+      :visible.sync="batchFixVisible"
+      :before-close="handleClose"
+    >
+      <div class="dialog-photo-list" v-if="selectStreamPhotos.length">
+        <el-checkbox-group v-model="checkedPhotos" @change="handleCheckedCitiesChange">
+          <el-checkbox
+            v-for="(photoItem, photoIndex) in selectStreamPhotos"
+            class="checkbox-photo"
+            :key="photoIndex"
+            :label="photoItem.id"
+          >
+            <div v-if="!photoItem.isDelete" class="dialog-photo-box">
+              <photo-box :src="photoItem.path" :people-num="photoItem.people_num" :show-special-effects="false" />
+            </div>
+          </el-checkbox>
+        </el-checkbox-group>
+
+        <div class="operation-module">
+          <el-checkbox
+            class="check-all"
+            :indeterminate="isIndeterminate"
+            v-model="checkAllPhoto"
+            @change="handleCheckAllChange"
+          >
+            全选照片
+          </el-checkbox>
+          <div class="batch-change-people-box">
+            <span class="batch-label">需更改人数：</span>
+            <el-input-number
+              class="change-input"
+              v-model="batchChangePeople"
+              v-numberOnly
+              :min="0"
+              :max="20"
+              size="mini"
+              placeholder="请输入人数"
+            />
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="sureChangePeople">确 定</el-button>
+      </span>
+    </el-dialog>
     <no-data v-if="!dataList.length" class="module-panel" />
   </div>
 </template>
@@ -129,7 +187,13 @@ export default {
       productsList: [], // 产品信息
       jointSequence: '',
       dataList: [], // 流水列表
-      jointClassOption: [] // 修图类别
+      jointClassOption: [], // 修图类别
+      batchFixVisible: false, // 是否显示批量修改人数弹框
+      selectStreamPhotos: [], // 选中批量更改订单数
+      checkedPhotos: [], // 选中照片id
+      checkAllPhoto: false, // 是否显示全部流水
+      isIndeterminate: false, // 控制样式
+      batchChangePeople: 0, // 批量修改人数
     }
   },
   created () {
@@ -220,6 +284,60 @@ export default {
         await this.$delayLoading()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
+    },
+    /**
+     * @description 打开修复人数弹窗
+     */
+    showFixPeopleDialog (streamInfo) {
+      this.selectStreamPhotos = streamInfo.photos.filter(photoItem => {
+        return !photoItem.isDelete && photoItem.type !== PHOTO_TYPE.TEMPLATE_TYPE
+      })
+      this.batchFixVisible = true
+    },
+    /**
+     * @description 批量修改前
+     */
+    handleClose () {
+      this.batchFixVisible = false
+      this.resetData()
+    },
+    /**
+     * @description 重置相关信息
+     */
+    resetData () {
+      this.selectStreamPhotos = []
+      this.checkedPhotos = []
+      this.checkAllPhoto = false
+      this.isIndeterminate = false
+      this.batchChangePeople = 0
+    },
+    /**
+     * @description 确认更改人数
+     */
+    sureChangePeople () {
+      if (!this.checkedPhotos.length) return this.$newMessage.warning('请选择更改的照片')
+      this.selectStreamPhotos.forEach(item => {
+        if (this.checkedPhotos.includes(item.id)) {
+          item.people_num = this.batchChangePeople
+        }
+      })
+      this.batchFixVisible = false
+      this.resetData()
+    },
+    /**
+     * @description 当照片选中
+     */
+    handleCheckedCitiesChange (value) {
+      const checkedCount = value.length
+      this.checkAllPhoto = checkedCount === this.selectStreamPhotos.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectStreamPhotos.length
+    },
+    /**
+     * @description 选中全部照片
+     */
+    handleCheckAllChange (val) {
+      this.checkedPhotos = val ? this.selectStreamPhotos.map(item => item.id) : []
+      this.isIndeterminate = false
     }
   }
 }
@@ -228,6 +346,10 @@ export default {
 <style lang="less">
 
 .amend-order {
+  .tip-box {
+    margin-bottom: 20px;
+  }
+
   .search-box {
     margin-bottom: 20px;
 
@@ -247,6 +369,10 @@ export default {
 
       .id {
         margin-right: 20px;
+      }
+
+      .batch-fix-people {
+        margin-left: auto;
       }
     }
 
@@ -350,6 +476,60 @@ export default {
           color: #9f9fa0;
         }
       }
+    }
+  }
+
+  .dialog-photo-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    .dialog-photo-box {
+      width: 200px;
+      padding: 6px;
+      background-color: #f5f7fa;
+      border-radius: 4px;
+    }
+
+    .operation-module {
+      display: flex;
+      align-items: center;
+
+      .batch-change-people-box {
+        display: flex;
+        align-items: center;
+        width: 100%;
+
+        .batch-label {
+          flex-shrink: 0;
+        }
+
+        .change-input {
+          width: 180px;
+        }
+      }
+    }
+  }
+
+  .checkbox-photo {
+    position: relative;
+    margin: 0 10px 10px 0;
+
+    .el-checkbox__input {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+    }
+
+    .el-checkbox__label {
+      padding: 0;
+    }
+  }
+
+  .check-all {
+    width: 100%;
+
+    .el-checkbox__input {
+      position: relative;
     }
   }
 }

@@ -91,7 +91,7 @@ export default class StreamModel {
   actualIncome = 0 // 实获收益
 
   // 云学院
-  isCloudEvaluation = '否' // 是否云学院抽查
+  isCloudEvaluation = false // 是否云学院抽查
   cloudEvaluateTime = '-' // 云学院评价时间
 
   // 申诉
@@ -159,7 +159,7 @@ export default class StreamModel {
     this.retoucherNpsAvg = _.get(streamData, 'tags.values.retoucher_score') || '-'
 
     // 云学院
-    this.isCloudEvaluation = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CLOUD_EVALUATION) ? '是' : '否'
+    this.isCloudEvaluation = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CLOUD_EVALUATION)
     this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
 
     // 申诉

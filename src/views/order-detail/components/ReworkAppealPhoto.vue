@@ -1,9 +1,22 @@
 <template>
-  <div class="rework-photo">
-    <div class="photo-area">
-      <img class="photo" :src="reworkImg" alt=""/>
-      <el-checkbox :disabled="showReason.needDisable" v-model="photoItem.reworkChecked"></el-checkbox>
+  <div class="rework-photo module-panel">
+    <!-- 照片 -->
+    <div
+      class="photo-area"
+      :class="photoItem.reworkChecked && 'photo-area-checked'"
+    >
+      <el-checkbox :disabled="showReason.needDisable" v-model="photoItem.reworkChecked">
+        <photo-box
+          :src="reworkImg"
+          :show-special-effects="false"
+          :show-store-part-rework-reason="false"
+          contain-photo
+          show-label-info
+        />
+      </el-checkbox>
     </div>
+
+    <!-- 申诉信息 -->
     <div class="info-area">
       <div class="info-item">
         <p class="info-title">整体退回标记：</p>
@@ -72,9 +85,11 @@
 import { mapGetters } from 'vuex'
 
 import PreviewModel from '@/model/PreviewModel.js'
+import PhotoBox from '@/components/PhotoBox'
 
 export default {
   name: 'ReworkAppealPhoto',
+  components: { PhotoBox },
   props: {
     photoItem: { type: Object, required: true }
   },
@@ -83,6 +98,7 @@ export default {
     reworkImg () {
       return this.imgCompressDomain + this.showReason.path
     },
+    // 获取重修照片
     showReason () {
       const showReasonPhoto = new PreviewModel(this.photoItem.realReworkPhoto)
       const originReworkTime = _.get(this.photoItem, 'originReworkPhotoLog.created_at')
@@ -102,41 +118,56 @@ export default {
 @panelTitleWidth: 185px;
 
 .rework-photo {
+  display: flex;
+  margin-bottom: 24px;
+  background-color: #f5f7fa;
+  box-shadow: none;
+
   .red {
-    color: red;
+    color: @red;
   }
 
   .photo-area {
     position: relative;
-    display: inline-block;
+    flex-shrink: 0;
     width: 240px;
     height: 240px;
-    margin-right: 10px;
+    margin-right: 24px;
+    border: 1px solid transparent;
 
-    .photo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      width: 240px;
-      height: 240px;
-      object-fit: cover;
-      object-position: top;
-      border-radius: 5px;
+    &.photo-area-checked {
+      box-sizing: border-box;
+      border: 1px solid @blue;
     }
 
     .el-checkbox {
-      position: absolute;
-      right: 4px;
-      bottom: 4px;
-      z-index: 2;
+      width: 100%;
+      height: 100%;
+
+      & /deep/ .el-checkbox__input {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        z-index: 99;
+      }
+
+      .photo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        border-radius: 5px;
+      }
     }
   }
 
   .info-area {
-    display: inline-block;
-    width: 600px;
-    vertical-align: top;
+    width: 100%;
+    padding-top: 12px;
 
     .info-item {
       display: flex;
@@ -145,12 +176,16 @@ export default {
     }
 
     .info-title {
-      width: 100px;
+      display: block;
+      flex-shrink: 0;
+      width: 110px;
+      height: 31px;
       font-size: 14px;
+      font-weight: 500;
       color: #303133;
 
       &.red {
-        color: red;
+        color: @red;
       }
     }
 
@@ -161,7 +196,8 @@ export default {
     .rework-tags {
       display: flex;
       flex-wrap: wrap;
-      width: 500px;
+      margin-right: -16px;
+      margin-bottom: -4px;
 
       .part-tags {
         display: flex;
@@ -186,10 +222,6 @@ export default {
           border: none;
         }
       }
-    }
-
-    .el-textarea {
-      width: 500px;
     }
   }
 }

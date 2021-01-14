@@ -41,15 +41,30 @@ const GreenLinearGradient = new echarts.graphic.LinearGradient(
   ]
 )
 
+const RedLinearGradient = new echarts.graphic.LinearGradient(
+  0, 0, 0, 1,
+  [
+    {
+      offset: 0,
+      color: '#FF3974'
+    },
+    {
+      offset: 1,
+      color: '#FFB4CA'
+    }
+  ]
+)
+
 export default {
   name: 'ChargeBackChat',
   props: {
-    chartDatas: { type: Array, default: () => [] }
+    chartDatas: { type: Array, default: () => [] },
+    showRate: { type: Boolean }
   },
   data () {
     this.extend = {
       legend: {
-        data: ['单量', '张数'],
+        data: this.showRate ? ['单量', '张数', '退张率'] : ['单量', '张数'],
         right: '27',
         top: '0',
         icon: 'circle'
@@ -59,7 +74,10 @@ export default {
         label: {
           show: true,
           position: 'top',
-          color: ['#4669FB', '#38BC7F']
+          color: ['#4669FB', '#38BC7F', '#FF3974'],
+          formatter: (data) => {
+            return data.seriesName === '退张率' ? `${data.value}%` : `${data.value}`
+          }
         },
         barWidth: 24,
         barCategoryGap: '80%',
@@ -67,7 +85,7 @@ export default {
           barBorderRadius: [6, 6, 0, 0]
         }
       },
-      color: [blueLinearGradient, GreenLinearGradient],
+      color: [blueLinearGradient, GreenLinearGradient, RedLinearGradient],
       xAxis: {
         boundaryGap: ['10%', '10%'],
         axisLabel: {
@@ -92,12 +110,13 @@ export default {
     this.chartSettings = {
       labelMap: {
         'orderCount': '单量',
-        'photoCount': '张数'
+        'photoCount': '张数',
+        'returnRate': '退张率'
       }
     }
     return {
       chartData: {
-        columns: ['name', 'orderCount', 'photoCount'],
+        columns: this.showRate ? ['name', 'orderCount', 'photoCount', 'returnRate'] : ['name', 'orderCount', 'photoCount'],
         rows: []
       }
     }
