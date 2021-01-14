@@ -1,6 +1,6 @@
 <template>
   <div class="pie-chart">
-    <div class="pie-no-data" v-show="!chartData.length">
+    <div class="pie-no-data" v-if="!chartData.length">
       <no-data />
     </div>
     <div class="pie-chart-data" ref="pie"></div>
@@ -93,6 +93,7 @@ export default {
 <style lang="less" scoped>
 .pie-chart {
   height: 100%;
+  overflow: hidden;
 
   .pie-no-data,
   .pie-chart-data {

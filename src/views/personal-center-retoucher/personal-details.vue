@@ -123,7 +123,7 @@
       <cloud-report :role="CLOUD_ROLE.CREW" />
     </div>
     <!-- 小蜜蜂奖励记录 -->
-    <div class="module-panel bee-award">
+    <div class="module-panel bee-award" v-loading="LittleBeeLoading">
       <div class="panel-title">小蜜蜂奖励记录</div>
       <div class="search-box">
         <div class="search-item">
@@ -247,7 +247,8 @@ export default {
       todayData: {}, // 今日指标
       gradeInfo: {},
       awardInfo: [],
-      propData: []
+      propData: [],
+      LittleBeeLoading: false, // 小蜜蜂 加载信息
     }
   },
   created () {
@@ -288,14 +289,15 @@ export default {
      * @description 获取小蜜蜂奖
      */
     async getLittleBeeInfo () {
-      if (!this.yearValue) {
-        this.$newMessage.warning('请输入时间')
-        return false
+      if (!this.yearValue) return this.$newMessage.warning('请输入时间')
+      try {
+        this.LittleBeeLoading = true
+        const reqData = { year: this.yearValue }
+        this.awardInfo = await Retoucher.getLittleBeeInfo(reqData)
+      } finally {
+        await this.$delayLoading()
+        this.LittleBeeLoading = false
       }
-      const reqData = {
-        year: this.yearValue
-      }
-      this.awardInfo = await Retoucher.getLittleBeeInfo(reqData)
     },
     /**
      * @description 获取道具库
