@@ -28,41 +28,35 @@
       <auto-image :autoImageInfo="activePhoto" />
     </div>
     <!-- 操作 -->
-    <operation-box class="operation-module" :handleSwtich="activePhoto.handleSwtich" />
+    <operation-box class="operation-module" :activeInfo="activePhoto" :handleSwtich="activePhoto.handleSwtich" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { PHOTO_FLAG } from '@/utils/enumerate.js'
 import PhotoMap from './PhotoMap'
 import OperationBox from './OperationBox'
 import AutoImage from './AutoImage'
 import PhotoBox from '@/components/PhotoBox'
 
-import DownIpc from '@electronMain/ipc/DownIpc'
-
-
 import { OperationBit, OPERATION_TYPE, AutoRetouchModel, changeToCompress } from '@/api/autoRetouch'
-import * as PhotoTool from '@/utils/photoTool'
-import * as AutoLog from '@/views/retoucher-center/autoLog.js'
 
 export default {
   name: "AutoRetouch",
   components: { PhotoMap, OperationBox, PhotoBox, AutoImage },
   props: {
     photoList: { type: Array, default: () => [] },
-    streamNum: { type: String, default: '' }
+    streamNum: { type: String, default: '' },
+    productId: { type: [String, Number], default: '' }
   },
   data () {
     return {
-      PHOTO_FLAG,
       listWidth: 224,
       photoPreviewList: {}
     }
   },
   computed: {
-    ...mapGetters(['imgDomain', 'autoBuffingA', 'autoBuffingB']),
+    ...mapGetters(['imgDomain', 'useNewAutoApi']),
     // 当前激活照片
     activePhoto () {
       const photoPreviewListArr = Object.values(this.photoPreviewList)
@@ -74,7 +68,6 @@ export default {
     photoList: {
       handler () {
         this.handlePhotoList()
-        // this.beforehandLoadPhoto()
       },
       immediate: true
     }
@@ -86,11 +79,16 @@ export default {
     async handlePhotoList () {
       this.photoPreviewList = {}
       this.photoList.forEach(async (photoUrl, photoIndex) => {
-        const autoRetouchModel = new AutoRetouchModel(photoUrl)
+        const autoRetouchModel = new AutoRetouchModel(photoUrl, this.streamNum, this.productId)
+
+        if (!this.useNewAutoApi) {
+          autoRetouchModel.handleSwtich[OPERATION_TYPE.RETOUCH] = false
+          autoRetouchModel.handleSwtich[OPERATION_TYPE.MATTING] = false
+        }
         const uuid = autoRetouchModel.uuid
         autoRetouchModel.photoIndex = photoIndex + 1
         this.$set(this.photoPreviewList, uuid, autoRetouchModel)
-        await autoRetouchModel.getAutoList()
+        await autoRetouchModel.getAutoList(this.useNewAutoApi)
         autoRetouchModel.isLoaded = true
         autoRetouchModel.showPath = changeToCompress(autoRetouchModel.autoFixPhotoList[OperationBit[OPERATION_TYPE.CROP]])
         if (photoIndex === 0) { autoRetouchModel.activate = true }
@@ -105,27 +103,6 @@ export default {
         item.activate = false
       })
       this.photoPreviewList[uuid].activate = true
-    },
-    /**
-     * @description 下载图片
-     */
-    downloadPhoto () {
-      const orgBaseRealPath = PhotoTool.realName(this.activePhoto.path)
-
-      const ext = PhotoTool.getFilePostfix(orgBaseRealPath).toLowerCase()
-      const name = PhotoTool.fileNameFormat(orgBaseRealPath)
-      const { activeModel } = this.activePhoto
-      let rename = `${name}${ext}`
-      if (activeModel !== PHOTO_FLAG.ORIGINAL) {
-        rename = `${name}~${activeModel}${ext}`
-      }
-      AutoLog.downLog(this.activePhoto.path, activeModel)
-      const data = {
-        url: this.showImage,
-        path: this.streamNum,
-        rename
-      }
-      DownIpc.addDownloadFile(data, rename)
     },
   }
 }
@@ -147,7 +124,10 @@ export default {
   background-color: rgba(0, 0, 0, 0.8);
 
   .map-content {
+    height: calc(100vh - @navtop);
     padding: 20px 20px 0 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     .photo-module {
       margin: 0 0 20px 0;

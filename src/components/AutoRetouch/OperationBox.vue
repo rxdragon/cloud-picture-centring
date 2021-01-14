@@ -37,7 +37,7 @@
       </div>
     </div>
     <!-- 背景选项 -->
-    <div class="backgroud-photos">
+    <div class="backgroud-photos" v-show="useNewAutoApi">
       <div class="backgroud-title">
         <div class="colourScheme-title">背景选择</div>
       </div>
@@ -49,15 +49,45 @@
                 class="backgroud-image"
                 v-for="backgroudItem in colourSchemeClass.commonUseList"
                 :key="backgroudItem.md5"
+                :class="activeBackgroundImage === backgroudItem.localPath ? 'select' : ''"
+                @click="selectBackground(backgroudItem.localPath)"
               >
-                <img :src="backgroudItem.localPath" alt="">
+                <el-popover
+                  placement="left"
+                  width="120"
+                  popper-class="background-popper"
+                  trigger="hover"
+                >
+                  <div class="background-desc">
+                    <div class="desc-img">
+                      <img :src="backgroudItem.compressPath" alt="">
+                    </div>
+                    <div class="desc-text">{{ backgroudItem.name }}</div>
+                  </div>
+                  <img slot="reference" :src="backgroudItem.compressPath" alt="">
+                </el-popover>
               </div>
               <div
                 class="backgroud-image"
                 v-for="backgroudItem in colourSchemeClass.notCommonUseList"
                 :key="backgroudItem.md5"
+                :class="activeBackgroundImage === backgroudItem.localPath ? 'select' : ''"
+                @click="selectBackground(backgroudItem.localPath)"
               >
-                <img :src="backgroudItem.localPath" alt="">
+                <el-popover
+                  placement="left"
+                  width="120"
+                  popper-class="background-popper"
+                  trigger="hover"
+                >
+                  <div class="background-desc">
+                    <div class="desc-img">
+                      <img :src="backgroudItem.compressPath" alt="">
+                    </div>
+                    <div class="desc-text">{{ backgroudItem.name }}</div>
+                  </div>
+                  <img slot="reference" :src="backgroudItem.compressPath" alt="">
+                </el-popover>
               </div>
             </div>
           </div>
@@ -70,15 +100,23 @@
 <script>
 import { OPERATION_TYPE, OperationName } from '@/api/autoRetouch'
 import BackgroundMap, { colorCN } from '@/assets/config/BackgroundMap'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'OperationBox',
   props: {
-    handleSwtich: { type: Object, default: () => ({}) }
+    handleSwtich: { type: Object, default: () => ({}) },
+    activeInfo: { type: Object, default: () => ({}) }
   },
   data () {
     return {
-      operationList: {
+      backgroundPhotos: []
+    }
+  },
+  computed: {
+    ...mapGetters(['useNewAutoApi']),
+    operationList () {
+      return {
         [OPERATION_TYPE.CROP]: {
           name: OperationName[OPERATION_TYPE.CROP],
           hidden: true,
@@ -89,17 +127,14 @@ export default {
         },
         [OPERATION_TYPE.RETOUCH]: {
           name: OperationName[OPERATION_TYPE.RETOUCH],
-          hidden: false,
+          hidden: !this.useNewAutoApi,
         },
         [OPERATION_TYPE.MATTING]: {
           name: OperationName[OPERATION_TYPE.MATTING],
-          hidden: false,
+          hidden: !this.useNewAutoApi,
         }
-      },
-      backgroundPhotos: []
-    }
-  },
-  computed: {
+      }
+    },
     allOpen: {
       get () {
         const operationValues = Object.values(this.handleSwtich)
@@ -112,6 +147,10 @@ export default {
           }
         }
       }
+    },
+    // 当前激活背景图
+    activeBackgroundImage () {
+      return this.activeInfo.activeBackgroundImage
     }
   },
   created () {
@@ -151,6 +190,12 @@ export default {
         }
       })
       this.backgroundPhotos = createData
+    },
+    /**
+     * @description 选择背景
+     */
+    selectBackground (backgroudPath) {
+      this.activeInfo.activeBackgroundImage = backgroudPath
     }
   }
 }
@@ -163,14 +208,14 @@ export default {
   padding: 10px;
 
   .close-box {
+    display: flex;
+    align-items: self-start;
+    justify-content: flex-end;
     height: 42px;
     line-height: 42px;
     text-align: right;
 
     .button-close {
-      position: absolute;
-      top: 5px;
-      right: 10px;
       width: 30px;
       height: 30px;
       padding: 0;
@@ -189,6 +234,11 @@ export default {
           color: #fff;
         }
       }
+    }
+
+    .down-btn {
+      margin-right: auto;
+      text-align: left;
     }
   }
 
@@ -292,11 +342,11 @@ export default {
           margin-bottom: 10px;
           overflow: hidden;
           cursor: pointer;
-          border: 2px solid transparent;
+          border: 4px solid transparent;
           border-radius: 8px;
 
           &.select {
-            border: 2px solid @blue;
+            border: 4px solid @red;
           }
 
           img {
@@ -334,6 +384,37 @@ export default {
       &.pink {
         background-color: ~'@{pink}80';
       }
+    }
+  }
+}
+</style>
+
+<style lang="less">
+.background-popper {
+  min-width: 100px;
+  background-color: #535353;
+  border: 1px solid #2e2d2d;
+}
+
+.background-popper[x-placement^=left] .popper__arrow::after {
+  border-left-color: #535353;
+}
+
+.background-popper[x-placement^=left] .popper__arrow {
+  border-left-color: #535353;
+}
+
+.background-desc {
+  text-align: center;
+
+  .desc-text {
+    color: #eee;
+  }
+
+  .desc-img {
+    img {
+      width: 100%;
+      height: 100%;
     }
   }
 }

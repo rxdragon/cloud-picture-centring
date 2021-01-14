@@ -1,4 +1,10 @@
-import { PhotoEnum, NoReturnPhotoEnum, ReturnOnePhotoEnum, StoreReturnPhoto, PHOTO_FLAG } from '@/utils/enumerate.js'
+import {
+  PhotoEnum,
+  NoReturnPhotoEnum,
+  ReturnOnePhotoEnum,
+  StoreReturnPhoto,
+  prioritySequence
+} from '@/utils/enumerate.js'
 
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as mPath from '@/utils/selfPath.js'
@@ -311,9 +317,8 @@ export function realName (path) {
  * @param {*} params 
  */
 export function fixAutoPhotoName (path) {
-  for (const mode in PHOTO_FLAG) {
-    const modeString = PHOTO_FLAG[mode]
-    const replaceMode = `~${modeString}`
+  for (const mode of prioritySequence) {
+    const replaceMode = `~${mode}`
     path = path.replace(replaceMode, '')
   }
   return path

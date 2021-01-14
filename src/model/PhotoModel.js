@@ -66,7 +66,6 @@ export default class PhotoModel {
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
 
-    // 
     let realReworkPhoto = {}
     if (labels.length) {
       realReworkPhoto = otherPhotoVersion.find(photoVersion => {

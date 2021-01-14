@@ -54,6 +54,7 @@ const permissionGetters = {
   canAutoRetouch: state => state.permission.canAutoRetouch, // 是否显示自动修图按钮
   autoBuffingA: state => state.permission.autoBuffingA, // 是否显示自动修图磨皮A按钮
   autoBuffingB: state => state.permission.autoBuffingB, // 是否显示自动修图磨皮B按钮
+  useNewAutoApi: state => state.permission.useNewAutoApi, // 使用新的自动修图接口
   // 申诉处理
   showAppealAccess: state => state.permission.showAppealAccess, // 是否显示我要申诉入口
   showFirstExamine: state => state.permission.showFirstExamine, // 是否显示初审按钮

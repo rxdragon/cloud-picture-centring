@@ -3,8 +3,8 @@
  * @description 抠图
  */
 export default class MattingImage {
-  canvasHeight = 1000
-  canvasWidth = 1000
+  canvasHeight = 1024
+  canvasWidth = 1024
   originalImage = ''
   newImage = ''
 
@@ -91,7 +91,7 @@ export default class MattingImage {
   /**
    * @description 添加背景
    */
-  async addBackground (canvas, context, mattingImage, backgroundImage) {
+  async addBackground (canvas, context, mattingImage, mimeType = 'image/png', backgroundImage) {
     context.globalCompositeOperation = 'source-over'
     if (backgroundImage) {
       const backgroundImageDom = await this.readImageData(backgroundImage)
@@ -104,7 +104,7 @@ export default class MattingImage {
     const mattingImageDom = await this.readImageData(mattingImage)
     context.globalCompositeOperation = 'source-over'
     context.drawImage(mattingImageDom, 0, 0, this.canvasHeight, this.canvasWidth)
-    const compoundImage = await this.getCanvasObjectURL(canvas)
+    const compoundImage = await this.getCanvasObjectURL(canvas, mimeType)
     return compoundImage
   }
 }

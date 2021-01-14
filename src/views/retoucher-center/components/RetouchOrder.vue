@@ -155,6 +155,7 @@
     <auto-retouch
       v-if="showAutoRetouchBtn"
       v-show="showAutoRetouch"
+      :productId="productId"
       :photo-list="autoRetouchPhoto"
       :stream-num="orderData.streamNum"
     />
@@ -221,22 +222,25 @@ export default {
       isReturnOrder: false, // 是否退单订单
       priviewPhotoData: [], // 预览数组
       imgIndex: 0, // 照片索引
-      showAutoRetouch: true, // TODO 调试显示自动修图页面
+      showAutoRetouch: false, // 调试显示自动修图页面
       autoRetouchPhoto: [],
       showTip: false // 是否显示提示框
     }
   },
   computed: {
-    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain', 'canAutoRetouch']),
+    ...mapGetters(['retouchId', 'showOverTag', 'imgDomain', 'canAutoRetouch', 'useNewAutoApi']),
     // 是否开启沙漏
     isSandClockOpen () {
       if (!this.hourGlass) return this.hourGlass
       return Object.keys(this.hourGlass).length
     },
+    productId () {
+      const productId = _.get(this.orderData, 'productInfo.id', 0)
+      return productId
+    },
     // 是否显示自动修图按钮
     showAutoRetouchBtn () {
-      const productIdArr = AutoProductIds
-      const hasProduct = productIdArr.includes(_.get(this.orderData, 'productInfo.id', 0))
+      const hasProduct = Boolean(AutoProductIds[this.productId])
       return this.canAutoRetouch && hasProduct
     }
   },
@@ -393,7 +397,7 @@ export default {
       const finishPhotoArr = Object.values(this.finishPhoto)
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
       const uploadData = [...cachePhoto, ...finishPhotoArr]
-      AutoLog.uploadLog(uploadData)
+      AutoLog.uploadLog(uploadData, this.useNewAutoApi)
       uploadData.forEach(item => {
         delete item.orginPhotoName
         delete item.file
