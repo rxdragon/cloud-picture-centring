@@ -204,6 +204,7 @@ import ModeSwitchBox from './ModeSwitchBox'
 import guideData from './guideData.js'
 import { mapGetters } from 'vuex'
 import 'driver.js/dist/driver.min.css'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'PreviewPhoto',
@@ -319,19 +320,19 @@ export default {
           if (!this.showPhoto.versionCache) return false
           const originalPhotoPath = this.showPhoto.versionCache.original_photo.path
           this.showPhoto.src = this.imgDomain + originalPhotoPath
-          this.showPhoto.version = 'original_photo'
+          this.showPhoto.version = PHOTO_VERSION.ORIGINAL_PHOTO
         } else if (val === 'complete') {
           this.showStoreReson = true
           if (!this.showPhoto.versionCache) return false
           const completePhotoPath = this.showPhoto.versionCache.store_rework.path
           this.showPhoto.src = this.imgDomain + completePhotoPath
-          this.showPhoto.version = 'store_rework'
+          this.showPhoto.version = PHOTO_VERSION.STORE_REWORK
         } else {
           this.showMark = true
           if (!this.showPhoto.versionCache) return false
           const completePhotoPath = this.showPhoto.versionCache.store_rework.path
           this.showPhoto.src = this.imgDomain + completePhotoPath
-          this.showPhoto.version = 'complete_photo'
+          this.showPhoto.version = PHOTO_VERSION.FIRST_PHOTO
         }
       },
       immediate: true

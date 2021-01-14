@@ -1,4 +1,4 @@
-// 蓝标海草默认配置
+// 蓝标提成默认配置
 export const blueMoney = {
   retouchingAssistant: {
     1: 2,
@@ -244,7 +244,7 @@ export const blueMoney = {
   }
 }
 
-// 蓝标拼接海草默认配置
+// 蓝标拼接提成默认配置
 export const blueConcatMoney = {
   retouchingAssistant: {
     1: 4,
@@ -490,7 +490,7 @@ chiefCraftsmanMaster: {
 }
 }
 
-// 大师海草默认配置
+// 大师提成默认配置
 export const masterMoney = {
   1: 5,
 	2: 8,
@@ -514,7 +514,7 @@ export const masterMoney = {
 	20: 40
 }
 
-// 大师拼接海草默认配置
+// 大师拼接提成默认配置
 export const masterConcatMoney = {
 	1: 8,
 	2: 11,
@@ -538,7 +538,7 @@ export const masterConcatMoney = {
 	20: 43
 }
 
-// 缦图海草默认配置
+// 缦图提成默认配置
 export const maintoMoney = {
 	1: 18,
 	2: 25,
@@ -562,7 +562,31 @@ export const maintoMoney = {
 	20: 65
 }
 
-// kids海草默认配置
+// 缦图拼接提成默认配置
+export const maintoConcatMoney = {
+	1: 21,
+	2: 28,
+	3: 35,
+	4: 42,
+	5: 49,
+	6: 56,
+	7: 63,
+	8: 63,
+	9: 63,
+	10: 63,
+	11: 63,
+	12: 68,
+	13: 68,
+	14: 68,
+	15: 68,
+	16: 68,
+	17: 68,
+	18: 68,
+	19: 68,
+	20: 68
+}
+
+// kids提成默认配置
 export const kidsMoney = {
   1: 5,
   2: 8,
@@ -585,3 +609,27 @@ export const kidsMoney = {
   19: 40,
   20: 40
 }
+
+// kids拼接提成默认配置
+export const kidsConcatMoney = {
+    1: 8,
+	2: 11,
+	3: 11,
+	4: 13,
+	5: 15,
+	6: 17,
+	7: 19,
+	8: 21,
+	9: 23,
+	10: 25,
+	11: 27,
+	12: 29,
+	13: 31,
+	14: 33,
+	15: 35,
+	16: 37,
+	17: 39,
+	18: 41,
+	19: 43,
+	20: 43
+  }

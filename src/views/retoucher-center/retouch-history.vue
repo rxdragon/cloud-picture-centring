@@ -48,7 +48,7 @@
           </div>
         </el-col>
         <!-- 退单类型 -->
-        <el-col :span="8" :xl="6">
+        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 6" :xl="6">
           <div class="audit-box search-item">
             <span>退单类型</span>
             <quality-select v-model="returnType" />
@@ -76,7 +76,7 @@
           </div>
         </el-col>
         <!-- 查询按钮 -->
-        <el-col :span="8" :xl="2">
+        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 2" :xl="2">
           <div class="search-button-box search-item">
             <el-button type="primary" @click="searchList(1)">查询</el-button>
           </div>
@@ -85,7 +85,32 @@
       
       <!-- 表格内容 -->
       <div class="table-module">
-        <el-table :data="tableData" style="width: 100%;">
+        <el-table :data="tableData" style="width: 100%;" @expand-change="onTableRowChange">
+          <el-table-column type="expand" fixed="left">
+            <template slot-scope="{ row }">
+              <div class="photo-module" v-loading="row.loading">
+                <div
+                  class="photo-list"
+                  v-if="(row.isStoreReturned || row.isCloudEvaluation) && row.listShowPhotoList.length"
+                >
+                  <template v-for="(photoItem, photoIndex) in row.listShowPhotoList">
+                    <div class="photo-chunk" :key="photoIndex">
+                      <photo-box
+                        :tags="photoItem.baseData.tags"
+                        :src="photoItem.completePhoto.path"
+                        :return-quality-type="photoItem.returnQualityType"
+                        :show-special-effects="false"
+                        :show-store-part-rework-reason="false"
+                        contain-photo
+                        show-label-info
+                      />
+                    </div>
+                  </template>
+                </div>
+                <div class="no-data" v-else>暂无可申诉照片</div>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="流水号" width="200" fixed="left">
             <template slot-scope="{ row }">
               <div>
@@ -111,13 +136,14 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="接单时间" width="150">
+          <el-table-column label="接单时间" min-width="70">
             <template slot-scope="scope">
+              <span class="time-block"></span>
               {{ scope.row.receiptAt | toTimeSpan }}
             </template>
           </el-table-column>
           <el-table-column prop="retouchAllTime" label="修图总时长" width="100" />
-          <el-table-column label="海草值（颗）">
+          <el-table-column label="海草值(颗)">
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
@@ -133,7 +159,7 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="实际收益（元）">
+          <el-table-column label="实际收益(元)">
             <template slot-scope="{ row }">
               <el-popover placement="right" popper-class="income-list" trigger="hover">
                 <div class="table-detail-box">
@@ -163,7 +189,11 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column prop="isCloudEvaluation" label="云学院抽查" width="100" />
+          <el-table-column label="云学院抽查" width="100">
+            <template slot-scope="{ row }">
+              <div :class="row.isCloudEvaluation && 'spot-class'">{{ row.isCloudEvaluation ? '是' : '否' }}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="门店评价" width="120">
             <template slot-scope="{ row }">
               <div class="table-detail-box">
@@ -202,11 +232,13 @@ import CloudSpot from '@SelectBox/CloudSpot'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import CloudSpotGrassSelect from '@/components/CloudSpotGrassSelect'
+import PhotoBox from '@/components/PhotoBox'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
 import { SearchType } from '@/utils/enumerate'
 
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+import * as Commonality from '@/api/commonality.js'
 
 const SEARCH_TYPE = {
   NORMAL: 'normal', // 正常流水
@@ -215,7 +247,7 @@ const SEARCH_TYPE = {
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot, CloudSpotGrassSelect },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot, CloudSpotGrassSelect, PhotoBox },
   data () {
     return {
       SEARCH_TYPE,
@@ -377,6 +409,26 @@ export default {
      */
     handleCurrentChange () {
       this.searchList()
+    },
+    /**
+     * @description 监听表格框展开缩小
+     */
+    async onTableRowChange (row, expandedRows) {
+      row.isExpanded = !row.isExpanded
+      if (!row.listShowPhotoList.length) {
+        row.loading = true
+        const photos = await this.getIssuePhotos(row.streamId)
+        row.listShowPhotoList = photos
+      }
+      row.loading = false
+    },
+    /**
+     * @description 获取问题照片
+     */
+    async getIssuePhotos (streamId) {
+      const req = { streamId }
+      const photos = await Commonality.getIssuePhotos(req)
+      return photos
     }
   }
 }
@@ -436,6 +488,26 @@ export default {
         }
       }
     }
+
+    .photo-module {
+      .photo-list {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-right: -10px;
+        margin-bottom: -10px;
+
+        .photo-chunk {
+          width: 141px;
+          height: 141px;
+          padding: 6px;
+          margin-right: 10px;
+          margin-bottom: 10px;
+          background-color: #f5f7fa;
+          border-radius: 4px;
+        }
+      }
+    }
   }
 }
 
@@ -443,6 +515,10 @@ export default {
   color: @blue;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.spot-class {
+  color: @green;
 }
 </style>
 

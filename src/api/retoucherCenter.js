@@ -6,6 +6,7 @@ import ProductModel from '@/model/ProductModel.js'
 import OrderModel from '@/model/OrderModel.js'
 import { keyToHump } from '@/utils/index.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import { PHOTO_TAG, PHOTO_VERSION } from '@/utils/enumerate'
 
 /**
  * @description 流水列表[待修，挂起]
@@ -76,19 +77,49 @@ export function getStreamInfo (params) {
       createData.christmasSplicePhotos = _.get(firstPhoto, 'tags.values.splice_photos') || []
     }
 
+    // 初始化照片信息
     msg.photos.forEach(photoItem => {
-      const findOriginalPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'original_photo')
+      const findOriginalPhoto = photoItem.photo_version.find(versionItem => {
+        return versionItem.version === PHOTO_VERSION.ORIGINAL_PHOTO
+      })
       photoItem.path = findOriginalPhoto && PhotoTool.handlePicPath(findOriginalPhoto.path)
       photoItem.orginPhotoPath = photoItem.path
       photoItem.versionCache = { original_photo: findOriginalPhoto }
       photoItem.version = findOriginalPhoto.version
       photoItem.isCover = false
     })
+
+    // 处理关联图片
+    msg.photos.forEach(photoItem => {
+      const orginLinkPath = _.get(photoItem.tags, 'values.origin_photo_path') || ''
+      const isTemplate = photoItem.orginPhotoPath.includes('template')
+      if (orginLinkPath && isTemplate) {
+        const findRelevancePhoto = msg.photos.find(item => item.orginPhotoPath === orginLinkPath)
+        if (!findRelevancePhoto) return
+        findRelevancePhoto.relevancePhoto = photoItem
+      }
+    })
+
     // 最新退回照片
+    const tempRelationPhotos = []
     const returnShowPhotos = msg.photos.filter(photoItem => {
-      const findReturnShowPhoto = photoItem.photo_version.find(versionItem => versionItem.version === 'return_show')
+      const findReturnShowPhoto = photoItem.photo_version.find(versionItem => {
+        return versionItem.version === PHOTO_VERSION.RETURN_SHOW
+      })
+
+      // 是否被动退回
+      const isTempRelation = _.get(photoItem, 'tags.statics', []).includes(PHOTO_TAG.TEMP_RELATION)
+
+      if (isTempRelation) {
+        photoItem.isReturnPhoto = true
+        photoItem.path = findReturnShowPhoto.path
+        tempRelationPhotos.push(photoItem)
+        return false
+      }
+
       if (findReturnShowPhoto) {
-        const isStoreReturn = photoItem.tags.statics.includes('store_rework')
+        const isStoreReturn = photoItem.tags.statics.includes(PHOTO_TAG.STORE_REWORK)
+
         if (isStoreReturn) {
           const findLastStorePhoto = PhotoTool.findLastReturnPhoto(photoItem.photo_version)
           photoItem.versionCache['store_rework'] = findLastStorePhoto
@@ -99,8 +130,11 @@ export function getStreamInfo (params) {
         photoItem.isReturnPhoto = true
         photoItem.path = findReturnShowPhoto.path
       }
+
       return Boolean(findReturnShowPhoto)
     })
+
+    createData.tempRelationPhotos = tempRelationPhotos
     createData.photos = returnShowPhotos.length ? returnShowPhotos : msg.photos
     createData.hourGlass = msg.hour_glass
     createData.reviewerNote = _.get(msg, 'tags.values.review_reason', '暂无审核备注')
@@ -184,7 +218,10 @@ export function getRetouchQuotaList (params) {
       streamInfo.hasOvertimeIncome = Number(streamInfo.overtimeIncome) + Number(streamInfo.rollbackIncomeOvertime)
       streamInfo.hasOvertimeIncome = Boolean(streamInfo.hasOvertimeIncome)
       return {
-        ...streamInfo
+        ...streamInfo,
+        isExpanded: false,
+        loading: true,
+        listShowPhotoList: []
       }
     })
     createData.list = msg.list

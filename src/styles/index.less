@@ -423,6 +423,40 @@ aside {
   }
 }
 
+.panel-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #303133;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: inline-block;
+    width: 2px;
+    height: 16px;
+    content: '';
+    background-color: @blue;
+    transform: translateY(-50%);
+  }
+
+  .panel-slot {
+    margin-left: auto;
+  }
+
+  .desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: #606266;
+    line-height: 20px;
+  }
+}
+
 // 照片盒子相关
 
 .photo-box {

@@ -2,7 +2,6 @@
   <div class="order-detail page-class">
     <div class="header">
       <h3>修图详情</h3>
-
       <el-button
         type="primary"
         v-if="showAppealAccess && retoucherIsSelf && !orderData.currentStreamAppeal"
@@ -60,6 +59,7 @@
       </div>
       <photo-detail :photo-item="photoItem" />
     </div>
+
     <el-dialog
       class="appeal-dialog"
       title="我要申诉"
@@ -70,24 +70,30 @@
         <span class="item-name">申诉类型</span>
         <appeal-type-select @selectChange="appealTypeChange" v-model="appealType" />
       </div>
-      <!-- 质量退单 -->
-      <rework-appeal
-        ref="rework-appeal"
-        v-if="appealType === APPEAL_TYPE.REWORK"
-        :order-data="orderData"
-        :appeal-photos="appealPhotos"
-      />
-      <!-- 云学院评分 -->
-      <evaluate-appeal
-        ref="evaluate-appeal"
-        v-if="appealType === APPEAL_TYPE.EVALUATE"
-        :order-data="orderData"
-        :appeal-photos="appealPhotos"
-      />
-      <!-- 沙漏超时 -->
-      <div class="timeout-appeal" v-if="appealType === APPEAL_TYPE.TIMEOUT">
-        <timeout-appeal ref="timeout-appeal" :order-data="orderData" />
-      </div>
+
+      <transition name="fade-transform" mode="out-in">
+        <!-- 质量退单 -->
+        <rework-appeal
+          ref="rework-appeal"
+          v-if="appealType === APPEAL_TYPE.REWORK"
+          :order-data="orderData"
+          :appeal-photos="appealPhotos"
+        />
+
+        <!-- 云学院评分 -->
+        <evaluate-appeal
+          ref="evaluate-appeal"
+          v-if="appealType === APPEAL_TYPE.EVALUATE"
+          :order-data="orderData"
+          :appeal-photos="appealPhotos"
+        />
+
+        <!-- 沙漏超时 -->
+        <div class="timeout-appeal" v-if="appealType === APPEAL_TYPE.TIMEOUT">
+          <timeout-appeal ref="timeout-appeal" :order-data="orderData" />
+        </div>
+      </transition>
+
       <div slot="footer" class="dialog-footer">
         <el-button type="info" @click="cancelAppeal">取消</el-button>
         <el-button type="primary" @click="submitAppeal">提交</el-button>
@@ -477,6 +483,10 @@ export default {
   }
 
   .appeal-dialog {
+    & /deep/ .el-dialog__body {
+      padding-top: 10px;
+    }
+
     .dialog-footer {
       display: flex;
       justify-content: center;
