@@ -67,6 +67,7 @@
         @current-change="handlePage"
       />
     </div>
+
     <!-- 抽片提示 -->
     <el-dialog
       width="300px"
@@ -80,6 +81,8 @@
       <div class="content">抽取成功</div>
       <div class="description">共：{{ spotAllNum }}张</div>
     </el-dialog>
+
+    <!-- 打分模块 -->
     <grade-preview
       v-if="gradeInfo && showGradePreview"
       :photo-version="showPhotoVersion"

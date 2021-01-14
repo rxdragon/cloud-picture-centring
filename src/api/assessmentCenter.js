@@ -83,7 +83,7 @@ export function getSpotCheckResult (params) {
       const photoIndex = index + params.skip + 1 + msg.commitNum
       item.photoIndex = `${total}-${photoIndex}`
       // 加载预加载，与业务无关
-      const photoVersion = item.photoInfo.photoVersion
+      const photoVersion = item.photoInfo.photoSpotCheckVersion
       allPhotoPath = [...allPhotoPath, ...photoVersion]
     })
     if (!+store.getters.cacheImageSwitch) {
@@ -144,7 +144,8 @@ export function getSearchHistory (params) {
       item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, pureTag)
       item.issueLabel = item.commitInfo.issueLabel
       item.score = item.commitInfo.score
-      item.photoInfo.photoVersion.forEach(versionItem => {
+
+      item.photoInfo.photoSpotCheckVersion.forEach(versionItem => {
         versionItem.commitInfo = item.commitInfo
       })
       // 是否复评

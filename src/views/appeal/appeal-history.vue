@@ -29,7 +29,12 @@
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select needAll isMulti v-model="appealType" />
+          <appeal-type-select
+            needAll
+            clearable
+            isMulti
+            v-model="appealType"
+          />
         </div>
         <div class="search-button-box search-item">
           <el-button type="primary" @click="searchList(1)">查询</el-button>

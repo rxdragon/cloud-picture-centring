@@ -26,7 +26,7 @@
     <div class="photo-list">
       <div
         class="photo-gulp"
-        v-for="item in photoData.photoInfo.photoVersion"
+        v-for="item in photoData.photoInfo.photoSpotCheckVersion"
         :key="item.id"
         @click="startGrade(item)"
       >

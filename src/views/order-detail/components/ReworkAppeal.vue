@@ -1,12 +1,12 @@
 <template>
   <div class="rework-area">
-    <p class="appeal-photo-title" v-if="canAppeal">
-      选择问题照片
-    </p>
-    <p class="appeal-photo-title" v-if="!canAppeal">{{ reasonText }}</p>
-    <div class="appeal-photos" v-if="canAppeal">
-      <rework-appeal-photo v-for="(photo) in appealPhotos" :photo-item="photo" :key="photo.id"></rework-appeal-photo>
-    </div>
+    <p class="appeal-photo-title panel-title" v-if="!canAppeal">{{ reasonText }}</p>
+    <template v-else>
+      <p class="appeal-photo-title panel-title">选择问题照片</p>
+      <div class="appeal-photos">
+        <rework-appeal-photo v-for="photo in appealPhotos" :photo-item="photo" :key="photo.id" />
+      </div>
+    </template>
   </div>
 </template>
 

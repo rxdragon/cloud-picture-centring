@@ -1,8 +1,14 @@
 <template>
   <div class="timeout-area">
     <div v-if="canAppeal">
-      <p class="info-item">沙漏预计时长：{{ orderData.hourGlassAllTime }}</p>
-      <p class="info-item">实际修图时长：{{ orderData.retouchAllTime }}</p>
+      <div class="info-item">
+        <p class="info-title">沙漏预计时长：</p>
+        <div class="info-content">{{ orderData.hourGlassAllTime }}</div>
+      </div>
+      <div class="info-item">
+        <p class="info-title">实际修图时长：</p>
+        <div class="info-content">{{ orderData.retouchAllTime }}</div>
+      </div>
       <div class="info-item">
         <p class="info-title">问题描述(必填)：</p>
         <el-input
@@ -13,7 +19,7 @@
         />
       </div>
     </div>
-    <p v-else class="not-timeout">{{ reasonText }}</p>
+    <p v-else class="not-timeout panel-title">{{ reasonText }}</p>
   </div>
 </template>
 
@@ -57,12 +63,25 @@ export default {
     display: flex;
     align-items: flex-start;
     margin-bottom: 10px;
-  }
 
-  .info-title {
-    width: 100px;
-    font-size: 14px;
-    color: #303133;
+    .info-title {
+      display: block;
+      flex-shrink: 0;
+      width: 110px;
+      height: 31px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      color: #303133;
+
+      &.red {
+        color: @red;
+      }
+    }
+
+    .info-content {
+      font-size: 14px;
+    }
   }
 
   .not-timeout {

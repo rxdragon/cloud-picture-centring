@@ -1,34 +1,50 @@
 <template>
-  <div class="evaluate-photo">
+  <div class="evaluate-photo module-panel">
+    <!-- 照片区域 -->
     <div class="photo-area">
-      <img class="photo" :src="reworkImg" alt=""/>
-      <el-checkbox v-model="photoItem.reworkChecked"></el-checkbox>
+      <el-checkbox v-model="photoItem.reworkChecked">
+        <photo-box
+          :src="reworkImg"
+          :show-special-effects="false"
+          :show-store-part-rework-reason="false"
+          contain-photo
+          show-label-info
+        />
+      </el-checkbox>
     </div>
+    <!-- 抽片信息 -->
     <div class="info-area">
+      <!-- 抽查评分 -->
       <div class="info-item">
         <p class="info-title">抽查评分</p>
+        <div class="info-content">
+          <span class="evaluate-score">{{ photoItem.checkPoolScore }}分</span>
+        </div>
       </div>
+      <!-- 评价类型 -->
       <div class="info-item">
-        <span class="evaluate-score">{{ photoItem.checkPoolScore }}分</span>
+        <p class="info-title">抽查评价</p>
         <el-tag :class="['type-tag', photoItem.evaluatorType]" size="medium">{{ photoItem.evaluatorType | toPlantCN }}</el-tag>
       </div>
+
+      <!-- 扣分项 -->
       <div class="info-item" v-if="checkTag.length">
         <p class="info-title">扣分项</p>
+        <div class="info-content check-tag-box">
+          <el-tag
+            size="medium"
+            class="tag-item"
+            v-for="(tagItem, tagIndex) in checkTag"
+            :key="tagIndex"
+          >
+            {{ tagItem }}
+          </el-tag>
+        </div>
       </div>
-      <div class="info-item">
-        <el-tag
-          size="medium"
-          class="tag-item"
-          v-for="(tagItem, tagIndex) in checkTag"
-          :key="tagIndex"
-        >
-          {{ tagItem }}
-        </el-tag>
-      </div>
+
+      <!-- 问题描述 -->
       <div v-show="photoItem.reworkChecked" class="info-item">
         <p class="info-title">问题描述(必填)：</p>
-      </div>
-      <div v-show="photoItem.reworkChecked" class="info-item">
         <el-input
           type="textarea"
           placeholder="问题描述,最多100个字符"
@@ -42,9 +58,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import PhotoBox from '@/components/PhotoBox'
 
 export default {
   name: 'EvaluateAppealPhoto',
+  components: { PhotoBox },
   props: {
     photoItem: { type: Object, required: true }
   },
@@ -72,85 +90,113 @@ export default {
 @panelTitleWidth: 185px;
 
 .evaluate-photo {
+  display: flex;
+  margin-bottom: 24px;
+  background-color: #f5f7fa;
+  box-shadow: none;
+
   .red {
-    color: red;
+    color: @red;
   }
 
   .photo-area {
     position: relative;
-    display: inline-block;
+    flex-shrink: 0;
     width: 240px;
     height: 240px;
-    margin-right: 10px;
+    margin-right: 24px;
+    border: 1px solid transparent;
 
-    .photo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      width: 240px;
-      height: 240px;
-      object-fit: cover;
-      object-position: top;
-      border-radius: 5px;
+    &.photo-area-checked {
+      box-sizing: border-box;
+      border: 1px solid @blue;
     }
 
     .el-checkbox {
-      position: absolute;
-      right: 4px;
-      bottom: 4px;
-      z-index: 2;
+      width: 100%;
+      height: 100%;
+
+      & /deep/ .el-checkbox__input {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        z-index: 99;
+      }
+
+      .photo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        border-radius: 5px;
+      }
     }
   }
 
   .info-area {
-    display: inline-block;
-    width: 600px;
-    vertical-align: top;
+    width: 100%;
+    padding-top: 12px;
 
     .info-item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 10px;
-    }
 
-    .info-title {
-      font-size: 14px;
-      color: #303133;
+      .info-title {
+        display: block;
+        flex-shrink: 0;
+        width: 110px;
+        height: 31px;
+        margin-right: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #303133;
+        text-align: right;
 
-      &.red {
-        color: red;
+        &.red {
+          color: @red;
+        }
+      }
+
+      .info-content {
+        font-size: 14px;
+
+        &.check-tag-box {
+          margin-right: -10px;
+          margin-bottom: -4px;
+
+          .tag-item {
+            margin-right: 10px;
+            margin-bottom: 4px;
+          }
+        }
       }
     }
 
     .type-tag {
-      margin-left: 10px;
+      margin-right: 10px;
 
       &.plant {
         color: #fff;
-        background-color: #44c27e;
-        border-color: #44c27e;
+        background-color: @panGreen;
+        border-color: @panGreen;
       }
 
       &.pull {
         color: #fff;
-        background-color: #ff3974;
-        border-color: #ff3974;
+        background-color: @red;
+        border-color: @red;
       }
 
       &.none {
         color: #fff;
-        background-color: #4669fb;
-        border-color: #4669fb;
+        background-color: @blue;
+        border-color: @blue;
       }
-    }
-
-    .tag-item {
-      margin-right: 10px;
-    }
-
-    .el-textarea {
-      width: 500px;
     }
   }
 }

@@ -155,7 +155,7 @@
             </div>
           </el-form-item>
           <el-form-item label="是否需要拼接">
-            <el-radio-group v-model="productConfig.needJoint" :disabled="disableChange">
+            <el-radio-group v-model="productConfig.needJoint">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="2">否</el-radio>
             </el-radio-group>
@@ -308,18 +308,7 @@ export default {
         needJoint: '', // 是否需要拼接
         productRemark: ''
       },
-      disableChange: false,
       checkPass: 0 // 0 没审核 1 审核通过 2 拒绝审核
-    }
-  },
-  watch: {
-    'productConfig.standard': function (val) {
-      if (val === 'blue' || val === 'master') {
-        this.disableChange = false
-      } else {
-        this.disableChange = true
-        this.productConfig.needJoint = 2
-      }
     }
   },
   created () {
@@ -386,10 +375,7 @@ export default {
      */
     defaultGrass () {
       const type = this.productConfig.standard
-      if (!type) {
-        this.$newMessage.warning('请选择修图标准')
-        return false
-      }
+      if (!type) return this.$newMessage.warning('请选择修图标准')
       this.productConfig.grassData = JSON.parse(JSON.stringify(defaultGrass[type + 'Grass']))
     },
     /**
@@ -397,10 +383,7 @@ export default {
      */
     defaultJoinGrass () {
       const type = this.productConfig.standard
-      if (!type) {
-        this.$newMessage.warning('请选择修图标准')
-        return false
-      }
+      if (!type) return this.$newMessage.warning('请选择修图标准')
       this.productConfig.joinGrassData = JSON.parse(JSON.stringify(defaultGrass[type + 'ConcatGrass']))
     },
     /**
@@ -408,10 +391,7 @@ export default {
      */
     defaultNotJointMoney () {
       const type = this.productConfig.standard
-      if (!type) {
-        this.$newMessage.warning('请选择修图标准')
-        return false
-      }
+      if (!type) return this.$newMessage.warning('请选择修图标准')
       if (type === 'blue') {
         this.productConfig.blueNotJointMoney = JSON.parse(JSON.stringify(defaultMoney[type + 'Money']))
       } else {
