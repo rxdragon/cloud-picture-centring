@@ -167,7 +167,7 @@
             ref="fabric-canvas"
             :style="photoZoomStyle"
             :option-obj="canvasOption"
-            :show-canvas="isFinishPhoto"
+            :show-canvas="isFirstPhoto"
             @cancelDeleteLabel="addDeleteLabel"
             @click.native="zoom"
           />
@@ -278,7 +278,7 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'
 
 import { mapGetters } from 'vuex'
-import { PlantIdTypeEnum } from '@/utils/enumerate'
+import { PlantIdTypeEnum, PHOTO_VERSION } from '@/utils/enumerate'
 
 
 let allLabel = null
@@ -361,7 +361,7 @@ export default {
     ...mapGetters(['imgDomain']),
     // 展示照片数据
     photoArray () {
-      const photoVersion = _.get(this.info, 'photoInfo.photoVersion', [])
+      const photoVersion = _.get(this.info, 'photoInfo.photoSpotCheckVersion', [])
       const data = photoVersion.map(item => {
         item.src = this.imgDomain + item.path
         return item
@@ -373,8 +373,8 @@ export default {
       return this.photoArray[this.photoIndex] || {}
     },
     // 是否最新修片
-    isFinishPhoto () {
-      return this.showPhoto.version === 'complete_photo'
+    isFirstPhoto () {
+      return this.showPhoto.version === PHOTO_VERSION.FIRST_PHOTO
     }
   },
   created () {
@@ -689,8 +689,8 @@ export default {
      * @description 创建canvas
      */
     createCanvas (drawType) {
-      if (!this.isFinishPhoto) {
-        this.$newMessage.warning('请在成片上进行评分')
+      if (!this.isFirstPhoto) {
+        this.$newMessage.warning('请在一次成片上进行评分')
         return false
       }
       if (!this.showCanvas) {

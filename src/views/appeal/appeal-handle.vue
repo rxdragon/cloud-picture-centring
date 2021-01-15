@@ -39,7 +39,12 @@
         <!-- 申诉类型 -->
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select needAll isMulti v-model="appealType" />
+          <appeal-type-select
+            needAll
+            clearable
+            isMulti
+            v-model="appealType"
+          />
         </div>
         <!-- 摄影机构 -->
         <div class="search-item">
@@ -56,7 +61,12 @@
       </div>
       <div class="table-module">
         <el-table :data="tableData" style="width: 100%;">
-          <el-table-column prop="streamNum" label="申诉信息" fixed="left">
+          <el-table-column
+            prop="streamNum"
+            label="申诉信息"
+            fixed="left"
+            width="250"
+          >
             <template slot-scope="{ row }">
               <div>
                 <p class="table-title">申诉时间：</p>
@@ -77,7 +87,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="appealTypeName" label="申诉类型" width="150" />
-          <el-table-column prop="appealStatusDesc" label="处理状态" width="100"/>
+          <el-table-column prop="appealStatusDesc" label="处理状态" width="100" />
           <el-table-column label="初审详情">
             <template slot-scope="{ row }">
               <div>

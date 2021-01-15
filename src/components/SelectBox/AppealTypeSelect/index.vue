@@ -6,7 +6,6 @@
       v-on="$listeners"
       :multiple="isMulti"
       :placeholder="needAll ? '全部' : ''"
-      clearable
     >
       <el-option
         v-for="(optionItem, optionIndex) in options"

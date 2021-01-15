@@ -9,9 +9,9 @@
     >
       <div class="down-list">
         <div class="title-row">
-          <div class="panel-title">下载内容</div>
-          <div class="panel-title">下载状态</div>
-          <div class="panel-title">操作</div>
+          <div class="down-panel-title">下载内容</div>
+          <div class="down-panel-title">下载状态</div>
+          <div class="down-panel-title">操作</div>
           <div class="delete-all">
             <el-button icon="el-icon-delete-solid" @click="clearAll" />
           </div>
@@ -139,7 +139,7 @@ export default {
       }
     }
 
-    .panel-title {
+    .down-panel-title {
       padding: 10px 21px;
       font-size: 14px;
       font-weight: 500;

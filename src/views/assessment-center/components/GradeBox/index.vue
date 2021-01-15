@@ -110,6 +110,7 @@ import PhotoList from '@/components/PhotoList'
 import GradePreview from '../GradePreview.vue'
 import * as AssessmentCenter from '@/api/assessmentCenter.js'
 import { mapGetters } from 'vuex'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'GradeBox',
@@ -131,7 +132,7 @@ export default {
       return this.photoInfo
     },
     photoVersionList () {
-      const photoVersionInfo = this.photoInfo.photoInfo.photoVersion
+      const photoVersionInfo = this.photoInfo.photoInfo.photoSpotCheckVersion
       photoVersionInfo.forEach(versionItem => {
         versionItem.phototag = this.photoInfo.photoData.tags
       })
@@ -155,8 +156,6 @@ export default {
         await AssessmentCenter.updateCommitHistory(req)
         this.$newMessage.success('重新评价成功')
         this.gradeInfo = null
-      } catch (error) {
-        console.error(error)
       } finally {
         this.$emit('updateList')
       }
@@ -165,7 +164,7 @@ export default {
      * @description 打开重新评价窗口
      */
     afreshGrade () {
-      this.showPhotoVersion = 'complete_photo'
+      this.showPhotoVersion = PHOTO_VERSION.FIRST_PHOTO
       this.gradeInfo = this.photoInfo
       this.showGradePreview = true
     }

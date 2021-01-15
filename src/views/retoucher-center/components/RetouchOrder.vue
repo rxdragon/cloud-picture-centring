@@ -54,6 +54,39 @@
       </div>
     </div>
 
+    <!-- 关联退回照片 -->
+    <div class="christmas-photos module-panel" v-if="tempRelationPhotos.length">
+      <div class="photo-panel-title panel-title">
+        <span>关联退回照片</span>
+        <div class="button-box">
+          <el-button type="primary" size="small" @click="oneTempRelationPhoto">
+            一键下载
+          </el-button>
+        </div>
+      </div>
+      <div class="photo-panel">
+        <div
+          v-for="(photoItem, photoIndex) in tempRelationPhotos"
+          :key="photoIndex"
+          class="photo-box"
+        >
+          <photo-box
+            downing
+            photo-name
+            preload-photo
+            show-joint-label
+            :tags="photoItem.tags"
+            :show-store-part-rework-reason="false"
+            :orgin-photo-path="photoItem.orginPhotoPath"
+            :down-complete="photoItem.isReturnPhoto"
+            :stream-num="orderData.streamNum"
+            :rename="photoItem.position"
+            :src="photoItem.path"
+          />
+        </div>
+      </div>
+    </div>
+
     <!-- 成片信息 -->
     <div class="photo-module module-panel">
       <div class="photo-panel-title panel-title">
@@ -78,6 +111,7 @@
           </el-button>
         </div>
       </div>
+
       <div class="photo-panel">
         <div
           v-for="(photoItem, photoIndex) in photos"
@@ -136,6 +170,7 @@
         @change="uploadDown"
       />
     </div>
+
     <!-- 问题标签 -->
     <issue-label
       :issue-data="issueData"
@@ -198,6 +233,7 @@ export default {
         requireLabel: {}
       },
       christmasSplicePhotos: [], // 拼接照信息
+      tempRelationPhotos: [], // 关联退回照片
       photos: [], // 照片数组
       reviewerNote: '', // 审核备注
       finishPhoto: {}, // 最后提交成片
@@ -275,7 +311,7 @@ export default {
       DownIpc.addDownloadFiles(photoArr)
     },
     /**
-     * @description 重命名凭借下载
+     * @description 重命名拼接下载
      */
     oneRenamePhoto () {
       const savePath = `/${this.orderData.streamNum}`
@@ -286,6 +322,19 @@ export default {
           url: photoItem.path,
           path: savePath,
           rename
+        }
+      })
+      DownIpc.addDownloadFiles(photoArr)
+    },
+    /**
+     * @description 一键下载关联退回照片
+     */
+    oneTempRelationPhoto () {
+      const savePath = `/${this.orderData.streamNum}`
+      const photoArr = this.tempRelationPhotos.map(photoItem => {
+        return {
+          url: photoItem.path,
+          path: savePath,
         }
       })
       DownIpc.addDownloadFiles(photoArr)
@@ -325,6 +374,8 @@ export default {
           this.countDown()
         }
         this.photos = data.photos
+        // 关联退回照片
+        this.tempRelationPhotos = data.tempRelationPhotos
         // 判断是否显示上传提示框
         this.checkHasSpecialExt(data.photos)
 
@@ -403,10 +454,20 @@ export default {
         delete item.file
         delete item.autoKey
       })
+
+      // 添加关联照片，不更改path路径，最后一张return_show版本图片
+      this.tempRelationPhotos.forEach(photoItem => {
+        uploadData.push({
+          id: photoItem.id,
+          path: photoItem.path
+        })
+      })
+
       const reqData = {
         streamId: this.realAid,
         photoData: uploadData
       }
+      
       // 设置问题标签
       if (issue) { reqData.streamTagData = issue }
       this.$store.dispatch('setting/showLoading', this.routeName)

@@ -1,7 +1,6 @@
 import axios from '@/plugins/axios.js'
 import store from '@/store' // vuex
-import { keyToHump } from '@/utils'
-import { settlePhoto } from '@/utils/photoTool.js'
+import * as PhotoTool from '@/utils/photoTool.js'
 import { PhotoStatics } from '@/utils/enumerate.js'
 
 /**
@@ -35,58 +34,63 @@ export function getPhotoInfo (params) {
     method: 'GET',
     params
   }).then(msg => {
-    const createData = keyToHump(msg)
-    createData.orderNum = createData.stream.order.external_num
-    createData.streamNum = createData.stream.stream_num
-    createData.productName = _.get(createData, 'stream.product.name', '-')
-    createData.customeName = _.get(createData, 'stream.order.tags.values.customer_name', '-')
-    createData.specialEfficacy = _.get(createData, 'tags.values.special_efficacy')
-    createData.labelTag = _.get(createData, 'stream.tags.values.retouch_claim', {})
-    createData.orderMark = _.get(createData, 'stream.order.note.orderNote', '-')
-    createData.dresserMark = _.get(createData, 'stream.order.note.dresserNote', '-') || '-'
-    createData.photographerRemark = _.get(createData, 'stream.note.photography_note', '-')
-    createData.retouchMark = _.get(createData, 'stream.note.retouch_note', '-')
-    createData.isPass = Boolean(createData.stream.pass_at)
+    const createInfo = {
+      orderNum: _.get(msg, 'stream.order.external_num') || '',
+      streamNum: _.get(msg, 'stream.stream_num') || '',
+      productName: _.get(msg, 'stream.product.name') || '-',
+      customeName: _.get(msg, 'stream.order.tags.values.customer_name') || '-',
+      specialEfficacy: _.get(msg, 'tags.values.special_efficacy') || '-',
+      labelTag: _.get(msg, 'stream.tags.values.retouch_claim') || {},
+      orderMark: _.get(msg, 'stream.order.note.orderNote') || '-',
+      dresserMark: _.get(msg, 'stream.order.note.orderNote'),
+      photographerRemark: _.get(msg, 'stream.note.photography_note') || '-',
+      retouchMark: _.get(msg, 'stream.note.retouch_note') || '-',
+      isPass: Boolean(_.get(msg, 'stream.pass_at')),
+      canAttitude: false,
+      isAttitudeBySelf: _.get(msg, 'attitude.staff_id') === store.getters.userInfo.id
+    }
+
     // 判断能否打分
-    createData.canAttitude = false
-    if (!createData.attitude) {
-      createData.canAttitude = true
+    if (!createInfo.canAttitude) {
+      createInfo.canAttitude = true
     } else {
-      createData.isAttitudeBySelf = createData.attitude.staff_id === store.getters.userInfo.id
       const isAttitudeScore = ['good', 'bad']
-      const isAttitude = isAttitudeScore.includes(createData.attitude.attitude)
-      createData.canAttitude = createData.isAttitudeBySelf || !isAttitude
+      const attitude = _.get(msg, 'attitude.attitude') || ''
+      const isAttitude = isAttitudeScore.includes(attitude)
+      createInfo.canAttitude = createInfo.isAttitudeBySelf || !isAttitude
     }
 
-    if (createData.isPass) {
-      const reworkNum = _.get(createData, 'stream.tags.values.rework_num', 0)
-      const isReturnPhoto = _.get(createData, 'tags.statics', []).includes(PhotoStatics.CheckReturn)
-      const isStoreReturn = _.get(createData, 'tags.statics', []).includes(PhotoStatics.StoreReturn)
-      createData.photoVersion = createData.lastFirstPhoto && isReturnPhoto
-        ? settlePhoto([...createData.otherPhotoVersion, createData.lastFirstPhoto], reworkNum, isStoreReturn)
-        : settlePhoto([...createData.otherPhotoVersion], reworkNum, isStoreReturn)
+    // 处理图片展示版本
+    if (createInfo.isPass) {
+      const reworkNum = _.get(msg, 'stream.tags.values.rework_num') || 0
+      const isStoreReturn = _.get(msg, 'tags.statics', []).includes(PhotoStatics.StoreReturn)
+      // 统一显示版本为第一次成片，取消最后一次成品
+      createInfo.photoVersion = PhotoTool.settlePhoto([...msg.photo_version], reworkNum, isStoreReturn)
     } else {
-      const originPhoto = createData.otherPhotoVersion.find(item => item.version === 'original_photo')
-      createData.photoVersion = [originPhoto]
+      // 不通过只展示原图
+      const originPhoto = msg.other_photo_version.find(item => item.version === 'original_photo')
+      createInfo.photoVersion = [originPhoto]
     }
-    
-    // 兼容单个版本的照片不显示`照片标记提交按钮`
-    if (createData.photoVersion.length === 1) { createData.canAttitude = false }
 
-    const storeEvaluateStream = _.get(createData, 'stream.store_evaluate_stream')
-    const storeEvaluateStar = _.get(createData, 'stream.store_evaluate_stream.store_evaluate_star')
-    createData.workerInfo = {
-      storeName: _.get(createData, 'stream.order.tags.values.store_name', '-'),
-      photographer: _.get(createData, 'stream.order.tags.values.photographer', '-'),
-      retoucher: _.get(createData, 'stream.retoucher.name') || _.get(createData, 'stream.retoucher.real_name') || '-',
-      retouchGroup: _.get(createData, 'stream.retoucher.retouch_group.name', '-'),
-      reviewer: _.get(createData, 'stream.reviewer.name') || _.get(createData, 'stream.reviewer.real_name') || '-',
-      dresser: _.get(createData, 'stream.order.tags.values.dresser', '-'),
-      watcherName: _.get(createData, 'stream.tags.values.watcher_name', '-'),
+    // 兼容单个版本的照片不显示`照片标记提交按钮`
+    if (createInfo.photoVersion.length === 1) { createInfo.canAttitude = false }
+
+    const storeEvaluateStream = _.get(msg, 'stream.store_evaluate_stream') || ''
+    const storeEvaluateStar = _.get(msg, 'stream.store_evaluate_stream.store_evaluate_star') || 0
+    const workerInfo = {
+      storeName: _.get(msg, 'stream.order.tags.values.store_name') || '-',
+      photographer: _.get(msg, 'stream.order.tags.values.photographer') || '-',
+      retoucher: _.get(msg, 'stream.retoucher.name') || _.get(msg, 'stream.retoucher.real_name') || '-',
+      retouchGroup: _.get(msg, 'stream.retoucher.retouch_group.name', '-'),
+      reviewer: _.get(msg, 'stream.reviewer.name') || _.get(msg, 'stream.reviewer.real_name') || '-',
+      dresser: _.get(msg, 'stream.order.tags.values.dresser') || '-',
+      watcherName: _.get(msg, 'stream.tags.values.watcher_name') || '-',
       storeEvaluateStar: storeEvaluateStream && storeEvaluateStar,
-      storeEvaluateReason: _.get(createData, 'stream.store_evaluate_stream.store_evaluate_reason', '-')
+      storeEvaluateReason: _.get(msg, 'stream.store_evaluate_stream.store_evaluate_reason') || '-'
     }
-    return createData
+    createInfo.workerInfo = workerInfo
+
+    return createInfo
   })
 }
 
@@ -143,8 +147,8 @@ export function getAttitudePhotoInfo (params) {
     const retoucherLeaderNickName = _.get(createData, 'stream.retoucher.retoucher_leader.nickname')
     const retoucherLeaderName = _.get(createData, 'stream.retoucher.retoucher_leader.name')
     createData.photoVersion = createData.last_first_photo && isReturnPhoto
-      ? settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1, isStoreReturn)
-      : settlePhoto([...createData.other_photo_version], 2, isStoreReturn)
+      ? PhotoTool.settlePhoto([...createData.other_photo_version, createData.last_first_photo], 1, isStoreReturn)
+      : PhotoTool.settlePhoto([...createData.other_photo_version], 2, isStoreReturn)
     createData.productName = createData.stream.product.name
     createData.retoucher = retoucherName || retoucherRealName || '-'
     createData.retoucherLeader = retoucherLeaderNickName || retoucherLeaderName || '-'

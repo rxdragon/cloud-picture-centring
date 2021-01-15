@@ -116,7 +116,7 @@
           <el-table-column label="云学院抽查">
             <template slot-scope="{ row }">
               <div class="table-detail-box">
-                <p>是否抽查：{{ row.isCloudEvaluation }}</p>
+                <p>是否抽查：{{ row.isCloudEvaluation ? '是' : '否' }}</p>
                 <p>评价时间：{{ row.cloudEvaluateTime }}</p>
               </div>
             </template>
