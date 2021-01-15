@@ -304,13 +304,22 @@ export const qualityTypeToCN = {
 /**
  * @description 自动修图模式
  */
-export const PHOTO_FLAG = {
-  WARP_BUFFING: 'warp_retouch',
-  CROP_BUFFING: 'crop_retouch',
-  ORIGINAL: 'original',
-  CROP: 'crop',
-  WARP: 'warp',
+export const OPERATION_TYPE = {
+  CROP: 'c', // 裁切
+  WARP: 'w', // 液化
+  RETOUCH: 'r', // 磨皮
+  MATTING: 'm', // 抠图
 }
+
+export const prioritySequence = [
+  `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.RETOUCH}${OPERATION_TYPE.MATTING}`,
+  `${OPERATION_TYPE.CROP}${OPERATION_TYPE.RETOUCH}${OPERATION_TYPE.MATTING}`,
+  `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.MATTING}`,
+  `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.RETOUCH}`,
+  `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}`,
+  `${OPERATION_TYPE.CROP}${OPERATION_TYPE.RETOUCH}`,
+  `${OPERATION_TYPE.CROP}${OPERATION_TYPE.MATTING}`,
+]
 
 // 通知功能授权状态
 export const NOTIFY_STATUS = {
