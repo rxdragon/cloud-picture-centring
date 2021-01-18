@@ -264,14 +264,18 @@ export default {
       if (!hasSameName) throw new Error('请上传与原片文件名一致的照片。')
     },
     /**
-     * @description 检查是否已经上传
+     * @description 检查文件名字是否相同
      */
-    checkHasUploadedPhoto (file) {
+    checkHasUploadedPhoto (file, uploadPhotoSha1) {
       let fileName = PhotoTool.fileNameFormat(file.name)
       fileName = PhotoTool.fixAutoPhotoName(fileName)
       const finishPhotoArr = Object.values(this.finishPhoto)
       const allFinishPhoto = [...this.cachePhoto, ...finishPhotoArr]
-      const findPhoto = allFinishPhoto.find(finishPhotoItem => finishPhotoItem.orginPhotoName === fileName)
+      const findPhoto = allFinishPhoto.find(finishPhotoItem => {
+        const uploadFileNameSame = finishPhotoItem.orginPhotoName === fileName
+        const md5FileNameSame = finishPhotoItem.path.includes(uploadPhotoSha1)
+        return uploadFileNameSame || md5FileNameSame
+      })
       if (findPhoto) {
         this.signRepetitionPhoto(findPhoto)
         throw new Error('该照片已经上传，请移除该照片' + findPhoto.path + '再上传。')
@@ -305,7 +309,7 @@ export default {
         this.checkFileType(type) // 判断是否是图片
         this.checkHasSaveName(file) // 判断是否与原片名字相同
         this.checkPsPhoto(file, uploadPhotoSha1) // 判断图片是否修改
-        this.checkHasUploadedPhoto(file) // 判断是否已经上传
+        this.checkHasUploadedPhoto(file, uploadPhotoSha1) // 判断是否已经上传
         file.startTime = Date.now() / 1000
         file.sha1Name = uploadPhotoSha1
         return Promise.resolve()
