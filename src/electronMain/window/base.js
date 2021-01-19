@@ -35,3 +35,31 @@ export async function startWindow (name, url, options) {
     windows[name].focus()
   }
 }
+
+/**
+ * @description 创建窗口
+ * @param {*} name 窗口名字
+ * @param {*} url 地址
+ * @param {*} options 选项
+ */
+export async function startOtherWindow (name, url, options) {
+  if (!windows[name]) {
+    options.show = false
+    const win = new BrowserWindow(options)
+    windows[name] = win
+
+    win.on('ready-to-show', () => {
+      win.show()
+    })
+
+    win.on('closed', () => {
+      delete windows[name]
+    })
+
+    await win.loadURL(url)
+
+    if (global.isDevelopment) win.webContents.openDevTools({ mode: "detach" })
+  } else {
+    windows[name].focus()
+  }
+}

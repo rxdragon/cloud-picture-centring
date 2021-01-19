@@ -133,7 +133,8 @@ export function getStreamInfo (params) {
       retoucherJobNum: streamData.retoucherJobNum,
       retouchStandard: streamData.retouchStandard,
       timeoutAppealReason: '', // 沙漏超时申诉理由
-      timeoutRollbackLog: streamData.timeoutRollbackLog
+      timeoutRollbackLog: streamData.timeoutRollbackLog,
+      storeName: streamData.storeName
     }
     createData.photos = msg.photos
     return createData

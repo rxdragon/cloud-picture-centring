@@ -13,6 +13,10 @@ module.exports = {
   lintOnSave: true, // eslint 错误处理，true表示对待eslint错误为warnings，warnings不会导致编译失败
   productionSourceMap: true, // 生产环境是否开启source map
   integrity: false, // 内容安全策略及子资源完整性
+  pages: {
+    index: 'src/main.js',
+    workbench: 'WorkbenchSrc/main.js'
+  },
   configureWebpack: (c) => {
     const config = {
       resolve: {

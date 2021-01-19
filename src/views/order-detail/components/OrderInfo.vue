@@ -1,10 +1,11 @@
 <template>
   <div class="order-info">
-    <div class="table-panel panel-order">
+    <div class="table-panel panel-order" :class="showWorkInfo && 'panel-order-retoucher'">
       <div class="content-title">流水号</div>
       <div class="content-title">所属机构</div>
       <div class="content-title">拍摄产品</div>
       <div class="content-title">摄影师</div>
+      <div class="content-title" v-if="showWorkInfo">门店</div>
       <div class="content-title">照片数量</div>
     </div>
     <div class="table-panel panel-order">
@@ -12,6 +13,7 @@
       <div class="panel-content">{{ orderInfo.photographerOrg }}</div>
       <div class="panel-content">{{ orderInfo.productName }}</div>
       <div class="panel-content">{{ orderInfo.photographerName }}</div>
+      <div class="panel-content" v-if="showWorkInfo">{{ orderInfo.storeName }}</div>
       <div class="panel-content">{{ orderInfo.photoNum }}</div>
     </div>
     <template v-if="!isWorkBoardInfo">
@@ -98,6 +100,7 @@
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
 import ShowEvaluate from '@/components/ShowEvaluate'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrderInfo',
@@ -107,6 +110,7 @@ export default {
     isWorkBoardInfo: { type: Boolean }
   },
   computed: {
+    ...mapGetters(['showWorkInfo']),
     orderInfo () {
       return this.orderData
     }
@@ -133,7 +137,11 @@ export default {
   }
 
   .panel-order {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .panel-order-retoucher {
+    grid-template-columns: repeat(6, 1fr);
   }
 
   .panel-grade {

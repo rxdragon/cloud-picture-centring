@@ -200,7 +200,7 @@ export function getStreamInfo (params) {
 
     createData.orderData = {
       streamNum: data.streamNum,
-      photographerOrg: _.get(data, 'order.photographer_org.name', '-'),
+      photographerOrg: _.get(data, 'order.photographer_org.name') || '-',
       productName: data.product.name,
       photoNum: data.photos.length,
       requireLabel: _.get(data, 'tags.values.retouch_claim', {}),
@@ -210,8 +210,9 @@ export function getStreamInfo (params) {
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,
       retoucherName: _.get(data, 'retoucher.name') || _.get(data, 'retoucher.real_name') || '-',
-      reviewerName: _.get(data, 'reviewer.name', ''),
-      photographerName: _.get(data, 'order.tags.values.photographer', '-')
+      reviewerName: _.get(data, 'reviewer.name') || '',
+      photographerName: _.get(data, 'order.tags.values.photographer') || '-',
+      storeName: _.get(data, 'order.tags.values.store_name') || '-'
     }
     createData.photos = data.photos
     return createData

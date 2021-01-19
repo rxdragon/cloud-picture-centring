@@ -47,15 +47,15 @@ export function getPhotoInfo (params) {
       retouchMark: _.get(msg, 'stream.note.retouch_note') || '-',
       isPass: Boolean(_.get(msg, 'stream.pass_at')),
       canAttitude: false,
-      isAttitudeBySelf: _.get(msg, 'attitude.staff_id') === store.getters.userInfo.id
+      isAttitudeBySelf: _.get(msg, 'attitude.staff_id') === store.getters.userInfo.id,
+      attitude: _.get(msg, 'attitude') || {}
     }
-
+    const attitude = _.get(msg, 'attitude.attitude') || ''
     // 判断能否打分
-    if (!createInfo.canAttitude) {
+    if (!attitude) {
       createInfo.canAttitude = true
     } else {
       const isAttitudeScore = ['good', 'bad']
-      const attitude = _.get(msg, 'attitude.attitude') || ''
       const isAttitude = isAttitudeScore.includes(attitude)
       createInfo.canAttitude = createInfo.isAttitudeBySelf || !isAttitude
     }

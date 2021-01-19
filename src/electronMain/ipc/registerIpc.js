@@ -1,4 +1,5 @@
 import { startNetworkDebugWindow } from '../window/networkDebug.js'
+import { startWorkbenchWindow } from '../window/workbenchWindow.js'
 const { ipcMain } = require('electron')
 
 export default function registerIpc () {
@@ -20,6 +21,11 @@ export default function registerIpc () {
 
   ipcMain.on('network-debug', async (event, url) => {
     await startNetworkDebugWindow(url)
+    event.returnValue = 'success'
+  })
+
+  ipcMain.on('workbench-window', async (event, url) => {
+    await startWorkbenchWindow(url)
     event.returnValue = 'success'
   })
 }
