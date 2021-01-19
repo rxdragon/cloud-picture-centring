@@ -5,7 +5,6 @@ import { keyToHump } from '@/utils/index'
 import { StreamState } from '@/utils/enumerate'
 import * as PhotoTool from '@/utils/photoTool.js'
 
-
 // 获取流水看板数据
 /**
  * @description 获取角色组列表
@@ -272,6 +271,19 @@ export function getOrderInfoForCloud (params) {
  * @param {*} params 
  */
 export function advanceAssignOrderToStaff (params) {
+  return axios({
+    url: '/project_cloud/order/advanceAssignOrderToStaff',
+    method: 'POST',
+    data: params
+  })
+}
+
+/**
+ * @description 退回队列
+ * @param {*} params 
+ */
+export function returnBackQueue (params) {
+  // TODO 退回接口
   return axios({
     url: '/project_cloud/order/advanceAssignOrderToStaff',
     method: 'POST',

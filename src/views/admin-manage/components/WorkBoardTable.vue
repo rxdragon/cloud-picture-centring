@@ -40,7 +40,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="index" label="修图师" min-width="140">
+      <el-table-column label="修图师" min-width="140">
         <template slot-scope="scope">
           <div v-if="scope.row.retoucherOrgName" class="staff-info">
             <span>修图师：{{ scope.row.retoucherOrgRetouchName }}</span>
@@ -75,6 +75,9 @@
                 <el-dropdown-item v-if="canManualReview(scope.row)" class="warning-color" @click.native="manualReview(scope.row.id)">
                   直接审核
                 </el-dropdown-item>
+                <el-dropdown-item  v-if="canReturnQueue(scope.row)" @click.native="returnBackQueue(scope.row.id)">
+                  退回队列
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <el-button
@@ -95,8 +98,9 @@
 
 <script>
 import * as AdminManage from '@/api/adminManage'
-import { StreamStateEnum } from '@/utils/enumerate'
+import { STREAM_STATE } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
+import * as dayjs from 'dayjs'
 
 export default {
   name: 'WorkBoardTable',
@@ -121,22 +125,44 @@ export default {
       return this.canUrgent(item) || this.canManualReview(item)
     },
     canSeeInfo (item) {
-      return this.showWorkInfo || item.state !== StreamStateEnum.WaitRetouch
+      return this.showWorkInfo || item.state !== STREAM_STATE.WAIT_RETOUCH
     },
     /**
      * @description 是够可以加急
      */
     canUrgent (item) {
-      const urgentState = [StreamStateEnum.Reviewing, StreamStateEnum.Finish]
+      const urgentState = [STREAM_STATE.REVIEWING, STREAM_STATE.FINISH]
       return this.showUrgentStream && !item.staticsUrgent && !urgentState.includes(item.state)
     },
     /**
      * @description 是否可以直接审核
      */
     canManualReview (item) {
-      const isWaitReview = [StreamStateEnum.WaitReview].includes(item.state)
+      const isWaitReview = [STREAM_STATE.WAIT_REVIEW].includes(item.state)
       const hasManualReviewPermission = this.roles.includes('AdminManage.workBoard.manualReview')
       return isWaitReview && hasManualReviewPermission
+    },
+    /**
+     * @description 是否可以退回队列
+     */
+    canReturnQueue (item) {
+      // 判断是否有权限
+      const hasManualReviewPermission = this.roles.includes('AdminManage.workBoard.manualReview')
+      if (!hasManualReviewPermission) return false
+
+      // 判断是否在修图中
+      const isRetouch = item.state === STREAM_STATE.RETOUCHING
+      if (!isRetouch) return false
+
+      // 判断时间是否处于 22点后 或者 8点前
+      let startTime = dayjs().format('YYYY-MM-DD') + ' 22:00'
+      startTime = dayjs(startTime).valueOf()
+
+      let endTime = dayjs().format('YYYY-MM-DD') + ' 08:00'
+      endTime = dayjs(endTime).valueOf()
+      const nowTime = new Date().getTime()
+      const canReturnQueueTime = nowTime >= startTime || nowTime <= endTime
+      return canReturnQueueTime
     },
     /**
      * @description 加急流水
@@ -191,6 +217,19 @@ export default {
         .finally(() => {
           this.$store.dispatch('setting/hiddenLoading', this.routeName)
         })
+    },
+    /**
+     * @description 退回队列
+     */
+    async returnBackQueue (streamId) {
+      // TODO 退回
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const req = { id: streamId }
+        await AdminManage.returnBackQueue(req)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     }
   }
 }

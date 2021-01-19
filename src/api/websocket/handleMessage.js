@@ -31,8 +31,12 @@ export default function handleMessage (data, chat) {
     case 'StreamReviewerReceive':
       getReviewerReceive()
       break
+    // 用户离线
     case 'StaffOffline':
       setStaffOffline()
+      break
+    case 'streamWithDrawn':
+      handleStreamDraw(typeMessage)
       break
     default:
       break
@@ -145,4 +149,21 @@ async function getReviewerReceive () {
  */
 function setStaffOffline () {
   store.dispatch('user/setUserlineState', 'offline')
+}
+
+/**
+ * @description 摄影撤回订单
+ * @param {*} data // 流水号
+ */
+function handleStreamDraw (data) {
+  // TODO 摄影撤回订单
+  const { streamNum } = data
+  // 桌面通知
+  const notificationMsg = '摄影师撤回流水通知'
+  const notificationData = {
+    title: notificationMsg,
+    body: `${streamNum}已被系统撤除`,
+    icon: errorPng
+  }
+  Vue.prototype.$notification(notificationData)
 }

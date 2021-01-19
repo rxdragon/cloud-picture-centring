@@ -5,19 +5,22 @@ import { startOtherWindow } from "./base"
  */
 export async function startWorkbenchWindow (url) {
   await startOtherWindow("workbench", url, {
-    width: 800,
-    height: 800,
-    minWidth: 800,
-    minHeight: 800,
-    resizable: true,
-    closable: true,
+    width: 400,
+    height: 400,
+    minWidth: 400,
+    minHeight: 400,
+    // resizable: true,
+    resizable: false,
+    closable: false,
     minimizable: false,
     maximizable: false,
     // transparent: true,
     alwaysOnTop: true,
-    titleBarStyle: 'hiddenInset',
+    titleBarStyle: 'hidden',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      scrollBounce: true,
+      backgroundThrottling: true
     }
   })
 }
