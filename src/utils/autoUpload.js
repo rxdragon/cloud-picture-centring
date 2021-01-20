@@ -4,7 +4,7 @@ import Vue from 'vue'
 import * as originalFs from 'original-fs'
 import * as mPath from '@/utils/selfPath.js'
 import * as PhotoTool from '@/utils/photoTool'
-import { PHOTO_FLAG } from '@/utils/enumerate'
+import { OPERATION_TYPE } from '@/api/autoRetouch'
 const { ipcRenderer } = require('electron')
 
 /**
@@ -12,7 +12,16 @@ const { ipcRenderer } = require('electron')
  * 获取优先级，先warp crop 原图
  */
 function getAutoPHoto (readfilePath, filePath) {
-  const prioritySequence = [PHOTO_FLAG.WARP_BUFFING, PHOTO_FLAG.CROP_BUFFING, PHOTO_FLAG.WARP, PHOTO_FLAG.CROP]
+  const prioritySequence = [
+    `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.RETOUCH}${OPERATION_TYPE.MATTING}`,
+    `${OPERATION_TYPE.CROP}${OPERATION_TYPE.RETOUCH}${OPERATION_TYPE.MATTING}`,
+    `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.MATTING}`,
+    `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.RETOUCH}`,
+    `${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}`,
+    `${OPERATION_TYPE.CROP}${OPERATION_TYPE.RETOUCH}`,
+    `${OPERATION_TYPE.CROP}${OPERATION_TYPE.MATTING}`,
+  ]
+
   const ext = PhotoTool.getFilePostfix(filePath)
   const name = PhotoTool.fileNameFormat(filePath)
   let autoLocalPath = ''

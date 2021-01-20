@@ -889,9 +889,6 @@ export default {
     }
 
     .button-close {
-      position: absolute;
-      top: 5px;
-      right: 10px;
       width: 30px;
       height: 30px;
       padding: 0;

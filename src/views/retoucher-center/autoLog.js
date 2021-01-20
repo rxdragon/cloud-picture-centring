@@ -1,4 +1,4 @@
-import { PHOTO_FLAG } from '@/utils/enumerate.js'
+import { prioritySequence } from '@/utils/enumerate.js'
 import AliyunLog from '@/api/LogSDK/AliyunLog'
 import * as PhotoTool from '@/utils/photoTool'
 
@@ -14,10 +14,10 @@ const logger = new AliyunLog(
  * @param {*} key 
  * @param {*} type 
  */
-export function downLog (key, flag) {
-  if (flag === PHOTO_FLAG.ORIGINAL) return
+export function downLog (key, flag, useNewAutoApi) {
+  const apiUrl = useNewAutoApi ? 'algo1/102/' : 'algo1/104/'
   const type = 'down'
-  const data = { key, flag, type }
+  const data = { key, flag, type, apiUrl }
   logger.log(data)
 }
 
@@ -25,21 +25,22 @@ export function downLog (key, flag) {
  * @description 记录上传埋点
  * @param {*} uploadArr 
  */
-export function uploadLog (uploadArr) {
+export function uploadLog (uploadArr, useNewAutoApi) {
+  const apiUrl = useNewAutoApi ? 'algo1/102/' : 'algo1/104/'
   const type = 'upload'
   uploadArr.forEach(photoItem => {
     const file = photoItem.file
     if (!file) return
     const localFileName = file.name
     const uploadedName = _.get(file, 'response.url') || ''
-    const flagTypes = [PHOTO_FLAG.WARP_BUFFING, PHOTO_FLAG.CROP_BUFFING, PHOTO_FLAG.WARP, PHOTO_FLAG.CROP]
+    const flagTypes = prioritySequence
     const hasUploadAutoPhoto = flagTypes.some(flag => localFileName.includes(`~${flag}`))
     if (hasUploadAutoPhoto) {
       const key = photoItem.autoKey
       const orginPhotoName = photoItem.orginPhotoName
       const localFileNameNotExt = PhotoTool.fileNameFormat(localFileName)
       const flag = localFileNameNotExt.replace(`${orginPhotoName}~`, '')
-      const data = { key, flag, uploadedName, type }
+      const data = { key, flag, uploadedName, type, apiUrl }
       logger.log(data)
     }
   })
@@ -83,9 +84,10 @@ export function handleBuffingEmpty (key, msg) {
  * @param {*} key 
  * @param {*} msg 
  */
-export function handleInApp (key, msg) {
+export function handleInApp (key, msg, useNewAutoApi) {
+  const apiUrl = useNewAutoApi ? 'algo1/102/' : 'algo1/104/'
   const type = 'handle'
-  const data = { key, msg, type }
+  const data = { key, msg, type, apiUrl }
   logger.log(data)
 }
 
@@ -100,3 +102,15 @@ export function handleBuffingInApp (key, msg) {
   logger.log(data)
 }
 
+
+/**
+ * @description 冲七牛获取
+ * @param {*} key 
+ * @param {*} msg 
+ */
+export function getPhotoFromQiNiu (key, flag, useNewAutoApi) {
+  const apiUrl = useNewAutoApi ? 'algo1/102/' : 'algo1/104/'
+  const type = 'get_fromQ'
+  const data = { key, flag, type, apiUrl }
+  logger.log(data)
+}

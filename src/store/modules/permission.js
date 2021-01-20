@@ -57,6 +57,7 @@ const state = {
   canAutoRetouch: false, // 是否显示自动修图按钮
   autoBuffingA: false, // 是否显示磨皮A
   autoBuffingB: false, // 是否显示液化B
+  useNewAutoApi: false, // 使用新的自动修图
   showAppealAccess: false, // 是否显示审核权限
   showFirstExamine: false, // 是否显示初审按钮
   showSecondExamine: false, // 是否显示复审按钮
@@ -95,6 +96,7 @@ const mutations = {
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
     state.autoBuffingA = roles.includes('RetoucherCenter.waitRetoucher.autoBuffingA')
     state.autoBuffingB = roles.includes('RetoucherCenter.waitRetoucher.autoBuffingB')
+    state.useNewAutoApi = state.autoBuffingA || state.autoBuffingB
     // 审核权限
     state.showAppealAccess = roles.includes('RetoucherCenter.appealHistory.add')
     state.showFirstExamine = roles.includes('AdminManage.appealHandle.firstExamine')

@@ -31,6 +31,9 @@ Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
 
+// 派发中心
+Vue.prototype.$bus = new Vue()
+
 window.polling = {}
 Vue.prototype.$ipcRenderer = ipcRenderer
 Vue.prototype.$isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
