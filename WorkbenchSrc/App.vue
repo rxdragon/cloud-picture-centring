@@ -1,6 +1,7 @@
 <template>
   <div id="App">
     <div class="workbench-title">缦图云端工作台</div>
+    <el-button @click="closeWindow">关闭窗口</el-button>
     <product-review-workbench />
     <online-workbench />
     <retouch-workbench />
@@ -8,20 +9,28 @@
 </template>
 
 <script>
-import { getXStreamId } from '@/utils/sessionTool' // get token from cookie
 import * as SessionTool from '@/utils/sessionTool.js'
 
 import ProductReviewWorkbench from './components/ProductReviewWorkbench'
 import OnlineWorkbench from './components/OnlineWorkbench'
 import RetouchWorkbench from './components/RetouchWorkbench'
+import { WINDOW_NAME } from '../src/electronMain/window/WindowEnumerate'
 
 export default {
   name: 'App',
   components: { ProductReviewWorkbench, OnlineWorkbench, RetouchWorkbench },
   async created () {
-    const hasXStreamId = getXStreamId() // 获取token
     const savePermission = SessionTool.getUserPermission()
-    console.log(savePermission)
+    console.error(savePermission)
+  },
+  methods: {
+    /**
+     * @description 关闭窗口
+     */
+    closeWindow () {
+      const windowName = WINDOW_NAME.WORKBENCH
+      this.$ipcRenderer.sendSync('close-window', windowName)
+    }
   }
 }
 </script>

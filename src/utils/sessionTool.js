@@ -34,7 +34,7 @@ export function getUserInfo (code) {
  */
 export function setUserPermission (permission) {
   const data = JSON.stringify(permission)
-  sessionStorage.setItem('userPermission', data)
+  localStorage.setItem('userPermission', data)
 }
 
 /**
@@ -43,7 +43,7 @@ export function setUserPermission (permission) {
  */
 export function getUserPermission () {
   try {
-    const data = sessionStorage.getItem('userPermission')
+    const data = localStorage.getItem('userPermission')
     return JSON.parse(data)
   } catch (error) {
     return null

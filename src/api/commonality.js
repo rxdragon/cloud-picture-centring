@@ -170,6 +170,22 @@ export function getSignature (params) {
 }
 
 /**
+ * @description 获取文件七牛云接口
+ * @param {*} params
+ */
+export function getFileSignature (params) {
+  return axios({
+    url: '/file_system/qiniu/upload_token?project=cloud_common',
+    method: 'GET'
+  }).then(msg => {
+    const createData = {
+      token: msg.token
+    }
+    return createData
+  })
+}
+
+/**
  * @description 覆盖上传
  */
 export function createPhotoVersion (params) {

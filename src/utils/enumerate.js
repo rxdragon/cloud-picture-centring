@@ -387,3 +387,43 @@ export const PHOTO_TAG = {
   STORE_REWORK: 'store_rework', // 门店退回的照片version
   TEMP_RELATION: 'temp_relation', // 被动牵扯退回照片
 }
+
+/**
+ * @description 公告类型
+ */
+export const ANNOUNCEMENT_TYPE = {
+  TYPE_NORMAL: 'normal',
+  TYPE_IMPORTANT: 'important',
+  TYPE_REWARD: 'reward',
+  TYPE_PUNISH: 'punish',
+  TYPE_UPDATE: 'update'
+}
+
+/**
+ * @description 公告中文
+ */
+export const announcementToCN = {
+  [ANNOUNCEMENT_TYPE.TYPE_NORMAL]: '普通公告',
+  [ANNOUNCEMENT_TYPE.TYPE_IMPORTANT]: '重要公告',
+  [ANNOUNCEMENT_TYPE.TYPE_REWARD]: '奖励公告',
+  [ANNOUNCEMENT_TYPE.TYPE_PUNISH]: '处罚公告',
+  [ANNOUNCEMENT_TYPE.TYPE_UPDATE]: '系统更新公告'
+}
+
+/**
+ * @description 通知对象
+ */
+export const ANNOUNCEMENT_PEOPLE = {
+  CLOUD_ALL: 'cloud_all',
+  CLOUD_RETOUCHER: 'cloud_retoucher',
+  CLOUD_RETOUCH_LEADER: 'cloud_retouch_leader'
+}
+
+/**
+ * @description 通知对象
+ */
+export const announcementPeopleToCN = {
+  [ANNOUNCEMENT_PEOPLE.CLOUD_ALL]: '全体云端伙伴',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCHER]: '云端修图师',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCH_LEADER]: '云端修图主管'
+}

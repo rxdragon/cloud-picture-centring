@@ -1,4 +1,5 @@
 import { BrowserWindow } from "electron"
+import WindowsModel from './WindowModel'
 
 const windows = {}
 
@@ -12,7 +13,7 @@ export async function startWindow (name, url, options) {
   if (!windows[name]) {
     options.show = false
     const win = new BrowserWindow(options)
-    windows[name] = win
+    windows[name] = new WindowsModel(name, win)
 
     win.on('ready-to-show', () => {
       win.show()
@@ -32,7 +33,7 @@ export async function startWindow (name, url, options) {
 
     if (global.isDevelopment) win.webContents.openDevTools({ mode: "detach" })
   } else {
-    windows[name].focus()
+    windows[name].browserWindowObject.focus()
   }
 }
 
@@ -44,9 +45,9 @@ export async function startWindow (name, url, options) {
  */
 export async function startOtherWindow (name, url, options) {
   if (!windows[name]) {
-    options.show = false
+    options.show = true
     const win = new BrowserWindow(options)
-    windows[name] = win
+    windows[name] = new WindowsModel(name, win)
 
     win.on('ready-to-show', () => {
       win.show()
@@ -60,6 +61,18 @@ export async function startOtherWindow (name, url, options) {
 
     if (global.isDevelopment) win.webContents.openDevTools({ mode: "detach" })
   } else {
-    windows[name].focus()
+    if (!windows[name]) return
+    windows[name].browserWindowObject.focus()
   }
+}
+
+/**
+ * @description 关闭窗口
+ * @param {*} windowName 姓名
+ */
+export function closeWindow (windowName) {
+  const WindowsModelObject = windows[windowName]
+  if (!WindowsModelObject) return
+  WindowsModelObject.browserWindowObject.destroy()
+  delete windows[windowName]
 }

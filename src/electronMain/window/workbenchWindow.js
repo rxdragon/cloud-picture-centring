@@ -1,10 +1,11 @@
 import { startOtherWindow } from "./base"
+import { WINDOW_NAME } from './WindowEnumerate'
 
 /**
  * @description 开启debug 窗口
  */
 export async function startWorkbenchWindow (url) {
-  await startOtherWindow("workbench", url, {
+  await startOtherWindow(WINDOW_NAME.WORKBENCH, url, {
     width: 400,
     height: 400,
     minWidth: 400,
