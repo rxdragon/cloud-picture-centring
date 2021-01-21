@@ -9,7 +9,8 @@ import initUtils from './electronMain/utils'
 import registerIpc from './electronMain/ipc/registerIpc'
 import initExecIncident from './electronMain/execNode'
 import { setMenu } from './electronMain/resetMenu.js'
-
+import { windows } from './electronMain/window/base'
+import WindowsModel from './electronMain/window/WindowModel'
 require('./electronMain/LocalServe')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -38,6 +39,9 @@ async function createWindow () {
     preload: path.join(__dirname, './electronMain/renderer.js')
   })
 
+  // 注册信息
+  windows['main'] = new WindowsModel('main', win)
+
   // 清空http-cache
   const ses = win.webContents.session
   await ses.clearHostResolverCache()
@@ -50,6 +54,10 @@ async function createWindow () {
   // 窗口关闭前触发
   win.on('close', () => {
     win.webContents.send('closed-win')
+
+    for (const browserWindowItem of windows) {
+      browserWindowItem.browserWindowObject.destroy()
+    }
   })
   // 窗口关闭后触发
   win.on('closed', () => {

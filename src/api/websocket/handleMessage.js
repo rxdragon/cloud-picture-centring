@@ -38,6 +38,8 @@ export default function handleMessage (data, chat) {
     case 'streamWithDrawn':
       handleStreamDraw(typeMessage)
       break
+    case 'Announcement':
+      handleAnnouncementNoice(typeMessage)
     default:
       break
   }
@@ -163,6 +165,21 @@ function handleStreamDraw (data) {
   const notificationData = {
     title: notificationMsg,
     body: `${streamNum}已被系统撤除`,
+    icon: errorPng
+  }
+  Vue.prototype.$notification(notificationData)
+}
+
+/**
+ * @description 处理公告
+ * @param {*} params 
+ */
+function handleAnnouncementNoice (params) {
+  // TODO 公告处理
+  const notificationMsg = '重要公告'
+  const notificationData = {
+    title: notificationMsg,
+    body: `有一个重要公告需要您查看`,
     icon: errorPng
   }
   Vue.prototype.$notification(notificationData)

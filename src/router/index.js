@@ -25,6 +25,7 @@ import personalCenterRetoucherLeader from './modules/personalCenterRetoucherLead
 import retoucherCenter from './modules/retoucherCenter.js' // 修图师中心
 import pictureOnline from './modules/pictureOnline.js' // 看片师中心
 import announcementManage from './modules/announcementManage.js' // 公告管理
+import announcementCenter from './modules/announcementCenter.js' // 公告管理
 
 
 // 实验路由
@@ -144,7 +145,8 @@ export const asyncRoutes = [
   personalCenterRetoucher,
   personalCenterRetoucherLeader,
   pictureOnline,
-  announcementManage
+  announcementManage,
+  announcementCenter
 ]
 
 const createRouter = () => new Router({

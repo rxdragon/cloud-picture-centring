@@ -1,7 +1,7 @@
 import { BrowserWindow } from "electron"
 import WindowsModel from './WindowModel'
 
-const windows = {}
+export const windows = {}
 
 /**
  * @description 创建窗口
@@ -73,6 +73,9 @@ export async function startOtherWindow (name, url, options) {
 export function closeWindow (windowName) {
   const WindowsModelObject = windows[windowName]
   if (!WindowsModelObject) return
+  // 发出关闭窗口欧通信
+  windows['main'].browserWindowObject.webContents.send(`${windowName}-close`)
+  // 销毁窗口
   WindowsModelObject.browserWindowObject.destroy()
   delete windows[windowName]
 }

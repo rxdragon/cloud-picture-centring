@@ -5,7 +5,6 @@
       <div class="logo-desc">
         <span class="black">欢迎来到</span>
         <span class="desc">缦图云端修图中心</span>
-        <el-button @click="test">测试</el-button>
       </div>
     </div>
   </div>
@@ -21,12 +20,6 @@ export default {
       retouchPhoto: 0,
       lottieAnimation: null,
       show: false
-    }
-  },
-  methods: {
-    async test () {
-      const url = `${window.location.origin}/workbench.html`
-      await this.$ipcRenderer.sendSync('workbench-window', url)
     }
   }
 }

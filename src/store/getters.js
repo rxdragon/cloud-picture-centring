@@ -27,6 +27,8 @@ const defaultGetters = {
 
 const settting = {
   showRecord: state => state.setting.showRecord, // 是否显示修图师修图数据
+  showWorkbench: state => state.setting.showWorkbench, // 是否显示工作台
+  workbenchLocation: state => state.setting.workbenchLocation, // 工作台位置
 }
 
 const permissionGetters = {

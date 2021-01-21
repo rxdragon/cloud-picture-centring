@@ -18,8 +18,10 @@ import './styles/font.less' // 全局样式
 import './styles/index.less' // 字体
 import './styles/variables.less' // 全局样式
 import './guards' // 路由守护
-import './indexDB/index.js'
+import initIndexDb from './indexDB/index.js'
 import '@/directive'
+
+initIndexDb(true)
 
 window._ = { get }
 // 注册websocket

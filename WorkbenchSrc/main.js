@@ -9,7 +9,9 @@ import '../src/styles/index.less' // 字体
 import '../src/styles/variables.less' // 全局样式
 
 import '../src/plugins/element.js' // ui布局
+import initIndexDb from '../src/indexDB/index.js'
 
+initIndexDb(false)
 window._ = { get }
 Vue.prototype.$ipcRenderer = ipcRenderer
 

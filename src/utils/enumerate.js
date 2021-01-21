@@ -427,3 +427,27 @@ export const announcementPeopleToCN = {
   [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCHER]: '云端修图师',
   [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCH_LEADER]: '云端修图主管'
 }
+
+/**
+ * @description 工作台位置
+ */
+export const WORKBENCH_LOCATION = {
+  APP: 'app',
+  WINDOW: 'window'
+}
+
+/**
+ * @description 已读字段
+ */
+export const READ_STATE = {
+  UNREAD: 'unread',
+  READ: 'read'
+}
+
+/**
+ * @description 中文字段
+ */
+export const readToCN = {
+  [READ_STATE.UNREAD]: '未读',
+  [READ_STATE.READED]: '已读',
+}
