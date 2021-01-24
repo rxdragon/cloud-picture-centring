@@ -146,7 +146,8 @@ export default {
      * @description 是否可以退回队列
      */
     canReturnQueue (item) {
-      // TODO 判断照片数量
+      const isMoreThen10 = item.photoNum >= 10
+      if (!isMoreThen10) return false
       // 判断是否有权限
       const hasManualReviewPermission = this.roles.includes('AdminManage.workBoard.manualReview')
       if (!hasManualReviewPermission) return false

@@ -7,7 +7,7 @@ const downloadFolder = app.getPath('desktop')
 
 export default function initIndexDb (resetData) {
   // eslint-disable-next-line new-cap
-  Idb(db_cloud_config)
+  return Idb(db_cloud_config)
     .then(async cloud_db => {
       window.CloudDb = cloud_db
       if (!resetData) return
@@ -28,6 +28,8 @@ export default function initIndexDb (resetData) {
 
       // 工作看板位置
       await initWorkbenchLocation()
+
+      await initWorkbenchInfo()
 
     })
     .catch(err => {
@@ -110,4 +112,54 @@ export async function initWorkbenchLocation () {
   } else {
     store.dispatch('setting/setWorkbenchLocation', workbenchLocation)
   }
+}
+
+/**
+ * @description 初始化工作台信息
+ */
+export async function initWorkbenchInfo () {
+  const workbenchInfoObj = await Setting.getSetting('workbenchInfo')
+  const workbenchInfo = workbenchInfoObj ? workbenchInfoObj.settingValue : ''
+  const baseInfo = {
+    top: 0,
+    left: 0,
+    width: 400,
+    height: 200,
+    mode: 'sunny'
+  }
+
+  if (!workbenchInfo) {
+    await Setting.setSetting('workbenchInfo', baseInfo)
+  }
+}
+
+/**
+ * @description 获取工作台信息
+ */
+export async function getWorkbenchInfo () {
+  const workbenchInfoObj = await Setting.getSetting('workbenchInfo')
+  const workbenchInfo = workbenchInfoObj ? workbenchInfoObj.settingValue : ''
+  const baseInfo = {
+    top: 0,
+    left: 0,
+    width: 400,
+    height: 200,
+    mode: 'sunny'
+  }
+  return workbenchInfo || baseInfo
+}
+
+/**
+ * @description 更新信息
+ * @param {*} param0 
+ */
+export async function updateWorkbenchInfo ({ width, height, top, left, mode }) {
+  const workbenchInfoObj = await Setting.getSetting('workbenchInfo')
+  const workbenchInfo = workbenchInfoObj ? workbenchInfoObj.settingValue : {}
+  if (width) workbenchInfo.width = width
+  if (height) workbenchInfo.height = height
+  if (top) workbenchInfo.top = top
+  if (left) workbenchInfo.width = left
+  if (mode) workbenchInfo.mode = mode
+  await Setting.updateSetting('workbenchInfo', workbenchInfo)
 }

@@ -7,22 +7,26 @@
         <el-button type="info" @click="back">返回</el-button>
       </div>
     </div>
-    <div class="announcement-info">
+    <!-- 公告内容 -->
+    <div class="announcement-info module-panel">
       <div class="announcement-header">
         <h3>【重要公告】标题内容</h3>
-      </div>
-      <div class="announcement-desc">
-        通知时间：2020-03-03 创建人：泰得
-      </div>
-      <div class="announcement-content module-panel">
-        <div v-html="mock" class="tui-editor-contents"></div>
-      </div>
-      <div class="announcement-adjunct">
-        <div class="info-title">附加文件</div>
-        <div class="info-content">
-          <p>文件名.jpg <el-button type="text">下载</el-button></p>
-          <p>文件名.xml <el-button type="text">下载</el-button></p>
+        <div class="announcement-desc">
+          <div class="base-info">
+            通知时间：2020-03-03 创建人：泰得
+          </div>
+          <div class="file-list">
+            <div class="info-title">附加下载：</div>
+            <div class="info-content">
+              <div class="file-item">文件名.jpg <el-button type="text">下载</el-button></div>
+              <div class="file-item">文件名.xml <el-button type="text">下载</el-button></div>
+            </div>
+          </div>
         </div>
+      </div>
+      <!-- 公告内容 -->
+      <div class="announcement-content module-content">
+        <div v-html="mock" class="tui-editor-contents"></div>
       </div>
     </div>
     <!-- 操作按钮 -->
@@ -47,3 +51,62 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.announcement-info {
+  padding: 0;
+
+  .announcement-header {
+    padding: 28px 24px;
+    border-bottom: 1px solid #ebeef5;
+
+    .announcement-desc {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #606266;
+
+      .file-list {
+        display: flex;
+
+        .info-content {
+          display: flex;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 22px;
+          color: #606266;
+
+          .file-item {
+            margin-right: 48px;
+
+            .iconfont {
+              font-size: 12px;
+            }
+          }
+
+          .el-button--text {
+            padding: 0;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  .announcement-content {
+    width: 750px;
+    padding: 12px 20px;
+    margin: auto;
+    background: #fafafa;
+    border-radius: 4px;
+  }
+}
+
+.announcement-read {
+  margin: 24px;
+  text-align: center;
+}
+</style>

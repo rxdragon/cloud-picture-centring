@@ -7,44 +7,66 @@
         <el-button type="info" @click="back">返回</el-button>
       </div>
     </div>
-    <div class="announcement-info">
-      <div class="announcement-row">
-        <div class="info-title">公告标题</div>
-        <div class="info-content">公告标题公告标题公告标题公告标题公告标题</div>
-      </div>
-      <div class="announcement-row">
-        <div class="info-title">公告类型</div>
-        <div class="info-content">重要公告</div>
-      </div>
-      <div class="announcement-row">
-        <div class="info-title">公告简介</div>
-        <div class="info-content">公告简介公告简介公告简介公告简介</div>
-      </div>
-      <div class="announcement-row">
-        <div class="info-title">公告内容</div>
-        <div class="info-content module-panel">
-          <div v-html="mock" class="tui-editor-contents"></div>
+    <!-- 详情 -->
+    <div class="announcement-info module-panel">
+      <div class="panel-title">基本信息</div>
+      <div class="base-info module-content">
+        <!-- 基本信息 -->
+        <div class="base-row d-g2">
+          <!-- 公告标题 -->
+          <div class="base-info-item">
+            <div class="info-title">公告标题：</div>
+            <div class="info-content">公告标题公告标题公告标题公告标题公告标题</div>
+          </div>
+          <!-- 公告类型 -->
+          <div class="base-info-item">
+            <div class="info-title">公告类型：</div>
+            <div class="info-content">重要公告</div>
+          </div>
+        </div>
+        <!-- 公告简介 -->
+        <div class="base-row d-g1">
+          <div class="base-info-item">
+            <div class="info-title">公告简介：</div>
+            <div class="info-content">公告简介公告简介公告简介公告简介</div>
+          </div>
+        </div>
+        <div class="base-row d-g2">
+          <!-- 通知对象 -->
+          <div class="base-info-item">
+            <div class="info-title">通知对象：</div>
+            <div class="info-content">全体云端伙伴</div>
+          </div>
+          <!-- 通知时间 -->
+          <div class="base-info-item">
+            <div class="info-title">通知时间：</div>
+            <div class="info-content">2020-10-22 12:00:00</div>
+          </div>
+        </div>
+        <div class="base-row d-g1">
+          <!-- 附加文件 -->
+          <div class="base-info-item">
+            <div class="info-title">附加文件：</div>
+            <div class="info-content file-list">
+              <div class="file-item"><i class="iconfont icon-filetext"></i> 文件名.jpg <el-button type="text">下载</el-button></div>
+              <div class="file-item"><i class="iconfont icon-filetext"></i> 文件名.xml <el-button type="text">下载</el-button></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="announcement-row">
-        <div class="info-title">附加文件</div>
-        <div class="info-content">
-          <p>文件名.jpg <el-button type="text">下载</el-button></p>
-          <p>文件名.xml <el-button type="text">下载</el-button></p>
+
+      <div class="panel-title">通告内容</div>
+      <div class="announcement-content module-content">
+        <div v-html="mock" class="tui-editor-contents"></div>
+      </div>
+
+      <div class="panel-title">
+        未查看伙伴
+        <div class="panel-slot">
+          <el-button type="text">收起明细</el-button>
         </div>
       </div>
-      <div class="announcement-row">
-        <div class="info-title">通知对象</div>
-        <div class="info-content">全体云端伙伴</div>
-      </div>
-      <div class="announcement-row">
-        <div class="info-title">通知时间</div>
-        <div class="info-content">2020-10-22 12:00:00</div>
-      </div>
-      <div class="announcement-row">
-        <div class="info-title">未查看伙伴</div>
-        <div class="info-content">122位未查看 收起明细</div>
-      </div>
+      <div class="people-list module-content">122位未查看 收起明细</div>
     </div>
   </div>
 </template>
@@ -68,20 +90,104 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.announcement-info {
-  .announcement-row {
-    display: flex;
-    margin-bottom: 24px;
+.d-g1 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+}
 
-    .info-title {
-      flex-shrink: 0;
-      width: 80px;
-      margin-right: 12px;
+.d-g2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.detail-announcement {
+  .module-content {
+    padding: 0 20px;
+    margin-bottom: 24px;
+    background: #fafafa;
+    border-radius: 4px;
+  }
+
+  .panel-title {
+    margin-bottom: 20px;
+  }
+
+  .base-row {
+    padding: 20px 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    color: #303133;
+    border-bottom: 1px solid #ebeef5;
+
+    &:nth-last-child(1) {
+      border-bottom: none;
     }
 
-    .info-content {
-      width: 100%;
+    .base-info-item {
+      display: flex;
+      align-items: flex-start;
+
+      .file-list {
+        display: flex;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 22px;
+        color: #606266;
+
+        .file-item {
+          margin-right: 48px;
+
+          .iconfont {
+            font-size: 12px;
+          }
+        }
+
+        .el-button--text {
+          padding: 0;
+          font-size: 12px;
+        }
+      }
     }
   }
+
+  .announcement-content {
+    padding: 12px 20px;
+    color: #303133;
+
+    /deep/ blockquote {
+      padding: 5px 15px;
+      font-size: 16px;
+      font-weight: 900;
+      background-color: #efeeee;
+      border-color: #42b983;
+      border-left-style: solid;
+      border-left-width: 4px;
+
+      p {
+        color: #545454;
+      }
+    }
+  }
+
+  .people-list {
+    padding: 17px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    color: #909399;
+  }
+}
+
+.mark-new {
+  color: #3bbc7f;
+}
+
+.mark-opt {
+  color: #ff8f00;
+}
+
+.mark-fix {
+  color: #ff3974;
 }
 </style>

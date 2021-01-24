@@ -11,13 +11,14 @@
     <div class="create-announcement-main">
       <el-form ref="form" :model="announcementInfo" label-width="80px">
         <el-form-item label="公告标题">
-          <el-input v-model="announcementInfo.title"></el-input>
+          <el-input class="announcement-title" v-model="announcementInfo.title"></el-input>
         </el-form-item>
         <el-form-item label="公告类型">
-          <announcement-select v-model="announcementInfo.type" />
+          <announcement-select class="announcement-select" v-model="announcementInfo.type" />
         </el-form-item>
         <el-form-item label="公告简介">
           <el-input
+            class="announcement-title"
             type="textarea"
             :rows="3"
             placeholder="请输入内容"
@@ -44,14 +45,20 @@
         </el-form-item>
 
         <el-form-item label="通知对象">
-          <announcement-people-select v-model="announcementInfo.receiver_type" />
+          <announcement-people-select class="announcement-select" v-model="announcementInfo.receiver_type" />
         </el-form-item>
 
         <el-form-item label="通知时间">
           <el-radio-group v-model="announcementInfo.sendType">
             <el-radio label="立刻通知" value="sendNow"></el-radio>
             <el-radio value="settimeSend">
-              <el-date-picker v-model="announcementInfo.sendAt" type="datetime" placeholder="选择日期时间"></el-date-picker>
+              <el-date-picker
+                class="settime-box"
+                v-model="announcementInfo.sendAt"
+                type="datetime"
+                placeholder="选择日期时间"
+              >
+              </el-date-picker>
             </el-radio>
           </el-radio-group>
         </el-form-item>
@@ -116,3 +123,23 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.create-announcement-main {
+  .announcement-title {
+    width: 320px;
+  }
+
+  .announcement-select {
+    width: 320px;
+  }
+
+  .settime-box {
+    width: 190px;
+  }
+
+  .el-radio {
+    margin-right: 24px;
+  }
+}
+</style>

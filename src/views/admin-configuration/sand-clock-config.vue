@@ -143,8 +143,6 @@ export default {
 </script>
 
 <style lang="less">
-
-
 .sand-clock-config {
   .header {
     .header-right {

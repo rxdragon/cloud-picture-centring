@@ -18,7 +18,7 @@ import { clearAllStorage } from '@/utils/sessionTool'
 import { throttle } from '@/utils/throttle.js'
 import { WORKBENCH_LOCATION } from '@/utils/enumerate'
 import { WINDOW_NAME } from '@/electronMain/window/WindowEnumerate'
-import { initShowWorkbenc, initWorkbenchLocation } from '@/indexDB/index'
+import { initShowWorkbenc, initWorkbenchLocation, updateWorkbenchInfo } from '@/indexDB/index'
 
 import * as Setting from '@/indexDB/getSetting.js'
 
@@ -32,7 +32,7 @@ export default {
   computed: {
     ...mapGetters(['showCat', 'isRetoucher', 'lineState', 'showWorkbench', 'workbenchLocation', 'name']),
     showWorkbenchInApp () {
-      return this.showWorkbench && this.workbenchLocation === WORKBENCH_LOCATION.APP && this.name
+      return this.showWorkbench && this.workbenchLocation === WORKBENCH_LOCATION.APP && Boolean(this.name)
     }
   },
   created () {
@@ -89,11 +89,23 @@ export default {
      * @description 置顶
      */
     async onStickTop () {
+      const workbenchDom = document.querySelector('.workbench-module')
+      let height = 400
+      let width = 400
+      if (workbenchDom) {
+        height = workbenchDom.clientHeight
+        width = workbenchDom.clientWidth
+      }
+
+      updateWorkbenchInfo({ width, height })
+
+      // 更新工作台打开模式
       await this.$store.dispatch('setting/setWorkbenchLocation', WORKBENCH_LOCATION.WINDOW)
       await Setting.updateSetting('workbenchLocation', WORKBENCH_LOCATION.WINDOW)
+
       // 开启窗口
       const url = `${window.location.origin}/workbench.html`
-      await this.$ipcRenderer.sendSync('workbench-window', url)
+      await this.$ipcRenderer.sendSync('workbench-window', { url, width, height })
     }
   }
 }
@@ -123,10 +135,11 @@ body {
 
 .workbench-module {
   position: fixed;
-  right: 0;
-  bottom: 0;
+  right: 24px;
+  bottom: 34px;
+  z-index: 9999;
   width: 400px;
-  height: 400px;
-  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -416,7 +416,9 @@ export const announcementToCN = {
 export const ANNOUNCEMENT_PEOPLE = {
   CLOUD_ALL: 'cloud_all',
   CLOUD_RETOUCHER: 'cloud_retoucher',
-  CLOUD_RETOUCH_LEADER: 'cloud_retouch_leader'
+  CLOUD_RETOUCH_LEADER: 'cloud_retouch_leader',
+  CLOUD_BUSINESS: 'cloud_business',
+  CLOUD_ACADEMY: 'cloud_academy'
 }
 
 /**
@@ -425,7 +427,9 @@ export const ANNOUNCEMENT_PEOPLE = {
 export const announcementPeopleToCN = {
   [ANNOUNCEMENT_PEOPLE.CLOUD_ALL]: '全体云端伙伴',
   [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCHER]: '云端修图师',
-  [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCH_LEADER]: '云端修图主管'
+  [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCH_LEADER]: '云端修图主管',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_BUSINESS]: '云端运营',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_ACADEMY]: '云学院'
 }
 
 /**

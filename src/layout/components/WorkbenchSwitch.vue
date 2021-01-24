@@ -4,7 +4,7 @@
       :class="showWorkbench && 'active'"
       @click="turnOnWorkbench"
       class="icon-button"
-      icon="el-icon-receiving"
+      icon="iconfont icongongzuotai"
     >
     </el-button>
   </div>
@@ -15,6 +15,7 @@ import { mapGetters } from 'vuex'
 import * as Setting from '@/indexDB/getSetting.js'
 import { WORKBENCH_LOCATION } from '@/utils/enumerate'
 import { WINDOW_NAME } from '@/electronMain/window/WindowEnumerate'
+import { getWorkbenchInfo } from '@/indexDB/index'
 
 export default {
   name: 'WorkbenchSwitch',
@@ -28,10 +29,14 @@ export default {
   async mounted () {
     if (this.showWorkbench && this.workbenchLocation === WORKBENCH_LOCATION.WINDOW) {
       const url = `${window.location.origin}/workbench.html`
-      await this.$ipcRenderer.sendSync('workbench-window', url)
+      const { width, height } = await getWorkbenchInfo()
+      await this.$ipcRenderer.sendSync('workbench-window', { url, width, height })
     }
   },
   methods: {
+    /**
+     * @description 开启工作台
+     */
     async turnOnWorkbench () {
       const value = !this.showWorkbench
       await this.$store.dispatch('setting/setShowWorkbench', value)
@@ -41,6 +46,8 @@ export default {
       if (this.workbenchLocation === WORKBENCH_LOCATION.WINDOW) {
         if (value) {
           const url = `${window.location.origin}/workbench.html`
+          const { width, height } = await getWorkbenchInfo()
+          await this.$ipcRenderer.sendSync('workbench-window', { url, width, height })
           await this.$ipcRenderer.sendSync('workbench-window', url)
         } else {
           const windowName = WINDOW_NAME.WORKBENCH
@@ -64,7 +71,6 @@ export default {
 
   &.active {
     color: @blue;
-    background-color: @blue !important;
   }
 }
 </style>

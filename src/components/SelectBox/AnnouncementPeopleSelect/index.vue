@@ -31,3 +31,13 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.announcement-people-select {
+  width: 100%;
+
+  .el-select {
+    width: 100%;
+  }
+}
+</style>

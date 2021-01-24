@@ -52,7 +52,7 @@
         :value="showProgressingNum"
         class="item"
       >
-        <el-button class="icon-button" icon="el-icon-download" />
+        <el-button class="icon-button" icon="iconfont iconxiazai" />
       </el-badge>
     </el-popover>
   </div>
@@ -174,6 +174,12 @@ export default {
         color: @blue;
       }
     }
+  }
+}
+
+.icon-button {
+  i {
+    font-size: 20px;
   }
 }
 </style>

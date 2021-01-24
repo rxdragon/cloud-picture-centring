@@ -5,7 +5,7 @@
       <div class="list-content" v-if="showModule === MODULE_NAME.INDEX">
         <!-- 标题 -->
         <div class="header">
-          <h3>公告管理</h3>
+          <h3>公告中心</h3>
           <div class="header-plugin">
             <el-button type="primary" @click="showDetailPage">公告详情</el-button>
           </div>
