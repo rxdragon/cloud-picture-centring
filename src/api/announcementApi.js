@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
 import AnnouncementModel from '@/model/AnnouncementModel'
+import { READ_STATE, readToCN } from '@/utils/enumerate'
 
 /**
  * @description 获取公告中心列表
@@ -36,6 +37,20 @@ export async function getAnnouncementDetail (params) {
 }
 
 /**
+ * @description 获取公告中心公告详情
+ * @param {*} params 
+ */
+export async function getAnnouncementUserDetail (params) {
+  const res = await axios({
+    url: '/project_cloud_oa/announcement/center/detail',
+    method: 'POST',
+    data: params
+  })
+  const createData = new AnnouncementModel(res)
+  return createData
+}
+
+/**
  * @description 创建公告
  * @param {*} params 
  */
@@ -48,7 +63,7 @@ export function createAnnouncementInfo (params) {
 }
 
 /**
- * @description 创建公告
+ * @description 获取未读取列表
  * @param {*} params 
  */
 export function recordList (params) {
@@ -82,7 +97,15 @@ export async function getAnnouncementCenterList (params) {
     data: params
   })
   // TODO 处理接口
-  const list = res.list
+  const list = res.list.map(announcementItem => {
+    const readState = _.get(announcementItem, 'record.read') ? READ_STATE.READ : READ_STATE.UNREAD
+    const readStateCN = readToCN[readState]
+    return {
+      ...new AnnouncementModel(announcementItem),
+      readState,
+      readStateCN
+    }
+  })
   return {
     total: res.total,
     list

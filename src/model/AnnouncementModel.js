@@ -35,11 +35,11 @@ export default class AnnouncementModel {
     this.createdAt = announcementData.created_at || '异常'
     this.receiverTime = announcementData.send_at || '异常'
 
-    this.files = announcementData.files
+    this.files = announcementData.files || []
     this.content = announcementData.content || '异常'
     this.brief = announcementData.brief || '异常'
 
-    this.unreadCount = 0
-    this.readCount = []
+    this.unreadCount = _.get(announcementData, 'unread_count') || 0
+    this.readCount = _.get(announcementData, 'read_count') || 0
   }
 }

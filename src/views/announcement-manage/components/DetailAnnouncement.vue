@@ -43,7 +43,7 @@
             <div class="info-content">{{ announcementInfo.receiverTime }}</div>
           </div>
         </div>
-        <div class="base-row d-g1">
+        <div class="base-row d-g1" v-if="announcementInfo.files.length">
           <!-- 附加文件 -->
           <div class="base-info-item">
             <div class="info-title">附加文件：</div>
@@ -63,13 +63,18 @@
         <div v-html="announcementInfo.content" class="tui-editor-contents"></div>
       </div>
 
-      <div class="panel-title">
+      <div class="panel-title" v-if="unreadRecordList.length">
         未查看伙伴
         <div class="panel-slot">
-          <el-button type="text">收起明细</el-button>
+          <div class="unread-item">{{ unreadRecordList.length }}人未读</div>
+          <el-button type="text" @click="showStaffList">{{ showAll ? '收起明细' : '展开明细' }}</el-button>
         </div>
       </div>
-      <div class="people-list module-content">122位未查看</div>
+      <div class="people-list module-content" :class="showAll && 'show-all'">
+        <span class="staff-item" v-for="staff in unreadRecordList" :key="staff.staffId">
+          {{ staff.name }}（{{ staff.staffId }}）
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -88,6 +93,8 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       announcementInfo: {},
+      unreadRecordList: [],
+      showAll: false
     }
   },
   watch: {
@@ -106,6 +113,9 @@ export default {
     back () {
       this.$emit('close')
     },
+    /**
+     * @description 初始化页面
+     */
     async initPageInfo (id) {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
@@ -134,8 +144,15 @@ export default {
         pageSize: 100
       }
       await this.getRecordList(req, recordList)
-      // TODO 未读列表
-      console.error(recordList)
+      const unreadRecordList = recordList.filter(item => !item.read)
+      this.unreadRecordList = unreadRecordList.map(item => {
+        const name = _.get(item, 'staff_info.nickname') || _.get(item, 'staff_info.name') || '-'
+        const staffId = _.get(item, 'staff_info.id') || '-'
+        return {
+          staffId,
+          name
+        }
+      })
     },
     /**
      * @description 循环读取信息
@@ -143,7 +160,8 @@ export default {
     async getRecordList (req, recordList) {
       const res = await AnnouncementApi.recordList(req)
       recordList.push(...res.list)
-      if (res.pages * req.pageSize < res.total) {
+      if (req.page < res.pages) {
+        req.page++
         await this.getRecordList(req, recordList)
       } else {
         return recordList
@@ -158,6 +176,12 @@ export default {
         path: ''
       }
       DownIpc.addDownloadFile(data)
+    },
+    /**
+     * @description 张开收起列表
+     */
+    showStaffList () {
+      this.showAll = !this.showAll
     }
   }
 }
@@ -245,11 +269,30 @@ export default {
   }
 
   .people-list {
+    max-height: 52px;
     padding: 17px 20px;
+    overflow: hidden;
     font-size: 14px;
     font-weight: 400;
     line-height: 28px;
     color: #909399;
+    transition: all 0.3s;
+
+    .staff-item {
+      display: inline-block;
+      width: 200px;
+    }
+
+    &.show-all {
+      max-height: 3000px;
+    }
+  }
+
+  .unread-item {
+    display: inline-block;
+    margin-right: 24px;
+    font-size: 12px;
+    color: @blue;
   }
 }
 

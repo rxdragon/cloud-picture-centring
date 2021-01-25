@@ -37,17 +37,53 @@
 </template>
 
 <script>
+import * as AnnouncementApi from '@/api/announcementApi'
+import DownIpc from '@electronMain/ipc/DownIpc'
+
 // TODO 接口链条
 export default {
   name: 'DetailAnnouncement',
+  props: {
+    announcementId: { type: [String, Number], required: true }
+  },
   data () {
     return {
       mock: '<blockquote>\n<p>版本概况</p>\n</blockquote>\n<ul>\n<li>xxxx</li>\n<li><span class=\"mark-opt\" data-tomark-pass=\"\">优化</span>&nbsp;部分功能</li>\n<li><span class=\"mark-fix\" data-tomark-pass=\"\">修复</span>&nbsp;部分bug</li>\n</ul>\n<blockquote>\n<p>综合改动</p>\n</blockquote>\n<ul>\n<li>窗口\n<ol>\n<li>xxx</li>\n</ol>\n</li>\n<li>下载管理器\n<ol>\n<li>xxx</li>\n</ol>\n</li>\n<li>修图详情页面\n<ol>\n<li>xxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>修图师</p>\n</blockquote>\n<ul>\n<li>状态栏\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>通知\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>待修订单页面\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>修图历史记录\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>个人概况\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>云端运营</p>\n</blockquote>\n<ul>\n<li>值班主管配置\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>绿色通道\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>组员修图报告\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>云端工作管理</p>\n</blockquote>\n<ul>\n<li>云端工作看板\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>伙伴绩效\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>看片评价\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>云学院</p>\n</blockquote>\n<ul>\n<li>云学院评价中心\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>评价历史记录\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>云学院评分配置\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n</ul>\n'
     }
   },
+  watch: {
+    announcementId: {
+      handler (value) {
+        if (!value) return
+        this.initPageInfo(value)
+      },
+      immediate: true
+    }
+  },
   methods: {
     back () {
       this.$emit('close')
+    },
+    async initPageInfo (id) {
+      await this.getAnnouncementDetail(id)
+    },
+    /**
+     * @description 获取公告详情
+     */
+    async getAnnouncementDetail (id) {
+      const req = { id }
+      const res = await AnnouncementApi.getAnnouncementUserDetail(req)
+      this.announcementInfo = res
+    },
+    /**
+     * @description 下载文件
+     */
+    downFile (url) {
+      const data = {
+        url,
+        path: ''
+      }
+      DownIpc.addDownloadFile(data)
     }
   }
 }

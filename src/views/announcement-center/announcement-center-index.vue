@@ -6,9 +6,6 @@
         <!-- 标题 -->
         <div class="header">
           <h3>公告中心</h3>
-          <div class="header-plugin">
-            <el-button type="primary" @click="showDetailPage">公告详情</el-button>
-          </div>
         </div>
         <!-- 搜索框 -->
         <el-row class="search-box" :gutter="20">
@@ -48,13 +45,22 @@
         <!--表格内容 -->
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%;">
-            <el-table-column prop="retouchAllTime" label="公告标题" />
-            <el-table-column prop="name" label="类型" width="100" />
-            <el-table-column prop="noiceTime" label="通知时间" />
-            <el-table-column prop="createName" label="状态" />
-            <el-table-column label="操作" width="200">
-              <template slot-scope="{ id }">
-                <el-button type="primary" size="mini">详情{{ id }}</el-button>
+            <el-table-column prop="title" label="公告标题" />
+            <el-table-column prop="typeCN" label="类型" width="100" />
+            <el-table-column prop="receiverTime" label="通知时间" />
+            <el-table-column label="状态">
+              <template slot-scope="{ row }">
+                <el-tag
+                  :type="row.readState === READ_STATE.READ ? '' : 'danger'"
+                  size="medium"
+                >
+                  {{ row.readStateCN }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="200" align="right">
+              <template slot-scope="{ row }">
+                <el-button type="primary" size="mini" @click="showDetailPage(row.id)">详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -72,7 +78,7 @@
       </div>
 
       <!-- 公告详情 -->
-      <detail-announcement v-else @close="showListPage" />
+      <detail-announcement :announcementId="detailId" v-else @close="showListPage" />
     </transition>
   </div>
 </template>
@@ -100,6 +106,7 @@ export default {
     return {
       routeName: this.$route.name, // 路由名字
       MODULE_NAME,
+      READ_STATE,
       timeSpan: null,
       announcementTitle: '',
       readState: '',
@@ -109,7 +116,8 @@ export default {
         pageSize: 20,
         total: 100
       },
-      tableData: []
+      tableData: [],
+      detailId: ''
     }
   },
   created () {
@@ -143,8 +151,8 @@ export default {
         if (!Object.keys(reqData.conds).length) delete reqData.conds
 
         const res = await AnnouncementApi.getAnnouncementCenterList(reqData)
-        // TODO 接口联调
-        console.error(res)
+        this.tableData = res.list
+        this.pager.total = res.total
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -164,7 +172,8 @@ export default {
     /**
      * @description 显示详细内容
      */
-    showDetailPage () {
+    showDetailPage (id) {
+      this.detailId = id
       this.showModule = MODULE_NAME.DETAIL
     },
   }
