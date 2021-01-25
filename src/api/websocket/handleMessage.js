@@ -158,7 +158,6 @@ function setStaffOffline () {
  * @param {*} data // 流水号
  */
 function handleStreamDraw (data) {
-  // TODO 摄影撤回订单
   const { streamNum } = data
   // 桌面通知
   const notificationMsg = '摄影师撤回流水通知'

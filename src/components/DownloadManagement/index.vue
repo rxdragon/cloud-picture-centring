@@ -176,10 +176,4 @@ export default {
     }
   }
 }
-
-.icon-button {
-  i {
-    font-size: 20px;
-  }
-}
 </style>

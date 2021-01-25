@@ -2,53 +2,53 @@
   <div class="work-board-table">
     <el-table :data="tableData" style="width: 100%;">
       <el-table-column prop="index" label="位置" min-width="100px">
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <div class="index-box">
-            <span>{{ scope.row.queue_index || '-' }}</span>
+            <span>{{ row.queue_index || '-' }}</span>
             <div class="icon-box">
-              <el-tag v-if="scope.row.staticsUrgent" type="danger" size="mini">急</el-tag>
-              <el-tag v-if="scope.row.isReturn" type="danger" size="mini">审核退回</el-tag>
+              <el-tag v-if="row.staticsUrgent" type="danger" size="mini">急</el-tag>
+              <el-tag v-if="row.isReturn" type="danger" size="mini">审核退回</el-tag>
             </div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="修图标准">
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <div class="standard-box">
-            {{ scope.row.retouchType | toRetouchClass }}
+            {{ row.retouchType | toRetouchClass }}
             <div class="standard-icon">
-              <div :class="`iconmap-standard-${scope.row.retouchType}`" />
+              <div :class="`iconmap-standard-${row.retouchType}`" />
             </div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="订单信息" min-width="240">
-        <template slot-scope="scope">
-          <div v-if="scope.row.order" class="order-info">
+        <template slot-scope="{ row }">
+          <div v-if="row.order" class="order-info">
             <span>
-              <span class="info-title">订单号：</span>{{ scope.row.order && scope.row.order.external_num || '-' }}
+              <span class="info-title">订单号：</span>{{ row.order && row.order.external_num || '-' }}
             </span>
             <span>
-              <span class="info-title">流水号：</span>{{ scope.row.stream_num || '-' }}
+              <span class="info-title">流水号：</span>{{ row.stream_num || '-' }}
             </span>
-            <span v-if="canSeeInfo(scope.row)">
-              <span class="info-title">拍摄产品：</span>{{ scope.row.product && scope.row.product.name || '-' }}
+            <span v-if="canSeeInfo(row)">
+              <span class="info-title">拍摄产品：</span>{{ row.product && row.product.name || '-' }}
             </span>
-            <span v-if="canSeeInfo(scope.row)">
-              <span class="info-title">照片数量：</span>{{ scope.row.photoNum }}
+            <span v-if="canSeeInfo(row)">
+              <span class="info-title">照片数量：</span>{{ row.photoNum }}
             </span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="修图师" min-width="140">
-        <template slot-scope="scope">
-          <div v-if="scope.row.retoucherOrgName" class="staff-info">
-            <span>修图师：{{ scope.row.retoucherOrgRetouchName }}</span>
-            <span>机构名称：{{ scope.row.retoucherOrgName }}</span>
+        <template slot-scope="{ row }">
+          <div v-if="row.retoucherOrgName" class="staff-info">
+            <span>修图师：{{ row.retoucherOrgRetouchName }}</span>
+            <span>机构名称：{{ row.retoucherOrgName }}</span>
           </div>
           <div v-else class="staff-info">
-            <span>修图师：{{ scope.row.retoucherName }}</span>
-            <span>组长：{{ scope.row.retouchLeader }}</span>
+            <span>修图师：{{ row.retoucherName }}</span>
+            <span>组长：{{ row.retouchLeader }}</span>
           </div>
         </template>
       </el-table-column>
@@ -56,26 +56,26 @@
       <el-table-column prop="waitTime" label="等待时间" />
       <el-table-column prop="streamState" label="当前状态" />
       <el-table-column label="操作" width="160">
-        <template slot-scope="scope">
+        <template slot-scope="{ row }">
           <div class="operation-box">
             <el-dropdown
-              v-if="showDropdown(scope.row)"
+              v-if="showDropdown(row)"
               placement="bottom"
               :show-timeout="100"
               trigger="hover"
             >
               <el-button size="mini" type="primary">操作<i class="el-icon-arrow-down el-icon--right" /></el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :disabled="!canSeeInfo(scope.row)" class="primary-color" @click.native="linkto(scope.row)">
+                <el-dropdown-item :disabled="!canSeeInfo(row)" class="primary-color" @click.native="linkto(row)">
                   流水详情
                 </el-dropdown-item>
-                <el-dropdown-item v-if="canUrgent(scope.row)" class="danger-color" @click.native="urgentStream(scope.row.id)">
+                <el-dropdown-item v-if="canUrgent(row)" class="danger-color" @click.native="urgentStream(row.id)">
                   流水加急
                 </el-dropdown-item>
-                <el-dropdown-item v-if="canManualReview(scope.row)" class="warning-color" @click.native="manualReview(scope.row.id)">
+                <el-dropdown-item v-if="canManualReview(row)" class="warning-color" @click.native="manualReview(row.id)">
                   直接审核
                 </el-dropdown-item>
-                <el-dropdown-item  v-if="canReturnQueue(scope.row)" @click.native="returnBackQueue(scope.row.id)">
+                <el-dropdown-item  v-if="canReturnQueue(row)" @click.native="returnBackQueue(row.id)">
                   退回队列
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -84,8 +84,8 @@
               v-else
               size="mini"
               type="primary"
-              :disabled="!canSeeInfo(scope.row)"
-              @click.native="linkto(scope.row)"
+              :disabled="!canSeeInfo(row)"
+              @click.native="linkto(row)"
             >
               流水详情
             </el-button>
@@ -205,30 +205,28 @@ export default {
     /**
      * @description 直接审核
      */
-    manualReview (streamId) {
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      const req = { streamId }
-      AdminManage.manualReview(req)
-        .then(() => {
-          this.$newMessage.success('流水审核绑定成功。')
-          this.$router.push({ path: '/audit-center' })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-        .finally(() => {
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        })
+    async manualReview (streamId) {
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const req = { streamId }
+        await AdminManage.manualReview(req)
+        this.$newMessage.success('流水审核绑定成功。')
+        this.$router.push({ path: '/audit-center' })
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 退回队列
      */
     async returnBackQueue (streamId) {
-      // TODO 退回
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const req = { id: streamId }
+        const req = { streamId }
         await AdminManage.returnBackQueue(req)
+        this.$newMessage.success('退回队列成功!')
+        const type = this.urgentSearch ? 'urgent' : 'other'
+        this.$emit('urgentSuccess', type)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }

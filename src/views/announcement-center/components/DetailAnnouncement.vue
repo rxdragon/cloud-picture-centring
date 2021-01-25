@@ -37,6 +37,7 @@
 </template>
 
 <script>
+// TODO 接口链条
 export default {
   name: 'DetailAnnouncement',
   data () {

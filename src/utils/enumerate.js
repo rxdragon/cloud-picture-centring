@@ -453,5 +453,5 @@ export const READ_STATE = {
  */
 export const readToCN = {
   [READ_STATE.UNREAD]: '未读',
-  [READ_STATE.READED]: '已读',
+  [READ_STATE.READ]: '已读',
 }

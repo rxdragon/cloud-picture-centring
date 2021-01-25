@@ -78,10 +78,15 @@
 </template>
 
 <script>
+// TODO 接口链条
 import '@toast-ui/editor/dist/toastui-editor.css'
 import DatePicker from '@/components/DatePicker'
 import AnnouncementReadState from '@/components/SelectBox/AnnouncementReadState'
 import DetailAnnouncement from './components/DetailAnnouncement'
+
+import * as AnnouncementApi from '@/api/announcementApi'
+import { joinTimeSpan } from '@/utils/timespan.js'
+import { READ_STATE } from '@/utils/enumerate'
 
 const MODULE_NAME = {
   INDEX: 'index',
@@ -93,6 +98,7 @@ export default {
   components: { DatePicker, AnnouncementReadState, DetailAnnouncement },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       MODULE_NAME,
       timeSpan: null,
       announcementTitle: '',
@@ -106,6 +112,9 @@ export default {
       tableData: []
     }
   },
+  created () {
+    this.searchList(1)
+  },
   methods: {
     /**
      * @description 搜索列表
@@ -117,12 +126,28 @@ export default {
     /**
      * @description 获取公告列表
      */
-    getAnnouncementList () {
-      const reqData = {
-        page: this.pager.page,
-        pageSize: this.pager.pageSize
+    async getAnnouncementList () {
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const reqData = {
+          page: this.pager.page,
+          pageSize: this.pager.pageSize,
+          conds: {}
+        }
+        if (this.timeSpan) {
+          reqData.conds.sendAtGte = joinTimeSpan(this.timeSpan[0]),
+          reqData.conds.sendAtLte = joinTimeSpan(this.timeSpan[1], 1)
+        }
+        if (this.announcementTitle) { reqData.conds.titleLike = this.announcementTitle }
+        if (this.readState) { reqData.conds.read = this.readState === READ_STATE.READ }
+        if (!Object.keys(reqData.conds).length) delete reqData.conds
+
+        const res = await AnnouncementApi.getAnnouncementCenterList(reqData)
+        // TODO 接口联调
+        console.error(res)
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
-      console.error(reqData)
     },
     /**
      * @description page变更

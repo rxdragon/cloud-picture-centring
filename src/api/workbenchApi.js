@@ -1,14 +1,13 @@
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
+import * as MathUtil from '@/utils/mathUtil'
 
 /**
  * @description 获取在线看片工作信息
  */
 export async function getOnlineInfo () {
   const res = await axios({
-    // TODO mock
-    // url: '/project_cloud/workTool/pictureOnline',
-    url: 'https://doc.pre.hzmantu.com/project_cloud/release-2-10-14/project_cloud/workTool/pictureOnline',
+    url: '/project_cloud/workTool/pictureOnline',
     method: 'GET',
   })
   const createData = {
@@ -24,9 +23,7 @@ export async function getOnlineInfo () {
  */
 export async function getProductInfo () {
   const res = await axios({
-    // TODO mock
-    // url: '/project_cloud/workTool/productCheck',
-    url: 'https://doc.pre.hzmantu.com/project_cloud/release-2-10-14/project_cloud/workTool/productCheck',
+    url: '/project_cloud/workTool/productCheck',
     method: 'GET',
   })
   const createData = {
@@ -41,19 +38,20 @@ export async function getProductInfo () {
  */
 export async function getRetouchInfo () {
   const res = await axios({
-    // TODO mock
-    // url: '/project_cloud/workTool/retouch',
-    url: 'https://doc.pre.hzmantu.com/project_cloud/release-2-10-14/project_cloud/workTool/retouch',
+    url: '/project_cloud/workTool/retouch',
     method: 'GET',
   })
 
   const streamInfo = res.retouchingStream
   const streamOrder = new StreamModel(streamInfo)
+  const dealStreamNum = res.dealStreamNum - 1 > 0 ? res.dealStreamNum - 1 : 0
+  let returnRate = _.get(res, 'todayQuota.returnRate') || 0
+  returnRate = MathUtil.toFixed(returnRate)
   const createData = {
     retouchingStream: streamOrder,
     hourGlass: streamInfo.hour_glass,
-    dealStreamNum: res.dealStreamNum,
-    returnRate: _.get(res, 'todayQuota.returnRate') || 0,
+    dealStreamNum,
+    returnRate,
     retouchPhotoNumTimeSum: _.get(res, 'todayQuota.retouchPhotoNumTimeSum') || 0
   }
   return createData

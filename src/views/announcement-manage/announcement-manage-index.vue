@@ -8,7 +8,6 @@
           <h3>公告管理</h3>
           <div class="header-plugin">
             <el-button type="primary" @click="showCreatePage">创建公告</el-button>
-            <el-button type="primary" @click="showDetailPage">公告详情</el-button>
           </div>
         </div>
         <!-- 订单列表 -->
@@ -26,7 +25,7 @@
               <span>公告标题</span>
               <el-input
                 @keyup.native.enter="searchList(1)"
-                v-model="announcementTitle"
+                v-model.trim="announcementTitle"
                 clearable
                 placeholder="请输入标题"
               />
@@ -43,16 +42,30 @@
         <!--表格内容 -->
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%;">
-            <el-table-column prop="retouchAllTime" label="公告标题" />
-            <el-table-column prop="name" label="类型" width="100" />
-            <el-table-column prop="people" label="通知人员" />
-            <el-table-column prop="createTime" label="创建时间" />
-            <el-table-column prop="noiceTime" label="通知时间" />
-            <el-table-column prop="createName" label="创建人" />
-            <el-table-column label="操作" width="200">
-              <template slot-scope="{ id }">
-                <el-button type="primary" size="mini">详情{{ id }}</el-button>
-                <el-button type="danger" size="mini">删除</el-button>
+            <el-table-column prop="title" label="公告标题" />
+            <el-table-column prop="typeCN" label="类型" width="100" />
+            <el-table-column prop="receiverTypeCN" label="通知人员" />
+            <el-table-column prop="createdAt" label="创建时间" />
+            <el-table-column prop="receiverTime" label="通知时间" />
+            <el-table-column prop="creatorName" label="创建人" />
+            <el-table-column label="操作" width="200" align="right">
+              <template slot-scope="{ row }">
+                <el-button
+                  class="detail-button"
+                  type="primary"
+                  size="mini"
+                  @click="showDetailPage(row.id)"
+                >
+                  详情
+                </el-button>
+
+                <el-popover placement="top" width="160" v-model="row.deleteVisible">
+                  <p>确定删除该公告？</p>
+                  <div style="margin-top: 12px; text-align: right;">
+                    <el-button type="danger" size="mini" @click="deleteAnnouncement(row.id)">确定</el-button>
+                  </div>
+                  <el-button type="danger" size="mini" slot="reference">删除</el-button>
+                </el-popover>
               </template>
             </el-table-column>
           </el-table>
@@ -70,10 +83,10 @@
       </div>
 
       <!-- 创建公告 -->
-      <create-announcement v-else-if="showModule === MODULE_NAME.CREATE" @close="showListPage" />
+      <create-announcement v-else-if="showModule === MODULE_NAME.CREATE" @refresh="showListPage('refresh')" @close="showListPage" />
 
       <!-- 公告详情 -->
-      <detail-announcement v-else @close="showListPage" />
+      <detail-announcement :announcementId="detailId" v-else @close="showListPage" />
     </transition>
   </div>
 </template>
@@ -82,6 +95,9 @@
 import DatePicker from '@/components/DatePicker'
 import CreateAnnouncement from './components/CreateAnnouncement'
 import DetailAnnouncement from './components/DetailAnnouncement'
+
+import * as AnnouncementApi from '@/api/announcementApi'
+import { joinTimeSpan } from '@/utils/timespan.js'
 
 const MODULE_NAME = {
   INDEX: 'index',
@@ -94,6 +110,7 @@ export default {
   components: { DatePicker, CreateAnnouncement, DetailAnnouncement },
   data () {
     return {
+      routeName: this.$route.name, // 路由名字
       MODULE_NAME,
       timeSpan: null, // 搜索标题
       announcementTitle: '', // 公告管理
@@ -103,8 +120,12 @@ export default {
         pageSize: 20,
         total: 100
       },
-      tableData: []
+      tableData: [],
+      detailId: ''
     }
+  },
+  created () {
+    this.searchList(1)
   },
   methods: {
     /**
@@ -117,12 +138,38 @@ export default {
     /**
      * @description 获取公告列表
      */
-    getAnnouncementList () {
+    async getAnnouncementList () {
       const reqData = {
         page: this.pager.page,
-        pageSize: this.pager.pageSize
+        pageSize: this.pager.pageSize,
+        conds: {}
       }
-      console.error(reqData)
+      if (this.timeSpan) {
+        reqData.conds.sendAtGte = joinTimeSpan(this.timeSpan[0]),
+        reqData.conds.sendAtLte = joinTimeSpan(this.timeSpan[1], 1)
+      }
+      if (this.announcementTitle) { reqData.conds.titleLike = this.announcementTitle }
+      if (!Object.keys(reqData.conds).length) delete reqData.conds
+
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const data = await AnnouncementApi.getAnnouncementManage(reqData)
+        this.tableData = data.list
+        this.pager.total = data.total
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+    },
+    /**
+     * @description 删除公告
+     */
+    async deleteAnnouncement (id) {
+      const req = { id }
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        await AnnouncementApi.deleteAnnouncement(req)
+        this.getAnnouncementList()
+      } catch {}
     },
     /**
      * @description page变更
@@ -139,13 +186,15 @@ export default {
     /**
      * @description 展示列表页面
      */
-    showListPage () {
+    showListPage (refresh) {
       this.showModule = MODULE_NAME.INDEX
+      if (refresh) this.searchList(1)
     },
     /**
      * @description 显示列表详情
      */
-    showDetailPage () {
+    showDetailPage (id) {
+      this.detailId = id
       this.showModule = MODULE_NAME.DETAIL
     }
   }
@@ -182,5 +231,9 @@ export default {
       width: 100%;
     }
   }
+}
+
+.detail-button {
+  margin-right: 10px;
 }
 </style>

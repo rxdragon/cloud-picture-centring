@@ -283,10 +283,9 @@ export function advanceAssignOrderToStaff (params) {
  * @param {*} params 
  */
 export function returnBackQueue (params) {
-  // TODO 退回接口
   return axios({
-    url: '/project_cloud/order/advanceAssignOrderToStaff',
-    method: 'POST',
+    url: '/project_cloud/operator/returnStreamToQueue',
+    method: 'PUT',
     data: params
   })
 }
