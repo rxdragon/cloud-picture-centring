@@ -103,7 +103,8 @@ export default {
      */
     async downPhoto () {
       if (this.downLoading) return
-      const handleSwtich = _.get(this.autoImageInfo, 'handleSwtich') || {}
+      const cloneAutoImageInfo = _.cloneDeep(this.autoImageInfo)
+      const handleSwtich = _.get(cloneAutoImageInfo, 'handleSwtich') || {}
       let typeBit = 0
       for (const key in handleSwtich) {
         const switchValue = handleSwtich[key]
@@ -120,21 +121,21 @@ export default {
       this.downLoading = true
       if ((typeBit & OperationBit[OPERATION_TYPE.MATTING]) !== OperationBit[OPERATION_TYPE.MATTING]) {
         // 不是抠图
-        url = this.autoImageInfo.autoFixPhotoList[typeBit]
+        url = cloneAutoImageInfo.autoFixPhotoList[typeBit]
       } else {
         // 是抠图
         const isWarp = (typeBit & OperationBit[OPERATION_TYPE.WARP]) === OperationBit[OPERATION_TYPE.WARP]
-        const maskPhoto = isWarp ? this.autoImageInfo.cropWarpMaskPhoto : this.autoImageInfo.cropMaskPhoto
-        const orgrinPhoto = this.autoImageInfo.autoFixPhotoList[typeBit ^ OperationBit[OPERATION_TYPE.MATTING]]
+        const maskPhoto = isWarp ? cloneAutoImageInfo.cropWarpMaskPhoto : cloneAutoImageInfo.cropMaskPhoto
+        const orgrinPhoto = cloneAutoImageInfo.autoFixPhotoList[typeBit ^ OperationBit[OPERATION_TYPE.MATTING]]
         const compress = false
-        const mattingImageTool = await this.autoImageInfo.drawMattingImage(maskPhoto, orgrinPhoto, compress)
-        url = await mattingImageTool(this.autoImageInfo.activeBackgroundImage)
+        const mattingImageTool = await cloneAutoImageInfo.drawMattingImage(maskPhoto, orgrinPhoto, compress)
+        url = await mattingImageTool(cloneAutoImageInfo.activeBackgroundImage)
 
       }
       this.downLoading = false
-      const savePath = `/${this.autoImageInfo.streamNum}`
-      const ext = PhotoTool.getFilePostfix(this.autoImageInfo.name)
-      const name = PhotoTool.fileNameFormat(this.autoImageInfo.name)
+      const savePath = `/${cloneAutoImageInfo.streamNum}`
+      const ext = PhotoTool.getFilePostfix(cloneAutoImageInfo.name)
+      const name = PhotoTool.fileNameFormat(cloneAutoImageInfo.name)
 
       let model = ''
       for (const key in handleSwtich) {
@@ -153,7 +154,7 @@ export default {
 
       // 日志记录下载
       const useNewAutoApi = this.useNewAutoApi
-      AutoLog.downLog(this.autoImageInfo.path, model, useNewAutoApi)
+      AutoLog.downLog(cloneAutoImageInfo.path, model, useNewAutoApi)
       this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)
     },
