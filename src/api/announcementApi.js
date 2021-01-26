@@ -47,6 +47,12 @@ export async function getAnnouncementUserDetail (params) {
     data: params
   })
   const createData = new AnnouncementModel(res)
+  const readState = _.get(res, 'record.read') ? READ_STATE.READ : READ_STATE.UNREAD
+  const readStateCN = readToCN[readState]
+
+  createData.readState = readState
+  createData.readStateCN = readStateCN
+
   return createData
 }
 
@@ -96,7 +102,6 @@ export async function getAnnouncementCenterList (params) {
     method: 'POST',
     data: params
   })
-  // TODO 处理接口
   const list = res.list.map(announcementItem => {
     const readState = _.get(announcementItem, 'record.read') ? READ_STATE.READ : READ_STATE.UNREAD
     const readStateCN = readToCN[readState]
@@ -110,4 +115,16 @@ export async function getAnnouncementCenterList (params) {
     total: res.total,
     list
   }
+}
+
+/**
+ * @description 已读
+ * @param {*} params 
+ */
+export function readAnnouncement (params) {
+  return axios({
+    url: '/project_cloud_oa/announcement/center/read',
+    method: 'POST',
+    data: params
+  })
 }

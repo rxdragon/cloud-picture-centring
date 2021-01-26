@@ -72,15 +72,14 @@ export function getStreamIdExpireTime (time) {
  * @param {*} code
  */
 export function setXStreamId (code) {
-  sessionStorage.setItem('xStreamId', code)
+  localStorage.setItem('xStreamId', code)
 }
 
 /**
  * @description 获取XStreamId
- * @param {*} params
  */
-export function getXStreamId (params) {
-  return sessionStorage.getItem('xStreamId')
+export function getXStreamId () {
+  return localStorage.getItem('xStreamId')
 }
 
 /**

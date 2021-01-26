@@ -10,28 +10,30 @@
     <!-- 公告内容 -->
     <div class="announcement-info module-panel">
       <div class="announcement-header">
-        <h3>【重要公告】标题内容</h3>
+        <h3>{{ announcementInfo.title }}</h3>
         <div class="announcement-desc">
           <div class="base-info">
-            通知时间：2020-03-03 创建人：泰得
+            通知时间：{{ announcementInfo.receiverTime }} 创建人：{{ announcementInfo.creatorName }}
           </div>
-          <div class="file-list">
+          <div class="file-list" v-if="announcementInfo.files.length">
             <div class="info-title">附加下载：</div>
             <div class="info-content">
-              <div class="file-item">文件名.jpg <el-button type="text">下载</el-button></div>
-              <div class="file-item">文件名.xml <el-button type="text">下载</el-button></div>
+              <div class="file-item" v-for="fileItem in announcementInfo.files" :key="fileItem.name">
+                {{ fileItem.name }}
+                <el-button type="text" @click="downFile(fileItem.path)">下载</el-button>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <!-- 公告内容 -->
       <div class="announcement-content module-content">
-        <div v-html="mock" class="tui-editor-contents"></div>
+        <div v-html="announcementInfo.content" class="tui-editor-contents"></div>
       </div>
     </div>
     <!-- 操作按钮 -->
-    <div class="announcement-read">
-      <el-button type="primary">我已阅读（10s）</el-button>
+    <div class="announcement-read" v-if="!read">
+      <el-button @click="readAnnouncement" type="primary" :disabled="!checkTimeDown">我已阅读<span v-if="countDownTime">（{{ countDownTime }}s）</span></el-button>
     </div>
   </div>
 </template>
@@ -39,6 +41,7 @@
 <script>
 import * as AnnouncementApi from '@/api/announcementApi'
 import DownIpc from '@electronMain/ipc/DownIpc'
+import { READ_STATE } from '@/utils/enumerate'
 
 // TODO 接口链条
 export default {
@@ -48,7 +51,13 @@ export default {
   },
   data () {
     return {
-      mock: '<blockquote>\n<p>版本概况</p>\n</blockquote>\n<ul>\n<li>xxxx</li>\n<li><span class=\"mark-opt\" data-tomark-pass=\"\">优化</span>&nbsp;部分功能</li>\n<li><span class=\"mark-fix\" data-tomark-pass=\"\">修复</span>&nbsp;部分bug</li>\n</ul>\n<blockquote>\n<p>综合改动</p>\n</blockquote>\n<ul>\n<li>窗口\n<ol>\n<li>xxx</li>\n</ol>\n</li>\n<li>下载管理器\n<ol>\n<li>xxx</li>\n</ol>\n</li>\n<li>修图详情页面\n<ol>\n<li>xxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>修图师</p>\n</blockquote>\n<ul>\n<li>状态栏\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>通知\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>待修订单页面\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>修图历史记录\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n<li>个人概况\n<ol>\n<li>xxxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>云端运营</p>\n</blockquote>\n<ul>\n<li>值班主管配置\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>绿色通道\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>组员修图报告\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>云端工作管理</p>\n</blockquote>\n<ul>\n<li>云端工作看板\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>伙伴绩效\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>看片评价\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n</ul>\n<blockquote>\n<p>云学院</p>\n</blockquote>\n<ul>\n<li>云学院评价中心\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>评价历史记录\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n<li>云学院评分配置\n<ol>\n<li>xxxxx</li>\n</ol>\n</li>\n</ul>\n'
+      routeName: this.$route.name, // 路由名字
+      announcementInfo: {
+        files: []
+      },
+      read: false,
+      checkTimeDown: false,
+      countDownTime: 10
     }
   },
   watch: {
@@ -58,12 +67,18 @@ export default {
         this.initPageInfo(value)
       },
       immediate: true
-    }
+    },
   },
   methods: {
+    /**
+     * @description 返回上一级
+     */
     back () {
       this.$emit('close')
     },
+    /**
+     * @description 初始化页面
+     */
     async initPageInfo (id) {
       await this.getAnnouncementDetail(id)
     },
@@ -71,9 +86,55 @@ export default {
      * @description 获取公告详情
      */
     async getAnnouncementDetail (id) {
-      const req = { id }
-      const res = await AnnouncementApi.getAnnouncementUserDetail(req)
-      this.announcementInfo = res
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const req = { id }
+        const res = await AnnouncementApi.getAnnouncementUserDetail(req)
+        this.announcementInfo = res
+        this.read = res.readState === READ_STATE.READ
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+      
+      if (!this.read) {
+        const fn = this.timeCirculation(() => {
+          this.countDownTime--
+          if (this.countDownTime === 0) {
+            this.checkTimeDown = true
+          }
+          if (!this.checkTimeDown) fn()
+        })
+        fn()
+      }
+    },
+    /**
+     * @description 已读
+     */
+    async readAnnouncement () {
+      try {
+        if (!this.checkTimeDown) return
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const req = { id: this.announcementInfo.id }
+        await AnnouncementApi.readAnnouncement(req)
+        this.read = true
+        this.$emit('refresh')
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
+      
+    },
+    /**
+     * @description 倒计时
+     */
+    timeCirculation (fn, time = 1000) {
+      let timeOut = null
+      return function () {
+        clearTimeout(timeOut)
+        timeOut = setTimeout(() => {
+          fn.apply(this, arguments)
+        }, time)
+      }
+      
     },
     /**
      * @description 下载文件
@@ -135,6 +196,7 @@ export default {
 
   .announcement-content {
     width: 750px;
+    min-height: 500px;
     padding: 12px 20px;
     margin: auto;
     background: #fafafa;

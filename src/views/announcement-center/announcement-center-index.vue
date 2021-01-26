@@ -78,7 +78,12 @@
       </div>
 
       <!-- 公告详情 -->
-      <detail-announcement :announcementId="detailId" v-else @close="showListPage" />
+      <detail-announcement
+        :announcementId="detailId"
+        v-else
+        @close="showListPage"
+        @refresh="getAnnouncementList"
+      />
     </transition>
   </div>
 </template>
@@ -118,6 +123,17 @@ export default {
       },
       tableData: [],
       detailId: ''
+    }
+  },
+  watch: {
+    '$route.query.announcementId': {
+      handler: function (value) {
+        if (!value) return
+        if (this.routeName === this.$route.name) {
+          this.showDetailPage(value)
+        }
+      },
+      immediate: true
     }
   },
   created () {

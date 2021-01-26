@@ -7,6 +7,7 @@ import router from '@/router'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+import { announcementToCN } from '@/utils/enumerate'
 
 import errorPng from '@/assets/error.png'
 import photocount from '@/assets/photocount.png'
@@ -35,9 +36,11 @@ export default function handleMessage (data, chat) {
     case 'StaffOffline':
       setStaffOffline()
       break
+    // 摄影撤单
     case 'streamWithDrawn':
       handleStreamDraw(typeMessage)
       break
+    // 公告
     case 'Announcement':
       handleAnnouncementNoice(typeMessage)
     default:
@@ -163,8 +166,7 @@ function handleStreamDraw (data) {
   const notificationMsg = '摄影师撤回流水通知'
   const notificationData = {
     title: notificationMsg,
-    body: `${streamNum}已被系统撤除`,
-    icon: errorPng
+    body: `${streamNum}已被系统撤除`
   }
   Vue.prototype.$notification(notificationData)
 }
@@ -173,13 +175,28 @@ function handleStreamDraw (data) {
  * @description 处理公告
  * @param {*} params 
  */
-function handleAnnouncementNoice (params) {
-  // TODO 公告处理
-  const notificationMsg = '重要公告'
+function handleAnnouncementNoice (message) {
+  const { type, id } = message
+  const notificationTitle = announcementToCN[type]
+
+  const callBack = () => {
+    router.push({
+      path: '/announcement-center/announcement-center-index',
+      query: { announcementId: id }
+    })
+  }
+
+  Vue.prototype.$newNotification({
+    title: notificationTitle,
+    message: `有一个${announcementToCN[type]}需要您查看`,
+    duration: 0,
+    onClick: callBack
+  })
+
   const notificationData = {
-    title: notificationMsg,
-    body: `有一个重要公告需要您查看`,
-    icon: errorPng
+    title: notificationTitle,
+    body: `有一个${announcementToCN[type]}需要您查看`,
+    clickCB: callBack
   }
   Vue.prototype.$notification(notificationData)
 }
