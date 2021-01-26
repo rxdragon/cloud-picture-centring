@@ -186,7 +186,7 @@ function handleAnnouncementNoice (message) {
     })
   }
 
-  Vue.prototype.$newNotification({
+  const notificationId = Vue.prototype.$newNotification({
     title: notificationTitle,
     message: `有一个${announcementToCN[type]}需要您查看`,
     duration: 0,
@@ -196,7 +196,10 @@ function handleAnnouncementNoice (message) {
   const notificationData = {
     title: notificationTitle,
     body: `有一个${announcementToCN[type]}需要您查看`,
-    clickCB: callBack
+    clickCB: () => {
+      callBack()
+      notificationId.close()
+    }
   }
   Vue.prototype.$notification(notificationData)
 }

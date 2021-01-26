@@ -100,7 +100,7 @@
 import * as AdminManage from '@/api/adminManage'
 import { STREAM_STATE } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 
 export default {
   name: 'WorkBoardTable',
