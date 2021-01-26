@@ -116,6 +116,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = { id: this.announcementInfo.id }
         await AnnouncementApi.readAnnouncement(req)
+        this.$store.dispatch('notification/subtractAnnouncementUnreadCount')
         this.read = true
         this.$emit('refresh')
       } finally {

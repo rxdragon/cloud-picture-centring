@@ -1,14 +1,26 @@
 <template>
   <div class="information-switch">
-    <el-button @click="toAnnouncement" class="icon-button" icon="iconfont iconxiaoxi"></el-button>
+    <el-badge
+      :hidden="!announcementUnreadCount"
+      :value="announcementUnreadCount"
+      :max="9"
+      class="item"
+    >
+      <el-button @click="toAnnouncement" class="icon-button" icon="iconfont iconxiaoxi"></el-button>
+    </el-badge>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'InformationSwitch',
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['announcementUnreadCount']),
   },
   methods: {
     /**
@@ -23,7 +35,7 @@ export default {
 
 <style lang="less" scoped>
 .information-switch {
-  margin-right: 6px;
+  margin-right: 20px;
 
   .icon-button {
     width: 24px;

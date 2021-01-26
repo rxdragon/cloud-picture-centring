@@ -1,6 +1,7 @@
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
 import * as MathUtil from '@/utils/mathUtil'
+import { timeFormat } from '@/utils/index.js'
 
 /**
  * @description 获取在线看片工作信息
@@ -47,12 +48,16 @@ export async function getRetouchInfo () {
   const dealStreamNum = res.dealStreamNum - 1 > 0 ? res.dealStreamNum - 1 : 0
   let returnRate = _.get(res, 'todayQuota.returnRate') || 0
   returnRate = MathUtil.toFixed(returnRate)
+  const retouchTimeAvgSum = _.get(res.todayQuota.retouchTimeAvg.sum) || 0
+  const retouchTimeAvgCount = _.get(res.todayQuota.retouchTimeAvg.count) || 0
+  let retouchPhotoNumTimeSum = MathUtil.toFixed(retouchTimeAvgSum / retouchTimeAvgCount)
+  retouchPhotoNumTimeSum = timeFormat(retouchPhotoNumTimeSum)
   const createData = {
     retouchingStream: streamOrder,
     hourGlass: streamInfo.hour_glass,
     dealStreamNum,
     returnRate,
-    retouchPhotoNumTimeSum: _.get(res, 'todayQuota.retouchPhotoNumTimeSum') || 0
+    retouchPhotoNumTimeSum,
   }
   return createData
 }

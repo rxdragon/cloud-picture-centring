@@ -83,7 +83,12 @@ class Ws {
       await this.createChat()
     }
     if (!isRetoucher) return
-    const firstSendType = ['StreamPhotographerOrgReturn', 'StreamReviewerReturn', 'StreamRetoucherReceive']
+    const firstSendType = [
+      'StreamPhotographerOrgReturn',
+      'StreamReviewerReturn',
+      'StreamRetoucherReceive',
+      'StaffAnnouncementUnreadCount'
+    ]
     store.dispatch('user/getRetoucherLineState')
     for (const type of firstSendType) {
       this.sendMessage({ typeName: type })

@@ -61,7 +61,7 @@ export default {
 
 <style lang="less" scoped>
 .workbench-switch {
-  margin-right: 6px;
+  margin-right: 20px;
 }
 
 .icon-button {

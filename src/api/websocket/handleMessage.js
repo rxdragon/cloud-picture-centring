@@ -186,6 +186,8 @@ function handleAnnouncementNoice (message) {
     })
   }
 
+  store.dispatch('notification/addAnnouncementUnreadCount')
+
   const notificationId = Vue.prototype.$newNotification({
     title: notificationTitle,
     message: `有一个${announcementToCN[type]}需要您查看`,

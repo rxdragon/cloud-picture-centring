@@ -19,10 +19,14 @@ const defaultGetters = {
   imgDomain: state => state.setting.imgDomain, // 上传后的照片域名
   imgCompressDomain: state => state.setting.imgCompressDomain, // 上传后自动压缩图域名
   updateDomain: state => state.setting.updateDomain, // 上传后的照片域名
-  retouchId: state => state.notification.retouchId, // 修图id
-  showAnniversary: state => state.notification.showAnniversary, // 显示弹框
   roles: state => state.permission.roles, // 全部权限
   downloadList: state => state.downloadlist.downloadList // 下载完成列表
+}
+
+const notification = {
+  retouchId: state => state.notification.retouchId, // 修图id
+  showAnniversary: state => state.notification.showAnniversary, // 显示弹框
+  announcementUnreadCount: state => state.notification.announcementUnreadCount // 未读数量
 }
 
 const settting = {
@@ -73,7 +77,8 @@ const permissionGetters = {
 const getters = {
   ...defaultGetters,
   ...permissionGetters,
-  ...settting
+  ...settting,
+  ...notification
 }
 
 export default getters
