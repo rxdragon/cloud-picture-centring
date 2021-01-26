@@ -30,6 +30,7 @@
     "animejs": "^3.1.0",
     "asar": "^2.0.1",
     "clipboard": "^2.0.4",
+    "dayjs": "^1.10.3",
     "driver.js": "^0.9.8",
     "echarts": "^4.5.0",
     "element-ui": "2.12.0",

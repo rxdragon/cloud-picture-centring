@@ -449,10 +449,10 @@ export default {
     /**
      * @description 控制显示开关
      */
-    toggleShowRecord () {
+    async toggleShowRecord () {
       this.$store.commit('setting/TOGGLE_SHOW_RECORD')
       const data = Boolean(this.showRecord) ? 1 : 0
-      Setting.updateSetting('showRecord', data)
+      await Setting.updateSetting('showRecord', data)
     }
   }
 }

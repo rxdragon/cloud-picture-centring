@@ -10,7 +10,8 @@ const waitDownloadList = [] // 等待下载队列
 const downingLoadList = [] // 正在下载队列
 const downloadList = {} // 队列信息
 
-let onListChange
+// eslint-disable-next-line no-empty-function
+let onListChange = () => {}
 
 // 获取文件名
 function getFileNameTool (src) {

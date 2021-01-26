@@ -39,7 +39,7 @@
       <el-button
         v-if="state === 'progressing' && !listItem.isUserPause"
         size="mini"
-        class="icon-button"
+        class="down-icon-button"
         icon="el-icon-video-pause"
         @click="pauseItem"
       />
@@ -47,7 +47,7 @@
       <el-button
         v-if="canResume"
         size="mini"
-        class="icon-button"
+        class="down-icon-button"
         icon="el-icon-video-play"
         @click="resumeDownItem"
       />
@@ -55,7 +55,7 @@
       <el-button
         v-if="state === 'completed' && hasFile"
         size="mini"
-        class="icon-button"
+        class="down-icon-button"
         icon="el-icon-search"
         @click="downOpenFileFolder"
       />
@@ -63,7 +63,7 @@
       <el-button
         v-if="state === 'progressing'"
         size="mini"
-        class="icon-button"
+        class="down-icon-button"
         icon="el-icon-delete"
         @click="cancelItem"
       />
@@ -71,7 +71,7 @@
       <el-button
         v-if="state !== 'progressing'"
         size="mini"
-        class="icon-button"
+        class="down-icon-button"
         icon="el-icon-delete"
         @click="deleteDownItem"
       />

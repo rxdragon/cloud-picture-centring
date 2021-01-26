@@ -74,19 +74,15 @@ export default {
     setShowOverTag (value) {
       this.$store.dispatch('setting/setShowOverTag', value)
     },
-    setCacheImageSwitch (value) {
-      this.$store.dispatch('setting/setImageCacheSwitch', value)
-        .then(() => {
-          const data = value ? 1 : 0
-          Setting.updateSetting('imageCacheSwitch', data)
-        })
+    async setCacheImageSwitch (value) {
+      await this.$store.dispatch('setting/setImageCacheSwitch', value)
+      const data = value ? 1 : 0
+      await Setting.updateSetting('imageCacheSwitch', data)
     },
-    setCacheGuestInfiniteScroll (value) {
-      this.$store.dispatch('setting/setGuestInfiniteScroll', value)
-        .then(() => {
-          const data = value ? 1 : 0
-          Setting.updateSetting('guestInfiniteScroll', data)
-        })
+    async setCacheGuestInfiniteScroll (value) {
+      await this.$store.dispatch('setting/setGuestInfiniteScroll', value)
+      const data = value ? 1 : 0
+      await Setting.updateSetting('guestInfiniteScroll', data)
     },
     /**
      * @description 打开图片缓存地址

@@ -5,6 +5,7 @@ import ApiError from './ApiError.js'
 import { Message } from 'element-ui'
 import { errorCode } from './errorCode'
 import { readConfig } from "../utils/electronConfig"
+import * as SessionTool from '@/utils/sessionTool'
 
 
 // axios 配置
@@ -31,7 +32,7 @@ const noHandlerError = [
 // 设置请求头信息
 axios.interceptors.request.use(
   config => {
-    let xstreamId = sessionStorage.getItem('xStreamId')
+    let xstreamId = SessionTool.getXStreamId()
     if (xstreamId) {
       config.headers['x-stream-id'] = xstreamId
     }
