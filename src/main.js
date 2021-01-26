@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router' // 路由
@@ -23,7 +24,7 @@ import '@/directive'
 
 initIndexDb(true)
 
-window._ = { get }
+window._ = { get, cloneDeep }
 // 注册websocket
 Vue.prototype.$eventEmitter = eventEmitter
 Vue.prototype.$delayLoading = delayLoading

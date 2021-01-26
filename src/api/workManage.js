@@ -4,6 +4,7 @@ import axios from '@/plugins/axios.js'
 import { RETOUCH_STANDARD } from '@/utils/enumerate'
 import { keyToHump, transformPercentage, isObj, getAvg, timeFormat } from '@/utils'
 import { toFixed, isNumber } from '@/utils/validate'
+import * as MathUtil from '@/utils/mathUtil'
 
 /** 工作指标 */
 
@@ -84,54 +85,69 @@ export function getRetoucherQuota (params) {
     }
 
     // R流水收益
-    const returnIncome = msg.income.storeReturnIncomeForBoth +
-      msg.income.storeReturnIncomeForNotQuality +
-      msg.income.storeReturnIncomeForQuality
-    msg.income.returnIncome = toFixed(returnIncome)
+    const returnIncomeFun = MathUtil.summation()
+    returnIncomeFun(msg.income.storeReturnIncomeForBoth)
+    returnIncomeFun(msg.income.storeReturnIncomeForNotQuality)
+    returnIncomeFun(msg.income.storeReturnIncomeForQuality)
+    msg.income.returnIncome = returnIncomeFun.toResult()
+
     // 退单回补收益
-    const rollbackIncomeRework = Number(msg.income.rollbackForNormalRework || 0) + Number(msg.income.rollbackForReturnRework || 0)
+    const rollbackIncomeReworkFun = MathUtil.summation()
+    rollbackIncomeReworkFun(msg.income.rollbackForNormalRework)
+    rollbackIncomeReworkFun(msg.income.rollbackForReturnRework)
+    const rollbackIncomeRework = rollbackIncomeReworkFun.toResult()
+
     const rollbackIncomeOvertime = Number(msg.income.rollbackForOvertime || 0)
-    msg.income.rollbackIncomeRework = toFixed(rollbackIncomeRework)
-    msg.income.rollbackIncomeOvertime = toFixed(rollbackIncomeOvertime)
+
+    msg.income.rollbackIncomeRework = rollbackIncomeRework
+    msg.income.rollbackIncomeOvertime = MathUtil.toFixed(rollbackIncomeOvertime)
+
     // 时段奖励收益
-    msg.income.timeIntervalImpulse = toFixed(_.get(msg, 'income.timeIntervalImpulse') || 0)
-    msg.income.timeIntervalReward = toFixed(_.get(msg, 'income.timeIntervalReward') || 0)
+    msg.income.timeIntervalImpulse = MathUtil.toFixed(_.get(msg, 'income.timeIntervalImpulse') || 0)
+    msg.income.timeIntervalReward = MathUtil.toFixed(_.get(msg, 'income.timeIntervalReward') || 0)
 
     // 收益
-    const income = msg.income.retouch * 100 +
-      msg.income.impulse * 100 +
-      msg.income.reward * 100 +
-      rollbackIncomeRework * 100 +
-      rollbackIncomeOvertime * 100 +
-      returnIncome * 100 +
-      msg.income.timeIntervalImpulse * 100 +
-      msg.income.timeIntervalReward * 100 -
-      msg.income.punish * 100 -
-      msg.income.glassPunishIncome * 100
-
-    msg.incomeInfo = toFixed(income / 100)
+    const incomeFun = MathUtil.summation()
+    incomeFun(msg.income.retouch)
+    incomeFun(msg.income.impulse)
+    incomeFun(msg.income.reward)
+    incomeFun(rollbackIncomeRework)
+    incomeFun(rollbackIncomeOvertime)
+    incomeFun(msg.income.returnIncome)
+    incomeFun(msg.income.timeIntervalImpulse)
+    incomeFun(msg.income.timeIntervalReward)
+    incomeFun(-1 * (msg.income.punish))
+    incomeFun(-1 * (msg.income.glassPunishIncome))
+    msg.incomeInfo = incomeFun.toResult()
 
     // 惩罚海草
-    const returnExp = Number(msg.exp.storeReturnExpForBoth) +
-      Number(msg.exp.storeReturnExpForNotQuality) +
-      Number(msg.exp.storeReturnExpForQuality)
+    const returnExpFun = MathUtil.summation()
+    returnExpFun(msg.exp.storeReturnExpForBoth)
+    returnExpFun(msg.exp.storeReturnExpForNotQuality)
+    returnExpFun(msg.exp.storeReturnExpForQuality)
+    msg.exp.returnExp = returnExpFun.toResult()
 
-    msg.exp.returnExp = toFixed(returnExp)
-    const rollbackExpRework = msg.exp.rollbackForNormalRework + msg.exp.rollbackForReturnRework
-    const rollbackExpOvertime = msg.exp.rollbackForOvertime
-    msg.exp.rollbackExpRework = toFixed(rollbackExpRework)
-    msg.exp.rollbackExpOvertime = toFixed(rollbackExpOvertime)
+    const rollbackExpReworkFun = MathUtil.summation()
+    rollbackExpReworkFun(msg.exp.rollbackForNormalRework)
+    rollbackExpReworkFun(msg.exp.rollbackForReturnRework)
+    const rollbackExpRework = rollbackExpReworkFun.toResult()
+    
+    const rollbackExpOvertime = Number(msg.exp.rollbackForOvertime)
+
+    msg.exp.rollbackExpRework = rollbackExpRework
+    msg.exp.rollbackExpOvertime = MathUtil.toFixed(rollbackExpOvertime)
     msg.exp.timeIntervalReward = Number(_.get(msg, 'exp.timeIntervalReward') || 0) // 时段海草奖励
-    // 海草
-    const exp = msg.exp.normal * 100 +
-      returnExp * 100 +
-      msg.exp.timeIntervalReward * 100 +
-      rollbackExpRework * 100 +
-      rollbackExpOvertime * 100 -
-      msg.exp.punishExp * 100 -
-      msg.exp.glassPunishExp * 100
 
-    msg.expInfo = toFixed(exp / 100)
+    // 海草
+    const expFun = MathUtil.summation()
+    expFun(msg.exp.normal)
+    expFun(msg.exp.returnExp)
+    expFun(msg.exp.timeIntervalReward)
+    expFun(msg.exp.rollbackExpRework)
+    expFun(msg.exp.rollbackExpOvertime)
+    expFun(-1 * (msg.exp.punishExp))
+    expFun(-1 * (msg.exp.glassPunishExp))
+    msg.expInfo = expFun.toResult()
 
     // 顾客满意度
     const retoucherNpsCount = Number(msg.retoucherNpsScore.count) // nps总量
