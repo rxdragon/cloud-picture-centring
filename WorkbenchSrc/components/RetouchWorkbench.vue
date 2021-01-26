@@ -132,7 +132,7 @@ export default {
         this.sandClass = 'red'
       }
       this.sandTime = time
-      setTimeout(this.countDown, 1000)
+      setTimeout(this.countDown, 5000)
     },
     /**
      * @description 下载参考图

@@ -55,7 +55,7 @@ async function createWindow () {
   win.on('close', () => {
     win.webContents.send('closed-win')
 
-    for (const browserWindowItem of windows) {
+    for (const browserWindowItem of Object.values(windows)) {
       browserWindowItem.browserWindowObject.destroy()
     }
   })

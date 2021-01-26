@@ -99,7 +99,7 @@ export default {
       if (!this.read) {
         const fn = this.timeCirculation(() => {
           this.countDownTime--
-          if (this.countDownTime === 0) {
+          if (this.countDownTime <= 0) {
             this.checkTimeDown = true
           }
           if (!this.checkTimeDown) fn()
