@@ -88,7 +88,8 @@ export function settlePhoto (photoArr, reworkTimes = 0, storeReturn = false) {
  * @param photoVersion
  */
 export function settlePhotoVersion (oldPhotoVersion) {
-  let idList = oldPhotoVersion.map(item => item.id)
+  oldPhotoVersion = oldPhotoVersion.filter(item => item)
+  let idList = oldPhotoVersion.map(item => _.get(item, 'id') || '')
   idList = [...new Set(idList)]
   const idListMap = {}
   idList.forEach(idItem => {
