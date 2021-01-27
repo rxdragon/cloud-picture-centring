@@ -43,6 +43,8 @@ export default function handleMessage (data, chat) {
     // 公告
     case 'Announcement':
       handleAnnouncementNoice(typeMessage)
+    case 'StaffAnnouncementUnreadCount':
+      handleStaffAnnouncementUnreadCount(typeMessage)
     default:
       break
   }
@@ -204,4 +206,13 @@ function handleAnnouncementNoice (message) {
     }
   }
   Vue.prototype.$notification(notificationData)
+}
+
+/**
+ * @description 处理未读信息
+ * @param {*} params 
+ */
+function handleStaffAnnouncementUnreadCount (message) {
+  const { unread_count } = message
+  store.dispatch('notification/setAnnouncementUnreadCount', unread_count || 0)
 }
