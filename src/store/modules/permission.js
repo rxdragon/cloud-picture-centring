@@ -49,6 +49,7 @@ const state = {
   showFlowInfo: false, // 是否显示浏览看板
   showRetouchStreamList: false, // 是否显示修图队列
   showReviewStreamList: false, // 是否显示审核队列
+  showReturnStreamToQueue: false, // 显示流水退回
   showStreamList: false, // 是否显示浏览加急查询
   showUrgentStream: false, // 是否显示加急按钮
   isRetoucher: false, // 是否是修片师
@@ -67,6 +68,7 @@ const state = {
   showDisableStaff: false, // 账号配置是否显示禁用按钮
   showEditStaff: false, // 账号配置是否显示编辑按钮
   showEnableStaff: false, // 账号配置是否显示启用按钮
+  showInformation: false, // 显示公告按钮
 }
 
 const mutations = {
@@ -84,13 +86,16 @@ const mutations = {
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
     state.showOverallPerformance = roles.includes('AdminManage.performanceInquire.overallperformance')
     state.showTimeStatistics = roles.includes('AdminManage.performanceInquire.timestatistics')
+
     state.showFlowInfo = roles.includes('AdminManage.workBoard.flowInfo')
     state.showRetouchStreamList = roles.includes('AdminManage.workBoard.retouchStreamList')
     state.showReviewStreamList = roles.includes('AdminManage.workBoard.reviewStreamList')
     state.showStreamList = roles.includes('AdminManage.workBoard.streamList')
     state.showUrgentStream = roles.includes('AdminManage.workBoard.urgentStream')
-    state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showWorkInfo = roles.includes('AdminManage.workBoard.showOrderInfo')
+    state.showReturnStreamToQueue = roles.includes('AdminManage.workBoard.returnStreamToQueue')
+
+    state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
     // 自动修图
@@ -115,7 +120,8 @@ const mutations = {
     const hasOnlineWorkbench = roles.includes('Workbench.pictureOnlineInfo.get')
     const hasProductReview = roles.includes('Workbench.productCheck.get')
     state.hasWorkbench = hasRetouchWorkbench || hasOnlineWorkbench || hasProductReview
-
+    // 通知
+    state.showInformation = roles.includes('AnnouncementCenter.announcementCenterIndex.list')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {
@@ -170,11 +176,7 @@ const actions = {
         ]
       }
 
-      
-      // TODO 调试
-      // accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
-      accessedRoutes = [...asyncRoutes, ...lastBaseRoutes]
-
+      accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

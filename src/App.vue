@@ -4,7 +4,7 @@
       <router-view />
     </transition>
     <painted-eggshell v-if="showCat" />
-    <div class="workbench-module" v-if="showWorkbenchInApp">
+    <div class="workbench-module" v-if="showWorkbenchInApp && hasWorkbench">
       <workbench @stick="onStickTop" />
     </div>
   </div>
@@ -30,7 +30,7 @@ export default {
   name: 'App',
   components: { PaintedEggshell, workbench },
   computed: {
-    ...mapGetters(['showCat', 'isRetoucher', 'lineState', 'showWorkbench', 'workbenchLocation', 'name']),
+    ...mapGetters(['showCat', 'isRetoucher', 'lineState', 'showWorkbench', 'workbenchLocation', 'name', 'hasWorkbench']),
     showWorkbenchInApp () {
       return this.showWorkbench && this.workbenchLocation === WORKBENCH_LOCATION.APP && Boolean(this.name)
     }

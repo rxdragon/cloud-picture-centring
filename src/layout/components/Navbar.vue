@@ -16,7 +16,7 @@
         缦图云端 修图中心
       </span>
       <div class="nav-right">
-        <information-switch />
+        <information-switch v-if="showInformation" />
         <workbench-switch v-if="hasWorkbench" />
         <download-management />
         <!-- 修图师在线功能 -->
@@ -93,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'lineState', 'isRetoucher', 'hasWorkbench']),
+    ...mapGetters(['userInfo', 'lineState', 'isRetoucher', 'hasWorkbench', 'showInformation']),
     isOnline () {
       return this.lineState === 'online'
     }

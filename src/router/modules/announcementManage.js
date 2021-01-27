@@ -5,6 +5,7 @@ const announcementManage = {
   component: Layout,
   name: 'AnnouncementManage',
   alwaysShow: false,
+  redirect: '/announcement-manage-index',
   meta: { title: '公告管理', icon: 'iconfont iconcurrent' },
   children: [
     {

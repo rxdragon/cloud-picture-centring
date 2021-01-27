@@ -41,6 +41,7 @@ const permissionGetters = {
   showPartnerPerformance: state => state.permission.showPartnerPerformance, // 是否显示伙伴绩效
   showOverallPerformance: state => state.permission.showOverallPerformance, // 是否显示总体绩效
   showWorkInfo: state => state.permission.showWorkInfo, // 是否显示工作看板
+  showReturnStreamToQueue: state => state.permission.showReturnStreamToQueue, // 显示流水退回按钮
   showAuditPerformance: state => state.permission.showAuditPerformance, // 是否显示审核绩效
   showTimeStatistics: state => state.permission.showTimeStatistics, // 是否显示用时统计
   showRetoucherChargeBackReport: state => state.permission.showRetoucherChargeBackReport, // 退单统计
@@ -74,7 +75,10 @@ const permissionGetters = {
   showEditStaff: state => state.permission.showEditStaff, // 账号配置是否显示编辑按钮
 
   // 工作看板
-  hasWorkbench: state => state.permission.hasWorkbench // 是否显示工作看板
+  hasWorkbench: state => state.permission.hasWorkbench, // 是否显示工作看板
+  
+  // 通知栏目
+  showInformation: state => state.permission.showInformation, // 是否显示消息通知
 }
 
 const getters = {

@@ -115,7 +115,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['showUrgentStream', 'roles', 'showWorkInfo'])
+    ...mapGetters(['showUrgentStream', 'roles', 'showWorkInfo', 'showReturnStreamToQueue'])
   },
   methods: {
     /**
@@ -146,10 +146,11 @@ export default {
      * @description 是否可以退回队列
      */
     canReturnQueue (item) {
+
       const isMoreThen10 = item.photoNum >= 10
       if (!isMoreThen10) return false
       // 判断是否有权限
-      const hasManualReviewPermission = this.roles.includes('AdminManage.workBoard.manualReview')
+      const hasManualReviewPermission = this.showReturnStreamToQueue
       if (!hasManualReviewPermission) return false
 
       // 判断是否在修图中

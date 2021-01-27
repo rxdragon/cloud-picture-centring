@@ -13,6 +13,8 @@ import { windows } from './electronMain/window/base'
 import WindowsModel from './electronMain/window/WindowModel'
 require('./electronMain/LocalServe')
 
+app.commandLine.appendArgument("--enable-features=Metal")
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -36,7 +38,8 @@ async function createWindow () {
     },
     titleBarStyle: 'hiddenInset',
     icon: path.join(global.staticDir, 'icon.png'),
-    preload: path.join(__dirname, './electronMain/renderer.js')
+    preload: path.join(__dirname, './electronMain/renderer.js'),
+    offscreen: false
   })
 
   // 注册信息

@@ -5,6 +5,7 @@ const announcementCenter = {
   component: Layout,
   name: 'AnnouncementCenter',
   alwaysShow: false,
+  redirect: '/announcement-center-index',
   meta: { title: '公告中心', icon: 'iconfont iconcurrent' },
   children: [
     {
