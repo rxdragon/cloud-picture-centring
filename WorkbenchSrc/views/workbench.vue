@@ -24,9 +24,9 @@
       </div>
     </div>
     <div class="workbench-content">
-      <retouch-workbench :dark="darkMode" />
-      <online-workbench :dark="darkMode" />
-      <product-review-workbench :dark="darkMode" />
+      <retouch-workbench v-if="hasRetouchWorkbench" :dark="darkMode" />
+      <online-workbench v-if="hasOnlineWorkbench" :dark="darkMode" />
+      <product-review-workbench v-if="hasProductReview" :dark="darkMode" />
     </div>
   </div>
 </template>
@@ -50,17 +50,27 @@ export default {
     return {
       isStickTop: false, // 是否置顶
       darkMode: false, // 是否暗黑模式
+      hasRetouchWorkbench: false, // 是否含有修图板块
+      hasOnlineWorkbench: false, // 是否含有在线看片权限
+      hasProductReview: false, // 是否含有产品审核权限
     }
   },
   async created () {
     const { mode } = await getWorkbenchInfo()
     this.darkMode = mode === 'moon'
-
-    const savePermission = SessionTool.getUserPermission()
-    console.error(savePermission)
+    this.judgeInPermission()
     this.judgeInWindow()
   },
   methods: {
+    /**
+     * @description 判断权限
+     */
+    judgeInPermission () {
+      const savePermission = SessionTool.getUserPermission()
+      this.hasRetouchWorkbench = savePermission.find(item => item.name === 'workbench.retouch_info.get')
+      this.hasOnlineWorkbench = savePermission.find(item => item.name === 'workbench.picture_online_info.get')
+      this.hasProductReview = savePermission.find(item => item.name === 'workbench.product_check.get')
+    },
     /**
      * @description 判断是否在新的窗口
      */

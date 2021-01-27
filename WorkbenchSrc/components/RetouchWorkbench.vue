@@ -1,7 +1,7 @@
 <template>
   <div class="retouch-workbench">
     <!-- 流水信息 -->
-    <div class="retouch-stream">
+    <div class="retouch-stream" v-if="retouchingStream.streamNum">
       <div class="retouch-stream-row stream-sand-row">
         <div class="stream-strong">当前正在处理流水：</div>
         <div class="stream-sand" v-if="isSandClockOpen">
@@ -20,7 +20,7 @@
       </div>
     </div>
     <!-- 修图要求 -->
-    <div class="require-box">
+    <div class="require-box" v-if="retouchingStream.streamNum">
       <div class="require-info">
         <div class="retouch-require">
           <el-tag :effect="dark ? 'plain' : 'light'" size="small">眼睛增大幅度：{{ retouchingStream.requireLabel.eye | toLabelName }}</el-tag>

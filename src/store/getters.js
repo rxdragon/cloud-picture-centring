@@ -71,7 +71,10 @@ const permissionGetters = {
   showAddStaff: state => state.permission.showAddStaff, // 账号配置是否显示添加按钮
   showDisableStaff: state => state.permission.showDisableStaff, // 账号配置是否显示禁用按钮
   showEnableStaff: state => state.permission.showEnableStaff, // 账号配置是否显示启用按钮
-  showEditStaff: state => state.permission.showEditStaff // 账号配置是否显示编辑按钮
+  showEditStaff: state => state.permission.showEditStaff, // 账号配置是否显示编辑按钮
+
+  // 工作看板
+  hasWorkbench: state => state.permission.hasWorkbench // 是否显示工作看板
 }
 
 const getters = {

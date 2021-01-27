@@ -37,6 +37,7 @@ const state = {
   addRoutes: [],
   personageRouters: [],
   roles: [],
+  hasWorkbench: false, // 是否显示工作看板
   showPartnerPerformance: false, // 是否显示伙伴绩效
   showOverallPerformance: false, // 是否显示总体绩效
   showAuditPerformance: false, // 是否显示审核绩效
@@ -65,7 +66,7 @@ const state = {
   showAddStaff: false, // 账号配置是否显示添加按钮
   showDisableStaff: false, // 账号配置是否显示禁用按钮
   showEditStaff: false, // 账号配置是否显示编辑按钮
-  showEnableStaff: false // 账号配置是否显示启用按钮
+  showEnableStaff: false, // 账号配置是否显示启用按钮
 }
 
 const mutations = {
@@ -108,6 +109,13 @@ const mutations = {
     state.showDisableStaff = roles.includes('AccountManage.accountConfig.disableStaff')
     state.showEditStaff = roles.includes('AccountManage.accountConfig.editStaff')
     state.showEnableStaff = roles.includes('AccountManage.accountConfig.enableStaff')
+
+    // 工作看板权限
+    const hasRetouchWorkbench = roles.includes('Workbench.retouchInfo.get')
+    const hasOnlineWorkbench = roles.includes('Workbench.pictureOnlineInfo.get')
+    const hasProductReview = roles.includes('Workbench.productCheck.get')
+    state.hasWorkbench = hasRetouchWorkbench || hasOnlineWorkbench || hasProductReview
+
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {

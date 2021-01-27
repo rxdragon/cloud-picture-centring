@@ -17,7 +17,7 @@
       </span>
       <div class="nav-right">
         <information-switch />
-        <workbench-switch />
+        <workbench-switch v-if="hasWorkbench" />
         <download-management />
         <!-- 修图师在线功能 -->
         <el-popover
@@ -80,6 +80,7 @@ import * as User from '@/api/user.js'
 import * as Retoucher from '@/api/retoucher.js'
 import { throttle } from '@/utils/throttle.js'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'Navbar',
   components: { DownloadManagement, WorkbenchSwitch, InformationSwitch },
@@ -92,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'lineState', 'isRetoucher']),
+    ...mapGetters(['userInfo', 'lineState', 'isRetoucher', 'hasWorkbench']),
     isOnline () {
       return this.lineState === 'online'
     }
