@@ -48,6 +48,7 @@
             :action="updateDomain"
             :file-list="announcementInfo.files"
             :on-success="handleSuccess"
+            :on-remove="onRemoveFile"
             :data="upyunConfig"
           >
             <el-button size="small" type="primary">点击上传</el-button>
@@ -64,6 +65,7 @@
             <el-radio label="settimeSend">
               <el-date-picker
                 class="settime-box"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 v-model="announcementInfo.sendAt"
                 type="datetime"
                 placeholder="选择日期时间"
@@ -191,6 +193,16 @@ export default {
      */
     handleSuccess (response, file, fileList) {
       this.announcementInfo.files = fileList
+    },
+    /**
+     * @description 监听文件移除
+     */
+    onRemoveFile (file, fileList) {
+      const { uid } = file
+      const findIndex = this.announcementInfo.files.findIndex(item => item.uid === uid)
+      if (findIndex >= 0) {
+        this.announcementInfo.files.splice(findIndex, 1)
+      }
     }
   }
 }
@@ -207,7 +219,7 @@ export default {
   }
 
   .settime-box {
-    width: 190px;
+    width: 200px;
   }
 
   .upload-file {
@@ -215,7 +227,7 @@ export default {
   }
 
   .el-radio {
-    margin-right: 24px;
+    margin-right: 14px;
   }
 }
 </style>

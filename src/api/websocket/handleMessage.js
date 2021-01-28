@@ -43,9 +43,11 @@ export default function handleMessage (data, chat) {
     // 公告
     case 'Announcement':
       handleAnnouncementNoice(typeMessage)
+      break
     // 未读公告数量
     case 'StaffAnnouncementUnreadCount':
       handleStaffAnnouncementUnreadCount(typeMessage)
+      break
     default:
       break
   }
