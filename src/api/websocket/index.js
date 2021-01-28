@@ -130,6 +130,7 @@ class Ws {
         chat.onMessageCallback = data => {
           handleMessage(data, this)
         }
+
         // websocket第一次连接时调用
         chat.onFirstConnectCallback = () => {
           this.setState('connected')

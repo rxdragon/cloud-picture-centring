@@ -43,7 +43,6 @@ import * as AnnouncementApi from '@/api/announcementApi'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { READ_STATE } from '@/utils/enumerate'
 
-// TODO 接口链条
 export default {
   name: 'DetailAnnouncement',
   props: {
@@ -92,6 +91,8 @@ export default {
         const res = await AnnouncementApi.getAnnouncementUserDetail(req)
         this.announcementInfo = res
         this.read = res.readState === READ_STATE.READ
+      } catch {
+        this.back()
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }

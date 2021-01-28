@@ -89,7 +89,6 @@
 </template>
 
 <script>
-// TODO 接口链条
 import '@toast-ui/editor/dist/toastui-editor.css'
 import DatePicker from '@/components/DatePicker'
 import AnnouncementReadState from '@/components/SelectBox/AnnouncementReadState'
