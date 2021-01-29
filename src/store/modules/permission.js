@@ -69,6 +69,7 @@ const state = {
   showEditStaff: false, // 账号配置是否显示编辑按钮
   showEnableStaff: false, // 账号配置是否显示启用按钮
   showInformation: false, // 显示公告按钮
+  showAnnouncementDelete: false // 显示公告删除按钮
 }
 
 const mutations = {
@@ -122,6 +123,8 @@ const mutations = {
     state.hasWorkbench = hasRetouchWorkbench || hasOnlineWorkbench || hasProductReview
     // 通知
     state.showInformation = roles.includes('AnnouncementCenter.announcementCenterIndex.list')
+    // 删除
+    state.showAnnouncementDelete = roles.includes('AnnouncementManage.announcementManageIndex.delete')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {

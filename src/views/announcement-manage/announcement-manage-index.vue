@@ -59,7 +59,12 @@
                   详情
                 </el-button>
 
-                <el-popover placement="top" width="160" v-model="row.deleteVisible">
+                <el-popover
+                  placement="top"
+                  width="160"
+                  v-model="row.deleteVisible"
+                  v-if="showAnnouncementDelete"
+                >
                   <p>确定删除该公告？</p>
                   <div style="margin-top: 12px; text-align: right;">
                     <el-button type="danger" size="mini" @click="deleteAnnouncement(row.id)">确定</el-button>
@@ -98,6 +103,7 @@ import DetailAnnouncement from './components/DetailAnnouncement'
 
 import * as AnnouncementApi from '@/api/announcementApi'
 import { joinTimeSpan } from '@/utils/timespan.js'
+import { mapGetters } from 'vuex'
 
 const MODULE_NAME = {
   INDEX: 'index',
@@ -123,6 +129,9 @@ export default {
       tableData: [],
       detailId: ''
     }
+  },
+  computed: {
+    ...mapGetters(['showAnnouncementDelete']),
   },
   created () {
     this.searchList(1)

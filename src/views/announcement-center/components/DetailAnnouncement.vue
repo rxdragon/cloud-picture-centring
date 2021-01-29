@@ -174,6 +174,8 @@ export default {
 
         .info-content {
           display: flex;
+          flex-wrap: wrap;
+          width: 300px;
           font-size: 12px;
           font-weight: 400;
           line-height: 22px;
