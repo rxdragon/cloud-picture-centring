@@ -16,6 +16,10 @@
           <div class="info-value">{{ todayPhoto }}张</div>
           <div class="info-label">看片张数</div>
         </div>
+        <div class="info-item">
+          <div class="info-value">{{ onlineUnreadCount }}</div>
+          <div class="info-label">消息数量</div>
+        </div>
       </div>
     </div>
   </div>
@@ -30,11 +34,13 @@ export default {
     return {
       waitDeal: 0,
       needOtherPhoto: 0,
-      todayPhoto: 0
+      todayPhoto: 0,
+      onlineUnreadCount: 0
     }
   },
   created () {
     this.initPollingInfo()
+    this.initElectron()
   },
   destroyed () {
     if (window.polling.getOnlineInfo) {
@@ -42,6 +48,15 @@ export default {
     }
   },
   methods: {
+    async initElectron () {
+      // 监听关闭窗口
+      this.$ipcRenderer.on('online-count:change', (e, item) => {
+        this.onlineUnreadCount = item
+      })
+
+      const count = await this.$ipcRenderer.sendSync('online-count:get')
+      this.onlineUnreadCount = count || 0
+    },
     /**
      * @description 获取基本信息
      */
@@ -78,7 +93,7 @@ export default {
 
   .online-content {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 
     .info-item {
       text-align: center;

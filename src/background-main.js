@@ -7,6 +7,7 @@ import initDownloadManager from './electronMain/downTool'
 import initDialog from './electronMain/dialog'
 import initUtils from './electronMain/utils'
 import registerIpc from './electronMain/ipc/registerIpc'
+import onlineIpc from './electronMain/ipc/onlineIpc'
 import initExecIncident from './electronMain/execNode'
 import { setMenu } from './electronMain/resetMenu.js'
 import { windows } from './electronMain/window/base'
@@ -92,6 +93,8 @@ async function createWindow () {
   initExecIncident(win, ipcMain)
   // 注册主线程事件
   registerIpc()
+  // 注册在线状态onlineIpc
+  onlineIpc(windows)
 
   // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
   win.once('ready-to-show', () => {

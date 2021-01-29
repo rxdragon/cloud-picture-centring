@@ -26,7 +26,8 @@ const defaultGetters = {
 const notification = {
   retouchId: state => state.notification.retouchId, // 修图id
   showAnniversary: state => state.notification.showAnniversary, // 显示弹框
-  announcementUnreadCount: state => state.notification.announcementUnreadCount // 未读数量
+  announcementUnreadCount: state => state.notification.announcementUnreadCount, // 未读数量
+  onlineUnreadCount: state => state.notification.onlineUnreadCount // 在线看片未读数
 }
 
 const settting = {
@@ -79,6 +80,7 @@ const permissionGetters = {
   
   // 通知栏目
   showInformation: state => state.permission.showInformation, // 是否显示消息通知
+  showAnnouncementDelete: state => state.permission.showAnnouncementDelete, // 是否显示公告删除按钮
 }
 
 const getters = {

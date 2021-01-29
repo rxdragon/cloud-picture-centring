@@ -146,7 +146,6 @@ export default {
      * @description 是否可以退回队列
      */
     canReturnQueue (item) {
-
       const isMoreThen10 = item.photoNum >= 10
       if (!isMoreThen10) return false
       // 判断是否有权限
@@ -156,6 +155,8 @@ export default {
       // 判断是否在修图中
       const isRetouch = item.state === STREAM_STATE.RETOUCHING
       if (!isRetouch) return false
+
+      return true
 
       // 判断时间是否处于 22点后 或者 8点前
       let startTime = dayjs().format('YYYY-MM-DD') + ' 22:00'
