@@ -166,7 +166,7 @@ function logoutApp () {
   setTimeout(() => {
     autoLogout()
   }, 1 * 30 * 1000)
-  MessageBox.confirm('', '在其他地方登录系统，1分钟后自动关闭app', {
+  MessageBox.confirm('', '在其他地方登录系统，30s后自动关闭app', {
     confirmButtonText: '确定',
     center: true,
     type: 'warning',
