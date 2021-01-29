@@ -80,7 +80,7 @@ async function createWindow () {
   initUtils(win, ipcMain)
   initExecIncident(win, ipcMain)
   // 注册主线程事件
-  registerIpc()
+  registerIpc(win)
 
   // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
   win.once('ready-to-show', () => {
