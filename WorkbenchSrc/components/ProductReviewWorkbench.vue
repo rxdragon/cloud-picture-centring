@@ -26,6 +26,7 @@ export default {
   destroyed () {
     if (window.polling.getProductInfo) {
       clearTimeout(window.polling.getProductInfo)
+      window.polling.getProductInfo = null
     }
   },
   methods: {

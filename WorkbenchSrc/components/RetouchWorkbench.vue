@@ -95,7 +95,13 @@ export default {
     },
   },
   created () {
-    this.getRetouchNowInfo()
+    this.initPollingInfo()
+  },
+  destroyed () {
+    if (window.polling.getRetouchInfo) {
+      clearTimeout(window.polling.getRetouchInfo)
+      window.polling.getRetouchInfo = null
+    }
   },
   methods: {
     /**
@@ -115,6 +121,15 @@ export default {
       this.dealStreamNum = dealStreamNum
       this.returnRate = returnRate
       this.retouchPhotoNumTimeSum = retouchPhotoNumTimeSum
+    },
+    /**
+     * @description 沦陷
+     */
+    async initPollingInfo () {
+      await this.getRetouchNowInfo()
+      window.polling.getRetouchInfo = setTimeout(async () => {
+        await this.initPollingInfo()
+      }, 5000)
     },
     /**
      * @description 时间倒计时

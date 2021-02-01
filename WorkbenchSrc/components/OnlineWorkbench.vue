@@ -45,6 +45,7 @@ export default {
   destroyed () {
     if (window.polling.getOnlineInfo) {
       clearTimeout(window.polling.getOnlineInfo)
+      window.polling.getOnlineInfo = null
     }
   },
   methods: {
