@@ -52,6 +52,7 @@ export async function getRetouchInfo () {
   const retouchTimeAvgSum = _.get(res, 'todayQuota.retouchTimeAvg.sum') || 0
   const retouchTimeAvgCount = _.get(res, 'todayQuota.retouchTimeAvg.count') || 0
   let retouchPhotoNumTimeSum = MathUtil.toFixed(retouchTimeAvgSum / retouchTimeAvgCount)
+
   retouchPhotoNumTimeSum = timeFormat(retouchPhotoNumTimeSum)
   const createData = {
     retouchingStream: streamOrder,

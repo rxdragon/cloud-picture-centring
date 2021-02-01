@@ -2,6 +2,7 @@
 
 import { transformPercentage, getAvg, timeFormat } from '@/utils/index.js'
 import * as Validate from '@/utils/validate.js'
+import * as MathUtil from '@/utils/mathUtil'
 
 export default class TargetModel {
   base = {}
@@ -149,12 +150,21 @@ export default class TargetModel {
 
   // 计算退张率
   getStoreReturnPhotoRate () {
-    const returnCount = this.storeReturnPhotoNumForNormalQuality + this.storeReturnPhotoNumForReworkQuality - this.rollbackPhotoNumForNormalRework - this.rollbackPhotoNumForReturnRework
-    this.finishPhotoNum = this.retouchPhotoNum +
-      this.finishPhotoNumForQuality +
-      this.finishPhotoNumForNotQuality +
-      this.finishPhotoNumForBoth
-    this.storeReturnPhotoRate = transformPercentage(returnCount, this.finishPhotoNum)
+    const returnCountFun = MathUtil.summation()
+    returnCountFun(this.storeReturnPhotoNumForNormalQuality)
+    returnCountFun(this.storeReturnPhotoNumForReworkQuality)
+    returnCountFun(-1 * this.rollbackPhotoNumForNormalRework)
+    returnCountFun(-1 * this.rollbackPhotoNumForReturnRework)
+    const returnCount = returnCountFun.toResult()
+
+    const finishPhotoNumFun = MathUtil.summation()
+    finishPhotoNumFun(this.retouchPhotoNum)
+    finishPhotoNumFun(this.finishPhotoNumForQuality)
+    finishPhotoNumFun(this.finishPhotoNumForNotQuality)
+    finishPhotoNumFun(this.finishPhotoNumForBoth)
+    const finishPhotoNum = finishPhotoNumFun.toResult()
+    this.finishPhotoNum = finishPhotoNum
+    this.storeReturnPhotoRate = transformPercentage(returnCount, finishPhotoNum)
   }
 
   // 获取收益相关信息
@@ -181,27 +191,27 @@ export default class TargetModel {
     this.income.rollbackIncomeRework = retoucherRollbackIncomeForNormalRework + retoucherRollbackIncomeForReturnRework
     this.income.rollbackIncomeOvertime = Validate.toFixed(_.get(this.base, 'income.retoucherRollbackIncomeForOverTime') || 0)
 
-    let storeReturnIncome =
-      this.income.storeReturnIncomeForQuality * 100 +
-      this.income.storeReturnIncomeForNotQuality * 100 +
-      this.income.storeReturnIncomeForBoth * 100
-    storeReturnIncome = Validate.toFixed(storeReturnIncome / 100)
+    const storeReturnIncomeFun = MathUtil.summation()
+    storeReturnIncomeFun(this.income.storeReturnIncomeForQuality)
+    storeReturnIncomeFun(this.income.storeReturnIncomeForNotQuality)
+    storeReturnIncomeFun(this.income.storeReturnIncomeForBoth)
+    const storeReturnIncome = storeReturnIncomeFun.toResult()
     this.income.storeReturnIncome = storeReturnIncome
 
-    let sumIncome =
-      this.income.retouchIncome * 100 -
-      this.income.glassPunishIncome * 100 +
-      this.income.storeReturnIncomeForQuality * 100 +
-      this.income.storeReturnIncomeForNotQuality * 100 +
-      this.income.storeReturnIncomeForBoth * 100 +
-      this.income.timeIntervalImpulse * 100 +
-      this.income.timeIntervalReward * 100 +
-      this.income.reward * 100 +
-      this.income.impulse * 100 -
-      this.income.punishIncome * 100 +
-      this.income.rollbackIncomeRework * 100 +
-      this.income.rollbackIncomeOvertime * 100
-    sumIncome = Validate.toFixed(sumIncome / 100)
+    const sumIncomeFun = MathUtil.summation()
+    sumIncomeFun(this.income.retouchIncome)
+    sumIncomeFun(-1 * this.income.glassPunishIncome)
+    sumIncomeFun(this.income.storeReturnIncomeForQuality)
+    sumIncomeFun(this.income.storeReturnIncomeForNotQuality)
+    sumIncomeFun(this.income.storeReturnIncomeForBoth)
+    sumIncomeFun(this.income.timeIntervalImpulse)
+    sumIncomeFun(this.income.timeIntervalReward)
+    sumIncomeFun(this.income.reward)
+    sumIncomeFun(this.income.impulse)
+    sumIncomeFun(-1 * this.income.punishIncome)
+    sumIncomeFun(this.income.rollbackIncomeRework)
+    sumIncomeFun(this.income.rollbackIncomeOvertime)
+    const sumIncome = sumIncomeFun.toResult()
     this.income.sumIncome = sumIncome
   }
 
@@ -221,25 +231,25 @@ export default class TargetModel {
     const retoucherRollbackExpForReturnRework = Validate.toFixed(_.get(this.base, 'exp.retoucherRollbackExpForReturnRework') || 0)
     this.exp.rollbackExpRework = retoucherRollbackExpForNormalRework + retoucherRollbackExpForReturnRework
     this.exp.rollbackExpOvertime = Validate.toFixed(_.get(this.base, 'exp.retoucherRollbackExpForOverTime') || 0)
-
-    let sumStoreReturnExp =
-      this.exp.storeReturnExpForQuality * 100 +
-      this.exp.storeReturnExpForNotQuality * 100 +
-      this.exp.storeReturnExpForBoth * 100
-    sumStoreReturnExp = Validate.toFixed(sumStoreReturnExp / 100)
+    
+    const sumStoreReturnExpFun = MathUtil.summation()
+    sumStoreReturnExpFun(this.exp.storeReturnExpForQuality)
+    sumStoreReturnExpFun(this.exp.storeReturnExpForNotQuality)
+    sumStoreReturnExpFun(this.exp.storeReturnExpForBoth)
+    const sumStoreReturnExp = sumStoreReturnExpFun.toResult()
     this.exp.sumStoreReturnExp = sumStoreReturnExp
 
-    let sumExp =
-      this.exp.retouchExp * 100 -
-      this.exp.glassPunishExp * 100 +
-      this.exp.storeReturnExpForQuality * 100 +
-      this.exp.storeReturnExpForNotQuality * 100 +
-      this.exp.storeReturnExpForBoth * 100 +
-      this.exp.timeIntervalReward * 100 -
-      this.exp.punishExp * 100 +
-      this.exp.rollbackExpRework * 100 +
-      this.exp.rollbackExpOvertime * 100
-    sumExp = Validate.toFixed(sumExp / 100)
+    const sumExpFun = MathUtil.summation()
+    sumExpFun(this.exp.retouchExp)
+    sumExpFun(-1 * this.exp.glassPunishExp)
+    sumExpFun(this.exp.storeReturnExpForQuality)
+    sumExpFun(this.exp.storeReturnExpForNotQuality)
+    sumExpFun(this.exp.storeReturnExpForBoth)
+    sumExpFun(this.exp.timeIntervalReward)
+    sumExpFun(-1 * this.exp.punishExp)
+    sumExpFun(this.exp.rollbackExpRework)
+    sumExpFun(this.exp.rollbackExpOvertime)
+    const sumExp = sumExpFun.toResult()
     this.exp.sumExp = sumExp
   }
 }
