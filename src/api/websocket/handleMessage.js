@@ -37,7 +37,7 @@ export default function handleMessage (data, chat) {
       setStaffOffline()
       break
     // 摄影撤单
-    case 'streamWithDrawn':
+    case 'StreamWithDrawn':
       handleStreamDraw(typeMessage)
       break
     // 公告

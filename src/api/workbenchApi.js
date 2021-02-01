@@ -45,11 +45,12 @@ export async function getRetouchInfo () {
 
   const streamInfo = res.retouchingStream
   const streamOrder = new StreamModel(streamInfo)
+  streamOrder.photoNum = streamInfo.photos_have_person_count || 0
   const dealStreamNum = res.dealStreamNum - 1 > 0 ? res.dealStreamNum - 1 : 0
   let returnRate = _.get(res, 'todayQuota.returnRate') || 0
-  returnRate = MathUtil.toFixed(returnRate)
-  const retouchTimeAvgSum = _.get(res.todayQuota.retouchTimeAvg.sum) || 0
-  const retouchTimeAvgCount = _.get(res.todayQuota.retouchTimeAvg.count) || 0
+  returnRate = MathUtil.toFixed(returnRate * 100)
+  const retouchTimeAvgSum = _.get(res, 'todayQuota.retouchTimeAvg.sum') || 0
+  const retouchTimeAvgCount = _.get(res, 'todayQuota.retouchTimeAvg.count') || 0
   let retouchPhotoNumTimeSum = MathUtil.toFixed(retouchTimeAvgSum / retouchTimeAvgCount)
   retouchPhotoNumTimeSum = timeFormat(retouchPhotoNumTimeSum)
   const createData = {

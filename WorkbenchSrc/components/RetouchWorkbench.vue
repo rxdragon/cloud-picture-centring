@@ -66,7 +66,8 @@ import DownIpc from '@electronMain/ipc/DownIpc'
 export default {
   name: 'RetouchWorkbench',
   props: {
-    dark: { type: Boolean }
+    dark: { type: Boolean },
+    isStickTop: { type: Boolean }
   },
   data () {
     return {
