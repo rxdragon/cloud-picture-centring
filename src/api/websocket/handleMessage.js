@@ -2,12 +2,14 @@ import Vue from 'vue'
 import { eventEmitter } from '@/plugins/eventemitter.js' // ui布局
 import { MessageBox } from 'element-ui'
 import { timeFormat } from '@/utils/index.js'
+import { ipcRenderer } from 'electron'
 import store from '@/store'
 import router from '@/router'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import { announcementToCN } from '@/utils/enumerate'
+import * as UserApi from '@/api/user'
 
 import errorPng from '@/assets/error.png'
 import photocount from '@/assets/photocount.png'
@@ -47,6 +49,8 @@ export default function handleMessage (data, chat) {
     // 未读公告数量
     case 'StaffAnnouncementUnreadCount':
       handleStaffAnnouncementUnreadCount(typeMessage)
+    case 'BeforeLogout':
+      logoutApp()
       break
     default:
       break
@@ -218,4 +222,32 @@ function handleAnnouncementNoice (message) {
 function handleStaffAnnouncementUnreadCount (message) {
   const { unread_count } = message
   store.dispatch('notification/setAnnouncementUnreadCount', unread_count || 0)
+}
+
+/**
+ * @description 退出登录
+ */
+function logoutApp () {
+  const autoLogout = async () => {
+    try {
+      await UserApi.logout()
+    } finally {
+      ipcRenderer.sendSync('close-app')
+    }
+  }
+  setTimeout(() => {
+    autoLogout()
+  }, 1 * 30 * 1000)
+  MessageBox.confirm('', '在其他地方登录系统，30s后自动关闭app', {
+    confirmButtonText: '确定',
+    center: true,
+    type: 'warning',
+    showCancelButton: false,
+    closeOnPressEscape: false,
+    showClose: false,
+    closeOnClickModal: false
+  }).then(() => {
+    autoLogout()
+  })
+
 }

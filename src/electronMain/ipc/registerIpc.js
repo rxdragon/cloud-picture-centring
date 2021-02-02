@@ -3,7 +3,12 @@ import { startWorkbenchWindow } from '../window/workbenchWindow.js'
 import { closeWindow, windows } from '../window/base'
 const { ipcMain } = require('electron')
 
-export default function registerIpc () {
+export default function registerIpc (win) {
+  ipcMain.on('close-app', (event, name) => {
+    win.close()
+    event.returnValue = 'success'
+  })
+
   // 当需要获取配置项时
   ipcMain.on('config:get', (event, name) => {
     if (!global.config || !global.config(name)) {

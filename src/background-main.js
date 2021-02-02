@@ -92,7 +92,7 @@ async function createWindow () {
   initUtils(win, ipcMain)
   initExecIncident(win, ipcMain)
   // 注册主线程事件
-  registerIpc()
+  registerIpc(win)
   // 注册在线状态onlineIpc
   onlineIpc(windows)
 
