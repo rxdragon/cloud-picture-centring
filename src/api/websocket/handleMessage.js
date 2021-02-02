@@ -49,6 +49,7 @@ export default function handleMessage (data, chat) {
     // 未读公告数量
     case 'StaffAnnouncementUnreadCount':
       handleStaffAnnouncementUnreadCount(typeMessage)
+      break
     case 'BeforeLogout':
       logoutApp()
       break
@@ -110,7 +111,7 @@ async function getReturnStream (data, type) {
   const notificationMsg = type === 'StreamReviewerReturn'
     ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
     : '您有门店退回流水需要处理'
-  
+
   // 处理沙漏时间显示
   const residueTime = Number(hourglass.green_time) + Number(hourglass.orange_time) // 剩余时间
   const overTime = Number(hourglass.over_time) // 超时时间
@@ -147,7 +148,7 @@ async function getReturnStream (data, type) {
  * @description 审核人接到订单
  */
 async function getReviewerReceive () {
-  
+
   // 桌面通知
   const notificationMsg = '你有新的审核订单请及时处理'
   const notificationData = {
@@ -182,7 +183,7 @@ function handleStreamDraw (data) {
 
 /**
  * @description 处理公告
- * @param {*} params 
+ * @param {*} params
  */
 function handleAnnouncementNoice (message) {
   const { type, id } = message
@@ -217,7 +218,7 @@ function handleAnnouncementNoice (message) {
 
 /**
  * @description 处理未读信息
- * @param {*} params 
+ * @param {*} params
  */
 function handleStaffAnnouncementUnreadCount (message) {
   const { unread_count } = message
