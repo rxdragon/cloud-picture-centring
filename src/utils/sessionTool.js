@@ -34,7 +34,7 @@ export function getUserInfo (code) {
  */
 export function setUserPermission (permission) {
   const data = JSON.stringify(permission)
-  sessionStorage.setItem('userPermission', data)
+  localStorage.setItem('userPermission', data)
 }
 
 /**
@@ -43,7 +43,7 @@ export function setUserPermission (permission) {
  */
 export function getUserPermission () {
   try {
-    const data = sessionStorage.getItem('userPermission')
+    const data = localStorage.getItem('userPermission')
     return JSON.parse(data)
   } catch (error) {
     return null
@@ -72,15 +72,14 @@ export function getStreamIdExpireTime (time) {
  * @param {*} code
  */
 export function setXStreamId (code) {
-  sessionStorage.setItem('xStreamId', code)
+  localStorage.setItem('xStreamId', code)
 }
 
 /**
  * @description 获取XStreamId
- * @param {*} params
  */
-export function getXStreamId (params) {
-  return sessionStorage.getItem('xStreamId')
+export function getXStreamId () {
+  return localStorage.getItem('xStreamId')
 }
 
 /**

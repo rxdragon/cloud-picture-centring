@@ -102,6 +102,7 @@ const StaffException = [
   [0xA11003018, 'name非本组伙伴']
 ]
 
+// 匹配查询
 const StreamException = [
   [0xA11004001, '不匹配的产品'],
   [0xA11004002, '无法加急'],
@@ -123,11 +124,13 @@ const StreamException = [
   [0xA11004018, '门店退回不能修改产品'],
 ]
 
+// 标签查询
 const TagException = [
   [0xA11005001, '该字段不能查询'],
   [0xA11005002, '非允许字段表']
 ]
 
+// 审核报错
 const AppealException = [
   [0xA11015001, '别人正在审核中'],
   [0xA11015002, '非法操作'],
@@ -150,12 +153,33 @@ const AppealException = [
   [0xA11015020, '流水没有修图审核通过']
 ]
 
+// 配置报错
 const TimeIntervalRewardConfigException = [
   [0xA11017001, '配置项不存在或不合法'],
   [0xA11017002, '经验倍率不合法'],
   [0xA11017003, '金币倍率不合法'],
   [0xA11017004, '配置类型不合法'],
   [0xA11017005, '配置的伙伴中,存在生效时间重叠']
+]
+
+// 门店退回信息
+const ReturnToQueueException = [
+  [0xA11018001, '该流水状态非修图中'],
+  [0xA11018002, '该流水状态非退回时间'],
+  [0xA11018003, '今日最大退回次数'],
+  [0xA11018004, '照片张数不匹配']
+]
+
+const AnnounceException = [
+  [0xA25002001, '公告日志未找到']
+]
+
+const AnnounceManageException = [
+  [0xA25001001, '公告文件参数不合法'],
+  [0xA25001002, '通知人类型不支持'],
+  [0xA25001003, '公告状态非待发送'],
+  [0xA25001004, '相同发送时间公告'],
+  [0xA25001005, '发送时间比当前更小']
 ]
 
 export const errText = [
@@ -175,7 +199,10 @@ export const errText = [
   ...StreamException,
   ...TagException,
   ...AppealException,
-  ...TimeIntervalRewardConfigException
+  ...TimeIntervalRewardConfigException,
+  ...ReturnToQueueException,
+  ...AnnounceException,
+  ...AnnounceManageException
 ]
 
 const errMap = new Map(errText)

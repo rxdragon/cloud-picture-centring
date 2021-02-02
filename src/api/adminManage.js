@@ -5,7 +5,6 @@ import { keyToHump } from '@/utils/index'
 import { StreamState } from '@/utils/enumerate'
 import * as PhotoTool from '@/utils/photoTool.js'
 
-
 // 获取流水看板数据
 /**
  * @description 获取角色组列表
@@ -200,7 +199,7 @@ export function getStreamInfo (params) {
 
     createData.orderData = {
       streamNum: data.streamNum,
-      photographerOrg: _.get(data, 'order.photographer_org.name', '-'),
+      photographerOrg: _.get(data, 'order.photographer_org.name') || '-',
       productName: data.product.name,
       photoNum: data.photos.length,
       requireLabel: _.get(data, 'tags.values.retouch_claim', {}),
@@ -210,8 +209,9 @@ export function getStreamInfo (params) {
       retouchStandard: data.product.retouch_standard,
       streamState: data.state,
       retoucherName: _.get(data, 'retoucher.name') || _.get(data, 'retoucher.real_name') || '-',
-      reviewerName: _.get(data, 'reviewer.name', ''),
-      photographerName: _.get(data, 'order.tags.values.photographer', '-')
+      reviewerName: _.get(data, 'reviewer.name') || '',
+      photographerName: _.get(data, 'order.tags.values.photographer') || '-',
+      storeName: _.get(data, 'order.tags.values.store_name') || '-'
     }
     createData.photos = data.photos
     return createData
@@ -274,6 +274,18 @@ export function advanceAssignOrderToStaff (params) {
   return axios({
     url: '/project_cloud/order/advanceAssignOrderToStaff',
     method: 'POST',
+    data: params
+  })
+}
+
+/**
+ * @description 退回队列
+ * @param {*} params 
+ */
+export function returnBackQueue (params) {
+  return axios({
+    url: '/project_cloud/operator/returnStreamToQueue',
+    method: 'PUT',
     data: params
   })
 }

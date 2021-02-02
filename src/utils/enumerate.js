@@ -17,26 +17,27 @@ export const retouchStandardToCN = {
 }
 
 // 流水状态
-export const StreamState = {
-  wait_retouch: '待修图',
-  retouching: '修图中',
-  review_return_retouch: '审核退回修图中',
-  wait_review: '等待审核',
-  reviewing: '审核中',
-  finish: '审核完成',
-  store_return_retouch: '门店退回',
-  hanging: '挂起中'
+export const STREAM_STATE = {
+  WAIT_RETOUCH: 'wait_retouch', // 待修图
+  RETOUCHING: 'retouching', // 修图中
+  REVIEW_RETURN_RETOUCH: 'review_return_retouch', // 审核退回修图中
+  WAIT_REVIEW: 'wait_review', // 等待审核
+  REVIEWING: 'reviewing', // 审核中
+  FINISH: 'finish', // 审核完成
+  STORE_RETURN_RETOUCH: 'store_return_retouch', // 门店退回
+  HANGING: 'hanging' // 挂起中
 }
 
-export const StreamStateEnum = {
-  WaitRetouch: 'wait_retouch',
-  Retouching: 'retouching',
-  ReviewReturnRetouch: 'review_return_retouch',
-  WaitReview: 'wait_review',
-  Reviewing: 'reviewing',
-  Finish: 'finish',
-  StoreReturnRetouch: 'store_return_retouch',
-  Hanging: 'hanging'
+// 流水中文状态
+export const StreamState = {
+  [STREAM_STATE.WAIT_RETOUCH]: '待修图',
+  [STREAM_STATE.RETOUCHING]: '修图中',
+  [STREAM_STATE.REVIEW_RETURN_RETOUCH]: '审核退回修图中',
+  [STREAM_STATE.WAIT_REVIEW]: '等待审核',
+  [STREAM_STATE.REVIEWING]: '审核中',
+  [STREAM_STATE.FINISH]: '审核完成',
+  [STREAM_STATE.STORE_RETURN_RETOUCH]: '门店退回',
+  [STREAM_STATE.HANGING]: '挂起中'
 }
 
 // 流水静态状态资源
@@ -385,4 +386,72 @@ export const IMPULSE_SETTING_TYPE = {
 export const PHOTO_TAG = {
   STORE_REWORK: 'store_rework', // 门店退回的照片version
   TEMP_RELATION: 'temp_relation', // 被动牵扯退回照片
+}
+
+/**
+ * @description 公告类型
+ */
+export const ANNOUNCEMENT_TYPE = {
+  TYPE_NORMAL: 'normal',
+  TYPE_IMPORTANT: 'important',
+  TYPE_REWARD: 'reward',
+  TYPE_PUNISH: 'punish',
+  TYPE_UPDATE: 'update'
+}
+
+/**
+ * @description 公告中文
+ */
+export const announcementToCN = {
+  [ANNOUNCEMENT_TYPE.TYPE_NORMAL]: '普通公告',
+  [ANNOUNCEMENT_TYPE.TYPE_IMPORTANT]: '重要公告',
+  [ANNOUNCEMENT_TYPE.TYPE_REWARD]: '奖励公告',
+  [ANNOUNCEMENT_TYPE.TYPE_PUNISH]: '处罚公告',
+  [ANNOUNCEMENT_TYPE.TYPE_UPDATE]: '系统更新公告'
+}
+
+/**
+ * @description 通知对象
+ */
+export const ANNOUNCEMENT_PEOPLE = {
+  CLOUD_ALL: 'cloud_all',
+  CLOUD_RETOUCHER: 'cloud_retoucher',
+  CLOUD_RETOUCH_LEADER: 'cloud_retouch_leader',
+  CLOUD_BUSINESS: 'cloud_business',
+  CLOUD_ACADEMY: 'cloud_academy'
+}
+
+/**
+ * @description 通知对象
+ */
+export const announcementPeopleToCN = {
+  [ANNOUNCEMENT_PEOPLE.CLOUD_ALL]: '全体云端伙伴',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCHER]: '云端修图师',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_RETOUCH_LEADER]: '云端修图主管',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_BUSINESS]: '云端运营',
+  [ANNOUNCEMENT_PEOPLE.CLOUD_ACADEMY]: '云学院'
+}
+
+/**
+ * @description 工作台位置
+ */
+export const WORKBENCH_LOCATION = {
+  APP: 'app',
+  WINDOW: 'window'
+}
+
+/**
+ * @description 已读字段
+ */
+export const READ_STATE = {
+  UNREAD: 'unread',
+  READ: 'read'
+}
+
+/**
+ * @description 中文字段
+ */
+export const readToCN = {
+  [READ_STATE.UNREAD]: '未读',
+  [READ_STATE.READ]: '已读',
 }

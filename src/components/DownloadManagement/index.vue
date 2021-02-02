@@ -52,7 +52,7 @@
         :value="showProgressingNum"
         class="item"
       >
-        <el-button class="icon-button" icon="el-icon-download" />
+        <el-button class="icon-button" icon="iconfont iconxiazai" />
       </el-badge>
     </el-popover>
   </div>
@@ -92,13 +92,11 @@ export default {
     /**
      * @description 更改保存路径
      */
-    changeSavePath () {
+    async changeSavePath () {
       const savePath = this.$ipcRenderer.sendSync('change-savePath')[0]
       if (savePath) {
-        this.$store.dispatch('setting/setSavePath', savePath)
-          .then(() => {
-            Setting.updateSavePath(savePath)
-          })
+        await this.$store.dispatch('setting/setSavePath', savePath)
+        Setting.updateSavePath(savePath)
       }
     },
     /**

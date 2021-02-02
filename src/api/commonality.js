@@ -133,7 +133,8 @@ export function getStreamInfo (params) {
       retoucherJobNum: streamData.retoucherJobNum,
       retouchStandard: streamData.retouchStandard,
       timeoutAppealReason: '', // 沙漏超时申诉理由
-      timeoutRollbackLog: streamData.timeoutRollbackLog
+      timeoutRollbackLog: streamData.timeoutRollbackLog,
+      storeName: streamData.storeName
     }
     createData.photos = msg.photos
     return createData
@@ -163,6 +164,22 @@ export function getSignature (params) {
   }).then(msg => {
     const createData = {
       token: msg
+    }
+    return createData
+  })
+}
+
+/**
+ * @description 获取文件七牛云接口
+ * @param {*} params
+ */
+export function getFileSignature (params) {
+  return axios({
+    url: '/file_system/qiniu/upload_token?project=cloud_common',
+    method: 'GET'
+  }).then(msg => {
+    const createData = {
+      token: msg.token
     }
     return createData
   })

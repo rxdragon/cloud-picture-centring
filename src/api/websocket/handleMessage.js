@@ -8,6 +8,7 @@ import router from '@/router'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+import { announcementToCN } from '@/utils/enumerate'
 import * as UserApi from '@/api/user'
 
 import errorPng from '@/assets/error.png'
@@ -33,9 +34,21 @@ export default function handleMessage (data, chat) {
     case 'StreamReviewerReceive':
       getReviewerReceive()
       break
+    // 用户离线
     case 'StaffOffline':
       setStaffOffline()
       break
+    // 摄影撤单
+    case 'StreamWithDrawn':
+      handleStreamDraw(typeMessage)
+      break
+    // 公告
+    case 'Announcement':
+      handleAnnouncementNoice(typeMessage)
+      break
+    // 未读公告数量
+    case 'StaffAnnouncementUnreadCount':
+      handleStaffAnnouncementUnreadCount(typeMessage)
     case 'BeforeLogout':
       logoutApp()
       break
@@ -153,7 +166,66 @@ function setStaffOffline () {
 }
 
 /**
- * @description 退出
+ * @description 摄影撤回订单
+ * @param {*} data // 流水号
+ */
+function handleStreamDraw (data) {
+  const { streamNum } = data
+  // 桌面通知
+  const notificationMsg = '摄影师撤回流水通知'
+  const notificationData = {
+    title: notificationMsg,
+    body: `${streamNum}已被系统撤除`
+  }
+  Vue.prototype.$notification(notificationData)
+}
+
+/**
+ * @description 处理公告
+ * @param {*} params 
+ */
+function handleAnnouncementNoice (message) {
+  const { type, id } = message
+  const notificationTitle = announcementToCN[type]
+
+  const callBack = () => {
+    router.push({
+      path: '/announcement-center/announcement-center-index',
+      query: { announcementId: id }
+    })
+  }
+
+  store.dispatch('notification/addAnnouncementUnreadCount')
+
+  const notificationId = Vue.prototype.$newNotification({
+    title: notificationTitle,
+    message: `有一个${announcementToCN[type]}需要您查看`,
+    duration: 0,
+    onClick: callBack
+  })
+
+  const notificationData = {
+    title: notificationTitle,
+    body: `有一个${announcementToCN[type]}需要您查看`,
+    clickCB: () => {
+      callBack()
+      notificationId.close()
+    }
+  }
+  Vue.prototype.$notification(notificationData)
+}
+
+/**
+ * @description 处理未读信息
+ * @param {*} params 
+ */
+function handleStaffAnnouncementUnreadCount (message) {
+  const { unread_count } = message
+  store.dispatch('notification/setAnnouncementUnreadCount', unread_count || 0)
+}
+
+/**
+ * @description 退出登录
  */
 function logoutApp () {
   const autoLogout = async () => {

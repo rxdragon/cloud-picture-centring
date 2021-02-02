@@ -1,4 +1,4 @@
-import { NOTIFY_STATUS } from '@/utils/enumerate'
+import { NOTIFY_STATUS, WORKBENCH_LOCATION } from '@/utils/enumerate'
 
 const state = {
   imgDomain: process.env.VUE_APP_DOMAIN,
@@ -12,7 +12,9 @@ const state = {
   cacheImageSwitch: 0,
   guestInfiniteScroll: 0,
   notificationStatus: NOTIFY_STATUS.DEFAULT,
-  showRecord: 1 // 修图师页面数据显示
+  showRecord: 1, // 修图师页面数据显示
+  showWorkbench: false, // 是否显示工作看板
+  workbenchLocation: WORKBENCH_LOCATION.APP, // 是否显示工作看板
 }
 
 const mutations = {
@@ -79,6 +81,12 @@ const actions = {
   },
   setShowRecord ({ state }, data) {
     state.showRecord = data
+  },
+  setShowWorkbench ({ state }, data) {
+    state.showWorkbench = Boolean(data)
+  },
+  setWorkbenchLocation ({ state }, data) {
+    state.workbenchLocation = data
   }
 }
 

@@ -14,9 +14,10 @@
       </div>
       <span class="nav-main">
         缦图云端 修图中心
-        <span v-if="$isDev" class="test-title"></span>
       </span>
       <div class="nav-right">
+        <information-switch v-if="showInformation" />
+        <workbench-switch v-if="hasWorkbench" />
         <download-management />
         <!-- 修图师在线功能 -->
         <el-popover
@@ -72,14 +73,17 @@
 
 <script>
 import DownloadManagement from '@/components/DownloadManagement'
+import WorkbenchSwitch from './WorkbenchSwitch'
+import InformationSwitch from './InformationSwitch'
 
 import * as User from '@/api/user.js'
 import * as Retoucher from '@/api/retoucher.js'
 import { throttle } from '@/utils/throttle.js'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'Navbar',
-  components: { DownloadManagement },
+  components: { DownloadManagement, WorkbenchSwitch, InformationSwitch },
   data () {
     return {
       throttleRefresh: throttle(this.refresh, 1000),
@@ -89,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'lineState', 'isRetoucher']),
+    ...mapGetters(['userInfo', 'lineState', 'isRetoucher', 'hasWorkbench', 'showInformation']),
     isOnline () {
       return this.lineState === 'online'
     }
@@ -182,6 +186,14 @@ export default {
     },
     async logoutReset () {
       await User.logout()
+      const userInfo = {
+        id: '',
+        name: '',
+        nickname: '',
+        departmentName: '',
+        avatarImg: '',
+      }
+      this.$store.commit('user/SET_USERINFO', userInfo)
       this.$ws.stopLink()
       this.$router.push('/login')
     },
