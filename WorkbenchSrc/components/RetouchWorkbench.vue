@@ -266,12 +266,18 @@ export default {
       background: #dddfe6;
       border: 1px solid #dddfe6;
     }
+  }
 
-    .retouch-remark {
-      font-weight: 400;
-      line-height: 20px;
-      color: var(--descColor);
-    }
+  .retouch-remark {
+    display: -webkit-box;
+    overflow: hidden;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--descColor);
+    text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
   }
 }
 
