@@ -84,7 +84,9 @@ export default {
       },
       dealStreamNum: 0,
       returnRate: 0,
-      retouchPhotoNumTimeSum: 0
+      retouchPhotoNumTimeSum: 0,
+      getSandClock: null,
+      oldStreamNum: ''
     }
   },
   computed: {
@@ -102,6 +104,10 @@ export default {
       clearTimeout(window.polling.getRetouchInfo)
       window.polling.getRetouchInfo = null
     }
+    if (this.getSandClock) {
+      clearTimeout(this.getSandClock)
+      this.getSandClock = null
+    }
   },
   methods: {
     /**
@@ -111,13 +117,14 @@ export default {
       const { retouchingStream, dealStreamNum, returnRate, retouchPhotoNumTimeSum, hourGlass } = await WorkbenchApi.getRetouchInfo()
       this.hourGlass = hourGlass
       this.retouchingStream = retouchingStream
-      if (this.isSandClockOpen) {
+      if (this.isSandClockOpen && this.oldStreamNum !== retouchingStream.streamNum) {
         this.overTime = +this.hourGlass.over_time
         const nowDate = Math.ceil(new Date().getTime() / 1000)
         this.goalTime.green = this.hourGlass.green_time + nowDate
         this.goalTime.red = this.hourGlass.green_time + this.hourGlass.orange_time + nowDate
-        this.countDown()
+        this.pollGetSandClock()
       }
+      this.oldStreamNum = retouchingStream.streamNum || ''
       this.dealStreamNum = dealStreamNum
       this.returnRate = returnRate
       this.retouchPhotoNumTimeSum = retouchPhotoNumTimeSum
@@ -130,6 +137,10 @@ export default {
       window.polling.getRetouchInfo = setTimeout(async () => {
         await this.initPollingInfo()
       }, 5000)
+    },
+    pollGetSandClock () {
+      this.countDown()
+      this.getSandClock = setTimeout(this.pollGetSandClock, 1000)
     },
     /**
      * @description 时间倒计时
@@ -148,7 +159,6 @@ export default {
         this.sandClass = 'red'
       }
       this.sandTime = time
-      setTimeout(this.countDown, 5000)
     },
     /**
      * @description 下载参考图
