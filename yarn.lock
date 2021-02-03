@@ -8188,10 +8188,10 @@ mainto-fed-utils@^1.0.1-release.5:
     xlsx "^0.15.6"
     xlsx-style-rows "^1.0.5"
 
-mainto-jssdk@^1.8.385-beta.release.1.1.0.246:
-  version "1.8.7808"
-  resolved "https://npm.code.hzmantu.com/mainto-jssdk/-/mainto-jssdk-1.8.7808.tgz#318e69d2aecfc3a437b1cd74919e3b07b3c33908"
-  integrity sha512-LF7hqhnsTznvEhAuBGg6U5VbBqkfUibTILqHNiD+TXLRjOBMLOtPRorXQrLpuo6yVocgeGuHr1VbQ6XgELSozw==
+mainto-jssdk@^1.8.8575-beta.hotfix.wa.validation.order.1:
+  version "1.8.8575-beta.hotfix.wa.validation.order.1"
+  resolved "https://npm.code.hzmantu.com/mainto-jssdk/-/mainto-jssdk-1.8.8575-beta.hotfix.wa.validation.order.1.tgz#56efda0c5a63ee8ba3d003936f7b0bf440901eaf"
+  integrity sha512-9YHFky6KTa9RCo45P/8VDak/Qo3CUv8oXeTueQur/4qqlmOZ152ZNFmb4eIT7uK3cJ/66Y24qz3qqPMbEuq7Zg==
   dependencies:
     axios "^0.18.0"
     es6-promise "^4.2.8"
