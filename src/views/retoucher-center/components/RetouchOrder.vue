@@ -479,6 +479,7 @@ export default {
         this.$newMessage.success('提交审核成功。')
         this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
         this.$emit('update:showDetail', false)
+        this.$ipcRenderer.sendSync('upload-workbench')
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)

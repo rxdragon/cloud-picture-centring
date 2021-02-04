@@ -97,19 +97,23 @@ export default {
     },
   },
   created () {
-    this.initPollingInfo()
+    this.getRetouchNowInfo()
+    this.initElectron()
   },
   destroyed () {
-    if (window.polling.getRetouchInfo) {
-      clearTimeout(window.polling.getRetouchInfo)
-      window.polling.getRetouchInfo = null
-    }
     if (this.getSandClock) {
       clearTimeout(this.getSandClock)
       this.getSandClock = null
     }
+    this.$ipcRenderer.removeAllListeners('workbench-change')
   },
   methods: {
+    async initElectron () {
+      // 监听关闭窗口
+      this.$ipcRenderer.on('workbench-change', (e, item) => {
+        this.getRetouchNowInfo()
+      })
+    },
     /**
      * @description 获取修图信息
      */
@@ -128,15 +132,6 @@ export default {
       this.dealStreamNum = dealStreamNum
       this.returnRate = returnRate
       this.retouchPhotoNumTimeSum = retouchPhotoNumTimeSum
-    },
-    /**
-     * @description 沦陷
-     */
-    async initPollingInfo () {
-      await this.getRetouchNowInfo()
-      window.polling.getRetouchInfo = setTimeout(async () => {
-        await this.initPollingInfo()
-      }, 5000)
     },
     pollGetSandClock () {
       this.countDown()

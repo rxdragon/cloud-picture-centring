@@ -21,4 +21,15 @@ export default function onlineIpc (windows) {
     }
     event.returnValue = onlineCount
   })
+
+  // 更新retouch相关信息
+  ipcMain.on('upload-workbench', (event) => {
+    if (windows['main']) {
+      windows['main'].browserWindowObject.webContents.send(`workbench-change`)
+    }
+    if (windows[WINDOW_NAME.WORKBENCH]) {
+      windows[WINDOW_NAME.WORKBENCH].browserWindowObject.webContents.send(`workbench-change`)
+    }
+    event.returnValue = 'success'
+  })
 }

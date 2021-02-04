@@ -21,14 +21,17 @@ export default function handleMessage (data, chat) {
     // 门店退单
     case 'StreamPhotographerOrgReturn':
       getReturnStream(typeMessage, typeName)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 审核退单
     case 'StreamReviewerReturn':
       getReturnStream(typeMessage, typeName)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 修片师接单
     case 'StreamRetoucherReceive':
       getRetouchStream(typeMessage)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 审核人接单
     case 'StreamReviewerReceive':

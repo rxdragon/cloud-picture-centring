@@ -45,7 +45,7 @@ export default {
       await this.getProductInfo()
       window.polling.getProductInfo = setTimeout(async () => {
         await this.initPollingInfo()
-      }, 5000)
+      }, 1 * 60 * 1000)
     }
   }
 }

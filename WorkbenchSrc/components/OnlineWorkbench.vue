@@ -47,6 +47,7 @@ export default {
       clearTimeout(window.polling.getOnlineInfo)
       window.polling.getOnlineInfo = null
     }
+    this.$ipcRenderer.removeAllListeners('online-count:change')
   },
   methods: {
     async initElectron () {
@@ -74,7 +75,7 @@ export default {
       await this.getInfoData()
       window.polling.getOnlineInfo = setTimeout(async () => {
         await this.initPollingInfo()
-      }, 5000)
+      }, 1 * 60 * 1000)
     }
   }
 }
