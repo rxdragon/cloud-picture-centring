@@ -316,6 +316,9 @@ export default {
       closeBtnText: '关闭',
       animate: true
     })
+    this.$bus.$on('stream-with-drawn', () => {
+      this.showDetail = false
+    })
   },
   mounted () {
     this.intervalShowMorning()
@@ -323,6 +326,7 @@ export default {
   beforeDestroy () {
     // 销毁轮训 是否早鸟奖
     if (this.timeId) { clearTimeout(this.timeId) }
+    this.$bus.$off('stream-with-drawn')
   },
   deactivated () {
     this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')

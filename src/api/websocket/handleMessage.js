@@ -181,6 +181,7 @@ function handleStreamDraw (data) {
     title: notificationMsg,
     body: `${streamNum}已被系统撤除`
   }
+  Vue.prototype.$bus.$emit('stream-with-drawn')
   Vue.prototype.$notification(notificationData)
 }
 
