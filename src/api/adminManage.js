@@ -244,10 +244,10 @@ export function getOrderInfoForCloud (params) {
     const retouchType = _.get(msg, 'store_info.store_type') || '-'
 
     const orderList = msg.order_info.map(listItem => {
-      const productArr = listItem.order_sale
+      const productArr = listItem.order_sale_sku
       
       let productInfo = productArr.map(item => {
-        const productName = _.get(item, 'sale_extend.product_name') || ''
+        const productName = _.get(item, 'sku_extend.product_name') || ''
         return productName
       })
 
