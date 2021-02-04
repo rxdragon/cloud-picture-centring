@@ -110,7 +110,7 @@ export async function initWorkbenchLocation () {
   if (!workbenchLocation) {
     Setting.setSetting('workbenchLocation', 'app')
   } else {
-    store.dispatch('setting/setWorkbenchLocation', workbenchLocation)
+    await store.dispatch('setting/setWorkbenchLocation', workbenchLocation)
   }
 }
 
