@@ -388,10 +388,11 @@ export default {
         LogStream.retoucherSee(+this.realAid)
         this.initPreviewPhoto()
         this.getPhotoProblemTagSets()
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        this.$bus.$emit('stream-with-drawn')
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
