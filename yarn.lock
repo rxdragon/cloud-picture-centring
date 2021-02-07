@@ -10123,10 +10123,10 @@ q@^1.1.2, q@^1.5.1, q@~1.5.0:
   resolved "https://npm.code.hzmantu.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
-qiankun@^2.1.0:
-  version "2.3.2"
-  resolved "https://npm.code.hzmantu.com/qiankun/-/qiankun-2.3.2.tgz#59b01081ce07f1d6de38d131bc1ec468dd691b75"
-  integrity sha512-Hz+d6JIzap/ujpQzL6OQmWAgV3dFNKKKTIIdr6GYFgARORMkNp7eSYI3NEeay4wUmELJTSXlxeDsZmf/v4wCBA==
+qiankun@^2.4.0:
+  version "2.4.0"
+  resolved "https://npm.code.hzmantu.com/qiankun/-/qiankun-2.4.0.tgz#e0c847fcee1e79c167899bfcb7441a23590c5430"
+  integrity sha512-O9xfVQ1yP1tp7dL1EvK3BicD3z2NURAyF0BjxdJ9TYny40VFfWvw7H9j5ONZiihiE7owcwCpXex+FsqEU7fuew==
   dependencies:
     "@babel/runtime" "^7.10.5"
     import-html-entry "^1.9.0"

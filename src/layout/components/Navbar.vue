@@ -190,7 +190,7 @@ export default {
         id: '',
         name: '',
         nickname: '',
-        departmentName: '',
+        department: { name: '' },
         avatarImg: '',
       }
       this.$store.commit('user/SET_USERINFO', userInfo)
