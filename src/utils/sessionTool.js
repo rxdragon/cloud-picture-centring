@@ -34,7 +34,7 @@ export function getUserInfo (code) {
  */
 export function setUserPermission (permission) {
   const data = JSON.stringify(permission)
-  sessionStorage.setItem('userPermission', data)
+  localStorage.setItem('userPermission', data)
 }
 
 /**
@@ -43,7 +43,7 @@ export function setUserPermission (permission) {
  */
 export function getUserPermission () {
   try {
-    const data = sessionStorage.getItem('userPermission')
+    const data = localStorage.getItem('userPermission')
     return JSON.parse(data)
   } catch (error) {
     return null
@@ -72,15 +72,14 @@ export function getStreamIdExpireTime (time) {
  * @param {*} code
  */
 export function setXStreamId (code) {
-  sessionStorage.setItem('xStreamId', code)
+  localStorage.setItem('xStreamId', code)
 }
 
 /**
  * @description 获取XStreamId
- * @param {*} params
  */
-export function getXStreamId (params) {
-  return sessionStorage.getItem('xStreamId')
+export function getXStreamId () {
+  return localStorage.getItem('xStreamId')
 }
 
 /**
@@ -134,24 +133,40 @@ export function getCacheDownloadList () {
  * @description 保存确定流水
  */
 export function saveSureRetouchOrder (aid) {
-  const saveKey = `save-retouch-id${aid}`
-  localStorage.setItem(saveKey, 'sure')
+  const saveKey = `save-retouch-id`
+  let sureRetouchOrderArr = localStorage.getItem(saveKey) ? JSON.parse(localStorage.getItem(saveKey)) : []
+  sureRetouchOrderArr = new Set([...sureRetouchOrderArr])
+  sureRetouchOrderArr.add(aid)
+  const data = JSON.stringify([...sureRetouchOrderArr])
+  localStorage.setItem(saveKey, data)
 }
 
 /**
  * @description 获取保存确定流水
  */
 export function getSureRetouchOrder (aid) {
-  const saveKey = `save-retouch-id${aid}`
-  const getDatra = localStorage.getItem(saveKey)
-  return getDatra
+  const saveKey = `save-retouch-id`
+  const sureRetouchOrderArr = localStorage.getItem(saveKey) ? JSON.parse(localStorage.getItem(saveKey)) : null
+  return sureRetouchOrderArr ? sureRetouchOrderArr.includes(aid) : false
 }
 
 /**
  * @description 移除确定流水
  */
 export function removeSureRetouchOrder (aid) {
-  const saveKey = `save-retouch-id${aid}`
+  const saveKey = `save-retouch-id`
+  let sureRetouchOrderArr = JSON.parse(localStorage.getItem(saveKey))
+  sureRetouchOrderArr = new Set(sureRetouchOrderArr)
+  sureRetouchOrderArr.delete(aid)
+  const data = JSON.stringify([...sureRetouchOrderArr])
+  localStorage.setItem(saveKey, data)
+}
+
+/**
+ * @description 移除全部信息
+ */
+export function removeAllSureRetouchOrder () {
+  const saveKey = `save-retouch-id`
   localStorage.removeItem(saveKey)
 }
 

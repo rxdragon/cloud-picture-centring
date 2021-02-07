@@ -19,14 +19,21 @@ const defaultGetters = {
   imgDomain: state => state.setting.imgDomain, // 上传后的照片域名
   imgCompressDomain: state => state.setting.imgCompressDomain, // 上传后自动压缩图域名
   updateDomain: state => state.setting.updateDomain, // 上传后的照片域名
-  retouchId: state => state.notification.retouchId, // 修图id
-  showAnniversary: state => state.notification.showAnniversary, // 显示弹框
   roles: state => state.permission.roles, // 全部权限
   downloadList: state => state.downloadlist.downloadList // 下载完成列表
 }
 
+const notification = {
+  retouchId: state => state.notification.retouchId, // 修图id
+  showAnniversary: state => state.notification.showAnniversary, // 显示弹框
+  announcementUnreadCount: state => state.notification.announcementUnreadCount, // 未读数量
+  onlineUnreadCount: state => state.notification.onlineUnreadCount // 在线看片未读数
+}
+
 const settting = {
   showRecord: state => state.setting.showRecord, // 是否显示修图师修图数据
+  showWorkbench: state => state.setting.showWorkbench, // 是否显示工作台
+  workbenchLocation: state => state.setting.workbenchLocation, // 工作台位置
 }
 
 const permissionGetters = {
@@ -35,6 +42,7 @@ const permissionGetters = {
   showPartnerPerformance: state => state.permission.showPartnerPerformance, // 是否显示伙伴绩效
   showOverallPerformance: state => state.permission.showOverallPerformance, // 是否显示总体绩效
   showWorkInfo: state => state.permission.showWorkInfo, // 是否显示工作看板
+  showReturnStreamToQueue: state => state.permission.showReturnStreamToQueue, // 显示流水退回按钮
   showAuditPerformance: state => state.permission.showAuditPerformance, // 是否显示审核绩效
   showTimeStatistics: state => state.permission.showTimeStatistics, // 是否显示用时统计
   showRetoucherChargeBackReport: state => state.permission.showRetoucherChargeBackReport, // 退单统计
@@ -65,13 +73,21 @@ const permissionGetters = {
   showAddStaff: state => state.permission.showAddStaff, // 账号配置是否显示添加按钮
   showDisableStaff: state => state.permission.showDisableStaff, // 账号配置是否显示禁用按钮
   showEnableStaff: state => state.permission.showEnableStaff, // 账号配置是否显示启用按钮
-  showEditStaff: state => state.permission.showEditStaff // 账号配置是否显示编辑按钮
+  showEditStaff: state => state.permission.showEditStaff, // 账号配置是否显示编辑按钮
+
+  // 工作看板
+  hasWorkbench: state => state.permission.hasWorkbench, // 是否显示工作看板
+  
+  // 通知栏目
+  showInformation: state => state.permission.showInformation, // 是否显示消息通知
+  showAnnouncementDelete: state => state.permission.showAnnouncementDelete, // 是否显示公告删除按钮
 }
 
 const getters = {
   ...defaultGetters,
   ...permissionGetters,
-  ...settting
+  ...settting,
+  ...notification
 }
 
 export default getters

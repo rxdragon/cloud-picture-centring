@@ -99,6 +99,7 @@ export default class StreamModel {
 
   // 摄影机构信息
   photographerOrgName = '' // 摄影机构名称
+  storeName = '' // 门店信息
 
   // 工作人员信息
   photographerName = '' // 摄影师名字
@@ -113,6 +114,7 @@ export default class StreamModel {
 
   constructor (streamData) {
     if (!streamData) return
+
     this.baseData = streamData
     this.streamId = streamData.id || ''
     this.streamNum = streamData.stream_num || ''
@@ -167,6 +169,7 @@ export default class StreamModel {
 
     // 摄影机构信息
     this.photographerOrgName = _.get(streamData, 'order.photographer_org.name') || '-'
+    this.storeName = _.get(streamData, 'order.tags.values.store_name') || '-'
 
     // 产品信息
     this.productName = _.get(streamData, 'product.name') || '-'

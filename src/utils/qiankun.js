@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { prefetchApps, registerMicroApps, loadMicroApp, start, addGlobalUncaughtErrorHandler } from 'qiankun'
 import * as SessionTool from '@/utils/sessionTool'
-import DownIpc from '@electronMain/ipc/DownIpc'
 import { readConfig } from "../utils/electronConfig"
+import DownIpc from '@electronMain/ipc/DownIpc'
+import store from '@/store' // vuex
 
 // 解决 popper 查找父级代码错误问题
 const rawGetComputedStyle = window.getComputedStyle
@@ -62,7 +63,8 @@ const apps = [
     // activeRule: genActiveRule('#/watcher-online'),
     props: {
       getXStreamId: () => SessionTool.getXStreamId(),
-      DownIpc: DownIpc
+      DownIpc: () => DownIpc,
+      store: () => store
     }
   }
 ]

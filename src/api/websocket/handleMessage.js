@@ -8,6 +8,7 @@ import router from '@/router'
 import * as LogStream from '@/api/logStream'
 import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
+import { announcementToCN } from '@/utils/enumerate'
 import * as UserApi from '@/api/user'
 
 import errorPng from '@/assets/error.png'
@@ -20,21 +21,37 @@ export default function handleMessage (data, chat) {
     // 门店退单
     case 'StreamPhotographerOrgReturn':
       getReturnStream(typeMessage, typeName)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 审核退单
     case 'StreamReviewerReturn':
       getReturnStream(typeMessage, typeName)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 修片师接单
     case 'StreamRetoucherReceive':
       getRetouchStream(typeMessage)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 审核人接单
     case 'StreamReviewerReceive':
       getReviewerReceive()
       break
+    // 用户离线
     case 'StaffOffline':
       setStaffOffline()
+      break
+    // 摄影撤单
+    case 'StreamWithDrawn':
+      handleStreamDraw(typeMessage)
+      break
+    // 公告
+    case 'Announcement':
+      handleAnnouncementNoice(typeMessage)
+      break
+    // 未读公告数量
+    case 'StaffAnnouncementUnreadCount':
+      handleStaffAnnouncementUnreadCount(typeMessage)
       break
     case 'BeforeLogout':
       logoutApp()
@@ -97,7 +114,7 @@ async function getReturnStream (data, type) {
   const notificationMsg = type === 'StreamReviewerReturn'
     ? '您有新的重修流水，未免影响沙漏时间请及时处理。'
     : '您有门店退回流水需要处理'
-  
+
   // 处理沙漏时间显示
   const residueTime = Number(hourglass.green_time) + Number(hourglass.orange_time) // 剩余时间
   const overTime = Number(hourglass.over_time) // 超时时间
@@ -134,7 +151,7 @@ async function getReturnStream (data, type) {
  * @description 审核人接到订单
  */
 async function getReviewerReceive () {
-  
+
   // 桌面通知
   const notificationMsg = '你有新的审核订单请及时处理'
   const notificationData = {
@@ -153,7 +170,67 @@ function setStaffOffline () {
 }
 
 /**
- * @description 退出
+ * @description 摄影撤回订单
+ * @param {*} data // 流水号
+ */
+function handleStreamDraw (data) {
+  const { streamNum } = data
+  // 桌面通知
+  const notificationMsg = '摄影师撤回流水通知'
+  const notificationData = {
+    title: notificationMsg,
+    body: `${streamNum}已被系统撤除`
+  }
+  Vue.prototype.$bus.$emit('stream-with-drawn')
+  Vue.prototype.$notification(notificationData)
+}
+
+/**
+ * @description 处理公告
+ * @param {*} params
+ */
+function handleAnnouncementNoice (message) {
+  const { type, id } = message
+  const notificationTitle = announcementToCN[type]
+
+  const callBack = () => {
+    router.push({
+      path: '/announcement-center/announcement-center-index',
+      query: { announcementId: id }
+    })
+  }
+
+  store.dispatch('notification/addAnnouncementUnreadCount')
+
+  const notificationId = Vue.prototype.$newNotification({
+    title: notificationTitle,
+    message: `有一个${announcementToCN[type]}需要您查看`,
+    duration: 0,
+    onClick: callBack
+  })
+
+  const notificationData = {
+    title: notificationTitle,
+    body: `有一个${announcementToCN[type]}需要您查看`,
+    clickCB: () => {
+      callBack()
+      notificationId.close()
+    }
+  }
+  Vue.prototype.$notification(notificationData)
+}
+
+/**
+ * @description 处理未读信息
+ * @param {*} params
+ */
+function handleStaffAnnouncementUnreadCount (message) {
+  const { unread_count } = message
+  store.dispatch('notification/setAnnouncementUnreadCount', unread_count || 0)
+}
+
+/**
+ * @description 退出登录
  */
 function logoutApp () {
   const autoLogout = async () => {

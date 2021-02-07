@@ -222,6 +222,7 @@ import { mapGetters } from 'vuex'
 import * as Retoucher from '@/api/retoucher.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import * as Setting from '@/indexDB/getSetting.js'
+import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'WaitRetoucher',
@@ -316,6 +317,9 @@ export default {
       closeBtnText: '关闭',
       animate: true
     })
+    this.$bus.$on('stream-with-drawn', () => {
+      this.showDetail = false
+    })
   },
   mounted () {
     this.intervalShowMorning()
@@ -323,6 +327,7 @@ export default {
   beforeDestroy () {
     // 销毁轮训 是否早鸟奖
     if (this.timeId) { clearTimeout(this.timeId) }
+    this.$bus.$off('stream-with-drawn')
   },
   deactivated () {
     this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
@@ -363,6 +368,10 @@ export default {
     async getRetouchStreamList () {
       const reqData = { state: this.listActive }
       const res = await RetoucherCenter.getRetouchStreams(reqData)
+      if (!this.tableData.length) {
+        SessionTool.removeAllSureRetouchOrder()
+        this.$store.commit('notification/SET_RETOUCH_STREAM_ID', '')
+      }
       this.tableData = res.data
       this.hangingListNum = res.hangingNum
       this.retouchingListNum = res.retouchingNum
@@ -449,10 +458,10 @@ export default {
     /**
      * @description 控制显示开关
      */
-    toggleShowRecord () {
+    async toggleShowRecord () {
       this.$store.commit('setting/TOGGLE_SHOW_RECORD')
       const data = Boolean(this.showRecord) ? 1 : 0
-      Setting.updateSetting('showRecord', data)
+      await Setting.updateSetting('showRecord', data)
     }
   }
 }

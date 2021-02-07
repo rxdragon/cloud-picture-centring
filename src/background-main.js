@@ -7,10 +7,14 @@ import initDownloadManager from './electronMain/downTool'
 import initDialog from './electronMain/dialog'
 import initUtils from './electronMain/utils'
 import registerIpc from './electronMain/ipc/registerIpc'
+import onlineIpc from './electronMain/ipc/onlineIpc'
 import initExecIncident from './electronMain/execNode'
 import { setMenu } from './electronMain/resetMenu.js'
-
+import { windows } from './electronMain/window/base'
+import WindowsModel from './electronMain/window/WindowModel'
 require('./electronMain/LocalServe')
+
+app.commandLine.appendArgument("--enable-features=Metal")
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -35,8 +39,12 @@ async function createWindow () {
     },
     titleBarStyle: 'hiddenInset',
     icon: path.join(global.staticDir, 'icon.png'),
-    preload: path.join(__dirname, './electronMain/renderer.js')
+    preload: path.join(__dirname, './electronMain/renderer.js'),
+    offscreen: false
   })
+
+  // 注册信息
+  windows['main'] = new WindowsModel('main', win)
 
   // 清空http-cache
   const ses = win.webContents.session
@@ -50,6 +58,10 @@ async function createWindow () {
   // 窗口关闭前触发
   win.on('close', () => {
     win.webContents.send('closed-win')
+
+    for (const browserWindowItem of Object.values(windows)) {
+      browserWindowItem.browserWindowObject.destroy()
+    }
   })
   // 窗口关闭后触发
   win.on('closed', () => {
@@ -81,6 +93,8 @@ async function createWindow () {
   initExecIncident(win, ipcMain)
   // 注册主线程事件
   registerIpc(win)
+  // 注册在线状态onlineIpc
+  onlineIpc(windows)
 
   // ready-to-show 一定要在 loadURL 前注册，不然会引发随机性 bug
   win.once('ready-to-show', () => {

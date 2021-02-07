@@ -109,6 +109,7 @@ const actions = {
       }
     })
   },
+
   // 设置在线状态
   setUserlineState ({ dispatch, commit }, inState) {
     if (inState === 'online') {
@@ -116,6 +117,7 @@ const actions = {
     }
     commit('SET_LINE_STATE', inState)
   },
+
   // 轮训是否激活状态
   getNowTime ({ dispatch, state }) {
     clearTimeout(window.polling.getTime)

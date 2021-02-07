@@ -388,10 +388,13 @@ export default {
         LogStream.retoucherSee(+this.realAid)
         this.initPreviewPhoto()
         this.getPhotoProblemTagSets()
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        SessionTool.removeSureRetouchOrder(this.realAid)
+        this.$store.commit('notification/SET_RETOUCH_STREAM_ID', '')
+        this.$bus.$emit('stream-with-drawn')
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
@@ -479,6 +482,7 @@ export default {
         this.$newMessage.success('提交审核成功。')
         this.$store.commit('notification/CLEAR_RETOUCH_STREAM_ID')
         this.$emit('update:showDetail', false)
+        this.$ipcRenderer.sendSync('upload-workbench')
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
