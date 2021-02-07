@@ -122,7 +122,7 @@ export default {
      * @description 是否显示下拉框
      */
     showDropdown (item) {
-      return this.canUrgent(item) || this.canManualReview(item)
+      return this.canUrgent(item) || this.canManualReview(item) || this.canReturnQueue(item)
     },
     canSeeInfo (item) {
       return this.showWorkInfo || item.state !== STREAM_STATE.WAIT_RETOUCH
