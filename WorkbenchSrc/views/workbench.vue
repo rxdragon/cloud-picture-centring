@@ -128,12 +128,8 @@ export default {
   user-select: none;
   background-color: #fff;
   border-radius: 10px;
-  opacity: 0.4;
+  opacity: 1;
   transition: all 0.3s;
-
-  &:hover {
-    opacity: 1;
-  }
 
   &::after {
     position: absolute;
