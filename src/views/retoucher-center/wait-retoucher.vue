@@ -222,6 +222,7 @@ import { mapGetters } from 'vuex'
 import * as Retoucher from '@/api/retoucher.js'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import * as Setting from '@/indexDB/getSetting.js'
+import * as SessionTool from '@/utils/sessionTool'
 
 export default {
   name: 'WaitRetoucher',
@@ -367,6 +368,10 @@ export default {
     async getRetouchStreamList () {
       const reqData = { state: this.listActive }
       const res = await RetoucherCenter.getRetouchStreams(reqData)
+      if (!this.tableData.length) {
+        SessionTool.removeAllSureRetouchOrder()
+        this.$store.commit('notification/SET_RETOUCH_STREAM_ID', '')
+      }
       this.tableData = res.data
       this.hangingListNum = res.hangingNum
       this.retouchingListNum = res.retouchingNum

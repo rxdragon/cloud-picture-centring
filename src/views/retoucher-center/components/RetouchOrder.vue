@@ -390,6 +390,8 @@ export default {
         this.getPhotoProblemTagSets()
       } catch (error) {
         console.error(error)
+        SessionTool.removeSureRetouchOrder(this.realAid)
+        this.$store.commit('notification/SET_RETOUCH_STREAM_ID', '')
         this.$bus.$emit('stream-with-drawn')
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
