@@ -1,5 +1,5 @@
 <template>
-  <div class="workbench" :class="darkMode && 'dark-workbench'">
+  <div class="workbench" id="workbench-window" :class="darkMode && 'dark-workbench'">
     <div class="workbench-title">
       <div class="plugin-left">
         <transition name="fade" mode="out-in">

@@ -111,7 +111,7 @@ export default {
     async initElectron () {
       // 监听关闭窗口
       this.$ipcRenderer.on('workbench-change', (e, item) => {
-        const { id } = item
+        const { id } = item || {}
         this.getRetouchNowInfo(id)
       })
     },
@@ -134,6 +134,18 @@ export default {
       this.dealStreamNum = dealStreamNum
       this.returnRate = returnRate
       this.retouchPhotoNumTimeSum = retouchPhotoNumTimeSum
+      // 重制窗口大小
+      if (!this.isStickTop) return
+      await this.$nextTick()
+      const workbenchWindow = document.getElementById('workbench-window')
+      if (!workbenchWindow) return
+      const width = workbenchWindow.clientWidth
+      const height = workbenchWindow.clientHeight
+      const data = {
+        width,
+        height
+      }
+      this.$ipcRenderer.sendSync('resize-workbench', data)
     },
     pollGetSandClock () {
       this.countDown()

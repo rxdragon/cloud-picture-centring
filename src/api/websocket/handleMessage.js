@@ -29,6 +29,7 @@ export default function handleMessage (data, chat) {
     // 修片师接单
     case 'StreamRetoucherReceive':
       getRetouchStream(typeMessage)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 审核人接单
     case 'StreamReviewerReceive':
@@ -41,6 +42,12 @@ export default function handleMessage (data, chat) {
     // 摄影撤单
     case 'StreamWithDrawn':
       handleStreamDraw(typeMessage)
+      ipcRenderer.sendSync('upload-workbench')
+      break
+    // 修图退回队列
+    case 'StreamReturnQueue':
+      handleStreamReturnQueue(typeMessage)
+      ipcRenderer.sendSync('upload-workbench')
       break
     // 公告
     case 'Announcement':
@@ -181,6 +188,25 @@ function handleStreamDraw (data) {
   Vue.prototype.$bus.$emit('stream-with-drawn')
   Vue.prototype.$notification(notificationData)
 }
+
+/**
+ * @description 流水撤回
+ * @param {*} data // 流水号
+ */
+function handleStreamReturnQueue (data) {
+  const { streamId } = data
+  // 桌面通知
+  const notificationMsg = '流水退回队列通知'
+  const notificationData = {
+    title: notificationMsg,
+    body: `已被退回撤除`
+  }
+  SessionTool.removeSureRetouchOrder(streamId)
+  store.commit('notification/SET_RETOUCH_STREAM_ID', '')
+  Vue.prototype.$bus.$emit('stream-with-drawn')
+  Vue.prototype.$notification(notificationData)
+}
+
 
 /**
  * @description 处理公告
