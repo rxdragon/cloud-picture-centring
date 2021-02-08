@@ -23,12 +23,12 @@ export default function onlineIpc (windows) {
   })
 
   // 更新retouch相关信息
-  ipcMain.on('upload-workbench', (event) => {
+  ipcMain.on('upload-workbench', (event, data) => {
     if (windows['main']) {
-      windows['main'].browserWindowObject.webContents.send(`workbench-change`)
+      windows['main'].browserWindowObject.webContents.send(`workbench-change`, data)
     }
     if (windows[WINDOW_NAME.WORKBENCH]) {
-      windows[WINDOW_NAME.WORKBENCH].browserWindowObject.webContents.send(`workbench-change`)
+      windows[WINDOW_NAME.WORKBENCH].browserWindowObject.webContents.send(`workbench-change`, data)
     }
     event.returnValue = 'success'
   })

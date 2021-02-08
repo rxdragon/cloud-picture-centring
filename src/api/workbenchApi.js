@@ -37,10 +37,11 @@ export async function getProductInfo () {
 /**
  * @description 获取修图信息
  */
-export async function getRetouchInfo () {
+export async function getRetouchInfo (params) {
   const res = await axios({
     url: '/project_cloud/workTool/retouch',
     method: 'GET',
+    params
   })
 
   const streamInfo = res.retouchingStream

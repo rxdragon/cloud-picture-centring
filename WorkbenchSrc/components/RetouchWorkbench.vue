@@ -111,14 +111,16 @@ export default {
     async initElectron () {
       // 监听关闭窗口
       this.$ipcRenderer.on('workbench-change', (e, item) => {
-        this.getRetouchNowInfo()
+        const { id } = item
+        this.getRetouchNowInfo(id)
       })
     },
     /**
      * @description 获取修图信息
      */
-    async getRetouchNowInfo () {
-      const { retouchingStream, dealStreamNum, returnRate, retouchPhotoNumTimeSum, hourGlass } = await WorkbenchApi.getRetouchInfo()
+    async getRetouchNowInfo (streamId) {
+      const req = { streamId }
+      const { retouchingStream, dealStreamNum, returnRate, retouchPhotoNumTimeSum, hourGlass } = await WorkbenchApi.getRetouchInfo(req)
       this.hourGlass = hourGlass
       this.retouchingStream = retouchingStream
       if (this.isSandClockOpen && this.oldStreamNum !== retouchingStream.streamNum) {

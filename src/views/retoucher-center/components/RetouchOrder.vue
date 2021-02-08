@@ -285,6 +285,7 @@ export default {
       handler (id) {
         if (!id) return
         this.realAid = id
+        this.$ipcRenderer.sendSync('upload-workbench', { id })
         this.getStreamInfo()
       },
       immediate: true
