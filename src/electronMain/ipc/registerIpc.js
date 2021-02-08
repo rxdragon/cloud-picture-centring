@@ -1,6 +1,7 @@
 import { startNetworkDebugWindow } from '../window/networkDebug.js'
 import { startWorkbenchWindow } from '../window/workbenchWindow.js'
 import { closeWindow, windows } from '../window/base'
+import { WINDOW_NAME } from '../window/WindowEnumerate'
 const { ipcMain } = require('electron')
 
 export default function registerIpc (win) {
@@ -31,6 +32,17 @@ export default function registerIpc (win) {
 
   ipcMain.on('workbench-window', async (event, url) => {
     await startWorkbenchWindow(url)
+    event.returnValue = 'success'
+  })
+
+  // 重制窗口大小
+  ipcMain.on('resize-workbench', async (event, data) => {
+    if (!windows[WINDOW_NAME.WORKBENCH]) {
+      event.returnValue = 'fail'
+      return
+    }
+    const { width, height } = data
+    windows[WINDOW_NAME.WORKBENCH].browserWindowObject.setContentSize(width, height, true)
     event.returnValue = 'success'
   })
 

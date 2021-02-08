@@ -319,6 +319,7 @@ export default {
     })
     this.$bus.$on('stream-with-drawn', () => {
       this.showDetail = false
+      this.getRetouchStreamList()
     })
   },
   mounted () {
@@ -368,13 +369,14 @@ export default {
     async getRetouchStreamList () {
       const reqData = { state: this.listActive }
       const res = await RetoucherCenter.getRetouchStreams(reqData)
-      if (!this.tableData.length) {
-        SessionTool.removeAllSureRetouchOrder()
-        this.$store.commit('notification/SET_RETOUCH_STREAM_ID', '')
-      }
       this.tableData = res.data
       this.hangingListNum = res.hangingNum
       this.retouchingListNum = res.retouchingNum
+      if (!this.tableData.length && this.listActive === 'retouching') {
+        SessionTool.removeAllSureRetouchOrder()
+        this.$ipcRenderer.sendSync('upload-workbench')
+        this.$store.commit('notification/SET_RETOUCH_STREAM_ID', '')
+      }
     },
     /**
      * @description 获取排队信息
