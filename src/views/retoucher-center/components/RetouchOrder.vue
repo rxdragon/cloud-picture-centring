@@ -285,7 +285,7 @@ export default {
       handler (id) {
         if (!id) return
         this.realAid = id
-        this.$ipcRenderer.sendSync('upload-workbench', { id })
+        this.$ipcRenderer.sendSync('upload-workbench', { id: this.realAid })
         this.getStreamInfo()
       },
       immediate: true
@@ -364,6 +364,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getStreamInfo(reqData)
         this.orderData = data.orderData
+
         this.hourGlass = data.hourGlass
         this.christmasSplicePhotos = data.christmasSplicePhotos || []
         this.isReturnOrder = data.isReturnOrder

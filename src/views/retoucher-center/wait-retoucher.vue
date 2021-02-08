@@ -369,8 +369,7 @@ export default {
     async getRetouchStreamList () {
       const reqData = { state: this.listActive }
       const res = await RetoucherCenter.getRetouchStreams(reqData)
-
-      if (!this.tableData.length) {
+      if (!this.tableData.length && this.listActive === 'retouching') {
         SessionTool.removeAllSureRetouchOrder()
         this.$ipcRenderer.sendSync('upload-workbench')
         this.$store.commit('notification/SET_RETOUCH_STREAM_ID', '')
