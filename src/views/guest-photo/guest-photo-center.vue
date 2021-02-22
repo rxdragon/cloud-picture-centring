@@ -5,9 +5,9 @@
     </div>
     <!-- 搜索相关 -->
     <div class="search-box">
-      <!-- 摄影上传时间 -->
+      <!-- 修图完成时间 -->
       <div class="search-item">
-        <span>摄影上传时间</span>
+        <span>修图完成时间</span>
         <date-picker v-model="timeSpan" />
       </div>
       <!-- 伙伴 -->
