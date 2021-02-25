@@ -1,5 +1,10 @@
 <template>
-  <el-image class="preview-canvas-img" :src="src" :fit="containPhoto ? 'contain' : 'cover'">
+  <el-image
+    class="preview-canvas-img"
+    :src="src"
+    :fit="containPhoto ? 'contain' : 'cover'"
+    :preview-src-list="getPreviewPhoto"
+  >
     <div slot="error" class="image-slot">
       <i class="el-icon-picture-outline" />
       <span>加载失败...</span>
@@ -12,7 +17,7 @@ export default {
   name: 'PreviewCanvasImg',
   props: {
     file: { type: Object, required: true },
-    containPhoto: { type: Boolean }
+    containPhoto: { type: Boolean },
   },
   data () {
     return {
@@ -20,6 +25,15 @@ export default {
       quality: 0.8,
       width: 700,
       src: ''
+    }
+  },
+  computed: {
+    getPreviewPhoto () {
+      if (this.src) {
+        return [this.src]
+      } else {
+        return []
+      }
     }
   },
   watch: {
