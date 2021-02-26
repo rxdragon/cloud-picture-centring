@@ -4,7 +4,7 @@
 
 import { app, protocol } from 'electron'
 import EventEmitter from 'events'
-import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
+import installExtension, {VUEJS_DEVTOOLS} from "electron-devtools-installer"
 
 // !!! 不要修改此文件，修改此文件没有任何作用，请修改对应 starter 项目文件 !!!
 global.env = process.env.NODE_ENV || 'dev'
@@ -45,7 +45,7 @@ app.on('ready', async () => {
     // If you are not using Windows 10 dark mode, you may uncomment these lines
     // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
     try {
-      await installVueDevtools()
+      await installExtension(VUEJS_DEVTOOLS)
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
     }

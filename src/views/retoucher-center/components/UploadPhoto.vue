@@ -257,8 +257,13 @@ export default {
         const orginPhotoNameForJpeg = orginPhotoName.replace('jpeg', 'jpg')
         let orginPhotoNameForUnknow = orginPhotoName.replace('unknown', 'jpg')
         orginPhotoNameForUnknow = orginPhotoNameForUnknow.replace('unknow', 'jpg')
-        
-        return orginPhotoName === fileName || orginPhotoNameForJpeg === fileName || orginPhotoNameForUnknow === fileName
+        let orginPhotoNameForHeic = orginPhotoName.replace('HEIC', 'jpg')
+        orginPhotoNameForHeic = orginPhotoName.replace('heic', 'jpg')
+
+        return orginPhotoName === fileName ||
+          orginPhotoNameForJpeg === fileName ||
+          orginPhotoNameForUnknow === fileName ||
+          orginPhotoNameForHeic === fileName
       })
 
       if (!hasSameName) throw new Error('请上传与原片文件名一致的照片。')
