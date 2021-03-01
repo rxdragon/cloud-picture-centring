@@ -53,6 +53,12 @@
         </template>
       </el-table-column>
       <el-table-column v-if="showChecker" prop="reviewerName" label="审核人" />
+      <el-table-column prop="photographerOrgName" label="摄影机构" />
+      <el-table-column v-if="showRetouchTime" label="修图时间">
+        <template slot-scope="{ row }">
+          {{ row.isReceipted ? row.retouchTime : '-' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="waitTime" label="等待时间" />
       <el-table-column prop="streamState" label="当前状态" />
       <el-table-column label="操作" width="160">
@@ -107,6 +113,7 @@ export default {
   props: {
     tableData: { type: Array, required: true }, // 列表数据
     showChecker: { type: Boolean }, // 是够显示审核人
+    showRetouchTime: { type: Boolean }, // 显示修图时间
     urgentSearch: { type: Boolean } // 是否是加急查询
   },
   data () {
