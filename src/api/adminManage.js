@@ -46,17 +46,16 @@ export function getStreamList (params) {
   }).then(msg => {
     const streamState = StreamState
     msg.list = msg.list.map(item => {
-      let retouchLeader = '-'
-      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.name) {
-        retouchLeader = item.retoucher.retoucher_leader.name
-      }
-      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.nickname) {
-        retouchLeader = item.retoucher.retoucher_leader.nickname
-      }
+      const retouchLeader = _.get(item, 'retoucher.retoucher_leader.nickname') ||
+        _.get(item, 'retoucher.retoucher_leader.name') || '-'
       if (item.retoucher_org) {
         item.retoucherOrgName = _.get(item, 'retoucher_org.name', '-')
         item.retoucherOrgRetouchName = _.get(item, 'tags.values.retoucher_name', '-')
       }
+      const isReceipted = Boolean(_.get(item, 'receipt_at'))
+      const retouchTime = waitTime(item.receipt_at, item.pass_at)
+      const photographerOrgName = _.get(item, 'order.photographer_org.name') || '-'
+
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
@@ -66,7 +65,10 @@ export function getStreamList (params) {
         reviewerName: _.get(item, 'reviewer.name') || _.get(item, 'reviewer.real_name') || '-',
         waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
-        photoNum: item.photos.filter(item => +item.people_num > 0).length
+        photoNum: item.photos.filter(item => +item.people_num > 0).length,
+        isReceipted,
+        retouchTime,
+        photographerOrgName
       })
     })
     return msg
@@ -85,13 +87,14 @@ export function getRetouchStreamList (params) {
   }).then(msg => {
     const streamState = StreamState
     msg.list = msg.list.map(item => {
-      let retouchLeader = '-'
-      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.name) {
-        retouchLeader = item.retoucher.retoucher_leader.name
-      }
-      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.nickname) {
-        retouchLeader = item.retoucher.retoucher_leader.nickname
-      }
+      const retouchLeader = _.get(item, 'retoucher.retoucher_leader.nickname') ||
+      _.get(item, 'retoucher.retoucher_leader.name') || '-'
+
+      const isReceipted = Boolean(_.get(item, 'receipt_at'))
+      const retouchTime = waitTime(item.receipt_at, item.pass_at)
+      // 摄影机构
+      const photographerOrgName = _.get(item, 'order.photographer_org.name') || '-'
+
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
@@ -101,7 +104,10 @@ export function getRetouchStreamList (params) {
         reviewerName: _.get(item, 'reviewer.name') || _.get(item, 'reviewer.real_name') || '-',
         waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
-        photoNum: item.photos.filter(item => +item.people_num > 0).length
+        photoNum: item.photos.filter(item => +item.people_num > 0).length,
+        isReceipted,
+        retouchTime,
+        photographerOrgName
       })
     })
     return msg
@@ -131,14 +137,15 @@ export function getQueueStreamList (params) {
     params
   }).then(msg => {
     const streamState = StreamState
+
     msg.list = msg.list.map(item => {
-      let retouchLeader = '-'
-      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.name) {
-        retouchLeader = item.retoucher.retoucher_leader.name
-      }
-      if (item.retoucher && item.retoucher.retoucher_leader && item.retoucher.retoucher_leader.nickname) {
-        retouchLeader = item.retoucher.retoucher_leader.nickname
-      }
+      const retouchLeader = _.get(item, 'retoucher.retoucher_leader.nickname') ||
+      _.get(item, 'retoucher.retoucher_leader.name') || '-'
+
+      const isReceipted = Boolean(_.get(item, 'receipt_at'))
+      const retouchTime = waitTime(item.receipt_at, item.pass_at)
+      const photographerOrgName = _.get(item, 'order.photographer_org.name') || '-'
+
       return Object.assign({}, item, {
         staticsUrgent: item.tags && item.tags.statics && item.tags.statics.includes('urgent'),
         isReturn: item.state === 'review_return_retouch',
@@ -148,7 +155,10 @@ export function getQueueStreamList (params) {
         reviewerName: _.get(item, 'reviewer.name') || _.get(item, 'reviewer.real_name') || '-',
         waitTime: waitTime(item.created_at, item.pass_at),
         streamState: streamState[item.state] || item.state,
-        photoNum: item.photos.filter(item => +item.people_num > 0).length
+        photoNum: item.photos.filter(item => +item.people_num > 0).length,
+        isReceipted,
+        retouchTime,
+        photographerOrgName
       })
     })
     return msg

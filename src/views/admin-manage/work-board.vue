@@ -44,6 +44,7 @@
         v-show="searchTableData.length"
         key="urgentTable"
         show-checker
+        show-retouch-time
         urgent-search
         :table-data="searchTableData"
         @urgentSuccess="onUrgent"
@@ -87,6 +88,7 @@
       <work-board-table
         key="boardTable"
         :show-checker="searchType === 'check'"
+        :show-retouch-time="activeName !== 'retouch'"
         :table-data="tableData"
         @urgentSuccess="onUrgent"
       />
@@ -253,10 +255,8 @@ export default {
         this.tableData = data.list
         this.pager.total = data.total
         await this.getQueueStreamListCount()
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -271,8 +271,6 @@ export default {
         this.tableData = data.list
         this.pager.total = data.total
         await this.getQueueStreamListCount()
-      } catch (error) {
-        console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -298,12 +296,11 @@ export default {
           return this.$newMessage.warning('请输入条件')
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
+
         const data = await AdminManage.getStreamList(req)
         if (data.list.length === 0) { this.$newMessage.warning('暂无数据') }
         this.searchTableData = data.list
         this.urgentPager.total = data.total
-      } catch (error) {
-        console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
