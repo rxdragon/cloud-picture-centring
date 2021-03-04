@@ -81,7 +81,8 @@ async function checkLocaklTime (next) {
   if (isDev) return
   const onlineDate = await User.getOnlineTime()
   const localDate = new Date().getTime()
-  const diff = (onlineDate - localDate) / 1000
+  let diff = (onlineDate - localDate) / 1000
+  diff = Math.abs(diff)
   // 如果大于30s贼同步时间
   if (diff > 30) {
     next(`/check-time`)
