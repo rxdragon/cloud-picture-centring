@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title' // 获取页面title
 
 NProgress.configure({ showSpinner: false }) // 关闭加载微调器
 
-const whiteList = ['/', '/login', '/auth-redirect', '/401', '/404', '/network-debug'] // 白名单
+const whiteList = ['/', '/login', '/auth-redirect', '/401', '/404', '/network-debug', '/check-time'] // 白名单
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start() // 读取进度条
@@ -44,15 +44,20 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (hasXStreamId) {
+    // 校验本地时间和网络时间
+    checkLocaklTime(next)
+
     // 下次的过期时间
     const expireTime = getStreamIdExpireTime() * 1000
     const nowTime = new Date().getTime()
     const discrepancyTime = expireTime - nowTime
+
     if (discrepancyTime > 0) {
       // 过期时间小于1小时续上
       if (discrepancyTime < 60 * 60 * 1000) {
         await User.userExpire()
       }
+      
       noExpire()
     } else if (discrepancyTime < 0) {
       User.logout()
@@ -66,3 +71,21 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach(() => {
   NProgress.done() // 读取完成
 })
+
+/**
+ * @description 检查本地时间和网络时间
+ * @param {*} params 
+ */
+async function checkLocaklTime (next) {
+  const isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
+  if (isDev) return
+  const onlineDate = await User.getOnlineTime()
+  const localDate = new Date().getTime()
+  let diff = (onlineDate - localDate) / 1000
+  diff = Math.abs(diff)
+  // 如果大于30s贼同步时间
+  if (diff > 30) {
+    next(`/check-time`)
+    NProgress.done()
+  }
+}

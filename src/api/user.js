@@ -71,3 +71,17 @@ export function logout () {
     SessionTool.removeSession()
   })
 }
+
+/**
+ * @description 获取网络时间
+ */
+export function getOnlineTime () {
+  return axios({
+    url: '/core_gear/util/getServerTime',
+    method: 'GET'
+  }).then(msg => {
+    const { date } = msg
+    const dateTime = new Date(date).getTime()
+    return dateTime
+  })
+}
