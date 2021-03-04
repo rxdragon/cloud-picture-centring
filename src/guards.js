@@ -77,6 +77,8 @@ router.afterEach(() => {
  * @param {*} params 
  */
 async function checkLocaklTime (next) {
+  const isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
+  if (isDev) return
   const onlineDate = await User.getOnlineTime()
   const localDate = new Date().getTime()
   const diff = (onlineDate - localDate) / 1000
