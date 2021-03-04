@@ -55,6 +55,11 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/check-time',
+    component: () => import('@/views/check-time/index.vue'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/login.vue'),
     hidden: true

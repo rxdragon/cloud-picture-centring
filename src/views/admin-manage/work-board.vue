@@ -311,7 +311,6 @@ export default {
 
 <style lang="less">
 
-
 .WorkBoard {
   .search-box {
     width: 100%;
