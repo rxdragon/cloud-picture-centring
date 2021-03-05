@@ -263,11 +263,12 @@ function logoutApp () {
       ipcRenderer.sendSync('close-app')
     }
   }
-  setTimeout(() => {
+  let timeOutCloseApp = setTimeout(() => {
     autoLogout()
-  }, 1 * 30 * 1000)
-  MessageBox.confirm('', '在其他地方登录系统，30s后自动关闭app', {
-    confirmButtonText: '确定',
+  }, 30 * 1000)
+  
+  MessageBox.confirm('', '在其他地方登录系统，不点击将在30s后自动关闭app', {
+    confirmButtonText: '取消',
     center: true,
     type: 'warning',
     showCancelButton: false,
@@ -275,7 +276,8 @@ function logoutApp () {
     showClose: false,
     closeOnClickModal: false
   }).then(() => {
-    autoLogout()
+    clearTimeout(timeOutCloseApp)
+    timeOutCloseApp = null
   })
 
 }
