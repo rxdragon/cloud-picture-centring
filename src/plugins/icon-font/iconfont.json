@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "20061355",
+      "name": "休息1",
+      "font_class": "xiuxi1",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "20061356",
+      "name": "工作",
+      "font_class": "gongzuo",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
       "icon_id": "19607950",
       "name": "下载",
       "font_class": "xiazai",
