@@ -142,14 +142,16 @@ export default {
       }
     },
     '$route.query': {
-      handler: function (query) {
+      handler: async function (query) {
         const { isCheckPass, photographerOrgId } = this.$route.query
         if (isCheckPass) {
+          await this.$nextTick()
           this.activeName = 'checked'
         }
         if (photographerOrgId) {
           this.institutionType = +photographerOrgId
         }
+        // TODO 切换到对应的分类
         this.getProductList()
       },
       immediate: true
