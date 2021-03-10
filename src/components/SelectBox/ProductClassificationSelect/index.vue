@@ -1,5 +1,5 @@
 <template>
-  <div class="product-select">
+  <div class="product-classification-select">
     <el-cascader
       :options="options"
       :props="propsValue"
@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import * as Product from '@/api/product.js'
+import * as ProductClassificationApi from '@/api/productClassificationApi.js'
 
 export default {
-  name: 'ProductSelect',
+  name: 'ProductClassificationSelect',
   props: {
     props: {
       type: Object,
@@ -46,14 +46,15 @@ export default {
     }
   },
   created () {
-    this.getAllProduct()
+    this.getClassificationTree()
   },
   methods: {
     /**
-     * @description 获取全部伙伴
+     * @description 获取全部产品分类信息
      */
-    async getAllProduct () {
-      const list = await Product.getAllProduct()
+    async getClassificationTree () {
+      // TODO 调试接口
+      const list = ProductClassificationApi.getClassificationTree()
       this.options = list
       this.loadingDown = true
     }
@@ -62,7 +63,7 @@ export default {
 </script>
 
 <style lang="less">
-.product-select {
+.product-classification-select {
   width: 100%;
 
   .el-cascader {

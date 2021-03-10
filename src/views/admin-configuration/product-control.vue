@@ -13,23 +13,40 @@
           class="table-box"
           :class="{'no-border': activeName === 'checkPending'}"
         >
-          <div class="search-box">
-            <div class="institution-box search-item">
-              <span>摄影机构</span>
-              <institution-select v-model="institutionType" institution-class="photographe" @change="onSearchChange" />
-            </div>
-            <div v-if="!isPending" class="product-box search-item">
-              <span>产品名称</span>
-              <product-select v-model="productValue" @change="onSearchChange" />
-            </div>
-            <div v-if="!isPending" class="weight-box search-item">
-              <span>权重等级</span>
-              <weight-select v-model="weightType" @change="onSearchChange" />
-            </div>
-            <div class="button-box">
-              <el-button type="primary" @click="getProductList">查 询</el-button>
-            </div>
-          </div>
+          <!-- 搜索框 -->
+          <el-row class="search-box" :gutter="20">
+            <el-col :span="6" :xl="4">
+              <div class="search-item">
+                <span>摄影机构</span>
+                <institution-select v-model="institutionType" institution-class="photographe" @change="onSearchChange" />
+              </div>
+            </el-col>
+            <el-col v-if="!isPending" :span="9" :xl="6">
+              <div class="search-item">
+                <span>产品名称</span>
+                <product-select v-model="productValue" @change="onSearchChange" />
+              </div>
+            </el-col>
+            <el-col v-if="!isPending" :span="9" :xl="6">
+              <div class="search-item">
+                <span>产品分类</span>
+                <product-classification-select v-model="productClassValues" @change="onSearchChange" />
+              </div>
+            </el-col>
+            <el-col v-if="!isPending" :span="6" :xl="4">
+              <div class="search-item">
+                <span>权重等级</span>
+                <weight-select v-model="weightType" @change="onSearchChange" />
+              </div>
+            </el-col>
+            <el-col :span="18" :xl="2">
+              <div class="search-item search-button-box">
+                <el-button type="primary" @click="getProductList">查 询</el-button>
+              </div>
+            </el-col>
+          </el-row>
+
+          <!-- 表格内容 -->
           <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="name" label="产品名称" />
             <el-table-column prop="photographerOrgName" label="机构名称" />
@@ -90,13 +107,15 @@
 import ProductInfo from './components/ProductInfo'
 import InstitutionSelect from '@SelectBox/InstitutionSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
+import ProductClassificationSelect from '@SelectBox/ProductClassificationSelect'
 import WeightSelect from '@SelectBox/WeightSelect'
+
 import * as OperationManage from '@/api/operationManage.js'
 import { WeightEnum } from '@/utils/enumerate.js'
 
 export default {
   name: 'ProductControl',
-  components: { ProductInfo, InstitutionSelect, ProductSelect, WeightSelect },
+  components: { ProductInfo, InstitutionSelect, ProductSelect, WeightSelect, ProductClassificationSelect },
   filters: {
     filterWeightEnum (value) {
       return WeightEnum[value]
@@ -105,10 +124,11 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      activeName: 'checkPending', // checkPending 待审核 checked 审核通过
+      activeName: 'checked', // checkPending 待审核 checked 审核通过
       institutionType: '', // 机构值
       showInfo: false, // 是否显示详情
       productValue: [], // 产品值
+      productClassValues: [], // 产品分类组
       weightType: 0, // 权重等级
       tableData: [], // 列表数据
       firstSearch: true, // 是否第一次搜索
@@ -194,6 +214,7 @@ export default {
         if (!this.isPending && this.productValue.length) {
           reqData.productId = this.productValue
         }
+        // TODO 添加分类id
         if (!this.isPending && this.weightType) {
           reqData.weightLevel = this.weightType
         }
@@ -237,13 +258,39 @@ export default {
 
 <style lang="less">
 
-
 .product-control {
   .search-box {
-    margin-bottom: 24px;
+    flex-wrap: wrap;
 
-    .button-box {
-      text-align: right;
+    .search-item {
+      margin-right: 0;
+      margin-bottom: 20px;
+
+      & > span {
+        display: inline-block;
+        flex-shrink: 0;
+        text-align: left;
+      }
+
+      & /deep/ .el-range-editor.el-input__inner {
+        width: 100% !important;
+      }
+
+      & /deep/ .date-picker,
+      & /deep/ .issue-label-select,
+      & /deep/ .evaluate-select,
+      & /deep/ .cloud-spot-grass-select,
+      & /deep/ .quality-select,
+      & /deep/ .el-select,
+      & /deep/ .return-select,
+      & /deep/ .cloud-spot,
+      & /deep/ .el-cascader {
+        width: 100%;
+      }
+    }
+
+    .search-button-box {
+      justify-content: flex-end;
     }
   }
 
