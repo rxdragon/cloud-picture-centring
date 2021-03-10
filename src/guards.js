@@ -77,7 +77,7 @@ router.afterEach(() => {
  * @param {*} params 
  */
 async function checkLocaklTime (next) {
-  const isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
+  const isDev = !process.env.VUE_APP_LOGIN_API.includes('online')
   if (isDev) return
   const onlineDate = await User.getOnlineTime()
   const localDate = new Date().getTime()
