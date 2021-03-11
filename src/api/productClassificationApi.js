@@ -64,42 +64,170 @@ export function getClassificationList (params) {
 }
 
 
-// /**
-//  * @description 过滤修图信息
-//  * @param {*} data 
-//  * @returns 
-//  */
-// function filterRetouchStandard (data) {
-//   const createData = [
-//     {
-//       value: 'blue',
-//       label: '蓝标',
-//       children: []
-//     }, {
-//       value: 'master',
-//       label: '大师',
-//       children: []
-//     }, {
-//       value: 'kids',
-//       label: 'kids',
-//       children: []
-//     }, {
-//       value: 'mainto',
-//       label: '缦图',
-//       children: []
-//     }
-//   ]
-//   data.forEach(productItem => {
-//     const findType = createData.find(typeItem => typeItem.value === productItem.retouch_standard)
-//     if (findType) {
-//       findType.children.push({
-//         label: productItem.name,
-//         value: productItem.id
-//       })
-//     }
-//   })
-//   return createData
-// }
+/**
+ * @description 过滤修图信息
+ * @param {*} data 
+ * @returns 
+ */
+function filterRetouchStandard (data) {
+  let createData = [
+    {
+      value: 'blue',
+      label: '蓝标',
+      children: []
+    }, {
+      value: 'master',
+      label: '大师',
+      children: []
+    }, {
+      value: 'kids',
+      label: 'kids',
+      children: []
+    }, {
+      value: 'mainto',
+      label: '缦图',
+      children: []
+    }
+  ]
+  data.forEach(productItem => {
+    const findType = createData.find(typeItem => typeItem.value === productItem.retouch_standard)
+    if (findType) {
+      findType.children.push({
+        label: productItem.name,
+        value: productItem.id
+      })
+    }
+  })
+  createData = createData.filter(item => item.children.length)
+  return createData
+}
+
+/**
+ * @description 获取分类产品树
+ * @param {*} params 
+ * @returns 
+ */
+export function getClassificationProductTree (params) {
+  // TODO 添加接口
+  const mockData = [
+    {
+      "id": 1,
+      "name": "海马体",
+      "parent_id": 0,
+      "children": [
+        {
+          "id": 2,
+          "name": "限时产品",
+          "parent_id": 1,
+          "product_list": [
+            {
+              "id": 65,
+              "name": "圣诞照-女生独照-精灵",
+              "retouch_standard": "blue"
+            },
+            {
+              "id": 66,
+              "name": "圣诞照-女生独照-精灵",
+              "retouch_standard": "master"
+            },
+            {
+              "id": 68,
+              "name": "圣诞照-女生独照-精灵",
+              "retouch_standard": "mainto"
+            },
+            {
+              "id": 69,
+              "name": "圣诞照-亲子-精灵",
+              "retouch_standard": "kids"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "功能照",
+          "parent_id": 1,
+          "product_list": [
+            {
+              "id": 7,
+              "name": "精致证件照 - 正面",
+              "retouch_standard": "blue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "name": "修修兽",
+      "parent_id": 0,
+      "children": [
+        {
+          "id": 101,
+          "name": "限时产品",
+          "parent_id": 100,
+          "product_list": [
+            {
+              "id": 65,
+              "name": "圣诞照-女生独照-精灵",
+              "retouch_standard": "blue"
+            },
+            {
+              "id": 66,
+              "name": "圣诞照-女生独照-精灵",
+              "retouch_standard": "master"
+            },
+            {
+              "id": 68,
+              "name": "圣诞照-女生独照-精灵",
+              "retouch_standard": "mainto"
+            },
+            {
+              "id": 69,
+              "name": "圣诞照-亲子-精灵",
+              "retouch_standard": "kids"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "功能照",
+          "parent_id": 100,
+          "product_list": [
+            {
+              "id": 7,
+              "name": "精致证件照 - 正面",
+              "retouch_standard": "blue"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+
+  const createData = mockData.map(parentItem => {
+    const children1Data = parentItem.children.map(childrenItem => {
+      const productList = childrenItem.product_list || []
+      const filterProductList = filterRetouchStandard(productList)
+
+      const childrenData = {
+        label: childrenItem.name,
+        value: childrenItem.id,
+        parentId: childrenItem.parent_id,
+        children: filterProductList
+      }
+      return childrenData
+    })
+
+    const parentData = {
+      label: parentItem.name,
+      value: parentItem.id,
+      parentId: parentItem.parent_id,
+      children: children1Data
+    }
+    return parentData
+  })
+  return createData
+}
 
 /**
  * @description 获取产品树结构
@@ -143,29 +271,6 @@ export function getClassificationTree (params) {
       ]
     }
   ]
-
-  // const createData = mockData.map(parentItem => {
-  //   const children1Data = parentItem.children.map(childrenItem => {
-  //     const productList = childrenItem.product_list
-  //     const filterProductList = filterRetouchStandard(productList)
-
-  //     const childrenData = {
-  //       label: childrenItem.name,
-  //       value: childrenItem.id,
-  //       parentId: childrenItem.parent_id,
-  //       children: filterProductList
-  //     }
-  //     return childrenData
-  //   })
-
-  //   const parentData = {
-  //     label: parentItem.name,
-  //     value: parentItem.id,
-  //     parentId: parentItem.parent_id,
-  //     children: children1Data
-  //   }
-  //   return parentData
-  // })
 
   // 优化成递归
   const createData = mockData.map(parentItem => {

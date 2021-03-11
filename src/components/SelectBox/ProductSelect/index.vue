@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import * as Product from '@/api/product.js'
+import * as ProductClassificationApi from '@/api/productClassificationApi.js'
 
 export default {
   name: 'ProductSelect',
@@ -53,7 +53,8 @@ export default {
      * @description 获取全部伙伴
      */
     async getAllProduct () {
-      const list = await Product.getAllProduct()
+      // TODO 接口联调
+      const list = ProductClassificationApi.getClassificationProductTree()
       this.options = list
       this.loadingDown = true
     }

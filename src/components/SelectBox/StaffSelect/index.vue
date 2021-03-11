@@ -71,6 +71,8 @@ export default {
 
 <style lang="less">
 .staff-select {
+  width: 100%;
+
   .el-cascader {
     width: 220px;
 
