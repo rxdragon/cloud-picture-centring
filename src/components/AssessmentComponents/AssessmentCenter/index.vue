@@ -106,9 +106,8 @@
 import DatePicker from '@/components/DatePicker'
 import ProductSelect from '@/components/SelectBox/ProductSelect'
 
-import GradePreview from '../components/GradePreview'
-import PhotoGradeBox from '../components/PhotoGradeBox'
-
+import GradePreview from '../components/GradePreview/index.vue'
+import PhotoGradeBox from '../components/PhotoGradeBox/index.vue'
 
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { PhotoEnumName } from '@/utils/enumerate.js'
@@ -119,6 +118,9 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 export default {
   name: 'AssessmentCenter',
   components: { DatePicker, GradePreview, PhotoGradeBox, ProductSelect },
+  props: {
+    cloudType: { type: String, required: true }
+  },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -149,8 +151,15 @@ export default {
       return findGradePhoto || {}
     }
   },
-  created () {
-    this.resetPage()
+  async created () {
+    await this.resetPage()
+    // TODO 调试
+    await this.$nextTick()
+    const mockData = {
+      id: "604996a32891cd67265ec2b2",
+      version: "original_photo"
+    }
+    this.showGrade(mockData)
   },
   methods: {
     /**
@@ -246,9 +255,9 @@ export default {
     /**
      * @description 初始化页面
      */
-    resetPage () {
+    async resetPage () {
       this.$store.dispatch('setting/showLoading', this.routeName)
-      Promise.all([
+      await Promise.all([
         this.getStatistics(),
         this.getHaveCheckResult(true)
       ])
@@ -316,7 +325,7 @@ export default {
         if (msg) {
           this.uuid = msg
           this.pager.page = 1
-          this.getSpotCheckResult()
+          await this.getSpotCheckResult()
           return true
         } else {
           this.photoData = []

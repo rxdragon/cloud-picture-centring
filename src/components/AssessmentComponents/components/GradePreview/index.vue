@@ -8,150 +8,41 @@
       </button>
     </div>
     <div class="photoBox" v-loading="allLoading">
-      <!-- 画板工具 -->
-      <div class="photo-tool">
-        <div
-          class="tool"
-          :class="{ 'active': canvasOption.drawType === 'move' }"
-          @click.capture="changeDrawType('move')"
-        >
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="移动"
-            placement="right"
-          >
-            <div class="tool-dom">
-              <i id="move" class="el-icon-rank" />
-              <span class="shortcut">V</span>
-            </div>
-          </el-tooltip>
-        </div>
-        <div
-          class="tool"
-          :class="{ 'active': canvasOption.drawType === 'pen' }"
-          @click="changeDrawType('pen')"
-        >
-          <el-popover
-            placement="right-start"
-            width="30"
-            popper-class="pen-weight"
-            trigger="click"
-          >
-            <div class="pen-list">
-              <div
-                class="pen-item"
-                v-for="penWeightItem in penWeight"
-                :key="penWeightItem.label"
-                @click="changeLineWidth(penWeightItem)"
-              >
-                <div
-                  class="pen-box"
-                  :class="penWeightItem.active ? penWeightItem.label + ' active' : penWeightItem.label "
-                >
+      <!-- 左侧栏 -->
+      <div class="photo-mark">
+        <div class="scroll-box">
+          <!-- 缩略图 -->
+          <div id="smallImg" v-loading="loading" class="small-img">
+            <div v-show="isShow" class="breviary-photo">
+              <div class="smallPhoto">
+                <div id="img-box" style="position: relative;">
+                  <img
+                    ref="smallImg"
+                    :src="showPhoto.src"
+                    alt="缩略图"
+                    @mouseout="handOut"
+                    @mousemove="handMove"
+                    @mouseover="handOver"
+                  >
+                  <div ref="magnifier_zoom" class="_magnifier_zoom" />
                 </div>
               </div>
+              <div class="contant">
+                <el-slider :show-tooltip="false" v-model="scaleNum" />
+                <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+                <span class="down-button" @click.stop="downing">下载</span>
+              </div>
             </div>
-            <div slot="reference">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="画笔"
-                placement="right"
-              >
-                <div class="tool-dom">
-                  <i id="pen" class="el-icon-edit" />
-                  <span class="shortcut">B</span>
-                </div>
-              </el-tooltip>
-            </div>
-          </el-popover>
-        </div>
-        <div
-          class="tool"
-          :class="{ 'active': canvasOption.drawType === 'arrow' }"
-          @click="changeDrawType('arrow')"
-        >
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="箭头"
-            placement="right"
-          >
-            <div class="tool-dom">
-              <i id="arrow" class="el-icon-top-right" />
-              <span class="shortcut">C</span>
-            </div>
-          </el-tooltip>
-        </div>
-        <div
-          class="tool"
-          :class="{ 'active': canvasOption.drawType === 'ellipse' }"
-          @click="changeDrawType('ellipse')"
-        >
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="圆圈"
-            placement="right"
-          >
-            <div class="tool-dom">
-              <div class="circle"></div>
-            </div>
-          </el-tooltip>
-        </div>
-        <div
-          class="tool"
-          :class="{ 'active': canvasOption.drawType === 'line' }"
-          @click="changeDrawType('line')"
-        >
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="直线"
-            placement="right"
-          >
-            <div class="tool-dom">
-              <i id="line" class="el-icon-minus" />
-            </div>
-          </el-tooltip>
-        </div>
-        <div
-          class="tool"
-          :class="{ 'active': canvasOption.drawType === 'blowup' }"
-          @click="changeDrawType('blowup')"
-        >
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="放大"
-            placement="right"
-          >
-            <div class="tool-dom">
-              <i id="blowup" class="el-icon-search" />
-              <span class="shortcut">Z</span>
-            </div>
-          </el-tooltip>
-        </div>
-        <div class="tool" @click="changeDrawType('delete')">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="删除"
-            placement="right"
-          >
-            <div class="tool-dom">
-              <i id="delete" class="el-icon-delete" />
-            </div>
-          </el-tooltip>
-        </div>
-        <div class="tool tool-color">
-          <el-color-picker v-model="canvasOption.penColor" size="mini" />
+          </div>
+          <!-- 工具 -->
+          <MarkTool @changeTool="changeDrawType" :canvas-option="canvasOption" />
+          <!-- 订单信息 -->
+          <order-info-module v-if="Object.keys(info).length" :order-info="info" />
         </div>
       </div>
       <!-- 图片 -->
       <div class="photo-show">
-        <div v-loading="loading" class="orginPhoto">
+        <div v-loading="loading" ref="photo-show-main" class="orginPhoto">
           <img
             id="orginImg"
             ref="orgin-img"
@@ -161,7 +52,7 @@
             @load="loadingPhoto"
             @click="zoom"
           >
-          <div id="_magnifier_layer" />
+          <div ref="magnifier_layer" id="_magnifier_layer" />
           <fabric-canvas
             v-if="showCanvas"
             ref="fabric-canvas"
@@ -191,76 +82,8 @@
           <i class="el-icon-arrow-right" />
         </button>
       </div>
-      <!-- 右边栏 -->
-      <div class="photo-mark">
-        <div class="scroll-box">
-          <!-- 缩略图 -->
-          <div id="smallImg" v-loading="loading" class="small-img">
-            <div v-show="isShow" class="breviary-photo">
-              <div class="smallPhoto">
-                <div id="img-box" style="position: relative;">
-                  <img
-                    :src="showPhoto.src"
-                    alt="缩略图"
-                    @mouseout="handOut"
-                    @mousemove="handMove"
-                    @mouseover="handOver"
-                  >
-                  <div class="_magnifier_zoom" />
-                </div>
-              </div>
-              <div class="contant">
-                <el-slider :show-tooltip="false" v-model="scaleNum" />
-                <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
-                <span class="down-button" @click.stop="downing">下载</span>
-              </div>
-            </div>
-          </div>
-          <order-info-module v-if="Object.keys(info).length" :order-info="info" />
-          <!-- 种拔草设置 -->
-          <div class="label-top" v-if="labelDataTop.length">
-            <div
-              v-for="(item, index) in labelDataTop"
-              :key="index"
-              :class="[item.isSelect ? 'active' : '', item.class, 'type-tag']"
-              @click="selectTLabelData(item)"
-            >
-              {{ item.name }}
-            </div>
-          </div>
-          <!-- 问题标签 -->
-          <div class="order-label" v-if="labelData.length">
-            <div class="label-title">标签栏</div>
-            <template v-for="(labelClassItem, labelClassIndex) in labelData">
-              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
-                <div class="label-class-title">{{ labelClassItem.name }}</div>
-                <div class="label-content">
-                  <el-tag
-                    v-for="issueItem in labelClassItem.child"
-                    :key="'issue' + issueItem.id"
-                    :class="issueItem.isSelect ? 'active' : ''"
-                    size="medium"
-                    disable-transitions
-                    @click="setLabel(issueItem)"
-                  >
-                    {{ issueItem.name }}
-                  </el-tag>
-                </div>
-              </div>
-            </template>
-          </div>
-          <div class="submit-box">
-            <el-button
-              type="primary"
-              v-if="currentId"
-              @click="submitData"
-              :loading="isSubmit"
-            >
-              提交评分
-            </el-button>
-            <el-button type="info" @click="closePreview" class="out-btn">退出</el-button>
-          </div>
-        </div>
+      <!-- 右侧栏 -->
+      <div class="photo-tool">
       </div>
     </div>
   </div>
@@ -268,11 +91,15 @@
 
 <script>
 import 'driver.js/dist/driver.min.css'
-import DownIpc from '@electronMain/ipc/DownIpc'
-import OrderInfoModule from './OrderInfoModule'
-import guideData from './guideData'
 import Driver from 'driver.js' // 引导框
-import FabricCanvas from './FabricCanvas'
+import { TOOL_TYPE } from './ToolEnumerate.js'
+
+import OrderInfoModule from './OrderInfoModule.vue'
+import FabricCanvas from './FabricCanvas.vue'
+import MarkTool from './MarkTool.vue'
+
+import DownIpc from '@electronMain/ipc/DownIpc'
+import guideData from './guideData'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'
@@ -286,7 +113,7 @@ let goodWord = []
 
 export default {
   name: 'GradePreview',
-  components: { OrderInfoModule, FabricCanvas },
+  components: { OrderInfoModule, FabricCanvas, MarkTool },
   props: {
     info: { type: Object, required: true },
     configs: {
@@ -334,23 +161,6 @@ export default {
         lineWidth: 2,
         drawType: ''
       },
-      penWeight: [ // 画笔宽度数据
-        {
-          label: 'min',
-          size: 2,
-          active: true
-        },
-        {
-          label: 'mid',
-          size: 6,
-          active: false
-        },
-        {
-          label: 'big',
-          size: 10,
-          active: false
-        }
-      ],
       isSubmit: false, // 是否提交
       allLoading: false, // 整个页面loading
       currentId: '', // 当前种拔草的id 1种草,2拔草,3一般
@@ -389,72 +199,8 @@ export default {
     })
   },
   mounted () {
-    /**
-     * @description 监听键盘事件
-     */
-    document.onkeydown = e => {
-      const key = window.event.keyCode
-      switch (key) {
-        case 49:
-        case 50:
-        case 51:
-        case 52:
-        case 53:
-          this.scaleNum = (key - 49) * 25
-          this.judgeHasZoom(e)
-          break
-        case 187:
-        case 69:
-          if (this.scaleNum < 100) {
-            this.scaleNum++
-          }
-          this.judgeHasZoom(e)
-          break
-        case 189:
-        case 81:
-          if (this.scaleNum > 0) {
-            this.scaleNum--
-          }
-          this.judgeHasZoom(e)
-          break
-        case 18:
-        case 83:
-          this.closePreview()
-          break
-        case 65:
-        case 37:
-          if (this.photoArray.length > 1) {
-            this.prePhoto()
-          }
-          break
-        case 39:
-        case 68:
-          if (this.photoArray.length > 1) {
-            this.nextPhoto()
-          }
-          break
-        case 16:
-          this.isShow = !this.isShow
-          break
-        case 8:
-          this.changeDrawType('delete')
-          break
-        case 66:
-          this.changeDrawType('pen')
-          break
-        case 86:
-          this.changeDrawType('move')
-          break
-        case 90:
-          this.changeDrawType('blowup')
-          break
-        case 67:
-          this.changeDrawType('arrow')
-          break
-        default:
-          break
-      }
-    }
+    this.registerKeyDownEvent()
+    // TODO 添加注销事件
     this.$ipcRenderer.on('win-resize', (e, item) => {
       this.getImgInfo()
       if (!this.showCanvas) return
@@ -703,16 +449,23 @@ export default {
     /**
      * @description 更改画笔类型
      */
-    changeDrawType (drawType) {
+    changeDrawType (drawInfo) {
       if (!this.$parent.showGradePreview) return false
-      if (drawType !== 'blowup' && !this.showCanvas) {
-        this.createCanvas(drawType)
+      const { type, value } = drawInfo
+
+      if (type === TOOL_TYPE.COLOR) {
+        this.canvasOption.penColor = value
         return
       }
-      if (drawType === 'blowup' && this.inZoomIn) {
+
+      if (type !== TOOL_TYPE.BLOWUP && !this.showCanvas) {
+        this.createCanvas(type)
+        return
+      }
+      if (type === TOOL_TYPE.BLOWUP && this.inZoomIn) {
         this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
       }
-      this.canvasOption.drawType = drawType
+      this.canvasOption.drawType = type
     },
     /**
      * @description 撤销删除标签
@@ -737,14 +490,6 @@ export default {
       const data = { url, path: '' }
       this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)
-    },
-    /**
-     * @description 更改线宽
-     */
-    changeLineWidth (penWeightItem) {
-      this.penWeight.forEach(item => { item.active = false })
-      penWeightItem.active = true
-      this.canvasOption.lineWidth = penWeightItem.size
     },
     /**
      * @description 初始化图片版本
@@ -801,35 +546,33 @@ export default {
      */
     handOver (e) {
       // 获取大图尺寸
-      this.imgObj = this.$el.getElementsByTagName('img')[1]
-      this.imgBigObj = this.$el.getElementsByTagName('img')[0]
+      
+      this.imgObj = this.$refs['smallImg']
+
+      this.imgBigObj = this.$refs['orgin-img']
       this.imgRect = this.imgObj.getBoundingClientRect()
       this.imgBigRect = this.imgBigObj.getBoundingClientRect()
       // 马克图宽度计算系数
-      this.propConfigs.maskWidth =
-        (this.imgRect.width / (this.scaleNum * 4 + 100)) * 100
-      this.propConfigs.maskHeight =
-        this.propConfigs.maskWidth *
-        (this.imgRect.height / this.imgRect.width)
+      this.propConfigs.maskWidth = (this.imgRect.width / (this.scaleNum * 4 + 100)) * 100
+      this.propConfigs.maskHeight = this.propConfigs.maskWidth * (this.imgRect.height / this.imgRect.width)
       // 背景图放大系数
-      this.propConfigs.scale =
-        (this.imgRect.width / this.propConfigs.maskWidth) * 100
+      this.propConfigs.scale = (this.imgRect.width / this.propConfigs.maskWidth) * 100
       // 获取大图信息
       this.bigImg = new Image()
       this.bigImg.src = this.showPhoto.src
-      this.bigImg.height =
-        (this.bigImg.height * this.propConfigs.scale) / 100
+      this.bigImg.height = (this.bigImg.height * this.propConfigs.scale) / 100
       this.bigImg.width = (this.bigImg.width * this.propConfigs.scale) / 100
       // 创建鼠标选择区域
-      this.mouseMask = document.querySelector('._magnifier_zoom')
+      this.mouseMask = this.$refs['magnifier_zoom']
       this.mouseMask.style.background = this.propConfigs.maskColor
       this.mouseMask.style.height = this.propConfigs.maskHeight + 'px'
       this.mouseMask.style.width = this.propConfigs.maskWidth + 'px'
       this.mouseMask.style.opacity = this.propConfigs.maskOpacity
       this.imgObj.parentNode.appendChild(this.mouseMask)
       // 创建预览框
-      const imgLayer = document.getElementById('_magnifier_layer')
-      const orginImg = document.getElementById('orginImg')
+      const imgLayer = this.$refs['magnifier_layer']
+
+      const orginImg = this.$refs['orgin-img']
       this.propConfigs.width = orginImg.width
       this.propConfigs.height = orginImg.height
       this.imgLayer = imgLayer
@@ -840,7 +583,73 @@ export default {
       imgLayer.style.backgroundImage = `url('${this.showPhoto.src}')`
       imgLayer.style.backgroundRepeat = 'no-repeat'
       imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
-      document.getElementsByClassName('orginPhoto')[0].appendChild(imgLayer)
+      const photoShowMain = this.$refs['photo-show-main']
+      photoShowMain.appendChild(imgLayer)
+    },
+    /**
+     * @description 注册键盘事件
+     */
+    registerKeyDownEvent () {
+      document.onkeydown = e => {
+        const key = window.event.keyCode
+        switch (key) {
+          case 49:
+          case 50:
+          case 51:
+          case 52:
+          case 53:
+            this.scaleNum = (key - 49) * 25
+            this.judgeHasZoom(e)
+            break
+          case 187:
+          case 69:
+            if (this.scaleNum < 100) {
+              this.scaleNum++
+            }
+            this.judgeHasZoom(e)
+            break
+          case 189:
+          case 81:
+            if (this.scaleNum > 0) {
+              this.scaleNum--
+            }
+            this.judgeHasZoom(e)
+            break
+          case 18:
+          case 83:
+            this.closePreview()
+            break
+          case 65:
+          case 37:
+            if (this.photoArray.length > 1) {
+              this.prePhoto()
+            }
+            break
+          case 39:
+          case 68:
+            if (this.photoArray.length > 1) {
+              this.nextPhoto()
+            }
+            break
+          case 16:
+            this.isShow = !this.isShow
+            break
+          case 8:
+            this.changeDrawType({ type: TOOL_TYPE.DELETE })
+            break
+          case 66:
+            this.changeDrawType({ type: TOOL_TYPE.PEN })
+            break
+          case 86:
+            this.changeDrawType({ type: TOOL_TYPE.MOVE })
+            break
+          case 90:
+            this.changeDrawType({ type: TOOL_TYPE.BLOWUP })
+            break
+          default:
+            break
+        }
+      }
     }
   }
 }
@@ -911,6 +720,9 @@ export default {
   }
 
   .photoBox {
+    @leftWidth: 280px;
+    @rightWidth: 280px;
+
     position: relative;
     display: flex;
     height: calc(100% - 40px);
@@ -918,7 +730,7 @@ export default {
     .photo-tool {
       position: relative;
       z-index: 5000;
-      width: 48px;
+      width: @rightWidth;
       background-color: #535353;
 
       .tool {
@@ -974,7 +786,7 @@ export default {
 
     .photo-show {
       position: relative;
-      width: calc(100% - 328px);
+      width: calc(~'100vw - @{leftWidth} - @{rightWidth}');
 
       .orginPhoto {
         display: flex;
@@ -1055,7 +867,7 @@ export default {
     .photo-mark {
       position: relative;
       z-index: 5000;
-      width: 280px;
+      width: @leftWidth;
       background-color: #535353;
 
       .scroll-box {

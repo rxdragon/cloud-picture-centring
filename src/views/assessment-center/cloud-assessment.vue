@@ -5,7 +5,7 @@
       <portal-target name="assessmentPlug" />
     </div>
     <!-- 评价中心 -->
-    <assessment-center />
+    <assessment-center cloud-type="cloud" />
   </div>
 </template>
 

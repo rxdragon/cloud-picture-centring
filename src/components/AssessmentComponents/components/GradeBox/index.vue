@@ -107,7 +107,7 @@
 
 <script>
 import PhotoList from '@/components/PhotoList'
-import GradePreview from '../GradePreview.vue'
+import GradePreview from '../GradePreview/index.vue'
 import * as AssessmentCenter from '@/api/assessmentCenter.js'
 import { mapGetters } from 'vuex'
 import { PHOTO_VERSION } from '@/utils/enumerate'

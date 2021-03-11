@@ -73,7 +73,7 @@ export default {
 
 <style lang="less" scoped>
 .order-info-module {
-  padding: 14px 18px;
+  padding: 14px 12px;
   font-size: 12px;
   color: #eee;
   border-bottom: 1px solid #666;

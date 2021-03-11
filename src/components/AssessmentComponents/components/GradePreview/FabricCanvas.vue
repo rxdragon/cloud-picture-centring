@@ -7,6 +7,9 @@
 <script>
 import * as CanvasTool from '@/utils/canvasTool'
 import * as Commonality from '@/api/commonality'
+import { TOOL_TYPE } from './ToolEnumerate.js'
+import { fabric } from 'fabric'
+
 export default {
   name: 'FabricCanvas',
   props: {
@@ -62,7 +65,7 @@ export default {
   mounted () {
     this.$refs['mark-canvas'].width = this.optionObj.width
     this.$refs['mark-canvas'].height = this.optionObj.height
-    this.canvasDom = new window.fabric.Canvas('mark-canvas', {
+    this.canvasDom = new fabric.Canvas('mark-canvas', {
       isDrawingMode: false,
       selection: false,
       skipTargetFind: true
@@ -82,16 +85,16 @@ export default {
       this.canvasDom.skipTargetFind = true
       this.canvasDom.isDrawingMode = false
       switch (drawType) {
-        case 'pen':
+        case TOOL_TYPE.PEN:
           this.changePen()
           break
-        case 'move':
+        case TOOL_TYPE.MOVE:
           this.changeMove()
           break
-        case 'blowup':
+        case TOOL_TYPE.BLOWUP:
           this.changeBlowup()
           break
-        case 'delete':
+        case TOOL_TYPE.DELETE:
           this.deletePath()
           break
         default:
@@ -144,13 +147,10 @@ export default {
       }
       let canvasObject = null
       switch (this.optionObj.drawType) {
-        case 'arrow':
-          canvasObject = this.createArrow()
-          break
-        case 'ellipse':
+        case TOOL_TYPE.ELLIPSE:
           canvasObject = this.createEllipse()
           break
-        case 'line':
+        case TOOL_TYPE.LINE:
           canvasObject = this.createLine()
           break
         default:
@@ -193,8 +193,8 @@ export default {
      */
     changePen () {
       this.canvasDom.selection = false
-      this.canvasDom.skipTargetFind = true
       this.canvasDom.isDrawingMode = true
+      this.canvasDom.skipTargetFind = true
     },
     /**
      * @description 放大
@@ -235,50 +235,6 @@ export default {
       this.cacheIssuse.splice(findCacheIssuesIndex, 1)
     },
     /**
-     * @description 绘制箭头
-     */
-    drawArrow (fromX, fromY, toX, toY, theta, headlen) {
-      theta = typeof theta !== 'undefined' ? theta : 30
-      headlen = typeof theta !== 'undefined' ? headlen : 10
-      // 计算各角度和对应的P2,P3坐标
-      const angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI
-      const angle1 = (angle + theta) * Math.PI / 180
-      const angle2 = (angle - theta) * Math.PI / 180
-      const topX = headlen * Math.cos(angle1)
-      const topY = headlen * Math.sin(angle1)
-      const botX = headlen * Math.cos(angle2)
-      const botY = headlen * Math.sin(angle2)
-      let arrowX = fromX - topX
-      let arrowY = fromY - topY
-      let path = ' M ' + fromX + ' ' + fromY
-      path += ' L ' + toX + ' ' + toY
-      arrowX = toX + topX
-      arrowY = toY + topY
-      path += ' M ' + arrowX + ' ' + arrowY
-      path += ' L ' + toX + ' ' + toY
-      arrowX = toX + botX
-      arrowY = toY + botY
-      path += ' L ' + arrowX + ' ' + arrowY
-      return path
-    },
-    /**
-     * @description 创建箭头
-     */
-    createArrow () {
-      const color = this.optionObj.penColor
-      const drawWidth = this.optionObj.lineWidth
-      const arrowpath = this.drawArrow(this.mouseFrom.x, this.mouseFrom.y, this.mouseTo.x, this.mouseTo.y, 30, 30)
-      const canvasObject = new window.fabric.Path(
-        arrowpath,
-        {
-          stroke: color,
-          fill: 'rgba(255, 255, 255, 0)',
-          strokeWidth: drawWidth
-        }
-      )
-      return canvasObject
-    },
-    /**
      * @description 创建椭圆
      */
     createEllipse () {
@@ -286,7 +242,7 @@ export default {
       const drawWidth = this.optionObj.lineWidth
       const left = this.mouseFrom.x
       const top = this.mouseFrom.y
-      const canvasObject = new window.fabric.Ellipse({
+      const canvasObject = new fabric.Ellipse({
         left: left,
         top: top,
         stroke: color,
@@ -305,7 +261,7 @@ export default {
     createLine () {
       const color = this.optionObj.penColor
       const drawWidth = this.optionObj.lineWidth
-      const canvasObject = new window.fabric.Line(
+      const canvasObject = new fabric.Line(
         [this.mouseFrom.x, this.mouseFrom.y, this.mouseTo.x, this.mouseTo.y],
         {
           stroke: color,
@@ -329,7 +285,7 @@ export default {
       }
       const width = issueData.name.length * 14 + 25
       const left = this.optionObj.width - (this.cacheLabelRow + 1) * width - 10
-      const textbox = new window.fabric.Textbox(issueData.name, {
+      const textbox = new fabric.Textbox(issueData.name, {
         left,
         top,
         width,
