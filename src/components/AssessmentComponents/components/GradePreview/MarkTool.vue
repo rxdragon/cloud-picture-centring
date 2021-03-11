@@ -99,6 +99,20 @@
         </div>
       </el-tooltip>
     </div>
+    <!-- 移动 -->
+    <div class="tool" :class="{ 'active': drawType === TOOL_TYPE.TEXT }" @click.capture="changeDrawType(TOOL_TYPE.TEXT)">
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="文本框"
+        placement="top"
+      >
+        <div class="tool-dom">
+          <i id="move" class="el-icon-rank" />
+          <span class="shortcut">T</span>
+        </div>
+      </el-tooltip>
+    </div>
     <!-- 删除 -->
     <div class="tool" @click="changeDrawType(TOOL_TYPE.DELETE)">
       <el-tooltip
