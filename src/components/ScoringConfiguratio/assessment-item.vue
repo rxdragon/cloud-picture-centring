@@ -3,7 +3,7 @@
     <div class="add-group-wrap">
       <el-button @click="handleAddGroup" size="mini">添加评分项</el-button>
     </div>
-    <div class="table-group"  v-for="(item, index) in groupData" :key="index">
+    <div class="table-group"  v-for="(item, index) in groupList" :key="index">
       <div class="table-nav">
         <div class="left">
           <el-input
@@ -11,17 +11,17 @@
             v-no-special-chinese
             placeholder="请填写评分项名称"
             v-if="item.isEdit"
-            v-model="item.edit_groupName"
+            v-model="item.edit_mainName"
           >
           </el-input>
-          <span v-else>{{ item.groupName }}</span>
+          <span v-else>{{ item.mainName }}</span>
         </div>
         <div class="right">
           <div @click="handleDeleteScoreGroup(item)">删除</div>
           <div @click="handleEditScoreGroup(item)">编辑</div>
         </div>
       </div>
-      <el-table :data="item.data" style="width: 100%;">
+      <el-table :data="item.configData" style="width: 100%;">
         <el-table-column prop="name" label="问题程度" align="center"></el-table-column>
         <el-table-column prop="score" label="分值" align="center">
           <template slot-scope="{ row }">
@@ -30,17 +30,15 @@
               v-numberOnly
               type="number"
               min="0"
+              max="100"
               v-model="row.edit_score"
             ></el-input>
             <span v-else>{{ row.type === 'add' ? row.score : '-' + row.score }}</span>
           </template>
         </el-table-column>
       </el-table>
-      <div class="table-bottom">
-        <el-button
-          type="info"
-          @click="$emit('cancel-score-item-change', item.id)"
-        >
+      <div class="table-bottom" v-if="item.isEdit">
+        <el-button type="info" @click="handleCancelSoreItemChange(item)">
           取消
         </el-button>
         <el-button type="primary" @click="handleSaveScoreItem(item)">保存</el-button>
@@ -52,19 +50,19 @@
 <script>
 
 export default {
-  name: 'assessment-item',
+  name: 'GradeConfigurationMainItem',
   props: {
-    groupData: Array
+    groupList: Array
   },
   methods: {
     // 删除
-    handleDeleteScoreGroup () {
+    handleDeleteScoreGroup (item) {
       this.$confirm('是否确定删除该评分项?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$emit('delete-score-item')
+        this.$emit('delete-score-item', item.id)
       }).catch(() => {
         // not
       })
@@ -80,30 +78,39 @@ export default {
     handleAddGroup () {
       this.$emit('add-score-group')
     },
-    // s删除
-    handleDeleteScoreItem1 () {
-      this.$emit('add-score-group')
-    },
     handleSaveScoreItem (item) {
-      const hasErrror = item.data.some(scoreItem => {
+      const hasError = item.configData.some(scoreItem => {
         return scoreItem.edit_score === undefined || scoreItem.edit_score === ''
       })
-      if (hasErrror) {
+      if (hasError) {
         this.$message.error('请填写分值')
         return
       }
-      if (!item.edit_groupName) {
+      const hasDuplicate = this.groupList.some(group => {
+        return group.id !== item.id && group.mainName === item.edit_mainName
+      })
+      if (hasDuplicate) {
+        this.$message.error('存在相同的评分项。')
+        return
+      }
+      if (!item.edit_mainName) {
         this.$message.error('请填写评分项名称')
         return
       }
       this.$emit('save-score-item', item.id)
+    },
+    handleCancelSoreItemChange (item) {
+      if (item.isNew) {
+        this.$emit('delete-score-item', item.id)
+        return
+      }
+      this.$emit('cancel-score-item-change', item.id)
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-
 .assessment-item {
   .add-group-wrap {
     display: flex;

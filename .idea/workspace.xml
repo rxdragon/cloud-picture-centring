@@ -41,15 +41,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
-      <change afterPath="$PROJECT_DIR$/src/views/assessment-center/components1/grade-configuration.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/CloudReport/cloud-report.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/gradeConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/gradeConfiguration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/directive/no-special-char/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/directive/no-special-char/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/electronMain/resetMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/electronMain/resetMenu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/enumerate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/enumerate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/components1/assessment-item.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/assessment-center/components1/assessment-item.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/admin-manage/performance-inquire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin-manage/performance-inquire.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration1.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration1.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -80,23 +78,29 @@
   <component name="PropertiesComponent">
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/dist_electron" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/CloudReport" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/CloudReport" />
+      <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/dist_electron" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/views/assessment-center/old/components" />
+      <recent name="$PROJECT_DIR$/src/views/assessment-center/old" />
+      <recent name="$PROJECT_DIR$/src/views/assessment-center" />
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
   </component>
@@ -193,6 +197,7 @@
       <workItem from="1615269691508" duration="11144000" />
       <workItem from="1615357802753" duration="296000" />
       <workItem from="1615432576683" duration="3261000" />
+      <workItem from="1615451501030" duration="4146000" />
     </task>
     <task id="LOCAL-00001" summary="CI">
       <created>1571799918873</created>
@@ -287,29 +292,33 @@
     <option name="LAST_COMMIT_MESSAGE" value="更新上测试环境" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1398" height="462" key="GridCell.Tab.0.bottom" timestamp="1615435828453">
+    <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1615450996090">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615450996090" />
+    <state width="1398" height="211" key="GridCell.Tab.0.bottom" timestamp="1615515852603">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635471" />
-    <state width="1398" height="462" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615435828453" />
+    <state width="1398" height="211" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615515852603" />
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989576" />
-    <state width="1398" height="462" key="GridCell.Tab.0.center" timestamp="1615435828449">
+    <state width="1398" height="211" key="GridCell.Tab.0.center" timestamp="1615515852599">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635466" />
-    <state width="1398" height="462" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615435828449" />
+    <state width="1398" height="211" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615515852599" />
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="462" key="GridCell.Tab.0.left" timestamp="1615435828447">
+    <state width="1398" height="211" key="GridCell.Tab.0.left" timestamp="1615515852589">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="462" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615435828447" />
+    <state width="1398" height="211" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615515852589" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635451" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="462" key="GridCell.Tab.0.right" timestamp="1615435828451">
+    <state width="1398" height="211" key="GridCell.Tab.0.right" timestamp="1615515852602">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635468" />
-    <state width="1398" height="462" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615435828451" />
+    <state width="1398" height="211" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615515852602" />
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989575" />
     <state x="182" y="75" key="SettingsEditor" timestamp="1615429330481">
       <screen x="0" y="0" width="1440" height="900" />
@@ -320,34 +329,38 @@
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615434834463">
+    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615455600537">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
-    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615434834463" />
+    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615455600537" />
     <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615431401572">
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615451264079">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615431401572" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615451264079" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615361206739" />
+    <state x="450" y="294" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1615451532932">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="450" y="294" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615451532932" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue</url>
+          <url>file://$PROJECT_DIR$/src/views/assessment-center/old/grade-configuration.vue</url>
           <line>418</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue</url>
+          <url>file://$PROJECT_DIR$/src/views/assessment-center/old/grade-configuration.vue</url>
           <line>12</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/views/assessment-center/grade-configuration1.vue</url>
-          <line>68</line>
+          <url>file://$PROJECT_DIR$/src/components/CloudReport/index.vue</url>
+          <line>7</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="20" />
         </line-breakpoint>

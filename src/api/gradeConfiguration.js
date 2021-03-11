@@ -3,37 +3,6 @@ import uuidv4 from 'uuid'
 import { PlantIdTypeEnum } from '@/utils/enumerate'
 
 /**
- * @description 获取云学院评分权重
- * @method GET
- * @returns {Number} 权重值
- * @author cf 2020/04/13
- * @version @version 2.4.0
- */
-export function getWeightsScore () {
-  return axios({
-    url: '/project_cloud/checkPool/getWeightsScore',
-    method: 'GET'
-  }).then(msg => {
-    return msg
-  })
-}
-
-/**
- * @description 获取云学院评分权重
- * @method POST
- * @returns {Number} 权重值
- * @author cf 2020/04/13
- * @version @version 2.4.0
- */
-export function setWeightsScore (params) {
-  return axios({
-    url: '/project_cloud/checkPool/setWeightsScore',
-    method: 'POST',
-    data: params
-  })
-}
-
-/**
  * @description 获取云学院评分配置
  * @method GET
  * @returns {Number} 权重值
@@ -65,121 +34,7 @@ export function getScoreConfigList () {
   })
 }
 
-/**
- * @description 修改评分单项
- * @method PUT
- * @returns {Number} 权重值
- * @author cf 2020/04/13
- * @version @version 2.4.0
- */
-export function editChildScoreConfig (params) {
-  return axios({
-    url: '/project_cloud/checkPool/editChildScoreConfig',
-    method: 'PUT',
-    data: params
-  })
-}
 
-/**
- * @description 修改评分大项
- * @method PUT
- * @returns {Number} 权重值
- * @author cf 2020/04/13
- * @version @version 2.4.0
- */
-export function editScoreConfig (params) {
-  return axios({
-    url: '/project_cloud/checkPool/editScoreConfig',
-    method: 'PUT',
-    data: params
-  })
-}
-
-/**
- * @description 添加云学院评分配置
- * @method POST
- * @returns {Number} 权重值
- * @author cf 2021/03/11
- * @version @version 2.24.0
- */
-export function addScoreConfig (params) {
-  return axios({
-    url: '/project_cloud/checkPool/addScoreConfig',
-    method: 'POST',
-    data: params
-  })
-}
-
-/**
- * @description 删除问题标签
- * @method PUT
- * @returns {Array} 标记数据
- * @author cf 2020/04/13
- * @version @version 2.4.0
- */
-export function delScoreConfig (params) {
-  return axios({
-    url: '/project_cloud/checkPool/delScoreConfig',
-    method: 'PUT',
-    data: params
-  })
-}
-
-/**
- * @description 添加激励词典
- * @method POST
- * @params name 激励词
- * @returns {Obeject} 结果
- * @author cl 2020/06/24
- * @version @version 2.8.0
- */
-export function addExcitationDir (params) {
-  return axios({
-    url: '/project_cloud/checkPool/addExcitationDir',
-    method: 'POST',
-    data: params
-  })
-}
-/**
- * @description 删除激励词典
- * @method DELETE
- * @params id id
- * @returns {Obeject} 结果
- * @author cl 2020/06/24
- * @version @version 2.8.0
- */
-export function delExcitationDir (params) {
-  return axios({
-    url: `/project_cloud/checkPool/delExcitationDir?id=${params.id}`,
-    method: 'DELETE',
-  })
-}
-/**
- * @description 获取激励词列表
- * @method PUT
- * @returns {Obeject} 激励词列表
- * @author cl 2020/06/24
- * @version @version 2.8.0
- */
-export function getExcitationDirList (params) {
-  return axios({
-    url: '/project_cloud/checkPool/getExcitationDirList',
-    method: 'GET',
-    data: params
-  }).then((res) => {
-    const list = res.reduce((itemSum, item) => {
-      const { name, created_at: createdAt, staff_info: staffInfo, id } = item
-      itemSum.push({
-        name,
-        staffName: staffInfo.nickname,
-        createdAt,
-        id
-      })
-      return itemSum
-    }, [])
-    return list
-  })
-}
 /**
  * @description 获取评分人列表
  * @method GET
@@ -216,20 +71,94 @@ export function emptyCheckPoolByStaffId (params) {
     data: params,
   })
 }
+
+
 /**
- * @description 分数限制
+ * @description 添加云学院类别
  * @method POST
- * @params scoreTypeId 大类名称
- * @params minScore 最低分数
- * @params maxScore 最高分数
- * @returns {Obeject} 结果
- * @author cl 2020/06/24
- * @version @version 2.8.0
+ * @params name 大类名称
+ * @returns {id} 大类id
+ * @author cl 2021/03/11
+ * @version @version 2.24
  */
-export function editScoreLimit (params) {
+export function addScoreType (params) {
   return axios({
-    url: `/project_cloud/checkPool/editScoreLimit`,
+    url: `/project_cloud/checkPool/addScoreType`,
     method: 'POST',
     data: params
+  })
+}
+
+/**
+ * @description 修改云学院类别
+ * @method POST
+ * @params name 大类名称， id
+ * @returns {id} 小类id
+ * @author nx 2021/03/11
+ * @version @version 2.24.0
+ */
+export function editScoreTypeName (params) {
+  return axios({
+    url: '/project_cloud/checkPool/editScoreType',
+    method: 'POST',
+    data: params
+  })
+}
+
+/**
+ * @description 添加云学院评分配置
+ * @method POST
+ * @returns {id} 小类id
+ * @author nx 2021/03/11
+ * @version @version 2.24.0
+ */
+export function addScoreConfig (params) {
+  return axios({
+    url: '/project_cloud/checkPool/addScoreConfig',
+    method: 'POST',
+    data: params
+  })
+}
+
+/**
+ * @description 修改云学院评分配置
+ * @method POST
+ * @returns {id} 小类id
+ * @author nx 2021/03/11
+ * @version @version 2.24.0
+ */
+export function editScoreConfig (params) {
+  return axios({
+    url: '/project_cloud/checkPool/editScoreConfig',
+    method: 'PUT',
+    data: params
+  })
+}
+
+/**
+ * @description 删除云学院评分组
+ * @method PUT
+ * @returns {id} 小类id
+ * @author nx 2021/03/11
+ * @version @version 2.24.0
+ */
+export function delScoreConfig (params) {
+  return axios({
+    url: '/project_cloud/checkPool/delScoreConfig',
+    method: 'POST',
+    data: params
+  })
+}
+
+/**
+ * @description 获取云学院评分配置列表
+ * @method PUT
+ * @author nx 2021/03/11
+ * @version @version 2.24.0
+ */
+export function getScoreConfig () {
+  return axios({
+    url: '/project_cloud/checkPool/getScoreConfig',
+    method: 'GET'
   })
 }
