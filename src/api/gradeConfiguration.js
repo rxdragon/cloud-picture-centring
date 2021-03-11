@@ -96,11 +96,11 @@ export function editScoreConfig (params) {
 }
 
 /**
- * @description 添加新评分大项
+ * @description 添加云学院评分配置
  * @method POST
  * @returns {Number} 权重值
- * @author cf 2020/04/13
- * @version @version 2.4.0
+ * @author cf 2021/03/11
+ * @version @version 2.24.0
  */
 export function addScoreConfig (params) {
   return axios({

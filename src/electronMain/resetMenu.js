@@ -22,7 +22,8 @@ const template = [{
     role: 'cut'
   }, {
     label: '重新加载',
-    accelerator: '',
+    // accelerator: '',
+    accelerator: 'Cmd+R', // todo
     click: function (item, focusedWindow) {
       if (focusedWindow) {
         if (focusedWindow.id === 1) {

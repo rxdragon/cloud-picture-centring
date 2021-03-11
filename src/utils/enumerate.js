@@ -455,3 +455,11 @@ export const readToCN = {
   [READ_STATE.UNREAD]: '未读',
   [READ_STATE.READ]: '已读',
 }
+
+/**
+ * @description 云学院评分类型， 加分或者减肥
+ */
+export const SCORE_TYPES = {
+  ADD: 'add',
+  DEDUCT: 'deduct'
+}

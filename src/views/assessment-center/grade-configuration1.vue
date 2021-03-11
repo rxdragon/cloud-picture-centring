@@ -4,19 +4,7 @@
       <h3>云学院评分配置1</h3>
       <el-button v-if="showEmptyCheckPool" type="primary" @click="showEmptyDialog = true">清空评分</el-button>
     </div>
-    <div class="main">
-      <el-button class="add-category-button" @click="showAddCategoryDialog = true">添加类别</el-button>
-      <el-tabs v-model="tabKey">
-        <el-tab-pane
-          v-for="tab in tabList"
-          :label="tab.name"
-          :name="tab.name"
-          :key="tab.id"
-        >
-          <Assessment :key="tab.id"></Assessment>
-        </el-tab-pane>
-      </el-tabs>
-    </div>
+    <GradeConfiguration></GradeConfiguration>
 
     <!-- 清空弹出框 -->
     <el-dialog
@@ -36,64 +24,23 @@
         <el-button type="primary" @click="setEmpty">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- 添加类别弹出框 -->
-    <el-dialog
-      width="35%"
-      title="添加类别"
-      center
-      custom-class="add-category-dialog"
-      :visible.sync="showAddCategoryDialog"
-    >
-      <div class="add-category-dialog">
-        <span>类别名称:</span>
-        <el-input
-          class="ml-10"
-          v-model="addCategoryName"
-          placeholder="请输入类别"
-          maxlength="5"
-        >
-        </el-input>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="info" @click="showAddCategoryDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirmCategory">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import * as GradeConfiguration from '@/api/gradeConfiguration.js'
-import Assessment from './components1/assessment-item'
+import GradeConfiguration from './components1/grade-configuration'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'GradeConfiguration',
+  name: 'GradeConfiguration123',
   components: {
-    Assessment
+    GradeConfiguration
   },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       showEmptyDialog: false,
       emptyPeople: [],
-      tabList: [
-        {
-          id: '1',
-          name: '液化',
-          type: '液化'
-        },
-        {
-          id: '2',
-          name: '液化2',
-          type: '液化2'
-        }
-      ],
-      tabKey: '1',
-
-      // 类别弹出框
-      showAddCategoryDialog: false,
-      addCategoryName: '',
     }
   },
   computed: {
@@ -114,21 +61,6 @@ export default {
         this.emptyPeople = []
         this.showEmptyDialog = false
       }
-    },
-    handleConfirmCategory () {
-      if (this.tabList.some(tab => tab.name === this.addCategoryName)) {
-        this.$message.error('存在相同的评分类别。')
-        return
-      }
-      const data = {
-        id: '' + +new Date(),
-        name: '新分类' + +new Date(),
-        type: '123'
-      }
-      this.tabList.unshift(data)
-      this.tabKey = data.name
-      this.showAddCategoryDialog = false
-      this.addCategoryName = ''
     }
   }
 }
@@ -146,6 +78,13 @@ export default {
       position: absolute;
       top: 0;
       right: 0;
+      z-index: 10;
+    }
+
+    .edit-category-button {
+      position: absolute;
+      top: 0;
+      right: 120px;
       z-index: 10;
     }
   }
@@ -166,18 +105,6 @@ export default {
       padding: 20px !important;
     }
   }
-
-  .add-category-dialog {
-    display: flex;
-    align-items: center;
-
-    & > span {
-      flex-shrink: 0;
-    }
-
-    .ml-10 {
-      margin-left: 10px;
-    }
-  }
 }
 </style>
+
