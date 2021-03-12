@@ -163,15 +163,19 @@ export default {
     },
     '$route.query': {
       handler: async function (query) {
-        const { isCheckPass, photographerOrgId } = this.$route.query
+        const { isCheckPass, photographerOrgId, productCategoryId } = this.$route.query
         if (isCheckPass) {
           await this.$nextTick()
           this.activeName = 'checked'
         }
+        // 分类id
+        if (productCategoryId) {
+          this.productCategoryIdIn = [productCategoryId]
+        }
+        // 摄影机构
         if (photographerOrgId) {
           this.institutionType = +photographerOrgId
         }
-        // TODO 切换到对应的分类
         this.getProductList()
       },
       immediate: true
@@ -214,7 +218,9 @@ export default {
         if (!this.isPending && this.productValue.length) {
           reqData.productId = this.productValue
         }
-        // TODO 添加分类id
+        if (!this.isPending && this.productClassValues.length) {
+          reqData.productCategoryIdIn = this.productClassValues
+        }
         if (!this.isPending && this.weightType) {
           reqData.weightLevel = this.weightType
         }

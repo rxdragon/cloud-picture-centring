@@ -16,6 +16,8 @@ export default class ProductClassificationListModel {
     this.keyId = String(classificationList.id)
     this.classificationName = classificationList.name || ''
     this.count = classificationList.count || 0
-    this.createTime = classificationList.create_time || ''
+    // TODO 等待接口联调
+    this.createStaffName = '-'
+    this.createTime = classificationList.create_time || '-'
   }
 }

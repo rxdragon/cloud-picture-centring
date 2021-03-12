@@ -9,8 +9,8 @@
         <el-tab-pane
           v-for="classItem in classificationList"
           :key="classItem.id"
-          :label="classItem.name"
-          :name="classItem.id"
+          :label="classItem.classificationName"
+          :name="classItem.keyId"
         >
         </el-tab-pane>
         <div
@@ -22,11 +22,11 @@
             <el-button type="primary" size="mini" @click="addClassification">添加分类</el-button>
           </div>
           <el-table :data="tableData" style="width: 100%;">
-            <el-table-column prop="date" label="分类名称" width="180" />
-            <el-table-column prop="name" label="归类产品数量" width="180" />
-            <el-table-column prop="address" label="创建人" />
-            <el-table-column prop="address" label="创建时间" />
-            <el-table-column prop="address" label="操作">
+            <el-table-column prop="classificationName" label="分类名称" width="180" />
+            <el-table-column prop="count" label="归类产品数量" width="180" />
+            <el-table-column prop="createStaffName" label="创建人" />
+            <el-table-column prop="createTime" label="创建时间" />
+            <el-table-column label="操作">
               <template slot-scope="{ row }">
                 <el-button type="primary" size="mini" @click="editClassificationName(row)">修改</el-button>
                 <el-button type="primary" size="mini" @click="linkToProductPage(row)">查看归类产品</el-button>
@@ -112,19 +112,18 @@ export default {
     editClassificationName (rowData) {
       this.editClassificationId = rowData.id
       this.isEdit = true
-      this.editName = rowData.name
+      this.editName = rowData.classificationName
       this.dialogVisible = true
     },
     /**
      * @description 跳转到产品管理
      */
     linkToProductPage (rowData) {
-      const query = { isCheckPass: true, id: rowData.id }
+      const query = { isCheckPass: true, productCategoryId: rowData.id }
       this.$router.push({
         name: 'ProductControl',
         query
       })
-     
     },
     /**
      * @description 添加产品分类
@@ -136,20 +135,20 @@ export default {
     /**
      * @description 确认编辑信息
      */
-    submitEditClassification () {
+    async submitEditClassification () {
       if (this.editName.length > 8) return this.$newMessage.warning('最大长度不能超过8个字符')
       if (this.isEdit) {
-        // TODO 确认编辑接口
         try {
           this.submitLoading = true
           const req = {
             id: this.editClassificationId,
             name: this.editName
           }
-          ProductClassificationApi.editClassification(req)
+          await ProductClassificationApi.editClassification(req)
+
           const findEditItem = this.tableData.find(item => item.id === this.editClassificationId)
           if (findEditItem) {
-            findEditItem.name = this.editName
+            findEditItem.classificationName = this.editName
           } else {
             this.getActiveClassList()
           }
@@ -158,14 +157,13 @@ export default {
           this.submitLoading = false
         }
       } else {
-        // TODO 确认添加接口
         try {
           this.submitLoading = true
           const req = {
             parentId: this.activeClassificationId,
             name: this.editName
           }
-          ProductClassificationApi.addClassification(req)
+          await ProductClassificationApi.addClassification(req)
           this.handleClose()
 
           this.$newMessage.success('生成分类成功')
@@ -178,13 +176,13 @@ export default {
     /**
      * @description 获取细类评分
      */
-    getActiveClassList () {
+    async getActiveClassList () {
       this.$store.dispatch('setting/hiddenLoading', this.routeName)
       try {
         const req = {
-          id: this.activeClassificationId
+          conds: { parentIdEqual: this.activeClassificationId }
         }
-        this.tableData = ProductClassificationApi.getClassificationList(req)
+        this.tableData = await ProductClassificationApi.getParentClassificationList(req)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -193,7 +191,6 @@ export default {
      * @description 弹框消失前 初始化默认值
      */
     handleClose () {
-      console.error('handleClose')
       this.editClassificationId = ''
       this.isEdit = false
       this.editName = ''
@@ -205,11 +202,13 @@ export default {
     async getParentClassList () {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const data = ProductClassificationApi.getParentClassificationList()
-        await this.$delayLoading(2000)
+        const req = {
+          conds: { parentIdEqual: 0 }
+        }
+        const data = await ProductClassificationApi.getParentClassificationList(req)
         this.classificationList = data
-        this.activeClassificationId = this.classificationList[0].id
-        this.firstClassifiicationId = this.classificationList[0].id
+        this.activeClassificationId = this.classificationList[0].keyId
+        this.firstClassifiicationId = this.classificationList[0].keyId
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -220,6 +219,11 @@ export default {
 
 <style lang="less" scoped>
 .product-main-list {
+  & /deep/ .el-tabs__nav-next,
+  & /deep/ .el-tabs__nav-prev {
+    bottom: 0;
+  }
+
   .table-box {
     margin-top: 0;
   }

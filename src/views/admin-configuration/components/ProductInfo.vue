@@ -178,9 +178,10 @@
                 <span>整体审核期限 </span>
                 <el-date-picker
                   v-model="productConfig.checkTimeDay"
+                  value-format="yyyy-MM-dd"
                   size="small"
                   type="daterange"
-                  range-separator="至"
+                  range-separator="~"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
                 />
@@ -191,7 +192,8 @@
                   is-range
                   size="small"
                   v-model="productConfig.checkTimeTime"
-                  range-separator="至"
+                  value-format="HH:mm:ss"
+                  range-separator="~"
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
                   placeholder="选择时间范围"
@@ -347,10 +349,12 @@ import WeightSelect from '@SelectBox/WeightSelect'
 import ProductClassificationSelect from '@SelectBox/ProductClassificationSelect'
 
 import { objEveryNumberValue, twoTierObjEveryNumberValue } from '@/utils/index.js'
+import * as Timespan from '@/utils/timespan.js'
 import * as MathUtil from '@/utils/mathUtil.js'
 import { StaffLevelEnum } from '@/utils/enumerate.js'
 import * as defaultGrass from '@/assets/config/grassConfig.js'
 import * as defaultMoney from '@/assets/config/moneyConfig.js'
+
 import * as OperationManage from '@/api/operationManage.js'
 
 const EDIT_TYPE = {
@@ -382,7 +386,7 @@ export default {
       samplePhoto: [], // 样片素材
       photographerOrgName: '', // 机构名称
       productConfig: {
-        classificationId: '', // 修图标准
+        classificationId: '', // 修图分类id
         standard: '', // 修图标准
         weightType: '', // 权重等级
         needTemplate: '', // 是否需要模版
@@ -394,7 +398,7 @@ export default {
         blueNotJointMoney: {},
         blueJointMoney: {}, // 拼接收益
         needJoint: '', // 是否需要拼接
-        needCheck: 2, // 是否需要强制审核
+        needCheck: '', // 是否需要强制审核
         checkTimeDay: null, // 强制审核日期
         checkTimeTime: null, // 强制审核时间
         productRemark: ''
@@ -624,6 +628,22 @@ export default {
           this.productConfig.productRemark = data.note
           this.productConfig.grassData = data.seaGrassConfig
           this.productConfig.templateSuffix = data.templateSuffix
+          this.productConfig.classificationId = data.productCategoryId || ''
+          this.productConfig.needCheck = data.forceReview ? 1 : 0
+
+          if (data.forceReviewStartAt && data.forceReviewEndAt) {
+            this.productConfig.checkTimeDay = [
+              Timespan.revertTimeSpan(data.forceReviewStartAt),
+              Timespan.revertTimeSpan(data.forceReviewEndAt)
+            ]
+          }
+          if (data.forceReviewDayStart && data.forceReviewDayEnd) {
+            this.productConfig.checkTimeTime = [
+              data.forceReviewDayStart,
+              data.forceReviewDayEnd
+            ]
+          }
+
           if (data.retouchStandard !== 'blue') {
             this.productConfig.notJointMoney = data.normalIncomeConfig
             this.productConfig.jointMoney = data.splicingIncomeConfig
@@ -662,7 +682,6 @@ export default {
      */
     passProductInfo () {
       if (!this.verificationData()) return false
-      // TODO 增加审核字段 产品分类
       const reqData = {
         productId: this.editId,
         retouchStandard: this.productConfig.standard,
@@ -674,7 +693,16 @@ export default {
         splicingIncomeConfig: this.productConfig.jointMoney,
         seaGrassConfig: this.productConfig.grassData,
         splicingSeaGrassConfig: this.productConfig.joinGrassData,
-        note: this.productConfig.productRemark
+        note: this.productConfig.productRemark,
+        forceReview: this.productConfig.needCheck === 1,
+        productCategoryId: this.productConfig.classificationId
+      }
+      // 是否需要强制审核
+      if (this.productConfig.needCheck === 1) {
+        reqData.forceReviewDayStart = this.productConfig.checkTimeTime[0]
+        reqData.forceReviewDayEnd = this.productConfig.checkTimeTime[1]
+        reqData.forceReviewStartAt = this.productConfig.checkTimeDay[0] + ' 00:00:00'
+        reqData.forceReviewEndAt = this.productConfig.checkTimeDay[1] + ' 23:59:59'
       }
       if (this.productConfig.standard === 'blue') {
         reqData.normalIncomeConfig = this.productConfig.blueNotJointMoney
@@ -701,6 +729,10 @@ export default {
     verificationData () {
       if (!this.productConfig.standard) {
         this.$newMessage.warning('请选中修图标准')
+        return false
+      }
+      if (!this.productConfig.classificationId) {
+        this.$newMessage.warning('请选中产品分类')
         return false
       }
       if (!this.productConfig.weightType) {

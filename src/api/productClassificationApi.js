@@ -1,68 +1,50 @@
-import uuidv4 from 'uuid'
+import axios from '@/plugins/axios.js'
+import ProductClassificationListModel from '@/model/ProductClassificationListModel.js'
 
 /**
  * @description 添加产品分类
  * @param {*} params 
  */
-export function addClassification (params) {
-  return uuidv4()
+export async function addClassification (params) {
+  const res = await axios({
+    url: '/project_cloud/product/category/add',
+    method: 'POST',
+    data: params
+  })
+  // 返回添加成功id
+  return res.msg
+
 }
 
 /**
  * @description 编辑产品分类
  * @param {*} params 
  */
-export function editClassification (params) {
-  return uuidv4()
+export async function editClassification (params) {
+  const res = await axios({
+    url: '/project_cloud/product/category/edit',
+    method: 'POST',
+    data: params
+  })
+  return res
 }
 
 /**
- * @description 获取父类数据
+ * @description 根据父级id获取分类信息
  * @param {*} params 
  */
-export function getParentClassificationList (params) {
-  return [
-    {
-      name: '海马体',
-      id: '1',
-    },
-    {
-      name: '修修兽',
-      id: '2',
-    },
-    {
-      name: '其他',
-      id: '3',
-    }
-  ]
-}
+export async function getParentClassificationList (params) {
+  const res = await axios({
+    url: '/project_cloud/product/category/list',
+    method: 'POST',
+    data: params
+  })
 
-/**
- * @description 获取编辑接口列表
- * @param {*} params 
- */
-export function getClassificationList (params) {
-  return [
-    {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    }, {
-      date: '2016-05-04',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1517 弄'
-    }, {
-      date: '2016-05-01',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1519 弄'
-    }, {
-      date: '2016-05-03',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1516 弄'
-    }
-  ]
+  const createData = res.map(item => {
+    return new ProductClassificationListModel(item)
+  })
+  return createData
 }
-
 
 /**
  * @description 过滤修图信息
@@ -107,106 +89,17 @@ function filterRetouchStandard (data) {
  * @param {*} params 
  * @returns 
  */
-export function getClassificationProductTree (params) {
-  // TODO 添加接口
-  const mockData = [
-    {
-      "id": 1,
-      "name": "海马体",
-      "parent_id": 0,
-      "children": [
-        {
-          "id": 2,
-          "name": "限时产品",
-          "parent_id": 1,
-          "product_list": [
-            {
-              "id": 65,
-              "name": "圣诞照-女生独照-精灵",
-              "retouch_standard": "blue"
-            },
-            {
-              "id": 66,
-              "name": "圣诞照-女生独照-精灵",
-              "retouch_standard": "master"
-            },
-            {
-              "id": 68,
-              "name": "圣诞照-女生独照-精灵",
-              "retouch_standard": "mainto"
-            },
-            {
-              "id": 69,
-              "name": "圣诞照-亲子-精灵",
-              "retouch_standard": "kids"
-            }
-          ]
-        },
-        {
-          "id": 3,
-          "name": "功能照",
-          "parent_id": 1,
-          "product_list": [
-            {
-              "id": 7,
-              "name": "精致证件照 - 正面",
-              "retouch_standard": "blue"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 100,
-      "name": "修修兽",
-      "parent_id": 0,
-      "children": [
-        {
-          "id": 101,
-          "name": "限时产品",
-          "parent_id": 100,
-          "product_list": [
-            {
-              "id": 65,
-              "name": "圣诞照-女生独照-精灵",
-              "retouch_standard": "blue"
-            },
-            {
-              "id": 66,
-              "name": "圣诞照-女生独照-精灵",
-              "retouch_standard": "master"
-            },
-            {
-              "id": 68,
-              "name": "圣诞照-女生独照-精灵",
-              "retouch_standard": "mainto"
-            },
-            {
-              "id": 69,
-              "name": "圣诞照-亲子-精灵",
-              "retouch_standard": "kids"
-            }
-          ]
-        },
-        {
-          "id": 3,
-          "name": "功能照",
-          "parent_id": 100,
-          "product_list": [
-            {
-              "id": 7,
-              "name": "精致证件照 - 正面",
-              "retouch_standard": "blue"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+export async function getClassificationProductTree (params) {
+  const res = await axios({
+    url: '/project_cloud/common/getProductCategoryTree',
+    method: 'GET',
+    params
+  })
 
-  const createData = mockData.map(parentItem => {
-    const children1Data = parentItem.children.map(childrenItem => {
-      const productList = childrenItem.product_list || []
+  const createData = res.map(parentItem => {
+    const children = _.get(parentItem, 'children') || []
+    const children1Data = children.map(childrenItem => {
+      const productList = childrenItem.products || []
       const filterProductList = filterRetouchStandard(productList)
 
       const childrenData = {
@@ -233,48 +126,17 @@ export function getClassificationProductTree (params) {
  * @description 获取产品树结构
  * @param {*} params 
  */
-export function getClassificationTree (params) {
-  // TODO 添加接口
-  const mockData = [
-    {
-      "id": 1,
-      "name": "海马体",
-      "parent_id": 0,
-      "children": [
-        {
-          "id": 2,
-          "name": "限时产品",
-          "parent_id": 1
-        },
-        {
-          "id": 3,
-          "name": "功能照",
-          "parent_id": 1
-        }
-      ]
-    },
-    {
-      "id": 100,
-      "name": "修修兽",
-      "parent_id": 0,
-      "children": [
-        {
-          "id": 101,
-          "name": "限时产品",
-          "parent_id": 100
-        },
-        {
-          "id": 3,
-          "name": "功能照",
-          "parent_id": 100
-        }
-      ]
-    }
-  ]
+export async function getClassificationTree (params) {
+  const res = await axios({
+    url: '/project_cloud/common/getProductCategoryTree',
+    method: 'GET',
+    params
+  })
 
   // 优化成递归
-  const createData = mockData.map(parentItem => {
-    const children1Data = parentItem.children.map(childrenItem => {
+  const createData = res.map(parentItem => {
+    const children = _.get(parentItem, 'children') || []
+    const children1Data = children.map(childrenItem => {
       const childrenData = {
         label: childrenItem.name,
         value: childrenItem.id,
