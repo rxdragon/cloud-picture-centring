@@ -27,6 +27,7 @@ export default {
       drawingObject: null, // 去除重读的穿件图像
       cacheIssuse: [], // 缓存问题
       cacheLabelRow: 0,
+      isPrevEditing: false, // 是否处于编辑状态
       zoom: 1 // canvas 比例系数
     }
   },
@@ -88,6 +89,7 @@ export default {
         case TOOL_TYPE.PEN:
           this.changePen()
           break
+        case TOOL_TYPE.TEXT:
         case TOOL_TYPE.MOVE:
           this.changeMove()
           break
@@ -108,13 +110,25 @@ export default {
       this.qNConfig = await Commonality.getSignature()
     },
     /**
+     * @description 判断是否是绘画
+     */
+    judgeIsDrawing () {
+      const drawingTypes = [TOOL_TYPE.PEN, TOOL_TYPE.ELLIPSE, TOOL_TYPE.LINE]
+      if (drawingTypes.includes(this.optionObj.drawType)) {
+        this.doDrawing = true
+      } else {
+        this.doDrawing = false
+      }
+    },
+    /**
      * @description 监听canvas鼠标按下
      */
     onMouseDown (options) {
       const xy = this.transformMouse(options.e.offsetX, options.e.offsetY)
       this.mouseFrom.x = xy.x
       this.mouseFrom.y = xy.y
-      this.doDrawing = true
+      this.judgeIsDrawing()
+      this.textAction(options)
     },
     /**
      * @description 监听canvas鼠标抬起
@@ -182,14 +196,14 @@ export default {
       return { x: mouseX / zoom, y: mouseY / zoom }
     },
     /**
-     * @description 使用拖动
+     * @description 使用拖动模式
      */
     changeMove () {
       this.canvasDom.selection = true
       this.canvasDom.skipTargetFind = false
     },
     /**
-     * @description 使用笔
+     * @description 使用笔模式
      */
     changePen () {
       this.canvasDom.selection = false
@@ -219,7 +233,9 @@ export default {
       }
       // 清楚选中框
       this.canvasDom.discardActiveObject()
-      this.optionObj.drawType = 'move'
+      // 如果是文字状态不更改模式
+      if (this.optionObj.drawType === TOOL_TYPE.TEXT) return
+      this.optionObj.drawType = TOOL_TYPE.MOVE
     },
     /**
      * @description 删除标签
@@ -233,6 +249,42 @@ export default {
       })
       const findCacheIssuesIndex = this.cacheIssuse.findIndex(item => item.id === labelInfo.id)
       this.cacheIssuse.splice(findCacheIssuesIndex, 1)
+    },
+    /**
+     * @description 处理添加文本框操作
+     */
+    textAction (fEvent) {
+      if (this.optionObj.drawType !== TOOL_TYPE.TEXT) return
+      const obj = fEvent.target
+      if (obj && !obj.isType('text')) {
+        return
+      }
+
+      if (this.isPrevEditing) {
+        this.isPrevEditing = false
+        return
+      }
+
+      const left = this.mouseFrom.x
+      const top = this.mouseFrom.y
+      const textColor = this.optionObj.penColor
+      const newText = new fabric.IText('修图批注', {
+        left,
+        top,
+        fontSize: 22,
+        fill: textColor,
+        hasControls: true,
+        editable: true,
+        autofocus: true,
+        textAlign: 'center',
+      })
+
+      this.canvasDom.add(newText)
+      
+      newText.enterEditing()
+      newText.selectAll()
+      this.canvasDom.setActiveObject(newText)
+      this.isPrevEditing = true
     },
     /**
      * @description 创建椭圆

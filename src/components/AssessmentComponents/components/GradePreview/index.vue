@@ -188,9 +188,9 @@ export default {
     }
   },
   created () {
-    this.fetchGoodWord()
+    // this.fetchGoodWord()
     this.initShowPhoto()
-    this.getLabelData()
+    // this.getLabelData()
     this.driver = new Driver({
       nextBtnText: '下一个',
       prevBtnText: '上一个',
@@ -199,6 +199,7 @@ export default {
     })
   },
   mounted () {
+    // TODO 调试
     this.registerKeyDownEvent()
     // TODO 添加注销事件
     this.$ipcRenderer.on('win-resize', (e, item) => {
@@ -459,7 +460,7 @@ export default {
       }
 
       if (type !== TOOL_TYPE.BLOWUP && !this.showCanvas) {
-        this.createCanvas(type)
+        this.createCanvas(drawInfo)
         return
       }
       if (type === TOOL_TYPE.BLOWUP && this.inZoomIn) {
@@ -591,6 +592,12 @@ export default {
      */
     registerKeyDownEvent () {
       document.onkeydown = e => {
+        if (this.$refs['fabric-canvas'] && this.$refs['fabric-canvas'].canvasDom) {
+          const activeText = this.$refs['fabric-canvas'].canvasDom.getActiveObject()
+          if (activeText && activeText.type === 'i-text' && activeText.isEditing) {
+            return
+          }
+        }
         const key = window.event.keyCode
         switch (key) {
           case 49:
@@ -639,6 +646,9 @@ export default {
             break
           case 66:
             this.changeDrawType({ type: TOOL_TYPE.PEN })
+            break
+          case 84:
+            this.changeDrawType({ type: TOOL_TYPE.TEXT })
             break
           case 86:
             this.changeDrawType({ type: TOOL_TYPE.MOVE })

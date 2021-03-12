@@ -99,7 +99,7 @@
         </div>
       </el-tooltip>
     </div>
-    <!-- 移动 -->
+    <!-- 文本 -->
     <div class="tool" :class="{ 'active': drawType === TOOL_TYPE.TEXT }" @click.capture="changeDrawType(TOOL_TYPE.TEXT)">
       <el-tooltip
         class="item"
@@ -108,7 +108,7 @@
         placement="top"
       >
         <div class="tool-dom">
-          <i id="move" class="el-icon-rank" />
+          <i id="move" class="el-icon-document" />
           <span class="shortcut">T</span>
         </div>
       </el-tooltip>
