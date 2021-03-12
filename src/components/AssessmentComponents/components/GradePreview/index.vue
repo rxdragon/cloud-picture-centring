@@ -84,6 +84,7 @@
       </div>
       <!-- 右侧栏 -->
       <div class="photo-tool">
+        <GradeLabel />
       </div>
     </div>
   </div>
@@ -97,23 +98,17 @@ import { TOOL_TYPE } from './ToolEnumerate.js'
 import OrderInfoModule from './OrderInfoModule.vue'
 import FabricCanvas from './FabricCanvas.vue'
 import MarkTool from './MarkTool.vue'
+import GradeLabel from './GradeLabel.vue'
 
 import DownIpc from '@electronMain/ipc/DownIpc'
 import guideData from './guideData'
 
-import * as AssessmentCenter from '@/api/assessmentCenter'
-import * as GradeConfiguration from '@/api/gradeConfiguration'
-
 import { mapGetters } from 'vuex'
 import { PlantIdTypeEnum, PHOTO_VERSION } from '@/utils/enumerate'
 
-
-let allLabel = null
-let goodWord = []
-
 export default {
   name: 'GradePreview',
-  components: { OrderInfoModule, FabricCanvas, MarkTool },
+  components: { OrderInfoModule, FabricCanvas, MarkTool, GradeLabel },
   props: {
     info: { type: Object, required: true },
     configs: {
@@ -259,48 +254,6 @@ export default {
         selectData = [...selectData, ...itemSelectLabel]
       })
       return selectData
-    },
-    /**
-     * @description 获取所有数据
-     */
-    async getLabelData () {
-      const labelInfo = await AssessmentCenter.getScoreConfigList()
-      this.labelDataTop = labelInfo.typeArr
-      allLabel = labelInfo.allLabel
-    },
-    /**
-     * @description 获取激励词列表
-     */
-    async fetchGoodWord () {
-      const words = await GradeConfiguration.getExcitationDirList()
-      words.forEach(wordsItem => {
-        wordsItem.isSelect = false
-        wordsItem.type = 'goodWord'
-      })
-      goodWord = words
-    },
-    /**
-     * @description 根据种拔草,选择对应的标签
-     */
-    selectTLabelData (selItem) {
-      const { id } = selItem
-      if (id === this.currentId) {
-        return
-      }
-      this.resetLabelData()
-      this.labelDataTop.forEach((item) => {
-        item.isSelect = item.id === id
-      })
-      this.currentId = id
-      this.labelData = allLabel[id]
-      if (id === 1 && !this.hasPushGoodWord) { // 种草情况下,将激励词推进标签中
-        this.labelData.push({
-          name: '激励词',
-          child: goodWord
-        })
-        this.hasPushGoodWord = true
-      }
-      this.showCanvas = false
     },
     /**
      * @description 重制标签

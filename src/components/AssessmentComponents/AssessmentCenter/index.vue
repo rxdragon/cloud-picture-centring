@@ -156,7 +156,7 @@ export default {
     // TODO 调试
     await this.$nextTick()
     const mockData = {
-      id: "604b173d81f12b77b65ec2b2",
+      id: "604b4d6a899bbf7d9c5ec2b2",
       version: "first_photo"
     }
     this.showGrade(mockData)

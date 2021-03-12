@@ -4,12 +4,28 @@ import store from '@/store' // vuex
 import ProductModel from '@/model/ProductModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import StreamModel from '@/model/StreamModel.js'
+import uuidv4 from 'uuid'
 
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
-import { PLANT_ID_MAP, GRADE_TYPE, PlantTypeNameEnum, PlantIdTypeEnum, CLOUD_ROLE } from '@/utils/enumerate'
+import { GRADE_TYPE, PlantTypeNameEnum, CLOUD_ROLE } from '@/utils/enumerate'
 import { getAvg, transformPercentage } from '@/utils/index.js'
+
+export const GRADE_LEVEL = {
+  SMALL: 'small',
+  MIDDLE: 'middle',
+  PULL: 'pull',
+  PLANT: 'plant'
+}
+
+// 修图标准映射中文
+export const gradeLevelToCN = {
+  [GRADE_LEVEL.SMALL]: '小',
+  [GRADE_LEVEL.MIDDLE]: '中',
+  [GRADE_LEVEL.PULL]: '拔草',
+  [GRADE_LEVEL.PLANT]: '种草'
+}
 
 /**
  * @description 获取今日抽片指标
@@ -170,47 +186,44 @@ export function getSearchHistory (params) {
 }
 
 /**
- * @description 获取问题标签
+ * @description 获取评分配置标签
  * @method GET
  * @returns {Array} 标记数据
  * @author cf 2020/04/10
- * @version @version 2.4.0
+ * @version @version 2.24
  */
-export function getScoreConfigList () {
-  return axios({
-    url: '/project_cloud/checkPool/getScoreConfigList',
+export async function getScoreConfigList () {
+  // TODO 更改配置
+  const res = await axios({
+    url: '/project_cloud/checkPool/getScoreConfig',
     method: 'GET'
-  }).then(msg => {
-    // 排序
-    const typeArrSort = [PLANT_ID_MAP.PLANT_ID, PLANT_ID_MAP.NONE_ID, PLANT_ID_MAP.PULL_ID]
-    const sortMsg = []
-    typeArrSort.forEach(typeItem => {
-      const findTypeItem = msg.find(item => +item.id === +typeItem)
-      sortMsg.push(findTypeItem)
+  })
+  const createData = res.map(item => {
+    const childrenData = item.children || []
+    const children = childrenData.map(childrenItem => {
+      return {
+        id: childrenItem.id,
+        idString: String(childrenItem.id),
+        name: childrenItem.name,
+        children: childrenItem.children,
+        value: ''
+      }
     })
-    // 处理数据
-    const typeArr = []
-    const allLabel = {}
-    sortMsg.forEach((msgItem) => {
-      const { name, id, score_config: scoreConfig } = msgItem
-      scoreConfig.forEach(scoreConfigItem => {
-        scoreConfigItem.child.forEach(issItem => { issItem.isSelect = false })
-      })
-
-      typeArr.push({
-        name,
-        id,
-        isSelect: false,
-        class: PlantIdTypeEnum[id]
-      })
-      allLabel[id] = scoreConfig
+    children.unshift({
+      id: uuidv4(),
+      idString: uuidv4(),
+      name: '一键评分',
+      isOneAll: true,
+      value: ''
     })
-
     return {
-      typeArr,
-      allLabel,
+      id: item.id,
+      idString: String(item.id),
+      name: item.name,
+      children
     }
   })
+  return createData
 }
 
 /**
