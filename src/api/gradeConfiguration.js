@@ -145,7 +145,7 @@ export function editScoreConfig (params) {
 export function delScoreConfig (params) {
   return axios({
     url: '/project_cloud/checkPool/delScoreConfig',
-    method: 'POST',
+    method: 'PUT',
     data: params
   })
 }

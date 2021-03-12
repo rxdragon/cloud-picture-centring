@@ -1,5 +1,5 @@
 <template>
-  <div class="grade-configuration-main" v-loading="loading">
+  <div class="grade-configuration-main">
     <el-popover
       placement="bottom-start"
       width="420"
@@ -27,7 +27,7 @@
         @click.stop="handleOpenEditCategoryNameView"
         class="edit-category-button"
       >
-        修改当前类别名称
+        修改当前类别名称1
       </el-button>
     </el-popover>
     <el-popover
@@ -57,7 +57,7 @@
         v-for="tab in tabList"
         :label="tab.name"
         :name="tab.name"
-        :key="tab.id"
+        :key="tab.name"
       >
         <Assessment
           @cancel-score-item-change="handleCancelScoreItem($event, tab.id)"
@@ -66,7 +66,7 @@
           @add-score-group="handleAddScoreGroup(tab.id)"
           @delete-score-item="handleDeleteScoreItem($event, tab.id)"
           :key="tab.id"
-          :groupList="tab.groupList"
+          :groupList="tab.children"
         >
         </Assessment>
       </el-tab-pane>
@@ -80,13 +80,13 @@ import Assessment from "./assessment-item"
 
 function getScoreGroupBase (scoreTypeId) {
   return {
-    mainName: '',
-    edit_mainName: '',
+    name: '',
+    edit_name: '',
     scoreTypeId,
     isEdit: true,
     isNew: true,
     id: +new Date(),
-    configData: [
+    children: [
       { id: 1, name: '小', score: undefined, edit_score: undefined, type: SCORE_TYPES.DEDUCT },
       { id: 2, name: '中', score: undefined, edit_score: undefined, type: SCORE_TYPES.DEDUCT },
       { id: 3, name: '拔草', score: undefined, edit_score: undefined, type: SCORE_TYPES.DEDUCT },
@@ -105,12 +105,12 @@ export default {
     delScoreConfig: Function,
     addScoreConfig: Function,
     editScoreConfig: Function,
-    getScoreConfig: Function
+    getScoreConfig: Function,
+    editScoreTypeName: Function
   },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      loading: false,
       tabList: [],
       tabKey: '',
       // 类别弹出框
@@ -132,6 +132,10 @@ export default {
     async getAllScoreConfig () {
       const res = await this.getScoreConfig()
       this.tabList = res
+      if (res.length > 0) {
+        this.tabKey = res[0].name
+      }
+      this.$store.commit('gradeConfiguration/SAVE_CLOUD_GRADE_CONFIGURATION_LIST', res)
     },
     async handleConfirmCategory () {
       if (this.tabList.some(tab => tab.name === this.addCategoryName)) {
@@ -152,12 +156,11 @@ export default {
         const data = {
           id: res,
           name: this.addCategoryName,
-          groupList: []
+          children: []
         }
         this.tabList.unshift(data)
         this.tabKey = data.name
         this.showAddCategoryDialog = false
-        this.loading = false
         this.addCategoryName = ''
       } catch (error) {
         console.error(error)
@@ -170,24 +173,24 @@ export default {
      */
     handleAddScoreGroup (id) {
       const index = this.tabList.findIndex(tab => tab.id === id)
-      if (!this.tabList[index].configData) {
-        this.$set(this.tabList[index], 'configData', [])
+      if (!this.tabList[index].children) {
+        this.$set(this.tabList[index], 'children', [])
       }
-      this.tabList[index].groupList.unshift(getScoreGroupBase(id))
+      this.tabList[index].children.unshift(getScoreGroupBase(id))
     },
     /**
      * 编辑某个类下的某一个组
      */
     handleEditScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
-      const editGroup = editCategory.groupList.find(group => Number(group.id) === Number(groupId))
+      const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
       if (!editGroup.hasOwnProperty('isEdit')) {
         this.$set(editGroup, 'isEdit', true)
       } else {
         editGroup.isEdit = true
       }
-      this.$set(editGroup, 'edit_mainName', editGroup.mainName)
-      editGroup.configData.forEach(item => {
+      this.$set(editGroup, 'edit_name', editGroup.name)
+      editGroup.children.forEach(item => {
         this.$set(item, 'edit_score', item.score)
       })
     },
@@ -196,18 +199,18 @@ export default {
      */
     async handleDeleteScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
-      const deleteGroupIndex = editCategory.groupList.findIndex(group => Number(group.id) === Number(groupId))
-      const deleteGroup = editCategory.groupList[deleteGroupIndex]
+      const deleteGroupIndex = editCategory.children.findIndex(group => Number(group.id) === Number(groupId))
+      const deleteGroup = editCategory.children[deleteGroupIndex]
       // 没有保存过的， 不需要调接口
       if (deleteGroup.isNew) {
-        editCategory.groupList.splice(deleteGroupIndex, 1)
+        editCategory.children.splice(deleteGroupIndex, 1)
         return
       }
       const req = { id: deleteGroup.id }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await this.delScoreConfig(req)
-        editCategory.groupList.splice(deleteGroupIndex, 1)
+        editCategory.children.splice(deleteGroupIndex, 1)
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         console.error(error)
@@ -219,10 +222,10 @@ export default {
      */
     handleCancelScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
-      const editGroup = editCategory.groupList.find(group => Number(group.id) === Number(groupId))
+      const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
       editGroup.isEdit = false
-      delete editGroup.edit_mainName
-      editGroup.configData.forEach(item => {
+      delete editGroup.edit_name
+      editGroup.children.forEach(item => {
         delete item.edit_score
       })
     },
@@ -231,7 +234,7 @@ export default {
      */
     async handleSaveScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
-      const editGroup = editCategory.groupList.find(group => Number(group.id) === Number(groupId))
+      const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
       // 区分是新增还是编辑
       const action = editGroup.isNew
         ? this.addScoreConfig
@@ -240,9 +243,9 @@ export default {
       // 删除无用数据
       delete editGroup.isNew
       editGroup.isEdit = false
-      editGroup.mainName = editGroup.edit_mainName
-      delete editGroup.edit_mainName
-      editGroup.configData.forEach(item => {
+      editGroup.name = editGroup.edit_name
+      delete editGroup.edit_name
+      editGroup.children.forEach(item => {
         item.score = item.edit_score
         delete item.edit_score
       })
@@ -254,7 +257,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const res = await action(req)
         if (res) this.$message.success('评分内容创建成功。')
-        editCategory.id = res
+        editGroup.id = res
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -290,6 +293,7 @@ export default {
         await this.editScoreTypeName(req)
         const origin = this.tabList.find(tab => tab.id === this.editEditCategory.id)
         origin.name = this.editEditCategory.edit_name
+        this.tabKey = this.editEditCategory.edit_name
         this.showEditCategoryDialog = false
         this.editEditCategory = {}
         this.$store.dispatch('setting/hiddenLoading', this.routeName)

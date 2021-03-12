@@ -77,17 +77,24 @@ const permissionGetters = {
 
   // 工作看板
   hasWorkbench: state => state.permission.hasWorkbench, // 是否显示工作看板
-  
+
   // 通知栏目
   showInformation: state => state.permission.showInformation, // 是否显示消息通知
   showAnnouncementDelete: state => state.permission.showAnnouncementDelete, // 是否显示公告删除按钮
+}
+
+const gradeConfiguration = {
+  // 云端评分配置
+  cloudGradeConfigurationList: state => state.gradeConfiguration.cloudGradeConfigurationList,
+  showGradeConfigurationList: state => state.gradeConfiguration.showGradeConfigurationList,
 }
 
 const getters = {
   ...defaultGetters,
   ...permissionGetters,
   ...settting,
-  ...notification
+  ...notification,
+  ...gradeConfiguration
 }
 
 export default getters

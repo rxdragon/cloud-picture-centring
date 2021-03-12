@@ -11,17 +11,17 @@
             v-no-special-chinese
             placeholder="请填写评分项名称"
             v-if="item.isEdit"
-            v-model="item.edit_mainName"
+            v-model="item.edit_name"
           >
           </el-input>
-          <span v-else>{{ item.mainName }}</span>
+          <span v-else>{{ item.name }}</span>
         </div>
         <div class="right">
           <div @click="handleDeleteScoreGroup(item)">删除</div>
           <div @click="handleEditScoreGroup(item)">编辑</div>
         </div>
       </div>
-      <el-table :data="item.configData" style="width: 100%;">
+      <el-table :data="item.children" style="width: 100%;">
         <el-table-column prop="name" label="问题程度" align="center"></el-table-column>
         <el-table-column prop="score" label="分值" align="center">
           <template slot-scope="{ row }">
@@ -79,7 +79,7 @@ export default {
       this.$emit('add-score-group')
     },
     handleSaveScoreItem (item) {
-      const hasError = item.configData.some(scoreItem => {
+      const hasError = item.children.some(scoreItem => {
         return scoreItem.edit_score === undefined || scoreItem.edit_score === ''
       })
       if (hasError) {
@@ -87,13 +87,13 @@ export default {
         return
       }
       const hasDuplicate = this.groupList.some(group => {
-        return group.id !== item.id && group.mainName === item.edit_mainName
+        return group.id !== item.id && group.name === item.edit_name
       })
       if (hasDuplicate) {
         this.$message.error('存在相同的评分项。')
         return
       }
-      if (!item.edit_mainName) {
+      if (!item.edit_name) {
         this.$message.error('请填写评分项名称')
         return
       }

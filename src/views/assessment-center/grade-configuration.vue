@@ -1,7 +1,7 @@
 <template>
   <div class="grade-configuration">
     <div class="header">
-      <h3>云学院评分配置1</h3>
+      <h3>云学院评分配置</h3>
       <el-button v-if="showEmptyCheckPool" type="primary" @click="showEmptyDialog = true">清空评分</el-button>
     </div>
     <GradeConfiguration
@@ -10,6 +10,7 @@
       :addScoreConfig="addScoreConfig"
       :editScoreConfig="editScoreConfig"
       :getScoreConfig="getScoreConfig"
+      :editScoreTypeName="editScoreTypeName"
     ></GradeConfiguration>
 
     <!-- 清空弹出框 -->
@@ -61,6 +62,7 @@ export default {
     addScoreConfig: GradeConfigurationApi.addScoreConfig,
     editScoreConfig: GradeConfigurationApi.editScoreConfig,
     getScoreConfig: GradeConfigurationApi.getScoreConfig,
+    editScoreTypeName: GradeConfigurationApi.editScoreTypeName,
     /**
      * @description 确认清除
      */
