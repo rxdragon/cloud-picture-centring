@@ -1,7 +1,7 @@
 <template>
   <div class="chart-container">
-    <div class="title">小问题</div>
     <div ref="main" class="chart" id="chart"> </div>
+    <div class="title">{{ title }}</div>
   </div>
 </template>
 
@@ -114,11 +114,11 @@ const option = {
   tooltip: {
     trigger: 'item'
   },
-  legend: {
-    bottom: 0,
-    selectedMode: false,
-    data: ['sunburst', '123']
-  },
+  // legend: {
+  //   bottom: 0,
+  //   selectedMode: false,
+  //   data: ['sunburst', '123']
+  // },
   series: [
     {
       type: 'sunburst',
@@ -138,9 +138,17 @@ const option = {
 
 export default {
   name: 'sunburst',
+  props: {
+    title: String,
+    chartDatas: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
   mounted () {
     const chartDom = this.$refs.main
-    // console.log(chartDom);
     const myChart = echarts.init(chartDom)
     option && myChart.setOption(option)
   }

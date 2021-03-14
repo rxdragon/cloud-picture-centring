@@ -42,14 +42,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/assessmentCenter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/assessmentCenter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/chart-sunburst.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/chart-sunburst.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/enumerate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/enumerate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -201,7 +196,7 @@
       <workItem from="1615269691508" duration="11144000" />
       <workItem from="1615357802753" duration="296000" />
       <workItem from="1615432576683" duration="3261000" />
-      <workItem from="1615451501030" duration="41214000" />
+      <workItem from="1615451501030" duration="43131000" />
     </task>
     <task id="LOCAL-00001" summary="CI">
       <created>1571799918873</created>
@@ -389,11 +384,11 @@
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615707911759">
+    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615714863210">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
-    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615707911759" />
+    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615714863210" />
     <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615529981834">
       <screen x="0" y="0" width="1440" height="900" />

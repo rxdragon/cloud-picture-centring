@@ -17,8 +17,11 @@
         <el-button type="primary" @click="searchData">查 询</el-button>
       </div>
     </div>
+    <div class="title">
+      平均分对比
+    </div>
     <div class="chat-warp">
-      <chart-sunburst v-for="item in GRADE_CONFIGURATION_TYPE" :key="item.id"></chart-sunburst>
+      <chart-sunburst v-for="item in GRADE_CONFIGURATION_TYPE" :key="item.id" :title="`${item.name}问题对比`"></chart-sunburst>
     </div>
   </div>
 </template>
@@ -64,7 +67,35 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+
+.search-box {
+  padding: 24px;
+  border-bottom: 1px solid #ecedee;
+}
+
+.title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 10px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 2px;
+    height: 16px;
+    margin-top: -8px;
+    content: '';
+    background-color: @green;
+  }
+}
+
 .chat-warp {
   display: flex;
   flex-wrap: wrap;

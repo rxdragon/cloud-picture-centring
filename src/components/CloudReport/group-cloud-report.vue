@@ -41,6 +41,7 @@
             >
             </el-option>
           </el-select>
+          <el-button type="primary" class="button">查询</el-button>
         </div>
         <chart-bar
           v-for="item in GRADE_CONFIGURATION_TYPE"
@@ -160,6 +161,10 @@ export default {
 
       & > span {
         margin-right: 10px;
+      }
+
+      .button {
+        margin-left: 32px;
       }
     }
 
