@@ -29,15 +29,96 @@ export default {
     return {
       activeNames: ['115'],
       labelClass: [],
+      chainLine: [],
       activeLabelId: '', // 当前选中标签id
     }
   },
   created () {
     this.getAllLabel()
   },
+  mounted () {
+    this.registerLableEvent()
+  },
+  destroyed () {
+    this.cancelRegisterLableEvent()
+  },
   methods: {
+    /**
+     * @description 注册监听事件
+     */
+    registerLableEvent () {
+      this.$bus.$on('delete-grade-lable', (lableInfo) => { this.deleteGradeLable(lableInfo) })
+      this.$bus.$on('reset-grade-lable', () => { this.clearAllLabelValue() })
+      this.$bus.$on('skip-next-label', (lableIds) => { this.skipNextLabel(lableIds) })
+    },
+    /**
+     * @description 取消监听lable事件
+     */
+    cancelRegisterLableEvent () {
+      this.$bus.$off('delete-grade-lable')
+      this.$bus.$off('reset-grade-lable')
+      this.$bus.$off('skip-next-label')
+    },
+    /**
+     * @description
+     */
+    deleteGradeLable (lableInfo) {
+      const idchains = lableInfo.id.split('-')
+      const findClass = this.labelClass.find(item => Number(item.id) === Number(idchains[0]))
+      if (!findClass) return
+      const findGrade = findClass.children.find(item => Number(item.id) === Number(idchains[1]))
+      if (!findGrade) return
+      findGrade.value = ''
+      const findOneBtn = findClass.children.find(item => item.isOneAll)
+      if (!findOneBtn) return
+      findOneBtn.value = ''
+    },
+    /**
+     * @description 清楚全部标签数据
+     */
+    clearAllLabelValue () {
+      this.labelClass.forEach(classItem => {
+        const gradeLabelItem = classItem.children
+        gradeLabelItem.forEach(gradeItem => {
+          gradeItem.value = ''
+        })
+      })
+    },
+    /**
+     * @description 获取标签数据
+     */
     async getAllLabel () {
-      this.labelClass = await AssessmentCenter.getScoreConfigList()
+      const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList()
+      this.labelClass = labelClass
+      this.chainLine = chainLine
+    },
+    /**
+     * @description 调整下一个id
+     */
+    skipNextLabel (labelIds) {
+
+      const findChainLineIndex = this.chainLine.findIndex(item => Number(item) === Number(labelIds.id))
+      // 没有在链路中找到index 不跳转
+      if (findChainLineIndex < 0) return
+      // 最后一个不跳转
+      if (findChainLineIndex === this.chainLine.length -1 ) return
+      const nextId = this.chainLine[findChainLineIndex + 1]
+
+      let findNextGradeLabel = null
+      this.labelClass.forEach(classItem => {
+        const gradeList = classItem.children || []
+        const findGrade = gradeList.find(item => Number(item.id) === Number(nextId))
+        if (findGrade) findNextGradeLabel = findGrade
+      })
+      if (!findNextGradeLabel) return
+      // 下一个标签有值 不跳转
+      if (findNextGradeLabel.value) return
+      // 打开折叠栏
+      const classId = findNextGradeLabel.parentId
+      if (!this.activeNames.includes(String(classId))) {
+        this.activeNames.push(String(classId))
+      }
+      this.onSelectGrade(nextId)
     },
     /**
      * @description 选中问题

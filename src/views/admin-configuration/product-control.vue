@@ -39,8 +39,8 @@
                 <weight-select v-model="weightType" @change="onSearchChange" />
               </div>
             </el-col>
-            <el-col :span="18" :xl="2">
-              <div class="search-item search-button-box">
+            <el-col :span="2" :xl="2">
+              <div class="search-item">
                 <el-button type="primary" @click="getProductList">查 询</el-button>
               </div>
             </el-col>
@@ -124,7 +124,7 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      activeName: 'checked', // checkPending 待审核 checked 审核通过
+      activeName: 'checkPending', // checkPending 待审核 checked 审核通过
       institutionType: '', // 机构值
       showInfo: false, // 是否显示详情
       productValue: [], // 产品值
@@ -293,10 +293,6 @@ export default {
       & /deep/ .el-cascader {
         width: 100%;
       }
-    }
-
-    .search-button-box {
-      justify-content: flex-end;
     }
   }
 

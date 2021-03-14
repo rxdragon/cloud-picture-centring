@@ -9,7 +9,7 @@ import uuidv4 from 'uuid'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
-import { GRADE_TYPE, PlantTypeNameEnum, CLOUD_ROLE } from '@/utils/enumerate'
+import { GRADE_TYPE, CLOUD_ROLE } from '@/utils/enumerate'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 
 export const GRADE_LEVEL = {
@@ -139,26 +139,17 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      // 取出tag中种拔草等标签
-      const pureTag = item.tags
-      let typeTag = []
-      // 加上激励词
-      if (item.exTags && item.exTags.length) {
-        typeTag = typeTag.concat(item.exTags)
-      }
-      // 纯种拔草的时候会在commitInfo中返回type
-      if (item.commitInfo && item.commitInfo.type) {
-        typeTag.unshift({
-          name: PlantTypeNameEnum[item.commitInfo.type],
-          type: item.commitInfo.type
-        })
-      }
-      item.typeTag = typeTag
+      // mock数据
+      const newTag = [{
+        name: '液化-头型-种草',
+        type: 'plant',
+        id: 1
+      }]
+      item.labelTag = newTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
-      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, pureTag)
-      item.issueLabel = item.commitInfo.issueLabel
+      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
       item.score = item.commitInfo.score
 
       item.photoInfo.photoSpotCheckVersion.forEach(versionItem => {
@@ -198,14 +189,18 @@ export async function getScoreConfigList () {
     url: '/project_cloud/checkPool/getScoreConfig',
     method: 'GET'
   })
+  const chainLine = []
+
   const createData = res.map(item => {
     const childrenData = item.children || []
     const children = childrenData.map(childrenItem => {
+      chainLine.push(childrenItem.id)
       return {
         id: childrenItem.id,
         idString: String(childrenItem.id),
         name: childrenItem.name,
         children: childrenItem.children,
+        parentId: childrenItem.parent_id,
         value: ''
       }
     })
@@ -223,7 +218,10 @@ export async function getScoreConfigList () {
       children
     }
   })
-  return createData
+  return {
+    labelClass: createData,
+    chainLine
+  }
 }
 
 /**

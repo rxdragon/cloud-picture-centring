@@ -1,62 +1,30 @@
 <template>
   <div class="grade-box">
-    <div class="photo-panel">
-      <div class="panel-title">
-        <span>照片评分</span>
-        <el-tag
-          v-if="photoInfoData.isReevaluatePhoto"
-          class="grade-again-tag"
-          type="danger"
-          size="medium"
-        >
-          已重评
-        </el-tag>
-        <div class="score-box">
-          <el-button
-            v-if="showSpotRecheck"
-            size="mini"
-            type="primary"
-            @click="afreshGrade"
-          >
-            重新评分
-          </el-button>
-        </div>
-      </div>
-      <photo-list
-        need-preload
-        :photo-data="photoVersionList"
-        showOrderInfo
-        :order-info="photoInfoData"
-      />
-    </div>
-    <div class="info-grid">
-      <!-- 评价信息 -->
-      <div class="panel-info">
+    <!-- 列表 -->
+    <div class="grid-list">
+      <!-- 照片信息 -->
+      <div class="photo-panel">
         <div class="panel-title">
-          <span>评价信息</span>
-          <span>总分：{{ photoInfoData.score }}</span>
+          <span>照片评分</span>
+          <el-tag
+            v-if="photoInfoData.isReevaluatePhoto"
+            class="grade-again-tag"
+            type="danger"
+            size="medium"
+          >
+            已重评
+          </el-tag>
         </div>
-        <div class="panel-content">
-          <div class="issue-class-box panel-row" v-if="photoInfoData.typeTag.length">
-            <el-tag
-              :class="['type-tag', item.type]"
-              size="medium"
-              v-for="(item, index) in photoInfoData.typeTag"
-              :key="index"
-            >
-              {{ item.name }}
-            </el-tag>
-          </div>
-          <div class="issue-class-box panel-row" v-for="issueClass in photoInfoData.issueLabel" :key="issueClass.id">
-            <div class="label-title">{{ issueClass.name }}</div>
-            <div class="label-box">
-              <el-tag size="medium" v-for="issueItem in issueClass.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
-            </div>
-          </div>
-        </div>
+        <photo-list
+          class="grade-photo-list"
+          need-preload
+          showOrderInfo
+          :photo-data="photoVersionList"
+          :order-info="photoInfoData"
+        />
       </div>
       <!-- 订单信息 -->
-      <div class="panel-info">
+      <div class="order-panel panel-info">
         <div class="panel-title">订单信息</div>
         <div class="panel-content">
           <div class="base-info panel-row">
@@ -83,17 +51,52 @@
               祛痣
             </el-tag>
           </div>
-          <div class="grade-staff panel-row">
-            <span class="order-info"><span class="order-info-title">评分人：</span>{{ photoInfoData.takeInfo.gradeStaff }}</span>
-            <span class="order-info" v-if="photoInfoData.isReevaluatePhoto"><span class="order-info-title">复评人：</span>{{ photoInfoData.takeInfo.reevaluate }}</span>
-          </div>
           <div class="retouch-remark panel-row">
             <div class="remark-title">修图备注：</div>
             <div class="remark-content">{{ photoInfoData.streamInfo.retouchRemark }}</div>
           </div>
+          <div class="reference-photo panel-row" v-if="photoInfoData.streamInfo.referencePhoto">
+            <span class="order-info-title">参考图：</span>
+            <el-image fit="contain" :src="photoInfoData.streamInfo.referencePhoto"></el-image>
+          </div>
         </div>
       </div>
     </div>
+    
+    <!-- 评价信息 -->
+    <div class="panel-info">
+      <div class="panel-title">
+        <span>评价信息</span>
+        <div class="score-box">
+          <el-button
+            v-if="showSpotRecheck"
+            size="mini"
+            type="primary"
+            @click="afreshGrade"
+          >
+            重新评分
+          </el-button>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="grade-score panel-row">
+          <span class="order-info"><span class="order-info-title">总分：</span>{{ photoInfoData.score }}</span>
+          <span class="order-info"><span class="order-info-title">评分人：</span>{{ photoInfoData.takeInfo.gradeStaff }}</span>
+          <span class="order-info" v-if="photoInfoData.isReevaluatePhoto"><span class="order-info-title">复评人：</span>{{ photoInfoData.takeInfo.reevaluate }}</span>
+        </div>
+        <div class="issue-class-box panel-row" v-if="photoInfoData.labelTag">
+          <el-tag
+            :class="['type-tag', item.type]"
+            size="medium"
+            v-for="(item, index) in photoInfoData.labelTag"
+            :key="index"
+          >
+            {{ item.name }}
+          </el-tag>
+        </div>
+      </div>
+    </div>
+    
     <grade-preview
       v-if="gradeInfo && showGradePreview"
       :photo-version="showPhotoVersion"
@@ -148,11 +151,10 @@ export default {
         const req = {
           photoId: this.photoInfo.photo_id,
           uuid: this.photoInfo._id,
-          tags: sendData.issuesLabelId,
           picUrl: sendData.markPhotoImg,
-          exTags: sendData.typeLabelId,
-          type: sendData.type
+          tags: sendData.lableId
         }
+        // TODO 联调
         await AssessmentCenter.updateCommitHistory(req)
         this.$newMessage.success('重新评价成功')
         this.gradeInfo = null
@@ -175,9 +177,14 @@ export default {
 <style lang="less">
 
 .grade-box {
+  .grid-list {
+    display: flex;
+    margin-bottom: 50px;
+  }
+
   .photo-panel {
-    margin-bottom: 32px;
-    border-bottom: 1px solid @borderColor;
+    flex-shrink: 0;
+    width: 542px;
 
     .panel-title {
       display: flex;
@@ -198,7 +205,8 @@ export default {
     }
 
     .photo-box {
-      margin-bottom: 20px;
+      margin-right: 18px;
+      margin-bottom: 0;
     }
 
     .photo-main {
@@ -210,10 +218,8 @@ export default {
     }
   }
 
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 32px 48px;
+  .order-panel {
+    width: 100%;
   }
 
   .panel-info {
@@ -228,6 +234,14 @@ export default {
       padding: 0 20px;
       background-color: #fafafa;
       border-radius: 4px;
+
+      .grade-score {
+        .order-info {
+          margin-right: 54px;
+          font-weight: 600;
+          color: #303133;
+        }
+      }
 
       .issue-class-box {
         display: flex;
@@ -245,21 +259,22 @@ export default {
           margin-right: 10px;
 
           &.plant {
-            color: #fff;
-            background-color: #44c27e;
-            border-color: #44c27e;
+            color: #38bc7f;
+            background-color: #ecf7f2;
+            border-color: #7fd9af;
           }
 
           &.pull {
-            color: #fff;
-            background-color: #ff3974;
-            border-color: #ff3974;
+            color: #ff3974;
+            background-color: #fff0f0;
+            border-color: #f99ab7;
           }
 
-          &.none {
-            color: #fff;
-            background-color: #4669fb;
-            border-color: #4669fb;
+          &.middle,
+          &.small {
+            color: #ff8f00;
+            background-color: #fff7ed;
+            border-color: #ffce90;
           }
         }
 
@@ -282,14 +297,17 @@ export default {
         }
       }
 
-      .grade-staff {
-        .order-info {
-          margin-right: 32px;
+      .reference-photo {
+        & /deep/ .el-image {
+          width: 60px;
+          height: 60px;
         }
       }
 
       .panel-row {
-        padding: 20px 0;
+        display: flex;
+        align-items: center;
+        height: 60px;
         font-size: 14px;
         line-height: 22px;
         color: #303133;
@@ -299,6 +317,10 @@ export default {
           .order-info-title {
             display: inline-block;
           }
+        }
+
+        &.reference-photo {
+          height: 85px;
         }
       }
 
@@ -315,9 +337,6 @@ export default {
       }
 
       .retouch-remark {
-        display: flex;
-        align-items: flex-start;
-
         .remark-title {
           width: 70px;
         }

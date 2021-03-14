@@ -59,7 +59,6 @@
             :style="photoZoomStyle"
             :option-obj="canvasOption"
             :show-canvas="isFirstPhoto"
-            @cancelDeleteLabel="addDeleteLabel"
             @click.native="zoom"
           />
         </div>
@@ -84,7 +83,11 @@
       </div>
       <!-- 右侧栏 -->
       <div class="photo-tool">
-        <GradeLabel />
+        <GradeLabel class="scroll-box" />
+        <div class="button-box">
+          <el-button type="info" class="out-btn" @click="closePreview">退出</el-button>
+          <el-button type="primary" @click="submitData">提交评分</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -104,11 +107,16 @@ import DownIpc from '@electronMain/ipc/DownIpc'
 import guideData from './guideData'
 
 import { mapGetters } from 'vuex'
-import { PlantIdTypeEnum, PHOTO_VERSION } from '@/utils/enumerate'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas, MarkTool, GradeLabel },
+  provide () {
+    return {
+      judageCanvas: this.createCanvas
+    }
+  },
   props: {
     info: { type: Object, required: true },
     configs: {
@@ -146,8 +154,6 @@ export default {
       driver: null, // 引导信息
       inZoomIn: false, // 是否放大中
       photoZoomStyle: '', // 图片信息
-      labelDataTop: [], // 种拔草标签, 选了这个以后才能展示对应的标签数据
-      labelData: [], // 标签数据
       showCanvas: false,
       canvasOption: { // canvas 信息
         width: 200,
@@ -158,8 +164,6 @@ export default {
       },
       isSubmit: false, // 是否提交
       allLoading: false, // 整个页面loading
-      currentId: '', // 当前种拔草的id 1种草,2拔草,3一般
-      hasPushGoodWord: false
     }
   },
   computed: {
@@ -185,7 +189,6 @@ export default {
   created () {
     // this.fetchGoodWord()
     this.initShowPhoto()
-    // this.getLabelData()
     this.driver = new Driver({
       nextBtnText: '下一个',
       prevBtnText: '上一个',
@@ -194,20 +197,12 @@ export default {
     })
   },
   mounted () {
-    // TODO 调试
     this.registerKeyDownEvent()
-    // TODO 添加注销事件
-    this.$ipcRenderer.on('win-resize', (e, item) => {
-      this.getImgInfo()
-      if (!this.showCanvas) return
-      this.$nextTick(() => {
-        if (!this.$refs['fabric-canvas']) return
-        this.$refs['fabric-canvas'].resetCanvas()
-      })
-    })
+    this.$ipcRenderer.on('win-resize', this.onWindowResize)
   },
   beforeDestroy () {
     document.onkeydown = null
+    this.$ipcRenderer.removeListener('win-resize', this.onWindowResize)
   },
   methods: {
     /**
@@ -215,58 +210,40 @@ export default {
      */
     async submitData () {
       try {
-        const issuesLabel = this.getIssuesData()
-        const issuesLabelId = issuesLabel.reduce((sumArr, item) => {
-          if (item.type !== 'goodWord') { sumArr.push({ id: item.id }) }
-          return sumArr
-        }, [])
-        const typeLabelId = issuesLabel.reduce((sumArr, item) => {
-          if (item.type === 'goodWord') { sumArr.push(item.id) }
-          return sumArr
-        }, [])
         this.isSubmit = true
+        // 获取批注图片
         let markPhotoImg = ''
         if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
           markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
         }
+        // 获取标签数据
+        const lableId = this.getActiveLableId()
         this.showCanvas = false
         this.canvasOption.drawType = ''
         const sendData = {
-          issuesLabelId,
           markPhotoImg,
-          typeLabelId,
-          type: PlantIdTypeEnum[this.currentId]
+          lableId
         }
         this.$emit('submit', sendData)
         this.resetLabelData()
       } catch (error) {
-        console.error(error)
         this.$newMessage.error('上传标记图失败')
       }
     },
     /**
      * @description 获取选中标签
      */
-    getIssuesData () {
-      let selectData = []
-      this.labelData.forEach(item => {
-        const itemSelectLabel = item.child.filter(issueItem => issueItem.isSelect)
-        selectData = [...selectData, ...itemSelectLabel]
-      })
-      return selectData
+    getActiveLableId () {
+      if (!this.$refs['fabric-canvas']) return []
+      const activeLableList = this.$refs['fabric-canvas'].activeLableList
+      const ids = activeLableList.map(item => item.levelId)
+      return ids
     },
     /**
      * @description 重制标签
      */
     resetLabelData () {
-      this.labelDataTop.forEach(item => {
-        item.isSelect = false
-      })
-      this.labelData.forEach(item => {
-        item.child.forEach(issItem => { issItem.isSelect = false })
-      })
-      this.currentId = ''
-      this.labelData = []
+      this.$bus.$emit('reset-grade-lable')
     },
     /**
      * @description 提示按钮
@@ -356,34 +333,7 @@ export default {
      */
     judgeHasZoom (e) {
       const isOverIn = Boolean(this.imgLayer.style.width)
-      if (isOverIn) {
-        this.handOver(e)
-      }
-    },
-    /**
-     * @description 设置标签
-     */
-    setLabel (issueItem) {
-      if (!this.createCanvas()) return false
-      this.$nextTick(() => {
-        this.labelData.forEach(classItem => {
-          const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
-          if (findIssueLabel) {
-            if (!findIssueLabel.isSelect) {
-              this.$refs['fabric-canvas'].createLabel(findIssueLabel)
-              findIssueLabel.isSelect = true
-            } else {
-              this.tagClose(issueItem)
-            }
-          }
-        })
-      })
-    },
-    /**
-     * @description 标签关闭
-     */
-    tagClose (tagInfo) {
-      this.$refs['fabric-canvas'].deleteLabel(tagInfo)
+      if (isOverIn) { this.handOver(e) }
     },
     /**
      * @description 创建canvas
@@ -420,17 +370,6 @@ export default {
         this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
       }
       this.canvasOption.drawType = type
-    },
-    /**
-     * @description 撤销删除标签
-     */
-    addDeleteLabel (issueItem) {
-      this.labelData.forEach(classItem => {
-        const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
-        if (findIssueLabel) {
-          findIssueLabel.isSelect = false
-        }
-      })
     },
     /**
      * @description 下载图片
@@ -500,9 +439,7 @@ export default {
      */
     handOver (e) {
       // 获取大图尺寸
-      
       this.imgObj = this.$refs['smallImg']
-
       this.imgBigObj = this.$refs['orgin-img']
       this.imgRect = this.imgObj.getBoundingClientRect()
       this.imgBigRect = this.imgBigObj.getBoundingClientRect()
@@ -539,6 +476,17 @@ export default {
       imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
       const photoShowMain = this.$refs['photo-show-main']
       photoShowMain.appendChild(imgLayer)
+    },
+    /**
+     * @description 监听屏幕变化
+     */
+    onWindowResize (e, item) {
+      this.getImgInfo()
+      if (!this.showCanvas) return
+      this.$nextTick(() => {
+        if (!this.$refs['fabric-canvas']) return
+        this.$refs['fabric-canvas'].resetCanvas()
+      })
     },
     /**
      * @description 注册键盘事件
@@ -661,6 +609,8 @@ export default {
     }
 
     .button-close {
+      position: absolute;
+      right: 0;
       width: 30px;
       height: 30px;
       padding: 0;
@@ -743,6 +693,32 @@ export default {
 
         &:hover {
           background-color: rgba(0, 0, 0, 0);
+        }
+      }
+
+      .scroll-box {
+        height: calc(100% - 60px);
+        overflow: overlay;
+      }
+
+      .button-box {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 60px;
+        border-top: 1px solid #666;
+
+        .out-btn {
+          background-color: #666;
+          border-color: #666;
+
+          &:hover {
+            background-color: #535353;
+          }
         }
       }
     }
@@ -929,131 +905,6 @@ export default {
               height: 12px;
               border: 1px solid #409eff;
             }
-          }
-        }
-      }
-
-      .label-top {
-        margin-top: 10px;
-        margin-left: 10px;
-
-        .type-tag {
-          display: inline-block;
-          width: 80px;
-          height: 40px;
-          margin: 0 10px 10px 0;
-          font-size: 18px;
-          font-weight: 400;
-          line-height: 40px;
-          text-align: center;
-          cursor: pointer;
-          -webkit-user-select: none;
-          border: 1px solid #fff;
-          border-radius: 4px;
-
-          &.plant {
-            color: #44c27e;
-            background-color: #fff;
-            border-color: #44c27e;
-
-            &.active {
-              color: #fff;
-              background-color: #44c27e;
-            }
-          }
-
-          &.pull {
-            color: #ff3974;
-            background-color: #fff;
-            border-color: #ff3974;
-
-            &.active {
-              color: #fff;
-              background-color: #ff3974;
-            }
-          }
-
-          &.none {
-            color: #4669fb;
-            background-color: #fff;
-            border-color: #4669fb;
-
-            &.active {
-              color: #fff;
-              background-color: #4669fb;
-            }
-          }
-        }
-      }
-
-      .order-label {
-        padding: 14px 10px 70px;
-        font-size: 12px;
-        color: #eee;
-
-        .label-title {
-          display: flex;
-          align-items: center;
-          font-size: 14px;
-          font-weight: 500;
-
-          &::before {
-            display: inline-block;
-            width: 2px;
-            height: 16px;
-            margin-right: 6px;
-            content: '';
-            background-color: #4669fb;
-          }
-        }
-
-        .label-box {
-          .label-class-title {
-            padding: 10px 0;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 20px;
-            color: #eee;
-          }
-
-          .label-content {
-            .el-tag {
-              margin: 0 10px 10px 0;
-              font-size: 12px;
-              font-weight: 400;
-              color: #eee;
-              cursor: pointer;
-              -webkit-user-select: none;
-              background-color: rgba(0, 0, 0, 0.6);
-              border: none;
-              border-radius: 4px;
-
-              &.active {
-                background-color: #808080;
-              }
-            }
-          }
-        }
-      }
-
-      .submit-box {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 60px;
-        background-color: #535353;
-        border-top: 1px solid #666;
-
-        .out-btn {
-          background-color: #666;
-          border-color: #666;
-
-          &:hover {
-            background-color: #535353;
           }
         }
       }

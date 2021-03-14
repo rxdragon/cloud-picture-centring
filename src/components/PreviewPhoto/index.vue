@@ -199,7 +199,7 @@
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
 import Driver from 'driver.js' // 引导框
-import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
+import OrderInfoModule from '@AssessmentComponents/components/GradePreview/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
 import guideData from './guideData.js'
 import { mapGetters } from 'vuex'

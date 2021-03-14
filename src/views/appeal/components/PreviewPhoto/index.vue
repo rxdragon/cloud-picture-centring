@@ -300,9 +300,9 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
-import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
+import OrderInfoModule from '@AssessmentComponents/components/GradePreview/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
-import FabricCanvas from '@/views/assessment-center/components/FabricCanvas.vue'
+import FabricCanvas from '@AssessmentComponents/components/GradePreview/FabricCanvas.vue'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import * as GradeConfiguration from '@/api/gradeConfiguration'

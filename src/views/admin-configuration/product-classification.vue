@@ -19,7 +19,7 @@
         >
           <!-- 添加分类按钮 -->
           <div class="button-plug" v-if="classificationList.length">
-            <el-button type="primary" size="mini" @click="addClassification">添加分类</el-button>
+            <el-button type="primary" @click="addClassification">添加分类</el-button>
           </div>
           <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="classificationName" label="分类名称" width="180" />
@@ -230,7 +230,7 @@ export default {
 
   .button-plug {
     margin-bottom: 20px;
-    text-align: right;
+    text-align: left;
   }
 }
 </style>

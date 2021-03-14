@@ -1,20 +1,22 @@
 <template>
   <div class="label-module">
-    <div
-      class="label-item"
-      :class="{
-        'is-active': gradeItem.id === activeId,
-        'one-all-label': gradeItem.isOneAll,
-        'small': gradeItem.value === 'small',
-        'middle': gradeItem.value === 'middle',
-        'pull': gradeItem.value === 'pull',
-        'plant': gradeItem.value === 'plant',
-      }"
-      v-for="gradeItem in lableChildren"
-      :key="gradeItem.id"
-      @click="selectGradeItem(gradeItem.id)"
-    >
-      {{ gradeItem.name }}
+    <div class="label-select">
+      <div
+        class="label-item"
+        :class="{
+          'is-active': gradeItem.id === activeId,
+          'one-all-label': gradeItem.isOneAll,
+          'small': gradeItem.value === 'small',
+          'middle': gradeItem.value === 'middle',
+          'pull': gradeItem.value === 'pull',
+          'plant': gradeItem.value === 'plant',
+        }"
+        v-for="gradeItem in lableChildren"
+        :key="gradeItem.id"
+        @click="selectGradeItem(gradeItem.id)"
+      >
+        {{ gradeItem.name }}
+      </div>
     </div>
     <div class="degree-module" v-if="activeLabel">
       <div class="tip">
@@ -56,6 +58,7 @@ const greadeLevel = [{
 
 export default {
   name: 'LabelModule',
+  inject: ['judageCanvas'],
   props: {
     labelClass: { type: Object, required: true },
     activeLabelId: { type: [String, Number] }
@@ -90,25 +93,49 @@ export default {
     /**
      * @description 设置底色
      */
-    selectGradeLevel (value) {
+    async selectGradeLevel (value) {
       if (!this.activeLabel) return
+      // 判断是否是一次成片上
+      if (!this.judageCanvas()) return
+      await this.$nextTick()
+
       function setLableItemGradeLevel (lableItem, level) {
         if (lableItem.value) {
           this.deleteLable(lableItem, lableItem.value)
         }
+        const canAddLable = this.addLable(lableItem, level)
+        if (!canAddLable) return
         lableItem.value = level
-        this.addLable(lableItem, level)
       }
+
       // 判断是否一键修改
       if (!this.activeLabel.isOneAll) {
-        setLableItemGradeLevel.call(this, this.activeLabel, value)
+        if (this.activeLabel.value === value) {
+          this.deleteLable(this.activeLabel, this.activeLabel.value)
+          this.activeLabel.value = ''
+        } else {
+          setLableItemGradeLevel.call(this, this.activeLabel, value)
+        }
+        this.autoNextLabel(this.activeLabel)
       } else {
+        if (this.activeLabel.value === value) return
         this.lableChildren.forEach(lableItem => {
           if (lableItem.isOneAll) return
           setLableItemGradeLevel.call(this, lableItem, value)
         })
       }
       this.judgeIsAllGradeLevelSame()
+    },
+    /**
+     * @description 自动调整下一个
+     */
+    autoNextLabel (labelInfo) {
+      if (labelInfo.isOneAll) return
+      const data = {
+        id: labelInfo.id,
+        parentId: labelInfo.parentId
+      }
+      this.$bus.$emit('skip-next-label', data)
     },
     /**
      * @description 查找问题程度
@@ -124,19 +151,35 @@ export default {
      */
     addLable (lableItem, level) {
       const findLevel = this.findLevelObj(lableItem, level)
+      if (!findLevel) {
+        this.$newMessage.warning('未找到对应标签')
+        return false
+      }
       const classId = this.labelClass.id
       const lableId = findLevel.parent_id
       const levelId = findLevel.id
-      const chaineId = `${classId}-${lableId}-${levelId}`
+      const chainCircuitId = `${classId}-${lableId}-${levelId}`
       // 添加id
-      console.error(chaineId)
+      const className = this.labelClass.name
+      const lableName = lableItem.name
+      const levelName = findLevel.name
+      const chainCircuitName = `${className}/${lableName}/${levelName}`
+
+      const lableInfo = {
+        name: chainCircuitName,
+        id: chainCircuitId,
+        levelId
+      }
+      this.$bus.$emit('add-canvas-lable', lableInfo)
     },
     /**
      * @description 删除标签
      */
     deleteLable (lableItem, level) {
-      // 删除标签,
-      // TODO canvas 中删除标签要将表格内对应value清楚
+      const findLevel = this.findLevelObj(lableItem, level)
+      if (!findLevel) return this.$newMessage.warning('未找到对应标签')
+      const levelId = findLevel.id
+      this.$bus.$emit('delete-canvas-lable', levelId)
     },
     /**
      * @description 判断评价是否一致
@@ -150,9 +193,12 @@ export default {
       })
       levels = [...levels]
       // 评分一致
+      const findOneLable = this.lableChildren.find(item => item.isOneAll)
+      if (!findOneLable) return
       if (levels.length === 1) {
-        const findOneLable = this.lableChildren.find(item => item.isOneAll)
-        if (findOneLable) { findOneLable.value = levels[0] }
+        findOneLable.value = levels[0]
+      } else {
+        findOneLable.value = ''
       }
     }
   }
@@ -166,6 +212,7 @@ export default {
   display: inline-block;
   width: max-content;
   padding: 4px 16px;
+  margin-right: 10px;
   margin-bottom: 10px;
   color: #fff;
   text-align: center;
@@ -189,6 +236,7 @@ export default {
     margin-bottom: 6px;
     font-size: 12px;
     color: #eee;
+    user-select: none;
   }
 
   .level-item {

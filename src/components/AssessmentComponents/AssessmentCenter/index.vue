@@ -153,13 +153,6 @@ export default {
   },
   async created () {
     await this.resetPage()
-    // TODO 调试
-    await this.$nextTick()
-    const mockData = {
-      id: "604b4d6a899bbf7d9c5ec2b2",
-      version: "first_photo"
-    }
-    this.showGrade(mockData)
   },
   methods: {
     /**
@@ -220,11 +213,9 @@ export default {
         const req = {
           photoId: selectPhoto.photo_id,
           uuid: selectPhoto._id,
-          tags: sendData.issuesLabelId,
           picUrl: sendData.markPhotoImg,
-          exTags: sendData.typeLabelId,
+          tags: sendData.lableId,
           spotUuid: this.uuid,
-          type: sendData.type
         }
         this.$refs['grade-preview'].allLoading = true
         await AssessmentCenter.commitHistory(req)
@@ -287,11 +278,10 @@ export default {
 
       const req = {
         takeNum: this.sampleNum,
-        passStartAt: joinTimeSpan(this.timeSpan[0]),
-        passEndAt: joinTimeSpan(this.timeSpan[1], 1)
+        submitStartAt: joinTimeSpan(this.timeSpan[0]),
+        submitEndAt: joinTimeSpan(this.timeSpan[1], 1)
       }
-      // TODO 添加抽取产品
-      // if (this.productIds.length)
+      if (this.productIds.length) { req.productIds = this.productIds }
       return req
     },
     /**
