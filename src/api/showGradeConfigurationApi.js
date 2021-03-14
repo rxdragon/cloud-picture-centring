@@ -50,7 +50,7 @@ export function emptyCheckPoolByStaffId (params) {
  */
 export function addScoreType (params) {
   return axios({
-    url: `/project_cloud/checkPool/addScoreType`,
+    url: `/project_cloud/showPicPool/addScoreType`,
     method: 'POST',
     data: params
   })
@@ -66,7 +66,7 @@ export function addScoreType (params) {
  */
 export function editScoreTypeName (params) {
   return axios({
-    url: '/project_cloud/checkPool/editScoreType',
+    url: '/project_cloud/showPicPool/editScoreType',
     method: 'POST',
     data: params
   })
@@ -81,7 +81,7 @@ export function editScoreTypeName (params) {
  */
 export function addScoreConfig (params) {
   return axios({
-    url: '/project_cloud/checkPool/addScoreConfig',
+    url: '/project_cloud/showPicPool/addScoreConfig',
     method: 'POST',
     data: params
   })
@@ -96,7 +96,7 @@ export function addScoreConfig (params) {
  */
 export function editScoreConfig (params) {
   return axios({
-    url: '/project_cloud/checkPool/editScoreConfig',
+    url: '/project_cloud/showPicPool/editScoreConfig',
     method: 'PUT',
     data: params
   })
@@ -111,7 +111,7 @@ export function editScoreConfig (params) {
  */
 export function delScoreConfig (params) {
   return axios({
-    url: '/project_cloud/checkPool/delScoreConfig',
+    url: '/project_cloud/showPicPool/delScoreConfig',
     method: 'PUT',
     data: params
   })
@@ -125,7 +125,7 @@ export function delScoreConfig (params) {
  */
 export function getScoreConfig () {
   return axios({
-    url: '/project_cloud/checkPool/getScoreConfig',
+    url: '/project_cloud/showPicPool/getScoreConfig',
     method: 'GET'
   })
 }

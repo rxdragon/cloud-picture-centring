@@ -25,13 +25,8 @@ const assessmentCenter = {
     }, {
       path: 'grade-configuration',
       name: 'GradeConfiguration',
-      component: () => import('@/views/assessment-center/old/grade-configuration.vue'),
-      meta: { title: '云学院评分配置', icon: '' }
-    }, {
-      path: 'grade-configuration1',
-      name: 'GradeConfiguration',
       component: () => import('@/views/assessment-center/grade-configuration.vue'),
-      meta: { title: '云学院评分配置2', icon: '' }
+      meta: { title: '云学院评分配置', icon: '' }
     }
   ]
 }

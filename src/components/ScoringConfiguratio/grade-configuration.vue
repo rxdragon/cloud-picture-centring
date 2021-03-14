@@ -1,7 +1,7 @@
 <template>
   <div class="grade-configuration-main">
     <div class="header">
-      <h3>云学院评分配置</h3>
+      <h3>{{ title }}</h3>
       <div>
         <el-popover
           placement="bottom-start"
@@ -128,6 +128,7 @@ export default {
     Assessment, ScorerSelect
   },
   props: {
+    title: String,
     addScoreType: Function,
     delScoreConfig: Function,
     addScoreConfig: Function,

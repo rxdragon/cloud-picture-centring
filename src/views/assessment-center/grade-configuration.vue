@@ -1,6 +1,7 @@
 <template>
   <div class="grade-configuration">
     <GradeConfiguration
+      title="云学院评分配置"
       :addScoreType="addScoreType"
       :delScoreConfig="delScoreConfig"
       :addScoreConfig="addScoreConfig"
