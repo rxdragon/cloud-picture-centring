@@ -8,7 +8,7 @@
         :key="tab.key"
       ></el-tab-pane>
     </el-tabs>
-
+    <el-divider class="divider"></el-divider>
     <div class="content">
       <personal-cloud-report v-if="tabKey === 'personal'"></personal-cloud-report>
       <group-cloud-report v-if="tabKey === 'group'"></group-cloud-report>
@@ -45,8 +45,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-.content {
-  margin-top: 20px;
+.divider {
+  margin: 1px 0 0;
 }
 </style>

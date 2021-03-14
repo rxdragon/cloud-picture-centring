@@ -26,7 +26,11 @@ export default {
     delScoreConfig: GradeConfigurationApi.delScoreConfig,
     addScoreConfig: GradeConfigurationApi.addScoreConfig,
     editScoreConfig: GradeConfigurationApi.editScoreConfig,
-    getScoreConfig: GradeConfigurationApi.getScoreConfig,
+    async getScoreConfig () {
+      const res = await GradeConfigurationApi.getScoreConfig()
+      this.$store.commit('gradeConfiguration/SAVE_CLOUD_GRADE_CONFIGURATION_LIST', _.cloneDeep(res))
+      return res
+    },
     editScoreTypeName: GradeConfigurationApi.editScoreTypeName,
   }
 }

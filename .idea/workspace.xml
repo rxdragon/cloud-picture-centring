@@ -41,17 +41,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
-      <change afterPath="$PROJECT_DIR$/src/api/showGradeConfigurationApi.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/gradeConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/gradeConfiguration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/assessmentCenter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/assessmentCenter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/modules/assessmentCenter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/modules/assessmentCenter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/enumerate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/enumerate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/old/components/GoodWord.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/old/components/GradeConfig/IssueClass.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/old/components/GradeConfig/IssueItem.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/old/grade-configuration.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/showpic-assessment-center/showpic-grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/showpic-assessment-center/showpic-grade-configuration.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -203,7 +201,7 @@
       <workItem from="1615269691508" duration="11144000" />
       <workItem from="1615357802753" duration="296000" />
       <workItem from="1615432576683" duration="3261000" />
-      <workItem from="1615451501030" duration="34034000" />
+      <workItem from="1615451501030" duration="41214000" />
     </task>
     <task id="LOCAL-00001" summary="CI">
       <created>1571799918873</created>
@@ -302,29 +300,29 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615450996090" />
-    <state width="1398" height="153" key="GridCell.Tab.0.bottom" timestamp="1615694097557">
+    <state width="1398" height="153" key="GridCell.Tab.0.bottom" timestamp="1615708651071">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635471" />
-    <state width="1398" height="153" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615694097557" />
+    <state width="1398" height="153" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651071" />
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989576" />
-    <state width="1398" height="153" key="GridCell.Tab.0.center" timestamp="1615694097556">
+    <state width="1398" height="153" key="GridCell.Tab.0.center" timestamp="1615708651069">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635466" />
-    <state width="1398" height="153" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615694097556" />
+    <state width="1398" height="153" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651069" />
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="153" key="GridCell.Tab.0.left" timestamp="1615694097556">
+    <state width="1398" height="153" key="GridCell.Tab.0.left" timestamp="1615708651068">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="153" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615694097556" />
+    <state width="1398" height="153" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651068" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635451" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="153" key="GridCell.Tab.0.right" timestamp="1615694097557">
+    <state width="1398" height="153" key="GridCell.Tab.0.right" timestamp="1615708651070">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635468" />
-    <state width="1398" height="153" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615694097557" />
+    <state width="1398" height="153" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651070" />
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989575" />
     <state width="1398" height="304" key="GridCell.Tab.1.bottom" timestamp="1615693923705">
       <screen x="0" y="0" width="1440" height="900" />
@@ -374,10 +372,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="304" key="GridCell.Tab.3.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923711" />
-    <state x="446" y="159" key="RollbackChangesDialog" timestamp="1615695223883">
+    <state x="446" y="159" key="RollbackChangesDialog" timestamp="1615704246690">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="446" y="159" key="RollbackChangesDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615695223883" />
+    <state x="446" y="159" key="RollbackChangesDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615704246690" />
     <state x="102" y="75" key="SettingsEditor" timestamp="1615693468369">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -391,11 +389,11 @@
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615694588353">
+    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615707911759">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
-    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615694588353" />
+    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615707911759" />
     <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615529981834">
       <screen x="0" y="0" width="1440" height="900" />
@@ -431,6 +429,18 @@
           <line>135</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue</url>
+          <line>3</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/admin-manage/components/PartnerPerformance.vue</url>
+          <line>24</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="49" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

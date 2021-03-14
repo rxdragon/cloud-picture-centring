@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { SCORE_TYPES } from '@/utils/enumerate'
+import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
 import Assessment from "./assessment-item"
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
 import ScorerSelect from '@SelectBox/scorerSelect/index'
@@ -113,12 +113,7 @@ function getScoreGroupBase (scoreTypeId) {
     isEdit: true,
     isNew: true,
     id: +new Date(),
-    children: [
-      { id: 1, name: '小', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
-      { id: 2, name: '中', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
-      { id: 3, name: '拔草', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
-      { id: 4, name: '种草', score: undefined, editScore: undefined, type: SCORE_TYPES.ADD }
-    ]
+    children: _.cloneDeep(GRADE_CONFIGURATION_TYPE)
   }
 }
 
@@ -269,7 +264,7 @@ export default {
      */
     async handleSaveScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
-      const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
+      const editGroup = _.cloneDeep(editCategory.children.find(group => Number(group.id) === Number(groupId)))
       // 区分是新增还是编辑
       const action = editGroup.isNew
         ? this.addScoreConfig

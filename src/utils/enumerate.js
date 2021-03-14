@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4'
 // enumerate
 
 // 修图标准
@@ -457,9 +458,16 @@ export const readToCN = {
 }
 
 /**
- * @description 云学院评分类型， 加分或者减肥
+ * @description 云学院评分类型， 加分或者减分
  */
 export const SCORE_TYPES = {
   ADD: 'add',
   DEDUCT: 'deduct'
 }
+
+export const GRADE_CONFIGURATION_TYPE = [
+  { id: uuidv4(), name: '小', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+  { id: uuidv4(), name: '中', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+  { id: uuidv4(), name: '拔草', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+  { id: uuidv4(), name: '种草', score: undefined, editScore: undefined, type: SCORE_TYPES.ADD }
+]

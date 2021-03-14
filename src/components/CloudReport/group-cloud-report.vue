@@ -5,21 +5,19 @@
         <span>评价时间</span>
         <date-picker v-model="timeSpan" />
       </div>
-      <div class="staff-search search-item">
-        <span>修图伙伴</span>
-        <staff-select v-model="staffIds" />
-      </div>
       <div class="product-box search-item">
         <span>产品</span>
         <product-select v-model="productValue" />
       </div>
     </div>
-    <div class="chat-warp">
-      <div class="total-sore"> 云端平均分：80 </div>
-      <chart-bar></chart-bar>
+    <div class="total-chat-warp">
+      <chart-bar title="平均分对比" :chartDatas="groupTotalRes">
+        <span slot="other">云端平均分：80</span>
+      </chart-bar>
     </div>
+    <div class="content-divider"></div>
 
-    <div>
+    <div class="group-warp">
       <el-tabs v-model="tabKey" @tab-click="handleChangeCategory">
         <el-tab-pane
           v-for="tab in cloudGradeConfigurationList"
@@ -30,18 +28,28 @@
         >
         </el-tab-pane>
       </el-tabs>
-
-      <div class="group-warp">
-        <el-select v-model="currentSelectedGroup" multiple placeholder="请选择">
-          <el-option
-            v-for="item in currentGroup"
-            :key="item.id"
-            :label="item.name"
-            :value="item.name"
-          >
-          </el-option>
-        </el-select>
-        <chart-bar ></chart-bar>
+      <el-divider class="divider"></el-divider>
+      <div class="chart-warp">
+        <div class="group-search-box">
+          <span>标签</span>
+          <el-select v-model="currentSelectedGroup" multiple placeholder="请选择">
+            <el-option
+              v-for="item in currentGroup"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <chart-bar
+          v-for="item in GRADE_CONFIGURATION_TYPE"
+          :key="item.id"
+          :title="`${item.name}问题对比 单位：张`"
+          class="detail-chart"
+          :chartDatas="groupTotalRes"
+        >
+        </chart-bar>
       </div>
     </div>
   </div>
@@ -50,14 +58,15 @@
 <script>
 import { delayLoading } from "@/utils/timespan"
 import DatePicker from '@/components/DatePicker/index'
-import StaffSelect from '@SelectBox/StaffSelect/index'
 import ProductSelect from '@SelectBox/ProductSelect/index'
 import ChartBar from './chart-bar'
 import { mapGetters } from 'vuex'
+import * as AssessmentCenterApi from '@/api/assessmentCenter'
+import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'group-cloud-report',
-  components: { DatePicker, StaffSelect, ProductSelect, ChartBar },
+  components: { DatePicker, ProductSelect, ChartBar },
   data () {
     return {
       loading: false,
@@ -65,7 +74,9 @@ export default {
       staffIds: [], // 云端伙伴
       productValue: [], // 产品
       tabKey: '',
-      currentSelectedGroup: []
+      currentSelectedGroup: [],
+      groupTotalRes: [],
+      GRADE_CONFIGURATION_TYPE
     }
   },
   computed: {
@@ -82,6 +93,7 @@ export default {
   },
   async mounted () {
     await this.$store.dispatch('gradeConfiguration/getCloudGradeConfigurationList')
+    await this.searchData()
   },
   methods: {
     /**
@@ -90,10 +102,8 @@ export default {
     async searchData () {
       this.loading = true
       try {
-        await Promise.all([
-          this.getCheckPoolQuota(),
-          this.getCheckPoolSubQuota()
-        ])
+        const res = await AssessmentCenterApi.getCloudProblemReportByGroupNew()
+        this.groupTotalRes = res
       } finally {
         await delayLoading()
         this.loading = false
@@ -109,10 +119,61 @@ export default {
 }
 </script>
 
-<style scoped>
-.chat-warp {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
+<style lang="less" scoped>
+
+.cloud-report {
+  background-color: #fff;
 }
+
+.search-box {
+  padding: 24px;
+  border-bottom: 1px solid #ecedee;
+}
+
+.total-chat-warp {
+  padding-top: 20px;
+}
+
+.content-divider {
+  width: calc(100% + 48px);
+  height: 20px;
+  margin-left: -24px;
+  background: #fafafa;
+}
+
+.group-warp {
+  margin-top: 20px;
+  background-color: #fff;
+
+  .divider {
+    margin: 1px 0 0;
+  }
+
+  .chart-warp {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 20px;
+
+    .group-search-box {
+      font-size: 14px;
+
+      & > span {
+        margin-right: 10px;
+      }
+    }
+
+    .total-sore {
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .detail-chart {
+      margin-top: 20px;
+    }
+  }
+}
+
 </style>

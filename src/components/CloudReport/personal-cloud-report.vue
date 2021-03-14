@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="chat-warp">
-      <chart-sunburst v-for="i in 4" :key="i"></chart-sunburst>
+      <chart-sunburst v-for="item in GRADE_CONFIGURATION_TYPE" :key="item.id"></chart-sunburst>
     </div>
   </div>
 </template>
@@ -28,6 +28,7 @@ import { delayLoading } from "@/utils/timespan"
 import DatePicker from '@/components/DatePicker/index'
 import StaffSelect from '@SelectBox/StaffSelect/index'
 import ProductSelect from '@SelectBox/ProductSelect/index'
+import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
 
 import ChartSunburst from './chart-sunburst'
 
@@ -40,6 +41,7 @@ export default {
       timeSpan: null,
       staffIds: [], // 云端伙伴
       productValue: [], // 产品
+      GRADE_CONFIGURATION_TYPE
     }
   },
   methods: {

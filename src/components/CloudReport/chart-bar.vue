@@ -1,41 +1,140 @@
 <template>
-  <div ref="main" class="chart-bar-main"></div>
+  <div class="chart-bar-wrap">
+    <div class="title">
+      <span>{{ title }}</span>
+      <slot name="other"></slot>
+    </div>
+    <ve-histogram
+      :data="chartData"
+      :legend-visible="false"
+      :extend="extend"
+      height="300px"
+    />
+  </div>
 </template>
 
 <script>
-import echarts from 'echarts'
 export default {
   name: 'chart-bar',
-  mounted () {
-    const chartDom = this.$refs.main
-    const myChart = echarts.init(chartDom)
-
-    const option = {
-      xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  props: {
+    title: String,
+    chartDatas: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  data () {
+    this.extend = {
+      grid: { x: 0, x2: 27, y: 60, y2: 0 },
+      series: {
+        label: {
+          show: true,
+          position: 'top',
+          color: '#4669FB'
+        },
+        barWidth: 24,
+        barCategoryGap: '80%',
+        itemStyle: {
+          barBorderRadius: [6, 6, 0, 0],
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: '#4669FB' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: '#71B9FD' // 100% 处的颜色
+              }
+            ],
+            global: false // 缺省为 false
+          }
+        }
       },
-      title: {
-        text: '平均分对比',
-        left: 'center'
+      xAxis: {
+        boundaryGap: ['10%', '10%'],
+        axisLabel: {
+          color: '#45454D',
+          fontSize: '10',
+          interval: 0
+        }
       },
       yAxis: {
-        type: 'value'
+        splitLine: {
+          lineStyle: {
+            color: '#DDDFE6',
+            type: 'dashed'
+          }
+        },
+        axisLabel: {
+          color: '#C0C4CC',
+          fontSize: '10'
+        }
       },
-      series: [{
-        data: [120, 200, 150, 80, 70, 110, 130],
-        type: 'bar'
-      }]
+      tooltip: {
+        formatter: (params) => {
+          const data = params[0]
+          return `${data.name}：${data.value}`
+        }
+      }
     }
-
-    option && myChart.setOption(option)
+    return {
+      chartData: {
+        columns: ['name', 'count'],
+        rows: []
+      }
+    }
+  },
+  watch: {
+    chartDatas () {
+      this.init()
+    }
+  },
+  methods: {
+    init () {
+      if (!this.chartDatas.length) return
+      this.chartData.rows = this.chartDatas
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.chart-bar-main {
+
+.chart-bar-wrap {
   width: 100%;
-  height: 300px;
+
+  .title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+    font-size: 16px;
+    font-weight: bold;
+
+    &::before {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 2px;
+      height: 16px;
+      margin-top: -8px;
+      content: '';
+      background-color: @green;
+    }
+  }
+
+  .chart-bar-main {
+    width: 100%;
+    height: 300px;
+  }
 }
 </style>
