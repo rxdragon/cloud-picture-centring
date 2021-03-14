@@ -85,7 +85,7 @@ const permissionGetters = {
 
 const gradeConfiguration = {
   // 云端评分配置
-  cloudGradeConfigurationList: state => state.gradeConfiguration.cloudGradeConfigurationList,
+  cloudGradeConfigurationList: state => state.gradeConfiguration.cloudGradeConfigurationList || [],
   showGradeConfigurationList: state => state.gradeConfiguration.showGradeConfigurationList,
 }
 

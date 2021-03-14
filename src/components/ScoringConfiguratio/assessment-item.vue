@@ -1,7 +1,7 @@
 <template>
   <div class="assessment-item">
     <div class="add-group-wrap">
-      <el-button @click="handleAddGroup" size="mini">添加评分项</el-button>
+      <el-button @click="handleAddGroup" type="primary">添加评分项</el-button>
     </div>
     <div class="table-group"  v-for="(item, index) in groupList" :key="index">
       <div class="table-nav">
@@ -9,40 +9,49 @@
           <el-input
             maxlength="8"
             v-no-special-chinese
-            placeholder="请填写评分项名称"
+            placeholder="请输入评分项名称"
             v-if="item.isEdit"
-            v-model="item.edit_name"
+            v-model="item.editName"
           >
           </el-input>
           <span v-else>{{ item.name }}</span>
         </div>
         <div class="right">
-          <div @click="handleDeleteScoreGroup(item)">删除</div>
-          <div @click="handleEditScoreGroup(item)">编辑</div>
+          <div v-if="item.isEdit">
+            <el-button type="info" @click="handleCancelSoreItemChange(item)">
+              取消
+            </el-button>
+            <el-button type="primary" @click="handleSaveScoreItem(item)">保存</el-button>
+          </div>
+          <div v-else class="icon">
+            <i class="el-icon-edit-outline" @click="handleEditScoreGroup(item)"></i>
+            <i class="el-icon-delete" @click="handleDeleteScoreGroup(item)"></i>
+          </div>
         </div>
       </div>
       <el-table :data="item.children" style="width: 100%;">
-        <el-table-column prop="name" label="问题程度" align="center"></el-table-column>
-        <el-table-column prop="score" label="分值" align="center">
+        <el-table-column prop="name" label="问题程度"></el-table-column>
+        <el-table-column prop="score" label="分值">
           <template slot-scope="{ row }">
-            <el-input
-              v-if="item.isEdit"
-              v-numberOnly
-              type="number"
-              min="0"
-              max="100"
-              v-model="row.edit_score"
-            ></el-input>
-            <span v-else>{{ row.type === 'add' ? row.score : '-' + row.score }}</span>
+            <div :class="row.type === 'add' ? 'green' : 'red'">
+              <span v-if="item.isEdit" >
+                {{ row.type === 'add' ? '加分项' : '扣分项' }}
+                <el-input
+                  v-numberOnly
+                  type="number"
+                  style="width: 140px;"
+                  class="ml-10"
+                  min="0"
+                  max="100"
+                  v-model="row.editScore"
+                ></el-input>
+              </span>
+
+              <span v-else>{{ row.type === 'add' ? row.score : '-' + row.score }}</span>
+            </div>
           </template>
         </el-table-column>
       </el-table>
-      <div class="table-bottom" v-if="item.isEdit">
-        <el-button type="info" @click="handleCancelSoreItemChange(item)">
-          取消
-        </el-button>
-        <el-button type="primary" @click="handleSaveScoreItem(item)">保存</el-button>
-      </div>
     </div>
   </div>
 </template>
@@ -80,20 +89,20 @@ export default {
     },
     handleSaveScoreItem (item) {
       const hasError = item.children.some(scoreItem => {
-        return scoreItem.edit_score === undefined || scoreItem.edit_score === ''
+        return scoreItem.editScore === undefined || scoreItem.editScore === ''
       })
       if (hasError) {
         this.$message.error('请填写分值')
         return
       }
       const hasDuplicate = this.groupList.some(group => {
-        return group.id !== item.id && group.name === item.edit_name
+        return group.id !== item.id && group.name === item.editName
       })
       if (hasDuplicate) {
         this.$message.error('存在相同的评分项。')
         return
       }
-      if (!item.edit_name) {
+      if (!item.editName) {
         this.$message.error('请填写评分项名称')
         return
       }
@@ -111,26 +120,48 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import '~@/styles/variables.less';
+
 .assessment-item {
+  padding: 20px 16px 20px 16px;
+  background-color: #fff;
+
   .add-group-wrap {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   .table-group {
     padding: 10px;
-    margin-bottom: 30px;
+    margin-top: 20px;
     background-color: #fff;
 
     .table-nav {
       display: flex;
       align-content: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      height: 48px;
+      padding: 0 12px;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 48px;
+      color: #303133;
+      background-color: #fafafa;
+      border-bottom: 1px solid #ebeef5;
 
       .right {
         display: flex;
         align-items: center;
+
+        .icon {
+          font-size: 24px;
+          color: #94979c;
+
+          & > i {
+            margin-left: 10px;
+            cursor: pointer;
+          }
+        }
       }
     }
 
@@ -139,6 +170,22 @@ export default {
       justify-content: center;
       margin-top: 10px;
     }
+  }
+
+  .ml-10 {
+    margin-left: 10px;
+  }
+
+  .w140 {
+    width: 140px;
+  }
+
+  .green {
+    color: @green;
+  }
+
+  .red {
+    color: @red;
   }
 }
 </style>

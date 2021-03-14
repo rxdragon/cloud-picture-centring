@@ -1,64 +1,69 @@
 <template>
   <div class="grade-configuration-main">
-    <el-popover
-      placement="bottom-start"
-      width="420"
-      :offset="20"
-      v-model="showEditCategoryDialog"
-      popper-class="add-new-item"
-      trigger="click"
-    >
-      <div class="grade-configuration-add-item-main">
-        <span>类别名称:</span>
-        <el-input
-          class="ml-10 w150"
-          v-no-special-chinese
-          v-model="editEditCategory.edit_name"
-          placeholder="请输入类别"
-          maxlength="5"
+    <div class="header">
+      <h3>云学院评分配置</h3>
+      <div>
+        <el-popover
+          placement="bottom-start"
+          width="420"
+          :offset="20"
+          v-model="showAddCategoryDialog"
+          trigger="click"
         >
-        </el-input>
-        <el-button type="info" class="ml-10" @click="showEditCategoryDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirmEditCategoryName">确 定</el-button>
-      </div>
-      <el-button
-        v-show="isShowEditCategoryButton"
-        slot="reference"
-        @click.stop="handleOpenEditCategoryNameView"
-        class="edit-category-button"
-      >
-        修改当前类别名称1
-      </el-button>
-    </el-popover>
-    <el-popover
-      placement="bottom-start"
-      width="420"
-      :offset="20"
-      v-model="showAddCategoryDialog"
-      trigger="click"
-    >
-      <div class="grade-configuration-add-item-main">
-        <span>类别名称:</span>
-        <el-input
-          class="ml-10 w150"
-          v-no-special-chinese
-          v-model="addCategoryName"
-          placeholder="请输入类别"
-          maxlength="5"
+          <div class="grade-configuration-add-item-main">
+            <span>类别名称:</span>
+            <el-input
+              class="ml-10 w150"
+              v-no-special-chinese
+              v-model="addCategoryName"
+              placeholder="请输入类别"
+              maxlength="5"
+            >
+            </el-input>
+            <el-button type="info" class="ml-10" @click="showAddCategoryDialog = false">取 消</el-button>
+            <el-button type="primary" @click="handleConfirmCategory">确 定</el-button>
+          </div>
+          <el-button slot="reference" type="primary">添加类别</el-button>
+        </el-popover>
+        <el-button
+          class="empty-button"
+          v-if="showEmptyCheckPool"
+          type="danger"
+          @click="showEmptyDialog = true"
         >
-        </el-input>
-        <el-button type="info" class="ml-10" @click="showAddCategoryDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirmCategory">确 定</el-button>
+          清空评分
+        </el-button>
       </div>
-      <el-button slot="reference" class="add-category-button">添加类别</el-button>
-    </el-popover>
+    </div>
     <el-tabs v-model="tabKey">
       <el-tab-pane
         v-for="tab in tabList"
         :label="tab.name"
         :name="tab.name"
         :key="tab.name"
+        @tab-click="handleSwitchTab"
       >
+        <span slot="label">
+          <span v-if="!tab.isEdit">{{ tab.name }}
+            <i slot="reference" class="el-icon-edit-outline" @click.stop="handleOpenEditCategoryName(tab)"></i>
+          </span>
+          <span v-else>
+            <el-input
+              class="ml-10 w150"
+              v-no-special-chinese
+              v-model="tab.editName"
+              @hook:mounted="handleEditCategoryNameInputMounted"
+              placeholder="请输入类别"
+              size="mini"
+              ref="editCategoryInput"
+              @blur="handleConfirmEditCategoryName(tab)"
+              v-on:keyup.enter="handleConfirmEditCategoryName(tab)"
+              maxlength="5"
+              clearable
+            >
+            </el-input>
+          </span>
+        </span>
         <Assessment
           @cancel-score-item-change="handleCancelScoreItem($event, tab.id)"
           @save-score-item="handleSaveScoreItem($event, tab.id)"
@@ -71,26 +76,48 @@
         </Assessment>
       </el-tab-pane>
     </el-tabs>
+
+    <!-- 清空弹出框 -->
+    <el-dialog
+      width="35%"
+      title="清空评分内容"
+      center
+      custom-class="empty-dialog"
+      :visible.sync="showEmptyDialog"
+    >
+      <div class="">
+        <span>选择清空对象:</span>
+        <scorer-select v-model="emptyPeople"></scorer-select>
+        <span v-if="!emptyPeople.length" class="all-empty-warning">默认清空全部人员评分</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="info" @click="showEmptyDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setEmpty">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { SCORE_TYPES } from '@/utils/enumerate'
 import Assessment from "./assessment-item"
+import * as GradeConfigurationApi from '@/api/gradeConfiguration'
+import ScorerSelect from '@SelectBox/scorerSelect/index'
+import { mapGetters } from 'vuex'
 
 function getScoreGroupBase (scoreTypeId) {
   return {
     name: '',
-    edit_name: '',
+    editName: '',
     scoreTypeId,
     isEdit: true,
     isNew: true,
     id: +new Date(),
     children: [
-      { id: 1, name: '小', score: undefined, edit_score: undefined, type: SCORE_TYPES.DEDUCT },
-      { id: 2, name: '中', score: undefined, edit_score: undefined, type: SCORE_TYPES.DEDUCT },
-      { id: 3, name: '拔草', score: undefined, edit_score: undefined, type: SCORE_TYPES.DEDUCT },
-      { id: 4, name: '种草', score: undefined, edit_score: undefined, type: SCORE_TYPES.ADD }
+      { id: 1, name: '小', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+      { id: 2, name: '中', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+      { id: 3, name: '拔草', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+      { id: 4, name: '种草', score: undefined, editScore: undefined, type: SCORE_TYPES.ADD }
     ]
   }
 }
@@ -98,7 +125,7 @@ function getScoreGroupBase (scoreTypeId) {
 export default {
   name: 'GradeConfigurationMain',
   components: {
-    Assessment
+    Assessment, ScorerSelect
   },
   props: {
     addScoreType: Function,
@@ -111,16 +138,19 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
+      // 清空评分
+      showEmptyDialog: false,
+      emptyPeople: [],
+
       tabList: [],
       tabKey: '',
       // 类别弹出框
       showAddCategoryDialog: false,
-      addCategoryName: '',
-      showEditCategoryDialog: false, // 修改当前类别名称
-      editEditCategory: {}, // 当前正在编辑的类别
+      addCategoryName: ''
     }
   },
   computed: {
+    ...mapGetters(['showEmptyCheckPool']),
     isShowEditCategoryButton () {
       return this.tabList.some(tab => tab.name === this.tabKey)
     }
@@ -131,11 +161,27 @@ export default {
   methods: {
     async getAllScoreConfig () {
       const res = await this.getScoreConfig()
+      // 每次这个页面改动只有， 都会重新调用getAllScoreConfig，保证vuex里的是最新的
+      this.$store.commit('gradeConfiguration/SAVE_CLOUD_GRADE_CONFIGURATION_LIST', _.cloneDeep(res))
+      res.forEach(tab => {
+        tab.isEdit = false
+        tab.editName = tab.name
+        if (!tab.children) tab.children = []
+        tab.children.forEach(group => {
+          group.isNew = false
+          group.isEdit = false
+          group.editName = group.name
+          if (!group.children) group.children = []
+          group.children.forEach(score => {
+            score.editScore = score.score
+          })
+        })
+      })
       this.tabList = res
       if (res.length > 0) {
         this.tabKey = res[0].name
       }
-      this.$store.commit('gradeConfiguration/SAVE_CLOUD_GRADE_CONFIGURATION_LIST', res)
+      this.tabList = res
     },
     async handleConfirmCategory () {
       if (this.tabList.some(tab => tab.name === this.addCategoryName)) {
@@ -153,13 +199,8 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const res = await this.addScoreType(req)
         if (res) this.$message.success('评分类别创建成功。')
-        const data = {
-          id: res,
-          name: this.addCategoryName,
-          children: []
-        }
-        this.tabList.unshift(data)
-        this.tabKey = data.name
+        await this.getAllScoreConfig()
+        this.tabKey = this.addCategoryName
         this.showAddCategoryDialog = false
         this.addCategoryName = ''
       } catch (error) {
@@ -173,9 +214,6 @@ export default {
      */
     handleAddScoreGroup (id) {
       const index = this.tabList.findIndex(tab => tab.id === id)
-      if (!this.tabList[index].children) {
-        this.$set(this.tabList[index], 'children', [])
-      }
       this.tabList[index].children.unshift(getScoreGroupBase(id))
     },
     /**
@@ -184,14 +222,10 @@ export default {
     handleEditScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
       const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
-      if (!editGroup.hasOwnProperty('isEdit')) {
-        this.$set(editGroup, 'isEdit', true)
-      } else {
-        editGroup.isEdit = true
-      }
-      this.$set(editGroup, 'edit_name', editGroup.name)
+      editGroup.isEdit = true
+      editGroup.editName = editGroup.name
       editGroup.children.forEach(item => {
-        this.$set(item, 'edit_score', item.score)
+        item.editScore = item.score
       })
     },
     /**
@@ -210,7 +244,7 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await this.delScoreConfig(req)
-        editCategory.children.splice(deleteGroupIndex, 1)
+        await this.getAllScoreConfig()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         console.error(error)
@@ -224,9 +258,9 @@ export default {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
       const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
       editGroup.isEdit = false
-      delete editGroup.edit_name
+      editGroup.editName = editGroup.name
       editGroup.children.forEach(item => {
-        delete item.edit_score
+        item.editScore = item.score
       })
     },
     /**
@@ -243,11 +277,11 @@ export default {
       // 删除无用数据
       delete editGroup.isNew
       editGroup.isEdit = false
-      editGroup.name = editGroup.edit_name
-      delete editGroup.edit_name
+      editGroup.name = editGroup.editName
+      delete editGroup.editName
       editGroup.children.forEach(item => {
-        item.score = item.edit_score
-        delete item.edit_score
+        item.score = item.editScore
+        delete item.editScore
       })
 
       const req = {
@@ -257,7 +291,8 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const res = await action(req)
         if (res) this.$message.success('评分内容创建成功。')
-        editGroup.id = res
+        await this.getAllScoreConfig()
+        this.tabKey = editCategory.name
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -265,41 +300,75 @@ export default {
       }
     },
     /**
+     * 切换tab， 需要吧当前编辑的都取消掉
+     */
+    handleSwitchTab () {
+      this.tabList.forEach(tab => {
+        tab.isEdit = false
+      })
+    },
+    /**
      * 打开修改分类名称的弹窗
      */
-    handleOpenEditCategoryNameView () {
-      const editEditCategory = this.tabList.find(tab => tab.name === this.tabKey)
-      editEditCategory.edit_name = editEditCategory.name
-      this.editEditCategory = _.cloneDeep(editEditCategory)
+    handleOpenEditCategoryName (editTab) {
+      const editEditCategory = this.tabList.find(tab => tab.name === editTab.name)
+      this.tabKey = editTab.name
+      editEditCategory.isEdit = true
+      editEditCategory.editName = editEditCategory.name
+    },
+    /**
+     * 修改的输入框打开扣需要获取焦点，其他的方式都不太好用
+     */
+    handleEditCategoryNameInputMounted () {
+      if (!this.$refs.editCategoryInput) return
+      this.$refs.editCategoryInput.forEach(v => v.focus())
     },
     /**
      * 确认修改类别名称
      */
-    async handleConfirmEditCategoryName () {
-      if (this.tabList.some(tab => tab.name === this.editEditCategory.edit_name)) {
-        this.$message.error('存在相同的评分类别。')
+    async handleConfirmEditCategoryName (editTab) {
+      const currentTab = this.tabList.find(tab => tab.id === editTab.id)
+      if (!currentTab.editName) {
+        this.$message.error('请填写正确的评分类型。')
         return
       }
-      if (!this.editEditCategory.edit_name) {
-        this.$message.error('请填写正确的评分类型。')
+      // 名字没有改变，算作取消
+      if (currentTab.editName === currentTab.name) {
+        currentTab.isEdit = false
+        return
+      }
+      if (this.tabList.some(tab => tab.name === currentTab.editName)) {
+        this.$message.error('存在相同的评分类别。')
         return
       }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = {
-          name: this.editEditCategory.edit_name,
-          id: this.editEditCategory.id
+          name: currentTab.editName,
+          id: currentTab.id
         }
         await this.editScoreTypeName(req)
-        const origin = this.tabList.find(tab => tab.id === this.editEditCategory.id)
-        origin.name = this.editEditCategory.edit_name
-        this.tabKey = this.editEditCategory.edit_name
-        this.showEditCategoryDialog = false
-        this.editEditCategory = {}
+        await this.getAllScoreConfig()
+        this.tabKey = currentTab.editName
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } catch (error) {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+      }
+    },
+    /**
+     * @description 确认清除
+     */
+    async setEmpty () {
+      const params = {}
+      if (this.emptyPeople.length > 0) {
+        params.staffIds = this.emptyPeople
+      }
+      const msg = GradeConfigurationApi.emptyCheckPoolByStaffId(params)
+      if (msg) {
+        this.$newMessage.success('清除成功')
+        this.emptyPeople = []
+        this.showEmptyDialog = false
       }
     }
   }
@@ -312,27 +381,22 @@ export default {
   position: relative;
   height: 100%;
 
-  .add-category-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
-  }
-
-  .edit-category-button {
-    position: absolute;
-    top: 0;
-    right: 120px;
-    z-index: 10;
+  .empty-button {
+    margin-left: 15px;
   }
 }
 </style>
 
 <style lang="less">
-
 .grade-configuration-add-item-main {
   display: flex;
   align-items: center;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   .ml-10 {
     margin-left: 10px;

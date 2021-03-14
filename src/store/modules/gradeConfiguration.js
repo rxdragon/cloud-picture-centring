@@ -13,6 +13,7 @@ const mutations = {
 
 const actions = {
   getCloudGradeConfigurationList: async ({ commit, state }) => {
+    if (state.cloudGradeConfigurationList && state.cloudGradeConfigurationList.length) return []
     const res = await GradeConfigurationApi.getScoreConfig()
     commit('SAVE_CLOUD_GRADE_CONFIGURATION_LIST', res)
     return res

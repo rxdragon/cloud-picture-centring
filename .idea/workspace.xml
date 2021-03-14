@@ -41,18 +41,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
-      <change afterPath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/CloudReport/chart-sunburst.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/modules/gradeConfiguration.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/gradeConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/gradeConfiguration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/cloud-report.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/assessment-item.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/assessment-item.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/getters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/getters.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/gradeConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/gradeConfiguration.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
@@ -111,12 +104,12 @@
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.slint">
-    <configuration name="eserve-dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="npm.lint">
+    <configuration name="build-release" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="eserve-dev" />
+        <script value="build-release" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -142,11 +135,11 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="serve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="log" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="serve" />
+        <script value="log" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -164,11 +157,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.slint" />
         <item itemvalue="npm.lint" />
+        <item itemvalue="npm.slint" />
         <item itemvalue="npm.eserve-release" />
-        <item itemvalue="npm.eserve-dev" />
-        <item itemvalue="npm.serve" />
+        <item itemvalue="npm.build-release" />
+        <item itemvalue="npm.log" />
       </list>
     </recent_temporary>
   </component>
@@ -204,7 +197,7 @@
       <workItem from="1615269691508" duration="11144000" />
       <workItem from="1615357802753" duration="296000" />
       <workItem from="1615432576683" duration="3261000" />
-      <workItem from="1615451501030" duration="23437000" />
+      <workItem from="1615451501030" duration="32528000" />
     </task>
     <task id="LOCAL-00001" summary="CI">
       <created>1571799918873</created>
@@ -303,38 +296,38 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615450996090" />
-    <state width="1398" height="221" key="GridCell.Tab.0.bottom" timestamp="1615540207446">
+    <state width="1398" height="153" key="GridCell.Tab.0.bottom" timestamp="1615692423823">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635471" />
-    <state width="1398" height="221" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615540207446" />
+    <state width="1398" height="153" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615692423823" />
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989576" />
-    <state width="1398" height="221" key="GridCell.Tab.0.center" timestamp="1615540207443">
+    <state width="1398" height="153" key="GridCell.Tab.0.center" timestamp="1615692423821">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635466" />
-    <state width="1398" height="221" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615540207443" />
+    <state width="1398" height="153" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615692423820" />
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="221" key="GridCell.Tab.0.left" timestamp="1615540207441">
+    <state width="1398" height="153" key="GridCell.Tab.0.left" timestamp="1615692423819">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="221" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615540207441" />
+    <state width="1398" height="153" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615692423819" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635451" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="221" key="GridCell.Tab.0.right" timestamp="1615540207445">
+    <state width="1398" height="153" key="GridCell.Tab.0.right" timestamp="1615692423822">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635468" />
-    <state width="1398" height="221" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615540207445" />
+    <state width="1398" height="153" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615692423822" />
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989575" />
     <state x="446" y="159" key="RollbackChangesDialog" timestamp="1615516095467">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="446" y="159" key="RollbackChangesDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615516095467" />
-    <state x="72" y="177" key="SettingsEditor" timestamp="1615517472756">
+    <state x="102" y="75" key="SettingsEditor" timestamp="1615693468369">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="72" y="177" key="SettingsEditor/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615517472756" />
+    <state x="102" y="75" key="SettingsEditor/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693468369" />
     <state x="182" y="75" key="SettingsEditor/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615361013623" />
     <state width="529" height="445" key="SwitcherDM" timestamp="1615518785220">
       <screen x="0" y="0" width="1440" height="900" />
@@ -344,11 +337,11 @@
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615539748173">
+    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615693357668">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
-    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615539748173" />
+    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693357668" />
     <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615529981834">
       <screen x="0" y="0" width="1440" height="900" />
@@ -378,6 +371,12 @@
           <line>18</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/assessment-center/modify-history.vue</url>
+          <line>135</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="39" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
