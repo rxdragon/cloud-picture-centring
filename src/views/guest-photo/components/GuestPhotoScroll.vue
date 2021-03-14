@@ -144,7 +144,8 @@ export default {
       const type = ['streamNum', 'orderNum', 'customerName', 'telephone']
       const reqData = {
         page: this.pager.page,
-        pageSize: this.pager.pageSize
+        pageSize: this.pager.pageSize,
+        photoVersion: this.searchParams.photoVersion
       }
       if (this.searchParams.orderSearchValue) {
         const key = type[this.searchParams.orderType - 1]
@@ -187,7 +188,7 @@ export default {
       const reqData = this.getParam()
       if (!reqData) return
       try {
-        const data = await GuestPhoto.getPhotoList(reqData)
+        const data = await GuestPhoto.getPhotoList(reqData, this.searchParams.photoVersion)
         const newRowPhotos = this.jointData(data)
         return newRowPhotos
       } catch (error) {

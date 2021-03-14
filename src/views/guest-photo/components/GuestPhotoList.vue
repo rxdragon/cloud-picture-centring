@@ -107,7 +107,8 @@ export default {
       const type = ['streamNum', 'orderNum', 'customerName', 'telephone']
       const reqData = {
         page: this.reqPager.page,
-        pageSize: this.reqPager.pageSize
+        pageSize: this.reqPager.pageSize,
+        photoVersion: this.searchParams.photoVersion
       }
       if (this.searchParams.orderSearchValue) {
         const key = type[this.searchParams.orderType - 1]
