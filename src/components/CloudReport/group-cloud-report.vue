@@ -127,7 +127,7 @@ export default {
 }
 
 .search-box {
-  padding: 24px;
+  padding-bottom: 24px;
   border-bottom: 1px solid #ecedee;
 }
 
@@ -176,7 +176,7 @@ export default {
     }
 
     .detail-chart {
-      margin-top: 20px;
+      margin-top: 24px;
     }
   }
 }

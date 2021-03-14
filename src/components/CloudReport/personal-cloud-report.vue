@@ -18,7 +18,8 @@
       </div>
     </div>
     <div class="title">
-      平均分对比
+      <span>平均分对比</span>
+      <span>抽查平均分：80</span>
     </div>
     <div class="chat-warp">
       <chart-sunburst v-for="item in GRADE_CONFIGURATION_TYPE" :key="item.id" :title="`${item.name}问题对比`"></chart-sunburst>

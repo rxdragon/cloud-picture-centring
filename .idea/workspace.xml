@@ -42,9 +42,10 @@
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/chart-sunburst.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/chart-sunburst.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/personal-center-retoucher-leader/components/AssessmentReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/personal-center-retoucher-leader/components/AssessmentReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/personal-center-retoucher/personal-details.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/personal-center-retoucher/personal-details.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -196,7 +197,7 @@
       <workItem from="1615269691508" duration="11144000" />
       <workItem from="1615357802753" duration="296000" />
       <workItem from="1615432576683" duration="3261000" />
-      <workItem from="1615451501030" duration="43131000" />
+      <workItem from="1615451501030" duration="44155000" />
     </task>
     <task id="LOCAL-00001" summary="CI">
       <created>1571799918873</created>
@@ -436,6 +437,12 @@
           <line>24</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue</url>
+          <line>19</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="55" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
