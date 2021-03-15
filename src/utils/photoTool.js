@@ -143,8 +143,7 @@ export function settlePhotoVersion (oldPhotoVersion) {
 export function handleCommitInfo (commitInfo, issueLabel) {
   const parentData = []
   issueLabel.forEach(issueItem => {
-    // TODO 云学院tag
-    const className = 'TODO'
+    const className = _.get(issueItem, 'parent.score_type.name') || '异常'
     const gradeName = _.get(issueItem, 'parent.name') || '异常'
     const createData = {
       id: issueItem.id,
