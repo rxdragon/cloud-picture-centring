@@ -1,6 +1,6 @@
 <template>
   <div class="photo-detail">
-    <!-- 图片列表 -->
+    <!-- 图片列表 不是审核模式-->
     <div v-if="!checkType" class="normal-photo-list">
       <div
         class="normal-photo-item"
@@ -21,17 +21,17 @@
         </photo-box>
       </div>
     </div>
-
     <photo-list
       v-else
       need-preload
       :photo-data="photoVersionList"
       :show-special-effects="false"
     />
+
     <!-- 质量问题标签 -->
     <div
-      class="panel-box"
       v-if="appealInfo.appealType === APPEAL_TYPE.REWORK"
+      class="panel-box"
     >
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
@@ -82,48 +82,32 @@
     </div>
     <!-- 云学院评分详情 -->
     <div
-      class="panel-box"
       v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
+      class="panel-box"
     >
-      <div class="panel-title evaluate">
+      <div class="panel-title eval uate">
         <span>评价信息</span>
         <span>总分：{{ photoItem.photoAppeals.checkPoolScore }}</span>
       </div>
       <div class="panel-main">
-        <!-- TODO 更改信息 -->
         <div class="issue-class-box panel-row">
           <el-tag
-            :class="['type-tag', photoItem.photoAppeals.evaluatorType]"
+            class="label-tag"
             size="medium"
+            v-for="labelItem in photoItem.checkPoolTags"
+            :key="labelItem.id"
+            :class="labelItem.type"
           >
-            {{ photoItem.photoAppeals.evaluatorType | toPlantCN }}
+            {{ labelItem.name }}
           </el-tag>
-          <el-tag
-            :class="['type-tag', item.type]"
-            size="medium"
-            v-for="(item, index) in photoItem.photoAppeals.typeTags"
-            :key="index"
-          >
-            {{ item.name }}
-          </el-tag>
-        </div>
-        <div
-          class="issue-class-box panel-row"
-          v-for="checkItem in photoItem.photoAppeals.checkPoolTags"
-          :key="checkItem.id"
-        >
-          <div class="label-title">{{ checkItem.name }}</div>
-          <div class="label-box">
-            <el-tag size="medium" v-for="issueItem in checkItem.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
-          </div>
         </div>
       </div>
     </div>
+    <!-- 复审后的评分 -->
     <div
       v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
       class="panel-box"
     >
-      <!-- 复审后的评分 -->
       <div class="panel-main" v-if="secondEvaluateResult.hasSecond">
         <div class="panel-content content-one">
           复审后评分
@@ -149,8 +133,8 @@
     </div>
     <!-- 申诉信息 -->
     <div
-      class="panel-box"
       v-if="appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
+      class="panel-box"
     >
       <div class="panel-title">
         申诉处理
@@ -291,12 +275,6 @@ export default {
         finalPhoto = this.priviewPhotoData.filter(priviewPhotoItem => priviewPhotoItem.version === PHOTO_VERSION.FIRST_PHOTO)[0]
       }
       return finalPhoto
-    },
-    // 云学院标记
-    checkTag () {
-      const tagArr = this.photoItem.photoAppeals.checkPoolTags
-      const tagFilter = tagArr.map(item => item.name)
-      return tagFilter
     },
     // 第一次评价信息
     photoAppealsFirstResult () {
@@ -471,6 +449,29 @@ export default {
         color: #303133;
       }
 
+      .label-tag {
+        margin-right: 10px;
+
+        &.plant {
+          color: #38bc7f;
+          background-color: #ecf7f2;
+          border-color: #7fd9af;
+        }
+
+        &.pull {
+          color: #ff3974;
+          background-color: #fff0f0;
+          border-color: #f99ab7;
+        }
+
+        &.middle,
+        &.small {
+          color: #ff8f00;
+          background-color: #fff7ed;
+          border-color: #ffce90;
+        }
+      }
+
       .type-tag {
         margin-right: 10px;
 
@@ -510,7 +511,6 @@ export default {
       font-size: 14px;
       line-height: 22px;
       color: #303133;
-      border-bottom: 1px solid @borderColor;
 
       .order-info {
         .order-info-title {
@@ -520,7 +520,7 @@ export default {
     }
 
     .panel-main {
-      padding: 20px;
+      padding: 0 20px;
       margin-top: 12px;
       background-color: #fafafa;
       border-radius: 4px;

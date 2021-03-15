@@ -22,9 +22,16 @@
         </div>
       </div>
       <!-- 评价标签 -->
-      <!-- TODO 更改标签 -->
       <div class="info-item">
-        <el-tag :class="['type-tag', photoItem.evaluatorType]" size="medium">{{ photoItem.evaluatorType | toPlantCN }}</el-tag>
+        <el-tag
+          v-for="item in photoItem.checkPoolTags"
+          :key="item.id"
+          size="medium"
+          class="label-tag"
+          :class="item.type"
+        >
+          {{ item.name }}
+        </el-tag>
       </div>
 
       <!-- 问题描述 -->
@@ -57,16 +64,6 @@ export default {
     reworkImg () {
       return this.imgCompressDomain + this.photoItem.originalPhoto.path
     },
-    // 云学院标记
-    checkTag () {
-      const tagArr = this.photoItem.checkPoolTags
-      const finalTag = tagArr.reduce((sumArr, tagItem) => {
-        const tagChild = tagItem.child.map(childItem => childItem.name)
-        sumArr = sumArr.concat(tagChild)
-        return sumArr
-      }, [])
-      return finalTag
-    }
   }
 }
 </script>
@@ -130,7 +127,8 @@ export default {
     .info-item {
       display: flex;
       align-items: flex-start;
-      margin-bottom: 10px;
+      margin-right: 10px;
+      margin-bottom: 14px;
 
       .info-title {
         display: block;
@@ -171,6 +169,29 @@ export default {
 
         .info-title {
           margin-bottom: 14px;
+        }
+      }
+
+      .label-tag {
+        margin-right: 10px;
+
+        &.plant {
+          color: #38bc7f;
+          background-color: #ecf7f2;
+          border-color: #7fd9af;
+        }
+
+        &.pull {
+          color: #ff3974;
+          background-color: #fff0f0;
+          border-color: #f99ab7;
+        }
+
+        &.middle,
+        &.small {
+          color: #ff8f00;
+          background-color: #fff7ed;
+          border-color: #ffce90;
         }
       }
     }

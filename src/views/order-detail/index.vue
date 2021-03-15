@@ -146,6 +146,7 @@ export default {
     isWorkBoardInfo () {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
+    // 申述照片
     appealPhotos () {
       // 区分评分申诉和质量问题申诉
       let finalPhotos = []

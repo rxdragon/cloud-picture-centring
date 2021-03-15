@@ -27,7 +27,7 @@
       <el-col :span="8" :xl="6">
         <div class="product-search search-item">
           <span>问题标签</span>
-          <issue-label-select v-model="issueValue" />
+          <issue-label-select :type="this.cloudType" v-model="issueValue" />
         </div>
       </el-col>
       <!-- 分数 -->

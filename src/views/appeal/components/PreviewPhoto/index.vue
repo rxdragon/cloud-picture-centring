@@ -3,9 +3,6 @@
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}{{ showPhoto.storeReturnCount || '' }}
       <div class="btn-right">
-        <!-- todo 2.14之后后续注释去掉,解决照片问题标记被右边栏覆盖 -->
-        <!-- <i @click="changeRightShow" class="el-icon-view" /> -->
-        <div class="for-todo"></div>
         <button
           id="closeImg"
           type="button"
@@ -248,8 +245,8 @@
           </div>
           <div class="submit-box">
             <div
-              class="not-refusing"
               v-if="!showRefuseTextarea && !showAcceptTextarea && !showLabelDataTop"
+              class="not-refusing"
             >
               <el-button type="danger" @click="showRefuse">审核拒绝</el-button>
               <el-button type="primary" @click="showAccept">审核通过</el-button>
@@ -305,13 +302,11 @@ import ModeSwitchBox from './ModeSwitchBox'
 import FabricCanvas from '@AssessmentComponents/components/GradePreview/FabricCanvas.vue'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
-import * as GradeConfiguration from '@/api/gradeConfiguration'
 
 import { APPEAL_CHECK_STATUS, APPEAL_TYPE, PHOTO_VERSION, PlantIdTypeEnum } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
 let allLabel = null
-let goodWord = []
 
 export default {
   name: 'PreviewPhoto',
@@ -477,9 +472,10 @@ export default {
     }
   },
   mounted () {
-    if (this.appealInfo.appealType === APPEAL_TYPE.EVALUATE && this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审云学院评分时候,要重评
+    const isCloudEvaluate = this.appealInfo.appealType === APPEAL_TYPE.EVALUATE
+    const isSecondCheck = this.checkType === APPEAL_CHECK_STATUS.SECOND
+    if (isCloudEvaluate && isSecondCheck) { // 复审云学院评分时候,要重评
       this.getLabelData()
-      this.fetchGoodWord()
     }
   },
   beforeDestroy () {
@@ -521,17 +517,6 @@ export default {
       })
     },
     /**
-     * @description 获取激励词列表
-     */
-    async fetchGoodWord () {
-      const words = await GradeConfiguration.getExcitationDirList()
-      words.forEach(wordsItem => {
-        wordsItem.isSelect = false
-        wordsItem.type = 'goodWord'
-      })
-      goodWord = words
-    },
-    /**
      * @description 根据种拔草,选择对应的标签
      */
     selectTLabelData (selItem) {
@@ -547,7 +532,7 @@ export default {
         this.labelData.push({
           isGoodWord: true, // 区分激励词
           name: '激励词',
-          child: goodWord
+          child: []
         })
         this.hasPushGoodWord = true
       }
@@ -840,7 +825,8 @@ export default {
      * @description 保存质量问题申诉复核通过备注
      */
     saveReworkAccept () {
-      if (this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审一定要勾选删除标签
+      if (this.checkType === APPEAL_CHECK_STATUS.SECOND) {
+        // 复审一定要勾选删除标签
         if (!this.delLabelNum) {
           this.$newMessage.warning('必须要删除至少一个标签')
           return

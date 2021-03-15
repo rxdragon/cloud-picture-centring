@@ -9,7 +9,7 @@ import uuidv4 from 'uuid'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
-import { GRADE_TYPE, CLOUD_ROLE, ASSESSMENT_TYPE } from '@/utils/enumerate'
+import { GRADE_TYPE, CLOUD_ROLE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 
 export const GRADE_LEVEL = {
@@ -17,13 +17,6 @@ export const GRADE_LEVEL = {
   MIDDLE: 'middle',
   PULL: 'pull',
   PLANT: 'plant'
-}
-
-export const CNLevelToType = {
-  '小': 'small',
-  '中': 'middle',
-  '拔草': 'pull',
-  '种草': 'plant'
 }
 
 // 修图标准映射中文
@@ -39,8 +32,8 @@ export const gradeLevelToCN = {
  */
 export function getStatistics (params) {
   const axiosUrls = {
-    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getStatistics',
-    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getStatistics'
+    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getStatistics',
+    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getStatistics'
   }
 
   return axios({
@@ -60,8 +53,8 @@ export function getStatistics (params) {
  */
 export function takePhoto (params) {
   const axiosUrls = {
-    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/takePhoto',
-    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/takePhoto'
+    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/takePhoto',
+    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/takePhoto'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -78,8 +71,8 @@ export function takePhoto (params) {
  */
 export function getHaveCheckResult (params) {
   const axiosUrls = {
-    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getHaveCheckResult',
-    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getHaveCheckResult'
+    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getHaveCheckResult',
+    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getHaveCheckResult'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -93,8 +86,8 @@ export function getHaveCheckResult (params) {
  */
 export function getSpotCheckResult (params) {
   const axiosUrls = {
-    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getSpotCheckResult',
-    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSpotCheckResult'
+    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getSpotCheckResult',
+    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSpotCheckResult'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -144,8 +137,8 @@ export function getSpotCheckResult (params) {
  */
 export function commitHistory (params) {
   const axiosUrls = {
-    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/commitHistory',
-    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/commitHistory'
+    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/commitHistory',
+    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/commitHistory'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -160,8 +153,8 @@ export function commitHistory (params) {
  */
 export function getSearchHistory (params) {
   const axiosUrls = {
-    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getSearchHistory',
-    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSearchHistory'
+    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getSearchHistory',
+    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSearchHistory'
   }
 
   return axios({
@@ -171,19 +164,12 @@ export function getSearchHistory (params) {
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      const newTag = item.tags.map(tagItem => {
-        const className = _.get(tagItem, 'type.name') || 'TODO'
-        return {
-          name: `${className}-${tagItem.parent.name}-${tagItem.name}`,
-          id: tagItem.id,
-          type: CNLevelToType[tagItem.name]
-        }
-      })
-      item.labelTag = newTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
       item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
+      item.labelTag = item.commitInfo.issueLabel
+
       item.score = item.commitInfo.score
 
       item.photoInfo.photoSpotCheckVersion.forEach(versionItem => {
@@ -399,8 +385,12 @@ export function getCloudProblemReportByGroup (params, type) {
  * @param {*} params
  */
 export function getUpdateHistoryLog (params) {
+  const axiosUrls = {
+    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getUpdateHistoryLog',
+    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getUpdateHistoryLog'
+  }
   return axios({
-    url: '/project_cloud/checkPool/getUpdateHistoryLog',
+    url: axiosUrls[params.axiosType],
     method: 'POST',
     data: params
   }).then(msg => {

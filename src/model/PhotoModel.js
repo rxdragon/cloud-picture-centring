@@ -1,4 +1,4 @@
-import uuidv4 from 'uuid'
+import * as PhotoTool from '@/utils/photoTool.js'
 
 // 照片model
 export default class PhotoModel {
@@ -134,27 +134,8 @@ export default class PhotoModel {
     this.checkPoolScore = _.get(this.baseData, 'tags.values.score') || ''
     this.checkEvaluator = _.get(this.baseData, 'tags.values.evaluator') || '-'
     const checkPoolTags = _.get(this.baseData, 'tags.values.check_pool_tags') || []
-    const parentData = []
-    checkPoolTags.forEach(issueItem => {
-      const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
-      if (findClass) {
-        findClass.child.push({
-          id: issueItem.id,
-          name: issueItem.name
-        })
-      } else {
-        const newClass = {
-          id: _.get(issueItem, 'parent.id') || uuidv4(),
-          name: _.get(issueItem, 'parent.name') || '-',
-          child: [{
-            id: issueItem.id,
-            name: issueItem.name,
-          }]
-        }
-        parentData.push(newClass)
-      }
-    })
-    this.checkPoolTags = parentData
+    const commitInfo = PhotoTool.handleCommitInfo({}, checkPoolTags)
+    this.checkPoolTags = commitInfo.issueLabel
   }
 
   // 获取被退信息

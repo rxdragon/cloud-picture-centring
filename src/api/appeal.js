@@ -75,32 +75,34 @@ export function appealDetail (params, source) {
     const { base, isFinished, ...rest } = new StreamAppealModel(msg)
     const appealInfo = { ...rest }
     const photoInfo = {}
-    msg.photo_appeals && msg.photo_appeals.forEach(photoAppealItem => {
+    const photoAppeals = _.get(msg, 'photo_appeals') || []
+    photoAppeals.forEach(photoAppealItem => {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
+      photoData.getCheckPoolTags()
       const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(photoAppealItem)
 
       const finalPhotoItem = {
+        ...photoData,
         reworkChecked: false, // 申诉的勾选
         appealReason: '', // 申诉的说明
-        wholeReason: photoData.wholeReason,
-        partReason: photoData.partReason,
-        partNote: photoData.partNote,
-        wholeNote: photoData.wholeNote,
         photoAppeals: { ...photoAppealRest },
         photoVersionId: photoAppealItem.photo_version_id,
         specialEfficacy: _.get(photoAppealItem, 'tags.values.special_efficacy') || '无需特效'
       }
 
-      // 照片版本
-      const storeAddNewVersion = photoItem.other_photo_version.length === 1
-        && photoItem.other_photo_version[0].version === PHOTO_VERSION.FINISH_PHOTO
+      // 确认是否是看片师新增照片
+      const otherPhotoVersion = _.get(photoItem, 'other_photo_version') || []
+      const onlyOneOtherPhotoVersion = otherPhotoVersion.length === 1
+      const isFinishPhotoVersion = otherPhotoVersion[0].version === PHOTO_VERSION.FINISH_PHOTO
+      const storeAddNewVersion = onlyOneOtherPhotoVersion && isFinishPhotoVersion
 
       // 过滤看片师新增照片
       if (storeAddNewVersion) {
         finalPhotoItem.photoVersion = ''
       } else {
-        const allVersionPhoto = [...photoItem.other_photo_version, ..._.get(photoItem, 'photo_version', [])]
+        const allVersionPhoto = [...otherPhotoVersion, ..._.get(photoItem, 'photo_version', [])]
+
         finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(allVersionPhoto)
         finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
           const isStoreRework = versionItem.version === PHOTO_VERSION.STORE_REWORK
@@ -117,6 +119,7 @@ export function appealDetail (params, source) {
           return finalVersion
         }, [])
       }
+
       if (finalPhotoItem.photoVersion) photos.push(finalPhotoItem)
     })
     const { baseData, ...restSteamData } = new StreamModel(msg.stream)

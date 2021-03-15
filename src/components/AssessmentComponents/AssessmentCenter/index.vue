@@ -23,7 +23,7 @@
         </div>
       </el-col>
       <!-- 修图机构 -->
-      <el-col :span="8" :xl="4" v-if="cloudType === ASSESSMENT_TYPE.CLOUD">
+      <el-col :span="8" :xl="4" v-if="cloudType === GRADE_LABEL_TYPE.CLOUD">
         <div class="search-item">
           <span>修图机构</span>
           <InstitutionSelect v-model="retouchInstitution" />
@@ -119,7 +119,7 @@ import GradePreview from '../components/GradePreview/index.vue'
 import PhotoGradeBox from '../components/PhotoGradeBox/index.vue'
 
 import DownIpc from '@electronMain/ipc/DownIpc'
-import { PhotoEnumName, ASSESSMENT_TYPE } from '@/utils/enumerate.js'
+import { PhotoEnumName, GRADE_LABEL_TYPE } from '@/utils/enumerate.js'
 import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
@@ -132,7 +132,7 @@ export default {
   },
   data () {
     return {
-      ASSESSMENT_TYPE,
+      GRADE_LABEL_TYPE,
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 搜索时间
       productIds: [], // 搜索产品
