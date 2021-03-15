@@ -9,7 +9,7 @@ import uuidv4 from 'uuid'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
-import { GRADE_TYPE, CLOUD_ROLE } from '@/utils/enumerate'
+import { GRADE_TYPE, CLOUD_ROLE, ASSESSMENT_TYPE } from '@/utils/enumerate'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 
 export const GRADE_LEVEL = {
@@ -30,9 +30,14 @@ export const gradeLevelToCN = {
 /**
  * @description 获取今日抽片指标
  */
-export function getStatistics () {
+export function getStatistics (params) {
+  const axiosUrls = {
+    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getStatistics',
+    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getStatistics'
+  }
+
   return axios({
-    url: '/project_cloud/checkPool/getStatistics',
+    url: axiosUrls[params.axiosType],
     method: 'GET'
   }).then(msg => {
     const data = msg
@@ -47,8 +52,12 @@ export function getStatistics () {
  * @param {*} params
  */
 export function takePhoto (params) {
+  const axiosUrls = {
+    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/takePhoto',
+    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/takePhoto'
+  }
   return axios({
-    url: '/project_cloud/checkPool/takePhoto',
+    url: axiosUrls[params.axiosType],
     method: 'POST',
     data: params
   }).then(msg => {
@@ -61,10 +70,13 @@ export function takePhoto (params) {
  * @param {*} params
  */
 export function getHaveCheckResult (params) {
+  const axiosUrls = {
+    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getHaveCheckResult',
+    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getHaveCheckResult'
+  }
   return axios({
-    url: '/project_cloud/checkPool/getHaveCheckResult',
-    method: 'GET',
-    params
+    url: axiosUrls[params.axiosType],
+    method: 'GET'
   })
 }
 
@@ -73,8 +85,12 @@ export function getHaveCheckResult (params) {
  * @param {*} params
  */
 export function getSpotCheckResult (params) {
+  const axiosUrls = {
+    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getSpotCheckResult',
+    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSpotCheckResult'
+  }
   return axios({
-    url: '/project_cloud/checkPool/getSpotCheckResult',
+    url: axiosUrls[params.axiosType],
     method: 'GET',
     params
   }).then(msg => {
@@ -120,8 +136,12 @@ export function getSpotCheckResult (params) {
  * @param {*} params
  */
 export function commitHistory (params) {
+  const axiosUrls = {
+    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/commitHistory',
+    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/commitHistory'
+  }
   return axios({
-    url: '/project_cloud/checkPool/commitHistory',
+    url: axiosUrls[params.axiosType],
     method: 'POST',
     data: params
   })

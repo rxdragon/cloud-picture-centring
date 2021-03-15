@@ -455,3 +455,11 @@ export const readToCN = {
   [READ_STATE.UNREAD]: '未读',
   [READ_STATE.READ]: '已读',
 }
+
+/**
+ * @description 抽片类型
+ */
+export const ASSESSMENT_TYPE = {
+  SHOWPIC: 'showPic',
+  CLOUD: 'cloud'
+}

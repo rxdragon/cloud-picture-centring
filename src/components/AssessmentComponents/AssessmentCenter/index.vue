@@ -11,7 +11,7 @@
       <!-- 修图通过时间 -->
       <el-col :span="8" :xl="6">
         <div class="search-item">
-          <span>修图通过时间</span>
+          <span>修图提交</span>
           <date-picker v-model="timeSpan" value-format="yyyy-MM-dd" />
         </div>
       </el-col>
@@ -20,6 +20,13 @@
         <div class="search-item">
           <span>产品</span>
           <product-select v-model="productIds" />
+        </div>
+      </el-col>
+      <!-- 修图机构 -->
+      <el-col :span="8" :xl="4" v-if="cloudType === ASSESSMENT_TYPE.CLOUD">
+        <div class="search-item">
+          <span>修图机构</span>
+          <InstitutionSelect v-model="retouchInstitution" />
         </div>
       </el-col>
       <!-- 抽取张数 -->
@@ -35,7 +42,8 @@
           </el-select>
         </div>
       </el-col>
-      <el-col :span="2" :xl="4">
+      <!-- 搜索按钮 -->
+      <el-col :span="2" :xl="2">
         <div class="search-item button-box">
           <el-button @click="takePhoto" :disabled="Boolean(photoData.length)" type="primary">抽 取</el-button>
         </div>
@@ -104,28 +112,31 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
-import ProductSelect from '@/components/SelectBox/ProductSelect'
+import ProductSelect from '@SelectBox/ProductSelect'
+import InstitutionSelect from '@SelectBox/InstitutionSelect'
 
 import GradePreview from '../components/GradePreview/index.vue'
 import PhotoGradeBox from '../components/PhotoGradeBox/index.vue'
 
 import DownIpc from '@electronMain/ipc/DownIpc'
-import { PhotoEnumName } from '@/utils/enumerate.js'
+import { PhotoEnumName, ASSESSMENT_TYPE } from '@/utils/enumerate.js'
 import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
 
 import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'AssessmentCenter',
-  components: { DatePicker, GradePreview, PhotoGradeBox, ProductSelect },
+  components: { DatePicker, GradePreview, PhotoGradeBox, ProductSelect, InstitutionSelect },
   props: {
     cloudType: { type: String, required: true }
   },
   data () {
     return {
+      ASSESSMENT_TYPE,
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 搜索时间
       productIds: [], // 搜索产品
+      retouchInstitution: '', // 修图机构
       sampleNum: '', // 搜索伙伴抽样量
       spotAllNum: '-',
       allPhotoPath: [],
@@ -217,6 +228,7 @@ export default {
           tags: sendData.lableId,
           spotUuid: this.uuid,
         }
+        req.axiosType = this.cloudType
         this.$refs['grade-preview'].allLoading = true
         await AssessmentCenter.commitHistory(req)
         this.getNextPhoto()
@@ -258,7 +270,8 @@ export default {
      */
     async getStatistics () {
       try {
-        this.todayInfo = await AssessmentCenter.getStatistics()
+        const req = { axiosType: this.cloudType }
+        this.todayInfo = await AssessmentCenter.getStatistics(req)
       } catch (error) {
         console.error(error)
       }
@@ -282,6 +295,7 @@ export default {
         submitEndAt: joinTimeSpan(this.timeSpan[1], 1)
       }
       if (this.productIds.length) { req.productIds = this.productIds }
+      if (this.retouchInstitution) { req.orgId = this.retouchInstitution }
       return req
     },
     /**
@@ -295,6 +309,7 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         // 防止重读抽片
         if (await this.getHaveCheckResult()) return false
+        req.axiosType = this.cloudType
         const data = await AssessmentCenter.takePhoto(req)
         if (!data.length) throw new Error('当前暂无可被抽取的订单。')
         this.uuid = data
@@ -311,7 +326,8 @@ export default {
      */
     async getHaveCheckResult (isReset) {
       try {
-        const msg = await AssessmentCenter.getHaveCheckResult()
+        const req = { axiosType: this.cloudType }
+        const msg = await AssessmentCenter.getHaveCheckResult(req)
         if (msg) {
           this.uuid = msg
           this.pager.page = 1
@@ -343,6 +359,7 @@ export default {
           skip: (this.pager.page - 1) * this.pager.pageSize,
           limit: this.pager.pageSize
         }
+        req.axiosType = this.cloudType
         const data = await AssessmentCenter.getSpotCheckResult(req)
         this.spotAllNum = data.total
         this.pager.total = data.pageTotal || this.pager.total

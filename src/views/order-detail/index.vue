@@ -498,8 +498,8 @@ export default {
       margin-bottom: 20px;
 
       .item-name {
-        margin-right: 10px;
-        font-size: 16px;
+        margin-right: 16px;
+        font-size: 14px;
         font-weight: 500;
       }
     }
