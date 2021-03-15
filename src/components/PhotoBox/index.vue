@@ -42,6 +42,7 @@
         >
           门店非质量问题
         </div>
+        <!-- todo:nx 种草改成分数-->
         <div v-if="cloudEvaluatorType === GRADE_TYPE.PLANT" class="tag green-tag">种草</div>
         <div v-if="cloudEvaluatorType === GRADE_TYPE.PULL" class="tag red-tag">拔草</div>
         <div v-if="cloudEvaluatorType === GRADE_TYPE.NONE" class="tag gray-tag">通过</div>

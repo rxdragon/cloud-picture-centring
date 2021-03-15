@@ -377,7 +377,7 @@ export function getUpdateHistoryLog (params) {
 /**
  * @description 重新评价愿学院抽片
  * @method PUT
- * @returns {Boolean} 
+ * @returns {Boolean}
  * @author cf 2020/05/20
  * @version @version 2.6.0
  */
@@ -476,4 +476,110 @@ export function getCheckPoolSubQuota (params, type) {
     })
     return checkTags
   })
+}
+
+
+export function getCloudProblemReportByGroupNew () {
+  return Promise.resolve([
+    {
+      "id": 298,
+      "name": "热火队",
+      "count": 1
+    },
+    {
+      "id": 299,
+      "name": "火箭队",
+      "count": 2
+    },
+    {
+      "id": 300,
+      "name": "梦之队",
+      "count": 4
+    },
+    {
+      "id": 301,
+      "name": "银河护卫队",
+      "count": 5
+    },
+    {
+      "id": 302,
+      "name": "X特遣队",
+      "count": 6
+    },
+    {
+      "id": 303,
+      "name": "复仇者联盟",
+      "count": 12
+    },
+    {
+      "id": 304,
+      "name": "红花会",
+      "count": 0
+    },
+    {
+      "id": 305,
+      "name": "惊天魔盗团",
+      "count": 26
+    },
+    {
+      "id": 363,
+      "name": "凤凰社",
+      "count": 3
+    },
+    {
+      "id": 394,
+      "name": "圆桌骑士团",
+      "count": 0
+    },
+    {
+      "id": 298,
+      "name": "热火队",
+      "count": 1
+    },
+    {
+      "id": 299,
+      "name": "火箭队",
+      "count": 0
+    },
+    {
+      "id": 300,
+      "name": "梦之队",
+      "count": 0
+    },
+    {
+      "id": 301,
+      "name": "银河护卫队",
+      "count": 0
+    },
+    {
+      "id": 302,
+      "name": "X特遣队",
+      "count": 0
+    },
+    {
+      "id": 303,
+      "name": "复仇者联盟",
+      "count": 0
+    },
+    {
+      "id": 304,
+      "name": "红花会",
+      "count": 0
+    },
+    {
+      "id": 305,
+      "name": "惊天魔盗团",
+      "count": 0
+    },
+    {
+      "id": 363,
+      "name": "凤凰社",
+      "count": 0
+    },
+    {
+      "id": 394,
+      "name": "圆桌骑士团",
+      "count": 0
+    }
+  ])
 }

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -39,12 +42,37 @@
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/gradeConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/gradeConfiguration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/showGradeConfigurationApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/ChartBar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/chart-sunburst.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/ChartSunburst.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/cloud-report.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/GroupCloudReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/PersonalCloudReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/assessment-item.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/assessment-item.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SelectBox/IssueLabelSelect/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SelectBox/IssueLabelSelect/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/getters.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/getters.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/gradeConfiguration.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/assessment-center/grade-configuration.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/personal-center-retoucher-leader/components/AssessmentReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/personal-center-retoucher-leader/components/AssessmentReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/personal-center-retoucher/personal-details.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/personal-center-retoucher/personal-details.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/showpic-assessment-center/showpic-grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/showpic-assessment-center/showpic-grade-configuration.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -62,72 +90,79 @@
   <component name="PropertiesComponent">
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/dist_electron" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/api" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/views/assessment-center/old/components" />
+      <recent name="$PROJECT_DIR$/src/views/assessment-center/old" />
+      <recent name="$PROJECT_DIR$/src/views/assessment-center" />
       <recent name="$PROJECT_DIR$/src/assets" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/api" />
+      <recent name="$PROJECT_DIR$/src/components/CloudReport" />
+      <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/dist_electron" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.eserve">
-    <configuration name="build-asar" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="npm.lint">
+    <configuration name="build-release" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="build-asar" />
+        <script value="build-release" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="build-background" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="eserve-release" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="build-background" />
+        <script value="eserve-release" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="build" />
+        <script value="lint" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="eserve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="log" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="eserve" />
+        <script value="log" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="pack-vue" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+    <configuration name="slint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="pack-vue" />
+        <script value="slint" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -135,11 +170,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.pack-vue" />
-        <item itemvalue="npm.eserve" />
-        <item itemvalue="npm.build-background" />
-        <item itemvalue="npm.build-asar" />
-        <item itemvalue="npm.build" />
+        <item itemvalue="npm.lint" />
+        <item itemvalue="npm.slint" />
+        <item itemvalue="npm.eserve-release" />
+        <item itemvalue="npm.build-release" />
+        <item itemvalue="npm.log" />
       </list>
     </recent_temporary>
   </component>
@@ -172,6 +207,10 @@
       <workItem from="1572240230186" duration="2781000" />
       <workItem from="1611650852841" duration="910000" />
       <workItem from="1612173143036" duration="1228000" />
+      <workItem from="1615269691508" duration="11144000" />
+      <workItem from="1615357802753" duration="296000" />
+      <workItem from="1615432576683" duration="3261000" />
+      <workItem from="1615451501030" duration="44155000" />
     </task>
     <task id="LOCAL-00001" summary="CI">
       <created>1571799918873</created>
@@ -266,13 +305,161 @@
     <option name="LAST_COMMIT_MESSAGE" value="更新上测试环境" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1615450996090">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615450996090" />
+    <state x="-1421" y="23" width="1421" height="881" maximized="true" key="DiffContextDialog" timestamp="1615802971675">
+      <screen x="-1920" y="23" width="1920" height="1057" />
+    </state>
+    <state x="-1421" y="23" key="DiffContextDialog/0.0.1440.814/-1920.23.1920.1057@0.0.1440.814" timestamp="1615802971675" />
+    <state x="-9" y="8" width="1421" height="881" maximized="true" key="DiffContextDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615779885687" />
+    <state width="1398" height="603" key="GridCell.Tab.0.bottom" timestamp="1615803169873">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635471" />
+    <state width="1398" height="603" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615803169873" />
+    <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989576" />
+    <state width="1398" height="603" key="GridCell.Tab.0.center" timestamp="1615803169872">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635466" />
+    <state width="1398" height="603" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615803169872" />
+    <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
+    <state width="1398" height="603" key="GridCell.Tab.0.left" timestamp="1615803169871">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="603" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615803169871" />
+    <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635451" />
+    <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
+    <state width="1398" height="603" key="GridCell.Tab.0.right" timestamp="1615803169873">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635468" />
+    <state width="1398" height="603" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615803169873" />
+    <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989575" />
+    <state width="1398" height="304" key="GridCell.Tab.1.bottom" timestamp="1615693923705">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923705" />
+    <state width="1398" height="304" key="GridCell.Tab.1.center" timestamp="1615693923704">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923704" />
+    <state width="1398" height="304" key="GridCell.Tab.1.left" timestamp="1615693923703">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923703" />
+    <state width="1398" height="304" key="GridCell.Tab.1.right" timestamp="1615693923704">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923704" />
+    <state width="1398" height="304" key="GridCell.Tab.2.bottom" timestamp="1615693923709">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.2.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923709" />
+    <state width="1398" height="304" key="GridCell.Tab.2.center" timestamp="1615693923707">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.2.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923707" />
+    <state width="1398" height="304" key="GridCell.Tab.2.left" timestamp="1615693923706">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.2.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923706" />
+    <state width="1398" height="304" key="GridCell.Tab.2.right" timestamp="1615693923708">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.2.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923708" />
+    <state width="1398" height="304" key="GridCell.Tab.3.bottom" timestamp="1615693923711">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.3.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923711" />
+    <state width="1398" height="304" key="GridCell.Tab.3.center" timestamp="1615693923710">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.3.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923710" />
+    <state width="1398" height="304" key="GridCell.Tab.3.left" timestamp="1615693923709">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.3.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923709" />
+    <state width="1398" height="304" key="GridCell.Tab.3.right" timestamp="1615693923711">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.3.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693923711" />
+    <state x="446" y="159" key="RollbackChangesDialog" timestamp="1615803004027">
+      <screen x="0" y="0" width="1440" height="814" />
+    </state>
+    <state x="446" y="159" key="RollbackChangesDialog/0.0.1440.814/-1920.23.1920.1057@0.0.1440.814" timestamp="1615803004027" />
+    <state x="446" y="159" key="RollbackChangesDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615704246690" />
+    <state x="102" y="75" key="SettingsEditor" timestamp="1615693468369">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="102" y="75" key="SettingsEditor/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615693468369" />
+    <state x="182" y="75" key="SettingsEditor/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615361013623" />
+    <state width="529" height="445" key="SwitcherDM" timestamp="1615518785220">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="529" height="445" key="SwitcherDM/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615518785220" />
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1611655064000">
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="987" y="442" width="586" height="490" key="find.popup" timestamp="1612173153214">
-      <screen x="0" y="23" width="2560" height="1329" />
+    <state x="561" y="273" width="622" height="548" key="find.popup" timestamp="1615803224600">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
+    <state x="561" y="273" width="622" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615803224600" />
+    <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615803097177">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615803097177" />
+    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615361206739" />
+    <state x="450" y="294" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1615451532932">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="450" y="294" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615451532932" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/assessment-center/old/grade-configuration.vue</url>
+          <line>418</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/assessment-center/old/grade-configuration.vue</url>
+          <line>12</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue</url>
+          <line>18</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/assessment-center/modify-history.vue</url>
+          <line>135</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/CloudReport/GroupCloudReport.vue</url>
+          <line>3</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/admin-manage/components/PartnerPerformance.vue</url>
+          <line>24</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/views/retoucher-center/retouch-history.vue</url>
+          <line>161</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
