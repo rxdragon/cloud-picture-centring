@@ -23,7 +23,7 @@ const template = [{
   }, {
     label: '重新加载',
     // accelerator: '',
-    accelerator: 'Cmd+R', // todo
+    accelerator: 'Cmd+R', // todo：nx 别忘了删除
     click: function (item, focusedWindow) {
       if (focusedWindow) {
         if (focusedWindow.id === 1) {

@@ -17,22 +17,26 @@
 </template>
 
 <script>
-import { GRADE_TYPE } from '@/utils/enumerate'
+import { SPOT_CHECK_MAP } from '@/utils/enumerate'
 
 export default {
   name: 'CloudSpotGrassSelect',
   data () {
     return {
-      options: [{
-        label: '种草',
-        value: GRADE_TYPE.PLANT
-      }, {
-        label: '拔草',
-        value: GRADE_TYPE.PULL
-      }, {
-        label: '一般',
-        value: GRADE_TYPE.NONE
-      }]
+      options: [
+        {
+          label: '云学院抽查',
+          value: SPOT_CHECK_MAP.CLOUD
+        },
+        {
+          label: '修修兽抽查',
+          value: SPOT_CHECK_MAP.SHOW
+        },
+        {
+          label: '未抽查',
+          value: SPOT_CHECK_MAP.NONE
+        }
+      ]
     }
   }
 }

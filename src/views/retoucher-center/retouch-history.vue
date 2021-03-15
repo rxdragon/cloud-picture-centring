@@ -15,14 +15,14 @@
       <!-- 搜索内容 -->
       <el-row class="search-box">
         <!-- 修图完成时间 -->
-        <el-col :span="8" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="date-search search-item">
             <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成时间' : '退单时间' }}</span>
             <date-picker v-model="timeSpan" />
           </div>
         </el-col>
         <!-- 流水号 -->
-        <el-col :span="8" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="stream-search search-item">
             <span>流水号</span>
             <el-input
@@ -34,47 +34,48 @@
           </div>
         </el-col>
         <!-- 门店退回 -->
-        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+        <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="audit-box search-item">
             <span>门店退回</span>
             <return-select v-model="isReturn" />
           </div>
         </el-col>
         <!-- 门店评价 -->
-        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+        <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="spot-check-box search-item">
             <span>门店评价</span>
             <evaluate-select v-model="isGood" />
           </div>
         </el-col>
         <!-- 退单类型 -->
-        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 6" :xl="6">
+        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 6" :xl="8">
           <div class="audit-box search-item">
             <span>退单类型</span>
             <quality-select v-model="returnType" />
           </div>
         </el-col>
-        <!-- 云学院抽查类型 -->
-        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+        <!-- 抽查类型 -->
+        <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="spot-check-box search-item">
             <span>抽查类型</span>
             <cloud-spot-grass-select v-model="cloudEvaluateType" clearable />
           </div>
         </el-col>
-        <!-- 云学院问题标签 -->
-        <el-col :span="8" :xl="6" v-if="activeName === SEARCH_TYPE.NORMAL">
-          <div class="cloud-issue-box search-item">
-            <span>问题标签</span>
-            <issue-label-select ref="issueLabelSelect" v-model="issueValue" />
+        <!-- 云学院标签 -->
+        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
+          <div class="search-item">
+            <span>云学院标签</span>
+            <issue-label-select :disabled="canSelectTag('cloudIssueValue')" v-model="cloudIssueValue" :type="GRADE_LABEL_TYPE.CLOUD"/>
           </div>
         </el-col>
-        <!-- 是否云学院抽查 -->
-        <el-col :span="8" :xl="4" v-show="activeName === SEARCH_TYPE.NORMAL">
-          <div class="spot-check-box search-item">
-            <span>云学院抽查</span>
-            <cloud-spot v-model="cloudSpot" clearable />
+        <!-- 修修兽标签 -->
+        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
+          <div class="search-item">
+            <span>修修兽标签</span>
+            <issue-label-select :disabled="canSelectTag('showIssueValue')" v-model="showIssueValue" :type="GRADE_LABEL_TYPE.SHOW_PIC"/>
           </div>
         </el-col>
+
         <!-- 查询按钮 -->
         <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 2" :xl="2">
           <div class="search-button-box search-item">
@@ -82,7 +83,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
       <!-- 表格内容 -->
       <div class="table-module">
         <el-table :data="tableData" style="width: 100%;" @expand-change="onTableRowChange">
@@ -189,7 +190,8 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="云学院抽查" width="100">
+          <!-- 抽查类型 todo:nx 这里内容要改 -->
+          <el-table-column label="抽查类型" width="100">
             <template slot-scope="{ row }">
               <div :class="row.isCloudEvaluation && 'spot-class'">{{ row.isCloudEvaluation ? '是' : '否' }}</div>
             </template>
@@ -228,14 +230,13 @@ import DatePicker from '@/components/DatePicker'
 import ReturnSelect from '@SelectBox/ReturnStateSelect'
 import QualitySelect from '@SelectBox/QualitySelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
-import CloudSpot from '@SelectBox/CloudSpot'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import CloudSpotGrassSelect from '@/components/CloudSpotGrassSelect'
 import PhotoBox from '@/components/PhotoBox'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
-import { SearchType } from '@/utils/enumerate'
+import { SearchType, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import * as Commonality from '@/api/commonality.js'
@@ -247,10 +248,11 @@ const SEARCH_TYPE = {
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot, CloudSpotGrassSelect, PhotoBox },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpotGrassSelect, PhotoBox },
   data () {
     return {
       SEARCH_TYPE,
+      GRADE_LABEL_TYPE,
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       streamNum: '', // 流水号
@@ -261,7 +263,8 @@ export default {
       returnType: '', // 退单类型
       cloudSpot: '', // 云学院抽查
       cloudEvaluateType: '', // 云学院种草类型
-      issueValue: [], // 云学院问题标签
+      cloudIssueValue: [], // 云学院问题标签
+      showIssueValue: [], // 云学院问题标签
       activeName: SEARCH_TYPE.NORMAL, // 标签显示类型
       pager: {
         page: 1,
@@ -322,6 +325,16 @@ export default {
   },
   methods: {
     /**
+     * 云学院标签和修修兽标签互斥
+     */
+    canSelectTag (key) {
+      const mutuallyTypes = ['showIssueValue', 'cloudIssueValue']
+      const has = (type) => {
+        return Array.isArray(this[type]) ? Boolean(this[type].length) : Boolean(this[type])
+      }
+      return mutuallyTypes.some(type => type !== key && has(type))
+    },
+    /**
      * @description 重制条件
      */
     resetSearchParm (notChangeTime) {
@@ -334,7 +347,8 @@ export default {
       this.returnType = ''
       this.cloudSpot = ''
       this.cloudEvaluateType = ''
-      this.issueValue = []
+      this.cloudIssueValue = []
+      this.showIssueValue = []
     },
     /**
      * @description 变更代码
@@ -388,7 +402,9 @@ export default {
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
         if (typeof this.cloudSpot === 'boolean') { reqData.cloudEvaluation = this.cloudSpot }
-        if (this.issueValue.length) { reqData.cloudTags = this.issueValue }
+        // todo:nx 抽查标签入餐
+        if (this.cloudIssueValue.length) { reqData.cloudTags = this.issueValue }
+        if (this.showIssueValue.length) { reqData.showTags = this.issueValue }
         if (this.isReturn) { reqData.isReturn = this.isReturn === 'isReturn' }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
         if (this.returnType) { reqData.storeReworkType = this.returnType }

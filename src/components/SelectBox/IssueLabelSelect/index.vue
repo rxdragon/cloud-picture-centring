@@ -4,7 +4,7 @@
       :options="options"
       :props="propsValue"
       :popper-append-to-body="false"
-      :disabled="!loadingDown"
+      :disabled="!loadingDown || disabled"
       placeholder="请选择标签"
       v-bind="$attrs"
       v-on="$listeners"
@@ -13,7 +13,7 @@
       clearable
     >
       <template slot-scope="{ node, data }">
-        <span>{{ data.label }}</span>
+        <span>{{ data.name }}</span>
         <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
       </template>
     </el-cascader>
@@ -22,6 +22,9 @@
 
 <script>
 import * as AssessmentCenter from '@/api/assessmentCenter.js'
+import * as GradeConfigurationApi from '@/api/gradeConfiguration.js'
+import * as showGradeConfigurationApi from '@/api/showGradeConfigurationApi'
+import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'IssueLabelSelect',
@@ -31,11 +34,20 @@ export default {
       default: () => {
         return {}
       }
+    },
+    type: {
+      type: String,
+      default: GRADE_LABEL_TYPE.CLOUD
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      deafultProps: { multiple: true, emitPath: false },
+      GRADE_LABEL_TYPE,
+      deafultProps: { multiple: true, emitPath: false, value: 'id', label: 'name' },
       options: [],
       loadingDown: false
     }
@@ -53,11 +65,12 @@ export default {
      * @description 获取全部伙伴
      */
     async getIssueList () {
-      const req = {
-        withWeightsZero: true
-      }
+      const action = this.type === GRADE_LABEL_TYPE.CLOUD
+        ? GradeConfigurationApi.getScoreConfig
+        : showGradeConfigurationApi.getScoreConfig
       const data = await Promise.all([
-        AssessmentCenter.getIssueList(req),
+        action(),
+        // todo:nx 这个接口还没有
         AssessmentCenter.getOldIssueList()
       ])
       const list = data[0]
