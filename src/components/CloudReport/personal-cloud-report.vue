@@ -71,7 +71,8 @@ export default {
 <style lang="less" scoped>
 
 .search-box {
-  padding: 24px;
+  padding-bottom: 24px;
+  margin-top: 24px;
   border-bottom: 1px solid #ecedee;
 }
 

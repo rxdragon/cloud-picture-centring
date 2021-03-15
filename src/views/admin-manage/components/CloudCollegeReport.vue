@@ -46,6 +46,30 @@ export default {
 
 <style lang="less" scoped>
 .divider {
-  margin: 1px 0 0;
+  margin: 1px 0 24px 0;
+}
+
+.cloud-report {
+  & /deep/ .el-tabs__item {
+    &.is-active {
+      &::before {
+        content: none !important;
+      }
+
+      &::after {
+        content: none !important;
+      }
+    }
+
+    &.is-active + .el-tabs__item {
+      &::before {
+        content: none !important;
+      }
+
+      &::after {
+        content: none !important;
+      }
+    }
+  }
 }
 </style>

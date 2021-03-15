@@ -9,13 +9,17 @@
       :legend-visible="false"
       :extend="extend"
       height="300px"
+      v-if="chartDatas.length"
     />
+    <NoData v-else></NoData>
   </div>
 </template>
 
 <script>
+import NoData from '@/components/NoData'
 export default {
   name: 'chart-bar',
+  components: { NoData },
   props: {
     title: String,
     chartDatas: {

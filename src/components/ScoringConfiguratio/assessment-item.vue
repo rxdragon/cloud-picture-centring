@@ -18,10 +18,10 @@
         </div>
         <div class="right">
           <div v-if="item.isEdit">
-            <el-button type="info" @click="handleCancelSoreItemChange(item)">
+            <el-button type="info" size="small" @click="handleCancelSoreItemChange(item)">
               取消
             </el-button>
-            <el-button type="primary" @click="handleSaveScoreItem(item)">保存</el-button>
+            <el-button type="primary" size="small" @click="handleSaveScoreItem(item)">保存</el-button>
           </div>
           <div v-else class="icon">
             <i class="el-icon-edit-outline" @click="handleEditScoreGroup(item)"></i>
@@ -36,15 +36,15 @@
             <div :class="row.type === 'add' ? 'green' : 'red'">
               <span v-if="item.isEdit" >
                 {{ row.type === 'add' ? '加分项' : '扣分项' }}
-                <el-input
+                <el-input-number
                   v-numberOnly
                   type="number"
                   style="width: 140px;"
                   class="ml-10"
-                  min="0"
-                  max="100"
+                  :min="0"
+                  :max="100"
                   v-model="row.editScore"
-                ></el-input>
+                ></el-input-number>
               </span>
 
               <span v-else>{{ row.type === 'add' ? row.score : '-' + row.score }}</span>
@@ -140,7 +140,7 @@ export default {
       display: flex;
       align-content: center;
       justify-content: space-between;
-      height: 48px;
+      height: 56px;
       padding: 0 12px;
       font-size: 14px;
       font-weight: bold;
@@ -149,7 +149,8 @@ export default {
       background-color: #fafafa;
       border-bottom: 1px solid #ebeef5;
 
-      .right {
+      .right,
+      .left {
         display: flex;
         align-items: center;
 

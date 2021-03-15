@@ -42,10 +42,13 @@
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/chart-bar.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/personal-cloud-report.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/personal-center-retoucher-leader/components/AssessmentReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/personal-center-retoucher-leader/components/AssessmentReport.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/personal-center-retoucher/personal-details.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/personal-center-retoucher/personal-details.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/assessment-item.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/assessment-item.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SearchRetouchRecord/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SearchRetouchRecord/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,18 +93,18 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/views/assessment-center/old/components" />
+      <recent name="$PROJECT_DIR$/src/views/assessment-center/old" />
+      <recent name="$PROJECT_DIR$/src/views/assessment-center" />
+      <recent name="$PROJECT_DIR$/src/assets" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/api" />
       <recent name="$PROJECT_DIR$/src/components/CloudReport" />
       <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/dist_electron" />
       <recent name="$PROJECT_DIR$" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/views/assessment-center/old/components" />
-      <recent name="$PROJECT_DIR$/src/views/assessment-center/old" />
-      <recent name="$PROJECT_DIR$/src/views/assessment-center" />
-      <recent name="$PROJECT_DIR$/src/assets" />
     </key>
   </component>
   <component name="RunManager" selected="npm.lint">
@@ -296,29 +299,29 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615450996090" />
-    <state width="1398" height="153" key="GridCell.Tab.0.bottom" timestamp="1615708651071">
+    <state width="1398" height="315" key="GridCell.Tab.0.bottom" timestamp="1615773233619">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635471" />
-    <state width="1398" height="153" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651071" />
+    <state width="1398" height="315" key="GridCell.Tab.0.bottom/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615773233619" />
     <state width="1398" height="206" key="GridCell.Tab.0.bottom/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989576" />
-    <state width="1398" height="153" key="GridCell.Tab.0.center" timestamp="1615708651069">
+    <state width="1398" height="315" key="GridCell.Tab.0.center" timestamp="1615773233618">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635466" />
-    <state width="1398" height="153" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651069" />
+    <state width="1398" height="315" key="GridCell.Tab.0.center/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615773233618" />
     <state width="1398" height="206" key="GridCell.Tab.0.center/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="153" key="GridCell.Tab.0.left" timestamp="1615708651068">
+    <state width="1398" height="315" key="GridCell.Tab.0.left" timestamp="1615773233617">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="153" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651068" />
+    <state width="1398" height="315" key="GridCell.Tab.0.left/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615773233617" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635451" />
     <state width="1398" height="206" key="GridCell.Tab.0.left/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989574" />
-    <state width="1398" height="153" key="GridCell.Tab.0.right" timestamp="1615708651070">
+    <state width="1398" height="315" key="GridCell.Tab.0.right" timestamp="1615773233619">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.814/-265.-1057.1920.1057@0.0.1440.814" timestamp="1615347635468" />
-    <state width="1398" height="153" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615708651070" />
+    <state width="1398" height="315" key="GridCell.Tab.0.right/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615773233619" />
     <state width="1398" height="206" key="GridCell.Tab.0.right/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615360989575" />
     <state width="1398" height="304" key="GridCell.Tab.1.bottom" timestamp="1615693923705">
       <screen x="0" y="0" width="1440" height="900" />
@@ -385,11 +388,11 @@
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="555" y="284" width="574" height="548" key="find.popup" timestamp="1615714863210">
+    <state x="555" y="284" width="622" height="548" key="find.popup" timestamp="1615777090483">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
-    <state x="555" y="284" width="574" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615714863210" />
+    <state x="555" y="284" width="622" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615777090483" />
     <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615529981834">
       <screen x="0" y="0" width="1440" height="900" />
@@ -417,32 +420,22 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/views/admin-manage/components/CloudCollegeReport.vue</url>
           <line>18</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/views/assessment-center/modify-history.vue</url>
           <line>135</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue</url>
           <line>3</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/views/admin-manage/components/PartnerPerformance.vue</url>
           <line>24</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/components/CloudReport/group-cloud-report.vue</url>
-          <line>19</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="55" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

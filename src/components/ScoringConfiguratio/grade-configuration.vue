@@ -35,7 +35,7 @@
         </el-button>
       </div>
     </div>
-    <el-tabs v-model="tabKey">
+    <el-tabs v-model="tabKey" class="tabs-wrap">
       <el-tab-pane
         v-for="tab in tabList"
         :label="tab.name"
@@ -379,6 +379,12 @@ export default {
 
   .empty-button {
     margin-left: 15px;
+  }
+
+  .tabs-wrap {
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: @boxShadow;
   }
 }
 </style>

@@ -43,6 +43,16 @@
             />
           </div>
         </el-col>
+        <!-- 修修兽评分时间 -->
+        <el-col :span="10" :xl="6">
+          <div class="search-item">
+            <span>修修兽评分时间</span>
+            <date-picker
+              v-model="storeEvaluateTimeSpan"
+              :disabled="!canSelectTimeSpan('storeEvaluateTimeSpan')"
+            />
+          </div>
+        </el-col>
         <!-- 云学院评价时间 -->
         <el-col :span="10" :xl="6">
           <div class="search-item">
@@ -53,10 +63,17 @@
             />
           </div>
         </el-col>
-        <!-- 云学院问题 -->
+        <!-- 云学院标签 -->
         <el-col :span="24" :xl="24">
           <div class="search-item">
-            <span>云学院问题</span>
+            <span>云学院标签</span>
+            <issue-label-select v-model="issueValue" />
+          </div>
+        </el-col>
+        <!-- 修修兽问题 -->
+        <el-col :span="24" :xl="24">
+          <div class="search-item">
+            <span>修修兽标签</span>
             <issue-label-select v-model="issueValue" />
           </div>
         </el-col>
