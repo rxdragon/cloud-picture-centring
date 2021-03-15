@@ -46,6 +46,7 @@ export default {
   components: { PartnerPerformance, OverallPerformance, RetoucherGroupPerformance, TimeStatistics, CheckerEvaluate, SearchRetouchRecord, RetoucherChargeBackReport, CloudCollegeReport },
   filters: {
     filterActiveName (value) {
+
       switch (value) {
         case 'PartnerPerformance':
           return '伙伴绩效'

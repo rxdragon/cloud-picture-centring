@@ -1,23 +1,13 @@
 <template>
   <div class="assessment-report module-panel">
-    <cloud-report :role="CLOUD_ROLE.GROUP_LEADER" />
+    <group-cloud-report></group-cloud-report>
   </div>
 </template>
 
 <script>
-import CloudReport from '@/components/CloudReport'
-import { CLOUD_ROLE } from '@/utils/enumerate'
-
+import GroupCloudReport from '@/components/CloudReport/GroupCloudReport'
 export default {
   name: 'AssessmentReport',
-  components: { CloudReport },
-  props: {},
-  data () {
-    return {
-      CLOUD_ROLE
-    }
-  },
-  methods: {
-  }
+  components: { GroupCloudReport},
 }
 </script>

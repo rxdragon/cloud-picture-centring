@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4'
 // enumerate
 
 // 修图标准
@@ -462,4 +463,39 @@ export const readToCN = {
 export const ASSESSMENT_TYPE = {
   SHOWPIC: 'showPic',
   CLOUD: 'cloud'
+}
+
+/* 评分标签分类， 云学院和修修兽
+ * @type {{cloud: string, showPicPool: string}}
+ */
+export const GRADE_LABEL_TYPE = {
+  CLOUD: 'cloud',
+  SHOW_PIC: 'showPic'
+}
+
+/**
+ * @description 云学院评分类型， 加分或者减分
+ */
+export const SCORE_TYPES = {
+  ADD: 'add',
+  DEDUCT: 'deduct'
+}
+
+/**
+ * 评分配置
+ */
+export const GRADE_CONFIGURATION_TYPE = [
+  { id: uuidv4(), name: '小', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+  { id: uuidv4(), name: '中', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+  { id: uuidv4(), name: '拔草', score: undefined, editScore: undefined, type: SCORE_TYPES.DEDUCT },
+  { id: uuidv4(), name: '种草', score: undefined, editScore: undefined, type: SCORE_TYPES.ADD }
+]
+
+/**
+ * 抽查类型
+ */
+export const SPOT_CHECK_MAP = {
+  CLOUD: '云学院抽查',
+  SHOW: '修修兽抽查',
+  NONE: '未抽查'
 }

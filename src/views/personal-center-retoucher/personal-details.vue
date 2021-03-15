@@ -120,7 +120,7 @@
     <!-- 云学院报告 -->
     <div class="cloud-report-self module-panel">
       <div class="panel-title">抽查绩效</div>
-      <cloud-report :role="CLOUD_ROLE.CREW" />
+      <personal-cloud-report></personal-cloud-report>
     </div>
     <!-- 小蜜蜂奖励记录 -->
     <div class="module-panel bee-award" v-loading="LittleBeeLoading">
@@ -207,7 +207,7 @@ import CountTo from '@/components/CountTo'
 import NoData from '@/components/NoData'
 import RetouchPerformance from './components/RetouchPerformance'
 import Tip from '@/components/Tip'
-import CloudReport from '@/components/CloudReport'
+import PersonalCloudReport from '@/components/CloudReport/PersonalCloudReport'
 
 import * as Retoucher from '@/api/retoucher.js'
 
@@ -215,7 +215,7 @@ import { CLOUD_ROLE } from '@/utils/enumerate'
 
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip, CloudReport },
+  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip, PersonalCloudReport },
   filters: {
     // 获取小数
     getPoint (value) {
