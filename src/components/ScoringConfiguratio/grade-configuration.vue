@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
+import { GRADE_CONFIGURATION_TYPE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 import Assessment from "./assessment-item"
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
 import ScorerSelect from '@SelectBox/scorerSelect/index'
@@ -124,12 +124,10 @@ export default {
   },
   props: {
     title: String,
-    addScoreType: Function,
-    delScoreConfig: Function,
-    addScoreConfig: Function,
-    editScoreConfig: Function,
-    getScoreConfig: Function,
-    editScoreTypeName: Function
+    gradeType: {
+      type: String,
+      default: GRADE_LABEL_TYPE.CLOUD
+    }
   },
   data () {
     return {
@@ -137,7 +135,6 @@ export default {
       // 清空评分
       showEmptyDialog: false,
       emptyPeople: [],
-
       tabList: [],
       tabKey: '',
       // 类别弹出框
@@ -156,23 +153,7 @@ export default {
   },
   methods: {
     async getAllScoreConfig () {
-      const res = await this.getScoreConfig()
-      // 每次这个页面改动只有， 都会重新调用getAllScoreConfig，保证vuex里的是最新的
-      this.$store.commit('gradeConfiguration/SAVE_CLOUD_GRADE_CONFIGURATION_LIST', _.cloneDeep(res))
-      res.forEach(tab => {
-        tab.isEdit = false
-        tab.editName = tab.name
-        if (!tab.children) tab.children = []
-        tab.children.forEach(group => {
-          group.isNew = false
-          group.isEdit = false
-          group.editName = group.name
-          if (!group.children) group.children = []
-          group.children.forEach(score => {
-            score.editScore = score.score
-          })
-        })
-      })
+      const res = await GradeConfigurationApi.getScoreConfigByEdit(this.gradeType)
       this.tabList = res
       if (res.length > 0) {
         this.tabKey = res[0].name
@@ -181,26 +162,20 @@ export default {
     },
     async handleConfirmCategory () {
       if (this.tabList.some(tab => tab.name === this.addCategoryName)) {
-        this.$message.error('存在相同的评分类别。')
-        return
+        return this.$message.error('存在相同的评分类别。')
       }
       if (!this.addCategoryName) {
-        this.$message.error('请填写正确的类别名称')
-        return
+        return this.$message.error('请填写正确的类别名称')
       }
-      const req = {
-        name: this.addCategoryName
-      }
+      const req = { name: this.addCategoryName, gradeType: this.gradeType }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const res = await this.addScoreType(req)
-        if (res) this.$message.success('评分类别创建成功。')
+        await GradeConfigurationApi.addScoreType(req)
+        this.$message.success('评分类别创建成功。')
         await this.getAllScoreConfig()
         this.tabKey = this.addCategoryName
         this.showAddCategoryDialog = false
         this.addCategoryName = ''
-      } catch (error) {
-        console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -209,41 +184,59 @@ export default {
      * 自组建冒泡上来的添加事件
      */
     handleAddScoreGroup (id) {
-      const index = this.tabList.findIndex(tab => tab.id === id)
-      this.tabList[index].children.unshift(getScoreGroupBase(id))
+      try {
+        const index = this.tabList.findIndex(tab => tab.id === id)
+        this.tabList[index].children.unshift(getScoreGroupBase(id))
+      } catch (err) {
+        this.$message.error('添加评分项失败')
+        throw new Error('添加评分项失败')
+      }
     },
     /**
      * 编辑某个类下的某一个组
      */
     handleEditScoreItem (groupId, categoryId) {
-      const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
-      const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
-      editGroup.isEdit = true
-      editGroup.editName = editGroup.name
-      editGroup.children.forEach(item => {
-        item.editScore = item.score
-      })
+      try {
+        const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
+        const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
+        editGroup.isEdit = true
+        editGroup.editName = editGroup.name
+        editGroup.children.forEach(item => {
+          item.editScore = item.score
+        })
+      } catch (err) {
+        this.$message.error('编辑评分项失败')
+        throw new Error('编辑评分项失败')
+      }
     },
     /**
      * 删除一个组
      */
     async handleDeleteScoreItem (groupId, categoryId) {
+      const tabKey = this.tabKey
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
+      if (!editCategory) {
+        this.$message.error('删除评分项失败')
+        throw new Error('删除评分项失败')
+      }
       const deleteGroupIndex = editCategory.children.findIndex(group => Number(group.id) === Number(groupId))
       const deleteGroup = editCategory.children[deleteGroupIndex]
+      if (!deleteGroup) {
+        this.$message.error('删除评分项失败')
+        throw new Error('删除评分项失败')
+      }
       // 没有保存过的， 不需要调接口
       if (deleteGroup.isNew) {
         editCategory.children.splice(deleteGroupIndex, 1)
         return
       }
-      const req = { id: deleteGroup.id }
+      const req = { id: deleteGroup.id, gradeType: this.gradeType }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        await this.delScoreConfig(req)
+        await GradeConfigurationApi.delScoreConfig(req)
         await this.getAllScoreConfig()
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        console.error(error)
+        this.tabKey = tabKey
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
@@ -251,13 +244,18 @@ export default {
      * 取消编辑
      */
     handleCancelScoreItem (groupId, categoryId) {
-      const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
-      const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
-      editGroup.isEdit = false
-      editGroup.editName = editGroup.name
-      editGroup.children.forEach(item => {
-        item.editScore = item.score
-      })
+      try {
+        const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
+        const editGroup = editCategory.children.find(group => Number(group.id) === Number(groupId))
+        editGroup.isEdit = false
+        editGroup.editName = editGroup.name
+        editGroup.children.forEach(item => {
+          item.editScore = item.score
+        })
+      } catch (err) {
+        this.$message.error('取消评分项失败')
+        throw new Error('取消评分项失败')
+      }
     },
     /**
      * 保存评分组
@@ -267,8 +265,9 @@ export default {
       const editGroup = _.cloneDeep(editCategory.children.find(group => Number(group.id) === Number(groupId)))
       // 区分是新增还是编辑
       const action = editGroup.isNew
-        ? this.addScoreConfig
-        : this.editScoreConfig
+        ? GradeConfigurationApi.addScoreConfig
+        : GradeConfigurationApi.editScoreConfig
+      const message = `评分内容${ editGroup.isNew ? '创建' : '编辑' }成功。`
 
       // 删除无用数据
       delete editGroup.isNew
@@ -280,19 +279,15 @@ export default {
         delete item.editScore
       })
 
-      const req = {
-        ...editGroup
-      }
+      const req = { ...editGroup, gradeType: this.gradeType }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const res = await action(req)
-        if (res) this.$message.success('评分内容创建成功。')
+        if (res) this.$message.success(message)
         await this.getAllScoreConfig()
         this.tabKey = editCategory.name
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -308,6 +303,10 @@ export default {
      */
     handleOpenEditCategoryName (editTab) {
       const editEditCategory = this.tabList.find(tab => tab.name === editTab.name)
+      if (!editEditCategory) {
+        this.$message.error('切换分类失败')
+        throw new Error('切换分类失败')
+      }
       this.tabKey = editTab.name
       editEditCategory.isEdit = true
       editEditCategory.editName = editEditCategory.name
@@ -339,17 +338,12 @@ export default {
       }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const req = {
-          name: currentTab.editName,
-          id: currentTab.id
-        }
-        await this.editScoreTypeName(req)
+        const req = { name: currentTab.editName, id: currentTab.id, gradeType: this.gradeType }
+        await GradeConfigurationApi.editScoreTypeName(req)
         await this.getAllScoreConfig()
         this.tabKey = currentTab.editName
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -360,7 +354,7 @@ export default {
       if (this.emptyPeople.length > 0) {
         params.staffIds = this.emptyPeople
       }
-      const msg = GradeConfigurationApi.emptyCheckPoolByStaffId(params)
+      const msg = await GradeConfigurationApi.emptyCheckPoolByStaffId(params)
       if (msg) {
         this.$newMessage.success('清除成功')
         this.emptyPeople = []

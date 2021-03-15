@@ -7,7 +7,6 @@
 
 <script>
 import * as echarts from 'echarts'
-
 const data = [
   {
     name: '液化',

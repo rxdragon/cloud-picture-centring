@@ -132,7 +132,6 @@ export default {
   }
 
   .table-group {
-    padding: 10px;
     margin-top: 20px;
     background-color: #fff;
 

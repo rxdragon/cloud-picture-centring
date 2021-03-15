@@ -57,13 +57,13 @@
 </template>
 
 <script>
-import { delayLoading } from "@/utils/timespan"
 import DatePicker from '@/components/DatePicker/index'
 import ProductSelect from '@SelectBox/ProductSelect/index'
-import ChartBar from './chart-bar'
-import { mapGetters } from 'vuex'
+import ChartBar from './ChartBar'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
+import * as GradeConfigurationApi from '@/api/gradeConfiguration'
 import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
+import * as timespanUtil from "@/utils/timespan"
 
 export default {
   name: 'group-cloud-report',
@@ -77,11 +77,11 @@ export default {
       tabKey: '',
       currentSelectedGroup: [],
       groupTotalRes: [],
+      cloudGradeConfigurationList: [], // 评价标签
       GRADE_CONFIGURATION_TYPE
     }
   },
   computed: {
-    ...mapGetters(['cloudGradeConfigurationList']),
     currentGroup () {
       if (!this.cloudGradeConfigurationList) return []
       const currentGroup = this.cloudGradeConfigurationList.find(tab => tab.name === this.tabKey)
@@ -93,10 +93,16 @@ export default {
     }
   },
   async mounted () {
-    await this.$store.dispatch('gradeConfiguration/getCloudGradeConfigurationList')
+    await this.getCloudGradeConfigurationList()
     await this.searchData()
   },
   methods: {
+    /**
+     * 获取全部的标签配置
+     */
+    async getCloudGradeConfigurationList () {
+      this.cloudGradeConfigurationList = await GradeConfigurationApi.getScoreConfig() || []
+    },
     /**
      * @description 搜搜数据
      */
@@ -106,7 +112,7 @@ export default {
         const res = await AssessmentCenterApi.getCloudProblemReportByGroupNew()
         this.groupTotalRes = res
       } finally {
-        await delayLoading()
+        await timespanUtil.delayLoading()
         this.loading = false
       }
     },

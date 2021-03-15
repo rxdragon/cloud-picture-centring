@@ -1,6 +1,9 @@
 import axios from '@/plugins/axios.js'
+import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
-
+function getUrl (type) {
+  return type === GRADE_LABEL_TYPE.CLOUD ? '/project_cloud/checkPool' : '/project_cloud/showPicPool'
+}
 /**
  * @description 获取评分人列表
  * @method GET
@@ -49,8 +52,10 @@ export function emptyCheckPoolByStaffId (params) {
  * @version @version 2.24
  */
 export function addScoreType (params) {
+  const url = getUrl(params.gradeType) + '/addScoreType'
+  delete params.gradeType
   return axios({
-    url: `/project_cloud/checkPool/addScoreType`,
+    url,
     method: 'POST',
     data: params
   })
@@ -65,8 +70,10 @@ export function addScoreType (params) {
  * @version @version 2.24.0
  */
 export function editScoreTypeName (params) {
+  const url = getUrl(params.gradeType) + '/editScoreType'
+  delete params.gradeType
   return axios({
-    url: '/project_cloud/checkPool/editScoreType',
+    url,
     method: 'POST',
     data: params
   })
@@ -80,8 +87,10 @@ export function editScoreTypeName (params) {
  * @version @version 2.24.0
  */
 export function addScoreConfig (params) {
+  const url = getUrl(params.gradeType) + '/addScoreConfig'
+  delete params.gradeType
   return axios({
-    url: '/project_cloud/checkPool/addScoreConfig',
+    url,
     method: 'POST',
     data: params
   })
@@ -95,8 +104,10 @@ export function addScoreConfig (params) {
  * @version @version 2.24.0
  */
 export function editScoreConfig (params) {
+  const url = getUrl(params.gradeType) + '/editScoreConfig'
+  delete params.gradeType
   return axios({
-    url: '/project_cloud/checkPool/editScoreConfig',
+    url,
     method: 'PUT',
     data: params
   })
@@ -110,8 +121,10 @@ export function editScoreConfig (params) {
  * @version @version 2.24.0
  */
 export function delScoreConfig (params) {
+  const url = getUrl(params.gradeType) + '/delScoreConfig'
+  delete params.gradeType
   return axios({
-    url: '/project_cloud/checkPool/delScoreConfig',
+    url,
     method: 'PUT',
     data: params
   })
@@ -123,9 +136,40 @@ export function delScoreConfig (params) {
  * @author nx 2021/03/11
  * @version @version 2.24.0
  */
-export function getScoreConfig () {
+export function getScoreConfig (gradeType = GRADE_LABEL_TYPE.CLOUD) {
+  const url = getUrl(gradeType) + '/getScoreConfig'
   return axios({
-    url: '/project_cloud/checkPool/getScoreConfig',
+    url,
     method: 'GET'
   })
+}
+
+/**
+ * @description 获取云学院评分配置列表, 用于编辑
+ * @method PUT
+ * @author nx 2021/03/11
+ * @version @version 2.24.0
+ */
+export async function getScoreConfigByEdit (gradeType = GRADE_LABEL_TYPE.CLOUD) {
+  const url = getUrl(gradeType) + '/getScoreConfig'
+  const res = await axios({
+    url,
+    method: 'GET'
+  })
+  res.forEach(tab => {
+    tab.isEdit = false
+    tab.editName = tab.name
+    if (!tab.children) tab.children = []
+    tab.children.forEach(group => {
+      group.isNew = false
+      group.isEdit = false
+      group.editName = group.name
+      if (!group.children) group.children = []
+      group.children.forEach(score => {
+        score.editScore = score.score
+      })
+    })
+  })
+
+  return res
 }

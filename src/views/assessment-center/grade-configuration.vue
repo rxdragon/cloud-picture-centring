@@ -1,38 +1,22 @@
 <template>
   <div class="grade-configuration">
-    <GradeConfiguration
-      title="云学院评分配置"
-      :addScoreType="addScoreType"
-      :delScoreConfig="delScoreConfig"
-      :addScoreConfig="addScoreConfig"
-      :editScoreConfig="editScoreConfig"
-      :getScoreConfig="getScoreConfig"
-      :editScoreTypeName="editScoreTypeName"
-    ></GradeConfiguration>
+    <GradeConfiguration :gradeType="GRADE_LABEL_TYPE.CLOUD" title="云学院评分配置"/>
   </div>
 </template>
 
 <script>
 import GradeConfiguration from '@/components/ScoringConfiguratio/grade-configuration'
-import * as GradeConfigurationApi from '@/api/gradeConfiguration.js'
-
+import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
 export default {
   name: 'CloudGradeConfiguration',
   components: {
     GradeConfiguration
   },
-  methods: {
-    addScoreType: GradeConfigurationApi.addScoreType,
-    delScoreConfig: GradeConfigurationApi.delScoreConfig,
-    addScoreConfig: GradeConfigurationApi.addScoreConfig,
-    editScoreConfig: GradeConfigurationApi.editScoreConfig,
-    async getScoreConfig () {
-      const res = await GradeConfigurationApi.getScoreConfig()
-      this.$store.commit('gradeConfiguration/SAVE_CLOUD_GRADE_CONFIGURATION_LIST', _.cloneDeep(res))
-      return res
-    },
-    editScoreTypeName: GradeConfigurationApi.editScoreTypeName,
-  }
+  data () {
+    return {
+      GRADE_LABEL_TYPE
+    }
+  },
 }
 </script>
 

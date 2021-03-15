@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import GroupCloudReport from '@/components/CloudReport/group-cloud-report'
+import GroupCloudReport from '@/components/CloudReport/GroupCloudReport'
 export default {
   name: 'AssessmentReport',
   components: { GroupCloudReport},

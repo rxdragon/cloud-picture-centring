@@ -1,34 +1,23 @@
 <template>
   <div class="grade-configuration">
-    <GradeConfiguration
-      title="修修兽评分配置"
-      :addScoreType="addScoreType"
-      :delScoreConfig="delScoreConfig"
-      :addScoreConfig="addScoreConfig"
-      :editScoreConfig="editScoreConfig"
-      :getScoreConfig="getScoreConfig"
-      :editScoreTypeName="editScoreTypeName"
-    ></GradeConfiguration>
+    <GradeConfiguration title="修修兽评分配置" :gradeType="GRADE_LABEL_TYPE.SHOW_PIC"></GradeConfiguration>
   </div>
 </template>
 
 <script>
 import GradeConfiguration from '@/components/ScoringConfiguratio/grade-configuration'
-import * as ShowGradeConfigurationApi from '@/api/showGradeConfigurationApi.js'
+import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'CloudGradeConfiguration',
   components: {
     GradeConfiguration
   },
-  methods: {
-    addScoreType: ShowGradeConfigurationApi.addScoreType,
-    delScoreConfig: ShowGradeConfigurationApi.delScoreConfig,
-    addScoreConfig: ShowGradeConfigurationApi.addScoreConfig,
-    editScoreConfig: ShowGradeConfigurationApi.editScoreConfig,
-    getScoreConfig: ShowGradeConfigurationApi.getScoreConfig,
-    editScoreTypeName: ShowGradeConfigurationApi.editScoreTypeName,
-  }
+  data () {
+    return {
+      GRADE_LABEL_TYPE
+    }
+  },
 }
 </script>
 

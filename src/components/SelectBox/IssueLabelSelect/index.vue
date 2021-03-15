@@ -21,9 +21,8 @@
 </template>
 
 <script>
-import * as AssessmentCenter from '@/api/assessmentCenter.js'
+// import * as AssessmentCenter from '@/api/assessmentCenter.js'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration.js'
-import * as showGradeConfigurationApi from '@/api/showGradeConfigurationApi'
 import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 export default {
@@ -65,17 +64,14 @@ export default {
      * @description 获取全部伙伴
      */
     async getIssueList () {
-      const action = this.type === GRADE_LABEL_TYPE.CLOUD
-        ? GradeConfigurationApi.getScoreConfig
-        : showGradeConfigurationApi.getScoreConfig
       const data = await Promise.all([
-        action(),
+        GradeConfigurationApi.getScoreConfig(this.type),
         // todo:nx 这个接口还没有
-        AssessmentCenter.getOldIssueList()
+        // AssessmentCenter.getOldIssueList()
       ])
       const list = data[0]
-      const oldList = data[1]
-      const createList = [...list, ...oldList]
+      // const oldList = data[1]
+      const createList = list
       this.options = createList
       this.loadingDown = true
     }

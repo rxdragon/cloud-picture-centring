@@ -28,13 +28,12 @@
 </template>
 
 <script>
-import { delayLoading } from "@/utils/timespan"
 import DatePicker from '@/components/DatePicker/index'
 import StaffSelect from '@SelectBox/StaffSelect/index'
+import ChartSunburst from './ChartSunburst'
 import ProductSelect from '@SelectBox/ProductSelect/index'
 import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
-
-import ChartSunburst from './chart-sunburst'
+import * as timespanUtil from "@/utils/timespan"
 
 export default {
   name: 'personal-cloud-report',
@@ -60,7 +59,7 @@ export default {
           this.getCheckPoolSubQuota()
         ])
       } finally {
-        await delayLoading()
+        await timespanUtil.delayLoading()
         this.loading = false
       }
     }

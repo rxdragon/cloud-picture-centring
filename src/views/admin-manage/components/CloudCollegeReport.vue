@@ -18,8 +18,8 @@
 
 <script>
 // 运营云端修图报告
-import PersonalCloudReport from '@/components/CloudReport/personal-cloud-report'
-import GroupCloudReport from '@/components/CloudReport/group-cloud-report'
+import PersonalCloudReport from '@/components/CloudReport/PersonalCloudReport'
+import GroupCloudReport from '@/components/CloudReport/GroupCloudReport'
 import { CLOUD_ROLE } from '@/utils/enumerate'
 
 export default {

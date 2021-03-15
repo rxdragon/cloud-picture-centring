@@ -207,7 +207,7 @@ import CountTo from '@/components/CountTo'
 import NoData from '@/components/NoData'
 import RetouchPerformance from './components/RetouchPerformance'
 import Tip from '@/components/Tip'
-import PersonalCloudReport from '@/components/CloudReport/personal-cloud-report'
+import PersonalCloudReport from '@/components/CloudReport/PersonalCloudReport'
 
 import * as Retoucher from '@/api/retoucher.js'
 
