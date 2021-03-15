@@ -316,9 +316,8 @@ export default {
         this.isTakePhoto = true
         await this.getSpotCheckResult()
       } catch (error) {
-        this.$newMessage.warning(error.message || error)
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
         console.error(error)
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**

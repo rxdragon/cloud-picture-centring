@@ -109,6 +109,7 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 export default {
   name: 'AssessmentHistoryModule',
   components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, scorerSelect, ScopeSearch },
+  inject: ['cloudType'],
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -194,6 +195,7 @@ export default {
         if (!req) return false
         this.searchTimeSpan = this.timeSpan
         this.$store.dispatch('setting/showLoading', this.routeName)
+        req.axiosType = this.cloudType
         const data = await AssessmentCenter.getSearchHistory(req)
         this.photoList = data.list
         this.pager.total = data.total

@@ -19,6 +19,13 @@ export const GRADE_LEVEL = {
   PLANT: 'plant'
 }
 
+export const CNLevelToType = {
+  '小': 'small',
+  '中': 'middle',
+  '拔草': 'pull',
+  '种草': 'plant'
+}
+
 // 修图标准映射中文
 export const gradeLevelToCN = {
   [GRADE_LEVEL.SMALL]: '小',
@@ -152,19 +159,26 @@ export function commitHistory (params) {
  * @param {*} params
  */
 export function getSearchHistory (params) {
+  const axiosUrls = {
+    [ASSESSMENT_TYPE.CLOUD]: '/project_cloud/checkPool/getSearchHistory',
+    [ASSESSMENT_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSearchHistory'
+  }
+
   return axios({
-    url: '/project_cloud/checkPool/getSearchHistory',
+    url: axiosUrls[params.axiosType],
     method: 'POST',
     data: params
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      // mock数据
-      const newTag = [{
-        name: '液化-头型-种草',
-        type: 'plant',
-        id: 1
-      }]
+      const newTag = item.tags.map(tagItem => {
+        const className = _.get(tagItem, 'type.name') || 'TODO'
+        return {
+          name: `${className}-${tagItem.parent.name}-${tagItem.name}`,
+          id: tagItem.id,
+          type: CNLevelToType[tagItem.name]
+        }
+      })
       item.labelTag = newTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
@@ -224,13 +238,17 @@ export async function getScoreConfigList () {
         value: ''
       }
     })
-    children.unshift({
-      id: uuidv4(),
-      idString: uuidv4(),
-      name: '一键评分',
-      isOneAll: true,
-      value: ''
-    })
+    // 如果有子项目才添加
+    if (children.length) {
+      children.unshift({
+        id: uuidv4(),
+        idString: uuidv4(),
+        name: '一键评分',
+        isOneAll: true,
+        value: ''
+      })
+    }
+    
     return {
       id: item.id,
       idString: String(item.id),
@@ -238,8 +256,9 @@ export async function getScoreConfigList () {
       children
     }
   })
+  const labelClass = createData.filter(item => item.children.length)
   return {
-    labelClass: createData,
+    labelClass,
     chainLine
   }
 }

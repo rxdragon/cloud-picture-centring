@@ -84,7 +84,7 @@
           <span class="order-info"><span class="order-info-title">评分人：</span>{{ photoInfoData.takeInfo.gradeStaff }}</span>
           <span class="order-info" v-if="photoInfoData.isReevaluatePhoto"><span class="order-info-title">复评人：</span>{{ photoInfoData.takeInfo.reevaluate }}</span>
         </div>
-        <div class="issue-class-box panel-row" v-if="photoInfoData.labelTag">
+        <div v-if="photoInfoData.labelTag.length" class="issue-class-box panel-row">
           <el-tag
             :class="['type-tag', item.type]"
             size="medium"
@@ -154,7 +154,6 @@ export default {
           picUrl: sendData.markPhotoImg,
           tags: sendData.lableId
         }
-        // TODO 联调
         await AssessmentCenter.updateCommitHistory(req)
         this.$newMessage.success('重新评价成功')
         this.gradeInfo = null

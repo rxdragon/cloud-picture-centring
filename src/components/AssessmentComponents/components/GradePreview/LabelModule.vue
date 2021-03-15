@@ -171,6 +171,7 @@ export default {
         levelId
       }
       this.$bus.$emit('add-canvas-lable', lableInfo)
+      return true
     },
     /**
      * @description 删除标签

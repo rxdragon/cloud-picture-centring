@@ -106,20 +106,23 @@ export async function getClassificationProductTree (params) {
         label: childrenItem.name,
         value: childrenItem.id,
         parentId: childrenItem.parent_id,
-        children: filterProductList
+        children: filterProductList,
+        productCount: productList.length
       }
       return childrenData
     })
+    const filterEmtpyProduct = children1Data.filter(item => item.children.length)
 
     const parentData = {
       label: parentItem.name,
       value: parentItem.id,
       parentId: parentItem.parent_id,
-      children: children1Data
+      children: filterEmtpyProduct
     }
     return parentData
   })
-  return createData
+  const filterEmtpyClass = createData.filter(item => item.children.length)
+  return Object.freeze(filterEmtpyClass)
 }
 
 /**

@@ -27,7 +27,7 @@ export default {
   components: { LabelModule },
   data () {
     return {
-      activeNames: ['115'],
+      activeNames: [],
       labelClass: [],
       chainLine: [],
       activeLabelId: '', // 当前选中标签id
@@ -90,6 +90,7 @@ export default {
     async getAllLabel () {
       const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList()
       this.labelClass = labelClass
+      this.activeNames = [String(_.get(labelClass[0], 'id'))]
       this.chainLine = chainLine
     },
     /**

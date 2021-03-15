@@ -236,7 +236,11 @@ export default {
     getActiveLableId () {
       if (!this.$refs['fabric-canvas']) return []
       const activeLableList = this.$refs['fabric-canvas'].activeLableList
-      const ids = activeLableList.map(item => item.levelId)
+      const ids = activeLableList.map(item => {
+        return {
+          id: item.levelId
+        }
+      })
       return ids
     },
     /**

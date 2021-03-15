@@ -14,7 +14,8 @@
     >
       <template slot-scope="{ node, data }">
         <span>{{ data.label }}</span>
-        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        <span v-if="!node.isLeaf && !data.productCount"> ({{ data.children.length }}) </span>
+        <span v-if="data.productCount"> ({{ data.productCount }}) </span>
       </template>
     </el-cascader>
   </div>
