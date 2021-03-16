@@ -39,8 +39,8 @@
                 <weight-select v-model="weightType" @change="onSearchChange" />
               </div>
             </el-col>
-            <el-col :span="18" :xl="2">
-              <div class="search-item search-button-box">
+            <el-col :span="2" :xl="2">
+              <div class="search-item">
                 <el-button type="primary" @click="getProductList">查 询</el-button>
               </div>
             </el-col>
@@ -124,7 +124,7 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      activeName: 'checked', // checkPending 待审核 checked 审核通过
+      activeName: 'checkPending', // checkPending 待审核 checked 审核通过
       institutionType: '', // 机构值
       showInfo: false, // 是否显示详情
       productValue: [], // 产品值
@@ -163,15 +163,19 @@ export default {
     },
     '$route.query': {
       handler: async function (query) {
-        const { isCheckPass, photographerOrgId } = this.$route.query
+        const { isCheckPass, photographerOrgId, productCategoryId } = this.$route.query
         if (isCheckPass) {
           await this.$nextTick()
           this.activeName = 'checked'
         }
+        // 分类id
+        if (productCategoryId) {
+          this.productCategoryIdIn = [productCategoryId]
+        }
+        // 摄影机构
         if (photographerOrgId) {
           this.institutionType = +photographerOrgId
         }
-        // TODO 切换到对应的分类
         this.getProductList()
       },
       immediate: true
@@ -214,7 +218,9 @@ export default {
         if (!this.isPending && this.productValue.length) {
           reqData.productId = this.productValue
         }
-        // TODO 添加分类id
+        if (!this.isPending && this.productClassValues.length) {
+          reqData.productCategoryIdIn = this.productClassValues
+        }
         if (!this.isPending && this.weightType) {
           reqData.weightLevel = this.weightType
         }
@@ -287,10 +293,6 @@ export default {
       & /deep/ .el-cascader {
         width: 100%;
       }
-    }
-
-    .search-button-box {
-      justify-content: flex-end;
     }
   }
 

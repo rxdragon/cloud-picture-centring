@@ -25,8 +25,10 @@ export default {
       moveCount: 1,
       doDrawing: false,
       drawingObject: null, // 去除重读的穿件图像
-      cacheIssuse: [], // 缓存问题
-      cacheLabelRow: 0,
+      activeLableList: [], // 选中标签
+      cacheLabelRow: 0, // 行
+      cacheLabelCell: 0, // 列
+      isPrevEditing: false, // 是否处于编辑状态
       zoom: 1 // canvas 比例系数
     }
   },
@@ -75,8 +77,26 @@ export default {
     this.canvasDom.on('mouse:down', this.onMouseDown)
     this.canvasDom.on('mouse:up', this.onMouseUp)
     this.canvasDom.on('mouse:move', this.onMouseMove)
+    this.registerLableEvent()
+  },
+  destroyed () {
+    this.cancelRegisterLableEvent()
   },
   methods: {
+    /**
+     * @description 注册监听标签事件
+     */
+    registerLableEvent () {
+      this.$bus.$on('delete-canvas-lable', (lableId) => { this.deleteLabel(lableId) })
+      this.$bus.$on('add-canvas-lable', (labelInfo) => { this.createLabel(labelInfo) })
+    },
+    /**
+     * @description 注销监听标签向光事件
+     */
+    cancelRegisterLableEvent () {
+      this.$bus.$off('delete-canvas-lable')
+      this.$bus.$off('add-canvas-lable')
+    },
     /**
      * @description 更改绘画模式
      */
@@ -88,6 +108,7 @@ export default {
         case TOOL_TYPE.PEN:
           this.changePen()
           break
+        case TOOL_TYPE.TEXT:
         case TOOL_TYPE.MOVE:
           this.changeMove()
           break
@@ -108,13 +129,25 @@ export default {
       this.qNConfig = await Commonality.getSignature()
     },
     /**
+     * @description 判断是否是绘画
+     */
+    judgeIsDrawing () {
+      const drawingTypes = [TOOL_TYPE.PEN, TOOL_TYPE.ELLIPSE, TOOL_TYPE.LINE]
+      if (drawingTypes.includes(this.optionObj.drawType)) {
+        this.doDrawing = true
+      } else {
+        this.doDrawing = false
+      }
+    },
+    /**
      * @description 监听canvas鼠标按下
      */
     onMouseDown (options) {
       const xy = this.transformMouse(options.e.offsetX, options.e.offsetY)
       this.mouseFrom.x = xy.x
       this.mouseFrom.y = xy.y
-      this.doDrawing = true
+      this.judgeIsDrawing()
+      this.textAction(options)
     },
     /**
      * @description 监听canvas鼠标抬起
@@ -182,14 +215,14 @@ export default {
       return { x: mouseX / zoom, y: mouseY / zoom }
     },
     /**
-     * @description 使用拖动
+     * @description 使用拖动模式
      */
     changeMove () {
       this.canvasDom.selection = true
       this.canvasDom.skipTargetFind = false
     },
     /**
-     * @description 使用笔
+     * @description 使用笔模式
      */
     changePen () {
       this.canvasDom.selection = false
@@ -210,29 +243,73 @@ export default {
     deletePath () {
       const selectionObj = this.canvasDom.getActiveObjects()
       for (const selectionItem of selectionObj) {
-        if (selectionItem.issueData) {
-          this.$emit('cancelDeleteLabel', selectionItem.issueData)
-          const findCacheIssuesIndex = this.cacheIssuse.findIndex(item => item.id === selectionItem.issueData.id)
-          this.cacheIssuse.splice(findCacheIssuesIndex, 1)
+        // 取消打分模块的值
+        if (selectionItem.lableInfo) {
+          this.$bus.$emit('delete-grade-lable', selectionItem.lableInfo)
+          this.removeActiveLable(selectionItem.lableInfo.levelId)
         }
         this.canvasDom.remove(selectionItem)
       }
       // 清楚选中框
       this.canvasDom.discardActiveObject()
-      this.optionObj.drawType = 'move'
+      // 如果是文字状态不更改模式
+      if (this.optionObj.drawType === TOOL_TYPE.TEXT) return
+      this.optionObj.drawType = TOOL_TYPE.MOVE
     },
     /**
      * @description 删除标签
      */
-    deleteLabel (labelInfo) {
+    deleteLabel (lableId) {
       this.canvasDom.forEachObject(pathItem => {
-        if (pathItem.issueData.id === labelInfo.id) {
-          this.$emit('cancelDeleteLabel', pathItem.issueData)
+        if (pathItem.lableInfo && pathItem.lableInfo.levelId === lableId) {
           this.canvasDom.remove(pathItem)
         }
       })
-      const findCacheIssuesIndex = this.cacheIssuse.findIndex(item => item.id === labelInfo.id)
-      this.cacheIssuse.splice(findCacheIssuesIndex, 1)
+      this.removeActiveLable(lableId)
+    },
+    /**
+     * @description 移除激活标签内的标签
+     */
+    removeActiveLable (lableId) {
+      const findCacheIssuesIndex = this.activeLableList.findIndex(item => item.levelId === lableId)
+      if (findCacheIssuesIndex < 0) return
+      this.activeLableList.splice(findCacheIssuesIndex, 1)
+    },
+    /**
+     * @description 处理添加文本框操作
+     */
+    textAction (fEvent) {
+      if (this.optionObj.drawType !== TOOL_TYPE.TEXT) return
+      const obj = fEvent.target
+      if (obj && !obj.isType('text')) {
+        return
+      }
+
+      if (this.isPrevEditing) {
+        this.isPrevEditing = false
+        return
+      }
+
+      const left = this.mouseFrom.x
+      const top = this.mouseFrom.y
+      const textColor = this.optionObj.penColor
+      const newText = new fabric.IText('修图批注', {
+        left,
+        top,
+        fontSize: 22,
+        fill: textColor,
+        hasControls: true,
+        editable: true,
+        autofocus: true,
+        textAlign: 'center',
+      })
+
+      this.canvasDom.add(newText)
+      
+      newText.enterEditing()
+      newText.selectAll()
+      this.canvasDom.setActiveObject(newText)
+      this.isPrevEditing = true
     },
     /**
      * @description 创建椭圆
@@ -273,32 +350,43 @@ export default {
     /**
      * @description 创建标签
      */
-    createLabel (issueData) {
-      const textColor = '#eee'
+    createLabel (lableInfo) {
+      const textColor = 'rgba(238, 238, 238, 0.6)'
       const canvasHeight = this.canvasDom.getHeight()
-      let top = this.cacheIssuse.length * 20
+      let top = this.cacheLabelRow * 30
       // 判断是否超过边界
-      if (top > canvasHeight - 20) {
-        this.cacheIssuse.length = 0
+      if (top > canvasHeight - 60) {
+        this.activeLableList.length = 0
         top = 0
-        this.cacheLabelRow++
+        this.cacheLabelRow = 0
+        this.cacheLabelCell++
       }
-      const width = issueData.name.length * 14 + 25
-      const left = this.optionObj.width - (this.cacheLabelRow + 1) * width - 10
-      const textbox = new fabric.Textbox(issueData.name, {
+      this.cacheLabelRow++
+      const width = lableInfo.name.length * 14 + 25
+      const left = this.optionObj.width - (this.cacheLabelCell + 1) * width - 10
+      const rect = new fabric.Rect({
+        rx: 4,
+        ry: 4,
+        fill: 'rgba(0, 0, 0, 0.6)',
+        width,
+        height: 28,
+        originX: 'center',
+        originY: 'center'
+      })
+
+      const text = new fabric.Text(lableInfo.name, {
+        fontSize: 12,
+        originX: 'center',
+        originY: 'center',
+        fill: textColor
+      })
+      const group = new fabric.Group([rect, text], {
         left,
         top,
-        width,
-        fontSize: 14,
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        fill: textColor,
-        hasControls: true,
-        editable: true,
-        textAlign: 'center',
-        issueData
+        lableInfo
       })
-      this.canvasDom.add(textbox)
-      this.cacheIssuse.push(issueData)
+      this.canvasDom.add(group)
+      this.activeLableList.push(lableInfo)
     },
     /**
      * @description 上传照片到七牛云

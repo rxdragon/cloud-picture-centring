@@ -55,27 +55,19 @@
     <div v-if="hasCheckTags" class="panel-box">
       <div class="panel-title">
         <span>云学院评分</span>
-        <span>总分：{{ checkScore }}</span>
+        <span>总分：{{ photoData.checkPoolScore }}</span>
       </div>
-      <div class="panel-main">
+      <div class="panel-main" v-if="photoData.checkPoolTags.length">
         <div class="issue-class-box panel-row">
-          <el-tag :class="['type-tag', evaluatorType]" size="medium">
-            {{ evaluatorType | toPlantCN }}
-          </el-tag>
           <el-tag
-            :class="['type-tag', item.type]"
+            class="type-tag"
             size="medium"
-            v-for="(item, index) in typeTags"
-            :key="index"
+            v-for="labelItem in photoData.checkPoolTags"
+            :key="labelItem.id"
+            :class="labelItem.type"
           >
-            {{ item.name }}
+            {{ labelItem.name }}
           </el-tag>
-        </div>
-        <div class="issue-class-box panel-row" v-for="checkItem in checkTag" :key="checkItem.id">
-          <div class="label-title">{{ checkItem.name }}</div>
-          <div class="label-box">
-            <el-tag size="medium" v-for="issueItem in checkItem.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
-          </div>
         </div>
       </div>
     </div>
@@ -85,7 +77,6 @@
 <script>
 import PhotoList from '@/components/PhotoList'
 import PreviewModel from '@/model/PreviewModel'
-import uuidv4 from 'uuid'
 
 import { mapGetters } from 'vuex'
 
@@ -119,50 +110,9 @@ export default {
     },
     // 是否云学院打分
     hasCheckTags () {
-      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
       const hasEvaluatorScore = _.get(this.photoData, 'tags.values.score')
-      const hasCheckPoolTags = _.get(this.photoData, 'tags.values.check_pool_tags')
-      return hasEvaluatorType || hasEvaluatorScore || hasCheckPoolTags || false
+      return hasEvaluatorScore
     },
-    // 云学院评价类型
-    evaluatorType () {
-      const hasEvaluatorType = _.get(this.photoData, 'tags.values.evaluator_type')
-      return hasEvaluatorType
-    },
-    // 云学院评分
-    checkScore () {
-      return _.get(this.photoData, 'tags.values.score') || 0
-    },
-    // 激励词
-    typeTags () {
-      const typeTags = _.get(this.photoData, 'tags.values.check_pool_ex_tags') || []
-      return typeTags
-    },
-    // 云学院标记
-    checkTag () {
-      const checkPoolTags = _.get(this.photoData, 'tags.values.check_pool_tags') || []
-      const parentData = []
-      checkPoolTags.forEach(issueItem => {
-        const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
-        if (findClass) {
-          findClass.child.push({
-            id: issueItem.id,
-            name: issueItem.name
-          })
-        } else {
-          const newClass = {
-            id: _.get(issueItem, 'parent.id') || uuidv4(),
-            name: _.get(issueItem, 'parent.name') || '-',
-            child: [{
-              id: issueItem.id,
-              name: issueItem.name,
-            }]
-          }
-          parentData.push(newClass)
-        }
-      })
-      return parentData
-    }
   },
   created () {
     this.initPhotoList()
@@ -188,45 +138,26 @@ export default {
     .issue-class-box {
       display: flex;
 
-      .label-title {
-        flex-shrink: 0;
-        margin: 0 20px 0 0;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 28px;
-        color: #303133;
-      }
-
       .type-tag {
         margin-right: 10px;
 
         &.plant {
-          color: #fff;
-          background-color: #44c27e;
-          border-color: #44c27e;
+          color: #38bc7f;
+          background-color: #ecf7f2;
+          border-color: #7fd9af;
         }
 
         &.pull {
-          color: #fff;
-          background-color: #ff3974;
-          border-color: #ff3974;
+          color: #ff3974;
+          background-color: #fff0f0;
+          border-color: #f99ab7;
         }
 
-        &.none {
-          color: #fff;
-          background-color: #4669fb;
-          border-color: #4669fb;
-        }
-      }
-
-      .label-box {
-        margin-bottom: -10px;
-
-        .el-tag {
-          margin: 0 10px 10px 0;
-          font-size: 12px;
-          font-weight: 400;
-          border-radius: 4px;
+        &.middle,
+        &.small {
+          color: #ff8f00;
+          background-color: #fff7ed;
+          border-color: #ffce90;
         }
       }
     }
@@ -236,7 +167,6 @@ export default {
       font-size: 14px;
       line-height: 22px;
       color: #303133;
-      border-bottom: 1px solid @borderColor;
 
       .order-info {
         .order-info-title {
@@ -246,7 +176,7 @@ export default {
     }
 
     .panel-main {
-      padding: 20px;
+      padding: 0 20px;
       margin-top: 12px;
       background-color: #fafafa;
       border-radius: 4px;

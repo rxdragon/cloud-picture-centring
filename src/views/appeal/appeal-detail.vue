@@ -207,6 +207,7 @@ export default {
           })
           photoExamines.push(secondObj)
         }
+
         // 评分问题复审数据
         if (this.checkType === 'second' && secondResult.result && appealInfo.appealType === APPEAL_TYPE.EVALUATE) {
           const secondObj = {
@@ -217,7 +218,6 @@ export default {
           secondObj.new_check_pool_history = realPhotoData.sendData
           photoExamines.push(secondObj)
         }
-
       })
       if (photoExamines.length !== this.photos.length) {
         this.$newMessage.warning('还存在未审核的申诉照片')

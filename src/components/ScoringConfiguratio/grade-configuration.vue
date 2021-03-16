@@ -99,21 +99,35 @@
 </template>
 
 <script>
-import { GRADE_CONFIGURATION_TYPE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
+import { GRADE_CONFIGURATION_TYPE, GRADE_LABEL_TYPE, SCORE_TYPES, gradeConfigurationToCN } from '@/utils/enumerate'
 import Assessment from "./assessment-item"
-import * as GradeConfigurationApi from '@/api/gradeConfiguration'
 import ScorerSelect from '@SelectBox/scorerSelect/index'
+
+import uuidv4 from 'uuid/v4'
 import { mapGetters } from 'vuex'
 
+import * as GradeConfigurationApi from '@/api/gradeConfiguration'
+
 function getScoreGroupBase (scoreTypeId) {
+  const children = []
+  for (const level in GRADE_CONFIGURATION_TYPE) {
+    const childrenItem = {
+      id: uuidv4(),
+      name: gradeConfigurationToCN[level],
+      score: '',
+      editScore: '',
+      type: level === GRADE_CONFIGURATION_TYPE.PLANT ? SCORE_TYPES.Add : SCORE_TYPES.DEDUCT
+    }
+    children.push(childrenItem)
+  }
   return {
     name: '',
     editName: '',
     scoreTypeId,
     isEdit: true,
     isNew: true,
-    id: +new Date(),
-    children: _.cloneDeep(GRADE_CONFIGURATION_TYPE)
+    id: uuidv4(),
+    children: children
   }
 }
 

@@ -42,7 +42,7 @@
         >
           门店非质量问题
         </div>
-        <div class="tag blue-tag">{{ checkPoolScore }}</div>
+        <div class="tag blue-tag" v-if="checkPoolScore">{{ checkPoolScore }}</div>
       </div>
     </div>
     <!-- 拼接照信息 -->

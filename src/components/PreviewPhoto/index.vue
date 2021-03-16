@@ -149,22 +149,17 @@
           <!-- 问题标签 -->
           <div class="order-label" v-if="showPhoto.hasCommitInfo">
             <div class="label-title">已打问题标签</div>
-            <template v-for="(labelClassItem, labelClassIndex) in labelData">
-              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
-                <div class="label-class-title">{{ labelClassItem.name }}</div>
-                <div class="label-content">
-                  <el-tag
-                    v-for="issueItem in labelClassItem.child"
-                    :key="'issue' + issueItem.id"
-                    :class="issueItem.isSelect ? 'active' : ''"
-                    size="medium"
-                    disable-transitions
-                  >
-                    {{ issueItem.name }}
-                  </el-tag>
-                </div>
-              </div>
-            </template>
+            <div class="issue-class-box">
+              <el-tag
+                class="label-tag"
+                size="medium"
+                v-for="labelItem in labelData"
+                :key="labelItem.id"
+                :class="labelItem.type"
+              >
+                {{ labelItem.name }}
+              </el-tag>
+            </div>
           </div>
           <div class="order-label store-return-reson" v-if="showPhoto.hasStoreReturnTag">
             <div class="label-title">照片整体原因</div>
@@ -198,13 +193,16 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
+
 import Driver from 'driver.js' // 引导框
-import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
-import ModeSwitchBox from './ModeSwitchBox'
-import guideData from './guideData.js'
-import { mapGetters } from 'vuex'
 import 'driver.js/dist/driver.min.css'
+
+import ModeSwitchBox from './ModeSwitchBox'
+import OrderInfoModule from '@AssessmentComponents/components/GradePreview/OrderInfoModule'
+
+import guideData from './guideData.js'
 import { PHOTO_VERSION } from '@/utils/enumerate'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'PreviewPhoto',

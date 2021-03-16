@@ -53,8 +53,8 @@ export default {
      * @description 获取全部产品分类信息
      */
     async getClassificationTree () {
-      // TODO 调试接口
-      const list = ProductClassificationApi.getClassificationTree()
+      const req = { rootId: 0 }
+      const list = await ProductClassificationApi.getClassificationTree(req)
       this.options = list
       this.loadingDown = true
     }

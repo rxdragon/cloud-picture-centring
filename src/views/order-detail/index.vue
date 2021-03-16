@@ -146,6 +146,7 @@ export default {
     isWorkBoardInfo () {
       return Boolean(this.$route.query.workBoardStreamNum)
     },
+    // 申述照片
     appealPhotos () {
       // 区分评分申诉和质量问题申诉
       let finalPhotos = []
@@ -154,7 +155,7 @@ export default {
           finalPhotos = this.photos.filter(item => item.qualityType === 'quality' && !item.isRollBack)
           break
         case APPEAL_TYPE.EVALUATE:
-          finalPhotos = this.photos.filter(item => item.evaluatorType)
+          finalPhotos = this.photos.filter(item => item.checkPoolScore)
           break
         default:
           break
@@ -498,8 +499,8 @@ export default {
       margin-bottom: 20px;
 
       .item-name {
-        margin-right: 10px;
-        font-size: 16px;
+        margin-right: 16px;
+        font-size: 14px;
         font-weight: 500;
       }
     }

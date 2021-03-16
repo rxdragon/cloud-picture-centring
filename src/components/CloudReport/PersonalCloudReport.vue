@@ -26,7 +26,7 @@
         v-for="item in GRADE_CONFIGURATION_TYPE"
         :key="item.name"
         :chartDatas="getChartDatas(item.name)"
-        :title="`${item.name}问题对比`"
+        :title="`${gradeConfigurationToCN[item]}问题对比`"
       ></chart-sunburst>
     </div>
   </div>
@@ -37,7 +37,7 @@ import DatePicker from '@/components/DatePicker/index'
 import StaffSelect from '@SelectBox/StaffSelect/index'
 import ChartSunburst from './components/ChartSunburst'
 import ProductSelect from '@SelectBox/ProductSelect/index'
-import { GRADE_CONFIGURATION_TYPE, CLOUD_ROLE } from '@/utils/enumerate'
+import { GRADE_CONFIGURATION_TYPE, CLOUD_ROLE, gradeConfigurationToCN } from '@/utils/enumerate'
 import * as timespanUtil from '@/utils/timespan'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 
@@ -52,6 +52,7 @@ export default {
   },
   data () {
     return {
+      gradeConfigurationToCN,
       loading: false,
       timeSpan: null,
       staffIds: [], // 云端伙伴

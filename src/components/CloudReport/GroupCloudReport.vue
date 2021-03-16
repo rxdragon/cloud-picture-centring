@@ -47,7 +47,7 @@
         <chart-bar
           v-for="item in problemList"
           :key="item.name"
-          :title="`${item.name}问题对比 单位：张`"
+          :title="`${gradeConfigurationToCN[item]}问题对比 单位：张`"
           class="detail-chart"
           :chartDatas="item.data"
         >
@@ -63,7 +63,7 @@ import ProductSelect from '@SelectBox/ProductSelect/index'
 import ChartBar from './components/ChartBar'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
-import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
+import { GRADE_CONFIGURATION_TYPE, gradeConfigurationToCN } from '@/utils/enumerate'
 import * as timespanUtil from "@/utils/timespan"
 
 export default {
@@ -77,6 +77,7 @@ export default {
   },
   data () {
     return {
+      gradeConfigurationToCN,
       loading: false,
       timeSpan: null,
       staffIds: [], // 云端伙伴

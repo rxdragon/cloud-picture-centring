@@ -15,7 +15,10 @@ export default class ProductClassificationListModel {
     this.id = classificationList.id
     this.keyId = String(classificationList.id)
     this.classificationName = classificationList.name || ''
-    this.count = classificationList.count || 0
-    this.createTime = classificationList.create_time || ''
+    this.count = classificationList.products_count || 0
+    const nickname = _.get(classificationList, 'creator_info.nickname')
+    const name = _.get(classificationList, 'creator_info.name')
+    this.createStaffName = nickname || name || '-'
+    this.createTime = classificationList.created_at || '-'
   }
 }

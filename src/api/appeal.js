@@ -72,35 +72,37 @@ export function appealDetail (params, source) {
     params
   }).then(msg => {
     const photos = []
-    const { base, isFinished, ...rest } = new StreamAppealModel(msg)
-    const appealInfo = { ...rest }
+    const appealInfo = new StreamAppealModel(msg)
     const photoInfo = {}
-    msg.photo_appeals && msg.photo_appeals.forEach(photoAppealItem => {
+    const photoAppeals = _.get(msg, 'photo_appeals') || []
+
+    photoAppeals.forEach(photoAppealItem => {
       const photoItem = photoAppealItem.photo
       const photoData = new PhotoModel(photoItem)
-      const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(photoAppealItem)
+      photoData.getCheckPoolTags()
+      const photoAppealRecord = new PhotoAppealModel(photoAppealItem)
 
       const finalPhotoItem = {
+        ...photoData,
         reworkChecked: false, // 申诉的勾选
         appealReason: '', // 申诉的说明
-        wholeReason: photoData.wholeReason,
-        partReason: photoData.partReason,
-        partNote: photoData.partNote,
-        wholeNote: photoData.wholeNote,
-        photoAppeals: { ...photoAppealRest },
+        photoAppeals: photoAppealRecord,
         photoVersionId: photoAppealItem.photo_version_id,
         specialEfficacy: _.get(photoAppealItem, 'tags.values.special_efficacy') || '无需特效'
       }
 
-      // 照片版本
-      const storeAddNewVersion = photoItem.other_photo_version.length === 1
-        && photoItem.other_photo_version[0].version === PHOTO_VERSION.FINISH_PHOTO
+      // 确认是否是看片师新增照片
+      const otherPhotoVersion = _.get(photoItem, 'other_photo_version') || []
+      const onlyOneOtherPhotoVersion = otherPhotoVersion.length === 1
+      const isFinishPhotoVersion = otherPhotoVersion[0].version === PHOTO_VERSION.FINISH_PHOTO
+      const storeAddNewVersion = onlyOneOtherPhotoVersion && isFinishPhotoVersion
 
       // 过滤看片师新增照片
       if (storeAddNewVersion) {
         finalPhotoItem.photoVersion = ''
       } else {
-        const allVersionPhoto = [...photoItem.other_photo_version, ..._.get(photoItem, 'photo_version', [])]
+        const allVersionPhoto = [...otherPhotoVersion, ..._.get(photoItem, 'photo_version', [])]
+
         finalPhotoItem.photoVersion = PhotoTool.settlePhotoVersion(allVersionPhoto)
         finalPhotoItem.photoVersion = finalPhotoItem.photoVersion.reduce((finalVersion, versionItem) => {
           const isStoreRework = versionItem.version === PHOTO_VERSION.STORE_REWORK
@@ -112,31 +114,33 @@ export function appealDetail (params, source) {
           versionItem.commitInfo = PhotoTool.handleCommitInfo(commitInfo, issueLabel)
 
           // 如果是完结状态的申诉详情,需要用appealResult替换掉退回的version的tag,展示本次申诉的结果
-          if (isCurrentStoreRework && isFinished) versionItem.tags.values = appealResult
+          if (isCurrentStoreRework && appealInfo.isFinished) versionItem.tags.values = photoAppealRecord.appealResult
           if (!isStoreRework || isCurrentStoreRework ) finalVersion.push(versionItem)
           return finalVersion
         }, [])
       }
+
       if (finalPhotoItem.photoVersion) photos.push(finalPhotoItem)
     })
-    const { baseData, ...restSteamData } = new StreamModel(msg.stream)
-    const orderData = { ...restSteamData }
+
+    const orderData = new StreamModel(msg.stream)
+
     // msg.photo_appeals没有的话,是沙漏申诉,photo去取stream中的
     if (appealInfo.appealType === APPEAL_TYPE.TIMEOUT) {
-      const { base, appealResult, ...photoAppealRest } = new PhotoAppealModel(msg)
-      orderData.timeoutAppeal = { ...photoAppealRest }
+      const timeoutPhotoAppeal = new PhotoAppealModel(msg)
+      orderData.timeoutAppeal = timeoutPhotoAppeal
 
       msg.stream.photos.forEach(photo => {
-        const { baseData, ...rest } = new PhotoModel(photo)
-        const photoData = { ...rest }
+        const photoData = new PhotoModel(photo)
         photoData.specialEfficacy = _.get(photo, 'tags.values.special_efficacy') || '无需特效'
         photoData.photoVersion = PhotoTool.settlePhotoVersion(photo.photo_version)
         photos.push(photoData)
       })
     }
+
     // 获取照片信息photoInfo
     photoInfo.productInfo = new ProductModel(msg.stream.product)
-    photoInfo.streamInfo = { ...restSteamData }
+    photoInfo.streamInfo = orderData
     return {
       photoInfo,
       orderData,
@@ -158,19 +162,19 @@ export function getAppealList (params, type) {
     data: params
   }).then(msg => {
     const appealList = msg.list.map(appealItem => {
-      const { base, ...rest } = new StreamAppealModel(appealItem)
-      const finalAppealItem = { ...rest }
+      const appealData = new StreamAppealModel(appealItem)
       // 判断展示那种按钮
-      const isWaitFirst = finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_FIRST
-      const isFirstExamine = finalAppealItem.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE
-      const isWaitSecond = finalAppealItem.state === APPEAL_STREAM_STATUS.WAIT_SECOND
-      const isSecondExamine = finalAppealItem.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE
-      const isFinish = finalAppealItem.state === APPEAL_STREAM_STATUS.FINISH
-      const isExpire = finalAppealItem.state === APPEAL_STREAM_STATUS.EXPIRE
-      if (isWaitFirst || isFirstExamine) finalAppealItem.showFirstCheck = true
-      if (isWaitSecond || isSecondExamine ) finalAppealItem.showSecondCheck = true
-      if (isFinish || isExpire ) finalAppealItem.showDetail = true
-      return finalAppealItem
+      const isWaitFirst = appealData.state === APPEAL_STREAM_STATUS.WAIT_FIRST
+      const isFirstExamine = appealData.state === APPEAL_STREAM_STATUS.FIRST_EXAMINE
+      const isWaitSecond = appealData.state === APPEAL_STREAM_STATUS.WAIT_SECOND
+      const isSecondExamine = appealData.state === APPEAL_STREAM_STATUS.SECOND_EXAMINE
+      const isFinish = appealData.state === APPEAL_STREAM_STATUS.FINISH
+      const isExpire = appealData.state === APPEAL_STREAM_STATUS.EXPIRE
+
+      if (isWaitFirst || isFirstExamine) appealData.showFirstCheck = true
+      if (isWaitSecond || isSecondExamine ) appealData.showSecondCheck = true
+      if (isFinish || isExpire ) appealData.showDetail = true
+      return appealData
     })
     msg.list = appealList
     return msg

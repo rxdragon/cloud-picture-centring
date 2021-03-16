@@ -16,38 +16,31 @@
     <div class="info-area">
       <!-- 抽查评分 -->
       <div class="info-item">
-        <p class="info-title">抽查评分</p>
+        <p class="info-title">抽查评分: </p>
         <div class="info-content">
           <span class="evaluate-score">{{ photoItem.checkPoolScore }}分</span>
         </div>
       </div>
-      <!-- 评价类型 -->
+      <!-- 评价标签 -->
       <div class="info-item">
-        <p class="info-title">抽查评价</p>
-        <el-tag :class="['type-tag', photoItem.evaluatorType]" size="medium">{{ photoItem.evaluatorType | toPlantCN }}</el-tag>
-      </div>
-
-      <!-- 扣分项 -->
-      <div class="info-item" v-if="checkTag.length">
-        <p class="info-title">扣分项</p>
-        <div class="info-content check-tag-box">
-          <el-tag
-            size="medium"
-            class="tag-item"
-            v-for="(tagItem, tagIndex) in checkTag"
-            :key="tagIndex"
-          >
-            {{ tagItem }}
-          </el-tag>
-        </div>
+        <el-tag
+          v-for="item in photoItem.checkPoolTags"
+          :key="item.id"
+          size="medium"
+          class="label-tag"
+          :class="item.type"
+        >
+          {{ item.name }}
+        </el-tag>
       </div>
 
       <!-- 问题描述 -->
-      <div v-show="photoItem.reworkChecked" class="info-item">
+      <div v-show="photoItem.reworkChecked" class="issue-describe info-item">
         <p class="info-title">问题描述(必填)：</p>
         <el-input
           type="textarea"
           placeholder="问题描述,最多100个字符"
+          :rows="4"
           v-model="photoItem.appealReason"
           maxlength="100"
         />
@@ -71,16 +64,6 @@ export default {
     reworkImg () {
       return this.imgCompressDomain + this.photoItem.originalPhoto.path
     },
-    // 云学院标记
-    checkTag () {
-      const tagArr = this.photoItem.checkPoolTags
-      const finalTag = tagArr.reduce((sumArr, tagItem) => {
-        const tagChild = tagItem.child.map(childItem => childItem.name)
-        sumArr = sumArr.concat(tagChild)
-        return sumArr
-      }, [])
-      return finalTag
-    }
   }
 }
 </script>
@@ -144,18 +127,17 @@ export default {
     .info-item {
       display: flex;
       align-items: flex-start;
-      margin-bottom: 10px;
+      margin-right: 10px;
+      margin-bottom: 14px;
 
       .info-title {
         display: block;
         flex-shrink: 0;
-        width: 110px;
-        height: 31px;
         margin-right: 12px;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
         color: #303133;
-        text-align: right;
 
         &.red {
           color: @red;
@@ -173,6 +155,43 @@ export default {
             margin-right: 10px;
             margin-bottom: 4px;
           }
+        }
+
+        .evaluate-score {
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 24px;
+        }
+      }
+
+      &.issue-describe {
+        flex-direction: column;
+
+        .info-title {
+          margin-bottom: 14px;
+        }
+      }
+
+      .label-tag {
+        margin-right: 10px;
+
+        &.plant {
+          color: #38bc7f;
+          background-color: #ecf7f2;
+          border-color: #7fd9af;
+        }
+
+        &.pull {
+          color: #ff3974;
+          background-color: #fff0f0;
+          border-color: #f99ab7;
+        }
+
+        &.middle,
+        &.small {
+          color: #ff8f00;
+          background-color: #fff7ed;
+          border-color: #ffce90;
         }
       }
     }
