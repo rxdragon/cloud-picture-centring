@@ -423,41 +423,6 @@ export function getPhotographerOrgList () {
   })
 }
 
-
-// /**
-//  * @description 获取摄影机构列表
-//  * @method GET
-//  * @returns {Obeject} 结果
-//  * @author cf 2020/07/27
-//  * @version @version 2.10.0
-//  */
-// export function getCheckPoolSubQuota (params, type) {
-//   const roleUrl = {
-//     [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolSubQuota',
-//     [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCheckPoolSubQuota',
-//     [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolSubQuota'
-//   }
-//   return axios({
-//     url: roleUrl[type],
-//     method: 'POST',
-//     data: params
-//   }).then(msg => {
-//     msg = msg.filter(item => item.count)
-//     let sum = 0
-//     const checkTags = msg.map(labelItem => {
-//       sum = sum + Number(labelItem.count)
-//       return {
-//         name: labelItem.name,
-//         value: Number(labelItem.count)
-//       }
-//     })
-//     checkTags.forEach(labelItem => {
-//       labelItem.rate = transformPercentage(labelItem.value, sum)
-//     })
-//     return checkTags
-//   })
-// }
-
 /**
  * @description 获取云学院修图组分数统计(柱状图)
  * @method POST
