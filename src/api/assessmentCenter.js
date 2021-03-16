@@ -8,8 +8,7 @@ import uuidv4 from 'uuid'
 
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-
-import { GRADE_TYPE, CLOUD_ROLE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
+import { GRADE_LABEL_TYPE, CLOUD_ROLE, GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 
 export const GRADE_LEVEL = {
@@ -234,7 +233,7 @@ export async function getScoreConfigList () {
         value: ''
       })
     }
-    
+
     return {
       id: item.id,
       idString: String(item.id),
@@ -362,25 +361,6 @@ export function getCloudProblemReport (params) {
 }
 
 /**
- * @description 获取问题标签柱状图
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/07/27
- * @version @version 2.10.0
- */
-export function getCloudProblemReportByGroup (params, type) {
-  const roleUrl = {
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudProblemReportByGroup',
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudProblemReportByGroup'
-  }
-  return axios({
-    url: roleUrl[type],
-    method: 'POST',
-    data: params
-  })
-}
-
-/**
  * @description 获取修改分数历史记录
  * @param {*} params
  */
@@ -444,48 +424,80 @@ export function getPhotographerOrgList () {
 }
 
 /**
- * @description 获取摄影机构列表
- * @method GET
- * @returns {Obeject} 结果
- * @author cl 2020/07/27
- * @version @version 2.10.0
+ * @description 获取云学院修图组分数统计(柱状图)
+ * @method POST
+ * @returns {Array} 标记数据
+ * @author nx 2020/07/27
+ * @version @version 2.24.0
  */
-export function getCheckPoolQuota (params, type) {
-  const roleUrl = {
-    [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolQuota',
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCheckPoolQuota',
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolQuota'
+export function getCloudProblemReportByGroup (params, searchRole) {
+  const urlMap = {
+    [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudScoreByGroup',
+    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudScoreByGroup',
   }
   return axios({
-    url: roleUrl[type],
+    url: urlMap[searchRole],
     method: 'POST',
     data: params
-  }).then(msg => {
-    const gradeSum = Number(msg.checkPoolPlantNum) + Number(msg.checkPoolPullNum) + Number(msg.checkPoolNormalNum)
-    const createData = {
-      [GRADE_TYPE.PLANT]: {
-        count: msg.checkPoolPlantNum,
-        rate: transformPercentage(msg.checkPoolPlantNum, gradeSum)
-      },
-      [GRADE_TYPE.PULL]: {
-        count: msg.checkPoolPullNum,
-        rate: transformPercentage(msg.checkPoolPullNum, gradeSum)
-      },
-      [GRADE_TYPE.NONE]: {
-        count: msg.checkPoolNormalNum,
-        rate: transformPercentage(msg.checkPoolNormalNum, gradeSum)
-      },
-      'score': {
-        count: getAvg(msg.checkPoolTotalScore, gradeSum),
-        rate: ''
+  }).then(res => {
+    res.group = res.group.map(g => {
+      return {
+        ...g,
+        count: g.totalScore
       }
-    }
-    return createData
+    })
+
+    return res
   })
 }
 
 /**
- * @description 获取摄影机构列表
+ * @description 获取云学院修图组分数统计(柱状图)， 这个是按照问题类型分组的
+ * @method POST
+ * @returns {Array} 标记数据
+ * @author nx 2020/07/27
+ * @version @version 2.24.0
+ */
+export function getCloudProblemByGroup (params, searchRole) {
+  const urlMap = {
+    [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudProblemByGroup',
+    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudProblemByGroup',
+  }
+  return axios({
+    url: urlMap[searchRole],
+    method: 'POST',
+    data: params
+  }).then(res => {
+    if (!(res.group && res.group.length)) return []
+    const group = res.group
+    // 按照小问题.中等问题分组
+    const config = GRADE_CONFIGURATION_TYPE.map(c => c.name)
+    const list = config.map(name => {
+      const data = group.map(g => {
+        if (!Array.isArray(g.problems)) {
+          g.problems = []
+        }
+        const item = g.problems.find(problem => problem.name === name)
+        const count = item ? item.count : 0
+        return {
+          id: g.id,
+          name: g.name,
+          count,
+        }
+      })
+
+      return {
+        name,
+        data
+      }
+    })
+
+    return list
+  })
+}
+
+/**
+ * @description 获取个人抽查平均分
  * @method GET
  * @returns {Obeject} 结果
  * @author cf 2020/07/27
@@ -494,132 +506,50 @@ export function getCheckPoolQuota (params, type) {
 export function getCheckPoolSubQuota (params, type) {
   const roleUrl = {
     [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolSubQuota',
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCheckPoolSubQuota',
     [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolSubQuota'
   }
   return axios({
     url: roleUrl[type],
     method: 'POST',
     data: params
-  }).then(msg => {
-    msg = msg.filter(item => item.count)
-    let sum = 0
-    const checkTags = msg.map(labelItem => {
-      sum = sum + Number(labelItem.count)
+  }).then(res => {
+    const group = res.group
+
+    const config = GRADE_CONFIGURATION_TYPE.map(c => c.name)
+    // map {"小":{},"中":{},"种草":{},"拔草":{}
+    const map = config.reduce((tol, cur ) => Object.assign(tol, { [cur]: { } }), {})
+    // 1 按照小中大问题分组
+    group.forEach(g => {
+      if (!map[g.name]) {
+        throw new Error('配置错误')
+      }
+      const parentName = _.get(g, 'parent.name')
+      const typeName = _.get(g, 'parent.score_type.name')
+
+      if (!map[g.name][parentName]) {
+        map[g.name][parentName] = {
+          name: parentName,
+          value: 0,
+          children: []
+        }
+      }
+      map[g.name][parentName].value += Number(g.count) || 0
+      map[g.name][parentName].children.push({
+        name: typeName,
+        value: Number(g.count) || 0
+      })
+    })
+
+    const list = Object.keys(map).map(key => {
       return {
-        name: labelItem.name,
-        value: Number(labelItem.count)
+        data: Object.values(map[key]),
+        name: key
       }
     })
-    checkTags.forEach(labelItem => {
-      labelItem.rate = transformPercentage(labelItem.value, sum)
-    })
-    return checkTags
-  })
-}
 
-
-export function getCloudProblemReportByGroupNew () {
-  return Promise.resolve([
-    {
-      "id": 298,
-      "name": "热火队",
-      "count": 1
-    },
-    {
-      "id": 299,
-      "name": "火箭队",
-      "count": 2
-    },
-    {
-      "id": 300,
-      "name": "梦之队",
-      "count": 4
-    },
-    {
-      "id": 301,
-      "name": "银河护卫队",
-      "count": 5
-    },
-    {
-      "id": 302,
-      "name": "X特遣队",
-      "count": 6
-    },
-    {
-      "id": 303,
-      "name": "复仇者联盟",
-      "count": 12
-    },
-    {
-      "id": 304,
-      "name": "红花会",
-      "count": 0
-    },
-    {
-      "id": 305,
-      "name": "惊天魔盗团",
-      "count": 26
-    },
-    {
-      "id": 363,
-      "name": "凤凰社",
-      "count": 3
-    },
-    {
-      "id": 394,
-      "name": "圆桌骑士团",
-      "count": 0
-    },
-    {
-      "id": 298,
-      "name": "热火队",
-      "count": 1
-    },
-    {
-      "id": 299,
-      "name": "火箭队",
-      "count": 0
-    },
-    {
-      "id": 300,
-      "name": "梦之队",
-      "count": 0
-    },
-    {
-      "id": 301,
-      "name": "银河护卫队",
-      "count": 0
-    },
-    {
-      "id": 302,
-      "name": "X特遣队",
-      "count": 0
-    },
-    {
-      "id": 303,
-      "name": "复仇者联盟",
-      "count": 0
-    },
-    {
-      "id": 304,
-      "name": "红花会",
-      "count": 0
-    },
-    {
-      "id": 305,
-      "name": "惊天魔盗团",
-      "count": 0
-    },
-    {
-      "id": 363,
-      "name": "凤凰社",
-      "count": 0
-    },
-    {
-      "id": 394,
-      "name": "圆桌骑士团",
-      "count": 0
+    return {
+      avgScore: Number(res.avgScore).toFixed(2),
+      data: list
     }
-  ])
+  })
 }

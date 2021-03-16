@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import NoData from '@/components/NoData'
+import NoData from '@/components/NoData/index'
 export default {
   name: 'chart-bar',
   components: { NoData },
@@ -97,8 +97,11 @@ export default {
     }
   },
   watch: {
-    chartDatas () {
-      this.init()
+    chartDatas: {
+      immediate: true,
+      handler () {
+        this.init()
+      }
     }
   },
   methods: {

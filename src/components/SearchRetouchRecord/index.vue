@@ -43,16 +43,6 @@
             />
           </div>
         </el-col>
-        <!-- 修修兽评分时间 -->
-        <el-col :span="10" :xl="6">
-          <div class="search-item">
-            <span>修修兽评分时间</span>
-            <date-picker
-              v-model="showEvaluateTimeSpan"
-              :disabled="canSelectTimeSpan('showEvaluateTimeSpan')"
-            />
-          </div>
-        </el-col>
         <!-- 云学院评价时间 -->
         <el-col :span="10" :xl="6">
           <div class="search-item">
@@ -68,6 +58,16 @@
           <div class="search-item">
             <span>云学院标签</span>
             <issue-label-select :disabled="canSelectTimeSpan('cloudIssueValue')" v-model="cloudIssueValue" :type="GRADE_LABEL_TYPE.CLOUD"/>
+          </div>
+        </el-col>
+        <!-- 修修兽评分时间 -->
+        <el-col :span="10" :xl="6">
+          <div class="search-item">
+            <span>修修兽评分时间</span>
+            <date-picker
+              v-model="showEvaluateTimeSpan"
+              :disabled="canSelectTimeSpan('showEvaluateTimeSpan')"
+            />
           </div>
         </el-col>
         <!-- 修修兽标签 -->
@@ -131,10 +131,9 @@
             </template>
           </el-table-column>
           <el-table-column label="抽查类型">
-            <!-- todo:nx 抽查类型要改-->
             <template slot-scope="{ row }">
               <div class="table-detail-box">
-                <p>是否抽查：{{ row.isCloudEvaluation ? '是' : '否' }}</p>
+                <p>抽查类型：{{ row.evaluationType || '-' }}</p>
                 <p>评价时间：{{ row.cloudEvaluateTime }}</p>
               </div>
             </template>
@@ -179,7 +178,7 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import moment from 'moment'
 
-import { SEARCH_ROLE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
+import { SEARCH_ROLE, GRADE_LABEL_TYPE, SPOT_CHECK_MAP } from '@/utils/enumerate'
 import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 
 import * as OperationManage from '@/api/operationManage.js'
@@ -253,13 +252,20 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (!this.reworkTimeSpan && !this.storeEvaluateTimeSpan && !this.cloudAuditTimeSpan && !this.cloudEvaluateTimeSpan) {
+      const timeTypes = [
+        'reworkTimeSpan',
+        'storeEvaluateTimeSpan',
+        'cloudAuditTimeSpan',
+        'cloudEvaluateTimeSpan',
+        'showEvaluateTimeSpan',
+      ]
+      if (!timeTypes.some(type => Boolean(this[type]))) {
         this.$newMessage.warning('请填写时间')
         return false
       }
       // 如果选中退回标记问题或者云学院问题标记讲不能查询超过10日的日期
       if (this.cloudIssueValue.length || this.showIssueValue.length || this.returnType) {
-        const timeType = ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan']
+        const timeType = ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan', 'showEvaluateTimeSpan']
         const timeLess10 = timeType.some(timeTypeItem => {
           const diffDays = getDiffDays(this[timeTypeItem])
           return diffDays <= 10 && diffDays >= 0
@@ -284,10 +290,22 @@ export default {
       if (this.cloudEvaluateTimeSpan) {
         req.cloudEvaluateStartAt = joinTimeSpan(this.cloudEvaluateTimeSpan[0])
         req.cloudEvaluateEndAt = joinTimeSpan(this.cloudEvaluateTimeSpan[1], 1)
+        req.cloudEvaluateType = SPOT_CHECK_MAP.CHECK_POOL_SPOT
+      }
+      if (this.showEvaluateTimeSpan) {
+        req.cloudEvaluateStartAt = joinTimeSpan(this.showEvaluateTimeSpan[0])
+        req.cloudEvaluateEndAt = joinTimeSpan(this.showEvaluateTimeSpan[1], 1)
+        req.cloudEvaluateType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
+      }
+      if (this.cloudIssueValue.length) {
+        req.cloudEvaluateType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
+        req.cloudTags = this.cloudIssueValue
+      }
+      if (this.showIssueValue.length) {
+        req.cloudEvaluateType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
+        req.cloudTags = this.showIssueValue
       }
       if (this.isGood !== 'all') { req.evaluate = this.isGood ? 'good' : 'bad' }
-      if (this.cloudIssueValue.length) { req.cloudTags = this.cloudIssueValue }
-      if (this.showIssueValue.length) { req.showTags = this.showIssueValue }
       if (this.returnType) { req.storeReworkType = this.returnType }
       // 伙伴id
       if (this.searchRole === SEARCH_ROLE.GROUP_LEADER && this.staffId) {

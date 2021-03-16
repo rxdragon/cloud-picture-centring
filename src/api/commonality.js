@@ -26,7 +26,7 @@ export function getAllRetouchClass () {
 
 /**
  * @description 获取周年庆相关信息
- * @param {*} params 
+ * @param {*} params
  */
 export function getAnniversaryInfo (params) {
   return axios({
@@ -143,7 +143,7 @@ export function getStreamInfo (params) {
 
 /**
  * @description 获取修改他人记录
- * @param {*} params 
+ * @param {*} params
  */
 export function getModifyRetouchQuotaInfo (params) {
   return axios({
@@ -198,7 +198,7 @@ export function createPhotoVersion (params) {
 
 /**
  * @description 获取问题照片
- * @param {*} params 
+ * @param {*} params
  */
 export async function getIssuePhotos (params) {
   const res = await axios({
@@ -212,7 +212,7 @@ export async function getIssuePhotos (params) {
     return photoInfo
   })
   const issueTag = item => {
-    const hasTag = (item.returnQualityType || item.evaluatorType)
+    const hasTag = (item.returnQualityType || item.checkPoolScore)
     return item.completePhoto && hasTag
   }
   const hasCompletePhotos = photos.filter(issueTag)
