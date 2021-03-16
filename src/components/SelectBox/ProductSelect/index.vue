@@ -14,7 +14,8 @@
     >
       <template slot-scope="{ node, data }">
         <span>{{ data.label }}</span>
-        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        <span v-if="!node.isLeaf && !data.productCount"> ({{ data.children.length }}) </span>
+        <span v-if="data.productCount"> ({{ data.productCount }}) </span>
       </template>
     </el-cascader>
   </div>
@@ -53,8 +54,11 @@ export default {
      * @description 获取全部伙伴
      */
     async getAllProduct () {
-      // TODO 接口联调
-      const list = ProductClassificationApi.getClassificationProductTree()
+      const req = {
+        rootId: 0,
+        withProduct: true
+      }
+      const list = await ProductClassificationApi.getClassificationProductTree(req)
       this.options = list
       this.loadingDown = true
     }

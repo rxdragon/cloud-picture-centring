@@ -24,10 +24,17 @@
         </div>
       </el-col>
       <!-- 问题标签 -->
-      <el-col :span="8" :xl="4">
+      <el-col :span="8" :xl="6">
         <div class="product-search search-item">
           <span>问题标签</span>
-          <issue-label-select v-model="issueValue" />
+          <issue-label-select :type="this.cloudType" v-model="issueValue" />
+        </div>
+      </el-col>
+      <!-- 分数 -->
+      <el-col :span="8" :xl="6">
+        <div class="grade-search search-item">
+          <span>分数</span>
+          <ScopeSearch v-model="scopeData" />
         </div>
       </el-col>
       <!-- 流水号 -->
@@ -45,7 +52,7 @@
         </div>
       </el-col>
       <!-- 评分人 -->
-      <el-col :span="6" :xl="4">
+      <el-col :span="8" :xl="6">
         <div class="product-search search-item">
           <span>评分人</span>
           <scorer-select collapse-tags v-model="currentScorer"></scorer-select>
@@ -90,6 +97,7 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import ProductSelect from '@SelectBox/ProductSelect'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import scorerSelect from '@SelectBox/scorerSelect'
+import ScopeSearch from '@/components/ScopeSearch'
 
 import GradeBox from '../components/GradeBox'
 
@@ -100,12 +108,14 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'AssessmentHistoryModule',
-  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, scorerSelect },
+  components: { DatePicker, GradeBox, StaffSelect, ProductSelect, IssueLabelSelect, scorerSelect, ScopeSearch },
+  inject: ['cloudType'],
   data () {
     return {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       searchTimeSpan: null, // 查询时间
+      scopeData: null, // 分数范围
       staffIds: [], // 修图师 id
       photoList: [], // 照片数据
       productValue: [], // 选中产品
@@ -119,7 +129,7 @@ export default {
       cacheTimeSpan: [],
       cacheSendStaff: '',
       currentScorer: [],
-      streamNum: ''
+      streamNum: '',
     }
   },
   created () {
@@ -167,6 +177,10 @@ export default {
       if (this.productValue.length) { req.productIds = this.productValue }
       if (this.currentScorer.length) req.operatorIds = this.currentScorer
       if (this.streamNum) req.streamNum = this.streamNum
+      if (this.scopeData) {
+        if (this.scopeData[0]) { req.minScore = this.scopeData[0] }
+        if (this.scopeData[1]) { req.minScore = this.scopeData[1] }
+      }
       this.cacheTimeSpan = this.timeSpan
       return req
     },
@@ -181,6 +195,7 @@ export default {
         if (!req) return false
         this.searchTimeSpan = this.timeSpan
         this.$store.dispatch('setting/showLoading', this.routeName)
+        req.axiosType = this.cloudType
         const data = await AssessmentCenter.getSearchHistory(req)
         this.photoList = data.list
         this.pager.total = data.total
@@ -218,7 +233,6 @@ export default {
         display: inline-block;
         flex-shrink: 0;
         width: 56px;
-        text-align-last: justify;
       }
 
       & /deep/ .el-range-editor.el-input__inner {

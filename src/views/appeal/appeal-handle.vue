@@ -122,25 +122,28 @@
           </el-table-column>
           <el-table-column label="操作" width="100">
             <template slot-scope="{ row }">
+              <!-- 初审 -->
               <el-button
-                type="primary"
                 v-if="row.showFirstCheck && row.isSelfFirst && showFirstExamine"
+                type="primary"
                 size="mini"
                 @click="firstCheck(row)"
               >
                 初审
               </el-button>
+              <!-- 复审 -->
               <el-button
-                type="primary"
                 v-if="row.showSecondCheck && row.isSelfSecond && showSecondExamine"
+                type="primary"
                 size="mini"
                 @click="secondCheck(row)"
               >
                 复审
               </el-button>
+              <!-- 查看 -->
               <el-button
-                type="primary"
                 v-if="row.showDetail"
+                type="primary"
                 size="mini"
                 @click="goDetail(row)"
               >

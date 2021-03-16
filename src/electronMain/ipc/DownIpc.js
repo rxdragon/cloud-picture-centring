@@ -82,7 +82,6 @@ function addDownloadFile (fileDownloadConfig) {
   const uuid = uuidv4()
   const folderPath = store.getters.saveFolder
   fileDownloadConfig.path = mPath.joinPath(folderPath, fileDownloadConfig.path)
-  // TODO 已存在文件名不进行下载
   fileDownloadConfig.uuid = uuid
   const createData = {
     status: 'waitdown', // 下载状态 progressing 下载中 completed 下载完成 cancelled 取消下载 interrupted 下载中断

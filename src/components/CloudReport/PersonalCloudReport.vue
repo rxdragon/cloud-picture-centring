@@ -22,7 +22,7 @@
       <span>抽查平均分：80</span>
     </div>
     <div class="chat-warp">
-      <chart-sunburst v-for="item in GRADE_CONFIGURATION_TYPE" :key="item.id" :title="`${item.name}问题对比`"></chart-sunburst>
+      <chart-sunburst v-for="item in GRADE_CONFIGURATION_TYPE" :key="item" :title="`${gradeConfigurationToCN[item]}问题对比`"></chart-sunburst>
     </div>
   </div>
 </template>
@@ -32,7 +32,7 @@ import DatePicker from '@/components/DatePicker/index'
 import StaffSelect from '@SelectBox/StaffSelect/index'
 import ChartSunburst from './ChartSunburst'
 import ProductSelect from '@SelectBox/ProductSelect/index'
-import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
+import { GRADE_CONFIGURATION_TYPE, gradeConfigurationToCN } from '@/utils/enumerate'
 import * as timespanUtil from "@/utils/timespan"
 
 export default {
@@ -44,7 +44,8 @@ export default {
       timeSpan: null,
       staffIds: [], // 云端伙伴
       productValue: [], // 产品
-      GRADE_CONFIGURATION_TYPE
+      GRADE_CONFIGURATION_TYPE,
+      gradeConfigurationToCN
     }
   },
   methods: {

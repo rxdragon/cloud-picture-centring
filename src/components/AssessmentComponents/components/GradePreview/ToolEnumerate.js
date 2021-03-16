@@ -6,5 +6,6 @@ export const TOOL_TYPE = {
   LINE: 'line',
   BLOWUP: 'blowup',
   DELETE: 'delete',
-  COLOR: 'color'
+  COLOR: 'color',
+  TEXT: 'text'
 }

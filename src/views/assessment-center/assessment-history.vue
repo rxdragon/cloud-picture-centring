@@ -10,9 +10,13 @@
 
 <script>
 import AssessmentHistoryModule from '@AssessmentComponents/AssessmentHistoryModule/index.vue'
+import { GRADE_LABEL_TYPE } from '@/utils/enumerate.js'
 
 export default {
   name: 'AssessmentHistory',
-  components: { AssessmentHistoryModule }
+  components: { AssessmentHistoryModule },
+  provide: {
+    cloudType: GRADE_LABEL_TYPE.CLOUD
+  }
 }
 </script>

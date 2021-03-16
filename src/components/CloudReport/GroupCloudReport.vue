@@ -45,8 +45,8 @@
         </div>
         <chart-bar
           v-for="item in GRADE_CONFIGURATION_TYPE"
-          :key="item.id"
-          :title="`${item.name}问题对比 单位：张`"
+          :key="item"
+          :title="`${gradeConfigurationToCN[item]}问题对比 单位：张`"
           class="detail-chart"
           :chartDatas="groupTotalRes"
         >
@@ -62,7 +62,7 @@ import ProductSelect from '@SelectBox/ProductSelect/index'
 import ChartBar from './ChartBar'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
-import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
+import { GRADE_CONFIGURATION_TYPE, gradeConfigurationToCN } from '@/utils/enumerate'
 import * as timespanUtil from "@/utils/timespan"
 
 export default {
@@ -70,6 +70,8 @@ export default {
   components: { DatePicker, ProductSelect, ChartBar },
   data () {
     return {
+      gradeConfigurationToCN,
+      GRADE_CONFIGURATION_TYPE,
       loading: false,
       timeSpan: null,
       staffIds: [], // 云端伙伴
@@ -78,7 +80,6 @@ export default {
       currentSelectedGroup: [],
       groupTotalRes: [],
       cloudGradeConfigurationList: [], // 评价标签
-      GRADE_CONFIGURATION_TYPE
     }
   },
   computed: {

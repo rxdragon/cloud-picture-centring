@@ -16,17 +16,17 @@ const showpicAssessmentCenter = {
       path: 'showpic-assessment-history',
       name: 'ShowpicAssessmentHistory',
       component: () => import('@/views/showpic-assessment-center/showpic-assessment-history.vue'),
-      meta: { title: '评价历史记录', icon: '' }
+      meta: { title: '修修兽评价历史记录', icon: '' }
     }, {
       path: 'showpic-modify-history',
       name: 'ShowpicModifyHistory',
       component: () => import('@/views/showpic-assessment-center/showpic-modify-history.vue'),
-      meta: { title: '评分修改记录', icon: '' }
+      meta: { title: '修修兽评分修改记录', icon: '' }
     }, {
       path: 'showpic-grade-configuration',
       name: 'ShowpicGradeConfiguration',
       component: () => import('@/views/showpic-assessment-center/showpic-grade-configuration.vue'),
-      meta: { title: '评分配置', icon: '' }
+      meta: { title: '修修兽评分配置', icon: '' }
     }
   ]
 }

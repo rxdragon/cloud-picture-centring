@@ -5,15 +5,21 @@
       <portal-target name="assessmentPlug" />
     </div>
     <!-- 评价中心 -->
-    <assessment-center cloudType="showPic" />
+    <assessment-center :cloudType="GRADE_LABEL_TYPE.SHOWPIC" />
   </div>
 </template>
 
 <script>
 import AssessmentCenter from '@AssessmentComponents/AssessmentCenter/index.vue'
+import { GRADE_LABEL_TYPE } from '@/utils/enumerate.js'
 
 export default {
   name: 'ShowpicAssessment',
-  components: { AssessmentCenter }
+  components: { AssessmentCenter },
+  data () {
+    return {
+      GRADE_LABEL_TYPE
+    }
+  }
 }
 </script>

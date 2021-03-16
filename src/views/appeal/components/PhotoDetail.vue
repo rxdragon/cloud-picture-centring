@@ -1,14 +1,14 @@
 <template>
   <div class="photo-detail">
-    <!-- 图片列表 -->
+    <!-- 图片列表 不是审核模式-->
     <div v-if="!checkType" class="normal-photo-list">
       <div
         class="normal-photo-item"
-        v-for="(photoItem, photoIndex) in photoVersionList"
+        v-for="(photoDataItem, photoIndex) in photoVersionList"
         :key="photoIndex"
       >
         <photo-box
-          :src="photoItem.path"
+          :src="photoDataItem.path"
           :show-store-part-rework-reason="false"
           :showSpecialEffects="false"
           downing
@@ -16,22 +16,22 @@
           show-label-info
         >
           <template v-slot:title>
-            <span class="lable-title">{{ photoItem.version | toPhotoVerName }}{{ photoItem.storeReturnCount || '' }}</span>
+            <span class="lable-title">{{ photoDataItem.version | toPhotoVerName }}{{ photoDataItem.storeReturnCount || '' }}</span>
           </template>
         </photo-box>
       </div>
     </div>
-
     <photo-list
       v-else
       need-preload
       :photo-data="photoVersionList"
       :show-special-effects="false"
     />
+
     <!-- 质量问题标签 -->
     <div
-      class="panel-box"
       v-if="appealInfo.appealType === APPEAL_TYPE.REWORK"
+      class="panel-box"
     >
       <div class="panel-title">门店退回</div>
       <div class="panel-main">
@@ -82,47 +82,32 @@
     </div>
     <!-- 云学院评分详情 -->
     <div
-      class="panel-box"
       v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
+      class="panel-box"
     >
-      <div class="panel-title evaluate">
+      <div class="panel-title eval uate">
         <span>评价信息</span>
         <span>总分：{{ photoItem.photoAppeals.checkPoolScore }}</span>
       </div>
       <div class="panel-main">
         <div class="issue-class-box panel-row">
           <el-tag
-            :class="['type-tag', photoItem.photoAppeals.evaluatorType]"
+            class="label-tag"
             size="medium"
+            v-for="labelItem in photoItem.checkPoolTags"
+            :key="labelItem.id"
+            :class="labelItem.type"
           >
-            {{ photoItem.photoAppeals.evaluatorType | toPlantCN }}
+            {{ labelItem.name }}
           </el-tag>
-          <el-tag
-            :class="['type-tag', item.type]"
-            size="medium"
-            v-for="(item, index) in photoItem.photoAppeals.typeTags"
-            :key="index"
-          >
-            {{ item.name }}
-          </el-tag>
-        </div>
-        <div
-          class="issue-class-box panel-row"
-          v-for="checkItem in photoItem.photoAppeals.checkPoolTags"
-          :key="checkItem.id"
-        >
-          <div class="label-title">{{ checkItem.name }}</div>
-          <div class="label-box">
-            <el-tag size="medium" v-for="issueItem in checkItem.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
-          </div>
         </div>
       </div>
     </div>
+    <!-- 复审后的评分 -->
     <div
       v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
       class="panel-box"
     >
-      <!-- 复审后的评分 -->
       <div class="panel-main" v-if="secondEvaluateResult.hasSecond">
         <div class="panel-content content-one">
           复审后评分
@@ -148,58 +133,59 @@
     </div>
     <!-- 申诉信息 -->
     <div
-      class="panel-box"
       v-if="appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
+      class="panel-box"
     >
       <div class="panel-title">
         申诉处理
         <el-button
+          v-if="checkType === 'first'"
           size="mini"
           type="primary"
           @click="goCheck('first')"
-          v-if="checkType === 'first'"
         >
           初审
         </el-button>
         <el-button
+          v-if="checkType === 'second'"
           size="mini"
           type="primary"
           @click="goCheck('second')"
-          v-if="checkType === 'second'"
         >
           复审
         </el-button>
       </div>
       <div class="panel-main">
         <div class="panel-content content-one">申诉问题描述：{{ photoItem.photoAppeals.desc }}</div>
-        <div class="panel-content content-one">初审状态：{{ photoItem.photoAppeals.firstResult.resultDesc }}</div>
+        <div class="panel-content content-one">初审状态：{{ photoAppealsFirstResult.resultDesc }}</div>
         <div
+          v-if="photoAppealsFirstResult.result === APPEAL_RESULT_STATUS.REFUSE"
           class="panel-content content-one"
-          v-if="photoItem.photoAppeals.firstResult.result === APPEAL_RESULT_STATUS.REFUSE"
         >
-          初审拒绝原因：{{ photoItem.photoAppeals.firstResult.reason }}
+          初审拒绝原因：{{ photoAppealsFirstResult.reason }}
         </div>
         <div
+          v-if="photoAppealsFirstResult.result === APPEAL_RESULT_STATUS.ACCEPT"
           class="panel-content content-one"
-          v-if="photoItem.photoAppeals.firstResult.result === APPEAL_RESULT_STATUS.ACCEPT"
         >
-          初审通过备注：{{ photoItem.photoAppeals.firstResult.reason }}
+          初审通过备注：{{ photoAppealsFirstResult.reason }}
         </div>
-        <div class="panel-content content-one">复审状态：{{ photoItem.photoAppeals.secondResult.resultDesc }}</div>
+        <div class="panel-content content-one">复审状态：{{ photoAppealsSecondResult.resultDesc }}</div>
         <div
+          v-if="photoAppealsSecondResult.result === APPEAL_RESULT_STATUS.REFUSE"
           class="panel-content content-one"
-          v-if="photoItem.photoAppeals.secondResult.result === APPEAL_RESULT_STATUS.REFUSE"
         >
-          复审拒绝原因：{{ photoItem.photoAppeals.secondResult.reason }}
+          复审拒绝原因：{{ photoAppealsSecondResult.reason }}
         </div>
         <div
+          v-if="photoAppealsSecondResult.result === APPEAL_RESULT_STATUS.ACCEPT"
           class="panel-content content-one"
-          v-if="photoItem.photoAppeals.secondResult.result === APPEAL_RESULT_STATUS.ACCEPT"
         >
-          复审通过备注：{{ photoItem.photoAppeals.secondResult.reason }}
+          复审通过备注：{{ photoAppealsSecondResult.reason }}
         </div>
       </div>
     </div>
+    <!-- 预览 -->
     <preview-photo
       v-if="showPreview"
       :imgarray="priviewPhotoData"
@@ -253,6 +239,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['imgDomain', 'imgCompressDomain']),
     imgIndex () {
       let finalIndex = 0
       const appealType = this.appealInfo.appealType
@@ -289,12 +276,13 @@ export default {
       }
       return finalPhoto
     },
-    ...mapGetters(['imgDomain', 'imgCompressDomain']),
-    // 云学院标记
-    checkTag () {
-      const tagArr = this.photoItem.photoAppeals.checkPoolTags
-      const tagFilter = tagArr.map(item => item.name)
-      return tagFilter
+    // 第一次评价信息
+    photoAppealsFirstResult () {
+      return _.get(this.photoItem, 'photoAppeals.firstResult') || {}
+    },
+    // 第二次评价信息
+    photoAppealsSecondResult () {
+      return _.get(this.photoItem, 'photoAppeals.secondResult') || {}
     }
   },
   created () {
@@ -385,6 +373,12 @@ export default {
           this.secondEvaluateResult = {}
         }
       }
+    },
+    /**
+     * @description 获取初审信息
+     */
+    getFirstResult (photoItem) {
+      return _.get(photoItem, 'photoAppeals.firstResult') || {}
     }
   }
 }
@@ -455,6 +449,29 @@ export default {
         color: #303133;
       }
 
+      .label-tag {
+        margin-right: 10px;
+
+        &.plant {
+          color: #38bc7f;
+          background-color: #ecf7f2;
+          border-color: #7fd9af;
+        }
+
+        &.pull {
+          color: #ff3974;
+          background-color: #fff0f0;
+          border-color: #f99ab7;
+        }
+
+        &.middle,
+        &.small {
+          color: #ff8f00;
+          background-color: #fff7ed;
+          border-color: #ffce90;
+        }
+      }
+
       .type-tag {
         margin-right: 10px;
 
@@ -494,7 +511,6 @@ export default {
       font-size: 14px;
       line-height: 22px;
       color: #303133;
-      border-bottom: 1px solid @borderColor;
 
       .order-info {
         .order-info-title {
@@ -504,7 +520,7 @@ export default {
     }
 
     .panel-main {
-      padding: 20px;
+      padding: 0 20px;
       margin-top: 12px;
       background-color: #fafafa;
       border-radius: 4px;
