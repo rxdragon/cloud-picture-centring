@@ -92,7 +92,7 @@
               <div class="photo-module" v-loading="row.loading">
                 <div
                   class="photo-list"
-                  v-if="(row.isStoreReturned || row.isCloudEvaluation) && row.listShowPhotoList.length"
+                  v-if="(row.isStoreReturned || row.evaluationType) && row.listShowPhotoList.length"
                 >
                   <template v-for="(photoItem, photoIndex) in row.listShowPhotoList">
                     <div class="photo-chunk" :key="photoIndex">
@@ -101,6 +101,7 @@
                         :src="photoItem.completePhoto.path"
                         :return-quality-type="photoItem.returnQualityType"
                         :show-special-effects="false"
+                        :check-pool-score="photoItem.checkPoolScore"
                         :show-store-part-rework-reason="false"
                         contain-photo
                         show-label-info
@@ -190,10 +191,10 @@
               </el-popover>
             </template>
           </el-table-column>
-          <!-- 抽查类型 todo:nx 这里内容要改 -->
+          <!-- 抽查类型 -->
           <el-table-column label="抽查类型" width="100">
             <template slot-scope="{ row }">
-              <div :class="row.isCloudEvaluation && 'spot-class'">{{ row.isCloudEvaluation ? '是' : '否' }}</div>
+              <div>{{ row.evaluationType || '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column label="门店评价" width="120">
@@ -389,6 +390,7 @@ export default {
     /**
      * @description 获取历史列表
      * @param 页码 如果通过按搜索框搜索,传输1 到第一页
+     * 云学院和修修兽公用一个showTags入餐， 通过type区分
      */
     async getRetouchList () {
       try {
@@ -402,14 +404,14 @@ export default {
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
         if (typeof this.cloudSpot === 'boolean') { reqData.cloudEvaluation = this.cloudSpot }
-        // todo:nx 抽查标签入餐
-        if (this.cloudIssueValue.length) { reqData.cloudTags = this.issueValue }
-        if (this.showIssueValue.length) { reqData.showTags = this.issueValue }
         if (this.isReturn) { reqData.isReturn = this.isReturn === 'isReturn' }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
         if (this.returnType) { reqData.storeReworkType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         if (this.cloudEvaluateType) { reqData.cloudEvaluateType = this.cloudEvaluateType }
+        if (this.cloudIssueValue.length || this.showIssueValue.length) {
+          reqData.showTags = this.cloudIssueValue.length ? this.cloudIssueValue : this.showIssueValue
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total

@@ -3,7 +3,7 @@
     <el-select
       v-bind="$attrs"
       :popper-append-to-body="false"
-      placeholder="请选择种拔草"
+      placeholder="请选择抽查类型"
       v-on="$listeners"
     >
       <el-option
@@ -26,15 +26,15 @@ export default {
       options: [
         {
           label: '云学院抽查',
-          value: SPOT_CHECK_MAP.CLOUD
+          value: SPOT_CHECK_MAP.CHECK_POOL_SPOT
         },
         {
           label: '修修兽抽查',
-          value: SPOT_CHECK_MAP.SHOW
+          value: SPOT_CHECK_MAP.SHOW_PIC_SPOT
         },
         {
           label: '未抽查',
-          value: SPOT_CHECK_MAP.NONE
+          value: SPOT_CHECK_MAP.NOT_SPOT
         }
       ]
     }

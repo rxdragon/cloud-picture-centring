@@ -26,11 +26,9 @@ import * as ProductClassificationApi from '@/api/productClassificationApi.js'
 export default {
   name: 'ProductSelect',
   props: {
-    props: {
-      type: Object,
-      default: () => {
-        return {}
-      }
+    type: Object, // todo:nx 区分修修兽和其他
+    default: () => {
+      return {}
     }
   },
   data () {

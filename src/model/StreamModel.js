@@ -1,4 +1,5 @@
 import * as Validate from '@/utils/validate.js'
+import { SPOT_CHECK_MAP } from '@/utils/enumerate'
 import store from '@/store' // vuex
 
 // 标记枚举
@@ -7,6 +8,12 @@ export const STREAM_TAG = {
   STORE_RETURNED: 'is_returned', // 被退回
   CHECKRETURN: 'rework',
   CLOUD_EVALUATION: 'cloud_evaluation'
+}
+
+// 抽查类型
+export const EVALUATION_TYPE = {
+  [SPOT_CHECK_MAP.SHOW_PIC_SPOT]: '修修兽抽查',
+  [SPOT_CHECK_MAP.CHECK_POOL_SPOT]: '云学院抽查'
 }
 
 /**
@@ -27,7 +34,7 @@ export default class StreamModel {
   dresserNote = '' // 化妆备注
   orderNote = '' // 订单备注
   reviewerNote = '' // 审核备注
-  
+
   requireLabel = {} // 修图要求
   photoNum = 0 // 照片数据
   isGreen = false // 是否是绿色通道
@@ -71,7 +78,7 @@ export default class StreamModel {
   notQualityNumForRework = 0 // 退回单门店退回非质量问题张数
   bothNumForRework = 0 // 退回单门店退回质量问题张数&非质量问题张数
   allReturnPhotoNum = 0 // 全部退单张数
-  
+
   rollbackNumForRework = 0 // 回滚的单数
 
   reworkNum = 0
@@ -91,7 +98,7 @@ export default class StreamModel {
   actualIncome = 0 // 实获收益
 
   // 云学院
-  isCloudEvaluation = false // 是否云学院抽查
+  evaluationType = '' // 抽查类型
   cloudEvaluateTime = '-' // 云学院评价时间
 
   // 申诉
@@ -133,8 +140,8 @@ export default class StreamModel {
 
     this.isCheckReturn = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CHECKRETURN)
     this.reviewerNote = _.get(streamData, 'reviewer_note') || ''
-    
-    // 判断是否是圣诞一人成团订单 
+
+    // 判断是否是圣诞一人成团订单
     this.isChristmasPhoto = _.get(streamData, 'tags.values.need_auto_created_finish_photo') || false
 
     const referencePhoto = _.get(streamData, 'tags.values.retouch_claim.referenceImg')
@@ -161,7 +168,7 @@ export default class StreamModel {
     this.retoucherNpsAvg = _.get(streamData, 'tags.values.retoucher_score') || '-'
 
     // 云学院
-    this.isCloudEvaluation = _.get(streamData, 'tags.statics', []).includes(STREAM_TAG.CLOUD_EVALUATION)
+    this.evaluationType = this.getEvaluationType(_.get(streamData, 'tags.statics', []))
     this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
 
     // 申诉
@@ -300,5 +307,16 @@ export default class StreamModel {
     this.photographyNote = _.get(this.baseData, 'note.photography_note') || '-' // 摄影备注
     this.dresserNote = _.get(this.baseData, 'order.note.dresserNote') || '-' // 化妆备注
     this.orderNote = _.get(this.baseData, 'order.note.orderNote') || '-' // 订单备注
+  }
+
+  // 获取抽查类型
+  getEvaluationType (statics = []) {
+    if (statics.includes(SPOT_CHECK_MAP.SHOW_PIC_SPOT)) {
+      return EVALUATION_TYPE[SPOT_CHECK_MAP.SHOW_PIC_SPOT]
+    }
+    if (statics.includes(SPOT_CHECK_MAP.CHECK_POOL_SPOT)) {
+      return EVALUATION_TYPE[SPOT_CHECK_MAP.CHECK_POOL_SPOT]
+    }
+    return ''
   }
 }

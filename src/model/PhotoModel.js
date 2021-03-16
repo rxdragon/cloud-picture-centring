@@ -14,7 +14,7 @@ export default class PhotoModel {
   reworkReason = '' // 重修理由
 
   photoNum = 0 // 照片人数
- 
+
   isStoreReturn = '' // 是否门店退回
   storeReworkReason = '' // 门店退回理由
   wholeReason = [] // 整体退回原因
@@ -58,7 +58,7 @@ export default class PhotoModel {
     this.reworkReason = _.get(photoData, 'tags.values.rework_reason') || ''
 
     this.photoNum = _.get(photoData, 'people_num') || 0
-    
+
     // 退单相关
     const statics = _.get(photoData, 'tags.statics') || []
 
@@ -132,8 +132,8 @@ export default class PhotoModel {
 
   // 获取云学院分数
   getCheckPoolTags () {
-    this.checkPoolScore = _.get(this.baseData, 'tags.values.score') || '-'
-    this.evaluatorType = _.get(this.baseData, 'tags.values.evaluator_type') || ''
+    this.checkPoolScore = _.get(this.baseData, 'tags.values.score')
+    this.evaluatorType = Boolean(this.checkPoolScore)
     this.checkEvaluator = _.get(this.baseData, 'tags.values.evaluator') || '-'
     const checkPoolTags = _.get(this.baseData, 'tags.values.check_pool_tags') || []
     const parentData = []
