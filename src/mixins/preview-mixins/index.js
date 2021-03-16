@@ -150,15 +150,15 @@ export default {
      * @description 放大
      */
     zoom (e) {
+      if (this.canvasOption.drawType !== 'blowup') return
       if (this.inZoomIn) {
         this.photoZoomStyle = ''
         this.inZoomIn = false
       } else {
-        const photoShow = this.$refs['photo-show']
-        const imageWidth = photoShow.clientWidth
-        const imageHeight = photoShow.clientHeight
-        const _x = e.pageX - 280
-        const _y = e.pageY - 82
+        const imageWidth = e.target.clientWidth
+        const imageHeight = e.target.clientHeight
+        const _x = e.offsetX
+        const _y = e.offsetY
         const clickX = (_x / imageWidth * 100).toFixed(2) + '%'
         const clickY = (_y / imageHeight * 100).toFixed(2) + '%'
         const zoomScale = (this.scaleNum * 4 + 100) / 100

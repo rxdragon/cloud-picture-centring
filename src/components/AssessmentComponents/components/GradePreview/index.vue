@@ -680,6 +680,8 @@ export default {
 }
 
 .grade-preview {
+  overflow: hidden;
+
   .tool-color {
     .el-color-picker__trigger {
       border: none;
