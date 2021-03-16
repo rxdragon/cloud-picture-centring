@@ -38,7 +38,7 @@ import StaffSelect from '@SelectBox/StaffSelect/index'
 import ChartSunburst from './components/ChartSunburst'
 import ProductSelect from '@SelectBox/ProductSelect/index'
 import { GRADE_CONFIGURATION_TYPE, CLOUD_ROLE, gradeConfigurationToCN } from '@/utils/enumerate'
-import * as timespanUtil from '@/utils/timespan'
+import * as TimespanUtil from '@/utils/timespan'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 
 export default {
@@ -72,8 +72,8 @@ export default {
       this.loading = true
       try {
         const req = {
-          startAt: timespanUtil.joinTimeSpan(this.timeSpan[0]),
-          endAt: timespanUtil.joinTimeSpan(this.timeSpan[1], 1)
+          startAt: TimespanUtil.joinTimeSpan(this.timeSpan[0]),
+          endAt: TimespanUtil.joinTimeSpan(this.timeSpan[1], 1)
         }
         if (this.staffIds.length) req.retoucherIds = this.staffIds
         if (this.productValue.length) req.productIds = this.productValue
@@ -81,7 +81,7 @@ export default {
         this.avgScore = res.avgScore
         this.gradeConfigurations = res.data
       } finally {
-        await timespanUtil.delayLoading()
+        await TimespanUtil.delayLoading()
         this.loading = false
       }
     },
