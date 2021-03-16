@@ -30,7 +30,7 @@
         v-if="secondResult.result === APPEAL_RESULT_STATUS.ACCEPT"
         class="panel-content content-one"
       >
-        复审通过备注：{{ secondResult.reason }}
+        复审通过备注：{{ secondResult.reason || '-' }}
       </div>
     </div>
   </div>

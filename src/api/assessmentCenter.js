@@ -220,7 +220,7 @@ export async function getScoreConfigList () {
         idString: String(childrenItem.id),
         name: childrenItem.name,
         children: childrenItem.children,
-        parentId: childrenItem.parent_id,
+        parentId: childrenItem.score_type_id,
         value: ''
       }
     })

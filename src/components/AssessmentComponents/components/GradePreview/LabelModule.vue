@@ -168,7 +168,8 @@ export default {
       const lableInfo = {
         name: chainCircuitName,
         id: chainCircuitId,
-        levelId
+        levelId,
+        type: level
       }
       this.$bus.$emit('add-canvas-lable', lableInfo)
       return true

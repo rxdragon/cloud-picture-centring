@@ -192,10 +192,7 @@ export default {
           photoExamines.push(secondObj)
         }
       })
-      if (photoExamines.length !== this.photos.length) {
-        this.$newMessage.warning('还存在未审核的申诉照片')
-        return
-      }
+      if (photoExamines.length !== this.photos.length) return this.$newMessage.warning('还存在未审核的申诉照片')
       const req = {
         id: this.appealInfo.id,
         photoExamines
