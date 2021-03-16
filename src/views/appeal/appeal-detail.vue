@@ -13,7 +13,7 @@
         申诉照片{{ photoIndex + 1 }}
         <span v-if="photoItem.specialEfficacy" class="special-efficacy panel-slot">{{ photoItem.specialEfficacy }}</span>
       </div>
-      <photo-detail
+      <PhotoDetail
         :ref="`photoDetail${photoIndex}`"
         :check-type="checkType"
         :photo-item="photoItem"
@@ -23,62 +23,35 @@
     </div>
     <!-- 申诉结果 -->
     <div
-      class="module-panel"
       v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT && !checkType"
+      class="module-panel"
     >
-      <div class="panel-box">
-        <div class="panel-title">申诉结果</div>
-        <div class="panel-main">
-          <div class="panel-content content-one">申诉问题描述：{{ orderData.timeoutAppeal.desc }}</div>
-          <div class="panel-content content-one">初审状态：{{ orderData.timeoutAppeal.firstResult.resultDesc }}</div>
-          <div
-            class="panel-content content-one"
-            v-if="orderData.timeoutAppeal.firstResult.result === APPEAL_RESULT_STATUS.REFUSE"
-          >
-            初审拒绝原因：{{ orderData.timeoutAppeal.firstResult.reason }}
-          </div>
-          <div
-            class="panel-content content-one"
-            v-if="orderData.timeoutAppeal.firstResult.result === APPEAL_RESULT_STATUS.ACCEPT"
-          >
-            初审通过备注：{{ orderData.timeoutAppeal.firstResult.reason }}
-          </div>
-          <div class="panel-content content-one">复审状态：{{ orderData.timeoutAppeal.secondResult.resultDesc }}</div>
-          <div
-            class="panel-content content-one"
-            v-if="orderData.timeoutAppeal.secondResult.result === APPEAL_RESULT_STATUS.REFUSE"
-          >
-            复审拒绝原因：{{ orderData.timeoutAppeal.secondResult.reason }}
-          </div>
-          <div
-            class="panel-content content-one"
-            v-if="orderData.timeoutAppeal.secondResult.result === APPEAL_RESULT_STATUS.ACCEPT"
-          >
-            复审通过备注：{{ orderData.timeoutAppeal.secondResult.reason }}
-          </div>
+      <AppealRecordInfo :appeal-record-data="orderData.timeoutAppeal" />
+    </div>
+
+    <template v-if="checkType">
+      <!-- 提交 -->
+      <div
+        v-if="appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
+        class="footer"
+      >
+        <el-button type="info" @click="cancelAll">返回</el-button>
+        <el-button type="primary" @click="submitAll">提交</el-button>
+      </div>
+      <!-- 审核 -->
+      <div
+        v-if="appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
+        class="footer"
+      >
+        <el-button type="info" @click="cancelAll">返回</el-button>
+        <div class="timeout-appeal-operation">
+          <el-button type="danger" @click="showTimeoutDialog">审核拒绝</el-button>
+          <el-button type="primary" @click="acceptAppeal">审核通过</el-button>
         </div>
       </div>
-    </div>
-    <!-- 提交 -->
-    <div
-      class="footer"
-      v-if="checkType && appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
-    >
-      <el-button type="info" @click="cancelAll">返回</el-button>
-      <el-button type="primary" @click="submitAll">提交</el-button>
-    </div>
-    <!-- 审核 -->
-    <div
-      class="footer"
-      v-if="checkType && appealInfo.appealType === APPEAL_TYPE.TIMEOUT"
-    >
-      <el-button type="info" @click="cancelAll">返回</el-button>
-      <div class="timeout-appeal-operation">
-        <el-button type="danger" @click="showTimeoutDialog">审核拒绝</el-button>
-        <el-button type="primary" @click="acceptAppeal">审核通过</el-button>
-      </div>
-    </div>
-    <!-- 审核拒绝-dialog -->
+    </template>
+    
+    <!-- 沙漏审核拒绝-dialog -->
     <el-dialog
       title="审核拒绝"
       class="alter-performance-dialog"
@@ -103,14 +76,15 @@
 <script>
 import PhotoDetail from './components/PhotoDetail'
 import OrderInfo from './components/OrderInfo'
+import AppealRecordInfo from './components/AppealRecordInfo'
 
-import { APPEAL_TYPE, APPEAL_RESULT_STATUS } from '@/utils/enumerate'
+import { APPEAL_TYPE } from '@/utils/enumerate'
 
 import * as Appeal from '@/api/appeal.js'
 
 export default {
   name: 'Detail',
-  components: { PhotoDetail, OrderInfo },
+  components: { PhotoDetail, OrderInfo, AppealRecordInfo },
   data () {
     return {
       showPreview: false,
@@ -125,7 +99,6 @@ export default {
       APPEAL_TYPE,
       refuseReasonShow: false,
       refuseReason: '',
-      APPEAL_RESULT_STATUS,
       photoInfo: {}
     }
   },
@@ -335,76 +308,5 @@ export default {
 
 .el-rate__icon {
   font-size: 24px;
-}
-
-.panel-box {
-  margin-top: 20px;
-  font-size: 14px;
-  color: #303133;
-
-  .type-tag {
-    margin: 0 10px 10px;
-
-    &.plant {
-      color: #fff;
-      background-color: #44c27e;
-      border-color: #44c27e;
-    }
-
-    &.pull {
-      color: #fff;
-      background-color: #ff3974;
-      border-color: #ff3974;
-    }
-
-    &.none {
-      color: #fff;
-      background-color: #4669fb;
-      border-color: #4669fb;
-    }
-  }
-
-  .panel-main {
-    padding: 20px;
-    margin-top: 12px;
-    background-color: #fafafa;
-    border-radius: 4px;
-
-    .panel-content {
-      padding: 10px 0;
-
-      .evaluate-item {
-        margin-right: 16px;
-        margin-bottom: 10px;
-      }
-
-      .reason-item {
-        display: inline-block;
-        padding: 4px;
-        margin-right: 16px;
-        font-size: 12px;
-        color: #4669fb;
-        background: rgba(237, 240, 255, 1);
-        border: 1px solid rgba(181, 195, 253, 1);
-        border-radius: 4px;
-
-        .red {
-          color: red;
-        }
-
-        &.del {
-          color: #919199;
-          background: rgba(212, 212, 217, 1);
-          border: none;
-        }
-      }
-    }
-
-    .content-one {
-      display: flex;
-      flex-wrap: wrap;
-      border-bottom: 1px solid @borderColor;
-    }
-  }
 }
 </style>

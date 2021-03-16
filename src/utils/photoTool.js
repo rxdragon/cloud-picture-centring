@@ -115,6 +115,7 @@ export function settlePhotoVersion (oldPhotoVersion) {
   const timeLine = photoVersion.sort((a, b) => {
     return Number(a.id) - Number(b.id)
   })
+
   const createData = []
   let storeReturnCount = 0
   timeLine.forEach(versionItem => {

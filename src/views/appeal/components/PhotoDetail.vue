@@ -1,85 +1,19 @@
 <template>
   <div class="photo-detail">
-    <!-- 图片列表 不是审核模式-->
-    <div v-if="!checkType" class="normal-photo-list">
-      <div
-        class="normal-photo-item"
-        v-for="(photoDataItem, photoIndex) in photoVersionList"
-        :key="photoIndex"
-      >
-        <photo-box
-          :src="photoDataItem.path"
-          :show-store-part-rework-reason="false"
-          :showSpecialEffects="false"
-          downing
-          contain-photo
-          show-label-info
-        >
-          <template v-slot:title>
-            <span class="lable-title">{{ photoDataItem.version | toPhotoVerName }}{{ photoDataItem.storeReturnCount || '' }}</span>
-          </template>
-        </photo-box>
-      </div>
-    </div>
+    <!-- 图片列表-->
     <photo-list
-      v-else
+      class="photo-module"
       need-preload
       :photo-data="photoVersionList"
       :show-special-effects="false"
     />
 
     <!-- 质量问题标签 -->
-    <div
+    <AppealStoreReturnInfo
       v-if="appealInfo.appealType === APPEAL_TYPE.REWORK"
-      class="panel-box"
-    >
-      <div class="panel-title">门店退回</div>
-      <div class="panel-main">
-        <div class="panel-content content-one">
-          局部退回标记：
-          <div
-            v-for="(reasonItem, index) in realPhotoData.storePartReworkReason"
-            :key="index"
-          >
-            <div
-              v-for="(reasonManageItem) in reasonItem.reasonManage"
-              :key="reasonManageItem.id"
-              :class="['reason-item', reasonManageItem.cancel && reasonManageItem.isDel ? 'del' : '']"
-            >
-              <span>{{ reasonManageItem.name }}</span>
-              <span v-if="reasonManageItem.cancel && reasonManageItem.isDel">(已删除)</span>
-              <span
-                class="red"
-                v-if="reasonManageItem.cancel && !reasonManageItem.isDel"
-              >(标记删除)
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="panel-content content-one">
-          局部退回备注：
-          <span
-            v-for="(storePartReworkReason, index) in realPhotoData.storePartReworkReason"
-            :key="index"
-          >
-            {{ storePartReworkReason.note }}
-          </span>
-        </div>
-        <div class="panel-content content-one">
-          整体退回标记：
-          <div
-            v-for="(reasonItem) in realPhotoData.storeReworkReasonManage"
-            :key="reasonItem.id"
-            :class="['reason-item', reasonItem.cancel && reasonItem.isDel ? 'del' : '']"
-          >
-            <span>{{ reasonItem.name }}</span>
-            <span v-if="reasonItem.cancel && reasonItem.isDel">(已删除)</span>
-            <span class="red" v-if="reasonItem.cancel && !reasonItem.isDel">(标记删除)</span>
-          </div>
-        </div>
-        <div class="panel-content">整体退回备注：{{ realPhotoData.storeReworkNote }}</div>
-      </div>
-    </div>
+      :photoData="realPhotoData"
+    />
+
     <!-- 云学院评分详情 -->
     <div
       v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
@@ -87,104 +21,60 @@
     >
       <div class="panel-title eval uate">
         <span>评价信息</span>
-        <span>总分：{{ photoItem.photoAppeals.checkPoolScore }}</span>
       </div>
       <div class="panel-main">
-        <div class="issue-class-box panel-row">
-          <el-tag
-            class="label-tag"
-            size="medium"
-            v-for="labelItem in photoItem.checkPoolTags"
-            :key="labelItem.id"
-            :class="labelItem.type"
-          >
-            {{ labelItem.name }}
-          </el-tag>
+        <div class="evaluate-score">
+          <div class="panel-row">首次评分：{{ photoItem.photoAppeals.checkPoolScore }}</div>
+          <div class="issue-class-box panel-row">
+            <el-tag
+              class="label-tag"
+              size="medium"
+              v-for="labelItem in photoItem.checkPoolTags"
+              :key="labelItem.id"
+              :class="labelItem.type"
+            >
+              {{ labelItem.name }}
+            </el-tag>
+          </div>
         </div>
-      </div>
-    </div>
-    <!-- 复审后的评分 -->
-    <div
-      v-if="appealInfo.appealType === APPEAL_TYPE.EVALUATE"
-      class="panel-box"
-    >
-      <div class="panel-main" v-if="secondEvaluateResult.hasSecond">
-        <div class="panel-content content-one">
-          复审后评分
-          <el-tag :class="['type-tag', secondEvaluateResult.class]" size="medium">
-            {{ secondEvaluateResult.name }}
-          </el-tag>
-          <el-tag
-            v-for="(typeTagItem, index) in secondEvaluateResult.typeTag"
-            :key="index"
-            class="type-tag"
-            size="medium"
-          >
-            {{ typeTagItem }}
-          </el-tag>
-        </div>
-        <div class="issue-class-box panel-row" v-for="tagItem in secondEvaluateResult.tags" :key="tagItem.id">
-          <div class="label-title">{{ tagItem.name }}</div>
-          <div class="label-box">
-            <el-tag size="medium" v-for="issueItem in tagItem.child" :key="issueItem.id">{{ issueItem.name }}</el-tag>
+        <!-- 复审后的评分 -->
+        <!-- TODO 更改 -->
+        <div class="evaluate-score" v-if="secondEvaluateResult.hasSecond">
+          <div class="panel-row">复审评分：{{ photoItem.photoAppeals.checkPoolScore }}</div>
+          <div class="issue-class-box panel-row">
+            <el-tag
+              class="label-tag"
+              size="medium"
+              v-for="labelItem in photoItem.checkPoolTags"
+              :key="labelItem.id"
+              :class="labelItem.type"
+            >
+              {{ labelItem.name }}
+            </el-tag>
           </div>
         </div>
       </div>
     </div>
+
     <!-- 申诉信息 -->
-    <div
+    <AppealRecordInfo
       v-if="appealInfo.appealType !== APPEAL_TYPE.TIMEOUT"
-      class="panel-box"
+      :appeal-record-data="photoItem.photoAppeals"
     >
-      <div class="panel-title">
-        申诉处理
-        <el-button
-          v-if="checkType === 'first'"
-          size="mini"
-          type="primary"
-          @click="goCheck('first')"
-        >
-          初审
-        </el-button>
-        <el-button
-          v-if="checkType === 'second'"
-          size="mini"
-          type="primary"
-          @click="goCheck('second')"
-        >
-          复审
-        </el-button>
-      </div>
-      <div class="panel-main">
-        <div class="panel-content content-one">申诉问题描述：{{ photoItem.photoAppeals.desc }}</div>
-        <div class="panel-content content-one">初审状态：{{ photoAppealsFirstResult.resultDesc }}</div>
-        <div
-          v-if="photoAppealsFirstResult.result === APPEAL_RESULT_STATUS.REFUSE"
-          class="panel-content content-one"
-        >
-          初审拒绝原因：{{ photoAppealsFirstResult.reason }}
+      <template v-slot:appealPlug>
+        <div class="header-plug" >
+          <el-button
+            v-if="checkType"
+            size="mini"
+            type="primary"
+            @click="goCheck()"
+          >
+            {{ checkType === 'first' ? '初审' : '复审' }}
+          </el-button>
         </div>
-        <div
-          v-if="photoAppealsFirstResult.result === APPEAL_RESULT_STATUS.ACCEPT"
-          class="panel-content content-one"
-        >
-          初审通过备注：{{ photoAppealsFirstResult.reason }}
-        </div>
-        <div class="panel-content content-one">复审状态：{{ photoAppealsSecondResult.resultDesc }}</div>
-        <div
-          v-if="photoAppealsSecondResult.result === APPEAL_RESULT_STATUS.REFUSE"
-          class="panel-content content-one"
-        >
-          复审拒绝原因：{{ photoAppealsSecondResult.reason }}
-        </div>
-        <div
-          v-if="photoAppealsSecondResult.result === APPEAL_RESULT_STATUS.ACCEPT"
-          class="panel-content content-one"
-        >
-          复审通过备注：{{ photoAppealsSecondResult.reason }}
-        </div>
-      </div>
-    </div>
+      </template>
+    </AppealRecordInfo>
+
     <!-- 预览 -->
     <preview-photo
       v-if="showPreview"
@@ -205,8 +95,9 @@
 <script>
 import PhotoList from '@/components/PhotoList'
 import PreviewPhoto from './PreviewPhoto/index.vue'
+import AppealRecordInfo from './AppealRecordInfo.vue'
+import AppealStoreReturnInfo from './AppealStoreReturnInfo.vue'
 import PreviewModel from '@/model/PreviewModel'
-import PhotoBox from '@/components/PhotoBox'
 
 import { mapGetters } from 'vuex'
 
@@ -214,7 +105,7 @@ import { APPEAL_RESULT_STATUS, PHOTO_VERSION, AppealResultStatusPhotoEnum, APPEA
 
 export default {
   name: 'PhotoDetail',
-  components: { PhotoList, PreviewPhoto, PhotoBox },
+  components: { PhotoList, PreviewPhoto, AppealRecordInfo, AppealStoreReturnInfo },
   props: {
     photoItem: { type: Object, required: true },
     appealInfo: { type: Object, required: true },
@@ -265,6 +156,7 @@ export default {
       })
       return previewList
     },
+    // 最后的照片数据
     realPhotoData () {
       const appealType = this.appealInfo.appealType
       let finalPhoto = {}
@@ -276,14 +168,6 @@ export default {
       }
       return finalPhoto
     },
-    // 第一次评价信息
-    photoAppealsFirstResult () {
-      return _.get(this.photoItem, 'photoAppeals.firstResult') || {}
-    },
-    // 第二次评价信息
-    photoAppealsSecondResult () {
-      return _.get(this.photoItem, 'photoAppeals.secondResult') || {}
-    }
   },
   created () {
     this.initPhotoList()
@@ -299,31 +183,30 @@ export default {
     /**
      * @description 去审核
      */
-    goCheck (type) {
+    goCheck () {
       this.showPreview = true
     },
     /**
      * @description 接受预览组件的审核结果
      */
     saveResult (resultObj) {
-      const { type, result, reason, appealType, labelData, labelDataTop, sendData } = resultObj
-      if (type === 'first') {
+      if (resultObj.type === 'first') {
         this.photoItem.photoAppeals.firstResult = {
           id: this.photoItem.photoAppeals.id,
-          result,
-          reason,
-          resultDesc: AppealResultStatusPhotoEnum[result]
+          result: resultObj.result,
+          reason: resultObj.reason,
+          resultDesc: AppealResultStatusPhotoEnum[resultObj.result]
         }
       }
       // 质量问题复审
-      if (type === 'second' && appealType === APPEAL_TYPE.REWORK) {
+      if (resultObj.type === 'second' && resultObj.appealType === APPEAL_TYPE.REWORK) {
         this.photoItem.photoAppeals.secondResult = {
           id: this.photoItem.photoAppeals.id,
-          result,
-          reason,
-          resultDesc: AppealResultStatusPhotoEnum[result]
+          result: resultObj.result,
+          reason: resultObj.reason,
+          resultDesc: AppealResultStatusPhotoEnum[resultObj.result]
         }
-        if (result === 'refuse') {
+        if (resultObj.result === 'refuse') {
           this.realPhotoData.storePartReworkReason.forEach(partReasonItem => {
             partReasonItem.reasonManage.forEach(reasonItem => {
               reasonItem.cancel = false
@@ -337,23 +220,23 @@ export default {
         if (resultObj.storeReworkReasonManage) this.realPhotoData.storeReworkReasonManage = resultObj.storeReworkReasonManage
       }
       // 评分问题复审
-      if (type === 'second' && appealType === APPEAL_TYPE.EVALUATE) {
+      if (resultObj.type === 'second' && resultObj.appealType === APPEAL_TYPE.EVALUATE) {
         this.photoItem.photoAppeals.secondResult = {
           id: this.photoItem.photoAppeals.id,
-          result,
-          reason,
-          resultDesc: AppealResultStatusPhotoEnum[result]
+          result: resultObj.result,
+          reason: resultObj.reason,
+          resultDesc: AppealResultStatusPhotoEnum[resultObj.result]
         }
-        this.realPhotoData.sendData = sendData
+        this.realPhotoData.sendData = resultObj.sendData
         this.realPhotoData.otherData = {} // 存放选中的标签对象
-        if (result === 'accept') {
-          const finalLabelType = labelDataTop.filter(labelDataTopItem => labelDataTopItem.isSelect)[0]
+        if (resultObj.result === 'accept') {
+          const finalLabelType = resultObj.labelDataTop.filter(labelDataTopItem => labelDataTopItem.isSelect)[0]
           const tempTag = []
           const tempTypeTag = []
           this.secondEvaluateResult.hasSecond = true
           this.secondEvaluateResult.name = finalLabelType.name
           this.secondEvaluateResult.class = finalLabelType.class
-          labelData.forEach(labelDataItem => {
+          resultObj.labelData.forEach(labelDataItem => {
             if (!labelDataItem.isGoodWord) { // 普通标签
               const filterLabelArr = labelDataItem.child.filter(childItem => childItem.isSelect)
               if (filterLabelArr.length) {
@@ -402,34 +285,8 @@ export default {
     }
   }
 
-  .normal-photo-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+  .photo-module {
     margin-right: -24px;
-    margin-bottom: -24px;
-
-    .normal-photo-item {
-      box-sizing: border-box;
-      width: 253px;
-      padding: 6px;
-      margin-right: 24px;
-      margin-bottom: 24px;
-      background-color: #f5f7fa;
-      border-radius: 4px;
-    }
-
-    .normal-photo-name {
-      padding: 12px 6px;
-      font-size: 12px;
-      color: #606266;
-      text-align: right;
-    }
-
-    .el-image {
-      width: 242px;
-      height: 242px;
-    }
   }
 
   .panel-box {
@@ -507,7 +364,7 @@ export default {
     }
 
     .panel-row {
-      padding: 20px 0;
+      padding: 16px 0 0;
       font-size: 14px;
       line-height: 22px;
       color: #303133;
@@ -520,7 +377,7 @@ export default {
     }
 
     .panel-main {
-      padding: 0 20px;
+      padding: 0 20px 20px;
       margin-top: 12px;
       background-color: #fafafa;
       border-radius: 4px;
