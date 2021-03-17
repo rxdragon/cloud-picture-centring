@@ -58,7 +58,7 @@
         <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="spot-check-box search-item">
             <span>抽查类型</span>
-            <cloud-spot-grass-select v-model="cloudEvaluateType" clearable />
+            <SpotEvaluateTypeSelect v-model="cloudEvaluateType" clearable />
           </div>
         </el-col>
         <!-- 云学院标签 -->
@@ -233,7 +233,7 @@ import QualitySelect from '@SelectBox/QualitySelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
-import CloudSpotGrassSelect from '@/components/CloudSpotGrassSelect'
+import SpotEvaluateTypeSelect from '@/components/SpotEvaluateTypeSelect'
 import PhotoBox from '@/components/PhotoBox'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
@@ -249,7 +249,7 @@ const SEARCH_TYPE = {
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpotGrassSelect, PhotoBox },
+  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, SpotEvaluateTypeSelect, PhotoBox },
   data () {
     return {
       SEARCH_TYPE,
