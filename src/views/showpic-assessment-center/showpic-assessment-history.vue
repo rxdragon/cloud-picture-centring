@@ -16,7 +16,7 @@ export default {
   name: 'ShowpicAssessmentHistory',
   components: { AssessmentHistoryModule },
   provide: {
-    cloudType: GRADE_LABEL_TYPE.SHOWPIC
+    cloudType: GRADE_LABEL_TYPE.SHOW_PIC
   }
 }
 </script>

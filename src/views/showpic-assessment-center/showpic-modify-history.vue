@@ -15,7 +15,7 @@ export default {
   name: 'ShowpicModifyHistory',
   components: { ModifyHistoryModule },
   provide: {
-    cloudType: GRADE_LABEL_TYPE.CLOUD
+    cloudType: GRADE_LABEL_TYPE.SHOW_PIC
   }
 }
 </script>

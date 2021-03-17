@@ -1,22 +1,34 @@
 <template>
   <div class="cloud-report" v-loading="loading">
-    <div class="search-box">
-      <div class="search-item">
-        <span>评价时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-search search-item" v-if="searchRole === CLOUD_ROLE.OPERATE">
-        <span>修图伙伴</span>
-        <staff-select v-model="staffIds" />
-      </div>
-      <div class="product-box search-item" v-if="searchRole === CLOUD_ROLE.OPERATE">
-        <span>产品</span>
-        <product-select v-model="productValue" />
-      </div>
-      <div class="button-box search-item">
-        <el-button type="primary" @click="searchData">查 询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 评价时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>评价时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 修图伙伴 -->
+      <el-col :span="6" :xl="4" v-if="searchRole === CLOUD_ROLE.OPERATE">
+        <div class="staff-search search-item">
+          <span>修图伙伴</span>
+          <staff-select v-model="staffIds" />
+        </div>
+      </el-col>
+      <!-- 产品 -->
+      <el-col :span="8" :xl="4" v-if="searchRole === CLOUD_ROLE.OPERATE">
+        <div class="product-box search-item">
+          <span>产品</span>
+          <ProductSelect :show-pic-product="false" v-model="productValue" />
+        </div>
+      </el-col>
+      <el-col :span="2" :xl="4">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="searchData">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+    <!-- 标题 -->
     <div class="title">
       <span>平均分对比</span>
       <span>抽查平均分：{{ avgScore }}</span>
@@ -101,8 +113,7 @@ export default {
 <style lang="less" scoped>
 
 .search-box {
-  padding-bottom: 24px;
-  margin-top: 24px;
+  margin: 0 !important;
   border-bottom: 1px solid #ecedee;
 }
 

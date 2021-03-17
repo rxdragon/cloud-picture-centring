@@ -115,28 +115,37 @@
         </div>
       </div>
     </div>
+
     <!-- 修图绩效 -->
-    <retouch-performance />
+    <RetouchPerformance />
+
     <!-- 云学院报告 -->
     <div class="cloud-report-self module-panel">
       <div class="panel-title">整理抽查数据统计</div>
-      <personal-cloud-report :search-role="CLOUD_ROLE.CREW"></personal-cloud-report>
+      <PersonalCloudReport :search-role="CLOUD_ROLE.CREW" />
     </div>
     <!-- 小蜜蜂奖励记录 -->
     <div class="module-panel bee-award" v-loading="LittleBeeLoading">
       <div class="panel-title">小蜜蜂奖励记录</div>
-      <div class="search-box">
-        <div class="search-item">
-          <span>年份</span>
-          <el-date-picker
-            v-model="yearValue"
-            type="year"
-            value-format="yyyy"
-            placeholder="选择年"
-          />
-        </div>
-        <el-button type="primary" @click="getLittleBeeInfo">查 询</el-button>
-      </div>
+      <el-row class="search-box" :gutter="20">
+        <el-col :span="6" :xl="4">
+          <div class="search-item">
+            <span>年份</span>
+            <el-date-picker
+              v-model="yearValue"
+              type="year"
+              value-format="yyyy"
+              placeholder="选择年"
+            />
+          </div>
+        </el-col>
+        <el-col :span="4" :xl="4">
+          <div class="search-item">
+            <el-button type="primary" @click="getLittleBeeInfo">查 询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <div class="panel-content">
         <list-table
           v-if="awardInfo.length"
@@ -485,20 +494,10 @@ export default {
 
   .bee-award {
     margin-top: 24px;
-  }
 
-  .search-box {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-
-    button {
-      margin-left: 20px;
+    .panel-title {
+      margin-bottom: 20px;
     }
-  }
-
-  .panel-content {
-    margin-top: 20px;
   }
 
   .prop-panel {
@@ -551,6 +550,10 @@ export default {
 
   .cloud-report-self {
     margin-top: 24px;
+
+    .panel-title {
+      margin-bottom: 20px;
+    }
   }
 }
 

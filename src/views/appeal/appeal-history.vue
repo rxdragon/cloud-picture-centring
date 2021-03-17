@@ -3,15 +3,17 @@
     <div class="header">
       <h3>申诉记录</h3>
     </div>
-    <!-- 列表主要内容 -->
-    <div class="history-main table-box">
-      <div class="search-box">
-        <!-- 申诉时间 -->
+    <!-- 搜索框 -->
+    <el-row class="search-box" :gutter="20">
+      <!-- 申诉时间 -->
+      <el-col :span="8" :xl="6">
         <div class="date-search search-item">
           <span>申诉时间</span>
           <date-picker v-model="timeSpan" />
         </div>
-        <!-- 流水号 -->
+      </el-col>
+      <!-- 流水号 -->
+      <el-col :span="8" :xl="4">
         <div class="stream-search search-item">
           <span>流水号</span>
           <el-input
@@ -21,25 +23,35 @@
             placeholder="请输入流水号"
           />
         </div>
-        <!-- 处理状态 -->
+      </el-col>
+      <!-- 处理状态 -->
+      <el-col :span="8" :xl="4">
         <div class="audit-box search-item">
           <span>处理状态</span>
-          <appeal-status-select v-model="appealStatus" />
+          <AppealStatusSelect v-model="appealStatus" />
         </div>
-        <!-- 申诉类型 -->
+      </el-col>
+      <!-- 申诉类型 -->
+      <el-col :span="6" :xl="4">
         <div class="audit-box search-item">
           <span>申诉类型</span>
-          <appeal-type-select
+          <AppealTypeSelect
             needAll
             clearable
             isMulti
             v-model="appealType"
           />
         </div>
+      </el-col>
+      <!-- 查询 -->
+      <el-col :span="2" :xl="4">
         <div class="search-button-box search-item">
           <el-button type="primary" @click="searchList(1)">查询</el-button>
         </div>
-      </div>
+      </el-col>
+    </el-row>
+    <!-- 列表主要内容 -->
+    <div class="history-main table-box">
       <div class="table-module">
         <el-table empty-text="暂无申诉记录" :data="tableData" style="width: 100%;">
           <el-table-column prop="streamNum" label="申诉信息" fixed="left">
@@ -197,27 +209,11 @@ export default {
   .history-main {
     margin-top: 0;
 
-    .search-box {
-      flex-wrap: wrap;
-
-      .search-item {
-        margin-right: 30px;
-        margin-bottom: 20px;
-      }
-    }
-
     .table-module {
       .table-title {
         display: inline-block;
         width: 70px;
         text-align: left;
-      }
-    }
-
-    .stream-search {
-      span {
-        flex-shrink: 0;
-        width: 60px;
       }
     }
   }

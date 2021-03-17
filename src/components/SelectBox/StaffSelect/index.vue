@@ -74,8 +74,6 @@ export default {
   width: 100%;
 
   .el-cascader {
-    width: 220px;
-
     .el-cascader__tags input {
       font-size: 14px;
     }

@@ -1,22 +1,35 @@
 <template>
   <div v-loading="loading" class="time-statistics">
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-search search-item">
-        <span>修图组</span>
-        <retoucher-group-select v-model="retoucherGroupValue" />
-      </div>
-      <div class="outsourc-staff-search search-item">
-        <span>修图标准</span>
-        <retouch-kind-select v-model="retouchType" placeholder="请选择修图标准"/>
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getStreamTimesInfo">查询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 修图组 -->
+      <el-col :span="6" :xl="4">
+        <div class="staff-search search-item">
+          <span>修图组</span>
+          <retoucher-group-select v-model="retoucherGroupValue" />
+        </div>
+      </el-col>
+      <!-- 修图标准 -->
+      <el-col :span="6" :xl="4">
+        <div class="outsourc-staff-search search-item">
+          <span>修图标准</span>
+          <retouch-kind-select v-model="retouchType" placeholder="请选择修图标准"/>
+        </div>
+      </el-col>
+      <!-- 查询 -->
+      <el-col :span="4" :xl="4">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="getStreamTimesInfo">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="table-panel">
       <div class="list-panel-title row-one">
         <div class="title">
@@ -183,7 +196,6 @@ export default {
 .time-statistics {
   .table-panel {
     position: relative;
-    margin-top: 32px;
     border-bottom: 1px solid #f2f6fc;
 
     .row-one {

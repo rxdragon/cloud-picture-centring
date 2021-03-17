@@ -151,48 +151,6 @@ export default {
 
 <style lang="less">
 .modify-history-module {
-  .search-box {
-    flex-wrap: wrap;
-
-    .search-item {
-      margin-right: 0;
-      margin-bottom: 20px;
-
-      .stream-num {
-        width: 100%;
-      }
-
-      & > span {
-        display: inline-block;
-        flex-shrink: 0;
-        width: 56px;
-      }
-
-      & /deep/ .el-range-editor.el-input__inner {
-        width: 100% !important;
-      }
-
-      & /deep/ .date-picker,
-      & /deep/ .issue-label-select,
-      & /deep/ .evaluate-select,
-      & /deep/ .cloud-spot-grass-select,
-      & /deep/ .quality-select,
-      & /deep/ .el-select,
-      & /deep/ .return-select,
-      & /deep/ .cloud-spot,
-      & /deep/ .el-cascader {
-        width: 100%;
-      }
-    }
-
-    .stream-search,
-    .staff-search {
-      & > span {
-        width: 56px;
-      }
-    }
-  }
-
   .page-box {
     margin-top: 24px;
     text-align: right;

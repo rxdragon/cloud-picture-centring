@@ -45,7 +45,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-cascader {
-  width: 230px;
+.retouch-kind-select {
+  width: 100%;
 }
 </style>

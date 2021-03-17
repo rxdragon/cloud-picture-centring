@@ -19,7 +19,11 @@
       <el-col :span="8" :xl="6">
         <div class="search-item">
           <span>产品</span>
-          <product-select v-model="productIds" />
+          <ProductSelect
+            :show-pic-product="cloudType === GRADE_LABEL_TYPE.SHOW_PIC"
+            :himo-product="cloudType === GRADE_LABEL_TYPE.CLOUD"
+            v-model="productIds"
+          />
         </div>
       </el-col>
       <!-- 修图机构 -->
@@ -127,9 +131,7 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 export default {
   name: 'AssessmentCenter',
   components: { DatePicker, GradePreview, PhotoGradeBox, ProductSelect, InstitutionSelect },
-  props: {
-    cloudType: { type: String, required: true }
-  },
+  inject: ['cloudType'],
   data () {
     return {
       GRADE_LABEL_TYPE,

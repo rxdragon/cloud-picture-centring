@@ -82,7 +82,7 @@ export default {
 <style lang="less">
 .issue-label-select {
   .el-cascader {
-    width: 310px;
+    width: 100%;
 
     .el-cascader__tags input {
       font-size: 14px;

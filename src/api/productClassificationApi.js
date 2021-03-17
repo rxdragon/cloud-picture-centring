@@ -121,7 +121,14 @@ export async function getClassificationProductTree (params) {
     }
     return parentData
   })
-  const filterEmtpyClass = createData.filter(item => item.children.length)
+  let filterEmtpyClass = createData.filter(item => item.children.length)
+  // 过滤修修兽类型
+  if (!params.showPicProduct) {
+    filterEmtpyClass = filterEmtpyClass.filter(item => item.label !== '修修兽')
+  }
+  if (!params.himoProduct) {
+    filterEmtpyClass = filterEmtpyClass.filter(item => item.label !== '海马体')
+  }
   return Object.freeze(filterEmtpyClass)
 }
 
