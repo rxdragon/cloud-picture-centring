@@ -131,7 +131,7 @@ export function appealDetail (params, source) {
       orderData.timeoutAppeal = timeoutPhotoAppeal
 
       msg.stream.photos.forEach(photo => {
-        const photoData = new PhotoModel(photo)
+        const photoData = { ...new PhotoModel(photo) }
         photoData.specialEfficacy = _.get(photo, 'tags.values.special_efficacy') || '无需特效'
         photoData.photoVersion = PhotoTool.settlePhotoVersion(photo.photo_version)
         photos.push(photoData)

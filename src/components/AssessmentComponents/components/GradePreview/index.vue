@@ -53,7 +53,7 @@
             @click="zoom"
           >
           <div ref="magnifier_layer" id="_magnifier_layer" />
-          <fabric-canvas
+          <FabricCanvas
             v-if="showCanvas"
             ref="fabric-canvas"
             :style="photoZoomStyle"
@@ -97,6 +97,7 @@
 import 'driver.js/dist/driver.min.css'
 import Driver from 'driver.js' // 引导框
 import { TOOL_TYPE } from './ToolEnumerate.js'
+import { PHOTO_VERSION } from '@/utils/enumerate'
 
 import OrderInfoModule from './OrderInfoModule.vue'
 import FabricCanvas from './FabricCanvas.vue'
@@ -105,13 +106,15 @@ import GradeLabel from './GradeLabel.vue'
 
 import DownIpc from '@electronMain/ipc/DownIpc'
 import guideData from './guideData'
+import PreviewMix from '@/mixins/preview-mixins'
+import canvasMix from './keyDownEventMix.js'
 
 import { mapGetters } from 'vuex'
-import { PHOTO_VERSION } from '@/utils/enumerate'
 
 export default {
   name: 'GradePreview',
   components: { OrderInfoModule, FabricCanvas, MarkTool, GradeLabel },
+  mixins: [PreviewMix, canvasMix],
   provide () {
     return {
       judageCanvas: this.createCanvas
@@ -119,49 +122,13 @@ export default {
   },
   props: {
     info: { type: Object, required: true },
-    configs: {
-      type: Object,
-      default () {
-        return {
-          width: 100,
-          height: 100,
-          maskWidth: 100,
-          maskHeight: 50,
-          maskColor: 'red',
-          maskOpacity: 0.5,
-          scale: 100
-        }
-      }
-    },
     photoVersion: { type: String, required: true }
   },
   data () {
     return {
       photoIndex: 0, // 展示照片索引
-      propConfigs: this.configs, // 参数配置
-      imgObj: {}, // 照片dom
-      bigImg: {}, // 大图dom
-      mouseMask: {}, // 图片标记配置
-      imgLayer: {}, // 照片布局
-      imgRect: {}, // 图片信息
-      scaleNum: 25, // 放大倍数
-      loading: true, // 是否加载
-      isShow: true, // 是否显示
-      maxObj: { // 最大宽高
-        height: '',
-        width: ''
-      },
       driver: null, // 引导信息
-      inZoomIn: false, // 是否放大中
-      photoZoomStyle: '', // 图片信息
       showCanvas: false,
-      canvasOption: { // canvas 信息
-        width: 200,
-        height: 200,
-        penColor: '#E34F51',
-        lineWidth: 2,
-        drawType: ''
-      },
       isSubmit: false, // 是否提交
       allLoading: false, // 整个页面loading
     }
@@ -187,7 +154,6 @@ export default {
     }
   },
   created () {
-    // this.fetchGoodWord()
     this.initShowPhoto()
     this.driver = new Driver({
       nextBtnText: '下一个',
@@ -197,11 +163,9 @@ export default {
     })
   },
   mounted () {
-    this.registerKeyDownEvent()
     this.$ipcRenderer.on('win-resize', this.onWindowResize)
   },
   beforeDestroy () {
-    document.onkeydown = null
     this.$ipcRenderer.removeListener('win-resize', this.onWindowResize)
   },
   methods: {
@@ -280,66 +244,6 @@ export default {
       this.loading = false
     },
     /**
-     * @description 滑块滑动改变值
-     * @param {Number} [放大系数]
-     */
-    formatTooltip (val) {
-      return val + 100
-    },
-    /**
-     * @description 上一张图片
-     */
-    prePhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === 0) {
-        this.photoIndex = this.photoArray.length - 1
-      } else {
-        this.photoIndex--
-      }
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
-     * @description 下一张图片
-     */
-    nextPhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === this.photoArray.length - 1) {
-        this.photoIndex = 0
-      } else {
-        this.photoIndex++
-      }
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
-     * @description 放大
-     */
-    zoom (e) {
-      if (this.canvasOption.drawType !== 'blowup') return
-      if (this.inZoomIn) {
-        this.photoZoomStyle = ''
-        this.inZoomIn = false
-      } else {
-        const imageWidth = e.target.clientWidth
-        const imageHeight = e.target.clientHeight
-        const clickX = (e.offsetX / imageWidth * 100).toFixed(2) + '%'
-        const clickY = (e.offsetY / imageHeight * 100).toFixed(2) + '%'
-        const zoomScale = (this.scaleNum * 4 + 100) / 100
-        this.photoZoomStyle = `transform-origin: ${clickX} ${clickY}; transform: scale(${zoomScale});`
-        this.inZoomIn = true
-      }
-    },
-    /**
-     * @description 判断是否处于放大中
-     */
-    judgeHasZoom (e) {
-      const isOverIn = Boolean(this.imgLayer.style.width)
-      if (isOverIn) { this.handOver(e) }
-    },
-    /**
      * @description 创建canvas
      */
     createCanvas (drawType) {
@@ -396,92 +300,6 @@ export default {
       this.photoIndex = findIndex
     },
     /**
-     * @description 鼠标移动
-     */
-    handMove (e) {
-      // 获取在图片的位置
-      const objX = e.clientX - this.imgRect.left
-      const objY = e.clientY - this.imgRect.top
-      // 判断是否超出界限
-      let _maskX = objX - this.mouseMask.offsetHeight / 2
-      let _maskY = objY - this.mouseMask.offsetWidth / 2
-      if (_maskY <= 0) {
-        _maskY = 0
-      }
-      if (_maskY + this.mouseMask.offsetHeight >= this.imgRect.height) {
-        _maskY = this.imgRect.height - this.mouseMask.offsetHeight
-      }
-      if (_maskX <= 0) {
-        _maskX = 0
-      }
-      if (_maskX + this.mouseMask.offsetWidth >= this.imgRect.width) {
-        _maskX = this.imgRect.width - this.mouseMask.offsetWidth
-      }
-      this.mouseMask.style.webkitTransform = `translate3d(${_maskX}px,${_maskY}px,0)`
-      const backgroundX =
-        ((_maskX / this.imgRect.width) *
-        this.propConfigs.width *
-        this.propConfigs.scale) /
-        100
-      const backgroundY =
-        ((_maskY / this.imgRect.height) *
-        this.propConfigs.height *
-        this.propConfigs.scale) /
-        100
-      this.imgLayer.style.backgroundPositionX = `-${backgroundX}px `
-      this.imgLayer.style.backgroundPositionY = `-${backgroundY}px `
-    },
-    /**
-     * @description 鼠标移出
-     */
-    handOut (e) {
-      this.imgLayer.removeAttribute('style')
-      this.mouseMask.removeAttribute('style')
-    },
-    /**
-     * @description 鼠标移进
-     */
-    handOver (e) {
-      // 获取大图尺寸
-      this.imgObj = this.$refs['smallImg']
-      this.imgBigObj = this.$refs['orgin-img']
-      this.imgRect = this.imgObj.getBoundingClientRect()
-      this.imgBigRect = this.imgBigObj.getBoundingClientRect()
-      // 马克图宽度计算系数
-      this.propConfigs.maskWidth = (this.imgRect.width / (this.scaleNum * 4 + 100)) * 100
-      this.propConfigs.maskHeight = this.propConfigs.maskWidth * (this.imgRect.height / this.imgRect.width)
-      // 背景图放大系数
-      this.propConfigs.scale = (this.imgRect.width / this.propConfigs.maskWidth) * 100
-      // 获取大图信息
-      this.bigImg = new Image()
-      this.bigImg.src = this.showPhoto.src
-      this.bigImg.height = (this.bigImg.height * this.propConfigs.scale) / 100
-      this.bigImg.width = (this.bigImg.width * this.propConfigs.scale) / 100
-      // 创建鼠标选择区域
-      this.mouseMask = this.$refs['magnifier_zoom']
-      this.mouseMask.style.background = this.propConfigs.maskColor
-      this.mouseMask.style.height = this.propConfigs.maskHeight + 'px'
-      this.mouseMask.style.width = this.propConfigs.maskWidth + 'px'
-      this.mouseMask.style.opacity = this.propConfigs.maskOpacity
-      this.imgObj.parentNode.appendChild(this.mouseMask)
-      // 创建预览框
-      const imgLayer = this.$refs['magnifier_layer']
-
-      const orginImg = this.$refs['orgin-img']
-      this.propConfigs.width = orginImg.width
-      this.propConfigs.height = orginImg.height
-      this.imgLayer = imgLayer
-      const _layerHeight = this.propConfigs.height
-      const _layerWidth = this.propConfigs.width
-      imgLayer.style.width = _layerWidth + 'px'
-      imgLayer.style.height = _layerHeight + 'px'
-      imgLayer.style.backgroundImage = `url('${this.showPhoto.src}')`
-      imgLayer.style.backgroundRepeat = 'no-repeat'
-      imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
-      const photoShowMain = this.$refs['photo-show-main']
-      photoShowMain.appendChild(imgLayer)
-    },
-    /**
      * @description 监听屏幕变化
      */
     onWindowResize (e, item) {
@@ -492,80 +310,7 @@ export default {
         this.$refs['fabric-canvas'].resetCanvas()
       })
     },
-    /**
-     * @description 注册键盘事件
-     */
-    registerKeyDownEvent () {
-      document.onkeydown = e => {
-        if (this.$refs['fabric-canvas'] && this.$refs['fabric-canvas'].canvasDom) {
-          const activeText = this.$refs['fabric-canvas'].canvasDom.getActiveObject()
-          if (activeText && activeText.type === 'i-text' && activeText.isEditing) {
-            return
-          }
-        }
-        const key = window.event.keyCode
-        switch (key) {
-          case 49:
-          case 50:
-          case 51:
-          case 52:
-          case 53:
-            this.scaleNum = (key - 49) * 25
-            this.judgeHasZoom(e)
-            break
-          case 187:
-          case 69:
-            if (this.scaleNum < 100) {
-              this.scaleNum++
-            }
-            this.judgeHasZoom(e)
-            break
-          case 189:
-          case 81:
-            if (this.scaleNum > 0) {
-              this.scaleNum--
-            }
-            this.judgeHasZoom(e)
-            break
-          case 18:
-          case 83:
-            this.closePreview()
-            break
-          case 65:
-          case 37:
-            if (this.photoArray.length > 1) {
-              this.prePhoto()
-            }
-            break
-          case 39:
-          case 68:
-            if (this.photoArray.length > 1) {
-              this.nextPhoto()
-            }
-            break
-          case 16:
-            this.isShow = !this.isShow
-            break
-          case 8:
-            this.changeDrawType({ type: TOOL_TYPE.DELETE })
-            break
-          case 66:
-            this.changeDrawType({ type: TOOL_TYPE.PEN })
-            break
-          case 84:
-            this.changeDrawType({ type: TOOL_TYPE.TEXT })
-            break
-          case 86:
-            this.changeDrawType({ type: TOOL_TYPE.MOVE })
-            break
-          case 90:
-            this.changeDrawType({ type: TOOL_TYPE.BLOWUP })
-            break
-          default:
-            break
-        }
-      }
-    }
+    
   }
 }
 </script>
@@ -935,6 +680,8 @@ export default {
 }
 
 .grade-preview {
+  overflow: hidden;
+
   .tool-color {
     .el-color-picker__trigger {
       border: none;
@@ -961,63 +708,6 @@ export default {
       color: #eee;
       background-color: #666;
       border-color: #666;
-    }
-  }
-}
-
-.pen-weight {
-  min-width: 30px;
-  padding: 0;
-  margin-left: 16px !important;
-  background-color: #535353;
-  border-color: #535353;
-
-  .pen-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 78px;
-
-    .pen-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 26px;
-      cursor: pointer;
-
-      .pen-box {
-        background-color: #282828;
-        border-radius: 50%;
-
-        &.active {
-          background-color: #eee;
-        }
-      }
-
-      .min {
-        width: 2px;
-        height: 2px;
-      }
-
-      .mid {
-        width: 6px;
-        height: 6px;
-      }
-
-      .big {
-        width: 10px;
-        height: 10px;
-      }
-    }
-  }
-
-  .popper__arrow {
-    border-right-color: #535353 !important;
-
-    &::after {
-      border-right-color: #535353 !important;
     }
   }
 }

@@ -264,3 +264,62 @@ export default {
   }
 }
 </style>
+
+<style lang="less">
+.pen-weight {
+  min-width: 30px;
+  padding: 0;
+  margin-left: 16px !important;
+  background-color: #535353;
+  border-color: #535353;
+
+  .pen-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 78px;
+
+    .pen-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 26px;
+      cursor: pointer;
+
+      .pen-box {
+        background-color: #282828;
+        border-radius: 50%;
+
+        &.active {
+          background-color: #eee;
+        }
+      }
+
+      .min {
+        width: 2px;
+        height: 2px;
+      }
+
+      .mid {
+        width: 6px;
+        height: 6px;
+      }
+
+      .big {
+        width: 10px;
+        height: 10px;
+      }
+    }
+  }
+
+  .popper__arrow {
+    border-right-color: #535353 !important;
+
+    &::after {
+      border-right-color: #535353 !important;
+    }
+  }
+}
+</style>

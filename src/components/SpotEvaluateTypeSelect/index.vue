@@ -1,5 +1,5 @@
 <template>
-  <div class="cloud-spot-grass-select">
+  <div class="spot-evaluate-type-select">
     <el-select
       v-bind="$attrs"
       :popper-append-to-body="false"
@@ -20,7 +20,7 @@
 import { SPOT_CHECK_MAP } from '@/utils/enumerate'
 
 export default {
-  name: 'CloudSpotGrassSelect',
+  name: 'SpotEvaluateTypeSelect',
   data () {
     return {
       options: [

@@ -19,10 +19,10 @@ export default class PhotoAppealModel {
     resultDesc: '-',
     reason: '-'
   }
-  checkPoolTags = []
-  typeTags = [] // 激励词
-  evaluatorType = ''
-  checkPoolScore = '-'
+  oldCheckPoolTags = []
+  oldCheckPoolScore = ''
+  newCheckPoolTags = []
+  newCheckPoolScore = ''
 
 
   constructor (photoAppeal) {
@@ -53,15 +53,26 @@ export default class PhotoAppealModel {
   // 获取云学院分数
   getCheckPoolTags () {
     const tags = _.get(this.base, 'photo.tags.values')
-    if (this.appealResult && tags) { // 如果有appealResult说明是历史快照,云学院评分情况下
+    // 如果有appealResult说明是历史快照,云学院评分情况下
+    if (this.appealResult && tags) {
       this.base.photo.tags.values = this.appealResult
-    }
-    this.checkPoolScore = _.get(this.base, 'photo.tags.values.score') || '-'
-    this.evaluatorType = _.get(this.base, 'photo.tags.values.evaluator_type') || ''
-    this.typeTags = _.get(this.base, 'photo.tags.values.check_pool_ex_tags') || []
+      this.oldCheckPoolScore = _.get(this.appealResult, 'old_check_pool_history.score') || ''
+      this.oldCheckPoolScore = String(this.oldCheckPoolScore)
+      const oldCheckPoolTags = _.get(this.appealResult, 'old_check_pool_history.check_pool_tags') || []
+      const oldCommitInfo = PhotoTool.handleCommitInfo({}, oldCheckPoolTags)
+      this.oldCheckPoolTags = oldCommitInfo.issueLabel
 
-    const checkPoolTags = _.get(this.base, 'photo.tags.values.check_pool_tags') || []
-    const commitInfo = PhotoTool.handleCommitInfo({}, checkPoolTags)
-    this.checkPoolTags = commitInfo.issueLabel
+      this.newCheckPoolScore = _.get(this.appealResult, 'new_check_pool_history.score') || ''
+      this.newCheckPoolScore = String(this.newCheckPoolScore)
+      const newCheckPoolTags = _.get(this.appealResult, 'new_check_pool_history.check_pool_tags') || []
+      const newCommitInfo = PhotoTool.handleCommitInfo({}, newCheckPoolTags)
+      this.newCheckPoolTags = newCommitInfo.issueLabel
+    } else {
+      this.oldCheckPoolScore = _.get(tags, 'score') || ''
+      this.oldCheckPoolScore = String(this.oldCheckPoolScore)
+      const oldCheckPoolTags = _.get(this.appealResult, 'check_pool_tags') || []
+      const oldCommitInfo = PhotoTool.handleCommitInfo({}, oldCheckPoolTags)
+      this.oldCheckPoolTags = oldCommitInfo.issueLabel
+    }
   }
 }
