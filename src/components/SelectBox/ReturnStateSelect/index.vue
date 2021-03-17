@@ -1,5 +1,5 @@
 <template>
-  <div class="return-select">
+  <div class="return-state-select">
     <el-select
       v-bind="$attrs"
       :popper-append-to-body="false"
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-select {
-  width: 100px;
+.return-state-select {
+  width: 100%;
 }
 </style>

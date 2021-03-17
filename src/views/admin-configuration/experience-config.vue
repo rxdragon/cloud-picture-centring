@@ -226,34 +226,8 @@ export default {
     box-shadow: @boxShadow;
   }
 
-  .search-box {
-    flex-wrap: wrap;
-
-    .search-item {
-      margin-right: 0;
-
-      & > span {
-        display: inline-block;
-        flex-shrink: 0;
-        text-align: left;
-      }
-
-      & /deep/ .el-range-editor.el-input__inner {
-        width: 100% !important;
-      }
-
-      & /deep/ .date-picker,
-      & /deep/ .issue-label-select,
-      & /deep/ .evaluate-select,
-      & /deep/ .cloud-spot-grass-select,
-      & /deep/ .quality-select,
-      & /deep/ .el-select,
-      & /deep/ .return-select,
-      & /deep/ .cloud-spot,
-      & /deep/ .el-cascader {
-        width: 100%;
-      }
-    }
+  .table-box {
+    margin-top: 0;
   }
 }
 </style>

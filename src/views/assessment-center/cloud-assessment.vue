@@ -5,7 +5,7 @@
       <portal-target name="assessmentPlug" />
     </div>
     <!-- 评价中心 -->
-    <assessment-center :cloudType="GRADE_LABEL_TYPE.CLOUD" />
+    <assessment-center />
   </div>
 </template>
 
@@ -16,10 +16,8 @@ import { GRADE_LABEL_TYPE } from '@/utils/enumerate.js'
 export default {
   name: 'CloudAssessment',
   components: { AssessmentCenter },
-  data () {
-    return {
-      GRADE_LABEL_TYPE
-    }
+  provide: {
+    cloudType: GRADE_LABEL_TYPE.CLOUD
   }
 }
 </script>

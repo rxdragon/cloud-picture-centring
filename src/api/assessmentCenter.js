@@ -32,7 +32,7 @@ export const gradeLevelToCN = {
 export function getStatistics (params) {
   const axiosUrls = {
     [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getStatistics',
-    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getStatistics'
+    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getStatistics'
   }
 
   return axios({
@@ -53,7 +53,7 @@ export function getStatistics (params) {
 export function takePhoto (params) {
   const axiosUrls = {
     [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/takePhoto',
-    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/takePhoto'
+    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/takePhoto'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -71,7 +71,7 @@ export function takePhoto (params) {
 export function getHaveCheckResult (params) {
   const axiosUrls = {
     [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getHaveCheckResult',
-    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getHaveCheckResult'
+    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getHaveCheckResult'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -86,7 +86,7 @@ export function getHaveCheckResult (params) {
 export function getSpotCheckResult (params) {
   const axiosUrls = {
     [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getSpotCheckResult',
-    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSpotCheckResult'
+    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getSpotCheckResult'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -137,7 +137,7 @@ export function getSpotCheckResult (params) {
 export function commitHistory (params) {
   const axiosUrls = {
     [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/commitHistory',
-    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/commitHistory'
+    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/commitHistory'
   }
   return axios({
     url: axiosUrls[params.axiosType],
@@ -153,7 +153,7 @@ export function commitHistory (params) {
 export function getSearchHistory (params) {
   const axiosUrls = {
     [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getSearchHistory',
-    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getSearchHistory'
+    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getSearchHistory'
   }
 
   return axios({
@@ -327,7 +327,7 @@ export function getCloudProblemReport (params) {
 export function getUpdateHistoryLog (params) {
   const axiosUrls = {
     [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getUpdateHistoryLog',
-    [GRADE_LABEL_TYPE.SHOWPIC]: '/project_cloud/showPicPool/getUpdateHistoryLog'
+    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getUpdateHistoryLog'
   }
   return axios({
     url: axiosUrls[params.axiosType],

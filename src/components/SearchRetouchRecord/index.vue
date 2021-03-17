@@ -10,21 +10,16 @@
         </div>
       </div>
       <!-- 搜索框 -->
-      <el-row
-        class="searhc-row"
-        :gutter="20"
-        align="center"
-        type="flex"
-      >
+      <el-row class="search-box" :gutter="20">
         <!-- 门店退单时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="search-item">
             <span>门店退单时间</span>
             <date-picker v-model="reworkTimeSpan" :disabled="canSelectTimeSpan('reworkTimeSpan')" />
           </div>
         </el-col>
         <!-- 云端审核通过时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="search-item">
             <span>云端审核通过时间</span>
             <date-picker
@@ -34,7 +29,7 @@
           </div>
         </el-col>
         <!-- 门店评价时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="search-item">
             <span>门店评价时间</span>
             <date-picker
@@ -44,7 +39,7 @@
           </div>
         </el-col>
         <!-- 云学院评价时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="12" :xl="6">
           <div class="search-item">
             <span>云学院评价时间</span>
             <date-picker
@@ -54,14 +49,14 @@
           </div>
         </el-col>
         <!-- 云学院标签 -->
-        <el-col :span="24" :xl="24">
+        <el-col :span="12" :xl="6">
           <div class="search-item">
             <span>云学院标签</span>
             <issue-label-select :disabled="canSelectTimeSpan('cloudIssueValue')" v-model="cloudIssueValue" :type="GRADE_LABEL_TYPE.CLOUD"/>
           </div>
         </el-col>
         <!-- 修修兽评分时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="12" :xl="6">
           <div class="search-item">
             <span>修修兽评分时间</span>
             <date-picker
@@ -71,28 +66,28 @@
           </div>
         </el-col>
         <!-- 修修兽标签 -->
-        <el-col :span="24" :xl="24">
+        <el-col :span="12" :xl="6">
           <div class="search-item">
             <span>修修兽标签</span>
             <issue-label-select :disabled="canSelectTimeSpan('showIssueValue')" v-model="showIssueValue" :type="GRADE_LABEL_TYPE.SHOW_PIC"/>
           </div>
         </el-col>
         <!-- 门店退回问题 -->
-        <el-col :span="7" :xl="4">
+        <el-col :span="6" :xl="6">
           <div class="search-item">
             <span>门店退回类型</span>
             <quality-select v-model="returnType" />
           </div>
         </el-col>
         <!-- 门店评价 -->
-        <el-col :span="5" :xl="4">
+        <el-col :span="6" :xl="6">
           <div class="search-item">
             <span>门店评价</span>
             <evaluate-select v-model="isGood" />
           </div>
         </el-col>
         <!-- 伙伴 -->
-        <el-col :span="5" :xl="12">
+        <el-col :span="6" :xl="6">
           <div class="staff-option search-item" v-if="searchRole === SEARCH_ROLE.GROUP_LEADER">
             <span>组员</span>
             <crew-select v-model="staffId" />
@@ -103,7 +98,7 @@
           </div>
         </el-col>
         <!-- 查 询 -->
-        <el-col :span="5" :xl="12">
+        <el-col :span="6" :xl="6">
           <div class="search-item">
             <el-button type="primary" @click="searchCloudInfo(1)">查 询</el-button>
           </div>
@@ -427,29 +422,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     height: @headerHeight;
-    -webkit-user-select: none;
+    user-select: none;
     background-color: #f2f6fc;
     box-shadow: var(--boxShadow);
 
     h3 {
       font-size: 24px;
-    }
-  }
-
-  .el-col {
-    width: max-content;
-  }
-
-  .searhc-row {
-    flex-wrap: wrap;
-  }
-
-  .search-item {
-    margin-right: 0;
-    margin-bottom: 20px;
-
-    & > span {
-      flex-shrink: 0;
     }
   }
 

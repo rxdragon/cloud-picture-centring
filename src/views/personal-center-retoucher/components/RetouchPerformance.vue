@@ -48,13 +48,20 @@
         </el-popover>
       </div>
     </div>
-    <div class="search-box">
-      <div class="search-item">
-        <span>修图完成时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <el-button type="primary" @click="getRetouchQuota">查 询</el-button>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>修图完成时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="getRetouchQuota">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="panel-content">
       <el-table ref="panel-table" :data="performanceData" style="width: 100%;">
         <el-table-column label="修图单量/张数" width="200" fixed>
@@ -252,7 +259,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .panel-title {
   display: flex;
   justify-content: space-between;
@@ -286,6 +293,8 @@ export default {
   }
 
   .panel-content {
+    margin-top: 0;
+
     a {
       color: @blue;
       text-decoration: underline;

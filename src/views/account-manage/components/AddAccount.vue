@@ -5,20 +5,28 @@
       <el-button type="primary" plain @click="toBack">返回</el-button>
     </div>
     <el-alert title="提示：请先输入伙伴工号或伙伴姓名进行相关查询后才可配置权限" type="info" show-icon />
-    <div class="search-box">
-      <div class="job-number-box search-item">
-        <span>工号</span>
-        <el-input
-          v-model="jobNumber"
-          v-numberOnly
-          type="number"
-          placeholder="请输入伙伴工号"
-        />
-      </div>
-      <div v-if="!isEdit" class="button-box">
-        <el-button type="primary" @click="getStaff">查询</el-button>
-      </div>
-    </div>
+    <!-- 搜索框 -->
+    <el-row class="search-box" :gutter="20">
+      <!-- 工号 -->
+      <el-col :span="8" :xl="4">
+        <div class="job-number-box search-item">
+          <span>工号</span>
+          <el-input
+            v-model="jobNumber"
+            v-numberOnly
+            :disabled="Boolean(isEdit)"
+            type="number"
+            placeholder="请输入伙伴工号"
+          />
+        </div>
+      </el-col>
+      <el-col v-if="!isEdit" :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="getStaff">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+  
     <template v-if="staffInfo.nickname || staffInfo.name">
       <div class="staff-info-panel module-panel">
         <div class="staff-name">伙伴姓名/花名：{{ staffInfo.nickname || staffInfo.name }}</div>
@@ -64,7 +72,7 @@
               :to-data.sync="toData"
             />
           </div>
-          <div class="button-box">
+          <div class="search-item">
             <el-button type="primary" @click="nextStep">下一步</el-button>
           </div>
         </div>
@@ -430,17 +438,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .add-account {
   .search-box {
-    margin-top: 20px;
-
-    .job-number-box {
-      .el-input {
-        width: 229px;
-      }
-    }
+    margin-top: 24px;
   }
 
   .staff-info-panel {
@@ -475,6 +475,13 @@ export default {
   }
 
   .retouch-category-box {
+    .search-item {
+      width: 856px;
+      padding-left: 68px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
     .retouch-select-box {
       .search-item {
         margin: 24px 0;
@@ -503,13 +510,6 @@ export default {
       .product-panel {
         width: 800px;
       }
-    }
-
-    .button-box {
-      width: 856px;
-      padding-left: 68px;
-      margin-top: 24px;
-      text-align: left;
     }
   }
 

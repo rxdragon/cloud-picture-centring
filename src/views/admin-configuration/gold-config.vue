@@ -7,19 +7,26 @@
           <el-button type="primary" @click="addConfig">添加新配置</el-button>
         </div>
         <!-- 搜索盒子 -->
-        <div class="search-box">
-          <div class="staff-box search-item">
-            <span>伙伴</span>
-            <staff-select v-model="staffId" />
-          </div>
-          <div class="state-box search-item">
-            <span>使用状态</span>
-            <state-select v-model="stateType" />
-          </div>
-          <div class="search-button">
-            <el-button type="primary" @click="getGoldConfigList(1)">查 询</el-button>
-          </div>
-        </div>
+        <el-row class="search-box" :gutter="20">
+          <el-col :span="6" :xl="4">
+            <div class="staff-box search-item">
+              <span>伙伴</span>
+              <staff-select v-model="staffId" />
+            </div>
+          </el-col>
+          <el-col :span="6" :xl="4">
+            <div class="state-box search-item">
+              <span>使用状态</span>
+              <StateSelect v-model="stateType" />
+            </div>
+          </el-col>
+          <el-col :span="6" :xl="4">
+            <div class="search-item">
+              <el-button type="primary" @click="getGoldConfigList(1)">查 询</el-button>
+            </div>
+          </el-col>
+        </el-row>
+        
         <!-- 列表数据 -->
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%;">
@@ -204,3 +211,9 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.table-box {
+  margin-top: 0;
+}
+</style>

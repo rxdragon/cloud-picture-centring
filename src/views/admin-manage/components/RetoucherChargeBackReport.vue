@@ -1,18 +1,27 @@
 <template>
   <div class="retoucher-charge-back-report" v-loading="loading">
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-option search-item">
-        <span>云端伙伴</span>
-        <staff-select v-model="staffIds" />
-      </div>
-      <div class="button-box search-item">
-        <el-button type="primary" @click="searchData">查 询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 云端伙伴 -->
+      <el-col :span="8" :xl="4">
+        <div class="staff-option search-item">
+          <span>云端伙伴</span>
+          <staff-select v-model="staffIds" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="searchData">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <!-- 退单统计 -->
     <div class="charge-back-chat charge-back-module">
       <div class="panel-title">退单统计</div>
@@ -144,10 +153,6 @@ export default {
 <style lang="less" scoped>
 .search-box {
   border-bottom: 1px solid #ecedee;
-
-  .search-item {
-    margin-bottom: 24px;
-  }
 }
 
 .charge-back-module {

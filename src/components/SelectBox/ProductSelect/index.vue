@@ -27,10 +27,8 @@ import * as ProductClassificationApi from '@/api/productClassificationApi.js'
 export default {
   name: 'ProductSelect',
   props: {
-    type: Object, // todo:nx 区分修修兽和其他
-    default: () => {
-      return {}
-    }
+    showPicProduct: { type: Boolean, default: true },
+    himoProduct: { type: Boolean, default: true }
   },
   data () {
     return {
@@ -54,7 +52,9 @@ export default {
     async getAllProduct () {
       const req = {
         rootId: 0,
-        withProduct: true
+        withProduct: true,
+        showPicProduct: this.showPicProduct,
+        himoProduct: this.himoProduct
       }
       const list = await ProductClassificationApi.getClassificationProductTree(req)
       this.options = list
@@ -69,8 +69,6 @@ export default {
   width: 100%;
 
   .el-cascader {
-    width: 310px;
-
     .el-cascader__tags input {
       font-size: 14px;
     }

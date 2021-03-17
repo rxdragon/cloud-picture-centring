@@ -1,16 +1,28 @@
 <template>
   <div class="cloud-report" v-loading="loading">
-    <div class="search-box">
-      <div class="search-item">
-        <span>评价时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="product-box search-item">
-        <span>产品</span>
-        <product-select v-model="productValue" />
-      </div>
-      <el-button type="primary" @click="searchData">查询</el-button>
-    </div>
+    <!-- 搜索框 -->
+    <el-row class="search-box" :gutter="20">
+      <!-- 评价时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>评价时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 产品 -->
+      <el-col :span="8" :xl="4">
+        <div class="product-box search-item">
+          <span>产品</span>
+          <ProductSelect :show-pic-product="false" v-model="productValue" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="searchData">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+    
     <div class="total-chat-warp">
       <chart-bar title="平均分对比" :chartDatas="groupTotalRes">
         <span slot="other">云端平均分：{{ avgScore }}</span>
@@ -140,7 +152,6 @@ export default {
         this.loading = false
       }
     },
-
     /**
      * 按照问题标签搜索
      */
@@ -183,7 +194,7 @@ export default {
 }
 
 .search-box {
-  padding-bottom: 24px;
+  margin: 0 !important;
   border-bottom: 1px solid #ecedee;
 }
 

@@ -5,26 +5,33 @@
     </div>
     <div class="module-panel">
       <!-- 查询框 -->
-      <div class="search-box">
-        <div class="order-search search-item">
-          <el-input
-            v-model.trim="orderSearchValue"
-            placeholder="请输入内容"
-            class="input-with-select"
-            clearable
-            @keyup.native.enter="searchOrder"
-          >
-            <el-select slot="prepend" v-model="orderType" placeholder="请选择">
-              <el-option label="订单号" :value="1" />
-              <el-option label="顾客姓名" :value="2" />
-              <el-option label="手机号" :value="3" />
-            </el-select>
-          </el-input>
-        </div>
-        <div class="search-item">
-          <el-button type="primary" @click="searchOrder">查 询</el-button>
-        </div>
-      </div>
+      <el-row class="search-box" :gutter="20">
+        <!-- 订单号 -->
+        <el-col :span="8" :xl="4">
+          <div class="order-search search-item">
+            <el-input
+              v-model.trim="orderSearchValue"
+              placeholder="请输入内容"
+              class="input-with-select"
+              clearable
+              @keyup.native.enter="searchOrder"
+            >
+              <el-select slot="prepend" v-model="orderType" placeholder="请选择">
+                <el-option label="订单号" :value="1" />
+                <el-option label="顾客姓名" :value="2" />
+                <el-option label="手机号" :value="3" />
+              </el-select>
+            </el-input>
+          </div>
+        </el-col>
+        <!-- 查 询 -->
+        <el-col :span="8" :xl="4">
+          <div class="search-item">
+            <el-button type="primary" @click="searchOrder">查 询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <!-- 列表 -->
       <div class="module-table-box">
         <el-table :data="tableData" style="width: 100%;">
@@ -222,11 +229,13 @@ export default {
 <style lang="less" scoped>
 .retouch-designate {
   .search-box {
-    margin-bottom: 20px;
-
     .order-search {
       & /deep/ .el-input-group__prepend {
         width: 120px;
+
+        .el-select {
+          width: 120px;
+        }
       }
     }
   }

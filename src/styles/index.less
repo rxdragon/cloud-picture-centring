@@ -472,26 +472,44 @@ aside {
   }
 }
 
+.search-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
 // 搜素盒子
 .search-item {
   display: flex;
   align-items: center;
-  margin-right: 32px;
+  margin-right: 0;
+  margin-bottom: 20px;
 
   & > span {
     margin-right: 12px;
     font-size: 14px;
     color: #303133;
+    flex-shrink: 0;
+  }
+
+  & /deep/ .el-range-editor.el-input__inner {
+    width: 100% !important;
+  }
+
+  & /deep/ .date-picker,
+  & /deep/ .issue-label-select,
+  & /deep/ .evaluate-select,
+  & /deep/ .cloud-spot-grass-select,
+  & /deep/ .quality-select,
+  & /deep/ .el-select,
+  & /deep/ .return-select,
+  & /deep/ .cloud-spot,
+  & /deep/ .el-cascader {
+    width: 100%;
   }
 
   &.tip-box {
     margin: 0 0 0 auto;
   }
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
 }
 
 // button

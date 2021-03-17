@@ -13,12 +13,26 @@
       :class="{'no-border': activeName === SEARCH_TYPE.NORMAL }"
     >
       <!-- 搜索内容 -->
-      <el-row class="search-box">
+      <el-row class="search-box" :gutter="20">
         <!-- 修图完成时间 -->
         <el-col :span="8" :xl="8">
           <div class="date-search search-item">
-            <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成时间' : '退单时间' }}</span>
+            <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成' : '退单时间' }}</span>
             <date-picker v-model="timeSpan" />
+          </div>
+        </el-col>
+        <!-- 云学院标签 -->
+        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
+          <div class="search-item">
+            <span>云学院标签</span>
+            <issue-label-select :disabled="canSelectTag('cloudIssueValue')" v-model="cloudIssueValue" :type="GRADE_LABEL_TYPE.CLOUD"/>
+          </div>
+        </el-col>
+        <!-- 修修兽标签 -->
+        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
+          <div class="search-item">
+            <span>修修兽标签</span>
+            <issue-label-select :disabled="canSelectTag('showIssueValue')" v-model="showIssueValue" :type="GRADE_LABEL_TYPE.SHOW_PIC"/>
           </div>
         </el-col>
         <!-- 流水号 -->
@@ -37,7 +51,7 @@
         <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="audit-box search-item">
             <span>门店退回</span>
-            <return-select v-model="isReturn" />
+            <ReturnStateSelect v-model="isReturn" />
           </div>
         </el-col>
         <!-- 门店评价 -->
@@ -59,20 +73,6 @@
           <div class="spot-check-box search-item">
             <span>抽查类型</span>
             <SpotEvaluateTypeSelect v-model="cloudEvaluateType" clearable />
-          </div>
-        </el-col>
-        <!-- 云学院标签 -->
-        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
-          <div class="search-item">
-            <span>云学院标签</span>
-            <issue-label-select :disabled="canSelectTag('cloudIssueValue')" v-model="cloudIssueValue" :type="GRADE_LABEL_TYPE.CLOUD"/>
-          </div>
-        </el-col>
-        <!-- 修修兽标签 -->
-        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
-          <div class="search-item">
-            <span>修修兽标签</span>
-            <issue-label-select :disabled="canSelectTag('showIssueValue')" v-model="showIssueValue" :type="GRADE_LABEL_TYPE.SHOW_PIC"/>
           </div>
         </el-col>
 
@@ -228,7 +228,7 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
-import ReturnSelect from '@SelectBox/ReturnStateSelect'
+import ReturnStateSelect from '@SelectBox/ReturnStateSelect'
 import QualitySelect from '@SelectBox/QualitySelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
@@ -249,7 +249,7 @@ const SEARCH_TYPE = {
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, SpotEvaluateTypeSelect, PhotoBox },
+  components: { DatePicker, ReturnStateSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, SpotEvaluateTypeSelect, PhotoBox },
   data () {
     return {
       SEARCH_TYPE,
@@ -458,44 +458,14 @@ export default {
     margin-right: 6px;
   }
 
+  .search-item {
+    & > span {
+      min-width: 70px;
+    }
+  }
+
   .history-main {
     margin-top: 0;
-
-    .search-box {
-      flex-wrap: wrap;
-
-      .search-item {
-        margin-right: 0;
-        margin-bottom: 20px;
-
-        & span {
-          display: inline-block;
-          flex-shrink: 0;
-          width: 98px;
-          text-align: right;
-        }
-
-        & /deep/ .el-range-editor.el-input__inner {
-          width: 100% !important;
-        }
-
-        & /deep/ .date-picker,
-        & /deep/ .issue-label-select,
-        & /deep/ .evaluate-select,
-        & /deep/ .cloud-spot-grass-select,
-        & /deep/ .quality-select,
-        & /deep/ .el-select,
-        & /deep/ .return-select,
-        & /deep/ .cloud-spot,
-        & /deep/ .el-cascader {
-          width: 100%;
-        }
-      }
-
-      .search-button-box {
-        justify-content: flex-end;
-      }
-    }
 
     .table-module {
       margin-top: 0;
