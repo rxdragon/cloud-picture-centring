@@ -11,6 +11,11 @@
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/assessmentCenter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/assessmentCenter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/gradeConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/gradeConfiguration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/GroupCloudReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/GroupCloudReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CloudReport/PersonalCloudReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CloudReport/PersonalCloudReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/grade-configuration.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SelectBox/IssueLabelSelect/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SelectBox/IssueLabelSelect/index.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -289,11 +294,11 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="466" y="312" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615450996090" />
-    <state x="0" y="23" width="1440" height="791" key="DiffContextDialog" timestamp="1615862433202">
-      <screen x="0" y="0" width="1440" height="814" />
+    <state x="41" y="93" width="1440" height="900" key="DiffContextDialog" timestamp="1615949322203">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="0" y="23" width="1440" height="791" key="DiffContextDialog/0.0.1440.814/-1920.23.1920.1057@0.0.1440.814" timestamp="1615862433202" />
-    <state x="-9" y="8" width="1421" height="881" maximized="true" key="DiffContextDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615779885687" />
+    <state x="41" y="93" width="1440" height="900" key="DiffContextDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615949322203" />
     <state width="1398" height="400" key="GridCell.Tab.0.bottom" timestamp="1615892863856">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -396,15 +401,19 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="529" height="445" key="SwitcherDM/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615518785220" />
+    <state x="153" y="154" key="VCS.ChangeListViewerDialog" timestamp="1615949306224">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="153" y="154" key="VCS.ChangeListViewerDialog/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615949306223" />
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1611655064000">
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="414" y="270" width="622" height="548" key="find.popup" timestamp="1615893062664">
+    <state x="746" y="104" width="622" height="548" key="find.popup" timestamp="1615954266241">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
-    <state x="414" y="270" width="622" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615893062664" />
+    <state x="746" y="104" width="622" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615954266241" />
     <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615892932077">
       <screen x="0" y="0" width="1440" height="900" />
@@ -452,7 +461,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/api/productClassificationApi.js</url>
           <line>97</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="71" />
         </line-breakpoint>
       </breakpoints>

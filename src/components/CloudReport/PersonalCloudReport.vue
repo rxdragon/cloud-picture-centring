@@ -33,29 +33,31 @@
       <span>平均分对比</span>
       <span>抽查平均分：{{ avgScore }}</span>
     </div>
-    <div class="chat-warp">
+    <div class="chat-warp" v-if="gradeConfigurations.length">
       <chart-sunburst
         v-for="item in GRADE_CONFIGURATION_TYPE"
-        :key="item.name"
-        :chartDatas="getChartDatas(item.name)"
-        :title="`${gradeConfigurationToCN[item]}问题对比`"
+        :key="item"
+        :chartDatas="getChartDatas(item)"
+        :title="`${item}问题对比`"
       ></chart-sunburst>
     </div>
+    <div class="chat-warp" v-else> <no-data></no-data></div>
   </div>
 </template>
 
 <script>
 import DatePicker from '@/components/DatePicker/index'
 import StaffSelect from '@SelectBox/StaffSelect/index'
+import NoData from '@/components/NoData'
 import ChartSunburst from './components/ChartSunburst'
 import ProductSelect from '@SelectBox/ProductSelect/index'
-import { GRADE_CONFIGURATION_TYPE, CLOUD_ROLE, gradeConfigurationToCN } from '@/utils/enumerate'
+import { CLOUD_ROLE, gradeConfigurationToCN } from '@/utils/enumerate'
 import * as TimespanUtil from '@/utils/timespan'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 
 export default {
   name: 'personal-cloud-report',
-  components: { DatePicker, StaffSelect, ProductSelect, ChartSunburst },
+  components: { DatePicker, StaffSelect, ProductSelect, ChartSunburst, NoData },
   props: {
     searchRole: {
       type: String,
@@ -69,11 +71,18 @@ export default {
       timeSpan: null,
       staffIds: [], // 云端伙伴
       productValue: [], // 产品
-      GRADE_CONFIGURATION_TYPE,
+      GRADE_CONFIGURATION_TYPE: Object.values(gradeConfigurationToCN),
       CLOUD_ROLE,
       avgScore: '', // 抽查平均分
       gradeConfigurations: [], // 图表数据
     }
+  },
+  mounted () {
+    this.timeSpan = [
+      TimespanUtil.revertTimeSpan(TimespanUtil.getNowDate(), 1),
+      TimespanUtil.revertTimeSpan(TimespanUtil.getNowDate(), 2)
+    ]
+    this.searchData()
   },
   methods: {
     /**
@@ -90,7 +99,7 @@ export default {
         if (this.staffIds.length) req.retoucherIds = this.staffIds
         if (this.productValue.length) req.productIds = this.productValue
         const res = await AssessmentCenterApi.getCheckPoolSubQuota(req, this.searchRole)
-        this.avgScore = res.avgScore
+        this.avgScore = res.avgScore || '-'
         this.gradeConfigurations = res.data
       } finally {
         await TimespanUtil.delayLoading()

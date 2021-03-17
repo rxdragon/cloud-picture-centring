@@ -8,7 +8,7 @@ import uuidv4 from 'uuid'
 
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
-import { GRADE_LABEL_TYPE, CLOUD_ROLE, GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
+import { GRADE_LABEL_TYPE, CLOUD_ROLE, CNLevelToType } from '@/utils/enumerate'
 import { getAvg, transformPercentage } from '@/utils/index.js'
 
 export const GRADE_LEVEL = {
@@ -288,46 +288,6 @@ export function getIssueList (params) {
 }
 
 /**
- * @description 获取问题标签筛选框
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/04/10
- * @version @version 2.4.0
- */
-export function getOldIssueList () {
-  return axios({
-    url: '/project_cloud/checkPool/getOldScoreConfigList',
-    method: 'GET'
-  }).then(msg => {
-    const createLabel = [{
-      name: '历史标签',
-      score_config: msg
-    }]
-    const createData = createLabel.map(item => {
-      item.children = item.score_config.map(configItem => {
-        configItem.children = configItem.child.map(chilItem => {
-          return {
-            value: chilItem.id,
-            label: chilItem.name
-          }
-        })
-        return {
-          value: configItem.id,
-          label: configItem.name,
-          children: configItem.children
-        }
-      })
-      return {
-        value: item.id,
-        label: item.name,
-        children: item.children
-      }
-    })
-    return createData
-  })
-}
-
-/**
  * @description 获取问题标签报告数据
  * @method GET
  * @returns {Array} 标记数据
@@ -440,14 +400,18 @@ export function getCloudProblemReportByGroup (params, searchRole) {
     method: 'POST',
     data: params
   }).then(res => {
-    res.group = res.group.map(g => {
+    if (!res.group) res.group = []
+    const group = res.group.map(g => {
       return {
         ...g,
         count: g.totalScore
       }
     })
 
-    return res
+    return {
+      group,
+      avgScore: res.avgScore ? Number(res.avgScore).toFixed(2) : '-'
+    }
   })
 }
 
@@ -468,10 +432,10 @@ export function getCloudProblemByGroup (params, searchRole) {
     method: 'POST',
     data: params
   }).then(res => {
-    if (!(res.group && res.group.length)) return []
-    const group = res.group
+    // if (!(res.group && res.group.length)) return []
+    const group = res.group || []
     // 按照小问题.中等问题分组
-    const config = GRADE_CONFIGURATION_TYPE.map(c => c.name)
+    const config = Object.keys(CNLevelToType)
     const list = config.map(name => {
       const data = group.map(g => {
         if (!Array.isArray(g.problems)) {
@@ -515,7 +479,7 @@ export function getCheckPoolSubQuota (params, type) {
   }).then(res => {
     const group = res.group
 
-    const config = GRADE_CONFIGURATION_TYPE.map(c => c.name)
+    const config = Object.keys(CNLevelToType)
     // map {"小":{},"中":{},"种草":{},"拔草":{}
     const map = config.reduce((tol, cur ) => Object.assign(tol, { [cur]: { } }), {})
     // 1 按照小中大问题分组
@@ -548,7 +512,7 @@ export function getCheckPoolSubQuota (params, type) {
     })
 
     return {
-      avgScore: Number(res.avgScore).toFixed(2),
+      avgScore: res.avgScore ? Number(res.avgScore).toFixed(2) : '-',
       data: list
     }
   })

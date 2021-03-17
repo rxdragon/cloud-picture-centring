@@ -59,11 +59,12 @@
         <chart-bar
           v-for="item in problemList"
           :key="item.name"
-          :title="`${gradeConfigurationToCN[item]}问题对比 单位：张`"
+          :title="`${item.name}问题对比`"
           class="detail-chart"
           :chartDatas="item.data"
         >
         </chart-bar>
+        <no-data class="chart" v-if="!problemList.length"></no-data>
       </div>
     </div>
   </div>
@@ -73,14 +74,15 @@
 import DatePicker from '@/components/DatePicker/index'
 import ProductSelect from '@SelectBox/ProductSelect/index'
 import ChartBar from './components/ChartBar'
+import NoData from '@/components/NoData'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
-import { GRADE_CONFIGURATION_TYPE, gradeConfigurationToCN } from '@/utils/enumerate'
+import { gradeConfigurationToCN } from '@/utils/enumerate'
 import * as timespanUtil from "@/utils/timespan"
 
 export default {
   name: 'group-cloud-report',
-  components: { DatePicker, ProductSelect, ChartBar },
+  components: { DatePicker, ProductSelect, ChartBar, NoData },
   props: {
     searchRole: {
       type: String,
@@ -98,7 +100,7 @@ export default {
       currentSelectedGroup: [],
       groupTotalRes: [],
       cloudGradeConfigurationList: [], // 评价标签
-      GRADE_CONFIGURATION_TYPE,
+      GRADE_CONFIGURATION_TYPE: Object.values(gradeConfigurationToCN),
       avgScore: '', // 平均分
       problemList: [] // 分组的数据
     }
@@ -144,7 +146,7 @@ export default {
       try {
         const res = await AssessmentCenterApi.getCloudProblemReportByGroup(req, this.searchRole)
         this.groupTotalRes = res.group
-        this.avgScore = res.avgScore
+        this.avgScore = res.avgScore ? Number(res.avgScore).toFixed(2) : '-'
       } finally {
         await timespanUtil.delayLoading()
         this.loading = false

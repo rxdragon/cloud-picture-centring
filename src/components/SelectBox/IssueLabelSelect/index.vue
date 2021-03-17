@@ -21,7 +21,6 @@
 </template>
 
 <script>
-// import * as AssessmentCenter from '@/api/assessmentCenter.js'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration.js'
 import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
@@ -66,12 +65,11 @@ export default {
     async getIssueList () {
       const data = await Promise.all([
         GradeConfigurationApi.getScoreConfig(this.type),
-        // todo:nx 这个接口还没有
-        // AssessmentCenter.getOldIssueList()
+        GradeConfigurationApi.getOldIssueList(this.type)
       ])
       const list = data[0]
-      // const oldList = data[1]
-      const createList = list
+      const oldList = data[1]
+      const createList = [...list, ...oldList]
       this.options = createList
       this.loadingDown = true
     }
