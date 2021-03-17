@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios.js'
 import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
+import uuidv4 from 'uuid/v4'
 
 function getUrl (type) {
   return type === GRADE_LABEL_TYPE.CLOUD ? '/project_cloud/checkPool' : '/project_cloud/showPicPool'
@@ -155,9 +156,22 @@ export function getOldIssueList (gradeType = GRADE_LABEL_TYPE.CLOUD) {
   return axios({
     url,
     method: 'GET'
+  }).then(res => {
+    if (!res) return []
+    const createLabel = [{
+      id: uuidv4(),
+      name: '历史标签',
+      children: res.map(conf => {
+        return {
+          name: conf.name,
+          id: conf.id,
+          children: conf.with_trashed_children || []
+        }
+      })
+    }]
+    return createLabel
   })
 }
-
 
 /**
  * @description 获取云学院评分配置列表, 用于编辑
