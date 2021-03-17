@@ -9,10 +9,11 @@
         <span>产品</span>
         <product-select v-model="productValue" />
       </div>
+      <el-button type="primary" @click="searchData">查询</el-button>
     </div>
     <div class="total-chat-warp">
       <chart-bar title="平均分对比" :chartDatas="groupTotalRes">
-        <span slot="other">云端平均分：80</span>
+        <span slot="other">云端平均分：{{ avgScore }}</span>
       </chart-bar>
     </div>
     <div class="content-divider"></div>
@@ -24,7 +25,7 @@
           :label="tab.name"
           :name="tab.name"
           style="width: 100%;"
-          :key="tab.name"
+          :key="tab.id"
         >
         </el-tab-pane>
       </el-tabs>
@@ -37,18 +38,18 @@
               v-for="item in currentGroup"
               :key="item.id"
               :label="item.name"
-              :value="item.name"
+              :value="item.id"
             >
             </el-option>
           </el-select>
-          <el-button type="primary" class="button">查询</el-button>
+          <el-button type="primary" class="button" @click="handleSearchProblemBy">查询</el-button>
         </div>
         <chart-bar
-          v-for="item in GRADE_CONFIGURATION_TYPE"
-          :key="item"
+          v-for="item in problemList"
+          :key="item.name"
           :title="`${gradeConfigurationToCN[item]}问题对比 单位：张`"
           class="detail-chart"
-          :chartDatas="groupTotalRes"
+          :chartDatas="item.data"
         >
         </chart-bar>
       </div>
@@ -59,7 +60,7 @@
 <script>
 import DatePicker from '@/components/DatePicker/index'
 import ProductSelect from '@SelectBox/ProductSelect/index'
-import ChartBar from './ChartBar'
+import ChartBar from './components/ChartBar'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
 import { GRADE_CONFIGURATION_TYPE, gradeConfigurationToCN } from '@/utils/enumerate'
@@ -68,10 +69,15 @@ import * as timespanUtil from "@/utils/timespan"
 export default {
   name: 'group-cloud-report',
   components: { DatePicker, ProductSelect, ChartBar },
+  props: {
+    searchRole: {
+      type: String,
+      require: true
+    }
+  },
   data () {
     return {
       gradeConfigurationToCN,
-      GRADE_CONFIGURATION_TYPE,
       loading: false,
       timeSpan: null,
       staffIds: [], // 云端伙伴
@@ -80,6 +86,9 @@ export default {
       currentSelectedGroup: [],
       groupTotalRes: [],
       cloudGradeConfigurationList: [], // 评价标签
+      GRADE_CONFIGURATION_TYPE,
+      avgScore: '', // 平均分
+      problemList: [] // 分组的数据
     }
   },
   computed: {
@@ -88,30 +97,68 @@ export default {
       const currentGroup = this.cloudGradeConfigurationList.find(tab => tab.name === this.tabKey)
       if (!currentGroup) return []
       return [
-        // { id: 0, name: '全部' },
         ...(currentGroup.children || []),
       ]
     }
   },
   async mounted () {
     await this.getCloudGradeConfigurationList()
-    await this.searchData()
   },
   methods: {
     /**
      * 获取全部的标签配置
      */
     async getCloudGradeConfigurationList () {
-      this.cloudGradeConfigurationList = await GradeConfigurationApi.getScoreConfig() || []
+      const res = await GradeConfigurationApi.getScoreConfig() || []
+      if (res.length) {
+        this.tabKey = res[0].name
+      }
+      this.cloudGradeConfigurationList = res
     },
     /**
-     * @description 搜搜数据
+     * @description 搜数据
      */
     async searchData () {
+      if (!this.timeSpan) {
+        return this.$message.warning('请输入时间')
+      }
+      this.loading = true
+      const req = {
+        startAt: timespanUtil.joinTimeSpan(this.timeSpan[0]),
+        endAt: timespanUtil.joinTimeSpan(this.timeSpan[1], 1)
+      }
+      if (this.productValue.length) req.productIds = this.productValue
+
+      try {
+        const res = await AssessmentCenterApi.getCloudProblemReportByGroup(req, this.searchRole)
+        this.groupTotalRes = res.group
+        this.avgScore = res.avgScore
+      } finally {
+        await timespanUtil.delayLoading()
+        this.loading = false
+      }
+    },
+
+    /**
+     * 按照问题标签搜索
+     */
+    async handleSearchProblemBy () {
+      if (!this.timeSpan) {
+        return this.$message.warning('请输入时间')
+      }
+      const selectType = this.cloudGradeConfigurationList.find(conf => conf.name === this.tabKey)
+      if (!selectType) return this.$message.warning('请选择评分类型')
+      const req = {
+        startAt: timespanUtil.joinTimeSpan(this.timeSpan[0]),
+        endAt: timespanUtil.joinTimeSpan(this.timeSpan[1], 1),
+        scoreTypeId: selectType.id
+      }
+      if (this.currentSelectedGroup.length) req.tagIds = this.currentSelectedGroup
+      if (this.productValue.length) req.productIds = this.productValue
       this.loading = true
       try {
-        const res = await AssessmentCenterApi.getCloudProblemReportByGroupNew()
-        this.groupTotalRes = res
+        const res = await AssessmentCenterApi.getCloudProblemByGroup(req, this.searchRole)
+        this.problemList = res
       } finally {
         await timespanUtil.delayLoading()
         this.loading = false

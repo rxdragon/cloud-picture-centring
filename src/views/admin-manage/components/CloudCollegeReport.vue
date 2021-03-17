@@ -10,8 +10,8 @@
     </el-tabs>
     <el-divider class="divider"></el-divider>
     <div class="content">
-      <personal-cloud-report v-if="tabKey === 'personal'"></personal-cloud-report>
-      <group-cloud-report v-if="tabKey === 'group'"></group-cloud-report>
+      <personal-cloud-report v-if="tabKey === 'personal'" :search-role="CLOUD_ROLE.OPERATE"></personal-cloud-report>
+      <group-cloud-report v-if="tabKey === 'group'" :search-role="CLOUD_ROLE.OPERATE" />
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
           name: '修图组'
         }
       ],
-      tabKey: 'group'
+      tabKey: 'personal'
     }
   },
 }

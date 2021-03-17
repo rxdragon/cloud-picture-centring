@@ -119,8 +119,8 @@
     <retouch-performance />
     <!-- 云学院报告 -->
     <div class="cloud-report-self module-panel">
-      <div class="panel-title">抽查绩效</div>
-      <personal-cloud-report></personal-cloud-report>
+      <div class="panel-title">整理抽查数据统计</div>
+      <personal-cloud-report :search-role="CLOUD_ROLE.CREW"></personal-cloud-report>
     </div>
     <!-- 小蜜蜂奖励记录 -->
     <div class="module-panel bee-award" v-loading="LittleBeeLoading">
