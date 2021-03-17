@@ -109,24 +109,22 @@ import { mapGetters } from 'vuex'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
 
 function getScoreGroupBase (scoreTypeId) {
-  const children = []
-  for (const level in GRADE_CONFIGURATION_TYPE) {
-    const childrenItem = {
+  const children = Object.values(GRADE_CONFIGURATION_TYPE).map(level => {
+    return {
       id: uuidv4(),
       name: gradeConfigurationToCN[level],
       score: '',
       editScore: '',
-      type: level === GRADE_CONFIGURATION_TYPE.PLANT ? SCORE_TYPES.Add : SCORE_TYPES.DEDUCT
+      type: level === GRADE_CONFIGURATION_TYPE.PLANT ? SCORE_TYPES.ADD : SCORE_TYPES.DEDUCT
     }
-    children.push(childrenItem)
-  }
+  })
   return {
     name: '',
     editName: '',
     scoreTypeId,
     isEdit: true,
     isNew: true,
-    id: uuidv4(),
+    id: +new Date(),
     children: children
   }
 }
@@ -167,12 +165,18 @@ export default {
   },
   methods: {
     async getAllScoreConfig () {
-      const res = await GradeConfigurationApi.getScoreConfigByEdit(this.gradeType)
-      this.tabList = res
-      if (res.length > 0) {
-        this.tabKey = res[0].name
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      try {
+        const res = await GradeConfigurationApi.getScoreConfigByEdit(this.gradeType)
+        this.tabList = res
+        if (res.length > 0) {
+          this.tabKey = res[0].name
+        }
+        this.tabList = res
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
-      this.tabList = res
+
     },
     async handleConfirmCategory () {
       if (this.tabList.some(tab => tab.name === this.addCategoryName)) {

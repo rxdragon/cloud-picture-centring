@@ -132,7 +132,7 @@ export function delScoreConfig (params) {
 
 /**
  * @description 获取云学院评分配置列表
- * @method PUT
+ * @method GET
  * @author nx 2021/03/11
  * @version @version 2.24.0
  */
@@ -143,6 +143,21 @@ export function getScoreConfig (gradeType = GRADE_LABEL_TYPE.CLOUD) {
     method: 'GET'
   })
 }
+
+/**
+ * @description 获取云学院老数据评分配置列表，假删除的那些
+ * @method GET
+ * @author nx 2021/03/11
+ * @version @version 2.24.0
+ */
+export function getOldIssueList (gradeType = GRADE_LABEL_TYPE.CLOUD) {
+  const url = getUrl(gradeType) + '/getOldScoreConfigList'
+  return axios({
+    url,
+    method: 'GET'
+  })
+}
+
 
 /**
  * @description 获取云学院评分配置列表, 用于编辑
