@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     /**
-     * 删除
+     * @description 删除
      */
     handleDeleteScoreGroup (item) {
       this.$confirm('是否确定删除该评分项?', '提示', {
@@ -79,20 +79,19 @@ export default {
       })
     },
     /**
-     * 编辑
-     * @param group
+     * @description 编辑
      */
     handleEditScoreGroup (group) {
       this.$emit('edit-score-item', group.id)
     },
     /**
-     * 添加评分项
+     * @description 添加评分项
      */
     handleAddGroup () {
       this.$emit('add-score-group')
     },
     /**
-     *  保存评分项
+     * @description  保存评分项
      */
     handleSaveScoreItem (item) {
       const hasError = item.children.some(scoreItem => {
@@ -116,7 +115,7 @@ export default {
       this.$emit('save-score-item', item.id)
     },
     /**
-     * 删除评分项
+     * @description 删除评分项
      */
     handleCancelSoreItemChange (item) {
       if (item.isNew) {

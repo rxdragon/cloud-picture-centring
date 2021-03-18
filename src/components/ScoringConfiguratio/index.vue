@@ -167,7 +167,7 @@ export default {
   },
   methods: {
     /**
-     * 获取当前的配置
+     * @description 获取当前的配置
      */
     async getAllScoreConfig () {
       this.$store.dispatch('setting/showLoading', this.routeName)
@@ -184,7 +184,7 @@ export default {
       }
     },
     /**
-     * 添加分类
+     * @description 添加分类
      */
     async handleConfirmCategory () {
       if (this.tabList.some(tab => tab.name === this.addCategoryName)) {
@@ -206,7 +206,7 @@ export default {
       }
     },
     /**
-     * 从子组建冒泡上来的添加事件
+     * @description 从子组建冒泡上来的添加事件
      */
     handleAddScoreGroup (id) {
       try {
@@ -218,7 +218,7 @@ export default {
       }
     },
     /**
-     * 编辑某个类下的某一个组
+     * @description 编辑某个类下的某一个组
      */
     handleEditScoreItem (groupId, categoryId) {
       try {
@@ -235,7 +235,7 @@ export default {
       }
     },
     /**
-     * 删除一个组
+     * @description 删除一个组
      */
     async handleDeleteScoreItem (groupId, categoryId) {
       const editCategoryIndex = this.tabList.findIndex(tab => Number(tab.id) === Number(categoryId))
@@ -266,7 +266,7 @@ export default {
       }
     },
     /**
-     * 取消编辑
+     * @description 取消编辑
      */
     handleCancelScoreItem (groupId, categoryId) {
       try {
@@ -283,7 +283,7 @@ export default {
       }
     },
     /**
-     * 保存评分组
+     * @description 保存评分组
      */
     async handleSaveScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
@@ -315,7 +315,7 @@ export default {
       }
     },
     /**
-     * 切换tab， 需要吧当前编辑的都取消掉
+     * @description 切换tab， 需要吧当前编辑的都取消掉
      */
     cancelEditSwitchTab () {
       this.tabList.forEach(tab => {
@@ -323,7 +323,7 @@ export default {
       })
     },
     /**
-     * 打开修改分类名称的弹窗
+     * @description 打开修改分类名称的弹窗
      */
     handleOpenEditCategoryName (editTab) {
       const editEditCategory = this.tabList.find(tab => tab.name === editTab.name)
@@ -336,14 +336,14 @@ export default {
       editEditCategory.editName = editEditCategory.name
     },
     /**
-     * 修改的输入框打开扣需要获取焦点，其他的方式都不太好用
+     * @description 修改的输入框打开扣需要获取焦点，其他的方式都不太好用
      */
     handleEditCategoryNameInputMounted () {
       if (!this.$refs.editCategoryInput) return
       this.$refs.editCategoryInput.forEach(v => v.focus())
     },
     /**
-     * 确认修改类别名称
+     * @description 确认修改类别名称
      */
     async handleConfirmEditCategoryName (editTab) {
       const currentTab = this.tabList.find(tab => tab.id === editTab.id)
