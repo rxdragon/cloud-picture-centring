@@ -188,6 +188,7 @@ export async function getScoreConfigByEdit (gradeType = GRADE_LABEL_TYPE.CLOUD) 
   res.forEach(tab => {
     tab.isEdit = false
     tab.editName = tab.name
+    tab.stringKey = String(tab.id)
     if (!tab.children) tab.children = []
     tab.children.forEach(group => {
       group.isNew = false

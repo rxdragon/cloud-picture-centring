@@ -39,9 +39,9 @@
       <el-tab-pane
         v-for="tab in tabList"
         :label="tab.name"
-        :name="tab.name"
-        :key="tab.name"
-        @tab-click="handleSwitchTab"
+        :name="tab.stringKey"
+        :key="tab.stringKey"
+        @tab-click="cancelEditSwitchTab"
       >
         <span slot="label">
           <span v-if="!tab.isEdit">{{ tab.name }}
@@ -57,14 +57,14 @@
               size="mini"
               ref="editCategoryInput"
               @blur="handleConfirmEditCategoryName(tab)"
-              v-on:keyup.enter="handleConfirmEditCategoryName(tab)"
+              v-on:keyup.native.enter="handleConfirmEditCategoryName(tab)"
               maxlength="5"
               clearable
             >
             </el-input>
           </span>
         </span>
-        <Assessment
+        <assessment-item
           @cancel-score-item-change="handleCancelScoreItem($event, tab.id)"
           @save-score-item="handleSaveScoreItem($event, tab.id)"
           @edit-score-item="handleEditScoreItem($event, tab.id)"
@@ -73,7 +73,7 @@
           :key="tab.id"
           :groupList="tab.children"
         >
-        </Assessment>
+        </assessment-item>
       </el-tab-pane>
     </el-tabs>
 
@@ -99,15 +99,18 @@
 </template>
 
 <script>
-import { GRADE_CONFIGURATION_TYPE, GRADE_LABEL_TYPE, SCORE_TYPES, gradeConfigurationToCN } from '@/utils/enumerate'
-import Assessment from "./assessment-item"
+import AssessmentItem from './AssessmentItem'
 import ScorerSelect from '@SelectBox/scorerSelect/index'
-
 import uuidv4 from 'uuid/v4'
+import { GRADE_CONFIGURATION_TYPE, GRADE_LABEL_TYPE, SCORE_TYPES, gradeConfigurationToCN } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
-
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
 
+/**
+ * 获取初始化的数据
+ * @param scoreTypeId
+ * @returns {{children: {score: string, name: *, id: *, type: *, editScore: string}[], isEdit: boolean, name: string, scoreTypeId: *, isNew: boolean, id: number, editName: string}}
+ */
 function getScoreGroupBase (scoreTypeId) {
   const children = Object.values(GRADE_CONFIGURATION_TYPE).map(level => {
     return {
@@ -125,15 +128,14 @@ function getScoreGroupBase (scoreTypeId) {
     isEdit: true,
     isNew: true,
     id: +new Date(),
+    stringKey: uuidv4(),
     children: children
   }
 }
 
 export default {
   name: 'GradeConfigurationMain',
-  components: {
-    Assessment, ScorerSelect
-  },
+  components: { AssessmentItem, ScorerSelect },
   props: {
     title: String,
     gradeType: {
@@ -157,27 +159,33 @@ export default {
   computed: {
     ...mapGetters(['showEmptyCheckPool']),
     isShowEditCategoryButton () {
-      return this.tabList.some(tab => tab.name === this.tabKey)
+      return this.tabList.some(tab => tab.stringKey === this.tabKey)
     }
   },
   mounted () {
     this.getAllScoreConfig()
   },
   methods: {
+    /**
+     * @description 获取当前的配置
+     */
     async getAllScoreConfig () {
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         const res = await GradeConfigurationApi.getScoreConfigByEdit(this.gradeType)
         this.tabList = res
+        // 第一次进来的时候选择当前的tab
         if (res.length > 0) {
-          this.tabKey = res[0].name
+          this.tabKey = res[0].stringKey
         }
         this.tabList = res
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
-
     },
+    /**
+     * @description 添加分类
+     */
     async handleConfirmCategory () {
       if (this.tabList.some(tab => tab.name === this.addCategoryName)) {
         return this.$message.error('存在相同的评分类别。')
@@ -191,7 +199,6 @@ export default {
         await GradeConfigurationApi.addScoreType(req)
         this.$message.success('评分类别创建成功。')
         await this.getAllScoreConfig()
-        this.tabKey = this.addCategoryName
         this.showAddCategoryDialog = false
         this.addCategoryName = ''
       } finally {
@@ -199,7 +206,7 @@ export default {
       }
     },
     /**
-     * 自组建冒泡上来的添加事件
+     * @description 从子组建冒泡上来的添加事件
      */
     handleAddScoreGroup (id) {
       try {
@@ -211,7 +218,7 @@ export default {
       }
     },
     /**
-     * 编辑某个类下的某一个组
+     * @description 编辑某个类下的某一个组
      */
     handleEditScoreItem (groupId, categoryId) {
       try {
@@ -228,11 +235,11 @@ export default {
       }
     },
     /**
-     * 删除一个组
+     * @description 删除一个组
      */
     async handleDeleteScoreItem (groupId, categoryId) {
-      const tabKey = this.tabKey
-      const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
+      const editCategoryIndex = this.tabList.findIndex(tab => Number(tab.id) === Number(categoryId))
+      const editCategory = this.tabList[editCategoryIndex]
       if (!editCategory) {
         this.$message.error('删除评分项失败')
         throw new Error('删除评分项失败')
@@ -252,14 +259,14 @@ export default {
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await GradeConfigurationApi.delScoreConfig(req)
-        await this.getAllScoreConfig()
-        this.tabKey = tabKey
+        this.tabList[editCategoryIndex].children.splice(deleteGroupIndex, 1)
+        this.tabKey = this.tabList.length ? this.tabList[0].stringKey : ''
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
-     * 取消编辑
+     * @description 取消编辑
      */
     handleCancelScoreItem (groupId, categoryId) {
       try {
@@ -276,7 +283,7 @@ export default {
       }
     },
     /**
-     * 保存评分组
+     * @description 保存评分组
      */
     async handleSaveScoreItem (groupId, categoryId) {
       const editCategory = this.tabList.find(tab => Number(tab.id) === Number(categoryId))
@@ -303,21 +310,20 @@ export default {
         const res = await action(req)
         if (res) this.$message.success(message)
         await this.getAllScoreConfig()
-        this.tabKey = editCategory.name
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
-     * 切换tab， 需要吧当前编辑的都取消掉
+     * @description 切换tab， 需要吧当前编辑的都取消掉
      */
-    handleSwitchTab () {
+    cancelEditSwitchTab () {
       this.tabList.forEach(tab => {
         tab.isEdit = false
       })
     },
     /**
-     * 打开修改分类名称的弹窗
+     * @description 打开修改分类名称的弹窗
      */
     handleOpenEditCategoryName (editTab) {
       const editEditCategory = this.tabList.find(tab => tab.name === editTab.name)
@@ -325,19 +331,19 @@ export default {
         this.$message.error('切换分类失败')
         throw new Error('切换分类失败')
       }
-      this.tabKey = editTab.name
+      this.tabKey = editTab.stringKey
       editEditCategory.isEdit = true
       editEditCategory.editName = editEditCategory.name
     },
     /**
-     * 修改的输入框打开扣需要获取焦点，其他的方式都不太好用
+     * @description 修改的输入框打开扣需要获取焦点，其他的方式都不太好用
      */
     handleEditCategoryNameInputMounted () {
       if (!this.$refs.editCategoryInput) return
       this.$refs.editCategoryInput.forEach(v => v.focus())
     },
     /**
-     * 确认修改类别名称
+     * @description 确认修改类别名称
      */
     async handleConfirmEditCategoryName (editTab) {
       const currentTab = this.tabList.find(tab => tab.id === editTab.id)
@@ -358,8 +364,8 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         const req = { name: currentTab.editName, id: currentTab.id, gradeType: this.gradeType }
         await GradeConfigurationApi.editScoreTypeName(req)
-        await this.getAllScoreConfig()
-        this.tabKey = currentTab.editName
+        currentTab.name = currentTab.editName
+        this.cancelEditSwitchTab()
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
