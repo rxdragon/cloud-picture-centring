@@ -629,7 +629,7 @@ export default {
           this.productConfig.grassData = data.seaGrassConfig
           this.productConfig.templateSuffix = data.templateSuffix
           this.productConfig.classificationId = data.productCategoryId || ''
-          this.productConfig.needCheck = data.forceReview ? 1 : 0
+          this.productConfig.needCheck = data.forceReview ? 1 : 2
 
           if (data.forceReviewStartAt && data.forceReviewEndAt) {
             this.productConfig.checkTimeDay = [
@@ -759,7 +759,7 @@ export default {
         this.$newMessage.warning('请填写是否需要强制审核')
         return false
       }
-      if (this.productConfig.needCheck) {
+      if (this.productConfig.needCheck === 1) {
         if (!this.productConfig.checkTimeDay || !this.productConfig.checkTimeTime) {
           this.$newMessage.warning('请填写强制审核日期或审核时间')
           return false

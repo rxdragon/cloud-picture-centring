@@ -162,7 +162,7 @@ export default {
       }
     },
     '$route.query': {
-      handler: async function (query) {
+      handler: async function () {
         const { isCheckPass, photographerOrgId, productCategoryId } = this.$route.query
         if (isCheckPass) {
           await this.$nextTick()
@@ -170,11 +170,13 @@ export default {
         }
         // 分类id
         if (productCategoryId) {
-          this.productCategoryIdIn = [productCategoryId]
+          this.productClassValues = [productCategoryId]
+          this.showInfo = false
         }
         // 摄影机构
         if (photographerOrgId) {
           this.institutionType = +photographerOrgId
+          this.showInfo = false
         }
         this.getProductList()
       },
