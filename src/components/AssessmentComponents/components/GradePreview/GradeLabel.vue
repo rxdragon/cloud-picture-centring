@@ -3,34 +3,40 @@
     <div class="label-header">
       <div class="panel-title">标签栏</div>
     </div>
-    <div class="lable-main">
-      <el-collapse v-model="activeNames">
-        <el-collapse-item
-          v-for="labelClassItem in labelClass"
-          :key="labelClassItem.id"
-          :title="labelClassItem.name"
-          :name="labelClassItem.idString"
-        >
-          <LabelModule :labelClass="labelClassItem" :activeLabelId="activeLabelId" @selectLabelId="onSelectGrade" />
-        </el-collapse-item>
-      </el-collapse>
-    </div>
+    <transition name="fade" mode="out-in">
+      <LoadingTea class="loading-box" v-if="loading"/>
+      <div class="lable-main" v-else>
+        <el-collapse v-model="activeNames" v-if="labelClass.length">
+          <el-collapse-item
+            v-for="labelClassItem in labelClass"
+            :key="labelClassItem.id"
+            :title="labelClassItem.name"
+            :name="labelClassItem.idString"
+          >
+            <LabelModule :labelClass="labelClassItem" :activeLabelId="activeLabelId" @selectLabelId="onSelectGrade" />
+          </el-collapse-item>
+        </el-collapse>
+        <div class="tip" v-else>请联系主管添加评分</div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import * as AssessmentCenter from '@/api/assessmentCenter'
 import LabelModule from './LabelModule.vue'
+import LoadingTea from '@/components/LoadingTea'
 
 export default {
   name: 'GradeLabel',
-  components: { LabelModule },
+  components: { LabelModule, LoadingTea },
   data () {
     return {
       activeNames: [],
       labelClass: [],
       chainLine: [],
       activeLabelId: '', // 当前选中标签id
+      loading: true, // 是否加载中
     }
   },
   created () {
@@ -88,10 +94,16 @@ export default {
      * @description 获取标签数据
      */
     async getAllLabel () {
-      const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList()
-      this.labelClass = labelClass
-      this.activeNames = [String(_.get(labelClass[0], 'id'))]
-      this.chainLine = chainLine
+      try {
+        this.loading = true
+        const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList()
+        await this.$delayLoading()
+        this.labelClass = labelClass
+        this.activeNames = [String(_.get(labelClass[0], 'id'))]
+        this.chainLine = chainLine
+      } finally {
+        this.loading = false
+      }
     },
     /**
      * @description 调整下一个id
@@ -175,6 +187,21 @@ export default {
         padding: 0 12px 14px;
         color: #eee;
       }
+    }
+  }
+
+  .loading-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 60px);
+  }
+
+  .lable-main {
+    .tip {
+      padding: 14px 12px;
+      font-size: 14px;
+      font-weight: bolder;
     }
   }
 }
