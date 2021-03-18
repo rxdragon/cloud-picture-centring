@@ -9,9 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6840fdf-c224-4a11-849a-3fd6ed4ca765" name="Default Changelist" comment="更新支持选择环境">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/gradeConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/gradeConfiguration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/directive/no-special-char/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/directive/no-special-char/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/AssessmentItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/AssessmentItem.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ScoringConfiguratio/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ScoringConfiguratio/index.vue" afterDir="false" />
     </list>
     <list id="4bf8f13a-dbc6-438e-bc89-8d582ee4d3a9" name="Not Commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -405,11 +404,11 @@
       <screen x="0" y="23" width="2560" height="1329" />
     </state>
     <state x="1093" y="608" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1611655064000" />
-    <state x="746" y="104" width="622" height="548" key="find.popup" timestamp="1615971383170">
+    <state x="746" y="104" width="622" height="548" key="find.popup" timestamp="1616041273218">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="987" y="442" width="586" height="490" key="find.popup/-1080.23.1080.1897/0.23.2560.1329@0.23.2560.1329" timestamp="1612173153214" />
-    <state x="746" y="104" width="622" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1615971383170" />
+    <state x="746" y="104" width="622" height="548" key="find.popup/0.0.1440.900/-1920.0.1920.1080@0.0.1440.900" timestamp="1616041273218" />
     <state x="555" y="284" width="568" height="548" key="find.popup/0.0.1440.900/-265.-1080.1920.1080@0.0.1440.900" timestamp="1615347467004" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1615970471849">
       <screen x="0" y="0" width="1440" height="900" />

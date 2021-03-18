@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import GradeConfiguration from '@/components/ScoringConfiguratio/grade-configuration'
+import GradeConfiguration from '@/components/ScoringConfiguratio'
 import { GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 export default {
