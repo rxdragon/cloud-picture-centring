@@ -144,7 +144,7 @@ export default {
       if (this.productValue.length) req.productIds = this.productValue
 
       try {
-        const res = await AssessmentCenterApi.getCloudProblemReportByGroup(req, this.searchRole)
+        const res = await AssessmentCenterApi.getCloudScoreByGroup(req, this.searchRole)
         this.groupTotalRes = res.group
         this.avgScore = res.avgScore ? Number(res.avgScore).toFixed(2) : '-'
       } finally {

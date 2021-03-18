@@ -9,7 +9,7 @@ import uuidv4 from 'uuid'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import { GRADE_LABEL_TYPE, CLOUD_ROLE, CNLevelToType } from '@/utils/enumerate'
-import { getAvg, transformPercentage } from '@/utils/index.js'
+import { getAvg } from '@/utils/index.js'
 
 export const GRADE_LEVEL = {
   SMALL: 'small',
@@ -288,39 +288,6 @@ export function getIssueList (params) {
 }
 
 /**
- * @description 获取问题标签报告数据
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/04/12
- * @version @version 2.4.0
- */
-export function getCloudProblemReport (params) {
-  return axios({
-    url: '/project_cloud/checkPool/getCloudProblemReport',
-    method: 'GET',
-    params
-  }).then(msg => {
-    msg = msg.filter(item => item.count)
-    let sum = 0
-    const checkTags = msg.map(labelItem => {
-      sum = sum + Number(labelItem.count)
-      return {
-        name: labelItem.name,
-        value: Number(labelItem.count),
-        group: labelItem.child
-      }
-    })
-    checkTags.forEach(labelItem => {
-      labelItem.rate = transformPercentage(labelItem.value, sum)
-      labelItem.group.forEach(item => {
-        item.rate = transformPercentage(item.count, sum)
-      })
-    })
-    return checkTags
-  })
-}
-
-/**
  * @description 获取修改分数历史记录
  * @param {*} params
  */
@@ -390,7 +357,7 @@ export function getPhotographerOrgList () {
  * @author nx 2020/07/27
  * @version @version 2.24.0
  */
-export function getCloudProblemReportByGroup (params, searchRole) {
+export function getCloudScoreByGroup (params, searchRole) {
   const urlMap = {
     [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudScoreByGroup',
     [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudScoreByGroup',
