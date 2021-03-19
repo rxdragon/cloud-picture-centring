@@ -304,7 +304,7 @@ import PreviewMix from '@/mixins/preview-mixins'
 import canvasMix from '@AssessmentComponents/components/GradePreview/keyDownEventMix.js'
 
 import { TOOL_TYPE } from '@AssessmentComponents/components/GradePreview/ToolEnumerate.js'
-import { APPEAL_CHECK_STATUS, APPEAL_TYPE, PHOTO_VERSION } from '@/utils/enumerate'
+import { APPEAL_CHECK_STATUS, APPEAL_TYPE, PHOTO_VERSION, SPOT_CHECK_MAP, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
 // 审核枚举值
@@ -319,7 +319,8 @@ export default {
   mixins: [PreviewMix, canvasMix],
   provide () {
     return {
-      judageCanvas: this.createCanvas
+      judageCanvas: this.createCanvas,
+      cloudType: this.cloudType
     }
   },
   props: {
@@ -408,6 +409,17 @@ export default {
     // 是否是抽查申述
     isCloudEvaluate () {
       return this.appealInfo.appealType === APPEAL_TYPE.EVALUATE
+    },
+    // 抽片类型
+    cloudType () {
+      const spotCheckType = _.get(this.photoInfo, 'streamInfo.evaluationType') || ''
+      if (spotCheckType === SPOT_CHECK_MAP.SHOW_PIC_SPOT) {
+        return GRADE_LABEL_TYPE.SHOW_PIC
+      }
+      if (spotCheckType === SPOT_CHECK_MAP.CHECK_POOL_SPOT) {
+        return GRADE_LABEL_TYPE.CLOUD
+      }
+      return ''
     }
   },
   watch: {

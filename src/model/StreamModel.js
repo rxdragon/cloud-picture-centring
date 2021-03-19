@@ -99,6 +99,7 @@ export default class StreamModel {
 
   // 云学院
   evaluationType = '' // 抽查类型
+  evaluationTypeCN = '' // 抽查类型中文
   cloudEvaluateTime = '-' // 云学院评价时间
 
   // 申诉
@@ -168,7 +169,7 @@ export default class StreamModel {
     this.retoucherNpsAvg = _.get(streamData, 'tags.values.retoucher_score') || '-'
 
     // 云学院
-    this.evaluationType = this.getEvaluationType(_.get(streamData, 'tags.statics', []))
+    this.getEvaluationType(_.get(streamData, 'tags.statics', []))
     this.cloudEvaluateTime = _.get(streamData, 'tags.values.cloud_evaluate_time') || '-'
 
     // 申诉
@@ -312,11 +313,14 @@ export default class StreamModel {
   // 获取抽查类型
   getEvaluationType (statics = []) {
     if (statics.includes(SPOT_CHECK_MAP.SHOW_PIC_SPOT)) {
-      return EVALUATION_TYPE[SPOT_CHECK_MAP.SHOW_PIC_SPOT]
+      this.evaluationType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
+      this.evaluationTypeCN = EVALUATION_TYPE[SPOT_CHECK_MAP.SHOW_PIC_SPOT]
+      return
     }
     if (statics.includes(SPOT_CHECK_MAP.CHECK_POOL_SPOT)) {
-      return EVALUATION_TYPE[SPOT_CHECK_MAP.CHECK_POOL_SPOT]
+      this.evaluationType = SPOT_CHECK_MAP.CHECK_POOL_SPOT
+      this.evaluationTypeCN = EVALUATION_TYPE[SPOT_CHECK_MAP.CHECK_POOL_SPOT]
+      return
     }
-    return ''
   }
 }

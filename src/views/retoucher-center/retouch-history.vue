@@ -194,7 +194,7 @@
           <!-- 抽查类型 -->
           <el-table-column label="抽查类型" width="100">
             <template slot-scope="{ row }">
-              <div>{{ row.evaluationType || '-' }}</div>
+              <div>{{ row.evaluationTypeCN || '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column label="门店评价" width="120">

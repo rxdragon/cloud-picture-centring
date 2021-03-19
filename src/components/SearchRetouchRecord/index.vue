@@ -128,7 +128,7 @@
           <el-table-column label="抽查类型">
             <template slot-scope="{ row }">
               <div class="table-detail-box">
-                <p>抽查类型：{{ row.evaluationType || '-' }}</p>
+                <p>抽查类型：{{ row.evaluationTypeCN || '-' }}</p>
                 <p>评价时间：{{ row.cloudEvaluateTime }}</p>
               </div>
             </template>
