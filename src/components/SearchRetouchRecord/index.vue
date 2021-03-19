@@ -293,7 +293,7 @@ export default {
         req.cloudEvaluateType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
       }
       if (this.cloudIssueValue.length) {
-        req.cloudEvaluateType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
+        req.cloudEvaluateType = SPOT_CHECK_MAP.CHECK_POOL_SPOT
         req.cloudTags = this.cloudIssueValue
       }
       if (this.showIssueValue.length) {
