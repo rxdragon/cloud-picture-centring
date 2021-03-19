@@ -22,7 +22,7 @@
         </div>
       </div>
       <!-- 评价标签 -->
-      <div class="info-item">
+      <div class="info-item issue-class-box">
         <el-tag
           v-for="item in photoItem.checkPoolTags"
           :key="item.id"
@@ -174,6 +174,7 @@ export default {
 
       .label-tag {
         margin-right: 10px;
+        margin-bottom: 10px;
 
         &.plant {
           color: #38bc7f;
@@ -196,26 +197,8 @@ export default {
       }
     }
 
-    .type-tag {
-      margin-right: 10px;
-
-      &.plant {
-        color: #fff;
-        background-color: @panGreen;
-        border-color: @panGreen;
-      }
-
-      &.pull {
-        color: #fff;
-        background-color: @red;
-        border-color: @red;
-      }
-
-      &.none {
-        color: #fff;
-        background-color: @blue;
-        border-color: @blue;
-      }
+    .issue-class-box {
+      flex-wrap: wrap;
     }
   }
 }

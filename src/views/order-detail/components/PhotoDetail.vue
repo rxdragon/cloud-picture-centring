@@ -137,9 +137,12 @@ export default {
 
     .issue-class-box {
       display: flex;
+      flex-wrap: wrap;
+      padding: 20px 0 10px !important;
 
       .type-tag {
         margin-right: 10px;
+        margin-bottom: 10px;
 
         &.plant {
           color: #38bc7f;
