@@ -43,7 +43,7 @@ Vue.prototype.$bus = new Vue()
 
 window.polling = {}
 Vue.prototype.$ipcRenderer = ipcRenderer
-Vue.prototype.$isDev = !process.env.VUE_APP_LOGIN_API.includes('k8s')
+Vue.prototype.$isDev = !process.env.VUE_APP_LOGIN_API.includes('online')
 
 Vue.config.productionTip = false
 

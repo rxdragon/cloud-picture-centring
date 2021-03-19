@@ -499,6 +499,7 @@ export default {
       margin-bottom: 20px;
 
       .item-name {
+        flex-shrink: 0;
         margin-right: 16px;
         font-size: 14px;
         font-weight: 500;

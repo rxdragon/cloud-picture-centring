@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-
+    
     <!-- 评价信息 -->
     <div class="panel-info">
       <div class="panel-title">
@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
-
+    
     <grade-preview
       v-if="gradeInfo && showGradePreview"
       :photo-version="showPhotoVersion"
@@ -245,8 +245,7 @@ export default {
       .issue-class-box {
         display: flex;
         flex-wrap: wrap;
-        height: auto !important;
-        margin-top: 16px;
+        margin-bottom: -10px;
 
         .label-title {
           flex-shrink: 0;
@@ -259,7 +258,7 @@ export default {
 
         .type-tag {
           margin-right: 10px;
-          margin-bottom: 16px;
+          margin-bottom: 10px;
 
           &.plant {
             color: #38bc7f;
