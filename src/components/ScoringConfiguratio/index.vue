@@ -35,7 +35,7 @@
         </el-button>
       </div>
     </div>
-    <el-tabs v-model="tabKey" class="tabs-wrap">
+    <el-tabs v-model="tabKey" :class="['tabs-wrap', { 'no-border': isFirst }]">
       <el-tab-pane
         v-for="tab in tabList"
         :label="tab.name"
@@ -145,7 +145,7 @@ export default {
   },
   data () {
     return {
-      routeName: this.$route.name, // 路由名字      
+      routeName: this.$route.name, // 路由名字
       showEmptyDialog: false, // 清空评分
       emptyPeople: [],
       tabList: [],
@@ -159,6 +159,12 @@ export default {
     ...mapGetters(['showEmptyCheckPool']),
     isShowEditCategoryButton () {
       return this.tabList.some(tab => tab.stringKey === this.tabKey)
+    },
+    // 第一个标签无圆角
+    isFirst () {
+      if (!this.tabKey) return false
+      const index = this.tabList.findIndex(tab => tab.stringKey === this.tabKey)
+      return index === 0
     }
   },
   mounted () {
@@ -384,11 +390,11 @@ export default {
         req.staffIds = this.emptyPeople
       }
       const msg = await GradeConfigurationApi.emptyCheckPoolByStaffId(req)
-      if (msg) {
-        this.$newMessage.success('清除成功')
-        this.emptyPeople = []
-        this.showEmptyDialog = false
-      }
+      Boolean(msg)
+        ? this.$newMessage.success('清除成功')
+        : this.$newMessage.error('清除失败')
+      this.emptyPeople = []
+      this.showEmptyDialog = false
     }
   }
 }
@@ -405,9 +411,17 @@ export default {
   }
 
   .tabs-wrap {
-    overflow: hidden;
-    border-radius: 16px;
-    box-shadow: @boxShadow;
+    & /deep/ .el-tabs__content {
+      border-radius: 16px;
+      box-shadow: @boxShadow;
+    }
+
+    &.no-border {
+      & /deep/ .el-tabs__content {
+        border-top-left-radius: 0;
+        transition: all 0.3s;
+      }
+    }
   }
 }
 </style>
