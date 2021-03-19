@@ -251,7 +251,6 @@ export default {
       .issue-class-box {
         display: flex;
         flex-wrap: wrap;
-        margin-bottom: -10px;
 
         .label-title {
           flex-shrink: 0;
@@ -315,7 +314,7 @@ export default {
       .panel-row {
         display: flex;
         align-items: center;
-        height: 60px;
+        min-height: 60px;
         font-size: 14px;
         line-height: 22px;
         color: #303133;
