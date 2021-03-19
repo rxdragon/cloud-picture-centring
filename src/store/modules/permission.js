@@ -44,6 +44,7 @@ const state = {
   showRetoucherGroupPerformance: false, // 是否显示修图组绩效
   showRetoucherChargeBackReport: false, // 云学院绩效查询-是否显示退单统计
   showCloudCollegeReport: false, // 云学院绩效查询-是否显示云学院报告
+  showPicCollegeReport: false, // 修修兽评价绩效查询-是否显示修修手抽片报告
   showTimeStatistics: false, // 是否显示用时统计
   showCheckerEvaluate: false, // 是否显示看片评价
   showFlowInfo: false, // 是否显示浏览看板
@@ -84,6 +85,10 @@ const mutations = {
     state.showRetoucherGroupPerformance = roles.includes('AdminManage.performanceInquire.retoucherGroupPerformance')
     state.showRetoucherChargeBackReport = roles.includes('AdminManage.performanceInquire.retoucherChargeBackReport')
     state.showCloudCollegeReport = roles.includes('AdminManage.performanceInquire.cloudCollegeReport')
+    // TODO 修修兽评价报告
+    // state.showPicCollegeReport = roles.includes('AdminManage.performanceInquire.showPicCollegeReport')
+    state.showPicCollegeReport = true
+
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
     state.showOverallPerformance = roles.includes('AdminManage.performanceInquire.overallperformance')
     state.showTimeStatistics = roles.includes('AdminManage.performanceInquire.timestatistics')
