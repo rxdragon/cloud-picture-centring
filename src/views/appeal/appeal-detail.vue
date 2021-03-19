@@ -193,11 +193,11 @@ export default {
         }
       })
       if (photoExamines.length !== this.photos.length) return this.$newMessage.warning('还存在未审核的申诉照片')
-      const req = {
-        id: this.appealInfo.id,
-        photoExamines
-      }
       try {
+        const req = {
+          id: this.appealInfo.id,
+          photoExamines
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         await Appeal.appealExamine(req, this.checkType)
         this.$newMessage.success('提交成功')

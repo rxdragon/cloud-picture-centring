@@ -704,7 +704,14 @@ export default {
      * @description 获取选中标签
      */
     getActiveLableId () {
-      if (!this.$refs['fabric-canvas']) return []
+      
+      if (!this.$refs['fabric-canvas']) {
+        const defaultData = {
+          ids: [],
+          labelData: []
+        }
+        return defaultData
+      }
       const activeLableList = this.$refs['fabric-canvas'].activeLableList
       const ids = activeLableList.map(item => {
         return {
