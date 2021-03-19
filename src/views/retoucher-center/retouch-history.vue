@@ -390,7 +390,7 @@ export default {
     /**
      * @description 获取历史列表
      * @param 页码 如果通过按搜索框搜索,传输1 到第一页
-     * 云学院和修修兽公用一个showTags入餐， 通过type区分
+     * 云学院和修修兽公用一个cloudTags入餐， 通过type区分
      */
     async getRetouchList () {
       try {
@@ -410,7 +410,7 @@ export default {
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         if (this.cloudEvaluateType) { reqData.cloudEvaluateType = this.cloudEvaluateType }
         if (this.cloudIssueValue.length || this.showIssueValue.length) {
-          reqData.showTags = this.cloudIssueValue.length ? this.cloudIssueValue : this.showIssueValue
+          reqData.cloudTags = this.cloudIssueValue.length ? this.cloudIssueValue : this.showIssueValue
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
