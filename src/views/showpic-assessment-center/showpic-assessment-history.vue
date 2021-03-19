@@ -1,5 +1,5 @@
 <template>
-  <div class="showpic-assessment-history">
+  <div class="showpic-assessment-history page-class">
     <div class="header">
       <h3>修修兽评价历史记录</h3>
     </div>

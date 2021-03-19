@@ -157,7 +157,7 @@ export default {
       try {
         const res = await AssessmentCenterApi.getCloudScoreByGroup(req, this.searchRole, this.searchType)
         this.groupTotalRes = res.group
-        this.avgScore = res.avgScore ? Number(res.avgScore).toFixed(2) : '-'
+        this.avgScore = res.avgScore
       } finally {
         await timespanUtil.delayLoading()
         this.loading = false

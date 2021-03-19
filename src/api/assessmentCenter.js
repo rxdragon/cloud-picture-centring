@@ -14,7 +14,7 @@ import { getAvg } from '@/utils/index.js'
 /**
  * @description 获取请求地址
  * @param {*} type GRADE_LABEL_TYPE
- * @returns 
+ * @returns
  */
 function getUrl (type) {
   return type === GRADE_LABEL_TYPE.CLOUD ? '/project_cloud/checkPool' : '/project_cloud/showPicPool'
@@ -329,7 +329,7 @@ export function getCloudScoreByGroup (params, searchRole, searchType) {
     const group = res.group.map(g => {
       return {
         ...g,
-        count: g.totalScore
+        count: g.totalScore ? Number(g.totalScore).toFixed(2) : 0
       }
     })
 
