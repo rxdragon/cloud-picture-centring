@@ -301,18 +301,27 @@ export function getPhotographerOrgList () {
 
 /**
  * @description 获取云学院修图组分数统计(柱状图)
+ * @param searchRole 角色： 运营 or组长
+ * @param searchType 类型： 云端 or 修修兽
  * @method POST
  * @returns {Array} 标记数据
  * @author nx 2020/07/27
  * @version @version 2.24.0
  */
-export function getCloudScoreByGroup (params, searchRole) {
+export function getCloudScoreByGroup (params, searchRole, searchType) {
   const urlMap = {
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudScoreByGroup',
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudScoreByGroup',
+    [CLOUD_ROLE.OPERATE]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getCloudScoreByGroup', // 运营-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getCloudScoreByGroup', // 运营-修修兽
+    },
+    [CLOUD_ROLE.GROUP_LEADER]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/retouchLeader/getCloudScoreByGroup', // 组长-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/retouchLeader/getShowPicScoreByGroup', // 组长 -修修兽
+    }
   }
+  const url = urlMap[searchRole][searchType]
   return axios({
-    url: urlMap[searchRole],
+    url,
     method: 'POST',
     data: params
   }).then(res => {
@@ -332,23 +341,31 @@ export function getCloudScoreByGroup (params, searchRole) {
 }
 
 /**
- * @description 获取云学院修图组分数统计(柱状图)， 这个是按照问题类型分组的
+ * @description 获取修图组分数统计(柱状图)， 这个是按照问题类型分组的
  * @method POST
+ * @param searchRole 角色： 运营 or组长
+ * @param searchType 类型： 云端 or 修修兽
  * @returns {Array} 标记数据
  * @author nx 2020/07/27
  * @version @version 2.24.0
  */
-export function getCloudProblemByGroup (params, searchRole) {
+export function getCloudProblemByGroup (params, searchRole, searchType) {
   const urlMap = {
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudProblemByGroup',
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudProblemByGroup',
+    [CLOUD_ROLE.OPERATE]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getCloudProblemByGroup', // 运营-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getCloudProblemByGroup', // 运营-修修兽
+    },
+    [CLOUD_ROLE.GROUP_LEADER]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/retouchLeader/getCloudProblemByGroup', // 组长-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/retouchLeader/getShowPicProblemByGroup', // 组长 -修修兽
+    }
   }
+  const url = urlMap[searchRole][searchType]
   return axios({
-    url: urlMap[searchRole],
+    url: url,
     method: 'POST',
     data: params
   }).then(res => {
-    // if (!(res.group && res.group.length)) return []
     const group = res.group || []
     // 按照小问题.中等问题分组
     const config = Object.keys(CNLevelToType)
@@ -379,17 +396,26 @@ export function getCloudProblemByGroup (params, searchRole) {
 /**
  * @description 获取个人抽查平均分
  * @method GET
+ * @param searchRole 角色： 运营 or 组长
+ * @param searchType 类型： 云端 or 修修兽
  * @returns {Obeject} 结果
  * @author cf 2020/07/27
  * @version @version 2.10.0
  */
-export function getCheckPoolSubQuota (params, type) {
-  const roleUrl = {
-    [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolSubQuota',
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolSubQuota'
+export function getCheckPoolSubQuota (params, searchRole, searchType) {
+  const urlMap = {
+    [CLOUD_ROLE.OPERATE]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/operator/getCheckPoolSubQuota', // 运营-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/operator/getShowPicPoolSubQuota' // 运营-修修兽
+    },
+    [CLOUD_ROLE.CREW]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/retoucher/getCheckPoolSubQuota', // 修图师-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/retoucher/getShowPicPoolSubQuota' // 修图师-修修兽
+    }
   }
+  const url = urlMap[searchRole][searchType]
   return axios({
-    url: roleUrl[type],
+    url,
     method: 'POST',
     data: params
   }).then(res => {

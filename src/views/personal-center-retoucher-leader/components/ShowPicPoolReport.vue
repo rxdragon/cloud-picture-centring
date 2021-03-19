@@ -1,6 +1,6 @@
 <template>
   <div class="assessment-report module-panel">
-    <group-cloud-report :searchRole="SEARCH_ROLE.GROUP_LEADER" :search-type="GRADE_LABEL_TYPE.CLOUD"/>
+    <group-cloud-report :searchRole="SEARCH_ROLE.GROUP_LEADER" :search-type="GRADE_LABEL_TYPE.SHOW_PIC"/>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import GroupCloudReport from '@/components/CloudReport/GroupCloudReport'
 import { SEARCH_ROLE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 export default {
-  name: 'AssessmentReport',
+  name: 'ShowPicPoolReport',
   components: { GroupCloudReport},
   data () {
     return {

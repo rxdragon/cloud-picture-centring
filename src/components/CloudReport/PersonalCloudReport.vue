@@ -19,7 +19,11 @@
       <el-col :span="8" :xl="4" v-if="searchRole === CLOUD_ROLE.OPERATE">
         <div class="product-box search-item">
           <span>产品</span>
-          <ProductSelect :show-pic-product="false" v-model="productValue" />
+          <ProductSelect
+            :show-pic-product="searchType === GRADE_LABEL_TYPE.SHOW_PIC"
+            :himo-product="searchType === GRADE_LABEL_TYPE.CLOUD"
+            v-model="productValue"
+          />
         </div>
       </el-col>
       <el-col :span="2" :xl="4">
@@ -51,7 +55,7 @@ import StaffSelect from '@SelectBox/StaffSelect/index'
 import NoData from '@/components/NoData'
 import ChartSunburst from './components/ChartSunburst'
 import ProductSelect from '@SelectBox/ProductSelect/index'
-import { CLOUD_ROLE, gradeConfigurationToCN } from '@/utils/enumerate'
+import { CLOUD_ROLE, gradeConfigurationToCN, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 import * as TimespanUtil from '@/utils/timespan'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 
@@ -59,13 +63,20 @@ export default {
   name: 'personal-cloud-report',
   components: { DatePicker, StaffSelect, ProductSelect, ChartSunburst, NoData },
   props: {
+    // 搜索的角色类型， 组长或者运营
     searchRole: {
+      type: String,
+      require: true
+    },
+    // 云学院or修修兽
+    searchType: {
       type: String,
       require: true
     }
   },
   data () {
     return {
+      GRADE_LABEL_TYPE,
       gradeConfigurationToCN,
       loading: false,
       timeSpan: null,
@@ -98,7 +109,7 @@ export default {
         }
         if (this.staffIds.length) req.retoucherIds = this.staffIds
         if (this.productValue.length) req.productIds = this.productValue
-        const res = await AssessmentCenterApi.getCheckPoolSubQuota(req, this.searchRole)
+        const res = await AssessmentCenterApi.getCheckPoolSubQuota(req, this.searchRole, this.searchType)
         this.avgScore = res.avgScore || '-'
         this.gradeConfigurations = res.data
       } finally {
