@@ -146,7 +146,7 @@ export default {
     showStorePartReworkReason: { type: Boolean, default: true },
     showLabelInfo: { type: Boolean }, // 显示标记信息
     returnQualityType: { type: String }, // 被退回标记
-    checkPoolScore: { type: Number } // 评分
+    checkPoolScore: { type: [Number, String] } // 评分
   },
   data () {
     return {

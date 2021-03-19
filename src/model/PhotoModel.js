@@ -131,7 +131,8 @@ export default class PhotoModel {
 
   // 获取云学院分数
   getCheckPoolTags () {
-    this.checkPoolScore = _.get(this.baseData, 'tags.values.score') || ''
+    const checkPoolScore = String(_.get(this.baseData, 'tags.values.score'))
+    this.checkPoolScore = isNaN(checkPoolScore) ? '' : checkPoolScore
     this.checkEvaluator = _.get(this.baseData, 'tags.values.evaluator') || '-'
     const checkPoolTags = _.get(this.baseData, 'tags.values.check_pool_tags') || []
     const commitInfo = PhotoTool.handleCommitInfo({}, checkPoolTags)

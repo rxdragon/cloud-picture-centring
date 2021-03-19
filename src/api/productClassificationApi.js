@@ -104,8 +104,8 @@ export async function getClassificationProductTree (params) {
 
       const childrenData = {
         label: childrenItem.name,
-        value: childrenItem.id,
-        parentId: childrenItem.parent_id,
+        value: `c-${childrenItem.id}`,
+        parentId: `c-${childrenItem.parent_id}`,
         children: filterProductList,
         productCount: productList.length
       }
@@ -115,8 +115,8 @@ export async function getClassificationProductTree (params) {
 
     const parentData = {
       label: parentItem.name,
-      value: parentItem.id,
-      parentId: parentItem.parent_id,
+      value: `p-${parentItem.id}`,
+      parentId: `p-${parentItem.parent_id}`,
       children: filterEmtpyProduct
     }
     return parentData

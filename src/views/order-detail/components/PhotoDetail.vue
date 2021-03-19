@@ -110,7 +110,7 @@ export default {
     },
     // 是否云学院打分
     hasCheckTags () {
-      const hasEvaluatorScore = _.get(this.photoData, 'tags.values.score')
+      const hasEvaluatorScore = this.photoData.checkPoolScore
       return hasEvaluatorScore
     },
   },
