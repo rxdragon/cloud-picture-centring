@@ -145,9 +145,8 @@ export default {
   },
   data () {
     return {
-      routeName: this.$route.name, // 路由名字
-      // 清空评分
-      showEmptyDialog: false,
+      routeName: this.$route.name, // 路由名字      
+      showEmptyDialog: false, // 清空评分
       emptyPeople: [],
       tabList: [],
       tabKey: '',
@@ -362,7 +361,11 @@ export default {
       }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const req = { name: currentTab.editName, id: currentTab.id, gradeType: this.gradeType }
+        const req = {
+          name: currentTab.editName,
+          id: currentTab.id,
+          gradeType: this.gradeType
+        }
         await GradeConfigurationApi.editScoreTypeName(req)
         currentTab.name = currentTab.editName
         this.cancelEditSwitchTab()
@@ -371,14 +374,16 @@ export default {
       }
     },
     /**
-     * @description 确认清除
+     * @description 确认清除评分
      */
     async setEmpty () {
-      const params = {}
-      if (this.emptyPeople.length > 0) {
-        params.staffIds = this.emptyPeople
+      const req = {
+        axiosType: this.gradeType
       }
-      const msg = await GradeConfigurationApi.emptyCheckPoolByStaffId(params)
+      if (this.emptyPeople.length > 0) {
+        req.staffIds = this.emptyPeople
+      }
+      const msg = await GradeConfigurationApi.emptyCheckPoolByStaffId(req)
       if (msg) {
         this.$newMessage.success('清除成功')
         this.emptyPeople = []

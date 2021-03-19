@@ -36,8 +36,9 @@ export function getTakeStaffList () {
  * @version @version 2.8.0
  */
 export function emptyCheckPoolByStaffId (params) {
+  const url = getUrl(params.axiosType) + '/emptyCheckPoolByStaffId'
   return axios({
-    url: `/project_cloud/checkPool/emptyCheckPoolByStaffId?${params}`,
+    url,
     method: 'POST',
     data: params,
   })

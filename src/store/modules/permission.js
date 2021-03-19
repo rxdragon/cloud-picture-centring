@@ -98,6 +98,7 @@ const mutations = {
 
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
+    // TODO 增加修修兽权限
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
     // 自动修图
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
