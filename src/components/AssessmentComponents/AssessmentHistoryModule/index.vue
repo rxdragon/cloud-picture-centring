@@ -179,7 +179,7 @@ export default {
       if (this.streamNum) req.streamNum = this.streamNum
       if (this.scopeData) {
         if (this.scopeData[0]) { req.minScore = this.scopeData[0] }
-        if (this.scopeData[1]) { req.minScore = this.scopeData[1] }
+        if (this.scopeData[1]) { req.maxScore = this.scopeData[1] }
       }
       this.cacheTimeSpan = this.timeSpan
       return req
@@ -199,8 +199,6 @@ export default {
         const data = await AssessmentCenter.getSearchHistory(req)
         this.photoList = data.list
         this.pager.total = data.total
-      } catch (error) {
-        console.error(error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
