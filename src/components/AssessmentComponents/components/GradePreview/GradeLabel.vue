@@ -30,6 +30,7 @@ import LoadingTea from '@/components/LoadingTea'
 export default {
   name: 'GradeLabel',
   components: { LabelModule, LoadingTea },
+  inject: ['cloudType'],
   data () {
     return {
       activeNames: [],
@@ -96,7 +97,8 @@ export default {
     async getAllLabel () {
       try {
         this.loading = true
-        const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList()
+        const req = { axiosType: this.cloudType }
+        const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList(req)
         await this.$delayLoading()
         this.labelClass = labelClass
         this.activeNames = [String(_.get(labelClass[0], 'id'))]

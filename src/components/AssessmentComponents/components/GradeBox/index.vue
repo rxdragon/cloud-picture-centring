@@ -57,7 +57,11 @@
           </div>
           <div class="reference-photo panel-row" v-if="photoInfoData.streamInfo.referencePhoto">
             <span class="order-info-title">参考图：</span>
-            <el-image fit="contain" :src="photoInfoData.streamInfo.referencePhoto"></el-image>
+            <el-image
+              fit="contain"
+              :src="photoInfoData.streamInfo.referencePhoto"
+              :preview-src-list="[photoInfoData.streamInfo.referencePhoto]"
+            />
           </div>
         </div>
       </div>
@@ -118,6 +122,7 @@ import { PHOTO_VERSION } from '@/utils/enumerate'
 export default {
   name: 'GradeBox',
   components: { PhotoList, GradePreview },
+  inject: ['cloudType'],
   props: {
     photoInfo: { type: Object, default: () => ({}) } // 照片数据
   },
@@ -152,7 +157,8 @@ export default {
           photoId: this.photoInfo.photo_id,
           uuid: this.photoInfo._id,
           picUrl: sendData.markPhotoImg,
-          tags: sendData.lableId
+          tags: sendData.lableId,
+          axiosType: this.cloudType
         }
         await AssessmentCenter.updateCommitHistory(req)
         this.$newMessage.success('重新评价成功')

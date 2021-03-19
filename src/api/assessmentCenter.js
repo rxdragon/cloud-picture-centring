@@ -11,6 +11,15 @@ import * as PhotoTool from '@/utils/photoTool.js'
 import { GRADE_LABEL_TYPE, CLOUD_ROLE, CNLevelToType } from '@/utils/enumerate'
 import { getAvg } from '@/utils/index.js'
 
+/**
+ * @description 获取请求地址
+ * @param {*} type GRADE_LABEL_TYPE
+ * @returns 
+ */
+function getUrl (type) {
+  return type === GRADE_LABEL_TYPE.CLOUD ? '/project_cloud/checkPool' : '/project_cloud/showPicPool'
+}
+
 export const GRADE_LEVEL = {
   SMALL: 'small',
   MIDDLE: 'middle',
@@ -30,13 +39,9 @@ export const gradeLevelToCN = {
  * @description 获取今日抽片指标
  */
 export function getStatistics (params) {
-  const axiosUrls = {
-    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getStatistics',
-    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getStatistics'
-  }
-
+  const url = getUrl(params.axiosType) + '/getStatistics'
   return axios({
-    url: axiosUrls[params.axiosType],
+    url,
     method: 'GET'
   }).then(msg => {
     const data = msg
@@ -51,12 +56,9 @@ export function getStatistics (params) {
  * @param {*} params
  */
 export function takePhoto (params) {
-  const axiosUrls = {
-    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/takePhoto',
-    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/takePhoto'
-  }
+  const url = getUrl(params.axiosType) + '/takePhoto'
   return axios({
-    url: axiosUrls[params.axiosType],
+    url,
     method: 'POST',
     data: params
   }).then(msg => {
@@ -69,12 +71,9 @@ export function takePhoto (params) {
  * @param {*} params
  */
 export function getHaveCheckResult (params) {
-  const axiosUrls = {
-    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getHaveCheckResult',
-    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getHaveCheckResult'
-  }
+  const url = getUrl(params.axiosType) + '/getHaveCheckResult'
   return axios({
-    url: axiosUrls[params.axiosType],
+    url,
     method: 'GET'
   })
 }
@@ -84,12 +83,9 @@ export function getHaveCheckResult (params) {
  * @param {*} params
  */
 export function getSpotCheckResult (params) {
-  const axiosUrls = {
-    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getSpotCheckResult',
-    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getSpotCheckResult'
-  }
+  const url = getUrl(params.axiosType) + '/getSpotCheckResult'
   return axios({
-    url: axiosUrls[params.axiosType],
+    url,
     method: 'GET',
     params
   }).then(msg => {
@@ -135,12 +131,9 @@ export function getSpotCheckResult (params) {
  * @param {*} params
  */
 export function commitHistory (params) {
-  const axiosUrls = {
-    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/commitHistory',
-    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/commitHistory'
-  }
+  const url = getUrl(params.axiosType) + '/commitHistory'
   return axios({
-    url: axiosUrls[params.axiosType],
+    url: url,
     method: 'POST',
     data: params
   })
@@ -151,13 +144,9 @@ export function commitHistory (params) {
  * @param {*} params
  */
 export function getSearchHistory (params) {
-  const axiosUrls = {
-    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getSearchHistory',
-    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getSearchHistory'
-  }
-
+  const url = getUrl(params.axiosType) + '/getSearchHistory'
   return axios({
-    url: axiosUrls[params.axiosType],
+    url,
     method: 'POST',
     data: params
   }).then(msg => {
@@ -199,13 +188,13 @@ export function getSearchHistory (params) {
  * @description 获取评分配置标签
  * @method GET
  * @returns {Array} 标记数据
- * @author cf 2020/04/10
+ * @author cf 2021/03/19
  * @version @version 2.24
  */
-export async function getScoreConfigList () {
-  // TODO 更改配置
+export async function getScoreConfigList (params) {
+  const url = getUrl(params.axiosType) + '/getScoreConfig'
   const res = await axios({
-    url: '/project_cloud/checkPool/getScoreConfig',
+    url,
     method: 'GET'
   })
   const chainLine = []
@@ -249,55 +238,13 @@ export async function getScoreConfigList () {
 }
 
 /**
- * @description 获取问题标签筛选框
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/04/10
- * @version @version 2.4.0
- */
-export function getIssueList (params) {
-  return axios({
-    url: '/project_cloud/checkPool/getScoreConfigList',
-    method: 'GET',
-    params
-  }).then(msg => {
-    const createData = msg.map(item => {
-      item.children = item.score_config.map(configItem => {
-        // 特殊处理没有权限的参数
-        const child = configItem.child_with_zero || configItem.child
-        configItem.children = child.map(chilItem => {
-          return {
-            value: chilItem.id,
-            label: chilItem.name
-          }
-        })
-        return {
-          value: configItem.id,
-          label: configItem.name,
-          children: configItem.children
-        }
-      })
-      return {
-        value: item.id,
-        label: item.name,
-        children: item.children
-      }
-    })
-    return createData
-  })
-}
-
-/**
  * @description 获取修改分数历史记录
  * @param {*} params
  */
 export function getUpdateHistoryLog (params) {
-  const axiosUrls = {
-    [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getUpdateHistoryLog',
-    [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getUpdateHistoryLog'
-  }
+  const url = getUrl(params.axiosType) + '/getUpdateHistoryLog'
   return axios({
-    url: axiosUrls[params.axiosType],
+    url,
     method: 'POST',
     data: params
   }).then(msg => {
@@ -322,15 +269,17 @@ export function getUpdateHistoryLog (params) {
 }
 
 /**
- * @description 重新评价愿学院抽片
+ * @description 重新评价云学院抽片或修修兽抽片
  * @method PUT
  * @returns {Boolean}
- * @author cf 2020/05/20
- * @version @version 2.6.0
+ * @author cf 2021/03/19
+ * @version @version 2.24.0
  */
 export function updateCommitHistory (params) {
+  const url = getUrl(params.axiosType) + '/updateCommitHistory'
+
   return axios({
-    url: '/project_cloud/checkPool/updateCommitHistory',
+    url,
     method: 'POST',
     data: params
   })
