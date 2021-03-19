@@ -13,16 +13,30 @@
       :class="{'no-border': activeName === SEARCH_TYPE.NORMAL }"
     >
       <!-- 搜索内容 -->
-      <el-row class="search-box">
+      <el-row class="search-box" :gutter="20">
         <!-- 修图完成时间 -->
-        <el-col :span="8" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="date-search search-item">
-            <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成时间' : '退单时间' }}</span>
+            <span>{{ activeName === SEARCH_TYPE.NORMAL ? '修图完成' : '退单时间' }}</span>
             <date-picker v-model="timeSpan" />
           </div>
         </el-col>
+        <!-- 云学院标签 -->
+        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
+          <div class="search-item">
+            <span>云学院标签</span>
+            <issue-label-select :disabled="canSelectTag('cloudIssueValue')" v-model="cloudIssueValue" :type="GRADE_LABEL_TYPE.CLOUD"/>
+          </div>
+        </el-col>
+        <!-- 修修兽标签 -->
+        <el-col :span="8" :xl="8" v-if="activeName === SEARCH_TYPE.NORMAL">
+          <div class="search-item">
+            <span>修修兽标签</span>
+            <issue-label-select :disabled="canSelectTag('showIssueValue')" v-model="showIssueValue" :type="GRADE_LABEL_TYPE.SHOW_PIC"/>
+          </div>
+        </el-col>
         <!-- 流水号 -->
-        <el-col :span="8" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="stream-search search-item">
             <span>流水号</span>
             <el-input
@@ -34,47 +48,34 @@
           </div>
         </el-col>
         <!-- 门店退回 -->
-        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+        <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="audit-box search-item">
             <span>门店退回</span>
-            <return-select v-model="isReturn" />
+            <ReturnStateSelect v-model="isReturn" />
           </div>
         </el-col>
         <!-- 门店评价 -->
-        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+        <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="spot-check-box search-item">
             <span>门店评价</span>
             <evaluate-select v-model="isGood" />
           </div>
         </el-col>
         <!-- 退单类型 -->
-        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 6" :xl="6">
+        <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 6" :xl="8">
           <div class="audit-box search-item">
             <span>退单类型</span>
             <quality-select v-model="returnType" />
           </div>
         </el-col>
-        <!-- 云学院抽查类型 -->
-        <el-col :span="8" :xl="6" v-show="activeName === SEARCH_TYPE.NORMAL">
+        <!-- 抽查类型 -->
+        <el-col :span="8" :xl="8" v-show="activeName === SEARCH_TYPE.NORMAL">
           <div class="spot-check-box search-item">
             <span>抽查类型</span>
-            <cloud-spot-grass-select v-model="cloudEvaluateType" clearable />
+            <SpotEvaluateTypeSelect v-model="cloudEvaluateType" clearable />
           </div>
         </el-col>
-        <!-- 云学院问题标签 -->
-        <el-col :span="8" :xl="6" v-if="activeName === SEARCH_TYPE.NORMAL">
-          <div class="cloud-issue-box search-item">
-            <span>问题标签</span>
-            <issue-label-select ref="issueLabelSelect" v-model="issueValue" />
-          </div>
-        </el-col>
-        <!-- 是否云学院抽查 -->
-        <el-col :span="8" :xl="4" v-show="activeName === SEARCH_TYPE.NORMAL">
-          <div class="spot-check-box search-item">
-            <span>云学院抽查</span>
-            <cloud-spot v-model="cloudSpot" clearable />
-          </div>
-        </el-col>
+
         <!-- 查询按钮 -->
         <el-col :span="activeName === SEARCH_TYPE.NORMAL ? 8 : 2" :xl="2">
           <div class="search-button-box search-item">
@@ -82,7 +83,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
       <!-- 表格内容 -->
       <div class="table-module">
         <el-table :data="tableData" style="width: 100%;" @expand-change="onTableRowChange">
@@ -91,7 +92,7 @@
               <div class="photo-module" v-loading="row.loading">
                 <div
                   class="photo-list"
-                  v-if="(row.isStoreReturned || row.isCloudEvaluation) && row.listShowPhotoList.length"
+                  v-if="(row.isStoreReturned || row.evaluationType) && row.listShowPhotoList.length"
                 >
                   <template v-for="(photoItem, photoIndex) in row.listShowPhotoList">
                     <div class="photo-chunk" :key="photoIndex">
@@ -100,6 +101,7 @@
                         :src="photoItem.completePhoto.path"
                         :return-quality-type="photoItem.returnQualityType"
                         :show-special-effects="false"
+                        :check-pool-score="photoItem.checkPoolScore"
                         :show-store-part-rework-reason="false"
                         contain-photo
                         show-label-info
@@ -189,9 +191,10 @@
               </el-popover>
             </template>
           </el-table-column>
-          <el-table-column label="云学院抽查" width="100">
+          <!-- 抽查类型 -->
+          <el-table-column label="抽查类型" width="100">
             <template slot-scope="{ row }">
-              <div :class="row.isCloudEvaluation && 'spot-class'">{{ row.isCloudEvaluation ? '是' : '否' }}</div>
+              <div>{{ row.evaluationType || '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column label="门店评价" width="120">
@@ -225,17 +228,16 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
-import ReturnSelect from '@SelectBox/ReturnStateSelect'
+import ReturnStateSelect from '@SelectBox/ReturnStateSelect'
 import QualitySelect from '@SelectBox/QualitySelect'
 import EvaluateSelect from '@SelectBox/EvaluateSelect'
-import CloudSpot from '@SelectBox/CloudSpot'
 import IssueLabelSelect from '@SelectBox/IssueLabelSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
-import CloudSpotGrassSelect from '@/components/CloudSpotGrassSelect'
+import SpotEvaluateTypeSelect from '@/components/SpotEvaluateTypeSelect'
 import PhotoBox from '@/components/PhotoBox'
 
 import { joinTimeSpan } from '@/utils/timespan.js'
-import { SearchType } from '@/utils/enumerate'
+import { SearchType, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import * as Commonality from '@/api/commonality.js'
@@ -247,10 +249,11 @@ const SEARCH_TYPE = {
 
 export default {
   name: 'RetouchHistory',
-  components: { DatePicker, ReturnSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, CloudSpot, CloudSpotGrassSelect, PhotoBox },
+  components: { DatePicker, ReturnStateSelect, EvaluateSelect, ShowEvaluate, QualitySelect, IssueLabelSelect, SpotEvaluateTypeSelect, PhotoBox },
   data () {
     return {
       SEARCH_TYPE,
+      GRADE_LABEL_TYPE,
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       streamNum: '', // 流水号
@@ -261,7 +264,8 @@ export default {
       returnType: '', // 退单类型
       cloudSpot: '', // 云学院抽查
       cloudEvaluateType: '', // 云学院种草类型
-      issueValue: [], // 云学院问题标签
+      cloudIssueValue: [], // 云学院问题标签
+      showIssueValue: [], // 云学院问题标签
       activeName: SEARCH_TYPE.NORMAL, // 标签显示类型
       pager: {
         page: 1,
@@ -322,6 +326,16 @@ export default {
   },
   methods: {
     /**
+     * 云学院标签和修修兽标签互斥
+     */
+    canSelectTag (key) {
+      const mutuallyTypes = ['showIssueValue', 'cloudIssueValue']
+      const has = (type) => {
+        return Array.isArray(this[type]) ? Boolean(this[type].length) : Boolean(this[type])
+      }
+      return mutuallyTypes.some(type => type !== key && has(type))
+    },
+    /**
      * @description 重制条件
      */
     resetSearchParm (notChangeTime) {
@@ -334,7 +348,8 @@ export default {
       this.returnType = ''
       this.cloudSpot = ''
       this.cloudEvaluateType = ''
-      this.issueValue = []
+      this.cloudIssueValue = []
+      this.showIssueValue = []
     },
     /**
      * @description 变更代码
@@ -375,6 +390,7 @@ export default {
     /**
      * @description 获取历史列表
      * @param 页码 如果通过按搜索框搜索,传输1 到第一页
+     * 云学院和修修兽公用一个showTags入餐， 通过type区分
      */
     async getRetouchList () {
       try {
@@ -388,12 +404,14 @@ export default {
           reqData.endAt = joinTimeSpan(this.timeSpan[1], 1)
         }
         if (typeof this.cloudSpot === 'boolean') { reqData.cloudEvaluation = this.cloudSpot }
-        if (this.issueValue.length) { reqData.cloudTags = this.issueValue }
         if (this.isReturn) { reqData.isReturn = this.isReturn === 'isReturn' }
         if (this.isGood !== 'all' ) { reqData.evaluate = this.isGood ? 'good' : 'bad' }
         if (this.returnType) { reqData.storeReworkType = this.returnType }
         if (this.streamNum) { reqData.streamNum = this.streamNum }
         if (this.cloudEvaluateType) { reqData.cloudEvaluateType = this.cloudEvaluateType }
+        if (this.cloudIssueValue.length || this.showIssueValue.length) {
+          reqData.showTags = this.cloudIssueValue.length ? this.cloudIssueValue : this.showIssueValue
+        }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await RetoucherCenter.getRetouchQuotaList(reqData)
         this.pager.total = data.total
@@ -440,44 +458,14 @@ export default {
     margin-right: 6px;
   }
 
+  .search-item {
+    & > span {
+      min-width: 70px;
+    }
+  }
+
   .history-main {
     margin-top: 0;
-
-    .search-box {
-      flex-wrap: wrap;
-
-      .search-item {
-        margin-right: 0;
-        margin-bottom: 20px;
-
-        & span {
-          display: inline-block;
-          flex-shrink: 0;
-          width: 98px;
-          text-align: right;
-        }
-
-        & /deep/ .el-range-editor.el-input__inner {
-          width: 100% !important;
-        }
-
-        & /deep/ .date-picker,
-        & /deep/ .issue-label-select,
-        & /deep/ .evaluate-select,
-        & /deep/ .cloud-spot-grass-select,
-        & /deep/ .quality-select,
-        & /deep/ .el-select,
-        & /deep/ .return-select,
-        & /deep/ .cloud-spot,
-        & /deep/ .el-cascader {
-          width: 100%;
-        }
-      }
-
-      .search-button-box {
-        justify-content: flex-end;
-      }
-    }
 
     .table-module {
       margin-top: 0;

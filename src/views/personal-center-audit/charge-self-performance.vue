@@ -6,20 +6,25 @@
     <!-- 小蜜蜂 -->
     <div class="module-panel apis-florea" v-loading="apisLoading">
       <div class="panel-title">小蜜蜂</div>
-      <div class="search-box">
-        <div class="search-item">
-          <span>查询时间</span>
-          <el-date-picker
-            v-model="yearValue"
-            type="year"
-            value-format="yyyy"
-            placeholder="选择年"
-          />
-        </div>
-        <div class="search-item">
-          <el-button type="primary" @click="getApisFlorea">查询</el-button>
-        </div>
-      </div>
+      <el-row class="search-box" :gutter="20">
+        <el-col :span="6" :xl="4">
+          <div class="search-item">
+            <span>查询时间</span>
+            <el-date-picker
+              v-model="yearValue"
+              type="year"
+              value-format="yyyy"
+              placeholder="选择年"
+            />
+          </div>
+        </el-col>
+        <el-col :span="8" :xl="4">
+          <div class="search-item">
+            <el-button type="primary" @click="getApisFlorea">查询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <div class="apis-info">
         <el-row class="info-box">
           <el-col
@@ -37,20 +42,25 @@
     <!-- 月度绩效 -->
     <div class="module-panel monthly-performance" v-loading="performanceLoading">
       <div class="panel-title">月度绩效</div>
-      <div class="search-box">
-        <div class="search-item">
-          <span>查询时间</span>
-          <el-date-picker
-            v-model="timeSpan"
-            type="month"
-            value-format="yyyyMM"
-            placeholder="选择月"
-          />
-        </div>
-        <div class="search-item">
-          <el-button type="primary" @click="getPerformanceInfo">查 询</el-button>
-        </div>
-      </div>
+      <el-row class="search-box" :gutter="20">
+        <el-col :span="6" :xl="4">
+          <div class="search-item">
+            <span>查询时间</span>
+            <el-date-picker
+              v-model="timeSpan"
+              type="month"
+              value-format="yyyyMM"
+              placeholder="选择月"
+            />
+          </div>
+        </el-col>
+        <el-col :span="6" :xl="4">
+          <div class="search-item">
+            <el-button type="primary" @click="getPerformanceInfo">查 询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <div class="performance-box">
         <el-row class="info-box">
           <el-col :span="6" class="info-item">

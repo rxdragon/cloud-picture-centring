@@ -15,6 +15,7 @@ import accountManage from './modules/accountManage.js' // 账号管理
 import adminConfiguration from './modules/adminConfiguration.js' // 运营配置
 import adminManage from './modules/adminManage.js' // 运营工作管理
 import assessmentCenter from './modules/assessmentCenter.js' // 评价中心
+import showpicAssessmentCenter from './modules/showpicAssessmentCenter.js' // 评价中心
 import auditCenter from './modules/auditCenter.js' // 审核中心
 import guestPhoto from './modules/guestPhoto.js' // 客片池
 import institutionManage from './modules/institutionManage.js' // 机构管理
@@ -142,6 +143,7 @@ export const asyncRoutes = [
   adminManage,
   adminConfiguration,
   assessmentCenter,
+  showpicAssessmentCenter,
   auditCenter,
   guestPhoto,
   institutionManage,

@@ -10,55 +10,73 @@
     </el-tabs>
     <!-- 列表主要内容 -->
     <div :class="['history-main', 'table-box', tabCurrent === 'first' ? 'no-border' : '']">
-      <div class="search-box">
+      <el-row class="search-box" :gutter="20">
         <!-- 申诉时间 -->
-        <div class="date-search search-item">
-          <span>申诉时间</span>
-          <date-picker v-model="timeSpan" />
-        </div>
+        <el-col :span="8" :xl="4">
+          <div class="date-search search-item">
+            <span>申诉时间</span>
+            <date-picker v-model="timeSpan" />
+          </div>
+        </el-col>
         <!-- 流水号 -->
-        <div class="stream-search search-item">
-          <span>流水号</span>
-          <el-input
-            @keyup.native.enter="searchList(1)"
-            v-model="streamNum"
-            clearable
-            placeholder="请输入流水号"
-          />
-        </div>
+        <el-col :span="8" :xl="4">
+          <div class="stream-search search-item">
+            <span>流水号</span>
+            <el-input
+              @keyup.native.enter="searchList(1)"
+              v-model="streamNum"
+              clearable
+              placeholder="请输入流水号"
+            />
+          </div>
+        </el-col>
         <!-- 修图师 -->
-        <div class="stream-search search-item">
-          <span>修图师</span>
-          <staff-select v-model="staffId" />
-        </div>
+        <el-col :span="8" :xl="4">
+          <div class="stream-search search-item">
+            <span>修图师</span>
+            <staff-select v-model="staffId" />
+          </div>
+        </el-col>
         <!-- 处理状态 -->
-        <div class="audit-box search-item">
-          <span>处理状态</span>
-          <appeal-status-select :options="defaultOptions" v-model="appealStatus" />
-        </div>
+        <el-col :span="6" :xl="4">
+          <div class="audit-box search-item">
+            <span>处理状态</span>
+            <appeal-status-select :options="defaultOptions" v-model="appealStatus" />
+          </div>
+        </el-col>
         <!-- 申诉类型 -->
-        <div class="audit-box search-item">
-          <span>申诉类型</span>
-          <appeal-type-select
-            needAll
-            clearable
-            isMulti
-            v-model="appealType"
-          />
-        </div>
+        <el-col :span="6" :xl="4">
+          <div class="audit-box search-item">
+            <span>申诉类型</span>
+            <appeal-type-select
+              needAll
+              clearable
+              isMulti
+              v-model="appealType"
+            />
+          </div>
+        </el-col>
         <!-- 摄影机构 -->
-        <div class="search-item">
-          <span>摄影机构</span>
-          <institution-select isMulti v-model="psOrganization" institution-class="photographe" />
-        </div>
+        <el-col :span="6" :xl="4">
+          <div class="search-item">
+            <span>摄影机构</span>
+            <institution-select isMulti v-model="psOrganization" institution-class="photographe" />
+          </div>
+        </el-col>
         <!-- 是否为本人 -->
-        <div class="audit-box search-item">
-          <el-checkbox v-model="justMe">仅看本人审核申诉</el-checkbox>
-        </div>
-        <div class="search-button-box search-item">
-          <el-button type="primary" @click="searchList(1)">查询</el-button>
-        </div>
-      </div>
+        <el-col :span="4" :xl="4">
+          <div class="audit-box search-item">
+            <el-checkbox v-model="justMe">仅看本人审核申诉</el-checkbox>
+          </div>
+        </el-col>
+        <!-- 查询 -->
+        <el-col :span="2" :xl="4">
+          <div class="search-button-box search-item">
+            <el-button type="primary" @click="searchList(1)">查询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <div class="table-module">
         <el-table :data="tableData" style="width: 100%;">
           <el-table-column
@@ -122,25 +140,28 @@
           </el-table-column>
           <el-table-column label="操作" width="100">
             <template slot-scope="{ row }">
+              <!-- 初审 -->
               <el-button
-                type="primary"
                 v-if="row.showFirstCheck && row.isSelfFirst && showFirstExamine"
+                type="primary"
                 size="mini"
                 @click="firstCheck(row)"
               >
                 初审
               </el-button>
+              <!-- 复审 -->
               <el-button
-                type="primary"
                 v-if="row.showSecondCheck && row.isSelfSecond && showSecondExamine"
+                type="primary"
                 size="mini"
                 @click="secondCheck(row)"
               >
                 复审
               </el-button>
+              <!-- 查看 -->
               <el-button
-                type="primary"
                 v-if="row.showDetail"
+                type="primary"
                 size="mini"
                 @click="goDetail(row)"
               >
@@ -372,15 +393,6 @@ export default {
 .appeal-handle {
   .history-main {
     margin-top: 0;
-
-    .search-box {
-      flex-wrap: wrap;
-
-      .search-item {
-        margin-right: 30px;
-        margin-bottom: 20px;
-      }
-    }
 
     .table-module {
       .table-title {

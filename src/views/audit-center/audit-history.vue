@@ -3,27 +3,42 @@
     <div class="header">
       <h3>审核历史记录</h3>
     </div>
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="audit-grass-box search-item">
-        <span>审核种拔草</span>
-        <grass-select v-model="auditType" />
-      </div>
-      <div class="audit-box search-item">
-        <span>纠偏</span>
-        <check-grass-select v-model="correcType" />
-      </div>
-      <div class="spot-check-box search-item">
-        <span>抽查种拔草</span>
-        <spot-grass-select v-model="spotCheckType" />
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getReviewList(1)">查 询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 审核时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>审核时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 审核种拔草 -->
+      <el-col :span="4" :xl="4">
+        <div class="audit-grass-box search-item">
+          <span>审核种拔草</span>
+          <grass-select v-model="auditType" />
+        </div>
+      </el-col>
+      <!-- 纠偏 -->
+      <el-col :span="4" :xl="4">
+        <div class="audit-box search-item">
+          <span>纠偏</span>
+          <check-grass-select v-model="correcType" />
+        </div>
+      </el-col>
+      <!-- 抽查种拔草 -->
+      <el-col :span="6" :xl="4">
+        <div class="spot-check-box search-item">
+          <span>抽查种拔草</span>
+          <SpotGrassSelect v-model="spotCheckType" />
+        </div>
+      </el-col>
+      <!-- 查 询 -->
+      <el-col :span="2" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="getReviewList(1)">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
 
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%;">
@@ -213,19 +228,8 @@ export default {
 }
 </script>
 
-<style lang="less">
-
-
-.audit-history {
-  .search-item {
-    margin-right: 16px;
-  }
-
-  .audit-grass-box,
-  .spot-check-box {
-    .el-select {
-      width: 120px;
-    }
-  }
+<style lang="less" scoped>
+.table-box {
+  margin-top: 0;
 }
 </style>

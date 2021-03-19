@@ -55,3 +55,9 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.institution-select {
+  width: 100%;
+}
+</style>

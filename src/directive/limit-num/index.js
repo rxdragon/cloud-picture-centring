@@ -5,7 +5,9 @@ Vue.directive('numberOnly', {
       const reg = /^[0-9]*$/g
       const reg2 = /[0-9]+/g
       const has = !reg.test(event.target.value)
-      el.__vue__.isComposing = false
+      if (el.__vue__) {
+        el.__vue__.isComposing = false
+      }
       if (has) {
         const regArr = reg2.exec(event.target.value)
         const trueText = regArr ? regArr[0] : ''

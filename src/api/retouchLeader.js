@@ -62,7 +62,7 @@ export function getGroupStaffQuotaInfo (params) {
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
     createData.income = income.toFixed(2) // 正常收益
     createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
-    
+
     const storeEvaluateCount = _.get(data, 'storeEvaluate.count') || 0
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, storeEvaluateCount) // 点赞数 / 点赞率
     createData.badEvaluationInfo = getRateInfo(data.badStreamNum, storeEvaluateCount) // 点踩数 / 点踩率

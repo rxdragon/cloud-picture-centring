@@ -455,3 +455,54 @@ export const readToCN = {
   [READ_STATE.UNREAD]: '未读',
   [READ_STATE.READ]: '已读',
 }
+
+
+/* 评分标签分类， 云学院和修修兽 抽片类型
+ * @type {{cloud: string, showPicPool: string}}
+ */
+export const GRADE_LABEL_TYPE = {
+  CLOUD: 'cloud',
+  SHOW_PIC: 'showPic'
+}
+
+/**
+ * @description 云学院评分类型， 加分或者减分
+ */
+export const SCORE_TYPES = {
+  ADD: 'add',
+  DEDUCT: 'deduct'
+}
+
+/**
+ * 评分配置
+ */
+export const GRADE_CONFIGURATION_TYPE = {
+  PULL: 'pull',
+  SMALL: 'small',
+  MIDDLE: 'middle',
+  PLANT: 'plant',
+}
+
+export const gradeConfigurationToCN = {
+  [GRADE_CONFIGURATION_TYPE.SMALL]: '小',
+  [GRADE_CONFIGURATION_TYPE.MIDDLE]: '中',
+  [GRADE_CONFIGURATION_TYPE.PULL]: '拔草',
+  [GRADE_CONFIGURATION_TYPE.PLANT]: '种草'
+}
+
+export const CNLevelToType = {
+  '小': 'small',
+  '中': 'middle',
+  '拔草': 'pull',
+  '种草': 'plant'
+}
+
+/**
+ * 抽查类型
+ */
+export const SPOT_CHECK_MAP = {
+  SHOW_PIC_SPOT: 'show_pic_spot',
+  CHECK_POOL_SPOT: 'check_pool_spot',
+  NOT_SPOT: 'not_spot'
+}
+

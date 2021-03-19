@@ -1,18 +1,28 @@
 <template>
   <div v-loading="loading" class="partner-performance">
-    <div class="search-box">
-      <div class="search-item">
-        <span>审核通过时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-search search-item">
-        <span>云端伙伴</span>
-        <staff-select v-model="staffIds" />
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getRetoucherQuota(1)">查询</el-button>
-      </div>
-    </div>
+    <!-- 搜索框 -->
+    <el-row class="search-box" :gutter="20">
+      <!-- 审核通过时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>审核通过时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 云端伙伴 -->
+      <el-col :span="8" :xl="4">
+        <div class="staff-search search-item">
+          <span>云端伙伴</span>
+          <staff-select v-model="staffIds" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="getRetoucherQuota(1)">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+    
     <div class="table-panel">
       <div class="retouch-order-statistics">
         <div class="panel-title">
@@ -219,31 +229,10 @@ export default {
 }
 
 .partner-performance {
-  .search-box {
-    .button-box {
-      text-align: right;
-    }
-
-    .outsourc-staff-search {
-      .el-input {
-        width: 180px;
-      }
-    }
-
-    .date-picker .el-range-editor.el-input__inner {
-      width: 260px;
-    }
-
-    .el-date-editor .el-range-separator {
-      width: 7%;
-    }
-  }
-
   .table-panel {
     display: flex;
     justify-content: space-between;
     padding: 32px 0;
-    margin-top: 32px;
     border-top: 1px solid #e8e8e8;
     border-bottom: 1px solid #e8e8e8;
 

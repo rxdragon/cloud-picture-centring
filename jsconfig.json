@@ -4,6 +4,7 @@
     "paths": {
         "@/*": ["src/*"],
         "@SelectBox/*": ["src/components/SelectBox/*"],
+        "@AssessmentComponents/*": ["src/components/AssessmentComponents/*"],
         "@electronMain/*": ["src/electronMain/*"]
     }
   },

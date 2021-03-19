@@ -5,15 +5,20 @@
         <div class="header">
           <h3>组员审核报告</h3>
         </div>
-        <div class="search-box">
-          <div class="search-item">
-            <span>时间</span>
-            <date-picker v-model="timeSpan" />
-          </div>
-          <div class="button-box">
-            <el-button type="primary" @click="setTimeSpan">查 询</el-button>
-          </div>
-        </div>
+        <el-row class="search-box" :gutter="20">
+          <el-col :span="8" :xl="4">
+            <div class="search-item">
+              <span>时间</span>
+              <date-picker v-model="timeSpan" />
+            </div>
+          </el-col>
+          <el-col :span="8" :xl="4">
+            <div class="search-item">
+              <el-button type="primary" @click="setTimeSpan">查 询</el-button>
+            </div>
+          </el-col>
+        </el-row>
+
         <div v-for="staffItem in staffList" :key="staffItem.value" class="tabel-content module-panel">
           <div class="tabel-title panel-title">【{{ staffItem.label }}】审核报告</div>
           <report-box :time-span="childrenTimeSpan" :staff-id="staffItem.value" @showDetail="getShowDetailInfo" />
@@ -98,14 +103,14 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .audit-report {
-  .search-box {
-    display: flex;
-  }
-
   .tabel-content {
-    margin-top: 24px;
+    margin-bottom: 24px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
 
     .tabel-title {
       margin-bottom: 20px;

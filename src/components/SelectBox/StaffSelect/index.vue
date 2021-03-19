@@ -71,9 +71,9 @@ export default {
 
 <style lang="less">
 .staff-select {
-  .el-cascader {
-    width: 220px;
+  width: 100%;
 
+  .el-cascader {
     .el-cascader__tags input {
       font-size: 14px;
     }

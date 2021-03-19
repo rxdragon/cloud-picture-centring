@@ -3,14 +3,11 @@
     <div class="title">
       {{ showPhoto.version | toPhotoVerName }}{{ showPhoto.storeReturnCount || '' }}
       <div class="btn-right">
-        <!-- todo 2.14之后后续注释去掉,解决照片问题标记被右边栏覆盖 -->
-        <!-- <i @click="changeRightShow" class="el-icon-view" /> -->
-        <div class="for-todo"></div>
         <button
           id="closeImg"
           type="button"
           class="button-close"
-          @click="closeShowPhoto"
+          @click="closePreview"
         >
           <i class="el-icon-close" />
         </button>
@@ -24,11 +21,60 @@
       class="mode-switch-box"
     />
     <div class="photoBox" v-loading="loading">
+      <!-- 左侧 -->
+      <div class="left-module">
+        <!-- 缩略图 -->
+        <div id="smallImg" v-loading="loading" class="small-img">
+          <div v-show="isShow" class="breviary-photo">
+            <div class="smallPhoto">
+              <div id="img-box" style="position: relative;">
+                <img
+                  ref="smallImg"
+                  :src="showPhoto.src"
+                  alt="缩略图"
+                  @mousemove="handMove"
+                  @mouseover="handOver"
+                  @mouseout="handOut"
+                >
+                <div ref="magnifier_zoom" class="_magnifier_zoom" />
+              </div>
+            </div>
+            <div class="contant">
+              <el-slider :show-tooltip="false" v-model="scaleNum" />
+              <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+              <span class="down-button" @click.stop="downing">下载</span>
+            </div>
+            <div class="mark-show-btn" v-if="!isOriginalMode">
+              <el-button
+                class="tag-btn"
+                id="tagShowBtn"
+                @click="showMarkPhoto"
+                :class="!tagShow && 'tag-show-btn'"
+                type="info"
+              >
+                {{ tagShow ? '隐藏标记' : '显示标记' }}
+              </el-button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 工具 -->
+        <MarkTool
+          v-if="isCloudEvaluate && isSecondCheck && checkResult === CHECK_RESULT_TYPE.ACCEPT"
+          @changeTool="changeDrawType"
+          :canvas-option="canvasOption"
+        />
+
+        <!-- 订单信息 -->
+        <order-info-module v-if="showOrderInfo" :order-info="photoInfo" show-other-note />
+      </div>
+
       <!-- 图片 -->
       <div class="photo-show" ref="photo-show">
         <div
           v-loading="loading"
           class="orginPhoto"
+          ref="photo-show-main"
           @click.stop="zoom"
           :style="photoZoomStyle + (inZoomIn && 'cursor: zoom-out;')"
         >
@@ -39,13 +85,12 @@
             :alt="showPhoto.title"
             @load="loadingPhoto"
           />
-          <fabric-canvas
+          <FabricCanvas
             v-if="showCanvas"
             ref="fabric-canvas"
             :style="photoZoomStyle"
             :option-obj="canvasOption"
             :show-canvas="isFirstPhoto"
-            @cancelDeleteLabel="addDeleteLabel"
             @click.native="zoom"
           />
           <!-- 门店退回显示 -->
@@ -106,7 +151,7 @@
               </div>
             </div>
           </div>
-          <div id="_magnifier_layer" />
+          <div ref="magnifier_layer" id="_magnifier_layer" />
         </div>
         <button
           v-if="photoArray.length !== 1"
@@ -126,88 +171,33 @@
         </button>
       </div>
       <!-- 右边栏 -->
-      <div :class="['photo-mark', photoMarkShow ? 'up' : 'down']">
+      <div class="photo-mark">
         <div class="scroll-box">
-          <!-- 缩略图 -->
-          <div id="smallImg" v-loading="loading" class="small-img">
-            <div v-show="isShow" class="breviary-photo">
-              <div class="smallPhoto">
-                <div id="img-box" style="position: relative;">
-                  <img
-                    ref="compress-img"
-                    :src="showPhoto.src"
-                    alt="缩略图"
-                    @mousemove="handMove"
-                    @mouseover="handOver"
-                    @mouseout="handOut"
-                  >
-                  <div class="_magnifier_zoom" />
-                </div>
-              </div>
-              <div class="contant">
-                <el-slider :show-tooltip="false" v-model="scaleNum" />
-                <span class="scale-box">{{ scaleNum * 4 + 80 }}%</span>
-                <span class="down-button" @click.stop="downing">下载</span>
-              </div>
-              <div class="mark-show-btn" v-if="!isOriginalMode">
-                <el-button
-                  class="tag-btn"
-                  id="tagShowBtn"
-                  @click="showMarkPhoto"
-                  :class="!tagShow && 'tag-show-btn'"
-                  type="info"
-                >
-                  {{ tagShow ? '隐藏标记' : '显示标记' }}
-                </el-button>
-              </div>
-            </div>
-          </div>
-          <order-info-module v-if="showOrderInfo" :order-info="photoInfo" show-other-note />
           <!-- 申诉理由 -->
           <div class="order-label">
-            <div class="label-title">申诉问题</div>
-            <div class="appeal-item">
-              <div class="name">申诉类型：</div>
-              <div>{{ appealInfo.appealTypeName }}</div>
+            <div class="order-header">
+              <div class="panel-title">申诉问题</div>
             </div>
-            <div class="appeal-item">
-              <div class="name">问题描述：</div>
-              <div>{{ photoAppeal.desc }}</div>
-            </div>
-          </div>
-          <!-- 云学院复审时的重评 -->
-          <!-- 种拔草设置 -->
-          <div class="label-top" v-if="labelDataTop.length && showLabelDataTop">
-            <div
-              v-for="(item, index) in labelDataTop"
-              :key="index"
-              :class="[item.isSelect ? 'active' : '', item.class, 'type-tag']"
-              @click="selectTLabelData(item)"
-            >
-              {{ item.name }}
-            </div>
-          </div>
-          <!-- 问题标签 -->
-          <div class="order-label" v-if="labelData.length">
-            <div class="label-title">标签栏</div>
-            <template v-for="(labelClassItem, labelClassIndex) in labelData">
-              <div v-if="labelClassItem.child.length" :key="labelClassIndex" class="label-box">
-                <div class="label-class-title">{{ labelClassItem.name }}</div>
-                <div class="label-content">
-                  <el-tag
-                    v-for="issueItem in labelClassItem.child"
-                    :key="'issue' + issueItem.id"
-                    :class="issueItem.isSelect ? 'active' : ''"
-                    size="medium"
-                    disable-transitions
-                    @click="setLabel(issueItem)"
-                  >
-                    {{ issueItem.name }}
-                  </el-tag>
-                </div>
+            <div class="appeal-info">
+              <div class="appeal-item">
+                <div class="name">申诉类型：</div>
+                <div>{{ appealInfo.appealTypeName }}</div>
               </div>
-            </template>
+              <div class="appeal-item">
+                <div class="name">问题描述：</div>
+                <div>{{ photoAppeal.desc }}</div>
+              </div>
+            </div>
           </div>
+
+          <!-- 云学院复审时的重评 -->
+          <div
+            v-if="isCloudEvaluate && isSecondCheck && checkResult === CHECK_RESULT_TYPE.ACCEPT"
+            class="label-top"
+          >
+            <GradeLabel class="scroll-box" />
+          </div>
+
           <!-- 质量问题类型 -->
           <div class="order-label store-return-reson" v-if="showPhoto.hasStoreReturnTag">
             <div class="label-title">照片整体原因</div>
@@ -246,23 +236,43 @@
               <p class="reason-note">{{ showPhoto.storeReworkNote }}</p>
             </div>
           </div>
+
           <div class="submit-box">
-            <div
-              class="not-refusing"
-              v-if="!showRefuseTextarea && !showAcceptTextarea && !showLabelDataTop"
-            >
+            <div v-if="!checkResult" class="not-refusing">
               <el-button type="danger" @click="showRefuse">审核拒绝</el-button>
               <el-button type="primary" @click="showAccept">审核通过</el-button>
             </div>
-            <!-- 评分问题复审通过操作 -->
-            <div class="refusing" v-if="showLabelDataTop">
-              <el-button type="info" @click="hideAccept">取消</el-button>
+
+            <!-- 抽片问题复审通过操作 -->
+            <div
+              v-if="isCloudEvaluate && isSecondCheck && checkResult === CHECK_RESULT_TYPE.ACCEPT"
+              class="refusing"
+            >
+              <el-button type="info" @click="cancelAccept">取消</el-button>
               <el-button type="primary" @click="saveEvaluateAccept">保存并关闭</el-button>
             </div>
-            <!-- 质量问题和评分问题拒绝操作 -->
+
+            <!-- 质量问题通过或评分问题第一次通过显示 -->
             <div
+              v-if="showAcceptTextarea && checkResult === CHECK_RESULT_TYPE.ACCEPT"
+              class="accepting"
+            >
+              <el-input
+                type="textarea"
+                :rows="4"
+                maxlength="50"
+                placeholder="审核通过备注(非必填), 最多50个字"
+                v-model="acceptTextarea"
+              >
+              </el-input>
+              <el-button type="info" @click="cancelAccept">取消</el-button>
+              <el-button type="primary" @click="saveReworkAccept">保存并关闭</el-button>
+            </div>
+
+            <!-- 审核拒绝拒绝操作 -->
+            <div
+              v-if="showRefuseTextarea && checkResult === CHECK_RESULT_TYPE.REFUSE"
               class="refusing"
-              v-if="showRefuseTextarea && checkResult === 'refuse'"
             >
               <el-input
                 type="textarea"
@@ -275,22 +285,6 @@
               <el-button type="info" @click="hideRefuse">取消</el-button>
               <el-button type="primary" @click="saveRefuse">保存并关闭</el-button>
             </div>
-            <!-- 质量问题和评分问题通过操作 -->
-            <div
-              class="accepting"
-              v-if="showAcceptTextarea && checkResult === 'accept'"
-            >
-              <el-input
-                type="textarea"
-                :rows="4"
-                maxlength="50"
-                placeholder="审核通过备注(非必填), 最多50个字"
-                v-model="acceptTextarea"
-              >
-              </el-input>
-              <el-button type="info" @click="hideAccept">取消</el-button>
-              <el-button type="primary" @click="saveReworkAccept">保存并关闭</el-button>
-            </div>
           </div>
         </div>
       </div>
@@ -300,37 +294,35 @@
 
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
-import OrderInfoModule from '@/views/assessment-center/components/OrderInfoModule'
+import OrderInfoModule from '@AssessmentComponents/components/GradePreview/OrderInfoModule'
 import ModeSwitchBox from './ModeSwitchBox'
-import FabricCanvas from '@/views/assessment-center/components/FabricCanvas.vue'
+import FabricCanvas from '@AssessmentComponents/components/GradePreview/FabricCanvas.vue'
+import GradeLabel from '@AssessmentComponents/components/GradePreview/GradeLabel.vue'
+import MarkTool from '@AssessmentComponents/components/GradePreview/MarkTool.vue'
 
-import * as AssessmentCenter from '@/api/assessmentCenter'
-import * as GradeConfiguration from '@/api/gradeConfiguration'
+import PreviewMix from '@/mixins/preview-mixins'
+import canvasMix from '@AssessmentComponents/components/GradePreview/keyDownEventMix.js'
 
-import { APPEAL_CHECK_STATUS, APPEAL_TYPE, PHOTO_VERSION, PlantIdTypeEnum } from '@/utils/enumerate'
+import { TOOL_TYPE } from '@AssessmentComponents/components/GradePreview/ToolEnumerate.js'
+import { APPEAL_CHECK_STATUS, APPEAL_TYPE, PHOTO_VERSION } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
-let allLabel = null
-let goodWord = []
+// 审核枚举值
+const CHECK_RESULT_TYPE = {
+  REFUSE: 'refuse', // 拒绝
+  ACCEPT: 'accept' // 通过
+}
 
 export default {
   name: 'PreviewPhoto',
-  components: { OrderInfoModule, ModeSwitchBox, FabricCanvas },
+  components: { OrderInfoModule, ModeSwitchBox, FabricCanvas, GradeLabel, MarkTool },
+  mixins: [PreviewMix, canvasMix],
+  provide () {
+    return {
+      judageCanvas: this.createCanvas
+    }
+  },
   props: {
-    configs: {
-      type: Object,
-      default () {
-        return {
-          width: 100,
-          height: 100,
-          maskWidth: 100,
-          maskHeight: 50,
-          maskColor: 'red',
-          maskOpacity: 0.5,
-          scale: 100
-        }
-      }
-    },
     imgarray: {
       type: Array,
       default () {
@@ -351,50 +343,24 @@ export default {
   },
   data () {
     return {
-      propConfigs: this.configs, // 配置信息
-      imgObj: {}, // 图片信息
-      bigImg: {}, // 大图信息
-      mouseMask: {}, // 马克图
-      imgLayer: {}, // 图片预览信息
-      imgRect: {}, // 图片宽度信息
-      scaleNum: 25, // 放大信息
+      APPEAL_TYPE,
+      PHOTO_VERSION,
+      APPEAL_CHECK_STATUS,
+      CHECK_RESULT_TYPE,
       photoIndex: this.orderindex,
-      loading: true,
-      isShow: true, // 小图信息
-      maxObj: {
-        height: '',
-        width: ''
-      },
+      showCanvas: false,
       showImageRect: { // 当前展示图片宽度信息
         width: 0,
         height: 0
       },
       photoArray: [], // 展示数组
-      inZoomIn: false,
-      photoZoomStyle: '',
       showMark: false, // mark图显示
       showStoreReson: false, // 是否显示门店退回标记
-      showRefuseTextarea: false,
-      refuseTextarea: '',
-      showAcceptTextarea: false,
-      acceptTextarea: '',
-      checkResult: '', // 审核结果
-      labelDataTop: [], // 种拔草标签, 选了这个以后才能展示对应的标签数据
-      labelData: [], // 标签数据
-      APPEAL_TYPE,
-      PHOTO_VERSION,
-      APPEAL_CHECK_STATUS,
-      showLabelDataTop: false,
-      showEvaluateSecondAccept: false,
-      showCanvas: false,
-      canvasOption: { // canvas 信息
-        width: 200,
-        height: 200,
-        penColor: '#E34F51',
-        lineWidth: 2,
-        drawType: ''
-      },
-      photoMarkShow: true
+      showRefuseTextarea: false, // 是否显示审核拒绝文本框
+      showAcceptTextarea: false, // 是否显示审核通过框
+      refuseTextarea: '', // 审核拒绝短语
+      acceptTextarea: '', // 审核通过描述
+      checkResult: '', // 审核状态 CHECK_RESULT_TYPE
     }
   },
   computed: {
@@ -434,6 +400,14 @@ export default {
         if (reasonItem.cancel && !reasonItem.isDel) num += 1
       })
       return num
+    },
+    // 是否是第二次审核
+    isSecondCheck () {
+      return this.checkType === APPEAL_CHECK_STATUS.SECOND
+    },
+    // 是否是抽查申述
+    isCloudEvaluate () {
+      return this.appealInfo.appealType === APPEAL_TYPE.EVALUATE
     }
   },
   watch: {
@@ -476,101 +450,12 @@ export default {
       immediate: true
     }
   },
-  mounted () {
-    if (this.appealInfo.appealType === APPEAL_TYPE.EVALUATE && this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审云学院评分时候,要重评
-      this.getLabelData()
-      this.fetchGoodWord()
-    }
-  },
-  beforeDestroy () {
-    document.onkeydown = null
-  },
   methods: {
-    /**
-     * @description 设置标签
-     */
-    setLabel (issueItem) {
-      if (!this.createCanvas()) return false
-      this.$nextTick(() => {
-        this.labelData.forEach(classItem => {
-          const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
-          if (findIssueLabel) {
-            if (!findIssueLabel.isSelect) {
-              this.$refs['fabric-canvas'].createLabel(findIssueLabel)
-              findIssueLabel.isSelect = true
-            } else {
-              this.tagClose(issueItem)
-            }
-          }
-        })
-      })
-    },
     /**
      * @description 标签关闭
      */
     tagClose (tagInfo) {
       this.$refs['fabric-canvas'].deleteLabel(tagInfo)
-    },
-    /**
-     * @description 撤销删除标签
-     */
-    addDeleteLabel (issueItem) {
-      this.labelData.forEach(classItem => {
-        const findIssueLabel = classItem.child.find(issueLabel => issueLabel.id === issueItem.id)
-        if (findIssueLabel) findIssueLabel.isSelect = false
-      })
-    },
-    /**
-     * @description 获取激励词列表
-     */
-    async fetchGoodWord () {
-      const words = await GradeConfiguration.getExcitationDirList()
-      words.forEach(wordsItem => {
-        wordsItem.isSelect = false
-        wordsItem.type = 'goodWord'
-      })
-      goodWord = words
-    },
-    /**
-     * @description 根据种拔草,选择对应的标签
-     */
-    selectTLabelData (selItem) {
-      const { id } = selItem
-      if (id === this.currentId) return
-      this.resetLabelData()
-      this.labelDataTop.forEach((item) => {
-        item.isSelect = item.id === id
-      })
-      this.currentId = id
-      this.labelData = allLabel[id]
-      if (id === 1 && !this.hasPushGoodWord) { // 种草情况下,将激励词推进标签中
-        this.labelData.push({
-          isGoodWord: true, // 区分激励词
-          name: '激励词',
-          child: goodWord
-        })
-        this.hasPushGoodWord = true
-      }
-      this.showCanvas = false
-    },
-    /**
-     * @description 获取所有数据
-     */
-    async getLabelData () {
-      const labelInfo = await AssessmentCenter.getScoreConfigList()
-      this.labelDataTop = labelInfo.typeArr
-      allLabel = labelInfo.allLabel
-    },
-    /**
-     * @description 重制标签
-     */
-    resetLabelData () {
-      this.labelDataTop.forEach(item => { item.isSelect = false })
-      this.labelData.forEach(item => {
-        item.child.forEach(issItem => { issItem.isSelect = false })
-      })
-      this.currentId = ''
-      this.labelData = []
     },
     /**
      * @description 显示标记
@@ -583,53 +468,16 @@ export default {
      * @description 取消加载
      */
     loadingPhoto (e) {
-      this.imgObj = this.$refs['compress-img']
+      this.imgObj = this.$refs['smallImg']
       this.imgBigObj = this.$refs['orgin-img']
       this.showImageRect.width = this.imgBigObj && this.imgBigObj.clientWidth
       this.showImageRect.height = this.imgBigObj && this.imgBigObj.clientHeight
       this.loading = false
     },
     /**
-     * @description 滑块滑动改变值
-     * @param {Number} [放大系数]
-     */
-    formatTooltip (val) {
-      return val + 100
-    },
-    /**
-     * @description 上一张图片
-     */
-    prePhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === 0) {
-        this.photoIndex = this.photoArray.length - 1
-      } else {
-        this.photoIndex--
-      }
-      this.$emit('change', this.photoIndex)
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
-     * @description 下一张图片
-     */
-    nextPhoto () {
-      const beforePath = this.photoArray[this.photoIndex].path
-      if (this.photoIndex === this.photoArray.length - 1) {
-        this.photoIndex = 0
-      } else {
-        this.photoIndex++
-      }
-      this.$emit('change', this.photoIndex)
-      const nextPath = this.photoArray[this.photoIndex].path
-      if (beforePath === nextPath) return
-      this.loading = true
-    },
-    /**
      * @description 关闭图片
      */
-    closeShowPhoto () {
+    closePreview () {
       this.$emit('update:showPreview', false)
     },
     /**
@@ -642,122 +490,6 @@ export default {
       const data = { url, path }
       this.$newMessage.success('已添加一张照片到下载')
       DownIpc.addDownloadFile(data)
-    },
-    /**
-     * @description 放大
-     */
-    zoom (e) {
-      if (this.inZoomIn) {
-        this.photoZoomStyle = ''
-        this.inZoomIn = false
-      } else {
-        const photoShow = this.$refs['photo-show']
-        const imageWidth = photoShow.clientWidth
-        const imageHeight = photoShow.clientHeight
-        const _x = e.pageX
-        const _y = e.pageY - 82
-        const clickX = (_x / imageWidth * 100).toFixed(2) + '%'
-        const clickY = (_y / imageHeight * 100).toFixed(2) + '%'
-        const zoomScale = (this.scaleNum * 4 + 80) / 100
-        this.photoZoomStyle = `transform-origin: ${clickX} ${clickY}; transform: scale(${zoomScale});`
-        this.inZoomIn = true
-      }
-    },
-    /**
-     * @description 判断是否处于放大中
-     */
-    judgeHasZoom (e) {
-      const isOverIn = _.get(this.imgLayer, 'style.width')
-      if (isOverIn) {
-        this.handOver(e)
-      }
-    },
-    /**
-     * @description 鼠标移动
-     */
-    handMove (e) {
-      // 获取在图片的位置
-      const objX = e.clientX - this.imgRect.left
-      const objY = e.clientY - this.imgRect.top
-      // 判断是否超出界限
-      let _maskX = objX - this.mouseMask.offsetHeight / 2
-      let _maskY = objY - this.mouseMask.offsetWidth / 2
-      if (_maskY <= 0) {
-        _maskY = 0
-      }
-      if (_maskY + this.mouseMask.offsetHeight >= this.imgRect.height) {
-        _maskY = this.imgRect.height - this.mouseMask.offsetHeight
-      }
-      if (_maskX <= 0) {
-        _maskX = 0
-      }
-      if (_maskX + this.mouseMask.offsetWidth >= this.imgRect.width) {
-        _maskX = this.imgRect.width - this.mouseMask.offsetWidth
-      }
-      this.mouseMask.style.webkitTransform = `translate3d(${_maskX}px,${_maskY}px,0)`
-      const backgroundX =
-        ((_maskX / this.imgRect.width) *
-        this.propConfigs.width *
-        this.propConfigs.scale) /
-        100
-      const backgroundY =
-        ((_maskY / this.imgRect.height) *
-        this.propConfigs.height *
-        this.propConfigs.scale) /
-        100
-      this.imgLayer.style.backgroundPositionX = `-${backgroundX}px `
-      this.imgLayer.style.backgroundPositionY = `-${backgroundY}px `
-    },
-    /**
-     * @description 鼠标移出
-     */
-    handOut (e) {
-      this.imgLayer.removeAttribute('style')
-      this.mouseMask.removeAttribute('style')
-    },
-    /**
-     * @description 鼠标移进
-     */
-    handOver (e) {
-      // 获取大图尺寸
-      this.imgRect = this.imgObj.getBoundingClientRect()
-      this.imgBigRect = this.imgBigObj.getBoundingClientRect()
-      // 马克图宽度计算系数
-      this.propConfigs.maskWidth =
-        (this.imgRect.width / (this.scaleNum * 4 + 100)) * 100
-      this.propConfigs.maskHeight =
-        this.propConfigs.maskWidth *
-        (this.imgRect.height / this.imgRect.width)
-      // 背景图放大系数
-      this.propConfigs.scale =
-        (this.imgRect.width / this.propConfigs.maskWidth) * 100
-      // 获取大图信息
-      this.bigImg = new Image()
-      this.bigImg.src = this.showPhoto.src
-      this.bigImg.height =
-        (this.bigImg.height * this.propConfigs.scale) / 100
-      this.bigImg.width = (this.bigImg.width * this.propConfigs.scale) / 100
-      // 创建鼠标选择区域
-      this.mouseMask = document.querySelector('._magnifier_zoom')
-      this.mouseMask.style.background = this.propConfigs.maskColor
-      this.mouseMask.style.height = this.propConfigs.maskHeight + 'px'
-      this.mouseMask.style.width = this.propConfigs.maskWidth + 'px'
-      this.mouseMask.style.opacity = this.propConfigs.maskOpacity
-      this.imgObj.parentNode.appendChild(this.mouseMask)
-      // 创建预览框
-      const imgLayer = document.getElementById('_magnifier_layer')
-      const orginImg = document.getElementById('orginImg')
-      this.propConfigs.width = orginImg.width
-      this.propConfigs.height = orginImg.height
-      this.imgLayer = imgLayer
-      const _layerHeight = this.propConfigs.height
-      const _layerWidth = this.propConfigs.width
-      imgLayer.style.width = _layerWidth + 'px'
-      imgLayer.style.height = _layerHeight + 'px'
-      imgLayer.style.backgroundImage = `url('${this.showPhoto.src}')`
-      imgLayer.style.backgroundRepeat = 'no-repeat'
-      imgLayer.style.backgroundSize = `${this.propConfigs.scale}%`
-      document.getElementsByClassName('orginPhoto')[0].appendChild(imgLayer)
     },
     /**
      * @description 删除标记
@@ -777,14 +509,15 @@ export default {
      * @description 展示拒绝原因输入
      */
     showRefuse () {
-      this.checkResult = 'refuse'
+      this.checkResult = CHECK_RESULT_TYPE.REFUSE
       this.showRefuseTextarea = true
     },
     /**
-     * @description 展示拒绝原因输入
+     * @description 审核通过
      */
     showAccept () {
-      this.checkResult = 'accept'
+      this.checkResult = CHECK_RESULT_TYPE.ACCEPT
+
       const appeealType = this.appealInfo.appealType
       switch (appeealType) {
         case APPEAL_TYPE.REWORK:
@@ -793,7 +526,6 @@ export default {
         case APPEAL_TYPE.EVALUATE:
           if (this.checkType === APPEAL_CHECK_STATUS.FIRST) this.showAcceptTextarea = true
           if (this.checkType === APPEAL_CHECK_STATUS.SECOND) {
-            this.showLabelDataTop = true
             document.getElementsByClassName('scroll-box')[0].scrollTop = 1000
           }
           break
@@ -805,21 +537,22 @@ export default {
      * @description 隐藏拒绝原因输入
      */
     hideRefuse () {
+      this.checkResult = ''
       this.showRefuseTextarea = false
     },
     /**
-     * @description 隐藏拒绝原因输入
+     * @description 重置拒绝原因数据
      */
-    hideAccept () {
+    cancelAccept () {
       const appeealType = this.appealInfo.appealType
+      this.checkResult = ''
       switch (appeealType) {
         case APPEAL_TYPE.REWORK:
           this.showAcceptTextarea = false
           break
         case APPEAL_TYPE.EVALUATE:
+          this.showCanvas = false
           this.showAcceptTextarea = false
-          this.showLabelDataTop = false
-          this.resetLabelData()
           break
         default:
           break
@@ -828,113 +561,57 @@ export default {
     /**
      * @description 保存拒绝原因输入
      */
-    saveRefuse (item) {
-      if (!this.refuseTextarea) {
-        this.$newMessage.warning('拒绝原因还没有填写')
-        return
-      }
+    saveRefuse () {
+      if (!this.refuseTextarea) return this.$newMessage.warning('拒绝原因还没有填写')
+      this.emitResult(CHECK_RESULT_TYPE.REFUSE)
       this.hideRefuse()
-      this.emitResult('refuse')
     },
     /**
      * @description 保存质量问题申诉复核通过备注
      */
     saveReworkAccept () {
-      if (this.checkType === APPEAL_CHECK_STATUS.SECOND) { // 复审一定要勾选删除标签
+      if (this.checkType === APPEAL_CHECK_STATUS.SECOND) {
+        // 复审一定要勾选删除标签
         if (!this.delLabelNum) {
           this.$newMessage.warning('必须要删除至少一个标签')
           return
         }
       }
-      this.hideAccept()
-      this.emitResult('accept')
-    },
-    /**
-     * @description 保存评分问题申诉复核通过
-     */
-    saveEvaluateAccept () {
-      const hasReEvaluate = this.labelDataTop.some(label => label.isSelect)
-      if (!hasReEvaluate) {
-        this.$newMessage.warning('必须要进行重评才能审核通过')
-        return
-      }
-      this.emitResult('accept')
+      this.cancelAccept()
+      this.emitResult(CHECK_RESULT_TYPE.ACCEPT)
     },
     /**
      * @description 通知审核结果
      */
-    async emitResult (type) {
+    async emitResult (type, evvaluateData) {
       const appealType = this.appealInfo.appealType
       const result = {
         result: this.checkResult, // 审核结果
         type: this.checkType, // 初审或者复审
         appealType
       }
-      const isAcceptAndSecond = type === 'accept' && this.checkType === APPEAL_CHECK_STATUS.SECOND
+      if (this.refuseTextarea) result.reason = this.refuseTextarea
+      if (this.acceptTextarea) result.reason = this.acceptTextarea
+
+      const isAccept = type === CHECK_RESULT_TYPE.ACCEPT
+      const isAcceptAndSecond = isAccept && this.isSecondCheck
       // 质量复审
       if (isAcceptAndSecond && appealType === APPEAL_TYPE.REWORK) {
         result.storePartReworkReason = this.showPhoto.storePartReworkReason
         result.storeReworkReasonManage = this.showPhoto.storeReworkReasonManage
       }
-      // 评分申诉
+      // 云学院评分申诉
       if (isAcceptAndSecond && appealType === APPEAL_TYPE.EVALUATE) {
-        result.labelDataTop = this.labelDataTop
-        result.labelData = this.labelData
-        result.sendData = await this.handleLabel()
+        result.labelData = evvaluateData.lableList
+        result.sendData = evvaluateData.sendData
       }
-      if (this.refuseTextarea) result.reason = this.refuseTextarea
-      if (this.acceptTextarea) result.reason = this.acceptTextarea
       this.$emit('saveResult', result)
-      this.closeShowPhoto()
-    },
-    /**
-     * @description 处理重新评分的标签
-     */
-    async handleLabel () {
-      try {
-        const issuesLabel = this.getIssuesData()
-        const issuesLabelId = issuesLabel.reduce((sumArr, item) => {
-          if (item.type !== 'goodWord') { sumArr.push({ id: item.id }) }
-          return sumArr
-        }, [])
-        const typeLabelId = issuesLabel.reduce((sumArr, item) => {
-          if (item.type === 'goodWord') { sumArr.push(item.id) }
-          return sumArr
-        }, [])
-        this.isSubmit = true
-        let markPhotoImg = ''
-        if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
-          markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
-        }
-        this.showCanvas = false
-        this.canvasOption.drawType = ''
-        const sendData = {
-          tags: issuesLabelId,
-          picUrl: markPhotoImg,
-          exTags: typeLabelId,
-          type: PlantIdTypeEnum[this.currentId]
-        }
-        return sendData
-      } catch (error) {
-        console.error(error)
-        this.$newMessage.error('上传标记图失败')
-      }
-    },
-    /**
-     * @description 获取选中标签
-     */
-    getIssuesData () {
-      let selectData = []
-      this.labelData.forEach(item => {
-        const itemSelectLabel = item.child.filter(issueItem => issueItem.isSelect)
-        selectData = [...selectData, ...itemSelectLabel]
-      })
-      return selectData
+      this.closePreview()
     },
     /**
      * @description 重置拒绝原因
      */
-    resetRefuse (item) {
+    resetRefuse () {
       this.refuseTextarea = ''
     },
     /**
@@ -949,7 +626,7 @@ export default {
     /**
      * @description 创建canvas
      */
-    createCanvas () {
+    createCanvas (drawType) {
       if (!this.isFirstPhoto) {
         this.$newMessage.warning('请在一次成片上进行评分')
         return false
@@ -957,25 +634,82 @@ export default {
       if (!this.showCanvas) {
         this.getImgInfo()
         this.showCanvas = true
+        if (drawType) { this.$nextTick(() => { this.changeDrawType(drawType) }) }
       }
       return true
     },
     /**
-     * @description 获取图片信息
+     * @description 更改画笔类型
      */
-    getImgInfo () {
-      const orginImgDom = this.$refs['orgin-img']
-      if (orginImgDom) {
-        this.canvasOption.width = orginImgDom.clientWidth
-        this.canvasOption.height = orginImgDom.clientHeight
+    changeDrawType (drawInfo) {
+      if (!this.$parent.showPreview) return false
+      if (!this.isCloudEvaluate || !this.isSecondCheck || this.checkResult !== CHECK_RESULT_TYPE.ACCEPT) return false
+      const { type, value } = drawInfo
+
+      if (type === TOOL_TYPE.COLOR) {
+        this.canvasOption.penColor = value
+        return
+      }
+
+      if (type !== TOOL_TYPE.BLOWUP && !this.showCanvas) {
+        this.createCanvas(drawInfo)
+        return
+      }
+      if (type === TOOL_TYPE.BLOWUP && this.inZoomIn) {
+        this.$refs['fabric-canvas'].$el.style.cursor = 'zoom-out'
+      }
+      this.canvasOption.drawType = type
+    },
+    // 云学院抽查相关
+    /**
+     * @description 保存评分问题申诉复核通过
+     */
+    async saveEvaluateAccept () {
+      try {
+        // 获取批注图片
+        let markPhotoImg = ''
+        if (this.showCanvas && this.$refs['fabric-canvas'].hasDraw()) {
+          markPhotoImg = await this.$refs['fabric-canvas'].outPhoto()
+        }
+        // 获取标签数据
+        const lableInfo = this.getActiveLableId()
+        this.showCanvas = false
+        this.canvasOption.drawType = ''
+        const evvaluateData = {
+          sendData: {
+            tags: lableInfo.ids,
+            picUrl: markPhotoImg
+          },
+          lableList: lableInfo.labelData
+        }
+        this.emitResult(CHECK_RESULT_TYPE.ACCEPT, evvaluateData)
+        this.resetLabelData()
+      } catch (error) {
+        this.$newMessage.error('上传标记图失败')
       }
     },
     /**
-     * @description 右边栏层级切换
+     * @description 获取选中标签
      */
-    changeRightShow () {
-      this.photoMarkShow = !this.photoMarkShow
-    }
+    getActiveLableId () {
+      if (!this.$refs['fabric-canvas']) return []
+      const activeLableList = this.$refs['fabric-canvas'].activeLableList
+      const ids = activeLableList.map(item => {
+        return {
+          id: item.levelId
+        }
+      })
+      return {
+        ids,
+        labelData: activeLableList
+      }
+    },
+    /**
+     * @description 重制标签
+     */
+    resetLabelData () {
+      this.$bus.$emit('reset-grade-lable')
+    },
   }
 }
 </script>

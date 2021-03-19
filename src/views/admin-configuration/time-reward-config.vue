@@ -7,32 +7,43 @@
           <el-button type="primary" @click="addConfig">添加新配置</el-button>
         </div>
         <!-- search -->
-        <div class="search-box">
-          <div class="search-item">
-            <span>伙伴</span>
-            <staff-select v-model="searchInfo.staffId" />
-          </div>
-          <div class="search-item">
-            <span>标题</span>
-            <el-input
-              @keyup.native.enter="getTimeRewardList(1)"
-              v-model="searchInfo.title"
-              clearable
-              placeholder="请输入标题"
-            />
-          </div>
-          <div class="search-item">
-            <span>奖励类型</span>
-            <time-reward-type-select placeholder="全部" v-model="searchInfo.rewardType" />
-          </div>
-          <div class="search-item">
-            <span>状态</span>
-            <time-reward-state-select v-model="searchInfo.stateType" />
-          </div>
-          <div class="search-button">
-            <el-button type="primary" @click="getTimeRewardList(1)">查 询</el-button>
-          </div>
-        </div>
+        <el-row class="search-box" :gutter="20">
+          <el-col :span="6" :xl="4">
+            <div class="search-item">
+              <span>伙伴</span>
+              <staff-select v-model="searchInfo.staffId" />
+            </div>
+          </el-col>
+          <el-col :span="6" :xl="4">
+            <div class="search-item">
+              <span>标题</span>
+              <el-input
+                @keyup.native.enter="getTimeRewardList(1)"
+                v-model="searchInfo.title"
+                clearable
+                placeholder="请输入标题"
+              />
+            </div>
+          </el-col>
+          <el-col :span="6" :xl="4">
+            <div class="search-item">
+              <span>奖励类型</span>
+              <time-reward-type-select placeholder="全部" v-model="searchInfo.rewardType" />
+            </div>
+          </el-col>
+          <el-col :span="4" :xl="4">
+            <div class="search-item">
+              <span>状态</span>
+              <time-reward-state-select v-model="searchInfo.stateType" />
+            </div>
+          </el-col>
+          <el-col :span="2" :xl="4">
+            <div class="search-item">
+              <el-button type="primary" @click="getTimeRewardList(1)">查 询</el-button>
+            </div>
+          </el-col>
+        </el-row>
+
         <!-- 列表数据 -->
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%;">
@@ -198,8 +209,9 @@ export default {
   }
 }
 </script>
+
 <style lang="less" scoped>
-.search-item > span {
-  flex-shrink: 0;
+.table-box {
+  margin-top: 0;
 }
 </style>

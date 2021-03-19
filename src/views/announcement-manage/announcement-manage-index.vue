@@ -211,38 +211,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.search-box {
-  flex-wrap: wrap;
-
-  .search-item {
-    margin-right: 0;
-
-    & span {
-      display: inline-block;
-      flex-shrink: 0;
-      width: 72px;
-      text-align: left;
-    }
-
-    & /deep/ .el-range-editor.el-input__inner {
-      width: 100% !important;
-    }
-
-    & /deep/ .date-picker,
-    & /deep/ .issue-label-select,
-    & /deep/ .evaluate-select,
-    & /deep/ .cloud-spot-grass-select,
-    & /deep/ .quality-select,
-    & /deep/ .el-select,
-    & /deep/ .return-select,
-    & /deep/ .cloud-spot,
-    & /deep/ .el-cascader {
-      width: 100%;
-    }
-  }
-}
-
 .detail-button {
   margin-right: 10px;
+}
+
+.table-box {
+  margin-top: 0;
 }
 </style>
