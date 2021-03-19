@@ -122,8 +122,9 @@
     <!-- 云学院报告 -->
     <div class="cloud-report-self module-panel">
       <div class="panel-title">整理抽查数据统计</div>
-      <PersonalCloudReport :search-role="CLOUD_ROLE.CREW" />
+      <PersonalCloudReport :search-role="CLOUD_ROLE.CREW" :search-type="GRADE_LABEL_TYPE.CLOUD"/>
     </div>
+
     <!-- 小蜜蜂奖励记录 -->
     <div class="module-panel bee-award" v-loading="LittleBeeLoading">
       <div class="panel-title">小蜜蜂奖励记录</div>
@@ -220,7 +221,7 @@ import PersonalCloudReport from '@/components/CloudReport/PersonalCloudReport'
 
 import * as Retoucher from '@/api/retoucher.js'
 
-import { CLOUD_ROLE } from '@/utils/enumerate'
+import { CLOUD_ROLE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'PersonalDetails',
@@ -251,6 +252,7 @@ export default {
   data () {
     return {
       CLOUD_ROLE,
+      GRADE_LABEL_TYPE,
       routeName: this.$route.name, // 路由名字
       yearValue: '',
       todayData: {}, // 今日指标

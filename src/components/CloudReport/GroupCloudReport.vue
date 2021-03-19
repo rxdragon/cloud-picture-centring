@@ -13,7 +13,11 @@
       <el-col :span="8" :xl="4">
         <div class="product-box search-item">
           <span>产品</span>
-          <ProductSelect :show-pic-product="false" v-model="productValue" />
+          <ProductSelect
+            :show-pic-product="searchType === GRADE_LABEL_TYPE.SHOW_PIC"
+            :himo-product="searchType === GRADE_LABEL_TYPE.CLOUD"
+            v-model="productValue"
+          />
         </div>
       </el-col>
       <el-col :span="8" :xl="4">
@@ -22,7 +26,7 @@
         </div>
       </el-col>
     </el-row>
-    
+
     <div class="total-chat-warp">
       <chart-bar title="平均分对比" :chartDatas="groupTotalRes">
         <span slot="other">云端平均分：{{ avgScore }}</span>
@@ -77,20 +81,27 @@ import ChartBar from './components/ChartBar'
 import NoData from '@/components/NoData'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
-import { gradeConfigurationToCN } from '@/utils/enumerate'
+import { gradeConfigurationToCN, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 import * as timespanUtil from "@/utils/timespan"
 
 export default {
   name: 'group-cloud-report',
   components: { DatePicker, ProductSelect, ChartBar, NoData },
   props: {
+    // 搜索的角色类型， 组长或者运营
     searchRole: {
+      type: String,
+      require: true
+    },
+    // 云学院or修修兽
+    searchType: {
       type: String,
       require: true
     }
   },
   data () {
     return {
+      GRADE_LABEL_TYPE,
       gradeConfigurationToCN,
       loading: false,
       timeSpan: null,
@@ -123,7 +134,7 @@ export default {
      * 获取全部的标签配置
      */
     async getCloudGradeConfigurationList () {
-      const res = await GradeConfigurationApi.getScoreConfig() || []
+      const res = await GradeConfigurationApi.getScoreConfig(this.searchType) || []
       if (res.length) {
         this.tabKey = res[0].name
       }
@@ -144,7 +155,7 @@ export default {
       if (this.productValue.length) req.productIds = this.productValue
 
       try {
-        const res = await AssessmentCenterApi.getCloudScoreByGroup(req, this.searchRole)
+        const res = await AssessmentCenterApi.getCloudScoreByGroup(req, this.searchRole, this.searchType)
         this.groupTotalRes = res.group
         this.avgScore = res.avgScore ? Number(res.avgScore).toFixed(2) : '-'
       } finally {
@@ -170,7 +181,7 @@ export default {
       if (this.productValue.length) req.productIds = this.productValue
       this.loading = true
       try {
-        const res = await AssessmentCenterApi.getCloudProblemByGroup(req, this.searchRole)
+        const res = await AssessmentCenterApi.getCloudProblemByGroup(req, this.searchRole, this.searchType)
         this.problemList = res
       } finally {
         await timespanUtil.delayLoading()

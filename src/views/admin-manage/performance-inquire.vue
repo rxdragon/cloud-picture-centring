@@ -14,6 +14,7 @@
       <el-tab-pane v-if="showTimeStatistics" label="用时统计" name="TimeStatistics" />
       <el-tab-pane v-if="showCheckerEvaluate" label="看片评价" name="CheckerEvaluate" />
       <el-tab-pane v-if="showCloudCollegeReport" label="云学院报告" name="CloudCollegeReport" />
+      <el-tab-pane v-if="showPicCollegeReport" label="修修兽报告" name="ShowPicCollegeReport" />
     </el-tabs>
     <div
       class="table-box"
@@ -37,6 +38,7 @@ import RetoucherChargeBackReport from './components/RetoucherChargeBackReport' /
 import TimeStatistics from './components/TimeStatistics' // 用时统计
 import CheckerEvaluate from './components/CheckerEvaluate' // 看片评价
 import CloudCollegeReport from './components/CloudCollegeReport' // 云学院评价
+import ShowPicCollegeReport from './components/ShowPicCollegeReport' // 云学院评价
 import SearchRetouchRecord from '@/components/SearchRetouchRecord' // 云端查询
 
 import { SEARCH_ROLE } from '@/utils/enumerate'
@@ -44,7 +46,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'PerformanceInquire',
-  components: { PartnerPerformance, OverallPerformance, RetoucherGroupPerformance, TimeStatistics, CheckerEvaluate, SearchRetouchRecord, RetoucherChargeBackReport, CloudCollegeReport },
+  components: { PartnerPerformance, OverallPerformance, RetoucherGroupPerformance, TimeStatistics, CheckerEvaluate, SearchRetouchRecord, RetoucherChargeBackReport, CloudCollegeReport, ShowPicCollegeReport },
   filters: {
     filterActiveName (value) {
 
@@ -63,6 +65,8 @@ export default {
           return '看片评价'
         case 'CloudCollegeReport':
           return '云学院报告'
+        case 'ShowPicCollegeReport':
+          return '修修兽报告'
         default:
           return '转换异常'
       }
@@ -83,7 +87,8 @@ export default {
       'showCheckerEvaluate',
       'showRetoucherGroupPerformance',
       'showRetoucherChargeBackReport',
-      'showCloudCollegeReport'
+      'showCloudCollegeReport',
+      'showPicCollegeReport',
     ])
   }
 }

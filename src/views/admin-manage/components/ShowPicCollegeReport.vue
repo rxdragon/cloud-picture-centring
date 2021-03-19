@@ -10,8 +10,8 @@
     </el-tabs>
     <el-divider class="divider"></el-divider>
     <div class="content">
-      <PersonalCloudReport v-if="tabKey === 'personal'" :search-role="CLOUD_ROLE.OPERATE" :search-type="GRADE_LABEL_TYPE.CLOUD" />
-      <GroupCloudReport v-if="tabKey === 'group'" :search-role="CLOUD_ROLE.OPERATE" :search-type="GRADE_LABEL_TYPE.CLOUD" />
+      <PersonalCloudReport v-if="tabKey === 'personal'" :search-role="CLOUD_ROLE.OPERATE" :search-type="GRADE_LABEL_TYPE.SHOW_PIC"/>
+      <GroupCloudReport v-if="tabKey === 'group'" :search-role="CLOUD_ROLE.OPERATE" :search-type="GRADE_LABEL_TYPE.SHOW_PIC" />
     </div>
   </div>
 </template>
