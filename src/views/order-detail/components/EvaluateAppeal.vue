@@ -4,7 +4,7 @@
     <template v-else>
       <p class="appeal-photo-title panel-title">选择问题照片</p>
       <div class="appeal-photos">
-        <evaluate-appeal-photo v-for="photo in appealPhotos" :photo-item="photo" :key="photo.id" />
+        <EvaluateAppealPhoto v-for="photo in appealPhotos" :photo-item="photo" :key="photo.id" />
       </div>
     </template>
   </div>

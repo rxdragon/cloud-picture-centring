@@ -577,8 +577,8 @@ export default {
           return
         }
       }
-      this.cancelAccept()
       this.emitResult(CHECK_RESULT_TYPE.ACCEPT)
+      this.cancelAccept()
     },
     /**
      * @description 通知审核结果

@@ -244,6 +244,8 @@ export default {
 
       .issue-class-box {
         display: flex;
+        flex-wrap: wrap;
+        margin-bottom: -10px;
 
         .label-title {
           flex-shrink: 0;
@@ -256,6 +258,7 @@ export default {
 
         .type-tag {
           margin-right: 10px;
+          margin-bottom: 10px;
 
           &.plant {
             color: #38bc7f;
