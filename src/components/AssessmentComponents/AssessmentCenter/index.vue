@@ -26,15 +26,8 @@
           />
         </div>
       </el-col>
-      <!-- 修图机构 -->
-      <el-col :span="8" :xl="4" v-if="cloudType === GRADE_LABEL_TYPE.CLOUD">
-        <div class="search-item">
-          <span>修图机构</span>
-          <InstitutionSelect v-model="retouchInstitution" />
-        </div>
-      </el-col>
       <!-- 抽取张数 -->
-      <el-col :span="6" :xl="4">
+      <el-col :span="8" :xl="4">
         <div class="sample-num search-item">
           <span>抽取张数</span>
           <el-select v-model="sampleNum" placeholder="单次不可超过5张">
@@ -44,6 +37,12 @@
             <el-option :label="4" :value="4" />
             <el-option :label="5" :value="5" />
           </el-select>
+        </div>
+      </el-col>
+      <!-- 修图机构 -->
+      <el-col :span="2" :xl="4" v-if="cloudType === GRADE_LABEL_TYPE.CLOUD">
+        <div class="search-item">
+          <el-checkbox v-model="isOut">外包修图</el-checkbox>
         </div>
       </el-col>
       <!-- 搜索按钮 -->
@@ -117,7 +116,6 @@
 <script>
 import DatePicker from '@/components/DatePicker'
 import ProductSelect from '@SelectBox/ProductSelect'
-import InstitutionSelect from '@SelectBox/InstitutionSelect'
 
 import GradePreview from '../components/GradePreview/index.vue'
 import PhotoGradeBox from '../components/PhotoGradeBox/index.vue'
@@ -131,7 +129,7 @@ import * as AssessmentCenter from '@/api/assessmentCenter'
 
 export default {
   name: 'AssessmentCenter',
-  components: { DatePicker, GradePreview, PhotoGradeBox, ProductSelect, InstitutionSelect },
+  components: { DatePicker, GradePreview, PhotoGradeBox, ProductSelect },
   inject: ['cloudType'],
   data () {
     return {
@@ -139,7 +137,7 @@ export default {
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 搜索时间
       productIds: [], // 搜索产品
-      retouchInstitution: '', // 修图机构
+      isOut: false, // 是否外包修图
       sampleNum: '', // 搜索伙伴抽样量
       spotAllNum: '-',
       allPhotoPath: [],
@@ -304,7 +302,7 @@ export default {
         submitEndAt: joinTimeSpan(this.timeSpan[1], 1)
       }
       if (this.productIds.length) { req.productIds = this.productIds }
-      if (this.retouchInstitution) { req.orgId = this.retouchInstitution }
+      if (this.isOut) { req.isOut = this.isOut }
       return req
     },
     /**

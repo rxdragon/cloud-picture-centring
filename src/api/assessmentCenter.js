@@ -464,19 +464,23 @@ export function getCheckPoolSubQuota (params, searchRole, searchType) {
     const mapData = [
       {
         name: '小',
-        data: filterLevel(smallList)
+        data: filterLevel(smallList),
+        color: '#ff8f00'
       },
       {
         name: '中',
-        data: filterLevel(middleList)
+        data: filterLevel(middleList),
+        color: '#ff8f00'
       },
       {
         name: '种草',
-        data: filterLevel(plantList)
+        data: filterLevel(plantList),
+        color: '#38bc7f'
       },
       {
         name: '拔草',
-        data: filterLevel(pullList)
+        data: filterLevel(pullList),
+        color: '#ff3974'
       }
     ]
     return {

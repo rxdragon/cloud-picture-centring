@@ -14,7 +14,10 @@
 
 <script>
 import * as echarts from 'echarts'
+import colorGenerate from '@/utils/ColorGenerate.js'
 import NoData from '@/components/NoData'
+
+import { pieColors } from '@/utils/colors.js'
 
 const option = {
   tooltip: {
@@ -23,11 +26,21 @@ const option = {
   series: {
     type: 'sunburst',
     data: [],
-    radius: [60, '90%'],
+    radius: [40, '90%'],
     emphasis: {
       focus: 'ancestor'
-    }
-  }
+    },
+    levels: [
+      {},
+      {},
+      {
+        itemStyle: {
+          opacity: 0.6
+        }
+      }
+    ]
+  },
+  color: pieColors
 }
 
 export default {
@@ -40,7 +53,8 @@ export default {
       default () {
         return []
       }
-    }
+    },
+    color: { type: String, default: '' }
   },
   watch: {
     chartDatas: {
@@ -58,6 +72,9 @@ export default {
   methods: {
     init () {
       if (!this.myChart) return
+      if (this.color) {
+        option.color = colorGenerate(this.color)
+      }
       option.series.data = this.chartDatas
       this.myChart.setOption(option)
     }

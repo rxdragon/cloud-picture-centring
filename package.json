@@ -26,6 +26,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@ctrl/tinycolor": "^3.4.0",
     "@toast-ui/editor": "^2.1.2",
     "animejs": "^3.1.0",
     "asar": "^2.0.1",

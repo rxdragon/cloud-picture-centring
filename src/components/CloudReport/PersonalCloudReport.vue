@@ -42,6 +42,7 @@
         v-for="item in GRADE_CONFIGURATION_TYPE"
         :key="item"
         :chartDatas="getChartDatas(item)"
+        :color="getChartDatas(item).color"
         :title="`${item}问题对比`"
       ></chart-sunburst>
     </div>
