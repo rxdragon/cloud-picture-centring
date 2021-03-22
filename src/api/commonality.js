@@ -134,7 +134,8 @@ export function getStreamInfo (params) {
       retouchStandard: streamData.retouchStandard,
       timeoutAppealReason: '', // 沙漏超时申诉理由
       timeoutRollbackLog: streamData.timeoutRollbackLog,
-      storeName: streamData.storeName
+      storeName: streamData.storeName,
+      evaluationType: streamData.evaluationType // 抽查类型
     }
     createData.photos = msg.photos
     return createData

@@ -54,7 +54,7 @@
     </div>
     <div v-if="hasCheckTags" class="panel-box">
       <div class="panel-title">
-        <span>云学院评分</span>
+        <span>{{ evaluationTypeCn }}</span>
         <span>总分：{{ photoData.checkPoolScore }}</span>
       </div>
       <div class="panel-main" v-if="photoData.checkPoolTags.length">
@@ -78,13 +78,15 @@
 import PhotoList from '@/components/PhotoList'
 import PreviewModel from '@/model/PreviewModel'
 
+import { SPOT_CHECK_MAP } from '@/utils/enumerate'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'PhotoDetail',
   components: { PhotoList },
   props: {
-    photoItem: { type: Object, required: true }
+    photoItem: { type: Object, required: true },
+    evaluationType: { type: String }
   },
   data () {
     return {
@@ -113,6 +115,13 @@ export default {
       const hasEvaluatorScore = this.photoData.checkPoolScore
       return hasEvaluatorScore
     },
+    // 抽查类型
+    evaluationTypeCn () {
+      if (!this.evaluationType) return ''
+      return this.evaluationType === SPOT_CHECK_MAP.CHECK_POOL_SPOT
+        ? '云学院评分'
+        : '修修兽评分'
+    }
   },
   created () {
     this.initPhotoList()
