@@ -329,10 +329,9 @@ export function getCloudScoreByGroup (params, searchRole, searchType) {
     const group = res.group.map(g => {
       return {
         ...g,
-        count: isNaN(Number(g.totalScore)) ? '-' : Number(g.totalScore).toFixed(2)
+        count: ((g.totalScore / g.totalPeople) || 0).toFixed(2)
       }
     })
-    res.avgScore = null
     return {
       group,
       avgScore: getNumberString(res.avgScore)
