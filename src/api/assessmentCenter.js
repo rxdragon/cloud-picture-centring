@@ -9,7 +9,7 @@ import uuidv4 from 'uuid'
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 import { GRADE_LABEL_TYPE, CLOUD_ROLE, CNLevelToType } from '@/utils/enumerate'
-import { getAvg } from '@/utils/index.js'
+import { getAvg, getNumberString } from '@/utils/index.js'
 
 /**
  * @description 获取请求地址
@@ -329,13 +329,13 @@ export function getCloudScoreByGroup (params, searchRole, searchType) {
     const group = res.group.map(g => {
       return {
         ...g,
-        count: g.totalScore ? Number(g.totalScore).toFixed(2) : 0
+        count: isNaN(Number(g.totalScore)) ? '-' : Number(g.totalScore).toFixed(2)
       }
     })
-
+    res.avgScore = null
     return {
       group,
-      avgScore: res.avgScore ? Number(res.avgScore).toFixed(2) : '-'
+      avgScore: getNumberString(res.avgScore)
     }
   })
 }
@@ -419,43 +419,70 @@ export function getCheckPoolSubQuota (params, searchRole, searchType) {
     method: 'POST',
     data: params
   }).then(res => {
+
+    function filterLevel (list) {
+      const mapList = {}
+      list.forEach(g => {
+        const parentId = _.get(g, 'parent.id')
+        const parentName = _.get(g, 'parent.name')
+        const typeId = _.get(g, 'parent.score_type.id')
+        const typeName = _.get(g, 'parent.score_type.name')
+        if (mapList[typeId]) {
+          const parentList = mapList[typeId].children
+          const findParent = parentList.find(item => item.id === parentId)
+          if (findParent) {
+            findParent.value++
+          } else {
+            parentList.push({
+              id: parentId,
+              name: parentName,
+              value: 1
+            })
+          }
+        } else {
+          mapList[typeId] = {
+            name: typeName,
+            id: typeId,
+            children: [
+              {
+                id: parentId,
+                name: parentName,
+                value: 1
+              }
+            ]
+          }
+        }
+      })
+      return Object.values(mapList)
+    }
     const group = res.group
 
-    const config = Object.keys(CNLevelToType)
-    // map {"小":{},"中":{},"种草":{},"拔草":{}
-    const map = config.reduce((tol, cur ) => Object.assign(tol, { [cur]: { } }), {})
-    // 1 按照小中大问题分组
-    group.forEach(g => {
-      if (!map[g.name]) {
-        throw new Error('配置错误')
-      }
-      const parentName = _.get(g, 'parent.name')
-      const typeName = _.get(g, 'parent.score_type.name')
+    const smallList = group.filter(item => item.name === '小')
+    const middleList = group.filter(item => item.name === '中')
+    const plantList = group.filter(item => item.name === '种草')
+    const pullList = group.filter(item => item.name === '拔草')
 
-      if (!map[g.name][parentName]) {
-        map[g.name][parentName] = {
-          name: parentName,
-          value: 0,
-          children: []
-        }
+    const mapData = [
+      {
+        name: '小',
+        data: filterLevel(smallList)
+      },
+      {
+        name: '中',
+        data: filterLevel(middleList)
+      },
+      {
+        name: '种草',
+        data: filterLevel(plantList)
+      },
+      {
+        name: '拔草',
+        data: filterLevel(pullList)
       }
-      map[g.name][parentName].value += Number(g.count) || 0
-      map[g.name][parentName].children.push({
-        name: typeName,
-        value: Number(g.count) || 0
-      })
-    })
-
-    const list = Object.keys(map).map(key => {
-      return {
-        data: Object.values(map[key]),
-        name: key
-      }
-    })
-
+    ]
     return {
-      avgScore: res.avgScore ? Number(res.avgScore).toFixed(2) : '-',
-      data: list
+      avgScore: getNumberString(res.avgScore),
+      data: mapData
     }
   })
 }
