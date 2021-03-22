@@ -123,6 +123,7 @@ import GradePreview from '../components/GradePreview/index.vue'
 import PhotoGradeBox from '../components/PhotoGradeBox/index.vue'
 
 import DownIpc from '@electronMain/ipc/DownIpc'
+import dayjs from 'dayjs'
 import { PhotoEnumName, GRADE_LABEL_TYPE } from '@/utils/enumerate.js'
 import { joinTimeSpan, getNowDate } from '@/utils/timespan.js'
 
@@ -288,6 +289,12 @@ export default {
       }
       if (!this.timeSpan) {
         this.$newMessage.warning('请填写正确的时间')
+        return false
+      }
+      // 时间间隔是否大于30天
+      const isMoreThen30 = dayjs(this.timeSpan[1]).subtract(30, 'day').isAfter(dayjs(this.timeSpan[0]))
+      if (isMoreThen30) {
+        this.$newMessage.warning('抽片时间间隔不能超过30天')
         return false
       }
 
