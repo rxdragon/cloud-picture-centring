@@ -85,8 +85,8 @@
       custom-class="empty-dialog"
       :visible.sync="showEmptyDialog"
     >
-      <div class="">
-        <span>选择清空对象:</span>
+      <div>
+        <span class="empty-title">选择清空对象:</span>
         <scorer-select v-model="emptyPeople"></scorer-select>
         <span v-if="!emptyPeople.length" class="all-empty-warning">默认清空全部人员评分</span>
       </div>
@@ -443,6 +443,16 @@ export default {
 
   .w150 {
     width: 150px;
+  }
+}
+
+.empty-dialog {
+  .empty-title {
+    margin-right: 12px;
+  }
+
+  .all-empty-warning {
+    margin-left: 12px;
   }
 }
 </style>
