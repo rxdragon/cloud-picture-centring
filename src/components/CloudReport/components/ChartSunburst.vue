@@ -16,7 +16,7 @@
 import * as echarts from 'echarts'
 import colorGenerate from '@/utils/ColorGenerate.js'
 import NoData from '@/components/NoData'
-
+import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
 import { pieColors } from '@/utils/colors.js'
 
 const option = {
@@ -35,12 +35,19 @@ const option = {
       {},
       {
         itemStyle: {
-          opacity: 0.6
+          opacity: 0.75
         }
       }
     ]
   },
   color: pieColors
+}
+
+const colorMap = {
+  [GRADE_CONFIGURATION_TYPE.SMALL]: '#fa8c16',
+  [GRADE_CONFIGURATION_TYPE.MIDDLE]: '#fa8c16',
+  [GRADE_CONFIGURATION_TYPE.PULL]: '#f5222d',
+  [GRADE_CONFIGURATION_TYPE.PLANT]: '#52c41a'
 }
 
 export default {
@@ -73,7 +80,9 @@ export default {
     init () {
       if (!this.myChart) return
       if (this.color) {
-        option.color = colorGenerate(this.color)
+        let colors = colorGenerate(colorMap[this.color])
+        colors = colors.reverse()
+        option.color = colors.slice(0,7)
       }
       option.series.data = this.chartDatas
       this.myChart.setOption(option)

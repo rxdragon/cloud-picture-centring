@@ -41,9 +41,9 @@
       <chart-sunburst
         v-for="item in GRADE_CONFIGURATION_TYPE"
         :key="item"
-        :chartDatas="getChartDatas(item)"
-        :color="getChartDatas(item).color"
-        :title="`${item}问题对比`"
+        :chartDatas="getChartDatas(gradeConfigurationToCN[item])"
+        :color="item"
+        :title="`${gradeConfigurationToCN[item]}问题对比`"
       ></chart-sunburst>
     </div>
     <div class="chat-warp" v-else> <no-data></no-data></div>
@@ -56,7 +56,7 @@ import StaffSelect from '@SelectBox/StaffSelect/index'
 import NoData from '@/components/NoData'
 import ChartSunburst from './components/ChartSunburst'
 import ProductSelect from '@SelectBox/ProductSelect/index'
-import { CLOUD_ROLE, gradeConfigurationToCN, GRADE_LABEL_TYPE } from '@/utils/enumerate'
+import { CLOUD_ROLE, gradeConfigurationToCN, GRADE_CONFIGURATION_TYPE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 import * as TimespanUtil from '@/utils/timespan'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 
@@ -79,11 +79,11 @@ export default {
     return {
       GRADE_LABEL_TYPE,
       gradeConfigurationToCN,
+      GRADE_CONFIGURATION_TYPE,
       loading: false,
       timeSpan: null,
       staffIds: [], // 云端伙伴
       productValue: [], // 产品
-      GRADE_CONFIGURATION_TYPE: Object.values(gradeConfigurationToCN),
       CLOUD_ROLE,
       avgScore: '', // 抽查平均分
       gradeConfigurations: [], // 图表数据
@@ -107,9 +107,9 @@ export default {
      */
     async searchData () {
       if (!this.timeSpan) return this.$message.warning('请选择时间')
-      if (this.searchRole === CLOUD_ROLE.OPERATE && !this.staffIds.length) {
-        return this.$message.warning('请选择查询角色')
-      }
+      // if (this.searchRole === CLOUD_ROLE.OPERATE && !this.staffIds.length) {
+      //   return this.$message.warning('请选择查询角色')
+      // }
       this.loading = true
       try {
         const req = {

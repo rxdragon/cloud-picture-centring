@@ -477,10 +477,10 @@ export const SCORE_TYPES = {
  * 评分配置
  */
 export const GRADE_CONFIGURATION_TYPE = {
-  PULL: 'pull',
   SMALL: 'small',
   MIDDLE: 'middle',
   PLANT: 'plant',
+  PULL: 'pull',
 }
 
 export const gradeConfigurationToCN = {

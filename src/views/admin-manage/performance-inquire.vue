@@ -75,7 +75,7 @@ export default {
   data () {
     return {
       SEARCH_ROLE,
-      activeName: 'CloudCollegeReport',
+      activeName: 'PartnerPerformance',
       showSearchPage: false
     }
   },
