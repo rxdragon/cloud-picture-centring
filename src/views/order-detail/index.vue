@@ -57,7 +57,7 @@
         照片{{ photoIndex + 1 }}
         <span v-if="photoItem.specialEfficacy" class="special-efficacy panel-slot">{{ photoItem.specialEfficacy }}</span>
       </div>
-      <photo-detail :photo-item="photoItem" />
+      <photo-detail :photo-item="photoItem" :evaluation-type="evaluationType" />
     </div>
 
     <el-dialog
@@ -161,6 +161,10 @@ export default {
           break
       }
       return finalPhotos
+    },
+    // 抽查类型
+    evaluationType () {
+      return this.orderData.evaluationType
     }
   },
   created () {
