@@ -89,13 +89,18 @@ export default {
     }
   },
   mounted () {
-    this.timeSpan = [
-      TimespanUtil.revertTimeSpan(TimespanUtil.getNowDate(), 1),
-      TimespanUtil.revertTimeSpan(TimespanUtil.getNowDate(), 2)
-    ]
-    this.searchData()
+    this.init()
   },
   methods: {
+    // 如果是个人查询， 则默认查询当前的数据
+    init () {
+      if (this.searchRole === CLOUD_ROLE.OPERATE) return
+      this.timeSpan = [
+        TimespanUtil.revertTimeSpan(TimespanUtil.getNowDate(), 1),
+        TimespanUtil.revertTimeSpan(TimespanUtil.getNowDate(), 2)
+      ]
+      this.searchData()
+    },
     /**
      * @description 搜搜数据
      */
