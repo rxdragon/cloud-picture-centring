@@ -101,6 +101,9 @@ export default {
      */
     async searchData () {
       if (!this.timeSpan) return this.$message.warning('请选择时间')
+      if (this.searchRole === CLOUD_ROLE.OPERATE && !this.staffIds.length) {
+        return this.$message.warning('请选择查询角色')
+      }
       this.loading = true
       try {
         const req = {
