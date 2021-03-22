@@ -84,6 +84,8 @@ export default {
      * @description 清楚全部标签数据
      */
     clearAllLabelValue () {
+      this.activeLabelId = ''
+      this.activeNames = [String(_.get(this, 'labelClass[0].id') || '')]
       this.labelClass.forEach(classItem => {
         const gradeLabelItem = classItem.children
         gradeLabelItem.forEach(gradeItem => {
