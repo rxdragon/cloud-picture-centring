@@ -4883,27 +4883,13 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
-echarts-amap@1.0.0-rc.6:
-  version "1.0.0-rc.6"
-  resolved "https://npm.code.hzmantu.com/echarts-amap/-/echarts-amap-1.0.0-rc.6.tgz#5782a74daee52ed44ce3f8f62577561783f09e16"
-  integrity sha1-V4KnTa7lLtRM4/j2JXdWF4PwnhY=
-
-echarts-liquidfill@^2.0.2:
-  version "2.0.6"
-  resolved "https://npm.code.hzmantu.com/echarts-liquidfill/-/echarts-liquidfill-2.0.6.tgz#0668dc61d87a6262003090bd32c55aa8108c252e"
-  integrity sha512-p+AH0O9/BtwXMQQyhjJbMZo+GwRAgWG/DCyK5r27PQzpS0UWrgXu57MyEFc0A8Ub3sRuqEu08BuxwHICBkSWSQ==
-
-echarts-wordcloud@^1.1.3:
-  version "1.1.3"
-  resolved "https://npm.code.hzmantu.com/echarts-wordcloud/-/echarts-wordcloud-1.1.3.tgz#07b140c8ba76b19c317b43c310f3d5dc99289ff2"
-  integrity sha512-Et8D5xEAoYkidmHun+hEH+2lF9dhCt6D0JJ390vlr2r/1zwhhZAbcL01CEvG93QcMcJpSvSPK8vRiGkTbMHRxg==
-
-echarts@^4.5.0:
-  version "4.9.0"
-  resolved "https://npm.code.hzmantu.com/echarts/-/echarts-4.9.0.tgz#a9b9baa03f03a2a731e6340c55befb57a9e1347d"
-  integrity sha512-+ugizgtJ+KmsJyyDPxaw2Br5FqzuBnyOWwcxPKO6y0gc5caYcfnEUIlNStx02necw8jmKmTafmpHhGo4XDtEIA==
+echarts@^5.0.2:
+  version "5.0.2"
+  resolved "https://npm.code.hzmantu.com/echarts/-/echarts-5.0.2.tgz#1726d17a57cf05d62cd0567b4325e1201a56baf6"
+  integrity sha512-En0VYpc96nw2/2AZoBWPHsGi471zMublttj50kfFpYAeR4geup0Tj9iVgEXh7QYZFPnRiruDJEjcB5PXZ+BYzQ==
   dependencies:
-    zrender "4.3.2"
+    tslib "2.0.3"
+    zrender "5.0.4"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -9242,7 +9228,7 @@ number-is-nan@^1.0.0:
   resolved "https://npm.code.hzmantu.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
 
-numerify@1.2.9:
+numerify@^1.2.9:
   version "1.2.9"
   resolved "https://npm.code.hzmantu.com/numerify/-/numerify-1.2.9.tgz#af4696bb1d57f8d3970a615d8b0cd53d932bd559"
   integrity sha512-X4QzQiytV5ZN3TVLhzbtFzjTarUNnaa1pgNDFqt7u7Nqhxe7FvY2eYrGt4WYHlYXDqgtfC/n/a5nJ2y0LijV8w==
@@ -12641,6 +12627,11 @@ tsconfig-paths@^3.9.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
+tslib@2.0.3:
+  version "2.0.3"
+  resolved "https://npm.code.hzmantu.com/tslib/-/tslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
+  integrity sha512-uZtkfKblCEQtZKBF6EBXVZeQNl82yqtDQdv+eck8u7tdPxjLu2/lp5/uPW+um2tpuxINHWy3GhiccY7QgEaVHQ==
+
 tslib@^1.10.0, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://npm.code.hzmantu.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
@@ -13006,10 +12997,10 @@ utila@~0.4:
   resolved "https://npm.code.hzmantu.com/utila/-/utila-0.4.0.tgz#8a16a05d445657a3aea5eecc5b12a4fa5379772c"
   integrity sha1-ihagXURWV6Oupe7MWxKk+lN5dyw=
 
-utils-lite@0.1.10:
-  version "0.1.10"
-  resolved "https://npm.code.hzmantu.com/utils-lite/-/utils-lite-0.1.10.tgz#d2908c0482e23c31e6b082558540e7134ffad7d7"
-  integrity sha512-jlHvdtI8MyWURF/3u+ufIjf1Cs5WjN6WZl9qO8dEkZsVjaI7X5YMUhaCFzkvB69ljt6fo4Dd7V/Oj2NJOFDFOQ==
+utils-lite@^0.1.15:
+  version "0.1.15"
+  resolved "https://npm.code.hzmantu.com/utils-lite/-/utils-lite-0.1.15.tgz#d9377e0e086a55d0c789116ec7d3678dac1e68bf"
+  integrity sha512-oznk+62m6g5crj5I70Bq0O69qrWDt+e4V+E86SUEb0wFLXKw9/vraGU1+27bzvZNu3wI1cUdn4r/5xKE9c4ZLw==
 
 utils-merge@1.0.1:
   version "1.0.1"
@@ -13020,17 +13011,6 @@ uuid@^3.3.2, uuid@^3.3.3, uuid@^3.4.0:
   version "3.4.0"
   resolved "https://npm.code.hzmantu.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
-
-v-charts@^1.19.0:
-  version "1.19.0"
-  resolved "https://npm.code.hzmantu.com/v-charts/-/v-charts-1.19.0.tgz#07b701800b159bd514264ffc8bf12b0405142da3"
-  integrity sha512-vm2HBUmxAsXK0ivwce9LytcpqrItDA5JSPLYVxZXtiuoyhcn80XX1/3dPJd/1GqG1OYv3jfBo1s9ra4q8GowqA==
-  dependencies:
-    echarts-amap "1.0.0-rc.6"
-    echarts-liquidfill "^2.0.2"
-    echarts-wordcloud "^1.1.3"
-    numerify "1.2.9"
-    utils-lite "0.1.10"
 
 v8-compile-cache@^2.1.1, v8-compile-cache@^2.2.0:
   version "2.2.0"
@@ -13834,10 +13814,12 @@ zip-stream@^1.2.0:
     lodash "^4.8.0"
     readable-stream "^2.0.0"
 
-zrender@4.3.2:
-  version "4.3.2"
-  resolved "https://npm.code.hzmantu.com/zrender/-/zrender-4.3.2.tgz#ec7432f9415c82c73584b6b7b8c47e1b016209c6"
-  integrity sha512-bIusJLS8c4DkIcdiK+s13HiQ/zjQQVgpNohtd8d94Y2DnJqgM1yjh/jpDb8DoL6hd7r8Awagw8e3qK/oLaWr3g==
+zrender@5.0.4:
+  version "5.0.4"
+  resolved "https://npm.code.hzmantu.com/zrender/-/zrender-5.0.4.tgz#89c355af908b9f64a301b38f751b7951f2c8a95a"
+  integrity sha512-DJpy0yrHYY5CuH6vhb9IINWbjvBUe/56J8aH86Jb7O8rRPAYZ3M2E469Qf5B3EOIfM3o3aUrO5edRQfLJ+l1Qw==
+  dependencies:
+    tslib "2.0.3"
 
 zwitch@^1.0.0:
   version "1.0.5"

@@ -112,44 +112,84 @@ function getValue (hsv, i, light) {
   return Number(value.toFixed(2))
 }
 
+/**
+ * @description 获取相近颜色值
+ * @param {*} hsv hsv值
+ * @param {*} i 
+ * @returns 
+ */
+function getNearHue (hsv, i, down) {
+  let hue
+  const nearHueStep = 4
+  const h = Math.round(hsv.h)
+  // 根据色相不同，色相转向不同
+  if (h >= 60 && h <= 240) {
+    // 冷色调
+    hue = down ? h - nearHueStep * i : h + nearHueStep * i
+  } else {
+    // 暖色调
+    hue = down ? h + nearHueStep * i : h - nearHueStep * i
+  }
+  if (hue < 0) {
+    hue += 360
+  } else if (hue >= 360) {
+    hue -= 360
+  }
+  return hue
+}
 
-export default function generate (color, opts = {}) {
+/**
+ * @description 获取相近V值
+ * @param {*} hsv hsv值
+ * @param {*} i 
+ * @returns 
+ */
+function getNearValue (hsv, i, light) {
+  let value
+  const brightnessStep1 = 0.03
+  const brightnessStep2 = 0.04
+  if (light) {
+    value = hsv.v + brightnessStep1 * i
+  } else {
+    value = hsv.v - brightnessStep2 * i
+  }
+  if (value > 1) {
+    value = 1
+  }
+  return Number(value.toFixed(2))
+}
+
+
+/**
+ * @description 获取渐变色
+ * @param {*} color 颜色
+ * @param {*} opts 选项, theme 主题色
+ * @returns 
+ */
+export function generate (color, opts = {}) {
   const patterns = []
   const pColor = inputToRGB(color)
   
   for (let i = lightColorCount; i > 0; i -= 1) {
     const hsv = toHsv(pColor)
-    const colorString = toHex(
-      inputToRGB({
-        h: getHue(hsv, i, true),
-        s: getSaturation(hsv, i, true),
-        v: getValue(hsv, i, true),
-      }),
-    )
-    // eslint-disable-next-line no-unused-vars
     const rgb = inputToRGB({
       h: getHue(hsv, i, true),
       s: getSaturation(hsv, i, true),
       v: getValue(hsv, i, true),
     })
+    const colorString = toHex(rgb)
     patterns.push(colorString)
   }
   patterns.push(toHex(pColor))
   for (let i = 1; i <= darkColorCount; i += 1) {
     const hsv = toHsv(pColor)
-    const colorString = toHex(
-      inputToRGB({
-        h: getHue(hsv, i),
-        s: getSaturation(hsv, i),
-        v: getValue(hsv, i),
-      }),
-    )
-    // eslint-disable-next-line no-unused-vars
     const rgb = inputToRGB({
       h: getHue(hsv, i),
       s: getSaturation(hsv, i),
       v: getValue(hsv, i),
     })
+
+    const colorString = toHex(rgb)
     patterns.push(colorString)
   }
 
@@ -170,6 +210,42 @@ export default function generate (color, opts = {}) {
       )
       return darkColorString
     })
+  }
+
+  return patterns
+}
+
+/**
+ * @description 获取相近颜色
+ * @param {*} params 
+ */
+export function getNearColors (color) {
+  const patterns = []
+  const pColor = inputToRGB(color)
+
+  for (let i = lightColorCount; i > 0; i -= 1) {
+    const hsv = toHsv(pColor)
+    const rgb = inputToRGB({
+      h: getNearHue(hsv, i, true),
+      s: hsv.s,
+      v: getNearValue(hsv, i, true),
+    })
+    const colorString = toHex(
+      inputToRGB(rgb),
+    )
+    patterns.push(colorString)
+  }
+
+  for (let i = 1; i <= darkColorCount; i += 1) {
+    const hsv = toHsv(pColor)
+    const rgb = inputToRGB({
+      h: getNearHue(hsv, i),
+      s: hsv.s,
+      v: getNearValue(hsv, i),
+    })
+
+    const colorString = toHex(rgb)
+    patterns.push(colorString)
   }
 
   return patterns

@@ -14,7 +14,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import colorGenerate from '@/utils/ColorGenerate.js'
+import * as ColorGenerate from '@/utils/ColorGenerate.js'
 import NoData from '@/components/NoData'
 import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
 import { pieColors } from '@/utils/colors.js'
@@ -80,9 +80,8 @@ export default {
     init () {
       if (!this.myChart) return
       if (this.color) {
-        let colors = colorGenerate(colorMap[this.color])
-        colors = colors.reverse()
-        option.color = colors.slice(0,7)
+        const nearColors = ColorGenerate.getNearColors(colorMap[this.color])
+        option.color = nearColors
       }
       option.series.data = this.chartDatas
       this.myChart.setOption(option)
@@ -102,6 +101,10 @@ export default {
 
   .title {
     width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #303133;
     text-align: center;
   }
 
