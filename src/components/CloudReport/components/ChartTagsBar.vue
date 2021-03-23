@@ -9,6 +9,7 @@
       :legend-visible="false"
       :extend="extend"
       height="300px"
+      :settings="chartSettings"
       v-if="chartDatas.length"
     />
     <NoData v-else></NoData>
@@ -17,7 +18,7 @@
 
 <script>
 import NoData from '@/components/NoData/index'
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 
 const blueLinearGradient = new echarts.graphic.LinearGradient(
   0, 0, 0, 1,
@@ -48,7 +49,7 @@ const GreenLinearGradient = new echarts.graphic.LinearGradient(
 )
 
 export default {
-  name: 'chart-bar',
+  name: 'chartTagsbar',
   components: { NoData },
   props: {
     title: String,
@@ -66,21 +67,13 @@ export default {
   data () {
     this.extend = {
       legend: {
-        data: ['小问题张数', '占比率'],
+        data: ['张数', '占比率'],
         right: '27',
         top: '0',
         icon: 'circle'
       },
       grid: { x: 0, x2: 27, y: 60, y2: 0 },
       series: {
-        label: {
-          show: true,
-          position: 'top',
-          color: ['#4669FB', '#38BC7F', '#FF3974'],
-          // formatter: (data) => {
-          //   return data.seriesName === '退张率' ? `${data.value}%` : `${data.value}`
-          // }
-        },
         barWidth: 24,
         barCategoryGap: '80%',
         itemStyle: {
@@ -109,9 +102,15 @@ export default {
         }
       }
     }
+    this.chartSettings = {
+      labelMap: {
+        'count': '张数',
+        'percentage': '占比率'
+      }
+    }
     return {
       chartData: {
-        columns: ['name', 'count'],
+        columns: ['name', 'count', 'percentage'],
         rows: []
       }
     }

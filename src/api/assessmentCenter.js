@@ -382,7 +382,7 @@ export function getCloudProblemByGroup (params, searchRole, searchType) {
           id: g.id,
           name: g.name,
           count,
-          percentage: count / total
+          percentage: ((count / total || 0) * 100).toFixed(2)
         }
       })
 
@@ -391,7 +391,7 @@ export function getCloudProblemByGroup (params, searchRole, searchType) {
         data
       }
     })
-    
+
     return list
   })
 }
