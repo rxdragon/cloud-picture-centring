@@ -135,7 +135,7 @@ export default {
      * 获取全部的标签配置
      */
     async getCloudGradeConfigurationList () {
-      const res = await GradeConfigurationApi.getScoreConfig(this.searchType) || []
+      const res = await GradeConfigurationApi.getScoreConfig(this.searchType, true) || []
       if (res.length) {
         this.tabKey = res[0].name
       }

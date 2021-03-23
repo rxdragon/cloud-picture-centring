@@ -425,7 +425,6 @@ export function getCheckPoolSubQuota (params, searchRole, searchType) {
 
     function filterLevel (list) {
       const mapList = {}
-      Array.reduce
       const countSum = list.reduce((sum, item) => {
         sum += item.count
         return sum
