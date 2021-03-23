@@ -18,10 +18,35 @@ import * as ColorGenerate from '@/utils/ColorGenerate.js'
 import NoData from '@/components/NoData'
 import { GRADE_CONFIGURATION_TYPE } from '@/utils/enumerate'
 import { pieColors } from '@/utils/colors.js'
+import * as Utils from '@/utils/index'
+
+function filterLabelName (data) {
+  const msg = `
+    <span style="display:inline-block;
+        margin-right:4px;
+        border-radius:10px;
+        width:10px;
+        height:10px;
+        background-color: ${data.color};"
+      >
+    </span>
+    <span style="font-size:14px;color:#666;font-weight:400;margin-left:2px">
+      ${data.data.name}
+    </span>
+    <span style="float:right;margin-left:20px;font-size:14px;color:#666;font-weight:900">
+      ${data.data.value}个
+      占比：${Utils.transformPercentage(data.data.value, data.data.countSum)}
+    </span>
+  `
+  return msg
+}
 
 const option = {
   tooltip: {
-    trigger: 'item'
+    trigger: 'item',
+    formatter: (v) => {
+      return filterLabelName(v)
+    }
   },
   series: {
     type: 'sunburst',

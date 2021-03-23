@@ -425,32 +425,42 @@ export function getCheckPoolSubQuota (params, searchRole, searchType) {
 
     function filterLevel (list) {
       const mapList = {}
+      Array.reduce
+      const countSum = list.reduce((sum, item) => {
+        sum += item.count
+        return sum
+      }, 0)
+
       list.forEach(g => {
         const parentId = _.get(g, 'parent.id')
         const parentName = _.get(g, 'parent.name')
         const typeId = _.get(g, 'parent.score_type.id')
         const typeName = _.get(g, 'parent.score_type.name')
+
         if (mapList[typeId]) {
           const parentList = mapList[typeId].children
           const findParent = parentList.find(item => item.id === parentId)
           if (findParent) {
-            findParent.value++
+            findParent.value = findParent.value + g.count
           } else {
             parentList.push({
               id: parentId,
               name: parentName,
-              value: 1
+              value: g.count,
+              countSum
             })
           }
         } else {
           mapList[typeId] = {
             name: typeName,
             id: typeId,
+            countSum,
             children: [
               {
                 id: parentId,
                 name: parentName,
-                value: 1
+                value: g.count,
+                countSum
               }
             ]
           }
