@@ -60,14 +60,14 @@
           </el-select>
           <el-button type="primary" class="button" @click="handleSearchProblemBy">查询</el-button>
         </div>
-        <chart-bar
+        <chart-tags-bar
           v-for="item in problemList"
           :key="item.name"
           :title="`${item.name}问题对比`"
           class="detail-chart"
           :chartDatas="item.data"
         >
-        </chart-bar>
+        </chart-tags-bar>
         <no-data class="chart" v-if="!problemList.length"></no-data>
       </div>
     </div>
@@ -78,6 +78,7 @@
 import DatePicker from '@/components/DatePicker/index'
 import ProductSelect from '@SelectBox/ProductSelect/index'
 import ChartBar from './components/ChartBar'
+import ChartTagsBar from './components/ChartTagsBar'
 import NoData from '@/components/NoData'
 import * as AssessmentCenterApi from '@/api/assessmentCenter'
 import * as GradeConfigurationApi from '@/api/gradeConfiguration'
@@ -86,7 +87,7 @@ import * as timespanUtil from "@/utils/timespan"
 
 export default {
   name: 'group-cloud-report',
-  components: { DatePicker, ProductSelect, ChartBar, NoData },
+  components: { DatePicker, ProductSelect, ChartBar, NoData, ChartTagsBar },
   props: {
     // 搜索的角色类型， 组长或者运营
     searchRole: {

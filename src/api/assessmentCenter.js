@@ -373,12 +373,16 @@ export function getCloudProblemByGroup (params, searchRole, searchType) {
         if (!Array.isArray(g.problems)) {
           g.problems = []
         }
-        const item = g.problems.find(problem => problem.name === name)
-        const count = item ? item.count : 0
+        const item = g.problems.filter(problem => problem.name === name)
+        // 标签总数
+        const count = item.reduce((tol, cur) => cur.count + tol, 0) || 0
+        // 该组的总张数
+        const total = g.count || 0
         return {
           id: g.id,
           name: g.name,
           count,
+          percentage: count / total
         }
       })
 
@@ -387,7 +391,7 @@ export function getCloudProblemByGroup (params, searchRole, searchType) {
         data
       }
     })
-
+    
     return list
   })
 }
