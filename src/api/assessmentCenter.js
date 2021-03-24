@@ -397,6 +397,55 @@ export function getCloudProblemByGroup (params, searchRole, searchType) {
 }
 
 /**
+ * 个人抽查平均分数据聚合
+ * @param list
+ * @returns {unknown[]}
+ */
+function filterLevel (list) {
+  const mapList = {}
+  const countSum = list.reduce((sum, item) => {
+    sum += item.count
+    return sum
+  }, 0)
+
+  list.forEach(g => {
+    const parentId = _.get(g, 'parent.id')
+    const parentName = _.get(g, 'parent.name')
+    const typeId = _.get(g, 'parent.score_type.id')
+    const typeName = _.get(g, 'parent.score_type.name')
+
+    if (mapList[typeId]) {
+      const parentList = mapList[typeId].children
+      const findParent = parentList.find(item => item.id === parentId)
+      if (findParent) {
+        findParent.value = findParent.value + g.count
+      } else {
+        parentList.push({
+          id: parentId,
+          name: parentName,
+          value: g.count,
+          countSum
+        })
+      }
+    } else {
+      mapList[typeId] = {
+        name: typeName,
+        id: typeId,
+        countSum,
+        children: [
+          {
+            id: parentId,
+            name: parentName,
+            value: g.count,
+            countSum
+          }
+        ]
+      }
+    }
+  })
+  return Object.values(mapList)
+}
+/**
  * @description 获取个人抽查平均分
  * @method GET
  * @param searchRole 角色： 运营 or 组长
@@ -422,51 +471,6 @@ export function getCheckPoolSubQuota (params, searchRole, searchType) {
     method: 'POST',
     data: params
   }).then(res => {
-
-    function filterLevel (list) {
-      const mapList = {}
-      const countSum = list.reduce((sum, item) => {
-        sum += item.count
-        return sum
-      }, 0)
-
-      list.forEach(g => {
-        const parentId = _.get(g, 'parent.id')
-        const parentName = _.get(g, 'parent.name')
-        const typeId = _.get(g, 'parent.score_type.id')
-        const typeName = _.get(g, 'parent.score_type.name')
-
-        if (mapList[typeId]) {
-          const parentList = mapList[typeId].children
-          const findParent = parentList.find(item => item.id === parentId)
-          if (findParent) {
-            findParent.value = findParent.value + g.count
-          } else {
-            parentList.push({
-              id: parentId,
-              name: parentName,
-              value: g.count,
-              countSum
-            })
-          }
-        } else {
-          mapList[typeId] = {
-            name: typeName,
-            id: typeId,
-            countSum,
-            children: [
-              {
-                id: parentId,
-                name: parentName,
-                value: g.count,
-                countSum
-              }
-            ]
-          }
-        }
-      })
-      return Object.values(mapList)
-    }
     const group = res.group
 
     const smallList = group.filter(item => item.name === '小')
@@ -501,4 +505,62 @@ export function getCheckPoolSubQuota (params, searchRole, searchType) {
       data: mapData
     }
   })
+}
+
+/**
+ * @description 获取个人抽查平均分, 云端和修修兽聚合接口
+ * @method GET
+ * @author cf 2020/07/27
+ * @version @version 2.10.0
+ */
+export async function getAllCheckPoolSubQuota (params) {
+  const paths = [
+    '/project_cloud/retoucher/getShowPicPoolSubQuota',
+    '/project_cloud/retoucher/getCheckPoolSubQuota'
+  ]
+  const res = await Promise.all(paths.map(url => {
+    return axios({
+      url,
+      method: 'POST',
+      data: params
+    })
+  }))
+
+  const showData = res[0] || {}
+  const cloudData = res[1] || {}
+  const group = (showData.group || []).concat(cloudData.group || [])
+  const avgScore = (Number(showData.sum || 0) + Number(cloudData.sum) || 0) /
+    (Number(showData.count || 0) + Number(cloudData.count || 0))
+
+  const smallList = group.filter(item => item.name === '小')
+  const middleList = group.filter(item => item.name === '中')
+  const plantList = group.filter(item => item.name === '种草')
+  const pullList = group.filter(item => item.name === '拔草')
+
+  const mapData = [
+    {
+      name: '小',
+      data: filterLevel(smallList),
+      color: '#ff8f00'
+    },
+    {
+      name: '中',
+      data: filterLevel(middleList),
+      color: '#ff8f00'
+    },
+    {
+      name: '种草',
+      data: filterLevel(plantList),
+      color: '#38bc7f'
+    },
+    {
+      name: '拔草',
+      data: filterLevel(pullList),
+      color: '#ff3974'
+    }
+  ]
+  return {
+    avgScore: getNumberString(avgScore),
+    data: mapData
+  }
 }
