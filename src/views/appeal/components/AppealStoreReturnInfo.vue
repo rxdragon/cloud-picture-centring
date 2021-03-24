@@ -5,7 +5,7 @@
       <div class="panel-content content-one">
         局部退回标记：
         <div
-          v-for="(reasonItem, index) in storePartReworkReason"
+          v-for="(reasonItem, index) in photoData.storePartReworkReason"
           :key="index"
         >
           <div
@@ -27,7 +27,7 @@
       <div class="panel-content content-one">
         局部退回备注：
         <span
-          v-for="(storePartReworkReasonItem, index) in storePartReworkReason"
+          v-for="(storePartReworkReasonItem, index) in photoData.storePartReworkReason"
           :key="index"
         >
           {{ storePartReworkReasonItem.note }}
@@ -36,7 +36,7 @@
       <div class="panel-content content-one">
         整体退回标记：
         <div
-          v-for="(reasonItem) in storeReworkReasonManage"
+          v-for="(reasonItem) in photoData.storeReworkReasonManage"
           :key="reasonItem.id"
           :class="['reason-item', reasonItem.cancel && reasonItem.isDel ? 'del' : '']"
         >
@@ -57,14 +57,6 @@ export default {
     photoData: { type: Object, required: true }
   },
   computed: {
-    // 局部问题
-    storePartReworkReason () {
-      return this.photoData.storePartReworkReason || {}
-    },
-    // 整体原因
-    storeReworkReasonManage () {
-      return this.photoData.storeReworkReasonManage || {}
-    },
     // 整体备注
     storeReworkNote () {
       return this.photoData.storeReworkNote || ''
