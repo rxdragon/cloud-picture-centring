@@ -1,29 +1,36 @@
 <template>
   <div class="crew-performance-management module-panel">
-    <div class="search-box">
-      <div class="search-item">
-        <span>绩效月份</span>
-        <el-date-picker
-          v-model="timeSpan"
-          type="month"
-          clearable
-          value-format="yyyyMM"
-          placeholder="选择月"
-        />
-      </div>
-      <div class="search-item">
-        <el-button type="primary" @click="searchPerformance">查 询</el-button>
-      </div>
-      <div class="search-item button-box" v-if="showPerformanceEdit">
-        <el-button type="primary" plain @click="downPerformanceTemplete">下载绩效模版</el-button>
-        <upload-excel
-          btn-text="导入当月绩效"
-          :header-data="headerKeys"
-          :on-success="handleSuccess"
-          :before-upload="beforeUpload"
-        />
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>绩效月份</span>
+          <el-date-picker
+            v-model="timeSpan"
+            type="month"
+            clearable
+            value-format="yyyyMM"
+            placeholder="选择月"
+          />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="searchPerformance">查 询</el-button>
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item button-box" v-if="showPerformanceEdit">
+          <el-button type="primary" plain @click="downPerformanceTemplete">下载绩效模版</el-button>
+          <upload-excel
+            btn-text="导入当月绩效"
+            :header-data="headerKeys"
+            :on-success="handleSuccess"
+            :before-upload="beforeUpload"
+          />
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="module-tabel-box">
       <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="joinName" label="伙伴姓名（花名）" />
@@ -77,10 +84,8 @@ export default {
 <style lang="less" scoped>
 .crew-performance-management {
   .search-box {
-    margin-bottom: 20px;
-
     .button-box {
-      margin-left: auto;
+      justify-content: flex-end;
     }
   }
 }

@@ -1,32 +1,42 @@
 <template>
   <div class="retoucher-performance">
-    <div class="search-box">
-      <div class="search-item">
-        <span>绩效月份</span>
-        <el-date-picker
-          v-model="timeSpan"
-          type="month"
-          clearable
-          value-format="yyyyMM"
-          placeholder="选择月"
-        />
-      </div>
-      <div class="search-item">
-        <span>云端伙伴</span>
-        <staff-select v-model="staffIds" />
-      </div>
-      <div class="search-item">
-        <el-button type="primary" @click="searchPerformance(1)">查 询</el-button>
-      </div>
-      <div class="search-item button-box" v-if="showPerformanceEdit">
-        <upload-excel
-          btn-text="导入当月绩效"
-          :header-data="headerKeys"
-          :on-success="handleSuccess"
-          :before-upload="beforeUpload"
-        />
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 绩效月份 -->
+      <el-col :span="6" :xl="4">
+        <div class="search-item">
+          <span>绩效月份</span>
+          <el-date-picker
+            v-model="timeSpan"
+            type="month"
+            clearable
+            value-format="yyyyMM"
+            placeholder="选择月"
+          />
+        </div>
+      </el-col>
+      <el-col :span="6" :xl="4">
+        <div class="search-item">
+          <span>云端伙伴</span>
+          <staff-select v-model="staffIds" />
+        </div>
+      </el-col>
+      <el-col :span="6" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="searchPerformance(1)">查 询</el-button>
+        </div>
+      </el-col>
+      <el-col :span="6" :xl="4" a>
+        <div class="search-item button-box" v-if="showPerformanceEdit">
+          <upload-excel
+            btn-text="导入当月绩效"
+            :header-data="headerKeys"
+            :on-success="handleSuccess"
+            :before-upload="beforeUpload"
+          />
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="table-module-box">
       <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="joinName" label="伙伴姓名（姓名）" />
@@ -108,14 +118,10 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.retoucher-performance {
-  .search-box {
-    margin-bottom: 20px;
-
-    .button-box {
-      margin: 0 0 0 auto;
-    }
+.<style lang="less" scoped>
+.search-box {
+  .button-box {
+    justify-content: flex-end;
   }
 }
 </style>

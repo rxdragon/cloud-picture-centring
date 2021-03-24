@@ -10,72 +10,84 @@
         </div>
       </div>
       <!-- 搜索框 -->
-      <el-row
-        class="searhc-row"
-        :gutter="20"
-        align="center"
-        type="flex"
-      >
+      <el-row class="search-box" :gutter="20">
         <!-- 门店退单时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="search-item">
             <span>门店退单时间</span>
-            <date-picker v-model="reworkTimeSpan" :disabled="!canSelectTimeSpan('reworkTimeSpan')" />
+            <date-picker v-model="reworkTimeSpan" :disabled="canSelectTimeSpan('reworkTimeSpan')" />
           </div>
         </el-col>
         <!-- 云端审核通过时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="search-item">
             <span>云端审核通过时间</span>
             <date-picker
               v-model="cloudAuditTimeSpan"
-              :disabled="!canSelectTimeSpan('cloudAuditTimeSpan')"
+              :disabled="canSelectTimeSpan('cloudAuditTimeSpan')"
             />
           </div>
         </el-col>
         <!-- 门店评价时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="8" :xl="8">
           <div class="search-item">
             <span>门店评价时间</span>
             <date-picker
               v-model="storeEvaluateTimeSpan"
-              :disabled="!canSelectTimeSpan('storeEvaluateTimeSpan')"
+              :disabled="canSelectTimeSpan('storeEvaluateTimeSpan')"
             />
           </div>
         </el-col>
         <!-- 云学院评价时间 -->
-        <el-col :span="10" :xl="6">
+        <el-col :span="12" :xl="6">
           <div class="search-item">
             <span>云学院评价时间</span>
             <date-picker
               v-model="cloudEvaluateTimeSpan"
-              :disabled="!canSelectTimeSpan('cloudEvaluateTimeSpan')"
+              :disabled="canSelectTimeSpan('cloudEvaluateTimeSpan')"
             />
           </div>
         </el-col>
-        <!-- 云学院问题 -->
-        <el-col :span="24" :xl="24">
+        <!-- 云学院标签 -->
+        <el-col :span="12" :xl="6">
           <div class="search-item">
-            <span>云学院问题</span>
-            <issue-label-select v-model="issueValue" />
+            <span>云学院标签</span>
+            <issue-label-select :disabled="canSelectTimeSpan('cloudIssueValue')" v-model="cloudIssueValue" :type="GRADE_LABEL_TYPE.CLOUD"/>
+          </div>
+        </el-col>
+        <!-- 修修兽评分时间 -->
+        <el-col :span="12" :xl="6">
+          <div class="search-item">
+            <span>修修兽评分时间</span>
+            <date-picker
+              v-model="showEvaluateTimeSpan"
+              :disabled="canSelectTimeSpan('showEvaluateTimeSpan')"
+            />
+          </div>
+        </el-col>
+        <!-- 修修兽标签 -->
+        <el-col :span="12" :xl="6">
+          <div class="search-item">
+            <span>修修兽标签</span>
+            <issue-label-select :disabled="canSelectTimeSpan('showIssueValue')" v-model="showIssueValue" :type="GRADE_LABEL_TYPE.SHOW_PIC"/>
           </div>
         </el-col>
         <!-- 门店退回问题 -->
-        <el-col :span="7" :xl="4">
+        <el-col :span="6" :xl="6">
           <div class="search-item">
             <span>门店退回类型</span>
             <quality-select v-model="returnType" />
           </div>
         </el-col>
         <!-- 门店评价 -->
-        <el-col :span="5" :xl="4">
+        <el-col :span="6" :xl="6">
           <div class="search-item">
             <span>门店评价</span>
             <evaluate-select v-model="isGood" />
           </div>
         </el-col>
         <!-- 伙伴 -->
-        <el-col :span="5" :xl="12">
+        <el-col :span="6" :xl="6">
           <div class="staff-option search-item" v-if="searchRole === SEARCH_ROLE.GROUP_LEADER">
             <span>组员</span>
             <crew-select v-model="staffId" />
@@ -86,7 +98,7 @@
           </div>
         </el-col>
         <!-- 查 询 -->
-        <el-col :span="5" :xl="12">
+        <el-col :span="6" :xl="6">
           <div class="search-item">
             <el-button type="primary" @click="searchCloudInfo(1)">查 询</el-button>
           </div>
@@ -113,10 +125,10 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="云学院抽查">
+          <el-table-column label="抽查类型">
             <template slot-scope="{ row }">
               <div class="table-detail-box">
-                <p>是否抽查：{{ row.isCloudEvaluation ? '是' : '否' }}</p>
+                <p>抽查类型：{{ row.evaluationTypeCN || '-' }}</p>
                 <p>评价时间：{{ row.cloudEvaluateTime }}</p>
               </div>
             </template>
@@ -161,7 +173,7 @@ import StaffSelect from '@SelectBox/StaffSelect'
 import ShowEvaluate from '@/components/ShowEvaluate'
 import moment from 'moment'
 
-import { SEARCH_ROLE } from '@/utils/enumerate'
+import { SEARCH_ROLE, GRADE_LABEL_TYPE, SPOT_CHECK_MAP } from '@/utils/enumerate'
 import { joinTimeSpan, delayLoading } from '@/utils/timespan.js'
 
 import * as OperationManage from '@/api/operationManage.js'
@@ -177,12 +189,15 @@ export default {
   data () {
     return {
       SEARCH_ROLE,
+      GRADE_LABEL_TYPE,
       loading: false,
       reworkTimeSpan: null, // 门店退单时间
       storeEvaluateTimeSpan: null, // 门店评价时间
       cloudAuditTimeSpan: null, // 云端审核时间
       cloudEvaluateTimeSpan: null, // 云学院评价时间
-      issueValue: [], // 问题标签
+      showEvaluateTimeSpan: null, // 修修兽评价时间
+      cloudIssueValue: [], // 云学院问题标签
+      showIssueValue: [], // 修修兽问题标签
       returnType: '', // 门店退单类型
       isGood: 'all', // 门店评价
       staffId: '', // 组员
@@ -232,13 +247,20 @@ export default {
         page: this.pager.page,
         pageSize: this.pager.pageSize
       }
-      if (!this.reworkTimeSpan && !this.storeEvaluateTimeSpan && !this.cloudAuditTimeSpan && !this.cloudEvaluateTimeSpan) {
+      const timeTypes = [
+        'reworkTimeSpan',
+        'storeEvaluateTimeSpan',
+        'cloudAuditTimeSpan',
+        'cloudEvaluateTimeSpan',
+        'showEvaluateTimeSpan',
+      ]
+      if (!timeTypes.some(type => Boolean(this[type]))) {
         this.$newMessage.warning('请填写时间')
         return false
       }
       // 如果选中退回标记问题或者云学院问题标记讲不能查询超过10日的日期
-      if (this.issueValue.length || this.returnType) {
-        const timeType = ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan']
+      if (this.cloudIssueValue.length || this.showIssueValue.length || this.returnType) {
+        const timeType = ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan', 'showEvaluateTimeSpan']
         const timeLess10 = timeType.some(timeTypeItem => {
           const diffDays = getDiffDays(this[timeTypeItem])
           return diffDays <= 10 && diffDays >= 0
@@ -263,9 +285,22 @@ export default {
       if (this.cloudEvaluateTimeSpan) {
         req.cloudEvaluateStartAt = joinTimeSpan(this.cloudEvaluateTimeSpan[0])
         req.cloudEvaluateEndAt = joinTimeSpan(this.cloudEvaluateTimeSpan[1], 1)
+        req.cloudEvaluateType = SPOT_CHECK_MAP.CHECK_POOL_SPOT
+      }
+      if (this.showEvaluateTimeSpan) {
+        req.cloudEvaluateStartAt = joinTimeSpan(this.showEvaluateTimeSpan[0])
+        req.cloudEvaluateEndAt = joinTimeSpan(this.showEvaluateTimeSpan[1], 1)
+        req.cloudEvaluateType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
+      }
+      if (this.cloudIssueValue.length) {
+        req.cloudEvaluateType = SPOT_CHECK_MAP.CHECK_POOL_SPOT
+        req.cloudTags = this.cloudIssueValue
+      }
+      if (this.showIssueValue.length) {
+        req.cloudEvaluateType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
+        req.cloudTags = this.showIssueValue
       }
       if (this.isGood !== 'all') { req.evaluate = this.isGood ? 'good' : 'bad' }
-      if (this.issueValue.length) { req.cloudTags = this.issueValue }
       if (this.returnType) { req.storeReworkType = this.returnType }
       // 伙伴id
       if (this.searchRole === SEARCH_ROLE.GROUP_LEADER && this.staffId) {
@@ -309,9 +344,22 @@ export default {
      * @description 是否能选中日期
      */
     canSelectTimeSpan (type) {
-      const typeList = ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan']
-      const filterTypeArr = typeList.filter(item => item !== type)
-      return filterTypeArr.every(item => !Boolean(this[item]))
+      // 互斥规则
+      const mutuallyTypes = [
+        ['reworkTimeSpan', 'storeEvaluateTimeSpan', 'cloudAuditTimeSpan', 'cloudEvaluateTimeSpan', 'showEvaluateTimeSpan'],
+        ['cloudIssueValue', 'showIssueValue'],
+        ['cloudEvaluateTimeSpan', 'showIssueValue'],
+        ['showEvaluateTimeSpan', 'cloudIssueValue'],
+      ]
+
+      const has = (type) => {
+        return Array.isArray(this[type]) ? Boolean(this[type].length) : Boolean(this[type])
+      }
+
+      return mutuallyTypes.some(types => {
+        if (!types.includes(type)) return false
+        return types.some(t => has(t) && (t !== type))
+      })
     },
     /**
      * @description 跳转详情
@@ -337,7 +385,8 @@ export default {
       this.storeEvaluateTimeSpan = null
       this.cloudAuditTimeSpan = null
       this.cloudEvaluateTimeSpan = null
-      this.issueValue = []
+      this.cloudIssueValue = []
+      this.showIssueValue = []
       this.returnType = ''
       this.isGood = 'all'
       this.staffId = ''
@@ -373,29 +422,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     height: @headerHeight;
-    -webkit-user-select: none;
+    user-select: none;
     background-color: #f2f6fc;
     box-shadow: var(--boxShadow);
 
     h3 {
       font-size: 24px;
-    }
-  }
-
-  .el-col {
-    width: max-content;
-  }
-
-  .searhc-row {
-    flex-wrap: wrap;
-  }
-
-  .search-item {
-    margin-right: 0;
-    margin-bottom: 20px;
-
-    & > span {
-      flex-shrink: 0;
     }
   }
 

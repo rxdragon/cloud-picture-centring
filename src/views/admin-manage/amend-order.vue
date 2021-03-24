@@ -4,31 +4,41 @@
       <h3>修改照片产品</h3>
     </div>
     <!-- 搜索模块 -->
-    <div class="search-box">
-      <div class="caid-search search-item">
-        <span>流水号</span>
-        <el-input
-          v-model.trim="caid"
-          :disabled="Boolean(id)"
-          placeholder="请输入流水号"
-          clearable
-          @keyup.native.enter="getStreamInfo"
-        />
-      </div>
-      <div class="caid-search search-item">
-        <span>订单号</span>
-        <el-input
-          v-model.trim="id"
-          :disabled="Boolean(caid)"
-          placeholder="请输入订单号"
-          clearable
-          @keyup.native.enter="getStreamInfo"
-        />
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getStreamInfo">查 询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 流水号 -->
+      <el-col :span="6" :xl="4">
+        <div class="caid-search search-item">
+          <span>流水号</span>
+          <el-input
+            v-model.trim="caid"
+            :disabled="Boolean(id)"
+            placeholder="请输入流水号"
+            clearable
+            @keyup.native.enter="getStreamInfo"
+          />
+        </div>
+      </el-col>
+      <!-- 订单号 -->
+      <el-col :span="6" :xl="4">
+        <div class="caid-search search-item">
+          <span>订单号</span>
+          <el-input
+            v-model.trim="id"
+            :disabled="Boolean(caid)"
+            placeholder="请输入订单号"
+            clearable
+            @keyup.native.enter="getStreamInfo"
+          />
+        </div>
+      </el-col>
+      <!-- 查 询 -->
+      <el-col :span="6" :xl="4">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="getStreamInfo">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+ 
     <!-- 提示 -->
     <div class="tip-box">
       <el-alert title="修改产品，只能更改相同修图标准的产品。" type="warning" effect="dark"></el-alert>
@@ -222,7 +232,6 @@ export default {
           const retouchStandard = this.dataList[0].product.retouch_standard
           this.productsList = await Product.getAllProductSelect(retouchStandard)
         }
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -278,8 +287,6 @@ export default {
         this.$store.dispatch('setting/showLoading', this.routeName)
         await WorkManage.modifyStream(req)
         this.$newMessage.success('操作成功!')
-      } catch (error) {
-        this.$newMessage.warning(error.message || error)
       } finally {
         await this.$delayLoading()
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
@@ -348,16 +355,6 @@ export default {
 .amend-order {
   .tip-box {
     margin-bottom: 20px;
-  }
-
-  .search-box {
-    margin-bottom: 20px;
-
-    .caid-search {
-      .el-input {
-        width: 200px;
-      }
-    }
   }
 
   .caid-box {

@@ -9,10 +9,10 @@ import {
 
 export default class StreamAppealModel {
   base = {}
-  id = ''
+  id = '' // 申述id
   desc = ''
-  streamId = ''
-  streamNum = ''
+  streamId = '' // 流水id
+  streamNum = '' // 流水号
   createdAt = '' // 申诉时间
   appealType = '' // 申诉类型
   appealTypeName = '' // 申诉类型中文

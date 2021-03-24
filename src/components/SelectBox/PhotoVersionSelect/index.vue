@@ -42,7 +42,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.order-state-select {
-  min-width: 164px;
+.photo-version-select {
+  width: 100%;
 }
 </style>

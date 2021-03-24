@@ -41,7 +41,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-select {
-  width: 105px;
+.spot-grass-select {
+  width: 100%;
 }
 </style>

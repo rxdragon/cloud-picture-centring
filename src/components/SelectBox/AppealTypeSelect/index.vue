@@ -52,6 +52,6 @@ export default {
 
 <style lang="less" scoped>
 .appeal-type-select {
-  width: 180px;
+  width: 100%;
 }
 </style>

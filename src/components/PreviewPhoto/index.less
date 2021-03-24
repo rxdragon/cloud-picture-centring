@@ -386,6 +386,7 @@
           align-items: center;
           font-size: 14px;
           font-weight: 500;
+          margin-bottom: 10px;
 
           &::before {
             display: inline-block;
@@ -397,35 +398,33 @@
           }
         }
 
-        .label-box {
-          .label-class-title {
-            padding: 10px 0;
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 20px;
-            color: #eee;
-          }
-
-          .label-content {
-            margin-bottom: -10px;
-
-            .el-tag {
-              margin: 0 10px 10px 0;
-              font-size: 12px;
-              font-weight: 400;
-              color: #eee;
-              -webkit-user-select: none;
-              background-color: #000;
-              border: none;
-              border-radius: 4px;
-              opacity: 0.6;
-
-              &.active {
-                background-color: #808080;
-              }
+        .issue-class-box {
+          .label-tag {
+            margin-right: 10px;
+            margin-bottom: 10px;
+    
+            &.plant {
+              color: #38bc7f;
+              background-color: #ecf7f2;
+              border-color: #7fd9af;
+            }
+    
+            &.pull {
+              color: #ff3974;
+              background-color: #fff0f0;
+              border-color: #f99ab7;
+            }
+    
+            &.middle,
+            &.small {
+              color: #ff8f00;
+              background-color: #fff7ed;
+              border-color: #ffce90;
             }
           }
         }
+
+        
       }
 
       .store-return-reson {

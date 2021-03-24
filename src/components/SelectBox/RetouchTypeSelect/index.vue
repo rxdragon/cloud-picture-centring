@@ -48,3 +48,9 @@ export default {
   }
 }
 </script>
+
+.<style lang="less" scoped>
+.retouch-type-select {
+  width: 100%;
+}
+</style>

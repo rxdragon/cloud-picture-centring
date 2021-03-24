@@ -1,15 +1,22 @@
 <template>
   <div v-loading="loading" class="overall-performance">
     <!-- 搜索盒 -->
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getWholeQuota">查询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 查询 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="getWholeQuota">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+    <!-- 数据 -->
     <div class="module-panel">
       <div class="data-info-box">
         <div class="panel-title">修图数据</div>
@@ -139,10 +146,6 @@ export default {
 
 <style lang="less">
 .overall-performance {
-  .search-box {
-    margin-bottom: 32px;
-  }
-
   .module-panel {
     display: flex;
     padding: 38px 0 13px;

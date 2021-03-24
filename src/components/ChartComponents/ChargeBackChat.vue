@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 
 const blueLinearGradient = new echarts.graphic.LinearGradient(
   0, 0, 0, 1,

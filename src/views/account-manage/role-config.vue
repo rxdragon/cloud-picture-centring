@@ -6,15 +6,21 @@
           <h3>角色组配置</h3>
           <el-button type="primary" @click="editRole">添加角色组</el-button>
         </div>
-        <div class="search-box">
-          <div class="role-box search-item">
-            <span>角色组名称</span>
-            <el-input v-model.trim="roleName" @keyup.native.enter="getRoleList(1)" />
-          </div>
-          <div class="button-box">
-            <el-button type="primary" @click="getRoleList(1)">查 询</el-button>
-          </div>
-        </div>
+        <!-- 搜索框 -->
+        <el-row class="search-box" :gutter="20">
+          <el-col :span="8" :xl="4">
+            <div class="role-box search-item">
+              <span>角色组名称</span>
+              <el-input v-model.trim="roleName" @keyup.native.enter="getRoleList(1)" />
+            </div>
+          </el-col>
+          <el-col :span="8" :xl="4">
+            <div class="button-box search-item">
+              <el-button type="primary" @click="getRoleList(1)">查 询</el-button>
+            </div>
+          </el-col>
+        </el-row>
+
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="title" label="角色组名称" />
@@ -152,16 +158,8 @@ export default {
 }
 </script>
 
-<style lang="less">
-.role-config {
-  .main {
-    .search-box {
-      .role-box {
-        .el-input {
-          width: 220px;
-        }
-      }
-    }
-  }
+<style lang="less" scoped>
+.table-box {
+  margin: 0;
 }
 </style>

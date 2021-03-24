@@ -47,6 +47,7 @@ const permissionGetters = {
   showTimeStatistics: state => state.permission.showTimeStatistics, // 是否显示用时统计
   showRetoucherChargeBackReport: state => state.permission.showRetoucherChargeBackReport, // 退单统计
   showCloudCollegeReport: state => state.permission.showCloudCollegeReport, // 云学院报告
+  showPicCollegeReport: state => state.permission.showPicCollegeReport, // 修修兽院报告权限点
   showRetoucherGroupPerformance: state => state.permission.showRetoucherGroupPerformance, // 是否显示用时统计
   showCheckerEvaluate: state => state.permission.showCheckerEvaluate, // 是否显示看片评价
   showFlowInfo: state => state.permission.showCheckerEvaluate, // 是否显示流量看板按钮
@@ -77,7 +78,7 @@ const permissionGetters = {
 
   // 工作看板
   hasWorkbench: state => state.permission.hasWorkbench, // 是否显示工作看板
-  
+
   // 通知栏目
   showInformation: state => state.permission.showInformation, // 是否显示消息通知
   showAnnouncementDelete: state => state.permission.showAnnouncementDelete, // 是否显示公告删除按钮

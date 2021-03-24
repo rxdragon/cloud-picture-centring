@@ -7,23 +7,32 @@
           <el-button type="primary" @click="addConfig">添加新配置</el-button>
         </div>
         <!-- 搜索框 -->
-        <div class="search-box">
-          <div class="staff-box search-item">
-            <span>伙伴</span>
-            <staff-select v-model="staffId" @change="onSearchChange" />
-          </div>
-          <div class="staff-box search-item">
-            <span>机构</span>
-            <institution-select v-model="institutionId" @change="onSearchChange" />
-          </div>
-          <div class="state-box search-item">
-            <span>使用状态</span>
-            <state-select v-model="stateType" @change="onSearchChange" />
-          </div>
-          <div class="search-button">
-            <el-button type="primary" @click="getImpulseList">查 询</el-button>
-          </div>
-        </div>
+        <el-row class="search-box" :gutter="20">
+          <el-col :span="6" :xl="4">
+            <div class="staff-box search-item">
+              <span>伙伴</span>
+              <staff-select v-model="staffId" @change="onSearchChange" />
+            </div>
+          </el-col>
+          <el-col :span="6" :xl="4">
+            <div class="staff-box search-item">
+              <span>机构</span>
+              <institution-select v-model="institutionId" @change="onSearchChange" />
+            </div>
+          </el-col>
+          <el-col :span="6" :xl="4">
+            <div class="state-box search-item">
+              <span>使用状态</span>
+              <state-select v-model="stateType" @change="onSearchChange" />
+            </div>
+          </el-col>
+          <el-col :span="6" :xl="4">
+            <div class="search-item">
+              <el-button type="primary" @click="getImpulseList">查 询</el-button>
+            </div>
+          </el-col>
+        </el-row>
+       
         <!-- 表格框 -->
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%;">
@@ -260,9 +269,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .amount-award {
+  .table-box {
+    margin-top: 0;
+  }
+
   .button-box {
     text-align: right;
   }

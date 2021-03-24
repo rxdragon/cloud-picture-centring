@@ -1,18 +1,27 @@
 <template>
   <div class="charge-back-report module-panel" v-loading="loading">
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-option search-item">
-        <span>组员</span>
-        <crew-select v-model="staffId" />
-      </div>
-      <div class="button-box search-item">
-        <el-button type="primary" @click="searchData">查 询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 组员 -->
+      <el-col :span="8" :xl="4">
+        <div class="staff-option search-item">
+          <span>组员</span>
+          <crew-select v-model="staffId" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="searchData">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <!-- 退单统计 -->
     <div class="charge-back-chat charge-back-module">
       <div class="panel-title">退单统计</div>

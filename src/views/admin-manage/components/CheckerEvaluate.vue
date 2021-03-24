@@ -1,22 +1,34 @@
 <template>
   <div v-loading="loading" class="checker-evaluate">
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-search search-item">
-        <span>伙伴</span>
-        <staff-select v-model="staffId" :props="{ multiple: false }" />
-      </div>
-      <div class="store-grade search-item">
-        <span>门店评价</span>
-        <evaluate-select v-model="storeEvaluate"/>
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getStoreEvaluate(1)">查询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="staff-search search-item">
+          <span>伙伴</span>
+          <staff-select v-model="staffId" :props="{ multiple: false }" />
+        </div>
+      </el-col>
+      <!-- 门店评价 -->
+      <el-col :span="4" :xl="4">
+        <div class="store-grade search-item">
+          <span> 门店评价 </span>
+          <evaluate-select v-model="storeEvaluate"/>
+        </div>
+      </el-col>
+      <!-- 查询 -->
+      <el-col :span="4" :xl="4">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="getStoreEvaluate(1)">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <!-- 列表 -->
     <el-table :data="tableData" style="width: 100%;">
       <el-table-column label="评价时间" width="180">
@@ -140,22 +152,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-
-.checker-evaluate {
-  .search-box {
-    margin-bottom: 24px;
-
-    .store-grade {
-      .el-select {
-        width: 120px;
-      }
-    }
-
-    .button-box {
-      text-align: right;
-    }
-  }
-}
-</style>

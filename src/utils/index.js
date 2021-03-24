@@ -229,3 +229,13 @@ export function getAvg (a, b, size = 2) {
   const avg = (Number(a) / Number(b)).toFixed(size)
   return parseFloat(avg)
 }
+
+/**
+ * 格式化数字， 非法的时候返回 '0.00'
+ * @param number
+ * @returns {string|string}
+ */
+export function getNumberString (number) {
+  const numberString = String(number)
+  return isNaN(numberString) ? '0.00' : Number(numberString).toFixed(2)
+}

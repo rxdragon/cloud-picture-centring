@@ -4,64 +4,81 @@
       <h3>客片池</h3>
     </div>
     <!-- 搜索相关 -->
-    <div class="search-box">
+    <el-row class="search-box" :gutter="20">
       <!-- 修图完成时间 -->
-      <div class="search-item">
-        <span>修图完成时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>修图完成时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
       <!-- 伙伴 -->
-      <div class="staff-box search-item">
-        <span class="row-title">伙伴</span>
-        <staff-select v-model="staffId" />
-      </div>
+      <el-col :span="8" :xl="4">
+        <div class="staff-box search-item">
+          <span class="row-title">伙伴</span>
+          <staff-select v-model="staffId" />
+        </div>
+      </el-col>
       <!-- 订单信息 -->
-      <div class="order-search search-item">
-        <el-input
-          v-model.trim="orderSearchValue"
-          placeholder="请输入内容"
-          class="input-with-select"
-          @keyup.native.enter="getPhotoList(1)"
-        >
-          <el-select slot="prepend" v-model="orderType" placeholder="请选择">
-            <el-option label="云端流水号" :value="1" />
-            <el-option label="订单号" :value="2" />
-            <el-option label="顾客姓名" :value="3" />
-            <el-option label="手机号" :value="4" />
-          </el-select>
-        </el-input>
-      </div>
-      <!-- 照片版本 -->
-      <div class="order-search search-item">
-        <span class="row-title">照片类型</span>
-        <photo-version-select v-model="photoVersion" />
-      </div>
+      <el-col :span="8" :xl="4">
+        <div class="order-search search-item">
+          <el-input
+            v-model.trim="orderSearchValue"
+            placeholder="请输入内容"
+            class="input-with-select"
+            @keyup.native.enter="getPhotoList(1)"
+          >
+            <el-select slot="prepend" v-model="orderType" placeholder="请选择">
+              <el-option label="云端流水号" :value="1" />
+              <el-option label="订单号" :value="2" />
+              <el-option label="顾客姓名" :value="3" />
+              <el-option label="手机号" :value="4" />
+            </el-select>
+          </el-input>
+        </div>
+      </el-col>
+      <!-- 照片类型 -->
+      <el-col :span="8" :xl="4">
+        <div class="order-search search-item">
+          <span class="row-title">照片类型</span>
+          <PhotoVersionSelect v-model="photoVersion" />
+        </div>
+      </el-col>
       <!-- 看片评价 -->
-      <div class="check-evaluate search-item">
-        <span>看片评价</span>
-        <el-select v-model="checkValue" placeholder="请选择">
-          <el-option
-            v-for="item in checkOption"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </div>
+      <el-col :span="8" :xl="4">
+        <div class="check-evaluate search-item">
+          <span>看片评价</span>
+          <el-select v-model="checkValue" placeholder="请选择">
+            <el-option
+              v-for="item in checkOption"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </div>
+      </el-col>
       <!-- 产品名称 -->
-      <div class="product-box search-item">
-        <span class="row-title">产品名称</span>
-        <product-select v-model="productValues" />
-      </div>
+      <el-col :span="8" :xl="4">
+        <div class="product-box search-item">
+          <span class="row-title">产品名称</span>
+          <product-select v-model="productValues" />
+        </div>
+      </el-col>
       <!-- 修图标准 -->
-      <div class="search-item">
-        <span>修图标准</span>
-        <retouch-kind-select v-model="retouchStandards" multiple placeholder="请选择修图标准"/>
-      </div>
-      <div class="button-box search-item">
-        <el-button type="primary" @click="getPhotoList">查询</el-button>
-      </div>
-    </div>
+      <el-col :span="6" :xl="4">
+        <div class="search-item">
+          <span>修图标准</span>
+          <retouch-kind-select v-model="retouchStandards" multiple placeholder="请选择修图标准"/>
+        </div>
+      </el-col>
+      <el-col :span="2" :xl="2">
+        <div class="button-box search-item">
+          <el-button type="primary" @click="getPhotoList">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+   
     <guest-photo-scroll ref="guestScroll" :search-params="searchParams" v-if="guestInfiniteScroll" />
     <guest-photo-list ref="guestList" :search-params="searchParams" v-else />
   </div>
@@ -172,37 +189,13 @@ export default {
 
 <style lang="less" scoped>
 .search-box {
-  flex-wrap: wrap;
-  align-items: center;
-
-  .search-item {
-    margin-right: 24px;
-    margin-bottom: 20px;
-
-    & > span {
-      text-align-last: justify;
-    }
-  }
-
-  .row-title {
-    width: 56px;
-  }
-
-  .product-box {
-    .el-cascader {
-      width: 220px !important;
-    }
-  }
-
   .order-search {
     & /deep/ .el-input-group__prepend {
       width: 120px;
-    }
-  }
 
-  .check-evaluate {
-    & > span {
-      width: 84px;
+      .el-select {
+        width: 120px;
+      }
     }
   }
 }

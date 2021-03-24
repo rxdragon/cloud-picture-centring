@@ -46,3 +46,9 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.state-select {
+  width: 100%;
+}
+</style>

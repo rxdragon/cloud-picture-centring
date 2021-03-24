@@ -47,6 +47,11 @@ const adminConfiguration = {
       name: 'ProductControl',
       component: () => import('@/views/admin-configuration/product-control.vue'),
       meta: { title: '产品管理', icon: '' }
+    }, {
+      path: 'product-classification',
+      name: 'ProductClassification',
+      component: () => import('@/views/admin-configuration/product-classification.vue'),
+      meta: { title: '产品分类管理', icon: '' }
     }
   ]
 }

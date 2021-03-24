@@ -76,6 +76,8 @@ export default {
 .date-picker {
   .el-date-editor {
     .el-range-separator {
+      flex-shrink: 0;
+      width: max-content;
       padding: 0;
     }
   }

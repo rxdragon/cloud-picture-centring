@@ -42,9 +42,7 @@
         >
           门店非质量问题
         </div>
-        <div v-if="cloudEvaluatorType === GRADE_TYPE.PLANT" class="tag green-tag">种草</div>
-        <div v-if="cloudEvaluatorType === GRADE_TYPE.PULL" class="tag red-tag">拔草</div>
-        <div v-if="cloudEvaluatorType === GRADE_TYPE.NONE" class="tag gray-tag">通过</div>
+        <div class="tag blue-tag" v-if="checkPoolScore">{{ checkPoolScore }}</div>
       </div>
     </div>
     <!-- 拼接照信息 -->
@@ -147,7 +145,8 @@ export default {
     showSpecialEffects: { type: Boolean, default: true }, // 是否显示特效
     showStorePartReworkReason: { type: Boolean, default: true },
     showLabelInfo: { type: Boolean }, // 显示标记信息
-    returnQualityType: { type: String } // 被退回标记
+    returnQualityType: { type: String }, // 被退回标记
+    checkPoolScore: { type: [Number, String] } // 评分
   },
   data () {
     return {

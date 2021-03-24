@@ -42,3 +42,9 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.crew-select {
+  width: 100%;
+}
+</style>

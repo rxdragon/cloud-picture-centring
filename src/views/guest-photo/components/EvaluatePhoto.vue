@@ -1,30 +1,41 @@
 <template>
   <div class="evaluate-photo">
-    <div class="search-box">
-      <div class="search-item">
-        <span>摄影上传时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-box search-item">
-        <span>伙伴</span>
-        <staff-select v-model="staffId" />
-      </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 摄影上传时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>摄影上传时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 伙伴 -->
+      <el-col :span="8" :xl="4">
+        <div class="staff-box search-item">
+          <span>伙伴</span>
+          <staff-select v-model="staffId" />
+        </div>
+      </el-col>
       <!-- 修图标准 -->
-      <div class="search-item">
-        <span>修图标准</span>
-        <retouch-kind-select v-model="retouchStandard" placeholder="请选择修图标准"/>
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getAttitudePhotoList(true)">查询</el-button>
-      </div>
-    </div>
-    <div class="search-box">
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>修图标准</span>
+          <retouch-kind-select v-model="retouchStandard" placeholder="请选择修图标准"/>
+        </div>
+      </el-col>
       <!-- 产品名称 -->
-      <div class="product-box search-item">
-        <span class="row-title">产品名称</span>
-        <product-select v-model="productValue" :props="{ multiple: false }" />
-      </div>
-    </div>
+      <el-col :span="8" :xl="4">
+        <div class="product-box search-item">
+          <span class="row-title">产品名称</span>
+          <ProductSelect v-model="productValue" :props="{ multiple: false }" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="getAttitudePhotoList(true)">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="module-panel table-box">
       <div v-if="photos.length" class="search-data">
         <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-box">
@@ -201,30 +212,6 @@ export default {
 <style lang="less">
 
 .evaluate-photo {
-  .search-box {
-    margin-bottom: 20px;
-
-    .panel-title {
-      margin-bottom: 12px;
-    }
-
-    .product-box {
-      .row-title {
-        width: 84px;
-      }
-
-      .el-cascader {
-        width: 300px;
-      }
-    }
-
-    .search-item {
-      & > span {
-        text-align-last: justify;
-      }
-    }
-  }
-
   .search-data {
     display: flex;
     flex-wrap: wrap;
@@ -261,6 +248,10 @@ export default {
     .page-box {
       width: 100%;
     }
+  }
+
+  .table-box {
+    margin-top: 0;
   }
 }
 </style>
