@@ -134,12 +134,13 @@ export function delScoreConfig (params) {
 
 /**
  * @description 获取云学院评分配置列表
+ * gradeType: 修修兽or云端， withTrashed： 是否已经被删除
  * @method GET
  * @author nx 2021/03/11
  * @version @version 2.24.0
  */
-export function getScoreConfig (gradeType = GRADE_LABEL_TYPE.CLOUD) {
-  const url = getUrl(gradeType) + '/getScoreConfig'
+export function getScoreConfig (gradeType = GRADE_LABEL_TYPE.CLOUD, withTrashed= false) {
+  const url = getUrl(gradeType) + `/getScoreConfig?withTrashed=${withTrashed}`
   return axios({
     url,
     method: 'GET'

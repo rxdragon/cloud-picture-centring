@@ -5,7 +5,7 @@
       <el-col :span="8" :xl="4">
         <div class="search-item">
           <span>评价时间</span>
-          <date-picker v-model="timeSpan" />
+          <date-picker style="width: 300px;" v-model="timeSpan" />
         </div>
       </el-col>
       <!-- 修图伙伴 -->
@@ -118,7 +118,12 @@ export default {
         }
         if (this.staffIds.length) req.retoucherIds = this.staffIds
         if (this.productValue.length) req.productIds = this.productValue
-        const res = await AssessmentCenterApi.getCheckPoolSubQuota(req, this.searchRole, this.searchType)
+        let res = {}
+        if (this.searchRole === CLOUD_ROLE.CREW) {
+          res = await AssessmentCenterApi.getAllCheckPoolSubQuota(req)
+        } else {
+          res = await AssessmentCenterApi.getCheckPoolSubQuota(req, this.searchRole, this.searchType)
+        }
         this.avgScore = res.avgScore || '-'
         this.gradeConfigurations = res.data
       } finally {
