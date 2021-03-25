@@ -322,5 +322,11 @@ export default class StreamModel {
       this.evaluationTypeCN = EVALUATION_TYPE[SPOT_CHECK_MAP.CHECK_POOL_SPOT]
       return
     }
+    // 兼容老数据
+    if (statics.includes('cloud_evaluation')) {
+      this.evaluationType = SPOT_CHECK_MAP.CHECK_POOL_SPOT
+      this.evaluationTypeCN = EVALUATION_TYPE[SPOT_CHECK_MAP.CHECK_POOL_SPOT]
+      return
+    }
   }
 }
