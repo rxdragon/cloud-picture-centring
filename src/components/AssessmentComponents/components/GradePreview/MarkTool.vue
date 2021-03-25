@@ -69,7 +69,7 @@
       </el-tooltip>
     </div>
     <!-- 直线 -->
-    <div class="tool" :class="{ 'active': drawType === TOOL_TYPE.LINE }" @click="changeDrawType(TOOL_TYPE.LINE)">
+    <!-- <div class="tool" :class="{ 'active': drawType === TOOL_TYPE.LINE }" @click="changeDrawType(TOOL_TYPE.LINE)">
       <el-tooltip
         class="item"
         effect="dark"
@@ -78,6 +78,24 @@
       >
         <div class="tool-dom">
           <i id="line" class="el-icon-minus" />
+        </div>
+      </el-tooltip>
+    </div> -->
+    <!-- 箭头 -->
+    <div
+      class="tool"
+      :class="{ 'active': canvasOption.drawType === TOOL_TYPE.ARROW }"
+      @click="changeDrawType(TOOL_TYPE.ARROW)"
+    >
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="箭头"
+        placement="right"
+      >
+        <div class="tool-dom">
+          <i id="arrow" class="el-icon-top-right" />
+          <span class="shortcut">C</span>
         </div>
       </el-tooltip>
     </div>

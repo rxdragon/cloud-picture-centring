@@ -4,6 +4,7 @@ export const TOOL_TYPE = {
   PEN: 'pen',
   ELLIPSE: 'ellipse',
   LINE: 'line',
+  ARROW: 'arrow',
   BLOWUP: 'blowup',
   DELETE: 'delete',
   COLOR: 'color',

@@ -76,6 +76,8 @@ export default {
           case 90:
             this.changeDrawType({ type: TOOL_TYPE.BLOWUP })
             break
+          case 67:
+            this.changeDrawType({ type: TOOL_TYPE.ARROW })
           default:
             break
         }

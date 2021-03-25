@@ -132,7 +132,7 @@ export default {
      * @description 判断是否是绘画
      */
     judgeIsDrawing () {
-      const drawingTypes = [TOOL_TYPE.PEN, TOOL_TYPE.ELLIPSE, TOOL_TYPE.LINE]
+      const drawingTypes = [TOOL_TYPE.PEN, TOOL_TYPE.ELLIPSE, TOOL_TYPE.LINE, TOOL_TYPE.ARROW]
       if (drawingTypes.includes(this.optionObj.drawType)) {
         this.doDrawing = true
       } else {
@@ -180,6 +180,9 @@ export default {
       }
       let canvasObject = null
       switch (this.optionObj.drawType) {
+        case 'arrow':
+          canvasObject = this.createArrow()
+          break
         case TOOL_TYPE.ELLIPSE:
           canvasObject = this.createEllipse()
           break
@@ -255,6 +258,50 @@ export default {
       // 如果是文字状态不更改模式
       if (this.optionObj.drawType === TOOL_TYPE.TEXT) return
       this.optionObj.drawType = TOOL_TYPE.MOVE
+    },
+    /**
+     * @description 绘制箭头
+     */
+    drawArrow (fromX, fromY, toX, toY, theta, headlen) {
+      theta = typeof theta !== 'undefined' ? theta : 30
+      headlen = typeof theta !== 'undefined' ? headlen : 10
+      // 计算各角度和对应的P2,P3坐标
+      const angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI
+      const angle1 = (angle + theta) * Math.PI / 180
+      const angle2 = (angle - theta) * Math.PI / 180
+      const topX = headlen * Math.cos(angle1)
+      const topY = headlen * Math.sin(angle1)
+      const botX = headlen * Math.cos(angle2)
+      const botY = headlen * Math.sin(angle2)
+      let arrowX = fromX - topX
+      let arrowY = fromY - topY
+      let path = ' M ' + fromX + ' ' + fromY
+      path += ' L ' + toX + ' ' + toY
+      arrowX = toX + topX
+      arrowY = toY + topY
+      path += ' M ' + arrowX + ' ' + arrowY
+      path += ' L ' + toX + ' ' + toY
+      arrowX = toX + botX
+      arrowY = toY + botY
+      path += ' L ' + arrowX + ' ' + arrowY
+      return path
+    },
+    /**
+     * @description 创建箭头
+     */
+    createArrow () {
+      const color = this.optionObj.penColor
+      const drawWidth = this.optionObj.lineWidth
+      const arrowpath = this.drawArrow(this.mouseFrom.x, this.mouseFrom.y, this.mouseTo.x, this.mouseTo.y, 30, 30)
+      const canvasObject = new window.fabric.Path(
+        arrowpath,
+        {
+          stroke: color,
+          fill: 'rgba(255, 255, 255, 0)',
+          strokeWidth: drawWidth
+        }
+      )
+      return canvasObject
     },
     /**
      * @description 删除标签
