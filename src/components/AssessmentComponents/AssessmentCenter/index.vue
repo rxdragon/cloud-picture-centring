@@ -299,10 +299,10 @@ export default {
       const req = {
         takeNum: this.sampleNum,
         submitStartAt: joinTimeSpan(this.timeSpan[0]),
-        submitEndAt: joinTimeSpan(this.timeSpan[1], 1)
+        submitEndAt: joinTimeSpan(this.timeSpan[1], 1),
+        isOut: this.isOut
       }
       if (this.productIds.length) { req.productIds = this.productIds }
-      if (this.isOut) { req.isOut = this.isOut }
       return req
     },
     /**
