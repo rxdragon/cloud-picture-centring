@@ -100,7 +100,7 @@ export function getSpotCheckResult (params) {
         pageTotal: msg.total || null
       }
     }
-    const total = msg.extend.processInfo[0].totalCount
+    const total = msg.extend.processInfo.reduce((tol, cur) => cur.totalCount + tol, 0) || 0
     data.forEach((item, index) => {
       const productData = _.get(item, 'photoData.stream.product')
       item.productInfo = new ProductModel(productData)
