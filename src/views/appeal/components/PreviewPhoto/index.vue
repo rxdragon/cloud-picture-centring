@@ -713,14 +713,15 @@ export default {
         return defaultData
       }
       const activeLableList = this.$refs['fabric-canvas'].activeLableList
-      const ids = activeLableList.map(item => {
+      const filterLabelList = activeLableList.filter(item => item)
+      const ids = filterLabelList.map(item => {
         return {
           id: item.levelId
         }
       })
       return {
         ids,
-        labelData: activeLableList
+        labelData: filterLabelList
       }
     },
     /**

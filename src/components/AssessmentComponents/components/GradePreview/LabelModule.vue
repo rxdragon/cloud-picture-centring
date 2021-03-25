@@ -118,10 +118,14 @@ export default {
         }
         this.autoNextLabel(this.activeLabel)
       } else {
-        if (this.activeLabel.value === value) return
         this.lableChildren.forEach(lableItem => {
           if (lableItem.isOneAll) return
-          setLableItemGradeLevel.call(this, lableItem, value)
+          if (this.activeLabel.value === value) {
+            this.deleteLable(lableItem, lableItem.value)
+            lableItem.value = ''
+          } else {
+            setLableItemGradeLevel.call(this, lableItem, value)
+          }
         })
       }
       this.judgeIsAllGradeLevelSame()
@@ -230,6 +234,7 @@ export default {
 
   &.one-all-label {
     width: 100%;
+    background-color: @defaultColor !important;
   }
 }
 

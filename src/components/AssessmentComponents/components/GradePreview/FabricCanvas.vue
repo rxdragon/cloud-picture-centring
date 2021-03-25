@@ -271,9 +271,9 @@ export default {
      * @description 移除激活标签内的标签
      */
     removeActiveLable (lableId) {
-      const findCacheIssuesIndex = this.activeLableList.findIndex(item => item.levelId === lableId)
+      const findCacheIssuesIndex = this.activeLableList.findIndex(item => _.get(item, 'levelId') === lableId)
       if (findCacheIssuesIndex < 0) return
-      this.activeLableList.splice(findCacheIssuesIndex, 1)
+      this.activeLableList[findCacheIssuesIndex] = null
     },
     /**
      * @description 处理添加文本框操作
@@ -353,17 +353,18 @@ export default {
     createLabel (lableInfo) {
       const textColor = 'rgba(238, 238, 238, 0.6)'
       const canvasHeight = this.canvasDom.getHeight()
-      let top = this.cacheLabelRow * 30
-      // 判断是否超过边界
-      if (top > canvasHeight - 60) {
-        this.activeLableList.length = 0
-        top = 0
-        this.cacheLabelRow = 0
-        this.cacheLabelCell++
-      }
-      this.cacheLabelRow++
+
+      const firstNullIndex = this.activeLableList.findIndex(item => !item)
+      const labelIndex = firstNullIndex < 0 ? this.activeLableList.length : firstNullIndex
+      // 查找空位
+      const oneHeightCount = Math.floor((canvasHeight - 60) / 30)
+      const drawIndex = labelIndex % oneHeightCount
+      const cellIndex = Math.ceil(labelIndex / oneHeightCount) || 1
+      const top = drawIndex * 30
+      
       const width = lableInfo.name.length * 14 + 25
-      const left = this.optionObj.width - (this.cacheLabelCell + 1) * width - 10
+      const left = this.optionObj.width - cellIndex * width - 10
+
       const rect = new fabric.Rect({
         rx: 4,
         ry: 4,
@@ -373,7 +374,6 @@ export default {
         originX: 'center',
         originY: 'center'
       })
-
       const text = new fabric.Text(lableInfo.name, {
         fontSize: 12,
         originX: 'center',
@@ -386,7 +386,11 @@ export default {
         lableInfo
       })
       this.canvasDom.add(group)
-      this.activeLableList.push(lableInfo)
+      if (firstNullIndex >= 0) {
+        this.activeLableList[firstNullIndex] = lableInfo
+      } else {
+        this.activeLableList.push(lableInfo)
+      }
     },
     /**
      * @description 上传照片到七牛云

@@ -200,12 +200,14 @@ export default {
     getActiveLableId () {
       if (!this.$refs['fabric-canvas']) return []
       const activeLableList = this.$refs['fabric-canvas'].activeLableList
-      const ids = activeLableList.map(item => {
-        return {
+      const ids = []
+
+      activeLableList.forEach(item => {
+        if (!item) return
+        ids.push({
           id: item.levelId
-        }
+        })
       })
-      return ids
     },
     /**
      * @description 重制标签
