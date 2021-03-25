@@ -386,7 +386,8 @@ export default {
         .reason-item {
           display: inline-block;
           padding: 4px;
-          margin-right: 16px;
+          margin-right: 8px;
+          margin-bottom: 8px;
           font-size: 12px;
           color: #4669fb;
           background: rgba(237, 240, 255, 1);

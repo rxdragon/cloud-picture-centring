@@ -47,20 +47,28 @@
           <div class="retouch-select-box">
             <div class="search-item">
               <span>修图等级</span>
-              <retouch-rank-select v-model="retouchRank" show-all-option @change="onRankChange"/>
+              <el-col :span="8">
+                <retouch-rank-select v-model="retouchRank" show-all-option @change="onRankChange"/>
+              </el-col>
             </div>
             <div class="search-item plant-search">
               <span>海草值</span>
-              <el-input v-model="retouchExp" placeholder="根据修图等级自动调整"/>
+              <el-col :span="8">
+                <el-input class="exp-box" v-model="retouchExp" placeholder="根据修图等级自动调整"/>
+              </el-col>
               <p class="plant-tip" v-show="showPlantTip">提示：账号当前海草值为{{ originExp }}</p>
             </div>
             <div class="search-item">
               <span>修图身份</span>
-              <retouch-kind-select v-model="retouchIdentity" placeholder="请选择修图身份"/>
+              <el-col :span="8">
+                <retouch-kind-select v-model="retouchIdentity" placeholder="请选择修图身份"/>
+              </el-col>
             </div>
             <div class="search-item">
               <span>修图类别</span>
-              <retouch-type-select v-model="retouchType" import-model />
+              <el-col :span="8">
+                <retouch-type-select v-model="retouchType" import-model />
+              </el-col>
             </div>
           </div>
           <div class="product-box search-item">
@@ -80,7 +88,9 @@
         <div v-if="activeName === 'role'" class="role-box">
           <div class="role-search search-item">
             <span>角色组名称</span>
-            <role-select v-model="roleValue" @change="roleChange" />
+            <el-col :span="8">
+              <role-select v-model="roleValue" @change="roleChange" />
+            </el-col>
           </div>
           <div class="role-module search-item">
             <span>权限模块</span>
@@ -500,6 +510,10 @@ export default {
           padding: 10px 5px;
           font-size: 13px;
           color: red;
+        }
+
+        .exp-box {
+          width: 100%;
         }
       }
     }
