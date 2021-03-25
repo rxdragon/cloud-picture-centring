@@ -116,7 +116,8 @@ export default {
         } else {
           setLableItemGradeLevel.call(this, this.activeLabel, value)
         }
-        this.autoNextLabel(this.activeLabel)
+        // 暂时取消自动调整功能
+        // this.autoNextLabel(this.activeLabel)
       } else {
         this.lableChildren.forEach(lableItem => {
           if (lableItem.isOneAll) return

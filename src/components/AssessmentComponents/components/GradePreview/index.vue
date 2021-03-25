@@ -208,6 +208,7 @@ export default {
           id: item.levelId
         })
       })
+      return ids
     },
     /**
      * @description 重制标签

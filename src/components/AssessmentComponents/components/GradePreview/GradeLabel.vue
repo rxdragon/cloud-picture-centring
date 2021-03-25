@@ -85,7 +85,6 @@ export default {
      */
     clearAllLabelValue () {
       this.activeLabelId = ''
-      this.activeNames = [String(_.get(this, 'labelClass[0].id') || '')]
       this.labelClass.forEach(classItem => {
         const gradeLabelItem = classItem.children
         gradeLabelItem.forEach(gradeItem => {
@@ -103,7 +102,7 @@ export default {
         const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList(req)
         await this.$delayLoading()
         this.labelClass = labelClass
-        this.activeNames = [String(_.get(labelClass[0], 'id'))]
+        this.activeNames = labelClass.map(item => item.idString)
         this.chainLine = chainLine
       } finally {
         this.loading = false

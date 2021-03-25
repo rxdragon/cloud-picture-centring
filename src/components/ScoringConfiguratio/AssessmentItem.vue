@@ -47,7 +47,7 @@
                 ></el-input-number>
               </span>
 
-              <span v-else>{{ row.type === 'add' ? row.score : '-' + row.score }}</span>
+              <span v-else>{{ row.type === 'add' ? '+' + row.score : '-' + row.score }}</span>
             </div>
           </template>
         </el-table-column>
