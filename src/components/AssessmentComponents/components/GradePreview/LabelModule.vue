@@ -259,6 +259,7 @@ export default {
     cursor: pointer;
     user-select: none;
     background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid transparent;
     border-radius: 4px;
     transition: all 0.3s;
 
@@ -271,6 +272,7 @@ export default {
 
     &.is-active {
       background-color: rgba(0, 0, 0, 0.4);
+      border: 1px solid #fff;
     }
   }
 }
