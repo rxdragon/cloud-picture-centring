@@ -37,3 +37,16 @@ function getMinMaxNumer (dom) {
   }
   return false
 }
+
+/**
+ * 只能输入整数
+ */
+Vue.directive('numberOnlyInteger', {
+  inserted: (el, bind) => {
+    el.addEventListener('keyup', (value) => {
+      const v = event.target.value
+      event.target.value = Number(v) ? Math.round(v) : v
+      event.target.dispatchEvent(new Event('input'))
+    })
+  }
+})

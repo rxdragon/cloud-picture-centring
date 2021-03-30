@@ -11,14 +11,15 @@
       <el-option
         v-for="item in options"
         :key="item.value"
-        :label="item.label"
-        :value="item.value"
+        :label="item.name"
+        :value="item.id"
       />
     </el-select>
   </div>
 </template>
 
 <script>
+import * as queueWeightManageApi from '@/api/queueWeightManageApi'
 export default {
   name: 'WeightSelect',
   props: {
@@ -26,23 +27,11 @@ export default {
   },
   data () {
     return {
-      options: [{
-        label: '一类产品',
-        value: 'weight_first'
-      }, {
-        label: '二类产品',
-        value: 'weight_second'
-      }, {
-        label: '三类产品',
-        value: 'weight_third'
-      }, {
-        label: '四类产品',
-        value: 'weight_fourth'
-      }, {
-        label: '五类产品',
-        value: 'weight_fifth'
-      }]
+      options: []
     }
+  },
+  async mounted () {
+    this.options = await queueWeightManageApi.getQueueWeightTypeList()
   }
 }
 </script>
