@@ -4,19 +4,44 @@ import store from '@/store' // vuex
 import ProductModel from '@/model/ProductModel.js'
 import PhotoModel from '@/model/PhotoModel.js'
 import StreamModel from '@/model/StreamModel.js'
+import uuidv4 from 'uuid'
 
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as PhotoTool from '@/utils/photoTool.js'
+import { GRADE_LABEL_TYPE, CLOUD_ROLE, CNLevelToType } from '@/utils/enumerate'
+import { getAvg, getNumberString } from '@/utils/index.js'
 
-import { PLANT_ID_MAP, GRADE_TYPE, PlantTypeNameEnum, PlantIdTypeEnum, CLOUD_ROLE } from '@/utils/enumerate'
-import { getAvg, transformPercentage } from '@/utils/index.js'
+/**
+ * @description 获取请求地址
+ * @param {*} type GRADE_LABEL_TYPE
+ * @returns
+ */
+function getUrl (type) {
+  return type === GRADE_LABEL_TYPE.CLOUD ? '/project_cloud/checkPool' : '/project_cloud/showPicPool'
+}
+
+export const GRADE_LEVEL = {
+  SMALL: 'small',
+  MIDDLE: 'middle',
+  PULL: 'pull',
+  PLANT: 'plant'
+}
+
+// 修图标准映射中文
+export const gradeLevelToCN = {
+  [GRADE_LEVEL.SMALL]: '小',
+  [GRADE_LEVEL.MIDDLE]: '中',
+  [GRADE_LEVEL.PULL]: '拔草',
+  [GRADE_LEVEL.PLANT]: '种草'
+}
 
 /**
  * @description 获取今日抽片指标
  */
-export function getStatistics () {
+export function getStatistics (params) {
+  const url = getUrl(params.axiosType) + '/getStatistics'
   return axios({
-    url: '/project_cloud/checkPool/getStatistics',
+    url,
     method: 'GET'
   }).then(msg => {
     const data = msg
@@ -31,8 +56,9 @@ export function getStatistics () {
  * @param {*} params
  */
 export function takePhoto (params) {
+  const url = getUrl(params.axiosType) + '/takePhoto'
   return axios({
-    url: '/project_cloud/checkPool/takePhoto',
+    url,
     method: 'POST',
     data: params
   }).then(msg => {
@@ -45,10 +71,10 @@ export function takePhoto (params) {
  * @param {*} params
  */
 export function getHaveCheckResult (params) {
+  const url = getUrl(params.axiosType) + '/getHaveCheckResult'
   return axios({
-    url: '/project_cloud/checkPool/getHaveCheckResult',
-    method: 'GET',
-    params
+    url,
+    method: 'GET'
   })
 }
 
@@ -57,8 +83,9 @@ export function getHaveCheckResult (params) {
  * @param {*} params
  */
 export function getSpotCheckResult (params) {
+  const url = getUrl(params.axiosType) + '/getSpotCheckResult'
   return axios({
-    url: '/project_cloud/checkPool/getSpotCheckResult',
+    url,
     method: 'GET',
     params
   }).then(msg => {
@@ -73,7 +100,7 @@ export function getSpotCheckResult (params) {
         pageTotal: msg.total || null
       }
     }
-    const total = msg.extend.processInfo[0].totalCount
+    const total = msg.extend.processInfo.reduce((tol, cur) => cur.totalCount + tol, 0) || 0
     data.forEach((item, index) => {
       const productData = _.get(item, 'photoData.stream.product')
       item.productInfo = new ProductModel(productData)
@@ -104,8 +131,9 @@ export function getSpotCheckResult (params) {
  * @param {*} params
  */
 export function commitHistory (params) {
+  const url = getUrl(params.axiosType) + '/commitHistory'
   return axios({
-    url: '/project_cloud/checkPool/commitHistory',
+    url: url,
     method: 'POST',
     data: params
   })
@@ -116,33 +144,20 @@ export function commitHistory (params) {
  * @param {*} params
  */
 export function getSearchHistory (params) {
+  const url = getUrl(params.axiosType) + '/getSearchHistory'
   return axios({
-    url: '/project_cloud/checkPool/getSearchHistory',
+    url,
     method: 'POST',
     data: params
   }).then(msg => {
     const data = msg.data
     data.forEach(item => {
-      // 取出tag中种拔草等标签
-      const pureTag = item.tags
-      let typeTag = []
-      // 加上激励词
-      if (item.exTags && item.exTags.length) {
-        typeTag = typeTag.concat(item.exTags)
-      }
-      // 纯种拔草的时候会在commitInfo中返回type
-      if (item.commitInfo && item.commitInfo.type) {
-        typeTag.unshift({
-          name: PlantTypeNameEnum[item.commitInfo.type],
-          type: item.commitInfo.type
-        })
-      }
-      item.typeTag = typeTag
       item.productInfo = new ProductModel(_.get(item, 'photoData.stream.product'))
       item.photoInfo = new PhotoModel(item.photoData)
       item.streamInfo = new StreamModel(item.photoData.stream)
-      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, pureTag)
-      item.issueLabel = item.commitInfo.issueLabel
+      item.commitInfo = PhotoTool.handleCommitInfo(item.commitInfo, item.tags)
+      item.labelTag = item.commitInfo.issueLabel
+
       item.score = item.commitInfo.score
 
       item.photoInfo.photoSpotCheckVersion.forEach(versionItem => {
@@ -170,178 +185,56 @@ export function getSearchHistory (params) {
 }
 
 /**
- * @description 获取问题标签
+ * @description 获取评分配置标签
  * @method GET
  * @returns {Array} 标记数据
- * @author cf 2020/04/10
- * @version @version 2.4.0
+ * @author cf 2021/03/19
+ * @version @version 2.24
  */
-export function getScoreConfigList () {
-  return axios({
-    url: '/project_cloud/checkPool/getScoreConfigList',
+export async function getScoreConfigList (params) {
+  const url = getUrl(params.axiosType) + '/getScoreConfig'
+  const res = await axios({
+    url,
     method: 'GET'
-  }).then(msg => {
-    // 排序
-    const typeArrSort = [PLANT_ID_MAP.PLANT_ID, PLANT_ID_MAP.NONE_ID, PLANT_ID_MAP.PULL_ID]
-    const sortMsg = []
-    typeArrSort.forEach(typeItem => {
-      const findTypeItem = msg.find(item => +item.id === +typeItem)
-      sortMsg.push(findTypeItem)
-    })
-    // 处理数据
-    const typeArr = []
-    const allLabel = {}
-    sortMsg.forEach((msgItem) => {
-      const { name, id, score_config: scoreConfig } = msgItem
-      scoreConfig.forEach(scoreConfigItem => {
-        scoreConfigItem.child.forEach(issItem => { issItem.isSelect = false })
-      })
+  })
+  const chainLine = []
 
-      typeArr.push({
-        name,
-        id,
-        isSelect: false,
-        class: PlantIdTypeEnum[id]
-      })
-      allLabel[id] = scoreConfig
+  const createData = res.map(item => {
+    const childrenData = item.children || []
+    const children = childrenData.map(childrenItem => {
+      chainLine.push(childrenItem.id)
+      return {
+        id: childrenItem.id,
+        idString: String(childrenItem.id),
+        name: childrenItem.name,
+        children: childrenItem.children,
+        parentId: childrenItem.score_type_id,
+        value: ''
+      }
     })
+    // 如果有子项目才添加
+    if (children.length) {
+      children.unshift({
+        id: uuidv4(),
+        idString: uuidv4(),
+        name: '一键评分',
+        isOneAll: true,
+        value: ''
+      })
+    }
 
     return {
-      typeArr,
-      allLabel,
+      id: item.id,
+      idString: String(item.id),
+      name: item.name,
+      children
     }
   })
-}
-
-/**
- * @description 获取问题标签筛选框
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/04/10
- * @version @version 2.4.0
- */
-export function getIssueList (params) {
-  return axios({
-    url: '/project_cloud/checkPool/getScoreConfigList',
-    method: 'GET',
-    params
-  }).then(msg => {
-    const createData = msg.map(item => {
-      item.children = item.score_config.map(configItem => {
-        // 特殊处理没有权限的参数
-        const child = configItem.child_with_zero || configItem.child
-        configItem.children = child.map(chilItem => {
-          return {
-            value: chilItem.id,
-            label: chilItem.name
-          }
-        })
-        return {
-          value: configItem.id,
-          label: configItem.name,
-          children: configItem.children
-        }
-      })
-      return {
-        value: item.id,
-        label: item.name,
-        children: item.children
-      }
-    })
-    return createData
-  })
-}
-
-/**
- * @description 获取问题标签筛选框
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/04/10
- * @version @version 2.4.0
- */
-export function getOldIssueList () {
-  return axios({
-    url: '/project_cloud/checkPool/getOldScoreConfigList',
-    method: 'GET'
-  }).then(msg => {
-    const createLabel = [{
-      name: '历史标签',
-      score_config: msg
-    }]
-    const createData = createLabel.map(item => {
-      item.children = item.score_config.map(configItem => {
-        configItem.children = configItem.child.map(chilItem => {
-          return {
-            value: chilItem.id,
-            label: chilItem.name
-          }
-        })
-        return {
-          value: configItem.id,
-          label: configItem.name,
-          children: configItem.children
-        }
-      })
-      return {
-        value: item.id,
-        label: item.name,
-        children: item.children
-      }
-    })
-    return createData
-  })
-}
-
-/**
- * @description 获取问题标签报告数据
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/04/12
- * @version @version 2.4.0
- */
-export function getCloudProblemReport (params) {
-  return axios({
-    url: '/project_cloud/checkPool/getCloudProblemReport',
-    method: 'GET',
-    params
-  }).then(msg => {
-    msg = msg.filter(item => item.count)
-    let sum = 0
-    const checkTags = msg.map(labelItem => {
-      sum = sum + Number(labelItem.count)
-      return {
-        name: labelItem.name,
-        value: Number(labelItem.count),
-        group: labelItem.child
-      }
-    })
-    checkTags.forEach(labelItem => {
-      labelItem.rate = transformPercentage(labelItem.value, sum)
-      labelItem.group.forEach(item => {
-        item.rate = transformPercentage(item.count, sum)
-      })
-    })
-    return checkTags
-  })
-}
-
-/**
- * @description 获取问题标签柱状图
- * @method GET
- * @returns {Array} 标记数据
- * @author cf 2020/07/27
- * @version @version 2.10.0
- */
-export function getCloudProblemReportByGroup (params, type) {
-  const roleUrl = {
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCloudProblemReportByGroup',
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/checkPool/getCloudProblemReportByGroup'
+  const labelClass = createData.filter(item => item.children.length)
+  return {
+    labelClass,
+    chainLine
   }
-  return axios({
-    url: roleUrl[type],
-    method: 'POST',
-    data: params
-  })
 }
 
 /**
@@ -349,8 +242,9 @@ export function getCloudProblemReportByGroup (params, type) {
  * @param {*} params
  */
 export function getUpdateHistoryLog (params) {
+  const url = getUrl(params.axiosType) + '/getUpdateHistoryLog'
   return axios({
-    url: '/project_cloud/checkPool/getUpdateHistoryLog',
+    url,
     method: 'POST',
     data: params
   }).then(msg => {
@@ -375,15 +269,17 @@ export function getUpdateHistoryLog (params) {
 }
 
 /**
- * @description 重新评价愿学院抽片
+ * @description 重新评价云学院抽片或修修兽抽片
  * @method PUT
- * @returns {Boolean} 
- * @author cf 2020/05/20
- * @version @version 2.6.0
+ * @returns {Boolean}
+ * @author cf 2021/03/19
+ * @version @version 2.24.0
  */
 export function updateCommitHistory (params) {
+  const url = getUrl(params.axiosType) + '/updateCommitHistory'
+
   return axios({
-    url: '/project_cloud/checkPool/updateCommitHistory',
+    url,
     method: 'POST',
     data: params
   })
@@ -404,76 +300,267 @@ export function getPhotographerOrgList () {
 }
 
 /**
- * @description 获取摄影机构列表
- * @method GET
- * @returns {Obeject} 结果
- * @author cl 2020/07/27
- * @version @version 2.10.0
+ * @description 获取云学院修图组分数统计(柱状图)
+ * @param searchRole 角色： 运营 or组长
+ * @param searchType 类型： 云端 or 修修兽
+ * @method POST
+ * @returns {Array} 标记数据
+ * @author nx 2020/07/27
+ * @version @version 2.24.0
  */
-export function getCheckPoolQuota (params, type) {
-  const roleUrl = {
-    [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolQuota',
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCheckPoolQuota',
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolQuota'
+export function getCloudScoreByGroup (params, searchRole, searchType) {
+  const urlMap = {
+    [CLOUD_ROLE.OPERATE]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getCloudScoreByGroup', // 运营-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getCloudScoreByGroup', // 运营-修修兽
+    },
+    [CLOUD_ROLE.GROUP_LEADER]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/retouchLeader/getCloudScoreByGroup', // 组长-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/retouchLeader/getShowPicScoreByGroup', // 组长 -修修兽
+    }
   }
+  const url = urlMap[searchRole][searchType]
   return axios({
-    url: roleUrl[type],
+    url,
     method: 'POST',
     data: params
-  }).then(msg => {
-    const gradeSum = Number(msg.checkPoolPlantNum) + Number(msg.checkPoolPullNum) + Number(msg.checkPoolNormalNum)
-    const createData = {
-      [GRADE_TYPE.PLANT]: {
-        count: msg.checkPoolPlantNum,
-        rate: transformPercentage(msg.checkPoolPlantNum, gradeSum)
-      },
-      [GRADE_TYPE.PULL]: {
-        count: msg.checkPoolPullNum,
-        rate: transformPercentage(msg.checkPoolPullNum, gradeSum)
-      },
-      [GRADE_TYPE.NONE]: {
-        count: msg.checkPoolNormalNum,
-        rate: transformPercentage(msg.checkPoolNormalNum, gradeSum)
-      },
-      'score': {
-        count: getAvg(msg.checkPoolTotalScore, gradeSum),
-        rate: ''
+  }).then(res => {
+    if (!res.group) res.group = []
+    const group = res.group.map(g => {
+      return {
+        ...g,
+        count: ((g.totalScore / g.totalPeople) || 0).toFixed(2)
       }
+    })
+    return {
+      group,
+      avgScore: getNumberString(res.avgScore)
     }
-    return createData
   })
 }
 
 /**
- * @description 获取摄影机构列表
+ * @description 获取修图组分数统计(柱状图)， 这个是按照问题类型分组的
+ * @method POST
+ * @param searchRole 角色： 运营 or组长
+ * @param searchType 类型： 云端 or 修修兽
+ * @returns {Array} 标记数据
+ * @author nx 2020/07/27
+ * @version @version 2.24.0
+ */
+export function getCloudProblemByGroup (params, searchRole, searchType) {
+  const urlMap = {
+    [CLOUD_ROLE.OPERATE]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/checkPool/getCloudProblemByGroup', // 运营-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/showPicPool/getCloudProblemByGroup', // 运营-修修兽
+    },
+    [CLOUD_ROLE.GROUP_LEADER]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/retouchLeader/getCloudProblemByGroup', // 组长-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/retouchLeader/getShowPicProblemByGroup', // 组长 -修修兽
+    }
+  }
+  const url = urlMap[searchRole][searchType]
+  return axios({
+    url: url,
+    method: 'POST',
+    data: params
+  }).then(res => {
+    const group = res.group || []
+    // 按照小问题.中等问题分组
+    const config = Object.keys(CNLevelToType)
+    const list = config.map(name => {
+      const data = group.map(g => {
+        if (!Array.isArray(g.problems)) {
+          g.problems = []
+        }
+        const item = g.problems.filter(problem => problem.name === name)
+        // 标签总数
+        const count = item.reduce((tol, cur) => cur.count + tol, 0) || 0
+        // 该组的总张数
+        const total = g.count || 0
+        return {
+          id: g.id,
+          name: g.name,
+          count,
+          percentage: ((count / total || 0) * 100).toFixed(2)
+        }
+      })
+
+      return {
+        name,
+        data
+      }
+    })
+
+    return list
+  })
+}
+
+/**
+ * 个人抽查平均分数据聚合
+ * @param list
+ * @returns {unknown[]}
+ */
+function filterLevel (list) {
+  const mapList = {}
+  const countSum = list.reduce((sum, item) => {
+    sum += item.count
+    return sum
+  }, 0)
+
+  list.forEach(g => {
+    const parentId = _.get(g, 'parent.id')
+    const parentName = _.get(g, 'parent.name')
+    const typeId = _.get(g, 'parent.score_type.id')
+    const typeName = _.get(g, 'parent.score_type.name')
+
+    if (mapList[typeId]) {
+      const parentList = mapList[typeId].children
+      const findParent = parentList.find(item => item.id === parentId)
+      if (findParent) {
+        findParent.value = findParent.value + g.count
+      } else {
+        parentList.push({
+          id: parentId,
+          name: parentName,
+          value: g.count,
+          countSum
+        })
+      }
+    } else {
+      mapList[typeId] = {
+        name: typeName,
+        id: typeId,
+        countSum,
+        children: [
+          {
+            id: parentId,
+            name: parentName,
+            value: g.count,
+            countSum
+          }
+        ]
+      }
+    }
+  })
+  return Object.values(mapList)
+}
+/**
+ * @description 获取个人抽查平均分
  * @method GET
+ * @param searchRole 角色： 运营 or 组长
+ * @param searchType 类型： 云端 or 修修兽
  * @returns {Obeject} 结果
  * @author cf 2020/07/27
  * @version @version 2.10.0
  */
-export function getCheckPoolSubQuota (params, type) {
-  const roleUrl = {
-    [CLOUD_ROLE.CREW]: '/project_cloud/retoucher/getCheckPoolSubQuota',
-    [CLOUD_ROLE.GROUP_LEADER]: '/project_cloud/retouchLeader/getCheckPoolSubQuota',
-    [CLOUD_ROLE.OPERATE]: '/project_cloud/operator/getCheckPoolSubQuota'
+export function getCheckPoolSubQuota (params, searchRole, searchType) {
+  const urlMap = {
+    [CLOUD_ROLE.OPERATE]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/operator/getCheckPoolSubQuota', // 运营-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/operator/getShowPicPoolSubQuota' // 运营-修修兽
+    },
+    [CLOUD_ROLE.CREW]: {
+      [GRADE_LABEL_TYPE.CLOUD]: '/project_cloud/retoucher/getCheckPoolSubQuota', // 修图师-云端
+      [GRADE_LABEL_TYPE.SHOW_PIC]: '/project_cloud/retoucher/getShowPicPoolSubQuota' // 修图师-修修兽
+    }
   }
+  const url = urlMap[searchRole][searchType]
   return axios({
-    url: roleUrl[type],
+    url,
     method: 'POST',
     data: params
-  }).then(msg => {
-    msg = msg.filter(item => item.count)
-    let sum = 0
-    const checkTags = msg.map(labelItem => {
-      sum = sum + Number(labelItem.count)
-      return {
-        name: labelItem.name,
-        value: Number(labelItem.count)
+  }).then(res => {
+    const group = res.group
+
+    const smallList = group.filter(item => item.name === '小')
+    const middleList = group.filter(item => item.name === '中')
+    const plantList = group.filter(item => item.name === '种草')
+    const pullList = group.filter(item => item.name === '拔草')
+
+    const mapData = [
+      {
+        name: '小',
+        data: filterLevel(smallList),
+        color: '#ff8f00'
+      },
+      {
+        name: '中',
+        data: filterLevel(middleList),
+        color: '#ff8f00'
+      },
+      {
+        name: '种草',
+        data: filterLevel(plantList),
+        color: '#38bc7f'
+      },
+      {
+        name: '拔草',
+        data: filterLevel(pullList),
+        color: '#ff3974'
       }
-    })
-    checkTags.forEach(labelItem => {
-      labelItem.rate = transformPercentage(labelItem.value, sum)
-    })
-    return checkTags
+    ]
+    return {
+      avgScore: getNumberString(res.avgScore),
+      data: mapData
+    }
   })
+}
+
+/**
+ * @description 获取个人抽查平均分, 云端和修修兽聚合接口
+ * @method GET
+ * @author cf 2020/07/27
+ * @version @version 2.10.0
+ */
+export async function getAllCheckPoolSubQuota (params) {
+  const paths = [
+    '/project_cloud/retoucher/getShowPicPoolSubQuota',
+    '/project_cloud/retoucher/getCheckPoolSubQuota'
+  ]
+  const res = await Promise.all(paths.map(url => {
+    return axios({
+      url,
+      method: 'POST',
+      data: params
+    })
+  }))
+
+  const showData = res[0] || {}
+  const cloudData = res[1] || {}
+  const group = (showData.group || []).concat(cloudData.group || [])
+  const avgScore = (Number(showData.sum || 0) + Number(cloudData.sum) || 0) /
+    (Number(showData.count || 0) + Number(cloudData.count || 0))
+
+  const smallList = group.filter(item => item.name === '小')
+  const middleList = group.filter(item => item.name === '中')
+  const plantList = group.filter(item => item.name === '种草')
+  const pullList = group.filter(item => item.name === '拔草')
+
+  const mapData = [
+    {
+      name: '小',
+      data: filterLevel(smallList),
+      color: '#ff8f00'
+    },
+    {
+      name: '中',
+      data: filterLevel(middleList),
+      color: '#ff8f00'
+    },
+    {
+      name: '种草',
+      data: filterLevel(plantList),
+      color: '#38bc7f'
+    },
+    {
+      name: '拔草',
+      data: filterLevel(pullList),
+      color: '#ff3974'
+    }
+  ]
+  return {
+    avgScore: getNumberString(avgScore),
+    data: mapData
+  }
 }

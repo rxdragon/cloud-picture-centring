@@ -1,45 +1,56 @@
 <template>
-  <div class="WorkBoard page-class">
+  <div class="work-board page-class">
     <div class="header">
       <h3>云端工作看板</h3>
       <el-button v-if="showFlowInfo" type="primary" @click="showFlow">流量看板</el-button>
     </div>
     <!-- 流水管理 -->
-    <div v-if="showStreamList" class="module-panel">
+    <div v-if="showStreamList" class="module-panel stream-manage">
       <div class="panel-title">流水管理</div>
-      <div class="search-box">
-        <div class="search-item">
-          <span>顾客姓名</span>
-          <el-input
-            v-model.trim="urgentSearch.name"
-            clearable
-            :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.id)"
-            placeholder="请输入顾客姓名"
-            @keyup.native.enter="getStreamList(1)"
-          />
-        </div>
-        <div class="search-item">
-          <span>订单号</span>
-          <el-input
-            v-model.trim="urgentSearch.id"
-            clearable
-            :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.name)"
-            placeholder="请输入订单号"
-            @keyup.native.enter="getStreamList(1)"
-          />
-        </div>
-        <div class="search-item">
-          <span>流水号</span>
-          <el-input
-            v-model.trim="urgentSearch.caid"
-            clearable
-            :disabled="Boolean(urgentSearch.id) || Boolean(urgentSearch.name)"
-            placeholder="请输入流水号"
-            @keyup.native.enter="getStreamList(1)"
-          />
-        </div>
-        <el-button type="primary" @click="getStreamList(1)">查询</el-button>
-      </div>
+      <el-row class="search-box" :gutter="20">
+        <el-col :span="6" :xl="4">
+          <div class="search-item">
+            <span>顾客姓名</span>
+            <el-input
+              v-model.trim="urgentSearch.name"
+              clearable
+              :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.id)"
+              placeholder="请输入顾客姓名"
+              @keyup.native.enter="getStreamList(1)"
+            />
+          </div>
+        </el-col>
+        <el-col :span="8" :xl="4">
+          <div class="search-item">
+            <span>订单号</span>
+            <el-input
+              v-model.trim="urgentSearch.id"
+              clearable
+              :disabled="Boolean(urgentSearch.caid) || Boolean(urgentSearch.name)"
+              placeholder="请输入订单号"
+              @keyup.native.enter="getStreamList(1)"
+            />
+          </div>
+        </el-col>
+        <el-col :span="8" :xl="4">
+          <div class="search-item">
+            <span>流水号</span>
+            <el-input
+              v-model.trim="urgentSearch.caid"
+              clearable
+              :disabled="Boolean(urgentSearch.id) || Boolean(urgentSearch.name)"
+              placeholder="请输入流水号"
+              @keyup.native.enter="getStreamList(1)"
+            />
+          </div>
+        </el-col>
+        <el-col :span="2" :xl="4">
+          <div class="search-item">
+            <el-button type="primary" @click="getStreamList(1)">查询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <work-board-table
         v-show="searchTableData.length"
         key="urgentTable"
@@ -75,16 +86,21 @@
       :class="{'no-border': activeName === 'retouch'}"
     >
       <!-- 搜索框 -->
-      <div class="search-button search-box">
-        <!-- 修图标准 -->
-        <div class="retouch-type search-item">
-          <span>修图标准</span>
-          <Retouch-kind-select v-model="retouchType" all-optision placeholder="请选择修图标准"/>
-        </div>
-        <div class="button-box">
-          <el-button type="primary" @click="getList(1)">查询</el-button>
-        </div>
-      </div>
+      <el-row class="search-box" :gutter="20">
+        <el-col :span="8" :xl="4">
+          <!-- 修图标准 -->
+          <div class="retouch-type search-item">
+            <span>修图标准</span>
+            <RetouchKindSelect v-model="retouchType" all-optision placeholder="请选择修图标准"/>
+          </div>
+        </el-col>
+        <el-col :span="8" :xl="4">
+          <div class="button-box search-item">
+            <el-button type="primary" @click="getList(1)">查询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <work-board-table
         key="boardTable"
         :show-checker="searchType === 'check'"
@@ -311,28 +327,20 @@ export default {
 
 <style lang="less">
 
-.WorkBoard {
-  .search-box {
-    width: 100%;
-    margin: 24px 0;
-
-    .el-input {
-      width: 220px;
+.work-board {
+  .stream-manage {
+    .panel-title {
+      margin-bottom: 12px;
     }
   }
 
   .tabs-box {
     margin-top: 24px;
-    -webkit-user-select: none;
+    user-select: none;
   }
 
   .table-box {
     margin-top: 0;
-
-    .search-box {
-      margin-top: 0;
-      margin-bottom: 24px;
-    }
   }
 }
 

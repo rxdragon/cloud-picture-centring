@@ -1,0 +1,252 @@
+import { rgbToHsv, rgbToHex, inputToRGB } from '@ctrl/tinycolor'
+
+const hueStep = 2 // 色相阶梯
+const saturationStep = 0.16 // 饱和度阶梯，浅色部分
+const saturationStep2 = 0.05 // 饱和度阶梯，深色部分
+const brightnessStep1 = 0.05 // 亮度阶梯，浅色部分
+const brightnessStep2 = 0.15 // 亮度阶梯，深色部分
+const lightColorCount = 5 // 浅色数量，主色上
+const darkColorCount = 4 // 深色数量，主色下
+// 暗色主题颜色映射关系表
+const darkColorMap = [
+  { index: 7, opacity: 0.15 },
+  { index: 6, opacity: 0.25 },
+  { index: 5, opacity: 0.3 },
+  { index: 5, opacity: 0.45 },
+  { index: 5, opacity: 0.65 },
+  { index: 5, opacity: 0.85 },
+  { index: 4, opacity: 0.9 },
+  { index: 3, opacity: 0.95 },
+  { index: 2, opacity: 0.97 },
+  { index: 1, opacity: 0.98 },
+]
+
+
+// Wrapper function ported from TinyColor.prototype.toHsv
+// Keep it here because of `hsv.h * 360`
+function toHsv ({ r, g, b }) {
+  const hsv = rgbToHsv(r, g, b)
+  return { h: hsv.h * 360, s: hsv.s, v: hsv.v }
+}
+
+// Wrapper function ported from TinyColor.prototype.toHexString
+// Keep it here because of the prefix `#`
+function toHex ({ r, g, b }) {
+  return `#${rgbToHex(r, g, b, false)}`
+}
+
+// Wrapper function ported from TinyColor.prototype.mix, not treeshakable.
+// Amount in range [0, 1]
+// Assume color1 & color2 has no alpha, since the following src code did so.
+function mix (rgb1, rgb2, amount) {
+  const p = amount / 100
+  const rgb = {
+    r: (rgb2.r - rgb1.r) * p + rgb1.r,
+    g: (rgb2.g - rgb1.g) * p + rgb1.g,
+    b: (rgb2.b - rgb1.b) * p + rgb1.b,
+  }
+  return rgb
+}
+
+// 获取重修计算色相
+function getHue (hsv, i, light) {
+  let hue
+  // 根据色相不同，色相转向不同
+  if (Math.round(hsv.h) >= 60 && Math.round(hsv.h) <= 240) {
+    // 冷色调
+    // 亮部色阶 色相顺时针旋转 更暖
+    // 暗部色阶 色相逆时针旋转 更冷
+    hue = light ? Math.round(hsv.h) - hueStep * i : Math.round(hsv.h) + hueStep * i
+  } else {
+    // 暖色调
+    // 亮部色阶 色相逆时针旋转 更冷
+    // 暗部色阶 色相顺时针旋转 更暖
+    hue = light ? Math.round(hsv.h) + hueStep * i : Math.round(hsv.h) - hueStep * i
+  }
+  if (hue < 0) {
+    hue += 360
+  } else if (hue >= 360) {
+    hue -= 360
+  }
+  return hue
+}
+
+// 获取重新计算饱和度
+function getSaturation (hsv, i, light) {
+  // grey color don't change saturation
+  if (hsv.h === 0 && hsv.s === 0) {
+    return hsv.s
+  }
+  let saturation
+  if (light) {
+    saturation = hsv.s - saturationStep * i
+  } else if (i === darkColorCount) {
+    saturation = hsv.s + saturationStep
+  } else {
+    saturation = hsv.s + saturationStep2 * i
+  }
+  // 边界值修正
+  if (saturation > 1) {
+    saturation = 1
+  }
+  // 第一格的 s 限制在 0.06-0.1 之间
+  if (light && i === lightColorCount && saturation > 0.1) {
+    saturation = 0.1
+  }
+  if (saturation < 0.06) {
+    saturation = 0.06
+  }
+  return Number(saturation.toFixed(2))
+}
+
+function getValue (hsv, i, light) {
+  let value
+  if (light) {
+    value = hsv.v + brightnessStep1 * i
+  } else {
+    value = hsv.v - brightnessStep2 * i
+  }
+  if (value > 1) {
+    value = 1
+  }
+  return Number(value.toFixed(2))
+}
+
+/**
+ * @description 获取相近颜色值
+ * @param {*} hsv hsv值
+ * @param {*} i 
+ * @returns 
+ */
+function getNearHue (hsv, i, down) {
+  let hue
+  const nearHueStep = 4
+  const h = Math.round(hsv.h)
+  // 根据色相不同，色相转向不同
+  if (h >= 60 && h <= 240) {
+    // 冷色调
+    hue = down ? h - nearHueStep * i : h + nearHueStep * i
+  } else {
+    // 暖色调
+    hue = down ? h + nearHueStep * i : h - nearHueStep * i
+  }
+  if (hue < 0) {
+    hue += 360
+  } else if (hue >= 360) {
+    hue -= 360
+  }
+  return hue
+}
+
+/**
+ * @description 获取相近V值
+ * @param {*} hsv hsv值
+ * @param {*} i 
+ * @returns 
+ */
+function getNearValue (hsv, i, light) {
+  let value
+  const brightnessStep1 = 0.03
+  const brightnessStep2 = 0.04
+  if (light) {
+    value = hsv.v + brightnessStep1 * i
+  } else {
+    value = hsv.v - brightnessStep2 * i
+  }
+  if (value > 1) {
+    value = 1
+  }
+  return Number(value.toFixed(2))
+}
+
+
+/**
+ * @description 获取渐变色
+ * @param {*} color 颜色
+ * @param {*} opts 选项, theme 主题色
+ * @returns 
+ */
+export function generate (color, opts = {}) {
+  const patterns = []
+  const pColor = inputToRGB(color)
+  
+  for (let i = lightColorCount; i > 0; i -= 1) {
+    const hsv = toHsv(pColor)
+    const rgb = inputToRGB({
+      h: getHue(hsv, i, true),
+      s: getSaturation(hsv, i, true),
+      v: getValue(hsv, i, true),
+    })
+    const colorString = toHex(rgb)
+    patterns.push(colorString)
+  }
+  patterns.push(toHex(pColor))
+  for (let i = 1; i <= darkColorCount; i += 1) {
+    const hsv = toHsv(pColor)
+    const rgb = inputToRGB({
+      h: getHue(hsv, i),
+      s: getSaturation(hsv, i),
+      v: getValue(hsv, i),
+    })
+
+    const colorString = toHex(rgb)
+    patterns.push(colorString)
+  }
+
+  if (color === '#ffffff') {
+    return darkColorMap.map(() => {
+      if (opts.theme === 'dark') {
+        return opts.backgroundColor || '#303133'
+      }
+      return '#ffffff'
+    })
+  }
+
+  // dark theme patterns
+  if (opts.theme === 'dark') {
+    return darkColorMap.map(({ index, opacity }) => {
+      const darkColorString = toHex(
+        mix(inputToRGB(opts.backgroundColor || '#303133'), inputToRGB(patterns[index]), opacity * 100),
+      )
+      return darkColorString
+    })
+  }
+
+  return patterns
+}
+
+/**
+ * @description 获取相近颜色
+ * @param {*} params 
+ */
+export function getNearColors (color) {
+  const patterns = []
+  const pColor = inputToRGB(color)
+
+  for (let i = lightColorCount; i > 0; i -= 1) {
+    const hsv = toHsv(pColor)
+    const rgb = inputToRGB({
+      h: getNearHue(hsv, i, true),
+      s: hsv.s,
+      v: getNearValue(hsv, i, true),
+    })
+    const colorString = toHex(
+      inputToRGB(rgb),
+    )
+    patterns.push(colorString)
+  }
+
+  for (let i = 1; i <= darkColorCount; i += 1) {
+    const hsv = toHsv(pColor)
+    const rgb = inputToRGB({
+      h: getNearHue(hsv, i),
+      s: hsv.s,
+      v: getNearValue(hsv, i),
+    })
+
+    const colorString = toHex(rgb)
+    patterns.push(colorString)
+  }
+
+  return patterns
+}

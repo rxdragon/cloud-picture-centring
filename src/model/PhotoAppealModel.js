@@ -1,7 +1,7 @@
-import uuidv4 from 'uuid'
-
+import * as PhotoTool from '@/utils/photoTool.js'
 import { AppealResultStatusPhotoEnum } from '@/utils/enumerate'
 
+// 照片申述记录
 export default class PhotoAppealModel {
   base = {}
   id = ''
@@ -19,10 +19,10 @@ export default class PhotoAppealModel {
     resultDesc: '-',
     reason: '-'
   }
-  checkPoolTags = []
-  typeTags = [] // 激励词
-  evaluatorType = ''
-  checkPoolScore = '-'
+  oldCheckPoolTags = []
+  oldCheckPoolScore = ''
+  newCheckPoolTags = []
+  newCheckPoolScore = ''
 
 
   constructor (photoAppeal) {
@@ -49,36 +49,30 @@ export default class PhotoAppealModel {
     }
     this.getCheckPoolTags()
   }
+
   // 获取云学院分数
   getCheckPoolTags () {
     const tags = _.get(this.base, 'photo.tags.values')
-    if (this.appealResult && tags) { // 如果有appealResult说明是历史快照,云学院评分情况下
+    // 如果有appealResult说明是历史快照,云学院评分情况下
+    if (this.appealResult && tags) {
       this.base.photo.tags.values = this.appealResult
+      this.oldCheckPoolScore = _.get(this.appealResult, 'old_check_pool_history.score', '')
+      this.oldCheckPoolScore = String(this.oldCheckPoolScore)
+      const oldCheckPoolTags = _.get(this.appealResult, 'old_check_pool_history.check_pool_tags') || []
+      const oldCommitInfo = PhotoTool.handleCommitInfo({}, oldCheckPoolTags)
+      this.oldCheckPoolTags = oldCommitInfo.issueLabel
+
+      this.newCheckPoolScore = _.get(this.appealResult, 'new_check_pool_history.score', '')
+      this.newCheckPoolScore = String(this.newCheckPoolScore)
+      const newCheckPoolTags = _.get(this.appealResult, 'new_check_pool_history.check_pool_tags') || []
+      const newCommitInfo = PhotoTool.handleCommitInfo({}, newCheckPoolTags)
+      this.newCheckPoolTags = newCommitInfo.issueLabel
+    } else {
+      this.oldCheckPoolScore = _.get(tags, 'score', '')
+      this.oldCheckPoolScore = String(this.oldCheckPoolScore)
+      const oldCheckPoolTags = _.get(this.appealResult, 'check_pool_tags') || []
+      const oldCommitInfo = PhotoTool.handleCommitInfo({}, oldCheckPoolTags)
+      this.oldCheckPoolTags = oldCommitInfo.issueLabel
     }
-    this.checkPoolScore = _.get(this.base, 'photo.tags.values.score') || '-'
-    this.evaluatorType = _.get(this.base, 'photo.tags.values.evaluator_type') || ''
-    this.typeTags = _.get(this.base, 'photo.tags.values.check_pool_ex_tags') || []
-    const checkPoolTags = _.get(this.base, 'photo.tags.values.check_pool_tags') || []
-    const parentData = []
-    checkPoolTags.forEach(issueItem => {
-      const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
-      if (findClass) {
-        findClass.child.push({
-          id: issueItem.id,
-          name: issueItem.name
-        })
-      } else {
-        const newClass = {
-          id: _.get(issueItem, 'parent.id') || uuidv4(),
-          name: _.get(issueItem, 'parent.name') || '-',
-          child: [{
-            id: issueItem.id,
-            name: issueItem.name,
-          }]
-        }
-        parentData.push(newClass)
-      }
-    })
-    this.checkPoolTags = parentData
   }
 }

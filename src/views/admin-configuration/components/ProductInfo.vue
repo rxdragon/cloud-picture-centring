@@ -15,12 +15,14 @@
           <div class="panel-content">{{ photographerOrgName }}</div>
         </div>
       </div>
+      
       <div class="info-box require-box">
         <div class="info-panel">
           <div class="info-title">修图要求</div>
           <div class="panel-content">{{ retouchRequire }}</div>
         </div>
       </div>
+
       <div class="sample-photo search-item">
         <span>样片素材</span>
         <div v-if="samplePhoto.length" class="photo-list">
@@ -31,6 +33,7 @@
         </div>
         <div v-else class="no-photo panel-content">暂无样片</div>
       </div>
+
       <div v-if="isPending && +checkPass === 0" class="check-box">
         <el-button type="primary" @click="passProduct">审核通过</el-button>
         <el-button type="danger" @click="rejectProduct">审核拒绝</el-button>
@@ -52,6 +55,9 @@
       </div>
       <div v-if="+checkPass === 1" class="product-config">
         <el-form ref="form" label-position="left" label-width="190px">
+          <el-form-item label="产品分类">
+            <product-classification-select :props="{ multiple: false }" v-model="productConfig.classificationId" />
+          </el-form-item>
           <el-form-item label="修图标准">
             <el-radio-group v-model="productConfig.standard">
               <el-radio label="blue">蓝标</el-radio>
@@ -77,6 +83,7 @@
             <div slot="label" class="slot-label">
               <span>海草值</span>
               <el-button type="text" @click="defaultGrass">使用默认海草值</el-button>
+              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.GRASS)">一键修改海草值</el-button>
             </div>
             <div class="list-data">
               <div
@@ -102,6 +109,7 @@
             <div slot="label" class="slot-label">
               <span>非拼接收益配置</span>
               <el-button type="text" @click="defaultNotJointMoney">使用默认收益</el-button>
+              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.MONEY)">一键修改收益</el-button>
             </div>
             <div v-if="productConfig.standard !== 'blue'" class="list-data">
               <div
@@ -160,10 +168,44 @@
               <el-radio :label="2">否</el-radio>
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="是否强制审核" class="need-check-box">
+            <el-radio-group v-model="productConfig.needCheck">
+              <el-radio :label="2">否（根据绿色通道设定进行审核）</el-radio>
+              <el-radio :label="1">是强制审核限制（无时绿色通道）</el-radio>
+            </el-radio-group>
+            <div class="need-check-time-select" v-if="productConfig.needCheck === 1">
+              <div class="time-box">
+                <span>整体审核期限 </span>
+                <el-date-picker
+                  v-model="productConfig.checkTimeDay"
+                  value-format="yyyy-MM-dd"
+                  size="small"
+                  type="daterange"
+                  range-separator="~"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                />
+              </div>
+              <div class="time-box">
+                <span>每日审核时限 </span>
+                <el-time-picker
+                  is-range
+                  size="small"
+                  v-model="productConfig.checkTimeTime"
+                  value-format="HH:mm:ss"
+                  range-separator="~"
+                  start-placeholder="开始时间"
+                  end-placeholder="结束时间"
+                  placeholder="选择时间范围"
+                />
+              </div>
+            </div>
+          </el-form-item>
           <el-form-item v-if="productConfig.needJoint === 1" label="拼接海草值">
             <div slot="label" class="slot-label">
               <span>拼接海草值</span>
               <el-button type="text" @click="defaultJoinGrass">使用默认拼接海草值</el-button>
+              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.JOIN_GRASS)">一键修改拼接海草值</el-button>
             </div>
             <div class="list-data">
               <div
@@ -189,6 +231,7 @@
             <div slot="label" class="slot-label">
               <span>拼接收益配置</span>
               <el-button type="text" @click="defaultJointMoney">使用默认拼接收益</el-button>
+              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.JOIN_MONEY)">一键修改拼接收益</el-button>
             </div>
             <div v-if="productConfig.standard !== 'blue'" class="list-data">
               <div
@@ -262,21 +305,68 @@
         <el-button v-if="+checkPass === 1" type="primary" @click="passProductInfo">提交</el-button>
       </div>
     </div>
+    <!-- 批量修改海草值 -->
+    <el-dialog
+      :title="batchEditInfo.title"
+      top="30vh"
+      width="30%"
+      :visible.sync="batchEditInfo.batchEditGrassDialog"
+    >
+      <el-form ref="form" label-width="80px">
+        <el-form-item label="修改类型">
+          <el-radio-group v-model="batchEditInfo.ratio">
+            <el-radio label="1">增加</el-radio>
+            <el-radio label="-1">减少</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="修改数值">
+          <el-input-number
+            v-decimalOnly
+            size="small"
+            v-model="batchEditInfo.value"
+            :min="1"
+            :max="20"
+            label="修改数值"
+          >
+          </el-input-number>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          size="small"
+          @click="batchEditInfo.batchEditGrassDialog = false"
+        >取 消
+        </el-button>
+        <el-button size="small" type="primary" @click="submitBatchEditValue">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import PhotoBox from '@/components/PhotoBox'
 import WeightSelect from '@SelectBox/WeightSelect'
+import ProductClassificationSelect from '@SelectBox/ProductClassificationSelect'
 
 import { objEveryNumberValue, twoTierObjEveryNumberValue } from '@/utils/index.js'
+import * as Timespan from '@/utils/timespan.js'
+import * as MathUtil from '@/utils/mathUtil.js'
 import { StaffLevelEnum } from '@/utils/enumerate.js'
 import * as defaultGrass from '@/assets/config/grassConfig.js'
 import * as defaultMoney from '@/assets/config/moneyConfig.js'
+
 import * as OperationManage from '@/api/operationManage.js'
+
+const EDIT_TYPE = {
+  GRASS: 'Grass',
+  JOIN_GRASS: 'JoinGrass',
+  MONEY: 'Money',
+  JOIN_MONEY: 'JointMoney'
+}
+
 export default {
   name: 'ProductInfo',
-  components: { PhotoBox, WeightSelect },
+  components: { PhotoBox, WeightSelect, ProductClassificationSelect },
   filters: {
     toCnLevel (value) {
       return StaffLevelEnum[value]
@@ -288,6 +378,7 @@ export default {
   },
   data () {
     return {
+      EDIT_TYPE,
       routeName: this.$route.name, // 路由名字
       rejectValue: '',
       productName: '', // 产品名称
@@ -295,6 +386,7 @@ export default {
       samplePhoto: [], // 样片素材
       photographerOrgName: '', // 机构名称
       productConfig: {
+        classificationId: '', // 修图分类id
         standard: '', // 修图标准
         weightType: '', // 权重等级
         needTemplate: '', // 是否需要模版
@@ -306,7 +398,17 @@ export default {
         blueNotJointMoney: {},
         blueJointMoney: {}, // 拼接收益
         needJoint: '', // 是否需要拼接
+        needCheck: '', // 是否需要强制审核
+        checkTimeDay: null, // 强制审核日期
+        checkTimeTime: null, // 强制审核时间
         productRemark: ''
+      },
+      batchEditInfo: {
+        title: '一键更改海草值',
+        type: '',
+        batchEditGrassDialog: false,
+        ratio: '1',
+        value: 1
       },
       checkPass: 0 // 0 没审核 1 审核通过 2 拒绝审核
     }
@@ -321,6 +423,98 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description 编辑海草
+     */
+    batchEditGrass (type) {
+      if (!type) return this.$newMessage.warning('代码异常，请联系互联网小伙伴')
+
+      this.batchEditInfo.type = type
+      switch (type) {
+        case EDIT_TYPE.GRASS:
+          this.batchEditInfo.title = '一键修改海草值'
+          break
+        case EDIT_TYPE.JOIN_GRASS:
+          this.batchEditInfo.title = '一键修改拼接海草值'
+          break
+        case EDIT_TYPE.MONEY:
+          this.batchEditInfo.title = '一键修改收益'
+          break
+        case EDIT_TYPE.JOIN_MONEY:
+          this.batchEditInfo.title = '一键修改拼接收益'
+          break
+        default:
+          break
+      }
+      this.batchEditInfo.batchEditGrassDialog = true
+    },
+    /**
+     * @description 确认批量更改信息
+     */
+    submitBatchEditValue () {
+      const editValue = this.batchEditInfo.value * Number(this.batchEditInfo.ratio)
+      switch (this.batchEditInfo.type) {
+        case EDIT_TYPE.GRASS:
+          for (const valueKey in this.productConfig.grassData) {
+            const valueItem = this.productConfig.grassData[valueKey]
+            let value = Number(valueItem) + Number(editValue)
+            if (value < 0) value = 0
+            this.productConfig.grassData[valueKey] = MathUtil.toFixed(value)
+          }
+          break
+        case EDIT_TYPE.JOIN_GRASS:
+          for (const valueKey in this.productConfig.joinGrassData) {
+            const valueItem = this.productConfig.joinGrassData[valueKey]
+            let value = Number(valueItem) + Number(editValue)
+            if (value < 0) value = 0
+            this.productConfig.joinGrassData[valueKey] = MathUtil.toFixed(value)
+          }
+          break
+        case EDIT_TYPE.MONEY:
+          if (this.productConfig.standard === 'blue') {
+            for (const levelKey in this.productConfig.blueNotJointMoney) {
+              const levelItem = this.productConfig.blueNotJointMoney[levelKey]
+              for (const valueKey in levelItem) {
+                const valueItem = levelItem[valueKey]
+                let value = Number(valueItem) + Number(editValue)
+                if (value < 0) value = 0
+                levelItem[valueKey] = MathUtil.toFixed(value)
+              }
+            }
+          } else {
+            for (const valueKey in this.productConfig.notJointMoney) {
+              const valueItem = this.productConfig.notJointMoney[valueKey]
+              let value = Number(valueItem) + Number(editValue)
+              if (value < 0) value = 0
+              this.productConfig.notJointMoney[valueKey] = MathUtil.toFixed(value)
+            }
+          }
+          break
+        case EDIT_TYPE.JOIN_MONEY:
+          if (this.productConfig.standard === 'blue') {
+            for (const levelKey in this.productConfig.blueJointMoney) {
+              const levelItem = this.productConfig.blueJointMoney[levelKey]
+              for (const valueKey in levelItem) {
+                const valueItem = levelItem[valueKey]
+                let value = Number(valueItem) + Number(editValue)
+                if (value < 0) value = 0
+                levelItem[valueKey] = MathUtil.toFixed(value)
+              }
+            }
+          } else {
+            for (const valueKey in this.productConfig.jointMoney) {
+              const valueItem = this.productConfig.jointMoney[valueKey]
+              let value = Number(valueItem) + Number(editValue)
+              if (value < 0) value = 0
+              this.productConfig.jointMoney[valueKey] = MathUtil.toFixed(value)
+            }
+          }
+          break
+        default:
+          break
+      }
+      this.batchEditInfo.batchEditGrassDialog = false
+    },
     /**
      * @description 初始化数据
      */
@@ -434,6 +628,22 @@ export default {
           this.productConfig.productRemark = data.note
           this.productConfig.grassData = data.seaGrassConfig
           this.productConfig.templateSuffix = data.templateSuffix
+          this.productConfig.classificationId = data.productCategoryId || ''
+          this.productConfig.needCheck = data.forceReview ? 1 : 2
+
+          if (data.forceReviewStartAt && data.forceReviewEndAt) {
+            this.productConfig.checkTimeDay = [
+              Timespan.revertTimeSpan(data.forceReviewStartAt),
+              Timespan.revertTimeSpan(data.forceReviewEndAt)
+            ]
+          }
+          if (data.forceReviewDayStart && data.forceReviewDayEnd) {
+            this.productConfig.checkTimeTime = [
+              data.forceReviewDayStart,
+              data.forceReviewDayEnd
+            ]
+          }
+
           if (data.retouchStandard !== 'blue') {
             this.productConfig.notJointMoney = data.normalIncomeConfig
             this.productConfig.jointMoney = data.splicingIncomeConfig
@@ -444,10 +654,8 @@ export default {
             }
           }
         }
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
@@ -485,7 +693,16 @@ export default {
         splicingIncomeConfig: this.productConfig.jointMoney,
         seaGrassConfig: this.productConfig.grassData,
         splicingSeaGrassConfig: this.productConfig.joinGrassData,
-        note: this.productConfig.productRemark
+        note: this.productConfig.productRemark,
+        forceReview: this.productConfig.needCheck === 1,
+        productCategoryId: this.productConfig.classificationId
+      }
+      // 是否需要强制审核
+      if (this.productConfig.needCheck === 1) {
+        reqData.forceReviewDayStart = this.productConfig.checkTimeTime[0]
+        reqData.forceReviewDayEnd = this.productConfig.checkTimeTime[1]
+        reqData.forceReviewStartAt = this.productConfig.checkTimeDay[0] + ' 00:00:00'
+        reqData.forceReviewEndAt = this.productConfig.checkTimeDay[1] + ' 23:59:59'
       }
       if (this.productConfig.standard === 'blue') {
         reqData.normalIncomeConfig = this.productConfig.blueNotJointMoney
@@ -514,6 +731,10 @@ export default {
         this.$newMessage.warning('请选中修图标准')
         return false
       }
+      if (!this.productConfig.classificationId) {
+        this.$newMessage.warning('请选中产品分类')
+        return false
+      }
       if (!this.productConfig.weightType) {
         this.$newMessage.warning('请选中权重等级')
         return false
@@ -533,6 +754,16 @@ export default {
       if (this.productConfig.standard !== 'blue' && !objEveryNumberValue(this.productConfig.notJointMoney)) {
         this.$newMessage.warning('请填写非拼接收益')
         return false
+      }
+      if (!this.productConfig.needCheck) {
+        this.$newMessage.warning('请填写是否需要强制审核')
+        return false
+      }
+      if (this.productConfig.needCheck === 1) {
+        if (!this.productConfig.checkTimeDay || !this.productConfig.checkTimeTime) {
+          this.$newMessage.warning('请填写强制审核日期或审核时间')
+          return false
+        }
       }
       if (this.productConfig.standard === 'blue' && !twoTierObjEveryNumberValue(this.productConfig.blueNotJointMoney)) {
         this.$newMessage.warning('请填写蓝标非拼接收益')
@@ -557,8 +788,6 @@ export default {
 </script>
 
 <style lang="less">
-
-
 .product-info {
   .module-panel {
     .panel-content {
@@ -651,6 +880,27 @@ export default {
 
       .el-button {
         text-align: left;
+      }
+    }
+
+    .need-check-box {
+      .need-check-time-select {
+        display: flex;
+        margin-top: 12px;
+
+        .time-box {
+          margin-right: 12px;
+
+          & > span {
+            margin-right: 12px;
+            font-size: 14px;
+            color: #606266;
+          }
+
+          .el-date-editor {
+            width: 300px;
+          }
+        }
       }
     }
 

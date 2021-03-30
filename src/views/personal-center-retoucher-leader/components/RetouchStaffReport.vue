@@ -1,19 +1,26 @@
 <template>
   <div class="retouch-report">
     <div class="report-box module-panel">
-      <div class="search-box">
-        <div class="search-item">
-          <span>时间</span>
-          <date-picker v-model="timeSpan" />
-        </div>
-        <div class="staff-option search-item">
-          <span>组员</span>
-          <crew-select v-model="staffId" />
-        </div>
-        <div class="button-box">
-          <el-button type="primary" @click="searchData">查 询</el-button>
-        </div>
-      </div>
+      <el-row class="search-box" :gutter="20">
+        <el-col :span="8" :xl="4">
+          <div class="search-item">
+            <span>时间</span>
+            <date-picker v-model="timeSpan" />
+          </div>
+        </el-col>
+        <el-col :span="8" :xl="4">
+          <div class="staff-option search-item">
+            <span>组员</span>
+            <CrewSelect v-model="staffId" />
+          </div>
+        </el-col>
+        <el-col :span="8" :xl="4">
+          <div class="search-item">
+            <el-button type="primary" @click="searchData">查 询</el-button>
+          </div>
+        </el-col>
+      </el-row>
+
       <div class="retouch-report-table report-module">
         <div class="panel-title">修图报告</div>
         <div class="table-content">
@@ -165,14 +172,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.report-box {
-  .search-box {
-    padding-bottom: 24px;
-    margin-top: 0;
-    border-bottom: 1px solid #ecedee;
-  }
-}
-
 .module-panel {
   border-top-left-radius: 0;
 
@@ -181,10 +180,6 @@ export default {
       margin-bottom: -48px;
     }
   }
-}
-
-.report-module {
-  margin-top: 24px;
 }
 
 .table-content {

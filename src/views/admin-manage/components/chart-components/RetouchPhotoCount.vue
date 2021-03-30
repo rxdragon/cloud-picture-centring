@@ -100,8 +100,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .retouch-photo-count {
   position: relative;
 

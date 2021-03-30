@@ -9,6 +9,7 @@ import * as filters from './filters' // 全局过滤器
 import { ipcRenderer } from 'electron'
 import { eventEmitter } from './plugins/eventemitter.js' // ui布局
 import { delayLoading } from '@/utils/timespan.js' // ui布局
+import PortalVue from 'portal-vue'
 
 import './plugins/element.js' // ui布局
 import './plugins/charts.js' // charts框架
@@ -28,6 +29,9 @@ window._ = { get, cloneDeep }
 // 注册websocket
 Vue.prototype.$eventEmitter = eventEmitter
 Vue.prototype.$delayLoading = delayLoading
+
+// 使用全局组件
+Vue.use(PortalVue)
 
 // 注入全局过滤器
 Object.keys(filters).forEach(key => {

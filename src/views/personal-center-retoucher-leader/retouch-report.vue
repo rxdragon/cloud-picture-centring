@@ -9,6 +9,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="修图报告" name="RetouchStaffReport" />
       <el-tab-pane label="云学院报告" name="AssessmentReport" />
+      <el-tab-pane label="修修兽报告" name="ShowPicPoolReport" />
       <el-tab-pane label="退单报告" name="ChargeBackReport" />
       <el-tab-pane label="组员绩效管理" name="CrewPerformanceManagement" />
     </el-tabs>
@@ -21,6 +22,7 @@
 <script>
 import RetouchStaffReport from './components/RetouchStaffReport'
 import AssessmentReport from './components/AssessmentReport'
+import ShowPicPoolReport from './components/ShowPicPoolReport'
 import ChargeBackReport from './components/ChargeBackReport'
 import CrewPerformanceManagement from './components/CrewPerformanceManagement'
 import SearchRetouchRecord from '@/components/SearchRetouchRecord'
@@ -28,7 +30,7 @@ import { SEARCH_ROLE, SearchType } from '@/utils/enumerate'
 
 export default {
   name: 'RetouchReport',
-  components: { RetouchStaffReport, ChargeBackReport, AssessmentReport, CrewPerformanceManagement, SearchRetouchRecord },
+  components: { RetouchStaffReport, ChargeBackReport, AssessmentReport, ShowPicPoolReport, CrewPerformanceManagement, SearchRetouchRecord },
   data () {
     return {
       SEARCH_ROLE,

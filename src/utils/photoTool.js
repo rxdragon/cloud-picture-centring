@@ -4,13 +4,13 @@ import {
   ReturnOnePhotoEnum,
   StoreReturnPhoto,
   prioritySequence,
-  PHOTO_VERSION
+  PHOTO_VERSION,
+  CNLevelToType
 } from '@/utils/enumerate.js'
 
 import * as SessionTool from '@/utils/sessionTool.js'
 import * as mPath from '@/utils/selfPath.js'
 
-import uuidv4 from 'uuid'
 import store from '@/store' // vuex
 import QiNiuETag from '@/utils/qetag.js'
 
@@ -115,6 +115,7 @@ export function settlePhotoVersion (oldPhotoVersion) {
   const timeLine = photoVersion.sort((a, b) => {
     return Number(a.id) - Number(b.id)
   })
+
   const createData = []
   let storeReturnCount = 0
   timeLine.forEach(versionItem => {
@@ -137,30 +138,22 @@ export function settlePhotoVersion (oldPhotoVersion) {
 
 /**
  * @description 处理comitInfo数据
- * @param {*} commitInfo 
- * @param {*} issueLabel 
+ * @param {*} commitInfo 评价图片
+ * @param {*} issueLabel 评价标签
  */
 export function handleCommitInfo (commitInfo, issueLabel) {
   const parentData = []
   issueLabel.forEach(issueItem => {
-    const findClass = parentData.find(classItem => classItem.id === _.get(issueItem, 'parent.id'))
-    if (findClass) {
-      findClass.child.push({
-        id: issueItem.id,
-        name: issueItem.name
-      })
-    } else {
-      const newClass = {
-        id: _.get(issueItem, 'parent.id') || uuidv4(),
-        name: _.get(issueItem, 'parent.name') || '-',
-        child: [{
-          id: issueItem.id,
-          name: issueItem.name,
-        }]
-      }
-      parentData.push(newClass)
+    const className = _.get(issueItem, 'parent.score_type.name') || '异常'
+    const gradeName = _.get(issueItem, 'parent.name') || '异常'
+    const createData = {
+      id: issueItem.id,
+      name: `${className}-${gradeName}-${issueItem.name}`,
+      type: CNLevelToType[issueItem.name]
     }
+    parentData.push(createData)
   })
+  this.checkPoolTags = parentData
   return {
     ...commitInfo,
     issueLabel: parentData

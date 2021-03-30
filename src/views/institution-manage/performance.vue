@@ -3,19 +3,26 @@
     <div class="header">
       <h3>修图机构绩效</h3>
     </div>
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" shortcuts />
-      </div>
-      <div class="instituion-box search-item">
-        <span>机构名称</span>
-        <institution-select v-model="instituionType" institution-class="retouch" />
-      </div>
-      <div class="button-box">
-        <el-button :disabled="!timeSpan" type="primary" @click="getRetouchOrgIncome">查 询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>创建时间</span>
+          <date-picker v-model="timeSpan" shortcuts />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="instituion-box search-item">
+          <span>机构名称</span>
+          <institution-select v-model="instituionType" institution-class="retouch" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="button-box search-item">
+          <el-button :disabled="!timeSpan" type="primary" @click="getRetouchOrgIncome">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="table-box">
       <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="instituionName" label="机构名" />
@@ -69,9 +76,6 @@ export default {
           req.retoucherOrgId = this.instituionType
         }
         this.tableData = await Institution.getRetouchOrgIncome(req)
-      } catch (error) {
-        console.error(error)
-        this.$newMessage.warning(error.message || error)
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -79,3 +83,9 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.table-box {
+  margin-top: 0;
+}
+</style>

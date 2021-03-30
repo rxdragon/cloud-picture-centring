@@ -5,20 +5,28 @@
       <el-button type="primary" plain @click="toBack">返回</el-button>
     </div>
     <el-alert title="提示：请先输入伙伴工号或伙伴姓名进行相关查询后才可配置权限" type="info" show-icon />
-    <div class="search-box">
-      <div class="job-number-box search-item">
-        <span>工号</span>
-        <el-input
-          v-model="jobNumber"
-          v-numberOnly
-          type="number"
-          placeholder="请输入伙伴工号"
-        />
-      </div>
-      <div v-if="!isEdit" class="button-box">
-        <el-button type="primary" @click="getStaff">查询</el-button>
-      </div>
-    </div>
+    <!-- 搜索框 -->
+    <el-row class="search-box" :gutter="20">
+      <!-- 工号 -->
+      <el-col :span="8" :xl="4">
+        <div class="job-number-box search-item">
+          <span>工号</span>
+          <el-input
+            v-model="jobNumber"
+            v-numberOnly
+            :disabled="Boolean(isEdit)"
+            type="number"
+            placeholder="请输入伙伴工号"
+          />
+        </div>
+      </el-col>
+      <el-col v-if="!isEdit" :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="getStaff">查询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+  
     <template v-if="staffInfo.nickname || staffInfo.name">
       <div class="staff-info-panel module-panel">
         <div class="staff-name">伙伴姓名/花名：{{ staffInfo.nickname || staffInfo.name }}</div>
@@ -39,20 +47,28 @@
           <div class="retouch-select-box">
             <div class="search-item">
               <span>修图等级</span>
-              <retouch-rank-select v-model="retouchRank" show-all-option @change="onRankChange"/>
+              <el-col :span="8">
+                <retouch-rank-select v-model="retouchRank" show-all-option @change="onRankChange"/>
+              </el-col>
             </div>
             <div class="search-item plant-search">
               <span>海草值</span>
-              <el-input v-model="retouchExp" placeholder="根据修图等级自动调整"/>
+              <el-col :span="8">
+                <el-input class="exp-box" v-model="retouchExp" placeholder="根据修图等级自动调整"/>
+              </el-col>
               <p class="plant-tip" v-show="showPlantTip">提示：账号当前海草值为{{ originExp }}</p>
             </div>
             <div class="search-item">
               <span>修图身份</span>
-              <retouch-kind-select v-model="retouchIdentity" placeholder="请选择修图身份"/>
+              <el-col :span="8">
+                <retouch-kind-select v-model="retouchIdentity" placeholder="请选择修图身份"/>
+              </el-col>
             </div>
             <div class="search-item">
               <span>修图类别</span>
-              <retouch-type-select v-model="retouchType" import-model />
+              <el-col :span="8">
+                <retouch-type-select v-model="retouchType" import-model />
+              </el-col>
             </div>
           </div>
           <div class="product-box search-item">
@@ -64,7 +80,7 @@
               :to-data.sync="toData"
             />
           </div>
-          <div class="button-box">
+          <div class="search-item">
             <el-button type="primary" @click="nextStep">下一步</el-button>
           </div>
         </div>
@@ -72,7 +88,9 @@
         <div v-if="activeName === 'role'" class="role-box">
           <div class="role-search search-item">
             <span>角色组名称</span>
-            <role-select v-model="roleValue" @change="roleChange" />
+            <el-col :span="8">
+              <role-select v-model="roleValue" @change="roleChange" />
+            </el-col>
           </div>
           <div class="role-module search-item">
             <span>权限模块</span>
@@ -430,17 +448,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .add-account {
   .search-box {
-    margin-top: 20px;
-
-    .job-number-box {
-      .el-input {
-        width: 229px;
-      }
-    }
+    margin-top: 24px;
   }
 
   .staff-info-panel {
@@ -475,6 +485,13 @@ export default {
   }
 
   .retouch-category-box {
+    .search-item {
+      width: 856px;
+      padding-left: 68px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
     .retouch-select-box {
       .search-item {
         margin: 24px 0;
@@ -494,6 +511,10 @@ export default {
           font-size: 13px;
           color: red;
         }
+
+        .exp-box {
+          width: 100%;
+        }
       }
     }
 
@@ -503,13 +524,6 @@ export default {
       .product-panel {
         width: 800px;
       }
-    }
-
-    .button-box {
-      width: 856px;
-      padding-left: 68px;
-      margin-top: 24px;
-      text-align: left;
     }
   }
 

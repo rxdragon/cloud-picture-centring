@@ -23,6 +23,7 @@ module.exports = {
         alias: {
           '@': resolve('src'),
           '@SelectBox': resolve('src/components/SelectBox'),
+          '@AssessmentComponents': resolve('src/components/AssessmentComponents'),
           '@electronMain': resolve('src/electronMain')
         }
       },

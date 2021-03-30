@@ -1,21 +1,32 @@
 <template>
   <div class="retoucher-group-performance" v-loading="loading">
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="staff-search search-item">
-        <span>修图组</span>
-        <retoucher-group-select v-model="retoucherGroupValue" />
-      </div>
-      <div class="search-item">
-        <el-button type="primary" @click="searchPerformance">查 询</el-button>
-      </div>
-      <div class="tip-box search-item">
-        <tip :message="tipMessage" />
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <!-- 时间 -->
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <!-- 修图组 -->
+      <el-col :span="6" :xl="4">
+        <div class="staff-search search-item">
+          <span>修图组</span>
+          <retoucher-group-select v-model="retoucherGroupValue" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="searchPerformance">查 询</el-button>
+        </div>
+      </el-col>
+      <el-col :span="2" :xl="4">
+        <div class="tip-box search-item">
+          <tip :message="tipMessage" />
+        </div>
+      </el-col>
+    </el-row>
+    
     <div class="module-table-box">
       <el-table :data="tableData" style="width: 100%;">
         <el-table-column prop="groupName" label="修图组"/>
@@ -95,7 +106,6 @@ export default {
         const data = await Performance.getGroupScoreRanks(req)
         this.tableData = data
       } catch (error) {
-        console.error(error)
         this.$newMessage.warning(error.message)
       } finally {
         await delayLoading()
@@ -108,8 +118,8 @@ export default {
 
 <style lang="less" scoped>
 .retoucher-group-performance {
-  .search-box {
-    margin-bottom: 20px;
+  .tip-box {
+    justify-content: flex-end;
   }
 
   .module-table-box {

@@ -3,15 +3,20 @@
     <div class="header">
       <h3>个人审核概况</h3>
     </div>
-    <div class="search-box">
-      <div class="search-item">
-        <span>时间</span>
-        <date-picker v-model="timeSpan" />
-      </div>
-      <div class="button-box">
-        <el-button type="primary" @click="getReviewQuota">查 询</el-button>
-      </div>
-    </div>
+    <el-row class="search-box" :gutter="20">
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <span>时间</span>
+          <date-picker v-model="timeSpan" />
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item">
+          <el-button type="primary" @click="getReviewQuota">查 询</el-button>
+        </div>
+      </el-col>
+    </el-row>
+
     <div class="table-content module-panel">
       <div class="list-tabel">
         <div v-for="(listItem, listIndex) in tableDataCount" :key="'tableDataCount' + listIndex" class="list-box">
@@ -128,11 +133,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-
 .table-content {
-  margin-top: 24px;
-
   .list-tabel {
     display: grid;
     grid-template-columns: repeat(7, 1fr);

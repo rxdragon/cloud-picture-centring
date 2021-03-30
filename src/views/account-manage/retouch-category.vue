@@ -6,15 +6,21 @@
           <h3>修图类型配置</h3>
           <el-button type="primary" @click="editCateGory()">添加修图类别</el-button>
         </div>
-        <div class="search-box">
-          <div class="category-box search-item">
-            <span>修图类别名称</span>
-            <retouch-type-select v-model="retouchClassId" />
-          </div>
-          <div class="button-box">
-            <el-button type="primary" @click="getList(1)">查 询</el-button>
-          </div>
-        </div>
+        <!-- 搜索框 -->
+        <el-row class="search-box" :gutter="20">
+          <el-col :span="8" :xl="4">
+            <div class="category-box search-item">
+              <span>修图类别名称</span>
+              <RetouchTypeSelect v-model="retouchClassId" />
+            </div>
+          </el-col>
+          <el-col :span="8" :xl="4">
+            <div class="button-box search-item">
+              <el-button type="primary" @click="getList(1)">查 询</el-button>
+            </div>
+          </el-col>
+        </el-row>
+
         <div class="table-box">
           <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="name" label="修图类别名称" />
@@ -160,22 +166,8 @@ export default {
 }
 </script>
 
-<style lang="less">
-.retouch-category {
-  .main {
-    .search-box {
-      .category-box {
-        .el-input {
-          width: 220px;
-        }
-      }
-
-      .button-box {
-        .el-button {
-          margin-left: 20px;
-        }
-      }
-    }
-  }
+.<style lang="less" scoped>
+.table-box {
+  margin: 0;
 }
 </style>
