@@ -110,6 +110,7 @@ export function getSelfBuffInfo () {
   })
 }
 
+// TODO 接口联调整
 /**
  * @description 获取个人等级
  */
@@ -130,6 +131,7 @@ export function getRankInfo () {
     createData.needLevelUpPlantRate = Math.floor(createData.needLevelUpPhotoPlantRate)
     createData.needLevelUpPhotoPullRate = (createData.needLevelUpPhotoPullRate * 100).toFixed(2)
     createData.needLevelUpPullRate = Math.floor(createData.needLevelUpPhotoPullRate)
+    createData.level = 2
     return createData
   })
 }
