@@ -50,6 +50,7 @@
           <el-table :data="tableData" style="width: 100%;">
             <el-table-column prop="name" label="产品名称" />
             <el-table-column prop="photographerOrgName" label="机构名称" />
+            <el-table-column v-if="!isPending" prop="productCategory" label="产品分类" />
             <el-table-column v-if="isPending" prop="retouch_require" label="修图要求" />
             <el-table-column v-if="!isPending" label="修图标准">
               <template slot-scope="scope" v-if="!isPending">

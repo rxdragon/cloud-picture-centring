@@ -342,6 +342,12 @@ export function getProductList (params) {
   }).then(msg => {
     msg.item.forEach(listItem => {
       listItem.photographerOrgName = listItem.photographer_org ? listItem.photographer_org.name : '-'
+      const productCategory = _.get(listItem, 'product_category') || null
+      if (productCategory) {
+        const parentName = _.get(productCategory, 'parent.name') || '-'
+        const className = _.get(productCategory, 'name') || '-'
+        listItem.productCategory = `${parentName}/${className}`
+      }
     })
     return msg
   })
