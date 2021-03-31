@@ -312,6 +312,8 @@ export default class StreamModel {
 
   // 获取抽查类型
   getEvaluationType (statics = []) {
+    const isCloudEvaluation = statics.includes('cloud_evaluation')
+    // 进入抽片池就标识修修兽云学院记号
     if (statics.includes(SPOT_CHECK_MAP.SHOW_PIC_SPOT)) {
       this.evaluationType = SPOT_CHECK_MAP.SHOW_PIC_SPOT
       this.evaluationTypeCN = EVALUATION_TYPE[SPOT_CHECK_MAP.SHOW_PIC_SPOT]
@@ -323,7 +325,7 @@ export default class StreamModel {
       return
     }
     // 兼容老数据
-    if (statics.includes('cloud_evaluation')) {
+    if (isCloudEvaluation) {
       this.evaluationType = SPOT_CHECK_MAP.CHECK_POOL_SPOT
       this.evaluationTypeCN = EVALUATION_TYPE[SPOT_CHECK_MAP.CHECK_POOL_SPOT]
       return
