@@ -102,7 +102,6 @@ export default {
         const { labelClass, chainLine } = await AssessmentCenter.getScoreConfigList(req)
         await this.$delayLoading()
         this.labelClass = labelClass
-        this.activeNames = labelClass.map(item => item.idString)
         this.chainLine = chainLine
       } finally {
         this.loading = false

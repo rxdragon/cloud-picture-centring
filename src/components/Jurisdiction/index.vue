@@ -149,6 +149,7 @@ export default {
         }
         moduleItem.checkMenu = []
       }
+      moduleItem.isIndeterminate = false
       this.updateParent()
     },
     /**
