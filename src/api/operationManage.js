@@ -342,6 +342,7 @@ export function getProductList (params) {
   }).then(msg => {
     msg.item.forEach(listItem => {
       listItem.photographerOrgName = listItem.photographer_org ? listItem.photographer_org.name : '-'
+      listItem.weightName = listItem.weight_setting ? listItem.weight_setting.name : '-'
     })
     return msg
   })
@@ -413,7 +414,7 @@ export function editProduct (params) {
 
 /**
  * @description 云端全流水查询
- * @param {*} params 
+ * @param {*} params
  */
 export function getAllCloudStream (params) {
   return axios({

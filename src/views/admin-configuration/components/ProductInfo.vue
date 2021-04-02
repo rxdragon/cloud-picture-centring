@@ -15,7 +15,7 @@
           <div class="panel-content">{{ photographerOrgName }}</div>
         </div>
       </div>
-      
+
       <div class="info-box require-box">
         <div class="info-panel">
           <div class="info-title">修图要求</div>
@@ -67,7 +67,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="权重等级">
-            <weight-select v-model="productConfig.weightType" import-data />
+            <weight-select v-model="productConfig.weightSettingId" import-data />
           </el-form-item>
           <el-form-item label="是否需要模版占位图">
             <el-radio-group v-model="productConfig.needTemplate">
@@ -388,7 +388,7 @@ export default {
       productConfig: {
         classificationId: '', // 修图分类id
         standard: '', // 修图标准
-        weightType: '', // 权重等级
+        weightSettingId: '', // 权重等级
         needTemplate: '', // 是否需要模版
         templateSuffix: 'jpg', // 模版照类型
         grassData: {}, // 海草数据
@@ -622,7 +622,7 @@ export default {
         data.splicingSeaGrassConfig && (this.productConfig.joinGrassData = data.splicingSeaGrassConfig)
         if (!this.isPending) {
           this.productConfig.standard = data.retouchStandard
-          this.productConfig.weightType = data.weightLevel
+          this.productConfig.weightSettingId = data.weightSettingId
           this.productConfig.needTemplate = data.needTemplate ? 1 : 2
           this.productConfig.needJoint = data.needSplicing ? 1 : 2
           this.productConfig.productRemark = data.note
@@ -685,7 +685,7 @@ export default {
       const reqData = {
         productId: this.editId,
         retouchStandard: this.productConfig.standard,
-        weightLevel: this.productConfig.weightType,
+        weightSettingId: this.productConfig.weightSettingId,
         needSplicing: +this.productConfig.needJoint === 1,
         needTemplate: +this.productConfig.needTemplate === 1,
         templateSuffix: this.productConfig.templateSuffix,
@@ -735,8 +735,8 @@ export default {
         this.$newMessage.warning('请选中产品分类')
         return false
       }
-      if (!this.productConfig.weightType) {
-        this.$newMessage.warning('请选中权重等级')
+      if (!this.productConfig.weightSettingId) {
+        this.$newMessage.warning('请选中权重类型')
         return false
       }
       if (!this.productConfig.needJoint) {
