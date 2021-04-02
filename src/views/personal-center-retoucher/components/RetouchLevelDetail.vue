@@ -59,20 +59,6 @@
             <span>历史海草数</span>
           </div>
         </el-col>
-        <!-- 平均单张修图时长（分钟） -->
-        <el-col :span="6">
-          <div class="main-content">
-            <span class="num">
-              <count-to :end-value="gradeInfo.avgRetouchTime | getInteger" />
-              <i>.<count-to
-                decimals
-                decimalsCount="3"
-                :end-value="gradeInfo.avgRetouchTime | getPointThree"
-              /></i>
-            </span>
-            <span>近{{ matchLevelInfo.checkDay || '∞' }}天均张修图时长（分）</span>
-          </div>
-        </el-col>
       </el-row>
     </div>
     <div class="panel-footer">
@@ -82,7 +68,6 @@
           <span class="check-time">升级核算时间: 2020-08-08 08:30:00</span>
         </div>
         <div class="info-row">
-          <span class="row-title">均张修图时长需 ≤ {{ matchLevelInfo.needAvgRetouchTime | toFixedString }} 分钟</span>
           <span>前{{ matchLevelInfo.checkDay }}天抽查平均分(非主管)需 ≥ {{ matchLevelInfo.upNeedCheckScore | toFixedString }} 分</span>
         </div>
         <div class="info-row">
