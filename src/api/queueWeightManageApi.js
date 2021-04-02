@@ -1,0 +1,81 @@
+import axios from '@/plugins/axios.js'
+
+/**
+ * @description 添加权重分类
+ * @param {*} params
+ */
+export async function addQueueWeightType (params) {
+  const res = await axios({
+    url: '/project_cloud/product/addQueueWeightType',
+    method: 'POST',
+    data: params
+  })
+  // 返回添加成功id
+  return res.msg
+}
+
+/**
+ * @description 编辑权重分类
+ * @param {*} params
+ */
+export async function editQueueWeightType (params) {
+  const res = await axios({
+    url: '/project_cloud/product/editQueueWeightType',
+    method: 'POST',
+    data: params
+  })
+  // 返回添加成功id
+  return res.msg
+}
+
+/**
+ * @description 获取队列权重列表
+ */
+export async function getQueueWeightTypeList () {
+  const map = {
+    urgent_weight: '普通加急',
+    customer_urgent_v1: 'V1会员加急',
+    customer_urgent_v2: 'V2会员加急',
+    customer_urgent_v3: 'V3会员加急',
+    customer_urgent_v4: 'V4会员加急',
+  }
+
+  return axios({
+    url: '/project_cloud/product/getQueueWeightTypeList',
+    method: 'POST'
+  }).then(res => {
+    res.items.forEach(data => {
+      data.operatorName = data.operatorInfo.name || '-'
+      data.customer_urgent_weight.urgent_weight = data.urgent_weight
+      data.customerUrgentWeight = Object.entries(map)
+        .map(([key, value]) => {
+          return {
+            title: value,
+            value: data.customer_urgent_weight[key]
+          }
+        })
+    })
+
+    return res.items
+  })
+}
+
+/**
+ * @description 检查是否可以刷新队列
+ */
+export async function canRefreshQueue () {
+  return axios({
+    url: '/project_cloud/product/canRefreshQueue',
+    method: 'GET'
+  })
+}
+
+/**
+ * @description 刷新队列
+ */
+export async function refreshQueue () {
+  return axios({
+    url: '/project_cloud/product/refreshQueue',
+    method: 'POST'
+  })
+}

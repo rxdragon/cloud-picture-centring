@@ -348,6 +348,7 @@ export function getProductList (params) {
         const className = _.get(productCategory, 'name') || '-'
         listItem.productCategory = `${parentName}/${className}`
       }
+      listItem.weightName = listItem.weight_setting ? listItem.weight_setting.name : '-'
     })
     return msg
   })
@@ -419,7 +420,7 @@ export function editProduct (params) {
 
 /**
  * @description 云端全流水查询
- * @param {*} params 
+ * @param {*} params
  */
 export function getAllCloudStream (params) {
   return axios({

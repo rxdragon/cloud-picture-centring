@@ -147,15 +147,6 @@ export const HourGlassSettingEnum = {
   staffEntryTagFormal: '正式伙伴'
 }
 
-// 权重等级
-export const WeightEnum = {
-  weight_first: '一类产品',
-  weight_second: '二类产品',
-  weight_third: '三类产品',
-  weight_fourth: '四类产品',
-  weight_fifth: '五类产品'
-}
-
 // 修图师等级
 export const StaffLevelEnum = {
   retouchingAssistant: '修图助理',
