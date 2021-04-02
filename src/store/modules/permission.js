@@ -85,9 +85,7 @@ const mutations = {
     state.showRetoucherGroupPerformance = roles.includes('AdminManage.performanceInquire.retoucherGroupPerformance')
     state.showRetoucherChargeBackReport = roles.includes('AdminManage.performanceInquire.retoucherChargeBackReport')
     state.showCloudCollegeReport = roles.includes('AdminManage.performanceInquire.cloudCollegeReport')
-    // TODO 修修兽评价报告
-    // state.showPicCollegeReport = roles.includes('AdminManage.performanceInquire.showPicCollegeReport')
-    state.showPicCollegeReport = true
+    state.showPicCollegeReport = roles.includes('AdminManage.performanceInquire.showPicCollegeReport')
 
     state.showCheckerEvaluate = roles.includes('AdminManage.performanceInquire.storeEvaluate')
     state.showOverallPerformance = roles.includes('AdminManage.performanceInquire.overallperformance')
@@ -103,8 +101,10 @@ const mutations = {
 
     state.isRetoucher = roles.includes('RetoucherCenter.waitRetoucher.deal')
     state.showSpotRecheck = roles.includes('AssessmentCenter.cloudAssessment.spotRecheck')
-    // TODO 增加修修兽权限
+    // 修修兽清空抽片权限
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
+    // eslint-disable-next-line max-len
+    state.showShowpicEmptyCheckPool = roles.includes('ShowpicAssessmentCenter.showpicAssessmentCenter.showpicGradeConfiguration.emptyCheckPool')
     // 自动修图
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
     state.autoBuffingA = roles.includes('RetoucherCenter.waitRetoucher.autoBuffingA')
@@ -185,9 +185,7 @@ const actions = {
         ]
       }
 
-      // accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
-      // TODO 调试更改权限
-      accessedRoutes = [...asyncRoutes, ...lastBaseRoutes]
+      accessedRoutes = [...filterAsyncRoutes(asyncRoutes, newRolesArr), ...lastBaseRoutes]
       commit('SET_PERSONAGE_ROUTES', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)

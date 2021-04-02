@@ -171,7 +171,7 @@
           <el-form-item label="是否强制审核" class="need-check-box">
             <el-radio-group v-model="productConfig.needCheck">
               <el-radio :label="2">否（根据绿色通道设定进行审核）</el-radio>
-              <el-radio :label="1">是强制审核限制（无时绿色通道）</el-radio>
+              <el-radio :label="1">是强制审核限制（无视绿色通道）</el-radio>
             </el-radio-group>
             <div class="need-check-time-select" v-if="productConfig.needCheck === 1">
               <div class="time-box">

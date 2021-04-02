@@ -492,8 +492,8 @@ export const CNLevelToType = {
  * 抽查类型
  */
 export const SPOT_CHECK_MAP = {
-  SHOW_PIC_SPOT: 'show_pic_spot',
-  CHECK_POOL_SPOT: 'check_pool_spot',
+  SHOW_PIC_SPOT: 'show_pic_pool',
+  CHECK_POOL_SPOT: 'check_pool',
   NOT_SPOT: 'not_spot'
 }
 

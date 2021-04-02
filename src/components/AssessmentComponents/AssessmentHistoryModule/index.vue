@@ -20,7 +20,11 @@
       <el-col :span="8" :xl="6">
         <div class="product-search search-item">
           <span>产品</span>
-          <product-select v-model="productValue" />
+          <product-select
+            :show-pic-product="cloudType === GRADE_LABEL_TYPE.SHOW_PIC"
+            :himo-product="cloudType === GRADE_LABEL_TYPE.CLOUD"
+            v-model="productValue"
+          />
         </div>
       </el-col>
       <!-- 问题标签 -->
@@ -103,6 +107,7 @@ import GradeBox from '../components/GradeBox'
 
 import moment from 'moment'
 
+import { GRADE_LABEL_TYPE } from '@/utils/enumerate.js'
 import { joinTimeSpan } from '@/utils/timespan.js'
 import * as AssessmentCenter from '@/api/assessmentCenter'
 
@@ -112,6 +117,7 @@ export default {
   inject: ['cloudType'],
   data () {
     return {
+      GRADE_LABEL_TYPE,
       routeName: this.$route.name, // 路由名字
       timeSpan: null, // 时间
       searchTimeSpan: null, // 查询时间
