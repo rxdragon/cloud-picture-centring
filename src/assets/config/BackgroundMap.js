@@ -195,11 +195,11 @@ const BackgroundMap = [
     isCommonUse: true
   },
   {
-    md5: '70cff3205cfedea3029ec0098108c23a',
+    md5: '4ceb0091bf0efcdbd016eea89eec9cdd',
     name: '灰底渐变',
-    url: `${BackGroundDomain}70cff3205cfedea3029ec0098108c23a.jpg`,
-    localPath: `${baseBackgroundPath}70cff3205cfedea3029ec0098108c23a.jpg`,
-    compressPath: `${baseBackgroundPath}70cff3205cfedea3029ec0098108c23a${compressExt}`,
+    url: `${BackGroundDomain}4ceb0091bf0efcdbd016eea89eec9cdd.jpg`,
+    localPath: `${baseBackgroundPath}4ceb0091bf0efcdbd016eea89eec9cdd.jpg`,
+    compressPath: `${baseBackgroundPath}4ceb0091bf0efcdbd016eea89eec9cdd${compressExt}`,
     colourScheme: COLOUR_SCHEME.GRAY,
     isCommonUse: true
   },
