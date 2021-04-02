@@ -111,16 +111,10 @@ import ProductClassificationSelect from '@SelectBox/ProductClassificationSelect'
 import WeightSelect from '@SelectBox/WeightSelect'
 
 import * as OperationManage from '@/api/operationManage.js'
-import { WeightEnum } from '@/utils/enumerate.js'
 
 export default {
   name: 'ProductControl',
   components: { ProductInfo, InstitutionSelect, ProductSelect, WeightSelect, ProductClassificationSelect },
-  filters: {
-    filterWeightEnum (value) {
-      return WeightEnum[value]
-    }
-  },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
