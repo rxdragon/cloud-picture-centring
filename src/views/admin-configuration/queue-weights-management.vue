@@ -65,7 +65,7 @@
               <el-input-number
                 :min="0"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.weight"
                 class="w100p"
               >
@@ -77,7 +77,7 @@
               <el-input-number
                 :min="0"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.increase_weight"
                 class="w100p"
               ></el-input-number>
@@ -90,7 +90,7 @@
               <el-input-number
                 :min="0"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.urgent_weight"
                 class="w100p"
               ></el-input-number>
@@ -101,7 +101,7 @@
               <el-input-number
                 :min="0"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.customer_urgent_weight.customer_urgent_v1"
                 class="w100p"
               ></el-input-number>
@@ -114,7 +114,7 @@
               <el-input-number
                 :min="0"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.customer_urgent_weight.customer_urgent_v2"
                 class="w100p"
               ></el-input-number>
@@ -125,7 +125,7 @@
               <el-input-number
                 :min="0"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.customer_urgent_weight.customer_urgent_v3"
                 class="w100p"
               ></el-input-number>
@@ -138,7 +138,7 @@
               <el-input-number
                 :min="0"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.customer_urgent_weight.customer_urgent_v1"
                 class="w100p"
               ></el-input-number>
@@ -149,7 +149,7 @@
               <el-input-number
                 :min="30"
                 :max="9999999"
-                v-number-only-integer
+                v-number-only
                 v-model="form.take_photo_time"
                 class="duration"
               ></el-input-number>
@@ -162,7 +162,7 @@
             <el-form-item
               :min="0"
               :max="9999999"
-              v-number-only-integer
+              v-number-only
               label="临界增加权重值"
             >
               <el-input-number v-model="form.critical_increase_weight" class="w100p"></el-input-number>
