@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 // 创建版本，版本编号和hash值
 const fs = require('fs')
-const md5 = require('md5')
+const md5File = require('md5-file')
 const NodeRSA = require('node-rsa')
 
 const file = './dist_electron/dist_vue.asar'
@@ -28,7 +28,7 @@ if (!fs.existsSync(file)) {
 
 // 获取打包文件 md5值
 console.log('开始读取文件')
-config.asarMD5 = md5.sync(file)
+config.asarMD5 = md5File.sync(file)
 console.log(config.asarMD5)
 
 const writeObj = JSON.stringify(config)
