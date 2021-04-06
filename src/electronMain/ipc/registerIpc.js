@@ -29,13 +29,13 @@ export default function registerIpc (win) {
   })
 
   // 获取图标地址
-  ipcMain.on('app:getFileIcon', (event, path) => {
-    app.getFileIcon(path, (err, nativeImage) => {
-      if (err) {
-        event.returnValue = ''
-      }
+  ipcMain.on('app:getFileIcon', async (event, path) => {
+    try {
+      const nativeImage = await app.getFileIcon(path)
       event.returnValue = nativeImage.toDataURL() // 使用base64展示图标
-    })
+    } catch {
+      event.returnValue = ''
+    }
   })
 
   ipcMain.on('network-debug', async (event, url) => {
