@@ -14,7 +14,7 @@ const asarUrlDomain = mode === 'production' ? 'https://showpic.mainto.cn' : 'htt
 const folderPath = process.env.ROOTPATH
 
 const config = {
-  asarUrl: `${asarUrlDomain}${folderPath}app_${process.env.CI_COMMIT_SHA}.asar`,
+  asarUrl: `${asarUrlDomain}/${folderPath}app_${process.env.CI_COMMIT_SHA}.asar`,
   asarMD5: "",
   version: process.env.CI_COMMIT_SHA,
   launcherVersion: "v1.0",
@@ -29,12 +29,17 @@ if (!fs.existsSync(file)) {
 // 获取打包文件 md5值
 const fileBuf = fs.readFileSync(file)
 config.asarMD5 = md5(fileBuf)
+console.log(config.asarMD5)
 
 const writeObj = JSON.stringify(config)
 const key = new NodeRSA()
+console.log(writeObj)
 
 key.importKey(process.env.SIGN_KEY, 'pkcs8-private-pem')
+const keyCode = key.encryptPrivate(new Buffer(writeObj), 'base64', 'base64')
+console.log(keyCode)
+
 // 创建version文件
-fs.writeFileSync('./dist_electron/version.json', key.encryptPrivate(new Buffer(writeObj), 'base64', 'base64'))
+fs.writeFileSync('./dist_electron/version.json', keyCode)
 
 console.log(`${config.version} created!`)
