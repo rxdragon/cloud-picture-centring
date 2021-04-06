@@ -2,7 +2,7 @@ import { startNetworkDebugWindow } from '../window/networkDebug.js'
 import { startWorkbenchWindow } from '../window/workbenchWindow.js'
 import { closeWindow, windows } from '../window/base'
 import { WINDOW_NAME } from '../window/WindowEnumerate'
-const { ipcMain } = require('electron')
+const { ipcMain, app } = require('electron')
 
 export default function registerIpc (win) {
   ipcMain.on('close-app', (event, name) => {
@@ -12,17 +12,30 @@ export default function registerIpc (win) {
 
   // 当需要获取配置项时
   ipcMain.on('config:get', (event, name) => {
-    if (!global.config || !global.config(name)) {
+    if (!global.config || !global.config[name]) {
       event.returnValue = ''
       return
     }
-    event.returnValue = global.config(name)
+    event.returnValue = global.config[name]
   })
 
-  // 当用户触发升级操作
-  ipcMain.on('version:do-upgrade', () => {
-    // 这里处理唤起升级的逻辑，下面一句话将会触发升级并重启
-    global.emit.emit('version:do-upgrade')
+  // 获取路径配置
+  ipcMain.on('app:getPath', (event, path) => {
+    try {
+      event.returnValue = app.getPath(path)
+    } catch {
+      event.returnValue = ''
+    }
+  })
+
+  // 获取图标地址
+  ipcMain.on('app:getFileIcon', (event, path) => {
+    app.getFileIcon(path, (err, nativeImage) => {
+      if (err) {
+        event.returnValue = ''
+      }
+      event.returnValue = nativeImage.toDataURL() // 使用base64展示图标
+    })
   })
 
   ipcMain.on('network-debug', async (event, url) => {
