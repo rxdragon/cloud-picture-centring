@@ -45,7 +45,7 @@ export function setGlobalShortcut () {
 
       globalShortcut.register('CmdOrCtrl+M', (item, focusedWindow) => {
         console.log('CmdOrCtrl+M')
-        // TODO 关闭菜单
+        // TODO
         // startAboutWindow()
       })
     }).then(reslove())
