@@ -27,6 +27,7 @@ if (!fs.existsSync(file)) {
 }
 
 // 获取打包文件 md5值
+console.log('开始读取文件')
 const fileBuf = fs.readFileSync(file)
 console.log('fileBuf')
 console.log(fileBuf)
