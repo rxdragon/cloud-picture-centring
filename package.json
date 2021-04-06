@@ -52,7 +52,7 @@
     "mainto-fed-log": "^1.0.0-release.26",
     "mainto-fed-utils": "^1.0.1-release.5",
     "mainto-jssdk": "^1.8.8575-beta.hotfix.wa.validation.order.1",
-    "md5": "^2.3.0",
+    "md5-file": "^5.0.0",
     "mime": "^2.4.4",
     "moment": "^2.29.1",
     "mousetrap": "^1.6.3",
