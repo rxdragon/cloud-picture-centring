@@ -10,7 +10,7 @@ const args = process.argv
 args.splice(0, 2)
 const [mode] = args
 
-const asarUrlDomain = mode === 'production' ? 'https://showpic.mainto.cn' : 'https://fed.dev.hzmantu.com'
+const asarUrlDomain = mode === 'production' ? 'https://cloud.hzmantu.com' : 'https://fed.dev.hzmantu.com'
 const folderPath = process.env.ROOTPATH
 
 const config = {
@@ -28,6 +28,8 @@ if (!fs.existsSync(file)) {
 
 // 获取打包文件 md5值
 const fileBuf = fs.readFileSync(file)
+console.log('fileBuf')
+console.log(fileBuf)
 config.asarMD5 = md5(fileBuf)
 console.log(config.asarMD5)
 
