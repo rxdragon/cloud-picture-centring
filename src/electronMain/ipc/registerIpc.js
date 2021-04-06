@@ -64,6 +64,10 @@ export default function registerIpc (win) {
     event.returnValue = 'success'
   })
 
+  ipcMain.on('version:get', (event) => {
+    event.returnValue = global.currentVersion
+  })
+
   ipcMain.on('other-window-down', async (event, data) => {
     if (!windows['main']) {
       event.returnValue = 'fail'

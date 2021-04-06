@@ -61,13 +61,18 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/login',
-    component: () => import('@/views/login/login.vue'),
+    path: '/about',
+    component: () => import('@/views/about/about.vue'),
     hidden: true
   },
   {
     path: '/new_version',
     component: () => import('@/views/new-version/new-version.vue'),
+    hidden: true
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/login.vue'),
     hidden: true
   },
   {

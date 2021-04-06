@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { app, globalShortcut } from 'electron'
-// import { startAboutWindow } from "@/background/window/about"
+import { app, globalShortcut, dialog } from 'electron'
+import path from 'path'
 const { BrowserWindow } = require('electron')
 
 /**
@@ -45,8 +45,12 @@ export function setGlobalShortcut () {
 
       globalShortcut.register('CmdOrCtrl+M', (item, focusedWindow) => {
         console.log('CmdOrCtrl+M')
-        // TODO
-        // startAboutWindow()
+        dialog.showMessageBoxSync({
+          type: 'info',
+          title: '版本号',
+          icon: path.join(global.staticDir, 'icon.png'),
+          message: global.currentVersion
+        })
       })
     }).then(reslove())
   })
