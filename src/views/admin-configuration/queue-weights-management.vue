@@ -212,9 +212,6 @@ export default {
       canRefreshQueue: false
     }
   },
-  computed: {
-
-  },
   mounted () {
     this.getQueueWeightTypeList()
     this.getCanRefreshQueueTime()
@@ -247,10 +244,9 @@ export default {
         await this.getQueueWeightTypeList()
         const message = isCreate ? '新增类别权重成功' : '编辑类别权重成功'
         this.$message.success(message)
-        this.loading = false
         this.showDialog = false
         this.form =_.cloneDeep(baseData)
-      } catch (err) {
+      } finally {
         this.loading = false
       }
     },
@@ -258,13 +254,13 @@ export default {
      * @description 获取列表信息
      */
     async getQueueWeightTypeList () {
-      this.$store.dispatch('setting/showLoading', this.routeName)
-      const res = await queueWeightManageApi.getQueueWeightTypeList()
-        .finally(() => {
-          this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        })
-      this.tableData = res
-
+      try {
+        this.$store.dispatch('setting/showLoading', this.routeName)
+        const res = await queueWeightManageApi.getQueueWeightTypeList()
+        this.tableData = res
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      @description 打开编辑弹窗
