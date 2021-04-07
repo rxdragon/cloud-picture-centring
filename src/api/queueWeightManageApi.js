@@ -32,7 +32,7 @@ export async function editQueueWeightType (params) {
  * @description 获取队列权重列表
  */
 export async function getQueueWeightTypeList () {
-  const map = {
+  const urgentNameMap = {
     urgent_weight: '普通加急',
     customer_urgent_v1: 'V1会员加急',
     customer_urgent_v2: 'V2会员加急',
@@ -47,7 +47,7 @@ export async function getQueueWeightTypeList () {
     res.items.forEach(data => {
       data.operatorName = data.operatorInfo.name || '-'
       data.customer_urgent_weight.urgent_weight = data.urgent_weight
-      data.customerUrgentWeight = Object.entries(map)
+      data.customerUrgentWeight = Object.entries(urgentNameMap)
         .map(([key, value]) => {
           return {
             title: value,
