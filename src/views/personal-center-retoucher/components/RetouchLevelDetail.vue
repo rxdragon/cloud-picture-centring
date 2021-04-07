@@ -6,12 +6,55 @@
         <el-tag size="medium">{{ gradeInfo.levelName }}（{{ gradeInfo.level }}级）</el-tag>
       </span>
       <div class="tip">
-        <el-popover placement="bottom-end" width="700" trigger="hover">
-          <div class="tip-content">
-            <div>修图等级升级规则：</div>
-            <div>1、退单率：近期修图获得的<span class="emphasis">质量问题退张数</span>占比，升级条件需<span class="emphasis">低于</span>退张合格率</div>
-            <div>2、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
-            <div>3、平均单张修图时长：近期平均单张修图时长不可超过升级规定的平均修图时长。</div>
+        <el-popover
+          placement="bottom-end"
+          popper-class="level-tip-popover"
+          width="700"
+          trigger="click"
+        >
+          <div class="tip-pop">
+            <div class="tip-module">
+              <div class="tip-header">升降级规则</div>
+              <div class="tip-content">
+                <table class="update-table">
+                  <tr class="table-header">
+                    <th>等级</th>
+                    <th>升级历史海草</th>
+                    <th>升级抽查张数</th>
+                    <th>升级抽查分数</th>
+                  </tr>
+                  <tr v-for="(item, index) in updateInfo" :key="index">
+                    <th>{{ item.level }}级（{{ item.levelName }}）</th>
+                    <th>{{ item.exp }}</th>
+                    <th>{{ item.upSpotCount }}</th>
+                    <th>{{ item.updateScore }}</th>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="tip-module">
+              <div class="tip-header">升级规则</div>
+              <div class="tip-content">
+                <p>1、近N张抽查均分（非主管）</p>
+                <ul>
+                  <li>近N张的非主管抽查的平均分，抽查范围包含<span class="emphasis">云学校抽查的修修兽抽查</span>。</li>
+                  <li>每次升级完成或者降级完成统计分数将会 <span class="emphasis">清零</span>。</li>
+                  <li>升级时间为<span class="emphasis">每日早上08:30</span>，该时间系统将会自动判断是否达到升级要求</li>
+                </ul>
+                <p>2、历史海草数：账号开通以来所获得的海草总数，包含扣除海草、奖励海草、回滚海草。</p>
+              </div>
+            </div>
+            <div class="tip-module">
+              <div class="tip-header">降级说明</div>
+              <div class="tip-content">
+                <p>1、近N张抽查均分（非主管）</p>
+                <ul>
+                  <li>近N张的非主管抽查的平均分，抽查范围包含<span class="emphasis">云学校抽查的修修兽抽查</span>。</li>
+                  <li>每次升级完成或者降级完成统计分数将会 <span class="emphasis">清零</span>。</li>
+                  <li>降级时间为<span class="emphasis">每日早上08:30</span>，该时间系统自动判断是否达到降级要求</li>
+                </ul>
+              </div>
+            </div>
           </div>
           <span slot="reference" class="tip-title"><i class="el-icon-warning-outline" />升级规则</span>
         </el-popover>
@@ -20,7 +63,7 @@
     <div class="panel-main">
       <el-row :gutter="51">
         <!-- 近30日点赞数 -->
-        <el-col :span="6">
+        <el-col :span="7">
           <div class="main-content">
             <span class="num" v-if="gradeInfo.level !== 11">
               <count-to :end-value="gradeInfo.nearly30DaysGoodNum | getInteger" />
@@ -31,11 +74,11 @@
               <span class="check-tip">（已统计10天）</span>
             </span>
             <span class="num" v-else>-</span>
-            <span>近{{ matchLevelInfo.checkDay || '∞' }}天抽查均分(非主管 )</span>
+            <span>升级统计近30张抽查均分(非主管 )</span>
           </div>
         </el-col>
         <!-- 近30日被退张数(质量问题) -->
-        <el-col :span="6">
+        <el-col :span="7">
           <div class="main-content">
             <span class="num" v-if="gradeInfo.level !== 1">
               <count-to :end-value="gradeInfo.nearly30DaysReturnNum | getInteger" />
@@ -46,11 +89,11 @@
               <span class="check-tip">（已统计10张）</span>
             </span>
             <span class="num" v-else>-</span>
-            <span>近30张抽查均分(非主管)</span>
+            <span>降级统计近30张抽查均分(非主管)</span>
           </div>
         </el-col>
         <!-- 历史海草数 -->
-        <el-col :span="6">
+        <el-col :span="7">
           <div class="main-content">
             <span class="num">
               <count-to :end-value="gradeInfo.exp | getInteger" />
@@ -91,6 +134,86 @@ import CountTo from '@/components/CountTo'
 import * as Retoucher from '@/api/retoucher.js'
 import LevelUpInfo from './LevelUpInfo.json'
 
+const updateInfo = [
+  {
+    level: 1,
+    levelName: '修图助理',
+    exp: '/',
+    updateScore: '/',
+    upSpotCount: '/',
+  },
+  {
+    level: 2,
+    levelName: '初级修图师',
+    exp: 800,
+    updateScore: 81,
+    upSpotCount: 20,
+  },
+  {
+    level: 3,
+    levelName: '修图师',
+    exp: 2000,
+    updateScore: 82,
+    upSpotCount: 20
+  },
+  {
+    level: 4,
+    levelName: '资深修图师',
+    exp: 3500,
+    updateScore: 83,
+    upSpotCount: 30
+  },
+  {
+    level: 5,
+    levelName: '高级修图师',
+    exp: 7000,
+    updateScore: 84,
+    upSpotCount: 30
+  },
+  {
+    level: 6,
+    levelName: '修图专家',
+    exp: 11000,
+    updateScore: 85,
+    upSpotCount: 30
+  },
+  {
+    level: 7,
+    levelName: '资深修图专家',
+    exp: 20000,
+    updateScore: 86,
+    upSpotCount: 35
+  },
+  {
+    level: 8,
+    levelName: '高级修图专家',
+    exp: 30000,
+    updateScore: 87,
+    upSpotCount: 35
+  },
+  {
+    level: 9,
+    levelName: '首席修图专家',
+    exp: 42000,
+    updateScore: 88,
+    upSpotCount: 35
+  },
+  {
+    level: 10,
+    levelName: '工匠大师',
+    exp: 55000,
+    updateScore: 89,
+    upSpotCount: 40
+  },
+  {
+    level: 11,
+    levelName: '首席工匠大师',
+    exp: 70000,
+    updateScore: 90,
+    upSpotCount: 40
+  }
+]
+
 export default {
   name: 'RetouchLevelDetail',
   components: { CountTo },
@@ -120,6 +243,7 @@ export default {
   data () {
     return {
       gradeInfo: {},
+      updateInfo
     }
   },
   computed: {
@@ -245,6 +369,48 @@ export default {
       .el-progress-bar__inner {
         background: @gradualGreen;
         box-shadow: @greenBoxShadow;
+      }
+    }
+  }
+}
+</style>
+
+<style lang="less">
+.level-tip-popover {
+  .tip-pop {
+    height: 400px;
+    overflow: overlay;
+
+    .update-table {
+      width: 100%;
+      border: 1px solid #ebeef5;
+
+      .table-header {
+        background-color: #fafafa;
+      }
+
+      th {
+        border-bottom: 1px solid #ebeef5;
+      }
+
+      tr {
+        line-height: 32px;
+
+        &:nth-last-child(1) {
+          th {
+            border: none;
+          }
+        }
+      }
+    }
+
+    .tip-module {
+      margin-bottom: 12px;
+
+      .tip-header {
+        margin-bottom: 12px;
+        font-size: 16px;
+        font-weight: 600;
       }
     }
   }
