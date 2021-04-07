@@ -171,6 +171,21 @@ export const StaffLevelEnum = {
   chiefCraftsmanMaster: '首席工匠大师'
 }
 
+// 修图等级
+export const STAFF_LEVEL = {
+  1: '修图助理',
+  2: '初级修图师',
+  3: '修图师',
+  4: '资深修图师',
+  5: '高级修图师',
+  6: '修图专家',
+  7: '资深修图专家',
+  8: '高级修图专家',
+  9: '首席修图专家',
+  10: '工匠大师',
+  11: '首席工匠大师'
+}
+
 export const PLANT_ID_MAP = {
   PLANT_ID: '1', // 种草id
   PULL_ID: '2', // 拔草id

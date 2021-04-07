@@ -66,30 +66,30 @@
         <el-col :span="7">
           <div class="main-content">
             <span class="num" v-if="gradeInfo.level !== 11">
-              <count-to :end-value="gradeInfo.nearly30DaysGoodNum | getInteger" />
+              <count-to :end-value="gradeInfo.staffLevelCheck.checked_level_up_avg_score | getInteger" />
               <i>.<count-to
                 decimals
-                :end-value="gradeInfo.nearly30DaysGoodNum | getPoint"
+                :end-value="gradeInfo.staffLevelCheck.checked_level_up_avg_score | getPoint"
               /></i>
-              <span class="check-tip">（已统计10天）</span>
+              <span class="check-tip">（已统计{{ gradeInfo.staffLevelCheck.checked_level_up_num }}张）</span>
             </span>
             <span class="num" v-else>-</span>
-            <span>升级统计近30张抽查均分(非主管 )</span>
+            <span>升级统计近{{ matchLevelInfo.upDateSpotCount || '-' }}张抽查均分(非主管 )</span>
           </div>
         </el-col>
         <!-- 近30日被退张数(质量问题) -->
         <el-col :span="7">
           <div class="main-content">
             <span class="num" v-if="gradeInfo.level !== 1">
-              <count-to :end-value="gradeInfo.nearly30DaysReturnNum | getInteger" />
+              <count-to :end-value="gradeInfo.staffLevelCheck.checked_level_down_avg_score | getInteger" />
               <i>.<count-to
                 decimals
-                :end-value="gradeInfo.nearly30DaysReturnNum | getPoint"
+                :end-value="gradeInfo.staffLevelCheck.checked_level_down_avg_score | getPoint"
               /></i>
-              <span class="check-tip">（已统计10张）</span>
+              <span class="check-tip">（已统计{{ gradeInfo.staffLevelCheck.checked_level_down_num }}张）</span>
             </span>
             <span class="num" v-else>-</span>
-            <span>降级统计近30张抽查均分(非主管)</span>
+            <span>降级统计近{{ matchLevelInfo.downDateSpotCount }}张抽查均分(非主管)</span>
           </div>
         </el-col>
         <!-- 历史海草数 -->
@@ -108,7 +108,6 @@
       <div class="levelup-info" v-if="gradeInfo.level !== 11">
         <div class="info-title">
           <span>距下一等级要求:</span>
-          <span class="check-time">升级核算时间: 2020-08-08 08:30:00</span>
         </div>
         <div class="info-row">
           <span>前{{ matchLevelInfo.checkDay }}天抽查平均分(非主管)需 ≥ {{ matchLevelInfo.upNeedCheckScore | toFixedString }} 分</span>
@@ -116,8 +115,8 @@
         <div class="info-row">
           <span class="row-title">海草值</span>
           <span class="progress">
-            <el-progress class="" :percentage="80" :show-text="false" />
-            （100000 / {{ matchLevelInfo.needExp }}）颗
+            <el-progress class="" :percentage="expPercentage" :show-text="false" />
+            （{{ gradeInfo.exp }} / {{ matchLevelInfo.needExp }}）颗
           </span>
         </div>
       </div>
@@ -132,6 +131,7 @@
 import CountTo from '@/components/CountTo'
 
 import * as Retoucher from '@/api/retoucher.js'
+import * as Utils from '@/utils/index.js'
 import LevelUpInfo from './LevelUpInfo.json'
 
 const updateInfo = [
@@ -242,7 +242,9 @@ export default {
   },
   data () {
     return {
-      gradeInfo: {},
+      gradeInfo: {
+        staffLevelCheck: {}
+      },
       updateInfo
     }
   },
@@ -250,6 +252,13 @@ export default {
     matchLevelInfo () {
       const level = this.gradeInfo.level
       return LevelUpInfo[level] || {}
+    },
+    // 升级所需海草百分比
+    expPercentage () {
+      const nowExp = _.get(this, 'gradeInfo.exp') || 0
+      const needExp = _.get(this, 'matchLevelInfo.needExp') || 0
+      const percent = Utils.getAvg(nowExp, needExp, 4) * 100
+      return percent > 100 ? 100 : percent
     }
   },
   created () {
