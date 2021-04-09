@@ -46,7 +46,7 @@ export async function getQueueWeightTypeList (params) {
     data: params
   }).then(res => {
     res.items.forEach(data => {
-      data.operatorName = data.operatorInfo.name || '-'
+      data.operatorName = _.get(data, 'operatorInfo.name') || '-'
       data.customer_urgent_weight.urgent_weight = data.urgent_weight
       data.customerUrgentWeight = Object.entries(urgentNameMap)
         .map(([key, value]) => {
