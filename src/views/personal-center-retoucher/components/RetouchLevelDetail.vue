@@ -89,7 +89,7 @@
               <span class="check-tip">（已统计{{ gradeInfo.staffLevelCheck.checked_level_down_num }}张）</span>
             </span>
             <span class="num" v-else>-</span>
-            <span>降级统计近{{ matchLevelInfo.downDateSpotCount }}张抽查均分(非主管)</span>
+            <span>降级统计近{{ matchLevelInfo.downDateSpotCount || '-' }}张抽查均分(非主管)</span>
           </div>
         </el-col>
         <!-- 历史海草数 -->
@@ -110,7 +110,7 @@
           <span>距下一等级要求:</span>
         </div>
         <div class="info-row">
-          <span>前{{ matchLevelInfo.checkDay }}天抽查平均分(非主管)需 ≥ {{ matchLevelInfo.upNeedCheckScore | toFixedString }} 分</span>
+          <span>前{{ matchLevelInfo.upDateSpotCount }}天抽查平均分(非主管)需 ≥ {{ matchLevelInfo.upNeedCheckScore | toFixedString }} 分</span>
         </div>
         <div class="info-row">
           <span class="row-title">海草值</span>
@@ -121,7 +121,7 @@
         </div>
       </div>
       <div class="demotion-info" v-if="gradeInfo.level !== 1">
-        <span>提示: 近30张抽查平均分(非主管) &lt; {{ matchLevelInfo.downCheckScore  | toFixedString }}分将会降级</span>
+        <span>提示: 近{{ matchLevelInfo.downDateSpotCount }}张抽查平均分(非主管) &lt; {{ matchLevelInfo.downCheckScore  | toFixedString }}分将会降级</span>
       </div>
     </div>
   </div>
