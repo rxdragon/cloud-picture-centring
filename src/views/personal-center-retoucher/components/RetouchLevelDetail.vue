@@ -37,9 +37,9 @@
               <div class="tip-content">
                 <p>1、近N张抽查均分（非主管）</p>
                 <ul>
-                  <li>近N张的非主管抽查的平均分，抽查范围包含<span class="emphasis">云学校抽查的修修兽抽查</span>。</li>
+                  <li>近N张的非主管抽查的平均分，抽查范围包含<span class="emphasis">云学校抽查和修修兽抽查</span>。</li>
                   <li>每次升级完成或者降级完成统计分数将会 <span class="emphasis">清零</span>。</li>
-                  <li>升级时间为<span class="emphasis">每日早上08:30</span>，该时间系统将会自动判断是否达到升级要求</li>
+                  <li>升级时间为<span class="emphasis">每日早上08:30</span>，该时间系统将自动判断是否达到升级要求。</li>
                 </ul>
                 <p>2、历史海草数：账号开通以来所获得的海草总数，包含扣除海草、奖励海草、回滚海草。</p>
               </div>
@@ -49,9 +49,9 @@
               <div class="tip-content">
                 <p>1、近N张抽查均分（非主管）</p>
                 <ul>
-                  <li>近N张的非主管抽查的平均分，抽查范围包含<span class="emphasis">云学校抽查的修修兽抽查</span>。</li>
+                  <li>近N张的非主管抽查的平均分，抽查范围包含<span class="emphasis">云学校抽查和修修兽抽查</span>。</li>
                   <li>每次升级完成或者降级完成统计分数将会 <span class="emphasis">清零</span>。</li>
-                  <li>降级时间为<span class="emphasis">每日早上08:30</span>，该时间系统自动判断是否达到降级要求</li>
+                  <li>降级时间为<span class="emphasis">每日早上08:30</span>，该时间系统将自动判断是否达到降级要求。</li>
                 </ul>
               </div>
             </div>
