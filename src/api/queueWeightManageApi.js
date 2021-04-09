@@ -29,7 +29,7 @@ export async function editQueueWeightType (params) {
 }
 
 /**
- * @description 获取队列权重列表
+ * @description 获取队列权重列表, 分页
  */
 export async function getQueueWeightTypeList (params) {
   const urgentNameMap = {
@@ -60,6 +60,18 @@ export async function getQueueWeightTypeList (params) {
     return res
   })
 }
+
+
+/**
+ * @description 获取队列权重列表, 不分页的
+ */
+export async function getAllQueueWeightType () {
+  return axios({
+    url: '/project_cloud/product/getAllQueueWeightType',
+    method: 'GET'
+  })
+}
+
 
 /**
  * @description 检查是否可以刷新队列
