@@ -31,7 +31,7 @@ export async function editQueueWeightType (params) {
 /**
  * @description 获取队列权重列表
  */
-export async function getQueueWeightTypeList () {
+export async function getQueueWeightTypeList (params) {
   const urgentNameMap = {
     urgent_weight: '普通加急',
     customer_urgent_v1: 'V1会员加急',
@@ -42,10 +42,11 @@ export async function getQueueWeightTypeList () {
 
   return axios({
     url: '/project_cloud/product/getQueueWeightTypeList',
-    method: 'POST'
+    method: 'POST',
+    data: params
   }).then(res => {
     res.items.forEach(data => {
-      data.operatorName = data.operatorInfo.name || '-'
+      data.operatorName = _.get(data, 'operatorInfo.name') || '-'
       data.customer_urgent_weight.urgent_weight = data.urgent_weight
       data.customerUrgentWeight = Object.entries(urgentNameMap)
         .map(([key, value]) => {
@@ -56,7 +57,7 @@ export async function getQueueWeightTypeList () {
         })
     })
 
-    return res.items
+    return res
   })
 }
 
