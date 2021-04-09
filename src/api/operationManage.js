@@ -348,7 +348,7 @@ export function getProductList (params) {
         const className = _.get(productCategory, 'name') || '-'
         listItem.productCategory = `${parentName}/${className}`
       }
-      listItem.weightName = _.get(listItem.weight_setting.name) || '-'
+      listItem.weightName = _.get(listItem, 'weight_setting.name') || '-'
     })
     return msg
   })

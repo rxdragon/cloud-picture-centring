@@ -33,13 +33,24 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <div class="page-box">
+        <el-pagination
+          :hide-on-single-page="true"
+          :current-page.sync="pager.page"
+          :page-size="pager.pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="pager.total"
+          @current-change="getQueueWeightTypeList"
+        />
+      </div>
       <div class="refresh-queue-wrap">
         <el-button type="primary" :disabled="!canRefreshQueue" @click="handleRefreshQueue">刷新队列</el-button>
       </div>
     </div>
     <el-dialog
       width="60%"
-      title="新增类别"
+      :title="isEditMode ? '编辑类别' : '新增类别'"
       center
       @close="handleCloseDialog"
       custom-class="empty-dialog"
@@ -61,7 +72,7 @@
         </el-row>
         <el-row >
           <el-col :span="11">
-            <el-form-item label="自身权重值">
+            <el-form-item label="自身权重值" prop="weight">
               <el-input-number
                 :min="0"
                 :max="9999999"
@@ -73,7 +84,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="11">
-            <el-form-item label="每小时增长权重值">
+            <el-form-item label="每小时增长权重值" prop="increase_weight">
               <el-input-number
                 :min="0"
                 :max="9999999"
@@ -86,7 +97,7 @@
         </el-row>
         <el-row >
           <el-col :span="11">
-            <el-form-item label="普通加急">
+            <el-form-item label="普通加急" prop="urgent_weight">
               <el-input-number
                 :min="0"
                 :max="9999999"
@@ -97,7 +108,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="11">
-            <el-form-item label="V1会员加急">
+            <el-form-item label="V1会员加急" prop="customer_urgent_weight.customer_urgent_v1">
               <el-input-number
                 :min="0"
                 :max="9999999"
@@ -110,7 +121,7 @@
         </el-row>
         <el-row >
           <el-col :span="11">
-            <el-form-item label="V2会员加急">
+            <el-form-item label="V2会员加急" prop="customer_urgent_weight.customer_urgent_v2">
               <el-input-number
                 :min="0"
                 :max="9999999"
@@ -121,7 +132,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="11">
-            <el-form-item label="V3会员加急">
+            <el-form-item label="V3会员加急" prop="customer_urgent_weight.customer_urgent_v3">
               <el-input-number
                 :min="0"
                 :max="9999999"
@@ -134,23 +145,23 @@
         </el-row>
         <el-row >
           <el-col :span="11">
-            <el-form-item label="V4会员加急">
+            <el-form-item label="V4会员加急" prop="customer_urgent_weight.customer_urgent_v4">
               <el-input-number
                 :min="0"
                 :max="9999999"
                 v-number-only
-                v-model="form.customer_urgent_weight.customer_urgent_v1"
+                v-model="form.customer_urgent_weight.customer_urgent_v4"
                 class="w100p"
               ></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="11">
-            <el-form-item label="约定取片时长：">
+            <el-form-item label="约定取片时长：" prop="take_photo_time">
               <el-input-number
-                :min="30"
+                :min="0"
                 :max="9999999"
                 v-number-only
-                v-model="form.take_photo_time"
+                v-model.number="form.take_photo_time"
                 class="duration"
               ></el-input-number>
               <span>分钟 / 张</span>
@@ -159,13 +170,14 @@
         </el-row>
         <el-row >
           <el-col :span="11">
-            <el-form-item
-              :min="0"
-              :max="9999999"
-              v-number-only
-              label="临界增加权重值"
-            >
-              <el-input-number v-model="form.critical_increase_weight" class="w100p"></el-input-number>
+            <el-form-item label="临界增加权重值" prop="critical_increase_weight">
+              <el-input-number
+                :min="0"
+                :max="9999999"
+                v-number-only
+                v-model="form.critical_increase_weight"
+                class="w100p"
+              ></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
@@ -206,10 +218,34 @@ export default {
         name: [
           { required: true, message: '请输入类别名称', trigger: 'blur' },
           { min: 1, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' }
-        ]
+        ],
+        weight: [{ required: true, message: '请输入自身权重值', trigger: 'blur' }],
+        increase_weight: [{ required: true, message: '每小时增长权重值', trigger: 'blur' }],
+        urgent_weight: [{ required: true, message: '请输入普通加急权重值', trigger: 'blur' }],
+        customer_urgent_weight: {
+          customer_urgent_v1: [{ required: true, message: '请输入V1会员加急权重值', trigger: 'blur' }],
+          customer_urgent_v2: [{ required: true, message: '请输入V2会员加急权重值', trigger: 'blur' }],
+          customer_urgent_v3: [{ required: true, message: '请输入V3会员加急权重值', trigger: 'blur' }],
+          customer_urgent_v4: [{ required: true, message: '请输入V4会员加急权重值', trigger: 'blur' }],
+        },
+        take_photo_time: [
+          { required: true, message: '请输入约定取片时长', trigger: 'blur' },
+          { type: 'number', min: 30, max: 9999999, message: '约定取片时长 30 到 9999999 之间', trigger: 'blur' }
+        ],
+        critical_increase_weight: [{ required: true, message: '请输入临界增加权重值', trigger: 'blur' }]
       },
       tableData: [],
-      canRefreshQueue: false
+      canRefreshQueue: false,
+      pager: {
+        page: 1,
+        pageSize: 10,
+        total: 0
+      },
+    }
+  },
+  computed: {
+    isEditMode () {
+      return Boolean(this.form.id)
     }
   },
   mounted () {
@@ -217,9 +253,12 @@ export default {
     this.getCanRefreshQueueTime()
   },
   methods: {
+    /**
+     * @description 校验表单
+     */
     submitForm () {
       this.$refs['form'].validate((valid) => {
-        if (this.tableData.some(row => row.name === this.form.name)) {
+        if (this.tableData.some(row => row.name === this.form.name && Number(row.id) !== Number(this.form.id))) {
           return this.$message.error('请勿填写重复类别名称。')
         }
         if (valid) {
@@ -241,6 +280,7 @@ export default {
 
       try {
         await action(this.form)
+        this.pager.page = 1
         await this.getQueueWeightTypeList()
         const message = isCreate ? '新增类别权重成功' : '编辑类别权重成功'
         this.$message.success(message)
@@ -254,10 +294,15 @@ export default {
      * @description 获取列表信息
      */
     async getQueueWeightTypeList () {
+      const req = {
+        page: this.pager.page,
+        pageSize: this.pager.pageSize
+      }
       try {
         this.$store.dispatch('setting/showLoading', this.routeName)
-        const res = await queueWeightManageApi.getQueueWeightTypeList()
-        this.tableData = res
+        const res = await queueWeightManageApi.getQueueWeightTypeList(req)
+        this.tableData = res.items
+        this.pager.total = res.total
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
@@ -282,6 +327,7 @@ export default {
      @description 关闭编辑弹窗
      */
     handleCloseDialog () {
+      this.$refs['form'] && this.$refs['form'].resetFields()
       this.form =_.cloneDeep(baseData)
       this.showDialog = false
     },
