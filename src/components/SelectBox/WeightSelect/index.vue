@@ -31,7 +31,7 @@ export default {
     }
   },
   async mounted () {
-    this.options = await queueWeightManageApi.getQueueWeightTypeList()
+    this.options = await queueWeightManageApi.getAllQueueWeightType()
   }
 }
 </script>
