@@ -7,7 +7,7 @@
           <h3>
             我的待修订单
             <p class="driver-icon" @click.stop="guide">?</p>
-            <div class="header-desc">（以下数据统计纬度为：今早8点～次日早8点）</div>
+            <div class="header-desc">（以下数据统计维度为：今早8点～次日早8点）</div>
             <div class="eye-box">
               <div v-if="showRecord" class="icon hide" @click="toggleShowRecord"><div class="eye eye-open"></div></div>
               <div v-else class="icon vision" @click="toggleShowRecord"><div class="eye eye-close"></div></div>
