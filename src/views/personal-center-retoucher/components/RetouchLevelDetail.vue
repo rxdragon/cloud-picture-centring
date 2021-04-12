@@ -52,6 +52,7 @@
                   <li>近N张的非主管抽查的平均分，抽查范围包含<span class="emphasis">云学校抽查和修修兽抽查</span>。</li>
                   <li>每次升级完成或者降级完成统计分数将会 <span class="emphasis">清零</span>。</li>
                   <li>降级时间为<span class="emphasis">每日早上08:30</span>，该时间系统将自动判断是否达到降级要求。</li>
+                  <li>同时满足降级和升级条件时优先降级。</li>
                 </ul>
               </div>
             </div>
@@ -110,7 +111,7 @@
           <span>距下一等级要求:</span>
         </div>
         <div class="info-row">
-          <span>前{{ matchLevelInfo.upDateSpotCount }}天抽查平均分(非主管)需 ≥ {{ matchLevelInfo.upNeedCheckScore | toFixedString }} 分</span>
+          <span>前{{ matchLevelInfo.upDateSpotCount }}张抽查平均分(非主管)需 ≥ {{ matchLevelInfo.upNeedCheckScore | toFixedString }} 分</span>
         </div>
         <div class="info-row">
           <span class="row-title">海草值</span>
