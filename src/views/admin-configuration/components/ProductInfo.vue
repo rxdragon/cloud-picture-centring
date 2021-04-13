@@ -83,29 +83,137 @@
       </div>
 
       <!-- 产品灯位图 -->
-      <div class="light-photo-module" v-if="+checkPass === 1">
+      <div class="light-photo-module mb-5" v-if="+checkPass === 1">
         <div class="panel-title">摄影灯位图</div>
         <LightingPointPhoto v-model="productConfig.lightPhoto" />
       </div>
 
-      <div class="photography-impression" v-if="+checkPass === 1">
+      <!-- 摄影底色图 -->
+      <div class="photography-impression mb-5" v-if="+checkPass === 1">
         <div class="panel-title">摄影底色列表</div>
-        <!-- TODO -->
+        <div class="panel-content">
+          <el-row class="photography-impression-list" :gutter="48" v-if="productConfig.photographyImpression.length">
+            <el-col
+              :span="12"
+              v-for="(photographyImpressionItem, photographyImpressionIndex) in productConfig.photographyImpression"
+              :key="photographyImpressionIndex"
+            >
+              <div class="photography-impression-item">
+                <div class="impression-header">
+                  <div class="title">拍摄底色{{ photographyImpressionIndex + 1 }}</div>
+                  <div class="operation-box">
+                    <div
+                      class="delete-btn"
+                      @click="deletePhotographyImpression(photographyImpressionItem.uuid)"
+                    >
+                      删除
+                    </div>
+                    <div
+                      class="text-btn"
+                      @click="editPhotographyImpressionItem(photographyImpressionItem)"
+                    >
+                      修改
+                    </div>
+                  </div>
+                </div>
+                <div class="impression-content">
+                  <div class="impression-photography">
+                    <div class="impression-box">
+                      <el-image class="photography-image" :src="photographyImpressionItem.imgPathShow" />
+                      <div class="impression-name">{{ photographyImpressionItem.photographyName }}</div>
+                    </div>
+                  </div>
+                  <div class="impression-retouch-list">
+                    <div
+                      class="impression-box"
+                      v-for="(color, colorIndex) in photographyImpressionItem.retouchColorPath"
+                      :key="colorIndex"
+                    >
+                      <el-image class="photography-image" :src="color.colorPath" />
+                      <div class="impression-name">{{ color.name }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+          <div class="no-chartlet" v-else>暂无贴图</div>
+          <div class="photography-operation-box">
+            <el-button type="primary" size="mini" @click="addNewPhotographyImpression">新增拍摄底色</el-button>
+            <ImpressionMaps
+              v-if="showEditPhotographyImpression"
+              @addNew="onAddNewImpression"
+              @editImpression="onEditNewImpression"
+              :show.sync="showEditPhotographyImpression"
+              :editInfo="editPhotographyImpression"
+            />
+          </div>
+        </div>
       </div>
 
-      <div class="chartlet-impression" v-if="+checkPass === 1">
+      <!-- 贴图列表 -->
+      <div class="chartlet-impression mb-5" v-if="+checkPass === 1">
         <div class="panel-title">贴图列表</div>
-        <!-- TODO -->
+        <div class="panel-content">
+          <el-row class="chartlet-list" v-if="productConfig.chartletMaps.length">
+            <el-col
+              :span="12"
+              class="chartlet-item"
+              v-for="(item, key) in productConfig.chartletMaps"
+              :key="key"
+            >
+              <template v-if="item.type !== 'input'">
+                <div class="charlet-content">贴图名称{{ key + 1 }}：{{ item.value }}</div>
+                <div class="delete-btn">删除</div>
+              </template>
+              <template v-else>
+                <div class="charlet-content">
+                  <el-input
+                    v-model="item.value"
+                    placeholder="请输入贴图名称"
+                    show-word-limit
+                    maxlength="8"
+                  />
+                </div>
+                <div class="delete-btn" @click="deleteChartlet(key)">删除</div>
+              </template>
+            </el-col>
+          </el-row>
+          <div class="no-chartlet" v-else>暂无贴图</div>
+          <div class="operation-box">
+            <el-button type="primary" size="mini" @click="addNewChartlet">新增贴图</el-button>
+          </div>
+        </div>
       </div>
 
-      <div class="photography-notice" v-if="+checkPass === 1">
+      <!-- 摄影注意事项 -->
+      <div class="photography-notice mb-5" v-if="+checkPass === 1">
         <div class="panel-title">摄影注意事项</div>
-        <!-- TODO -->
+        <div class="panel-content">
+          <el-input
+            type="textarea"
+            placeholder="请输入摄影注意事项相关信息"
+            v-model="productConfig.photographyNotice"
+            maxlength="300"
+            rows="3"
+            show-word-limit
+          />
+        </div>
       </div>
 
-      <div class="retouch-notice" v-if="+checkPass === 1">
+      <!-- 修图注意事项 -->
+      <div class="retouch-notice mb-5" v-if="+checkPass === 1">
         <div class="panel-title">修图注意事项</div>
-        <!-- TODO -->
+        <div class="panel-content">
+          <el-input
+            type="textarea"
+            placeholder="请输入修图注意事项相关信息"
+            v-model="productConfig.retouchNotice"
+            maxlength="300"
+            rows="3"
+            show-word-limit
+          />
+        </div>
       </div>
     </div>
 
@@ -222,13 +330,8 @@
     <div class="module-panel joint-exp-module" v-if="+checkPass === 1">
       <div class="panel-title">
         拼接海草值
-
-        <el-radio-group v-model="productConfig.needJoint">
-          <el-radio :label="1">是</el-radio>
-          <el-radio :label="2">否</el-radio>
-        </el-radio-group>
-
-        <div class="panel-slot">
+        <SwitchBox class="panel-title-switch" v-model="productConfig.needJoint" :modeArr="joinSwitcOption"/>
+        <div class="panel-slot" v-if="productConfig.needJoint === 1">
           <el-button
             type="primary"
             size="mini"
@@ -267,7 +370,8 @@
     <div class="module-panel joint-money-module" v-if="+checkPass === 1">
       <div class="panel-title">
         拼接收益配置
-        <div class="panel-slot">
+        <SwitchBox class="panel-title-switch" v-model="productConfig.needJoint" :modeArr="joinSwitcOption"/>
+        <div class="panel-slot" v-if="productConfig.needJoint === 1">
           <el-button
             type="primary"
             size="mini"
@@ -400,7 +504,7 @@
         />
       </div>
       <div class="reject-button">
-        <el-button type="primary" plain @click="cancelCheck">取消</el-button>
+        <el-button type="info" @click="cancelCheck">取消</el-button>
         <el-button type="danger" @click="refuseProduct">提交</el-button>
       </div>
     </div>
@@ -409,13 +513,22 @@
     <div v-if="+checkPass !== 2" class="pass-box">
       <el-button
         v-if="+checkPass === 1 && isPending"
-        type="primary"
-        plain
+        size="medium"
+        type="info"
+        class="pass-btn"
         @click="cancelCheck"
       >
         取消
       </el-button>
-      <el-button v-if="+checkPass === 1" type="primary" @click="passProductInfo">提交</el-button>
+      <el-button
+        v-if="+checkPass === 1"
+        type="primary"
+        size="medium"
+        class="pass-btn"
+        @click="passProductInfo"
+      >
+        提交
+      </el-button>
     </div>
 
     <!-- 批量修改海草值 -->
@@ -459,13 +572,15 @@
 <script>
 import PhotoBox from '@/components/PhotoBox'
 import LightingPointPhoto from './LightingPointPhoto'
+import ImpressionMaps from './ImpressionMaps'
 import WeightSelect from '@SelectBox/WeightSelect'
 import ProductClassificationSelect from '@SelectBox/ProductClassificationSelect'
+import SwitchBox from '@/components/SwitchBox'
 
+import { StaffLevelEnum } from '@/utils/enumerate.js'
 import { objEveryNumberValue, twoTierObjEveryNumberValue } from '@/utils/index.js'
 import * as Timespan from '@/utils/timespan.js'
 import * as MathUtil from '@/utils/mathUtil.js'
-import { StaffLevelEnum } from '@/utils/enumerate.js'
 import * as defaultGrass from '@/assets/config/grassConfig.js'
 import * as defaultMoney from '@/assets/config/moneyConfig.js'
 
@@ -480,7 +595,7 @@ const EDIT_TYPE = {
 
 export default {
   name: 'ProductInfo',
-  components: { PhotoBox, WeightSelect, ProductClassificationSelect, LightingPointPhoto },
+  components: { PhotoBox, WeightSelect, ProductClassificationSelect, LightingPointPhoto, SwitchBox, ImpressionMaps },
   filters: {
     toCnLevel (value) {
       return StaffLevelEnum[value]
@@ -494,29 +609,38 @@ export default {
     return {
       EDIT_TYPE,
       routeName: this.$route.name, // 路由名字
+      joinSwitcOption: [{label: '不拼接', value: 2}, {label: '拼接', value: 1}],
       rejectValue: '',
       productName: '', // 产品名称
       retouchRequire: '', // 修图要求
       samplePhoto: [], // 样片素材
       photographerOrgName: '', // 机构名称
+
+      editPhotographyImpression: null, // 拍摄底色
+      showEditPhotographyImpression: false,
+
       productConfig: {
         classificationId: '', // 修图分类id
         standard: '', // 修图标准
         weightType: '', // 权重等级
-        lightPhoto: [], // 等位图接口
+        lightPhoto: [], // 灯位图接口
+        chartletMaps: [], // 贴图名称
+        photographyImpression: [], // 拍摄底色
+        photographyNotice: '', // 摄影注意事项
+        retouchNotice: '', // 修图注意事项
         needTemplate: '', // 是否需要模版
         templateSuffix: 'jpg', // 模版照类型
         grassData: {}, // 海草数据
         joinGrassData: {}, // 拼接海草
-        notJointMoney: {},
+        notJointMoney: {}, // 未拼接收益
         jointMoney: {}, // 拼接收益
-        blueNotJointMoney: {},
+        blueNotJointMoney: {}, // 蓝标拼接收益
         blueJointMoney: {}, // 拼接收益
-        needJoint: '', // 是否需要拼接
+        needJoint: 2, // 是否需要拼接
         needCheck: '', // 是否需要强制审核
         checkTimeDay: null, // 强制审核日期
         checkTimeTime: null, // 强制审核时间
-        productRemark: ''
+        productRemark: '' // 产品备注
       },
       batchEditInfo: {
         title: '一键更改海草值',
@@ -688,6 +812,59 @@ export default {
       this.checkPass = 0
     },
     /**
+     * @description 添加贴图
+     */
+    addNewChartlet () {
+      this.productConfig.chartletMaps.push({
+        value: '',
+        type: 'input',
+      })
+    },
+    /**
+     * @description 删除贴图
+     */
+    deleteChartlet (key) {
+      this.productConfig.chartletMaps.splice(key, 1)
+    },
+    /**
+     * @description 添加修图底色
+     */
+    addNewPhotographyImpression () {
+      this.editPhotographyImpression = null
+      this.showEditPhotographyImpression = true
+    },
+    /**
+     * @description 编辑相关信息
+     */
+    editPhotographyImpressionItem (editInfo) {
+      this.editPhotographyImpression = editInfo
+      this.showEditPhotographyImpression = true
+    },
+    /**
+     * @description 删除底色
+     */
+    deletePhotographyImpression (uuid) {
+      const findDeleteIndex = this.productConfig.photographyImpression.findIndex(item => item.uuid === uuid)
+      if (findDeleteIndex < 0) return
+      this.productConfig.photographyImpression.splice(findDeleteIndex, 1)
+    },
+    /**
+     * @description 添加底色信息
+     */
+    onAddNewImpression (newData) {
+      this.productConfig.photographyImpression.push(newData)
+      this.showEditPhotographyImpression = false
+    },
+    /**
+     * @description 编辑底色信息
+     */
+    onEditNewImpression (data) {
+      const findEditIndex = this.productConfig.photographyImpression.findIndex(item => item.uuid === data.uuid)
+      if (findEditIndex < 0) return
+      this.productConfig.photographyImpression[findEditIndex] = data
+      this.showEditPhotographyImpression = false
+    },
+    /**
      * @description 默认海草数
      */
     defaultGrass () {
@@ -754,14 +931,12 @@ export default {
           this.productConfig.classificationId = data.productCategoryId || ''
           this.productConfig.needCheck = data.forceReview ? 1 : 2
 
-          // TODO mock数据
-          this.productConfig.lightPhoto = [{
-            url: '2021/04/12/llpa8tLbkjf_rvrNfPHPI-HbmaQD.jpg',
-            path: '2021/04/12/llpa8tLbkjf_rvrNfPHPI-HbmaQD.jpg',
-            name: 'llpa8tLbkjf_rvrNfPHPI-HbmaQD',
-            uid: 111,
-            status: 'success'
-          }]
+          // 灯位图
+          this.productConfig.lightPhoto = data.lightImgPath
+          this.productConfig.photographyImpression = data.photographyImpression
+          this.productConfig.chartletMaps = data.chartletMaps
+          this.productConfig.photographyNotice = data.photographyNotice
+          this.productConfig.retouchNotice = data.retouchNotice
 
           if (data.forceReviewStartAt && data.forceReviewEndAt) {
             this.productConfig.checkTimeDay = [
@@ -814,12 +989,6 @@ export default {
      */
     passProductInfo () {
       if (!this.verificationData()) return false
-
-      const finishPhoto = this.productConfig.lightPhoto.filter(item => Boolean(item.response))
-      const livePhotos = finishPhoto.map(item => item.path)
-      // todo 联调
-      console.error(livePhotos)
-
       const reqData = {
         productId: this.editId,
         retouchStandard: this.productConfig.standard,
@@ -833,8 +1002,30 @@ export default {
         splicingSeaGrassConfig: this.productConfig.joinGrassData,
         note: this.productConfig.productRemark,
         forceReview: this.productConfig.needCheck === 1,
-        productCategoryId: this.productConfig.classificationId
+        productCategoryId: this.productConfig.classificationId,
+        photography_remark: this.productConfig.photographyNotice,
+        retouch_remark: this.productConfig.retouchNotice
       }
+
+      // 灯位图
+      const finishPhoto = this.productConfig.lightPhoto.filter(item => Boolean(item.response))
+      const livePhotos = finishPhoto.map(item => item.path)
+      reqData.light_img_path = livePhotos
+
+      const photographyColor = this.productConfig.photographyImpression.map(item => {
+        return {
+          name: item.photographyName,
+          img_path: item.imgPathShow,
+          retouch_color: item.retouchColorId
+        }
+      })
+      reqData.photography_color = photographyColor
+
+      // 贴图名称
+      if (this.productConfig.chartletMaps.length) {
+        reqData.texture_name = this.productConfig.chartletMaps.map(item => item.value)
+      }
+
       // 是否需要强制审核
       if (this.productConfig.needCheck === 1) {
         reqData.forceReviewDayStart = this.productConfig.checkTimeTime[0]
@@ -897,6 +1088,22 @@ export default {
         this.$newMessage.warning('请填写是否需要强制审核')
         return false
       }
+      if (!this.productConfig.lightPhoto.length) {
+        this.$newMessage.warning('请上传灯位图')
+        return false
+      }
+      if (!this.productConfig.photographyImpression.length) {
+        this.$newMessage.warning('请上传摄影底色相关信息')
+        return false
+      }
+      if (!this.productConfig.photographyNotice) {
+        this.$newMessage.warning('请填写摄影注意事项')
+        return false
+      }
+      if (!this.productConfig.retouchNotice) {
+        this.$newMessage.warning('请填写修图注意事项')
+        return false
+      }
       if (this.productConfig.needCheck === 1) {
         if (!this.productConfig.checkTimeDay || !this.productConfig.checkTimeTime) {
           this.$newMessage.warning('请填写强制审核日期或审核时间')
@@ -927,11 +1134,37 @@ export default {
 
 <style lang="less">
 .product-info {
+  .mb-5 {
+    margin-bottom: 20px;
+  }
+
+  .delete-btn {
+    color: @red;
+    cursor: pointer;
+
+    &:hover {
+      color: #f78989;
+    }
+  }
+
+  .text-btn {
+    color: @blue;
+    cursor: pointer;
+
+    &:hover {
+      color: #66b1ff;
+    }
+  }
+
   .module-panel {
     margin-bottom: 20px;
 
     .panel-title {
       margin-bottom: 20px;
+
+      .panel-title-switch {
+        margin-left: 14px;
+      }
     }
 
     .panel-content {
@@ -990,6 +1223,110 @@ export default {
           margin-right: 24px;
           margin-bottom: 24px;
         }
+      }
+    }
+
+    .no-chartlet {
+      padding: 20px;
+      color: #606266;
+      background-color: #fafafa;
+      border-radius: 4px;
+    }
+
+    .chartlet-impression {
+      .chartlet-list {
+        border-radius: 4px;
+      }
+
+      .chartlet-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #fafafa;
+
+        .charlet-content {
+          width: 80%;
+
+          .el-input {
+            width: 100%;
+          }
+        }
+      }
+
+      .operation-box {
+        margin-top: 16px;
+      }
+    }
+
+    .photography-impression {
+      .photography-impression-item {
+        color: #606266;
+        background: #fafafa;
+        border-radius: 4px;
+      }
+
+      .impression-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 0;
+        margin: 0 20px;
+        font-weight: 600;
+        color: #606266;
+        border-bottom: 1px solid #ebeef5;
+
+        .operation-box {
+          display: flex;
+          font-weight: 400;
+
+          .delete-btn {
+            margin-right: 20px;
+          }
+        }
+      }
+
+      .impression-content {
+        display: flex;
+
+        .impression-box {
+          display: inline-block;
+
+          .photography-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 4px;
+          }
+
+          .impression-name {
+            margin-top: 8px;
+            font-size: 12px;
+            line-height: 17px;
+            color: #606266;
+          }
+        }
+
+        .impression-photography {
+          padding: 20px 33px 10px 20px;
+          border-right: 1px solid #ebeef5;
+        }
+
+        .impression-retouch-list {
+          padding: 20px 20px 10px 20px;
+          overflow-x: auto;
+          white-space: nowrap;
+
+          .impression-box {
+            margin-right: 12px;
+          }
+
+          &::-webkit-scrollbar {
+            height: 8px;
+          }
+        }
+      }
+
+      .photography-operation-box {
+        margin-top: 16px;
       }
     }
   }
@@ -1069,7 +1406,11 @@ export default {
   }
 
   .pass-box {
-    margin-left: 190px;
+    text-align: center;
+
+    .pass-btn {
+      width: 180px;
+    }
   }
 
   .list-data {

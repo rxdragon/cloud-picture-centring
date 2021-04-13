@@ -25,6 +25,24 @@ export function getAllRetouchClass () {
 }
 
 /**
+ * @description 获取修图底色
+ */
+export async function getBackColors () {
+  const msg = await axios({
+    url: '/project_cloud/common/getBackColors',
+    method: 'GET'
+  })
+  const createData = msg.map(item => {
+    return {
+      value: item.id,
+      label: item.name,
+      compressPath: item.img_path
+    }
+  })
+  return createData
+}
+
+/**
  * @description 获取周年庆相关信息
  * @param {*} params
  */
