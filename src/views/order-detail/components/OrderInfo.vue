@@ -72,24 +72,29 @@
           <span class="title">修图备注：</span>
           <span class="content">{{ orderInfo.retouchRemark }}</span>
         </div>
+        <div class="panel-main-content" v-if="orderInfo.retouchNotice">
+          <span class="title">修图注意事项：</span>
+          <span class="content">{{ orderInfo.retouchNotice }}</span>
+        </div>
+        <div class="panel-main-content" v-if="orderInfo.retouchBackImg">
+          <span class="title">修图底色：</span>
+          <span class="content require-impression-color">
+            <span class="impression-name">{{ orderInfo.retouchBackImgName }}</span>
+            <ReferencePhoto :streamNum="orderInfo.streamNum" downMsg="下载底色图" :src="orderInfo.retouchBackImg" />
+          </span>
+        </div>
+        <!-- 背景图要求 -->
         <div v-if="orderInfo.backgroundColor" class="panel-main-content">
           <span class="title">背景图要求：</span>
           <div class="content require-background-color">
-            <img :src="orderInfo.backgroundColor" alt="">
-            <el-button type="text" @click="downPhoto(orderInfo.backgroundColor)">下载背景图</el-button>
+            <ReferencePhoto :streamNum="orderInfo.streamNum" downMsg="下载背景图" :src="orderInfo.backgroundColor" />
           </div>
         </div>
+        <!-- 参考图 -->
         <div v-if="orderInfo.referencePhoto" class="panel-main-content">
           <span class="title">参考图：</span>
           <div class="content require-reference-photo">
-            <el-image
-              class="reference-img"
-              fit="contain"
-              :src="orderData.referencePhoto"
-              :preview-src-list="[orderData.referencePhoto]"
-            >
-            </el-image>
-            <el-button type="text" @click="downPhoto(orderData.referencePhoto)">下载参考图</el-button>
+            <ReferencePhoto :streamNum="orderInfo.streamNum" :src="orderInfo.referencePhoto" />
           </div>
         </div>
       </div>
@@ -100,11 +105,13 @@
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
 import ShowEvaluate from '@/components/ShowEvaluate'
+import ReferencePhoto from '@/components/ReferencePhoto'
+
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrderInfo',
-  components: { ShowEvaluate },
+  components: { ShowEvaluate, ReferencePhoto },
   props: {
     orderData: { type: Object, required: true },
     isWorkBoardInfo: { type: Boolean }
@@ -198,7 +205,7 @@ export default {
         border-bottom: 1px solid @borderColor;
 
         .title {
-          width: 90px;
+          width: 120px;
         }
 
         .content {
@@ -213,6 +220,14 @@ export default {
             width: 50px;
             height: 50px;
             margin-right: 10px;
+          }
+        }
+
+        .require-impression-color {
+          display: flex;
+
+          .impression-name {
+            margin-right: 12px;
           }
         }
 

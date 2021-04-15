@@ -125,15 +125,15 @@ export default {
   data () {
     return {
       routeName: this.$route.name, // 路由名字
-      activeName: 'checked', // checkPending 待审核 checked 审核通过 todo
+      activeName: 'checkPending', // checkPending 待审核 checked 审核通过
       institutionType: '', // 机构值
-      showInfo: true, // 是否显示详情 todo
+      showInfo: false, // 是否显示详情
       productValue: [], // 产品值
       productClassValues: [], // 产品分类组
       weightType: 0, // 权重等级
       tableData: [], // 列表数据
       firstSearch: true, // 是否第一次搜索
-      editId: '1371', // 编辑id todo
+      editId: '', // 编辑id
       pager: {
         page: 1,
         pageSize: 10,

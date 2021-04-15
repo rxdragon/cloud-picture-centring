@@ -55,6 +55,19 @@
             <div class="remark-title">修图备注：</div>
             <div class="remark-content">{{ photoInfoData.streamInfo.retouchRemark }}</div>
           </div>
+          <div class="retouch-remark panel-row" v-if="photoInfoData.streamInfo.retouchNotice">
+            <div class="remark-title">修图注意事项：</div>
+            <div class="remark-content">{{ photoInfoData.streamInfo.retouchNotice }}</div>
+          </div>
+          <div class="reference-photo panel-row" v-if="photoInfoData.streamInfo.retouchBackImg">
+            <span class="order-info-title">修图底色：</span>
+            <span class="impression-name">{{ photoInfoData.streamInfo.retouchBackImgName }}</span>
+            <el-image
+              fit="contain"
+              :src="photoInfoData.streamInfo.retouchBackImg"
+              :preview-src-list="[photoInfoData.streamInfo.retouchBackImg]"
+            />
+          </div>
           <div class="reference-photo panel-row" v-if="photoInfoData.streamInfo.referencePhoto">
             <span class="order-info-title">参考图：</span>
             <el-image
@@ -309,6 +322,11 @@ export default {
           width: 60px;
           height: 60px;
         }
+
+        .impression-name {
+          display: inline-block;
+          margin-right: 12px;
+        }
       }
 
       .panel-row {
@@ -345,7 +363,7 @@ export default {
 
       .retouch-remark {
         .remark-title {
-          width: 70px;
+          width: 110px;
         }
 
         .remark-content {

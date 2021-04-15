@@ -153,7 +153,10 @@ export function getStreamInfo (params) {
       timeoutAppealReason: '', // 沙漏超时申诉理由
       timeoutRollbackLog: streamData.timeoutRollbackLog,
       storeName: streamData.storeName,
-      evaluationType: streamData.evaluationType // 抽查类型
+      evaluationType: streamData.evaluationType, // 抽查类型
+      retouchNotice: streamData.retouchNotice,
+      retouchBackImgName: streamData.retouchBackImgName,
+      retouchBackImg: streamData.retouchBackImg
     }
     createData.photos = msg.photos
     return createData

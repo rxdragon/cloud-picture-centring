@@ -34,7 +34,6 @@ export default class StreamModel {
   dresserNote = '' // 化妆备注
   orderNote = '' // 订单备注
   reviewerNote = '' // 审核备注
-  // TODO
   retouchNotice = '' // 修图注意事项
   retouchBackImgName = '' // 底色图
   retouchBackImg = '' // 底色图
