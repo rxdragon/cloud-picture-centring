@@ -380,7 +380,8 @@ export function getProductInfo (params) {
     const data = keyToHump(msg)
     data.simpleImages = data.simpleImages.filter(item => item !== 'null')
 
-    const lightImgPath = data.lightImgPath.map(item => {
+    const lightImgPathData = data.lightImgPath || []
+    const lightImgPath = lightImgPathData.map(item => {
       return {
         uid: uuidv4(),
         url: item,
