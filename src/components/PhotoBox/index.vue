@@ -231,6 +231,7 @@ export default {
       // 不是上传显示
       if (!this.fileData) {
         if (this.src.includes('http')) return this.src
+        if (this.src.includes('blob')) return this.src
         const errorReplaceUrl = `${this.imgCompressDomain}${this.errorReplaceUrl}`
         const imageUrl = `${this.imgCompressDomain}${this.src}`
         return this.errorReplaceUrl ? errorReplaceUrl : imageUrl
