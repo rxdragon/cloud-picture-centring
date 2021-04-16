@@ -7,7 +7,7 @@
       :preview-src-list="[src]"
     >
     </el-image>
-    <span class="dowm-text" type="text" @click="downPhoto()">下载参考图</span>
+    <span class="dowm-text" type="text" @click="downPhoto()">{{ downMsg }}</span>
   </div>
 </template>
 
@@ -18,7 +18,8 @@ export default {
   name: 'ReferencePhoto',
   props: {
     src: { type: String, default: '' },
-    streamNum: { type: String, default: '' }
+    streamNum: { type: String, default: '' },
+    downMsg: { type: String, default: '下载参考图' }
   },
   methods: {
     /**

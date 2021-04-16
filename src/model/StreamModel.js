@@ -34,6 +34,9 @@ export default class StreamModel {
   dresserNote = '' // 化妆备注
   orderNote = '' // 订单备注
   reviewerNote = '' // 审核备注
+  retouchNotice = '' // 修图注意事项
+  retouchBackImgName = '' // 底色图
+  retouchBackImg = '' // 底色图
 
   requireLabel = {} // 修图要求
   photoNum = 0 // 照片数据
@@ -308,6 +311,9 @@ export default class StreamModel {
     this.photographyNote = _.get(this.baseData, 'note.photography_note') || '-' // 摄影备注
     this.dresserNote = _.get(this.baseData, 'order.note.dresserNote') || '-' // 化妆备注
     this.orderNote = _.get(this.baseData, 'order.note.orderNote') || '-' // 订单备注
+    this.retouchNotice = _.get(this.baseData, 'tags.values.retouch_remark') || '' // 修图注意事项
+    this.retouchBackImgName = _.get(this.baseData, 'tags.values.retouch_color.name') || '' // 底色图
+    this.retouchBackImg = _.get(this.baseData, 'tags.values.retouch_color.img_path') || '' // 底色地址
   }
 
   // 获取抽查类型

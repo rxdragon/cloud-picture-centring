@@ -104,7 +104,7 @@ const mutations = {
     // 修修兽清空抽片权限
     state.showEmptyCheckPool = roles.includes('AssessmentCenter.gradeConfiguration.emptyCheckPool')
     // eslint-disable-next-line max-len
-    state.showShowpicEmptyCheckPool = roles.includes('ShowpicAssessmentCenter.showpicAssessmentCenter.showpicGradeConfiguration.emptyCheckPool')
+    state.showShowpicEmptyCheckPool = roles.includes('ShowpicAssessmentCenter.showpicGradeConfiguration.emptyCheckPool')
     // 自动修图
     state.canAutoRetouch = roles.includes('RetoucherCenter.waitRetoucher.autoRetouch')
     state.autoBuffingA = roles.includes('RetoucherCenter.waitRetoucher.autoBuffingA')
