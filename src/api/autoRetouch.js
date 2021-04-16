@@ -242,14 +242,16 @@ function mockAutoRetouch (url, isNew) {
       cwm: `${algoDomain}${name}_cwm${pngExt}`,
       cwm_compress: `${algoDomain}${name}_cwm_compress${pngExt}`,
       cwr: `${algoDomain}${name}_cwr${ext}`,
-      cwr_compress: `${algoDomain}${name}_cwr_compress${ext}`
+      cwr_compress: `${algoDomain}${name}_cwr_compress${ext}`,
+      state: AutoProcessStates.SUCCESS
     }
   } else {
     return {
       c: `${algoDomain}${name}_c${ext}`,
       c_compress: `${algoDomain}${name}_c_compress${ext}`,
       cw: `${algoDomain}${name}_cw${ext}`,
-      cw_compress: `${algoDomain}${name}_cw_compress${ext}`
+      cw_compress: `${algoDomain}${name}_cw_compress${ext}`,
+      state: AutoProcessStates.SUCCESS
     }
   }
 }
