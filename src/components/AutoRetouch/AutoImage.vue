@@ -9,7 +9,10 @@
       alt=""
     >
     <div class="image-tool" v-show="activatedImage">
-      <div class="photo-actions">
+      <div
+        class="photo-actions"
+        v-if="autoImageInfo.state === AutoProcessStates.SUCCESS"
+      >
         <el-button
           @click="downPhoto"
           :loading="downLoading"
@@ -21,14 +24,28 @@
         >
         </el-button>
       </div>
+      <el-button v-else :disabled="true" type="danger">智能修图失败</el-button>
+    </div>
+    <div
+      class="progress-wrap"
+      v-show="!autoImageInfo.isLoaded || !activatedImage"
+    >
+      <div class="title">智能修图中</div>
+      <el-progress
+        :stroke-width="18"
+        :text-inside="true"
+        :status="percentageStatus"
+        :percentage="percentage"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { OperationBit, changeToCompress, OPERATION_TYPE } from '@/api/autoRetouch'
+import { OperationBit, changeToCompress, OPERATION_TYPE, AutoProcessStates } from '@/api/autoRetouch'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { mapGetters } from 'vuex'
+import _ from 'lodash'
 
 import * as PhotoTool from '@/utils/photoTool'
 import * as AutoLog from '@/views/retoucher-center/autoLog'
@@ -40,20 +57,40 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      AutoProcessStates,
+      loading: true,
       activatedImage: '',
       downLoading: false,
       inZoomIn: false,
-      photoZoomStyle: ''
+      photoZoomStyle: '',
+      percentage: 0,
+      percentageStatus: 'success'
     }
   },
   computed: {
-    ...mapGetters(['useNewAutoApi']),
+    ...mapGetters(['useNewAutoApi', 'imgCompressDomain']),
   },
   watch: {
     // 观察修图信息
     autoImageInfo: {
       async handler () {
+        // 如果当前这张没有修图完成， 则开始进度条
+        if (!this.autoImageInfo.isLoaded) {
+          this.percentage = 0
+          this.handlePercentage()
+        } else {
+          // 否则停止进度条
+          this.percentage = 100
+        }
+        if (_.isEmpty(this.autoImageInfo)) {
+          this.activatedImage = ''
+          this.loading = true
+          return
+        }
+        if (this.autoImageInfo.state !== AutoProcessStates.SUCCESS) {
+          this.activatedImage = this.imgCompressDomain + this.autoImageInfo.path
+          return
+        }
         const handleSwtich = _.get(this.autoImageInfo, 'handleSwtich') || {}
         let typeBit = 0
         for (const key in handleSwtich) {
@@ -96,6 +133,7 @@ export default {
      * @description 当图片加载完成
      */
     imageLoaded () {
+      if (!this.activatedImage) return
       this.loading = false
     },
     /**
@@ -172,6 +210,27 @@ export default {
         this.inZoomIn = true
       }
     },
+
+    /**
+     * @description 进度条处理， 越逼近100越慢
+     * 递归调用， 退出条件为percentage === 10
+     * 退出点要么外面的autoImageInfo.isLoaded = true， 在watch中结束， 要么超过60s
+     */
+    handlePercentage (num = 0) {
+      if (num === 0) {
+        this.percentageStatus = 'success'
+        setTimeout(() => {
+          if (this.percentage >= 100) return
+          this.percentage = 100
+          this.percentageStatus = 'exception'
+        }, 60000)
+      }
+      const newPercentage = +this.percentage + (num < 90 ? ((100 - num) / 15) : ((100 - num) / 100))
+      this.percentage = +newPercentage.toFixed(2)
+      setTimeout(() => {
+        if (this.percentage < 100 ) this.handlePercentage(newPercentage)
+      }, 300)
+    }
   }
 }
 </script>
@@ -229,6 +288,20 @@ export default {
           color: @blue;
         }
       }
+    }
+  }
+
+  .progress-wrap {
+    position: absolute;
+    bottom: 50px;
+    z-index: 9999;
+    width: 100%;
+    padding: 10px 20px;
+    background: #fff;
+
+    .title {
+      margin-bottom: 5px;
+      font-size: 12px;
     }
   }
 }

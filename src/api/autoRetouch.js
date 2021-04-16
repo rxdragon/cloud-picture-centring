@@ -55,9 +55,16 @@ export const OperationBit = {
   [OPERATION_TYPE.MATTING]: 0b0001,
 }
 
+// 智能修图状态
+export const AutoProcessStates = {
+  SUCCESS: 'success', // 成功
+  ERROR: 'error', // 失败
+  PROCESS_ERROR: 'processError' // 分类器拒绝
+}
+
 /**
  * @description 转换为缩略图
- * @param {@} url 
+ * @param {@} url
  */
 export function changeToCompress (url) {
   if (url.includes('blob')) return url
@@ -96,6 +103,8 @@ export class AutoRetouchModel {
   cropMaskPhoto = ''
   cropWarpMaskPhoto = ''
 
+  state = 0 // 自动修图状态
+
   constructor (photoUrl, streamNum, productId) {
     this.uuid = uuidv4()
     this.path = photoUrl
@@ -108,6 +117,7 @@ export class AutoRetouchModel {
   async getAutoList (useNewAutoApi) {
     const req = { url: this.path }
     const res = await getImageAutoProcess(req, useNewAutoApi)
+    this.state = res.state // AutoProcessStates
     // 获取模版照
     this.cropMaskPhoto = res[`${OPERATION_TYPE.CROP}${OPERATION_TYPE.MATTING}`]
     this.cropWarpMaskPhoto = res[`${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.MATTING}`]
@@ -120,7 +130,7 @@ export class AutoRetouchModel {
     this.autoFixPhotoList[crBit] = res[`${OPERATION_TYPE.CROP}${OPERATION_TYPE.RETOUCH}`]
     const cwrBit = OperationBit[OPERATION_TYPE.CROP] | OperationBit[OPERATION_TYPE.WARP] | OperationBit[OPERATION_TYPE.RETOUCH]
     this.autoFixPhotoList[cwrBit] = res[`${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.RETOUCH}`]
-    
+
     // 抠图照片
     if (!useNewAutoApi) return
     const cmBit = OperationBit[OPERATION_TYPE.CROP] | OperationBit[OPERATION_TYPE.MATTING]
@@ -132,6 +142,7 @@ export class AutoRetouchModel {
     this.autoFixPhotoList[cwmBit] = await this.drawMattingImage(this.cropWarpMaskPhoto, this.autoFixPhotoList[cwBit], true)
     const cwrmBit = OperationBit[OPERATION_TYPE.CROP] | OperationBit[OPERATION_TYPE.WARP] |OperationBit[OPERATION_TYPE.RETOUCH] | OperationBit[OPERATION_TYPE.MATTING]
     this.autoFixPhotoList[cwrmBit] = await this.drawMattingImage(this.cropWarpMaskPhoto, this.autoFixPhotoList[cwrBit], true)
+
   }
 
   async drawMattingImage (maskPhoto, orgrinPhoto, compress) {
@@ -141,10 +152,10 @@ export class AutoRetouchModel {
 
     const canvasHeight = compress ? compressSize : orgrinPhotoDom.naturalHeight
     const canvasWidth = compress ? compressSize : orgrinPhotoDom.naturalWidth
-    
+
     const { canvas, context } = MattingImageClass.createCanvas(canvasWidth, canvasHeight)
     const mattingImage = await MattingImageClass.drawImage(canvas, context)
-   
+
     return async (backgroundImage) => {
       const ext = PhotoTool.getFilePostfix(this.name)
       const mimeType = ext.includes('png') ? 'image/png' : 'image/jpeg'
@@ -163,7 +174,7 @@ export class AutoRetouchModel {
 
 /**
  * @description 获取自动修图地址
- * @param {*} params 
+ * @param {*} params
  */
 export async function getImageAutoProcess (params, isNew) {
   params = {
@@ -191,10 +202,12 @@ export async function getImageAutoProcess (params, isNew) {
 
   if (res.code === 1) {
     AutoLog.handleInApp(params.url, res, isNew)
+    res.result.state = AutoProcessStates.SUCCESS
     return res.result
   } else {
     AutoLog.autoErr(params.url, res)
     return {
+      state: res.code === 2 ? AutoProcessStates.PROCESS_ERROR : AutoProcessStates.ERROR,
       c: '',
       c_compress: '',
       cm: '',
@@ -243,8 +256,8 @@ function mockAutoRetouch (url, isNew) {
 
 /**
  * @description 判断图片是否存在
- * @param {*} url 
- * @param {*} mode 
+ * @param {*} url
+ * @param {*} mode
  */
 function hasAutoPhoto (url, mode) {
   const algoDomain = process.env.VUE_APP_ALGO_DOMAIN
