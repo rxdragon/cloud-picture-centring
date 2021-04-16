@@ -132,7 +132,7 @@ export class AutoRetouchModel {
     this.autoFixPhotoList[cwrBit] = res[`${OPERATION_TYPE.CROP}${OPERATION_TYPE.WARP}${OPERATION_TYPE.RETOUCH}`]
 
     // 抠图照片
-    if (!useNewAutoApi) return
+    if (!useNewAutoApi || this.state !== AutoProcessStates.SUCCESS) return
     const cmBit = OperationBit[OPERATION_TYPE.CROP] | OperationBit[OPERATION_TYPE.MATTING]
     this.autoFixPhotoList[cmBit] = await this.drawMattingImage(this.cropMaskPhoto, this.autoFixPhotoList[cBit], true)
     const crmBit = OperationBit[OPERATION_TYPE.CROP] | OperationBit[OPERATION_TYPE.RETOUCH] | OperationBit[OPERATION_TYPE.MATTING]
@@ -142,7 +142,6 @@ export class AutoRetouchModel {
     this.autoFixPhotoList[cwmBit] = await this.drawMattingImage(this.cropWarpMaskPhoto, this.autoFixPhotoList[cwBit], true)
     const cwrmBit = OperationBit[OPERATION_TYPE.CROP] | OperationBit[OPERATION_TYPE.WARP] |OperationBit[OPERATION_TYPE.RETOUCH] | OperationBit[OPERATION_TYPE.MATTING]
     this.autoFixPhotoList[cwrmBit] = await this.drawMattingImage(this.cropWarpMaskPhoto, this.autoFixPhotoList[cwrBit], true)
-
   }
 
   async drawMattingImage (maskPhoto, orgrinPhoto, compress) {

@@ -24,16 +24,18 @@
         >
         </el-button>
       </div>
-      <el-button v-else :disabled="true" type="danger">智能修图失败</el-button>
+      <span class="retouch-error" v-else>智能修图失败</span>
     </div>
+    
     <div
       class="progress-wrap"
       v-show="!autoImageInfo.isLoaded || !activatedImage"
     >
       <div class="title">智能修图中</div>
       <el-progress
-        :stroke-width="18"
-        :text-inside="true"
+        color="#fff"
+        :stroke-width="9"
+        :show-text="false"
         :status="percentageStatus"
         :percentage="percentage"
       />
@@ -87,6 +89,7 @@ export default {
           this.loading = true
           return
         }
+        // 作图失败增加报错
         if (this.autoImageInfo.state !== AutoProcessStates.SUCCESS) {
           this.activatedImage = this.imgCompressDomain + this.autoImageInfo.path
           return
@@ -289,19 +292,36 @@ export default {
         }
       }
     }
+
+    .retouch-error {
+      height: 44px;
+      padding: 10px 20px;
+      font-size: 14px;
+      color: #fff;
+      text-align: center;
+      background-color: @red;
+      border-radius: 22px;
+    }
   }
 
   .progress-wrap {
     position: absolute;
     bottom: 50px;
     z-index: 9999;
-    width: 100%;
+    width: 60%;
     padding: 10px 20px;
-    background: #fff;
+    background: #606266cf;
+    border-radius: 20px;
 
     .title {
       margin-bottom: 5px;
       font-size: 12px;
+      color: #fff;
+      text-align: center;
+    }
+
+    & /deep/ .el-progress-bar__outer {
+      background-color: #8e9094;
     }
   }
 }

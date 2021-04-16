@@ -53,10 +53,6 @@ export default {
     return {
       listWidth: 224,
       photoPreviewList: {},
-      // photoList: [
-      //   '2021/04/15/lmJyGgqLL3zcz922wNrn63hN0v5C.jpg',
-      //   '2021/04/15/lmJyGgqLL3zcz922wNrn63hN0v5C.jpg'
-      // ]
     }
   },
   computed: {
@@ -94,9 +90,12 @@ export default {
         this.$set(this.photoPreviewList, uuid, autoRetouchModel)
         await autoRetouchModel.getAutoList(this.useNewAutoApi)
         autoRetouchModel.isLoaded = true
-        autoRetouchModel.showPath = autoRetouchModel.state === AutoProcessStates.SUCCESS
-          ? changeToCompress(autoRetouchModel.autoFixPhotoList[OperationBit[OPERATION_TYPE.CROP]])
-          : autoRetouchModel.path
+        if (autoRetouchModel.state === AutoProcessStates.SUCCESS) {
+          autoRetouchModel.showPath = changeToCompress(autoRetouchModel.autoFixPhotoList[OperationBit[OPERATION_TYPE.CROP]])
+        } else {
+          autoRetouchModel.showPath = autoRetouchModel.path
+        }
+         
         if (photoIndex === 0) { autoRetouchModel.activate = true }
       })
     },
