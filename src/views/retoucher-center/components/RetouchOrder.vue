@@ -143,7 +143,7 @@
         </div>
       </div>
     </div>
-    
+
     <transition name="app-transform" mode="out-in">
       <el-alert
         class="tip-module"
@@ -472,7 +472,7 @@ export default {
         streamId: this.realAid,
         photoData: uploadData
       }
-      
+
       // 设置问题标签
       if (issue) { reqData.streamTagData = issue }
       this.$store.dispatch('setting/showLoading', this.routeName)

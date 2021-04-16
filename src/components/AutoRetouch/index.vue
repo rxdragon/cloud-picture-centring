@@ -39,7 +39,7 @@ import OperationBox from './OperationBox'
 import AutoImage from './AutoImage'
 import PhotoBox from '@/components/PhotoBox'
 
-import { OperationBit, OPERATION_TYPE, AutoRetouchModel, changeToCompress } from '@/api/autoRetouch'
+import { OperationBit, OPERATION_TYPE, AutoRetouchModel, changeToCompress, AutoProcessStates } from '@/api/autoRetouch'
 
 export default {
   name: "AutoRetouch",
@@ -52,7 +52,7 @@ export default {
   data () {
     return {
       listWidth: 224,
-      photoPreviewList: {}
+      photoPreviewList: {},
     }
   },
   computed: {
@@ -90,7 +90,12 @@ export default {
         this.$set(this.photoPreviewList, uuid, autoRetouchModel)
         await autoRetouchModel.getAutoList(this.useNewAutoApi)
         autoRetouchModel.isLoaded = true
-        autoRetouchModel.showPath = changeToCompress(autoRetouchModel.autoFixPhotoList[OperationBit[OPERATION_TYPE.CROP]])
+        if (autoRetouchModel.state === AutoProcessStates.SUCCESS) {
+          autoRetouchModel.showPath = changeToCompress(autoRetouchModel.autoFixPhotoList[OperationBit[OPERATION_TYPE.CROP]])
+        } else {
+          autoRetouchModel.showPath = autoRetouchModel.path
+        }
+         
         if (photoIndex === 0) { autoRetouchModel.activate = true }
       })
     },
