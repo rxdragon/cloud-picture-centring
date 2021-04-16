@@ -276,7 +276,6 @@ export default {
     },
     // 是否显示自动修图按钮
     showAutoRetouchBtn () {
-      return true
       const hasProduct = Boolean(AutoProductIds[this.productId])
       return this.canAutoRetouch && hasProduct
     }
