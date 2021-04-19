@@ -109,8 +109,9 @@ export default {
     sumbitData () {
       if (!this.editData.imgPath.length) return this.$newMessage.warning('请添加底色图')
       if (!this.editData.photographyName) return this.$newMessage.warning('请添加拍摄底色名字')
+      if (!this.editData.retouchColorId.length) return this.$newMessage.warning('请选择修图底色')
 
-      let imgPath = this.editData.imgPath[0].path
+      let imgPath = this.editData.imgPath[0].path || ''
       if (!imgPath.includes('http')) {
         imgPath = this.imgDomain + imgPath
       }

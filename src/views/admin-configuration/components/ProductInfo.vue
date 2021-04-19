@@ -78,7 +78,7 @@
             </div>
             <div v-for="i in 3" :key="'empty' + i" class="empty-box" />
           </div>
-          <div v-else class="no-photo panel-content">暂无样片</div>
+          <div v-else class="no-chartlet panel-content">暂无样片</div>
         </div>
       </div>
 
@@ -92,7 +92,12 @@
       <div class="photography-impression mb-5" v-if="+checkPass === 1">
         <div class="panel-title">摄影底色列表</div>
         <div class="panel-content">
-          <el-row class="photography-impression-list" :gutter="48" v-if="productConfig.photographyImpression.length">
+          <el-row
+            class="photography-impression-list"
+            type="flex"
+            :gutter="48"
+            v-if="productConfig.photographyImpression.length"
+          >
             <el-col
               :span="12"
               v-for="(photographyImpressionItem, photographyImpressionIndex) in productConfig.photographyImpression"
@@ -137,7 +142,7 @@
               </div>
             </el-col>
           </el-row>
-          <div class="no-chartlet" v-else>暂无贴图</div>
+          <div class="no-chartlet" v-else>暂无摄影底色图</div>
           <div class="photography-operation-box">
             <el-button type="primary" size="mini" @click="addNewPhotographyImpression">新增拍摄底色</el-button>
             <ImpressionMaps
@@ -164,7 +169,7 @@
             >
               <template v-if="item.type !== 'input'">
                 <div class="charlet-content">贴图名称{{ key + 1 }}：{{ item.value }}</div>
-                <div class="delete-btn">删除</div>
+                <div class="delete-btn" @click="deleteChartlet(key)">删除</div>
               </template>
               <template v-else>
                 <div class="charlet-content">
@@ -852,6 +857,9 @@ export default {
      * @description 添加底色信息
      */
     onAddNewImpression (newData) {
+      const impressionName = newData.photographyName
+      const hasSameImpressionName = this.productConfig.photographyImpression.some(item => item.photographyName === impressionName)
+      if (hasSameImpressionName) return this.$newMessage.warning('存在相同摄影底色名')
       this.productConfig.photographyImpression.push(newData)
       this.showEditPhotographyImpression = false
     },
@@ -861,6 +869,9 @@ export default {
     onEditNewImpression (data) {
       const findEditIndex = this.productConfig.photographyImpression.findIndex(item => item.uuid === data.uuid)
       if (findEditIndex < 0) return
+      const impressionName = data.photographyName
+      const hasSameImpressionName = this.productConfig.photographyImpression.some(item => item.photographyName === impressionName)
+      if (hasSameImpressionName) return this.$newMessage.warning('存在相同摄影底色名')
       this.productConfig.photographyImpression[findEditIndex] = data
       this.showEditPhotographyImpression = false
     },
@@ -1008,7 +1019,7 @@ export default {
       }
 
       // 灯位图
-      const finishPhoto = this.productConfig.lightPhoto.filter(item => Boolean(item.response))
+      const finishPhoto = this.productConfig.lightPhoto.filter(item => item.status === 'success')
       const livePhotos = finishPhoto.map(item => item.path)
       reqData.light_img_path = livePhotos
 
@@ -1022,8 +1033,9 @@ export default {
       reqData.photography_color = photographyColor
 
       // 贴图名称
-      if (this.productConfig.chartletMaps.length) {
-        reqData.texture_name = this.productConfig.chartletMaps.map(item => item.value)
+      const hasDataChartletMaps = this.productConfig.chartletMaps.filter(item => item.value)
+      if (hasDataChartletMaps.length) {
+        reqData.texture_name = hasDataChartletMaps.map(item => item.value)
       }
 
       // 是否需要强制审核
@@ -1206,6 +1218,8 @@ export default {
     }
 
     .sample-photo {
+      margin-bottom: 16px;
+
       & > span {
         width: 100px;
         margin: 0;
@@ -1260,7 +1274,12 @@ export default {
     }
 
     .photography-impression {
+      .photography-impression-list {
+        flex-wrap: wrap;
+      }
+
       .photography-impression-item {
+        margin-bottom: 24px;
         color: #606266;
         background: #fafafa;
         border-radius: 4px;

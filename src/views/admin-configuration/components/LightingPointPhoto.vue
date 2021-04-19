@@ -45,6 +45,7 @@
       :before-upload="beforeUpload"
       :on-progress="handleProgress"
       :on-success="handleSuccess"
+      :on-exceed="onExceedPhoto"
     >
       <i slot="default" class="el-icon-plus"></i>
     </el-upload>
@@ -111,9 +112,24 @@ export default {
      * @description 检测是否正在上传的照片
      */
     checkHasUploadingPhoto () {
-      if (!this.uploadPhoto.every(item => item.response)) {
+      if (!this.uploadPhoto.every(item => item.response || item.status === 'success')) {
         throw new Error('请等待照片上传完成')
       }
+    },
+    /**
+     * @description 检测是否有一样的图片
+     */
+    async checkHasSamePhoto (file) {
+      const imgInfo = await PhotoTool.getImgBufferPhoto(file)
+      const uploadPhotoSha1 = imgInfo.sha1
+      const hasSamePhoto = this.uploadPhoto.some(item => item.path.includes(uploadPhotoSha1))
+      if (hasSamePhoto) throw new Error(`请不要上传相同的图片`)
+    },
+    /**
+     * @description 超过上传张数限制钩子
+     */
+    onExceedPhoto () {
+      this.$newMessage.error(`超过上传张数限制${this.maxNum}张`)
     },
     /**
      * @description 上传前回调
@@ -121,6 +137,7 @@ export default {
     async beforeUpload (file) {
       try {
         if (file.type !== 'image/jpeg' && file.type !== 'image/png') throw new Error(`请上传jpg/png的图片`)
+        await this.checkHasSamePhoto(file)
         this.checkHasUploadingPhoto()
         return Promise.resolve()
       } catch (error) {
@@ -145,7 +162,6 @@ export default {
     handleSuccess (response, file, fileList) {
       const path = file.response ? PhotoTool.handlePicPath(file.response.url) : ''
       const uploadedName = PhotoTool.fileNameFormat(file.name)
-
       const uploadedPhotoIndex = fileList.findIndex(item => item.uid === file.uid)
       if (uploadedPhotoIndex < 0) return
       this.$set(fileList[uploadedPhotoIndex], 'path', path)

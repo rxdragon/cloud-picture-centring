@@ -1,4 +1,4 @@
-# 2.0.0 (2021-04-16)
+# 2.0.0 (2021-04-19)
 
 ### 🌟 新功能
 范围|描述|commitId
@@ -701,8 +701,8 @@
 范围|描述|commitId
 --|--|--
  - | add errorcode 代码cr修改 | [0a6d1d1](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0a6d1d1)
- - | codeReview | [b93aae0](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/b93aae0)
  - | codeReview | [848c4b8](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/848c4b8)
+ - | codeReview | [b93aae0](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/b93aae0)
  - | css修改 | [002cc41](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/002cc41)
  - | dev接口路径恢复 | [4fe3c86](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/4fe3c86)
  - | fix break | [684bf5b](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/684bf5b)
@@ -750,8 +750,8 @@
  - | 修复 预览错误 | [d7dcba3](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/d7dcba3)
  - | 修复,如果不进行任何评价直接提交,数据默认为空数据 | [16ec2d9](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/16ec2d9)
  - | 修复4舍5入问题 | [0da8a8c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0da8a8c)
- - | 修复bug | [297d818](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/297d818)
  - | 修复bug | [5b8516c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/5b8516c)
+ - | 修复bug | [297d818](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/297d818)
  - | 修复id查询失败 | [540520c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/540520c)
  - | 修复lodash引入失败 | [4aa5441](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/4aa5441)
  - | 修复lodash方法问题 | [81b5425](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/81b5425)
@@ -813,8 +813,8 @@
  - | 修复数据显示错误 | [3cffd7c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/3cffd7c)
  - | 修复数据显示错误问题 | [cdab46f](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/cdab46f)
  - | 修复数据显示问题 | [9ffe467](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/9ffe467)
- - | 修复数据显示问题 | [6ab5b27](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/6ab5b27)
  - | 修复数据显示问题 | [c141cb1](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/c141cb1)
+ - | 修复数据显示问题 | [6ab5b27](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/6ab5b27)
  - | 修复数据计算问题 | [6e99a95](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/6e99a95)
  - | 修复数据问题 | [7ecc281](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/7ecc281)
  - | 修复日志记录结束时间失败 | [e465727](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/e465727)
@@ -903,6 +903,7 @@
  - | 增加代码容错 | [3dced93](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/3dced93)
  - | 增加沙漏回滚指标 | [8153ff7](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/8153ff7)
  - | 处理20mb以上图片不能显示的问题 | [c68d44c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/c68d44c)
+ - | 处理blob数据信息 | [6e4c0b0](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/6e4c0b0)
  - | 复审通过后,再点拒绝bugfix | [014a0c0](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/014a0c0)
  - | 复权限问题，以及视图显示问题，以及下载不 | [98195e3](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/98195e3)
  - | 完善注释 | [d5b2511](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/d5b2511)
@@ -969,11 +970,11 @@
  - | 运营查询个人抽查平均分必须选择伙伴 | [2809985](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/2809985)
  - | 退单申诉无法显示fix | [ac01409](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/ac01409)
  - | 重置数据变化 | [29ba78a](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/29ba78a)
+ 修复沙漏判断问题，增加周年庆隐藏功能 | 修复沙漏判断问题，增加周年庆隐藏功 | [9ca6220](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/9ca6220)
  - | 页码修复 | [f7880c1](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/f7880c1)
  \ | 优化自动下线，如果有订单不形象判断 | [286b259](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/286b259)
  上传校验文件错误 | 上传完成md5校验错误 | [df15e3a](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/df15e3a)
  修复两个订单的时候退单一直弹窗 | 修复门店退单 弹窗问题 | [61a7d4f](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/61a7d4f)
- 修复沙漏判断问题，增加周年庆隐藏功能 | 修复沙漏判断问题，增加周年庆隐藏功 | [9ca6220](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/9ca6220)
  修复门店退单不显示 | 修复门店退单不显示 | [0f1d87c](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0f1d87c)
  显示外包机构 | 显示外奥机构 | [0b63dc2](https://code.hzmantu.com/mantu-tech/web-frontend/cloud-picture-centring/commits/0b63dc2)
 
