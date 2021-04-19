@@ -1,7 +1,7 @@
 <template>
   <div class="impression-maps">
     <el-dialog
-      title="新增拍摄底色"
+      :title="`${isEdit ? '修改' : '新增'}拍摄底色`"
       width="30%"
       center
       custom-class="impression-dialog"
@@ -61,7 +61,8 @@ export default {
   data () {
     return {
       backColorMap: [],
-      editData: {}
+      editData: {},
+      isEdit: false
     }
   },
   computed: {
@@ -85,7 +86,9 @@ export default {
     this.getColorBackColorMap()
     if (this.editInfo) {
       this.editData = this.editInfo
+      this.isEdit = true
     } else {
+      this.isEdit = false
       this.editData = {
         uuid: uuidv4(),
         photographyName: '',
@@ -107,6 +110,8 @@ export default {
      * @description 添加参数
      */
     sumbitData () {
+      const isEveryUploaded = this.editData.imgPath.every(item => item.status === 'success')
+      if (!isEveryUploaded) return this.$newMessage.warning('请等待底片上传完成')
       if (!this.editData.imgPath.length) return this.$newMessage.warning('请添加底色图')
       if (!this.editData.photographyName) return this.$newMessage.warning('请添加拍摄底色名字')
       if (!this.editData.retouchColorId.length) return this.$newMessage.warning('请选择修图底色')

@@ -109,20 +109,15 @@ export default {
       this.upyunConfig = await Commonality.getSignature()
     },
     /**
-     * @description 检测是否正在上传的照片
-     */
-    checkHasUploadingPhoto () {
-      if (!this.uploadPhoto.every(item => item.response || item.status === 'success')) {
-        throw new Error('请等待照片上传完成')
-      }
-    },
-    /**
      * @description 检测是否有一样的图片
      */
     async checkHasSamePhoto (file) {
       const imgInfo = await PhotoTool.getImgBufferPhoto(file)
       const uploadPhotoSha1 = imgInfo.sha1
-      const hasSamePhoto = this.uploadPhoto.some(item => item.path.includes(uploadPhotoSha1))
+      const hasSamePhoto = this.uploadPhoto.some(item => {
+        const path = item.path || ''
+        return path.includes(uploadPhotoSha1)
+      })
       if (hasSamePhoto) throw new Error(`请不要上传相同的图片`)
     },
     /**
@@ -139,7 +134,6 @@ export default {
         const canUploadType = ['image/jpeg', 'image/jpg', 'image/png']
         if (!canUploadType.includes(file.type)) throw new Error(`请上传jpg/png的图片`)
         await this.checkHasSamePhoto(file)
-        this.checkHasUploadingPhoto()
         return Promise.resolve()
       } catch (error) {
         this.$newMessage({
