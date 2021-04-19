@@ -248,10 +248,11 @@ export default {
     getPreviewPhoto () {
       const isFullPath = this.src.includes('http') || this.src.includes('blob')
       const imgDomain = isFullPath ? '' : this.imgDomain
+      const imgCompressDomain = isFullPath ? '' : this.imgCompressDomain
       if (this.preview) {
         return [imgDomain + this.src]
       } else if (this.previewBreviary) {
-        return [this.imgCompressDomain + this.src]
+        return [imgCompressDomain + this.src]
       } else {
         return []
       }
