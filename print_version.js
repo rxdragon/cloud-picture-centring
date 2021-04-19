@@ -4,6 +4,8 @@ const fs = require('fs')
 const NodeRSA = require('node-rsa')
 
 const version = process.env.CI_COMMIT_SHA
+console.log(process.env.CI_COMMIT_REF_NAME)
+
 const file = './dist_electron/dist_vue.asar'
 
 if (!fs.existsSync(file)) {
