@@ -226,10 +226,8 @@ export default {
         this.tableData = data.item
         this.pager.total = data.total
         this.firstSearch = false
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**
