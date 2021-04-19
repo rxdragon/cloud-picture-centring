@@ -136,7 +136,8 @@ export default {
      */
     async beforeUpload (file) {
       try {
-        if (file.type !== 'image/jpeg' && file.type !== 'image/png') throw new Error(`请上传jpg/png的图片`)
+        const canUploadType = ['image/jpeg', 'image/jpg', 'image/png']
+        if (!canUploadType.includes(file.type)) throw new Error(`请上传jpg/png的图片`)
         await this.checkHasSamePhoto(file)
         this.checkHasUploadingPhoto()
         return Promise.resolve()
