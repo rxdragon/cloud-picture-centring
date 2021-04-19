@@ -4,7 +4,8 @@ const fs = require('fs')
 const NodeRSA = require('node-rsa')
 
 const version = process.env.CI_COMMIT_SHA
-console.log(process.env.CI_COMMIT_REF_NAME)
+
+const commitName = process.env.CI_COMMIT_REF_NAME
 
 const file = './dist_electron/dist_vue.asar'
 
@@ -24,6 +25,13 @@ const writeObj = {
   hash: signHash
 }
 
-fs.writeFileSync('./dist_electron/version.json', JSON.stringify(writeObj))
+let jsonPath = './dist_electron/version.json'
+
+// 如果release环境
+if (commitName.includes('release')) {
+  jsonPath = `./dist_electron/version-${commitName}.json`
+}
+console.log(jsonPath)
+fs.writeFileSync(jsonPath, JSON.stringify(writeObj))
 
 console.log(`${version} created!`)
