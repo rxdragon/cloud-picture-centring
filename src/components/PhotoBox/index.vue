@@ -246,7 +246,9 @@ export default {
     },
     // 展示图片
     getPreviewPhoto () {
+      console.warn(this.src)
       const isFullPath = this.src.includes('http') || this.src.includes('blob')
+      console.warn(isFullPath)
       const imgDomain = isFullPath ? '' : this.imgDomain
       const imgCompressDomain = isFullPath ? '' : this.imgCompressDomain
       if (this.preview) {
