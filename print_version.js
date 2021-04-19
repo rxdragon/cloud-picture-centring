@@ -40,6 +40,15 @@ const keyCode = key.encryptPrivate(new Buffer(writeObj), 'base64', 'base64')
 console.log(keyCode)
 
 // 创建version文件
-fs.writeFileSync('./dist_electron/version.json', keyCode)
 
-console.log(`${config.version} created!`)
+let jsonPath = './dist_electron/version.json'
+const commitName = process.env.CI_COMMIT_REF_NAME
+ 
+// 如果release环境
+if (commitName.includes('release')) {
+  jsonPath = `./dist_electron/version-${commitName}.json`
+}
+
+fs.writeFileSync(jsonPath, keyCode)
+
+console.log(`${commitName} ${config.version} created!`)
