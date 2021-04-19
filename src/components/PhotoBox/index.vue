@@ -231,7 +231,6 @@ export default {
       // 不是上传显示
       if (!this.fileData) {
         if (this.src.includes('http')) return this.src
-        console.error(this.src)
         if (this.src.includes('blob')) return this.src
         const errorReplaceUrl = `${this.imgCompressDomain}${this.errorReplaceUrl}`
         const imageUrl = `${this.imgCompressDomain}${this.src}`
@@ -247,7 +246,8 @@ export default {
     },
     // 展示图片
     getPreviewPhoto () {
-      const imgDomain = this.src.includes('http') ? '' : this.imgDomain
+      const isFullPath = this.src.includes('http') || this.src.includes('blob')
+      const imgDomain = isFullPath ? '' : this.imgDomain
       if (this.preview) {
         return [imgDomain + this.src]
       } else if (this.previewBreviary) {
