@@ -1113,6 +1113,11 @@ export default {
         this.$newMessage.warning('请上传灯位图')
         return false
       }
+      const isEveryUploaded = this.productConfig.lightPhoto.every(item => item.status === 'success')
+      if (!isEveryUploaded) {
+        this.$newMessage.warning('请等待上传完灯位图')
+        return false
+      }
       if (!this.productConfig.photographyImpression.length) {
         this.$newMessage.warning('请上传摄影底色相关信息')
         return false

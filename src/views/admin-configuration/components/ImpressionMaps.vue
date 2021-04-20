@@ -85,7 +85,7 @@ export default {
   created () {
     this.getColorBackColorMap()
     if (this.editInfo) {
-      this.editData = this.editInfo
+      this.editData = JSON.parse(JSON.stringify(this.editInfo))
       this.isEdit = true
     } else {
       this.isEdit = false

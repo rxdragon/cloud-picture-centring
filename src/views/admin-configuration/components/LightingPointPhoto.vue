@@ -127,12 +127,21 @@ export default {
       this.$newMessage.error(`超过上传张数限制${this.maxNum}张`)
     },
     /**
+     * @description 检测是否正在上传的照片
+     */
+    checkHasUploadingPhoto () {
+      if (!this.uploadPhoto.every(item => item.status === 'success')) {
+        throw new Error('请等待照片上传完成')
+      }
+    },
+    /**
      * @description 上传前回调
      */
     async beforeUpload (file) {
       try {
         const canUploadType = ['image/jpeg', 'image/jpg', 'image/png']
         if (!canUploadType.includes(file.type)) throw new Error(`请上传jpg/png的图片`)
+        this.checkHasUploadingPhoto()
         await this.checkHasSamePhoto(file)
         return Promise.resolve()
       } catch (error) {
