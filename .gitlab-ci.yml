@@ -106,7 +106,7 @@ deploy-release:
   only:
     - /^release-([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/
 
-.uploadConfig:
+uploadConfig:
   image: registry.hzmantu.com/common/service-minio-client
   stage: uploadConfig
   variables:
