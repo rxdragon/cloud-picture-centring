@@ -56,7 +56,7 @@
         </el-form-item>
 
         <el-form-item label="通知对象" prop="receiverType">
-          <announcement-people-select class="announcement-select" v-model="announcementInfo.receiverType" />
+          <announcement-people-select class="announcement-select" v-="announcementInfo.receiverType" />
         </el-form-item>
 
         <el-form-item label="通知时间" prop="sendType">
