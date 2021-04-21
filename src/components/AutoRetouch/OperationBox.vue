@@ -12,7 +12,13 @@
           <div class="label-text">修图选项</div>
           <div class="desc">全部</div>
           <div class="switch-content">
-            <el-switch v-model="allOpen" active-color="#4669FB" inactive-color="#C0C4CC"></el-switch>
+            <el-switch
+              v-model="allOpen"
+              :disabled="activeInfo.state !== AutoProcessStates.SUCCESS"
+              active-color="#4669FB"
+              inactive-color="#C0C4CC"
+            >
+            </el-switch>
           </div>
         </div>
       </div>
@@ -27,7 +33,7 @@
           <div class="switch-content">
             <el-switch
               v-model="handleSwtich[operationIndex]"
-              :disabled="operation.hidden"
+              :disabled="operation.hidden || activeInfo.state !== AutoProcessStates.SUCCESS"
               active-color="#4669FB"
               inactive-color="#C0C4CC"
             >
@@ -98,7 +104,7 @@
 </template>
 
 <script>
-import { OPERATION_TYPE, OperationName } from '@/api/autoRetouch'
+import { OPERATION_TYPE, OperationName, AutoProcessStates } from '@/api/autoRetouch'
 import BackgroundMap, { colorCN } from '@/assets/config/BackgroundMap'
 import { mapGetters } from 'vuex'
 
@@ -110,7 +116,8 @@ export default {
   },
   data () {
     return {
-      backgroundPhotos: []
+      backgroundPhotos: [],
+      AutoProcessStates
     }
   },
   computed: {

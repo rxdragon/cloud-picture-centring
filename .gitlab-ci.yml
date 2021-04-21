@@ -78,7 +78,7 @@ build-release:
 # 上传又拍云
 .deploy:
   stage: deploy
-  image: registry-vpc.cn-hangzhou.aliyuncs.com/mainto_micro/environment-node:10-deploy
+  image: registry.hzmantu.com/common/environment-node:10-deploy
   script:
     - node /deploy-scripts/cloudUpload.js
 
