@@ -2,6 +2,7 @@ stages:
   - install
   - build
   - deploy
+  - uploadConfig
 
 variables:
   ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
@@ -82,8 +83,12 @@ build-release:
 
 deploy-master:
   extends: .deploy
+  when: manual
   environment:
     name: master
+  script:
+    - node /deploy-scripts/cloudUpload.js
+    - node /deploy-scripts/cloudDeployUpyun.js
   only:
     - master
 
@@ -98,5 +103,17 @@ deploy-release:
   extends: .deploy
   environment:
     name: staging/release
+  only:
+    - /^release-([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/
+
+.uploadConfig:
+  image: registry.hzmantu.com/common/service-minio-client
+  stage: uploadConfig
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - mc config host add mainto $S3_HOST $S3_KEY $S3_SECRET
+    - cd ./dist_electron
+    - mc cp version-$CI_COMMIT_REF_NAME.json mainto/electron-release/cloud-launcher/
   only:
     - /^release-([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/
