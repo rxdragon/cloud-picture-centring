@@ -305,7 +305,7 @@ export default {
       }
 
       .reference-photo {
-        & /deep/ .el-image {
+        & .el-image {
           width: 60px;
           height: 60px;
         }
