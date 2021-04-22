@@ -170,6 +170,7 @@ export default {
         width: 632px;
         font-size: 14px;
         color: #303133;
+        word-break: break-all;
         white-space: pre-wrap;
       }
 
