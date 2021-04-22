@@ -16,7 +16,7 @@
     "pack-vue": "asar pack dist_vue dist_electron/dist_vue.asar",
     "build-asar": "export MAIN_FILE='src/background-main.js' && yarn build && yarn build-background",
     "build-asar-dev": "export MAIN_FILE='src/background-main.js' && yarn build-dev && yarn build-background-dev && yarn pack-vue && rm -rf dist_vue",
-    "build-asar-release": "export MAIN_FILE='src/background-main.js' && yarn build-release && yarn build-background-release",
+    "build-asar-release": "export MAIN_FILE='src/background-main.js' && yarn build-release && yarn build-background-release && yarn pack-vue && rm -rf dist_vue",
     "log": "conventional-changelog --config ./node_modules/vue-cli-plugin-commitlint/lib/log -i CHANGELOG.md -s -r 0",
     "new": "plop",
     "postinstall": "electron-builder install-app-deps",
