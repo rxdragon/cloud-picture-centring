@@ -1,6 +1,8 @@
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
 import TimeAwardModel from '@/model/TimeAwardModel.js'
+import uuidv4 from 'uuid'
+import * as PhotoTool from '@/utils/photoTool.js'
 
 import { keyToHump } from '../utils'
 
@@ -377,6 +379,58 @@ export function getProductInfo (params) {
   }).then(msg => {
     const data = keyToHump(msg)
     data.simpleImages = data.simpleImages.filter(item => item !== 'null')
+
+    const lightImgPathData = data.lightImgPath || []
+    const lightImgPath = lightImgPathData.map(item => {
+      return {
+        uid: uuidv4(),
+        url: item,
+        path: item,
+        status: 'success',
+        name: PhotoTool.fileNameFormat(item)
+      }
+    })
+    data.lightImgPath = lightImgPath
+
+    const textureName = _.get(data, 'textureName') || []
+    const chartletMaps = textureName.map(item => {
+      return {
+        value: item,
+        type: 'default'
+      }
+    })
+    data.chartletMaps = chartletMaps
+
+    data.photographyNotice = data.photographyRemark || ''
+    data.retouchNotice = data.retouchRemark || ''
+
+    const photographyImpression = data.productPhotographyColor.map(item => {
+      const productRetouchColor = _.get(item, 'product_retouch_color') || []
+      const retouchColorId = productRetouchColor.map(item => item.back_color_id)
+      const retouchColorPath = productRetouchColor.map(item => {
+        return {
+          name: _.get(item, 'back_color.name') || '异常',
+          colorPath: _.get(item, 'back_color.img_path') || ''
+        }
+      })
+
+      return {
+        uuid: uuidv4(),
+        photographyName: item.name,
+        imgPathShow: item.img_path,
+        imgPath: [{
+          uid: uuidv4(),
+          url: item.img_path,
+          path: item.img_path,
+          status: 'success',
+          name: PhotoTool.fileNameFormat(item.img_path)
+        }],
+        retouchColorId: retouchColorId,
+        retouchColorPath: retouchColorPath
+      }
+    })
+
+    data.photographyImpression = photographyImpression
     return data
   })
 }

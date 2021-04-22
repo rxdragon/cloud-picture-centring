@@ -4,307 +4,538 @@
       <h3>产品详情</h3>
       <el-button type="primary" plain @click="goBack">返回</el-button>
     </div>
-    <div class="module-panel">
-      <div class="info-box">
-        <div class="info-panel">
-          <div class="info-title">产品名称</div>
-          <div class="panel-content">{{ productName }}</div>
+
+    <div class="base-modele module-panel">
+      <div class="base-info">
+        <div class="panel-title">基本信息</div>
+        <div class="panel-content">
+          <el-row class="info-row">
+            <el-col :span="12" class="info-col">
+              <div class="info-title">产品名称：</div>
+              <div class="panel-content">{{ productName }}</div>
+            </el-col>
+            <el-col :span="12" class="info-col">
+              <div class="info-title">机构名称：</div>
+              <div class="panel-content">{{ photographerOrgName }}</div>
+            </el-col>
+          </el-row>
+          <el-row class="info-row">
+            <el-col :span="24" class="info-col">
+              <div class="info-title">修图要求：</div>
+              <div class="panel-content">{{ retouchRequire }}</div>
+            </el-col>
+          </el-row>
+          <el-row class="info-row" v-if="+checkPass === 1">
+            <el-col :span="12" class="info-col">
+              <div class="info-title">产品分类：</div>
+              <div class="panel-content">
+                <product-classification-select :props="{ multiple: false }" v-model="productConfig.classificationId" />
+              </div>
+            </el-col>
+            <el-col :span="12" class="info-col">
+              <div class="info-title">权重等级：</div>
+              <div class="panel-content">
+                <weight-select v-model="productConfig.weightType" import-data />
+              </div>
+            </el-col>
+          </el-row>
+          <el-row class="info-row" v-if="+checkPass === 1">
+            <el-col :span="12" class="info-col">
+              <div class="info-title">修图标准：</div>
+              <div class="panel-content">
+                <el-radio-group v-model="productConfig.standard">
+                  <el-radio label="blue">蓝标</el-radio>
+                  <el-radio label="master">大师</el-radio>
+                  <el-radio label="mainto">缦图</el-radio>
+                  <el-radio label="kids">kids</el-radio>
+                </el-radio-group>
+              </div>
+            </el-col>
+            <el-col :span="12" class="info-col">
+              <div class="info-title">是否需要模版占位图：</div>
+              <div class="panel-content">
+                <el-radio-group v-model="productConfig.needTemplate">
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="2">否</el-radio>
+                </el-radio-group>
+                <el-radio-group v-if="productConfig.needTemplate === 1" v-model="productConfig.templateSuffix" class="template-box">
+                  <el-radio label="jpg">JPG</el-radio>
+                  <el-radio label="png">PNG</el-radio>
+                </el-radio-group>
+              </div>
+            </el-col>
+          </el-row>
         </div>
-        <div class="info-panel">
-          <div class="info-title">机构名称</div>
-          <div class="panel-content">{{ photographerOrgName }}</div>
+      </div>
+
+      <!-- 产品样图 -->
+      <div class="sample-photo">
+        <div class="panel-title">产品样片</div>
+        <div class="panel-content">
+          <div v-if="samplePhoto.length" class="photo-list">
+            <div v-for="(photoItem, photoIndex) in samplePhoto" :key="photoIndex" class="photo-box">
+              <photo-box downing :src="photoItem" />
+            </div>
+            <div v-for="i in 3" :key="'empty' + i" class="empty-box" />
+          </div>
+          <div v-else class="no-chartlet panel-content">暂无样片</div>
+        </div>
+      </div>
+
+      <!-- 产品灯位图 -->
+      <div class="light-photo-module mb-5" v-if="+checkPass === 1">
+        <div class="panel-title">摄影灯位图（最多9张）</div>
+        <LightingPointPhoto v-model="productConfig.lightPhoto" />
+      </div>
+
+      <!-- 摄影底色图 -->
+      <div class="photography-impression mb-5" v-if="+checkPass === 1">
+        <div class="panel-title">摄影底色列表</div>
+        <div class="panel-content">
+          <el-row
+            class="photography-impression-list"
+            type="flex"
+            :gutter="48"
+            v-if="productConfig.photographyImpression.length"
+          >
+            <el-col
+              :span="12"
+              v-for="(photographyImpressionItem, photographyImpressionIndex) in productConfig.photographyImpression"
+              :key="photographyImpressionIndex"
+            >
+              <div class="photography-impression-item">
+                <div class="impression-header">
+                  <div class="title">拍摄底色{{ photographyImpressionIndex + 1 }}</div>
+                  <div class="operation-box">
+                    <div
+                      class="delete-btn"
+                      @click="deletePhotographyImpression(photographyImpressionItem.uuid)"
+                    >
+                      删除
+                    </div>
+                    <div
+                      class="text-btn"
+                      @click="editPhotographyImpressionItem(photographyImpressionItem)"
+                    >
+                      修改
+                    </div>
+                  </div>
+                </div>
+                <div class="impression-content">
+                  <div class="impression-photography">
+                    <div class="impression-box">
+                      <el-image class="photography-image" :src="photographyImpressionItem.imgPathShow" />
+                      <div class="impression-name">{{ photographyImpressionItem.photographyName }}</div>
+                    </div>
+                  </div>
+                  <div class="impression-retouch-list">
+                    <div
+                      class="impression-box"
+                      v-for="(color, colorIndex) in photographyImpressionItem.retouchColorPath"
+                      :key="colorIndex"
+                    >
+                      <el-image class="photography-image" :src="color.colorPath" />
+                      <div class="impression-name">{{ color.name }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+          <div class="no-chartlet" v-else>暂无摄影底色图</div>
+          <div class="photography-operation-box">
+            <el-button type="primary" size="mini" @click="addNewPhotographyImpression">新增拍摄底色</el-button>
+            <ImpressionMaps
+              v-if="showEditPhotographyImpression"
+              @addNew="onAddNewImpression"
+              @editImpression="onEditNewImpression"
+              :show.sync="showEditPhotographyImpression"
+              :editInfo="editPhotographyImpression"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- 贴图列表 -->
+      <div class="chartlet-impression mb-5" v-if="+checkPass === 1">
+        <div class="panel-title">贴图列表</div>
+        <div class="panel-content">
+          <el-row class="chartlet-list" v-if="productConfig.chartletMaps.length">
+            <el-col
+              :span="12"
+              class="chartlet-item"
+              v-for="(item, key) in productConfig.chartletMaps"
+              :key="key"
+            >
+              <template v-if="item.type !== 'input'">
+                <div class="charlet-content">贴图名称{{ key + 1 }}：{{ item.value }}</div>
+                <div class="delete-btn" @click="deleteChartlet(key)">删除</div>
+              </template>
+              <template v-else>
+                <div class="charlet-content">
+                  <el-input
+                    v-model="item.value"
+                    placeholder="请输入贴图名称"
+                    show-word-limit
+                    maxlength="8"
+                  />
+                </div>
+                <div class="delete-btn" @click="deleteChartlet(key)">删除</div>
+              </template>
+            </el-col>
+          </el-row>
+          <div class="no-chartlet" v-else>暂无贴图</div>
+          <div class="operation-box">
+            <el-button type="primary" size="mini" @click="addNewChartlet">新增贴图</el-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 摄影注意事项 -->
+      <div class="photography-notice mb-5" v-if="+checkPass === 1">
+        <div class="panel-title">摄影注意事项</div>
+        <div class="panel-content">
+          <el-input
+            type="textarea"
+            placeholder="请输入摄影注意事项相关信息"
+            v-model="productConfig.photographyNotice"
+            maxlength="300"
+            rows="3"
+            show-word-limit
+          />
+        </div>
+      </div>
+
+      <!-- 修图注意事项 -->
+      <div class="retouch-notice mb-5" v-if="+checkPass === 1">
+        <div class="panel-title">修图注意事项</div>
+        <div class="panel-content">
+          <el-input
+            type="textarea"
+            placeholder="请输入修图注意事项相关信息"
+            v-model="productConfig.retouchNotice"
+            maxlength="300"
+            rows="3"
+            show-word-limit
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- 海草值 -->
+    <div class="module-panel exp-module" v-if="+checkPass === 1">
+      <div class="panel-title">
+        海草值
+        <div class="panel-slot">
+          <el-button
+            type="primary"
+            size="mini"
+            plain
+            @click="batchEditGrass(EDIT_TYPE.GRASS)"
+          >
+            一键修改海草值
+          </el-button>
+          <el-button type="primary" size="mini" @click="defaultGrass">使用默认海草值</el-button>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="list-data">
+          <div
+            v-for="(grassItem, grassIndex) in productConfig.grassData"
+            :key="grassIndex"
+            class="panel"
+          >
+            <div class="people-info-title">{{ grassIndex }} 人</div>
+            <div class="panel-contetn">
+              <input
+                :key="grassIndex"
+                v-model="productConfig.grassData[grassIndex]"
+                v-decimalOnly
+                class="num-input"
+                type="text"
+                placeholder="0"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 非拼接收益配置 -->
+    <div class="module-panel money-module" v-if="+checkPass === 1">
+      <div class="panel-title">
+        非拼接收益配置
+        <div class="panel-slot">
+          <el-button
+            type="primary"
+            size="mini"
+            plain
+            @click="batchEditGrass(EDIT_TYPE.MONEY)"
+          >
+            一键修改收益
+          </el-button>
+          <el-button type="primary" size="mini" @click="defaultNotJointMoney">使用默认收益</el-button>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div v-if="productConfig.standard !== 'blue'" class="list-data">
+          <div
+            v-for="(notJointItem, notJointIndex) in productConfig.notJointMoney"
+            :key="notJointIndex"
+            class="panel"
+          >
+            <div class="people-info-title">{{ notJointIndex }} 人</div>
+            <div class="panel-contetn">
+              <input
+                v-model="productConfig.notJointMoney[notJointIndex]"
+                v-decimalOnly
+                class="num-input"
+                type="text"
+                placeholder="0"
+              >
+            </div>
+          </div>
+        </div>
+        <div v-else class="blue-list-data">
+          <div class="list-title">
+            <span class="list-item">修图等级</span>
+            <span
+              v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney"
+              :key="blueIndex"
+              class="list-item"
+            >
+              {{ blueIndex | toCnLevel }}
+            </span>
+          </div>
+          <div class="list-content">
+            <div class="item-row">
+              <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
+            </div>
+            <div
+              v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney"
+              :key="blueIndex"
+              class="item-row"
+            >
+              <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
+                <input
+                  v-model="productConfig.blueNotJointMoney[blueIndex][moneyIndex]"
+                  v-decimalOnly
+                  class="num-input"
+                  type="text"
+                  placeholder="0"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 拼接海草值 -->
+    <div class="module-panel joint-exp-module" v-if="+checkPass === 1">
+      <div class="panel-title">
+        拼接海草值
+        <SwitchBox class="panel-title-switch" v-model="productConfig.needJoint" :modeArr="joinSwitcOption"/>
+        <div class="panel-slot" v-if="productConfig.needJoint === 1">
+          <el-button
+            type="primary"
+            size="mini"
+            plain
+            @click="batchEditGrass(EDIT_TYPE.JOIN_GRASS)"
+          >
+            一键修改拼接海草值
+          </el-button>
+          <el-button type="primary" size="mini" @click="defaultJoinGrass">使用默认拼接海草值</el-button>
+        </div>
+      </div>
+      <div class="panel-content" v-if="productConfig.needJoint === 1">
+        <div class="list-data">
+          <div
+            v-for="(grassItem, grassIndex) in productConfig.joinGrassData"
+            :key="grassIndex"
+            class="panel"
+          >
+            <div class="people-info-title">{{ grassIndex }} 人</div>
+            <div class="panel-contetn">
+              <input
+                :key="grassIndex"
+                v-model="productConfig.joinGrassData[grassIndex]"
+                v-decimalOnly
+                class="num-input"
+                type="text"
+                placeholder="0"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 拼接收益 -->
+    <div class="module-panel joint-money-module" v-if="+checkPass === 1">
+      <div class="panel-title">
+        拼接收益配置
+        <SwitchBox class="panel-title-switch" v-model="productConfig.needJoint" :modeArr="joinSwitcOption"/>
+        <div class="panel-slot" v-if="productConfig.needJoint === 1">
+          <el-button
+            type="primary"
+            size="mini"
+            plain
+            @click="batchEditGrass(EDIT_TYPE.JOIN_MONEY)"
+          >
+            一键修改拼接收益
+          </el-button>
+          <el-button type="primary" size="mini" @click="defaultJointMoney">使用默认拼接收益</el-button>
+        </div>
+      </div>
+      <div class="panel-content" v-if="productConfig.needJoint === 1">
+        <div v-if="productConfig.standard !== 'blue'" class="list-data">
+          <div
+            v-for="(jointItem, jointIndex) in productConfig.jointMoney"
+            :key="jointIndex"
+            class="panel"
+          >
+            <div class="people-info-title">{{ jointIndex }} 人</div>
+            <div class="panel-contetn">
+              <input
+                v-model="productConfig.jointMoney[jointIndex]"
+                v-decimalOnly
+                class="num-input"
+                type="text"
+                placeholder="0"
+              >
+            </div>
+          </div>
+        </div>
+        <div v-else class="blue-list-data">
+          <div class="list-title">
+            <span class="list-item">修图等级</span>
+            <span
+              v-for="(blueItem, blueIndex) in productConfig.blueJointMoney"
+              :key="blueIndex"
+              class="list-item"
+            >
+              {{ blueIndex | toCnLevel }}
+            </span>
+          </div>
+          <div class="list-content">
+            <div class="item-row">
+              <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
+            </div>
+            <div
+              v-for="(blueItem, blueIndex) in productConfig.blueJointMoney"
+              :key="blueIndex"
+              class="item-row"
+            >
+              <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
+                <input
+                  v-model="productConfig.blueJointMoney[blueIndex][moneyIndex]"
+                  v-decimalOnly
+                  class="num-input"
+                  placeholder="0"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 是否强制审核 -->
+    <div class="module-panel other-info" v-if="+checkPass === 1">
+      <div class="panel-title">是否强制审核</div>
+      <div class="panel-content">
+        <el-radio-group v-model="productConfig.needCheck">
+          <el-radio :label="2">否（根据绿色通道设定进行审核）</el-radio>
+          <el-radio :label="1">是强制审核限制（无视绿色通道）</el-radio>
+        </el-radio-group>
+        <div class="need-check-time-select" v-if="productConfig.needCheck === 1">
+          <div class="time-box">
+            <span>整体审核期限 </span>
+            <el-date-picker
+              v-model="productConfig.checkTimeDay"
+              value-format="yyyy-MM-dd"
+              size="small"
+              type="daterange"
+              range-separator="~"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            />
+          </div>
+          <div class="time-box">
+            <span>每日审核时限 </span>
+            <el-time-picker
+              is-range
+              size="small"
+              v-model="productConfig.checkTimeTime"
+              value-format="HH:mm:ss"
+              range-separator="~"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+              placeholder="选择时间范围"
+            />
+          </div>
         </div>
       </div>
       
-      <div class="info-box require-box">
-        <div class="info-panel">
-          <div class="info-title">修图要求</div>
-          <div class="panel-content">{{ retouchRequire }}</div>
-        </div>
-      </div>
-
-      <div class="sample-photo search-item">
-        <span>样片素材</span>
-        <div v-if="samplePhoto.length" class="photo-list">
-          <div v-for="(photoItem, photoIndex) in samplePhoto" :key="photoIndex" class="photo-box">
-            <photo-box downing :src="photoItem" />
-          </div>
-          <div v-for="i in 3" :key="'empty' + i" class="empty-box" />
-        </div>
-        <div v-else class="no-photo panel-content">暂无样片</div>
-      </div>
-
-      <div v-if="isPending && +checkPass === 0" class="check-box">
-        <el-button type="primary" @click="passProduct">审核通过</el-button>
-        <el-button type="danger" @click="rejectProduct">审核拒绝</el-button>
-      </div>
-      <div v-if="isPending && +checkPass === 2" class="reject-box">
-        <div class="reject-content search-item">
-          <span>拒绝原因</span>
+      <div class="remark-module">
+        <div class="panel-title">备注信息</div>
+        <div class="panel-content">
           <el-input
-            v-model="rejectValue"
+            v-model="productConfig.productRemark"
             type="textarea"
             :rows="2"
-            placeholder="请输入拒绝原因"
+            placeholder="请输入备注"
           />
         </div>
-        <div class="reject-button">
-          <el-button type="primary" plain @click="cancelCheck">取消</el-button>
-          <el-button type="danger" @click="refuseProduct">提交</el-button>
-        </div>
-      </div>
-      <div v-if="+checkPass === 1" class="product-config">
-        <el-form ref="form" label-position="left" label-width="190px">
-          <el-form-item label="产品分类">
-            <product-classification-select :props="{ multiple: false }" v-model="productConfig.classificationId" />
-          </el-form-item>
-          <el-form-item label="修图标准">
-            <el-radio-group v-model="productConfig.standard">
-              <el-radio label="blue">蓝标</el-radio>
-              <el-radio label="master">大师</el-radio>
-              <el-radio label="mainto">缦图</el-radio>
-              <el-radio label="kids">kids</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="权重等级">
-            <weight-select v-model="productConfig.weightType" import-data />
-          </el-form-item>
-          <el-form-item label="是否需要模版占位图">
-            <el-radio-group v-model="productConfig.needTemplate">
-              <el-radio :label="1">是</el-radio>
-              <el-radio :label="2">否</el-radio>
-            </el-radio-group>
-            <el-radio-group v-if="productConfig.needTemplate === 1" v-model="productConfig.templateSuffix" class="template-box">
-              <el-radio label="jpg">JPG</el-radio>
-              <el-radio label="png">PNG</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="海草值">
-            <div slot="label" class="slot-label">
-              <span>海草值</span>
-              <el-button type="text" @click="defaultGrass">使用默认海草值</el-button>
-              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.GRASS)">一键修改海草值</el-button>
-            </div>
-            <div class="list-data">
-              <div
-                v-for="(grassItem, grassIndex) in productConfig.grassData"
-                :key="grassIndex"
-                class="panel"
-              >
-                <div class="info-title">{{ grassIndex }} 人</div>
-                <div class="panel-contetn">
-                  <input
-                    :key="grassIndex"
-                    v-model="productConfig.grassData[grassIndex]"
-                    v-decimalOnly
-                    class="num-input"
-                    type="text"
-                    placeholder="0"
-                  >
-                </div>
-              </div>
-            </div>
-          </el-form-item>
-          <el-form-item label="非拼接收益配置">
-            <div slot="label" class="slot-label">
-              <span>非拼接收益配置</span>
-              <el-button type="text" @click="defaultNotJointMoney">使用默认收益</el-button>
-              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.MONEY)">一键修改收益</el-button>
-            </div>
-            <div v-if="productConfig.standard !== 'blue'" class="list-data">
-              <div
-                v-for="(notJointItem, notJointIndex) in productConfig.notJointMoney"
-                :key="notJointIndex"
-                class="panel"
-              >
-                <div class="info-title">{{ notJointIndex }} 人</div>
-                <div class="panel-contetn">
-                  <input
-                    v-model="productConfig.notJointMoney[notJointIndex]"
-                    v-decimalOnly
-                    class="num-input"
-                    type="text"
-                    placeholder="0"
-                  >
-                </div>
-              </div>
-            </div>
-            <div v-else class="blue-list-data">
-              <div class="list-title">
-                <span class="list-item">修图等级</span>
-                <span
-                  v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney"
-                  :key="blueIndex"
-                  class="list-item"
-                >
-                  {{ blueIndex | toCnLevel }}
-                </span>
-              </div>
-              <div class="list-content">
-                <div class="item-row">
-                  <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
-                </div>
-                <div
-                  v-for="(blueItem, blueIndex) in productConfig.blueNotJointMoney"
-                  :key="blueIndex"
-                  class="item-row"
-                >
-                  <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
-                    <input
-                      v-model="productConfig.blueNotJointMoney[blueIndex][moneyIndex]"
-                      v-decimalOnly
-                      class="num-input"
-                      type="text"
-                      placeholder="0"
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-form-item>
-          <el-form-item label="是否需要拼接">
-            <el-radio-group v-model="productConfig.needJoint">
-              <el-radio :label="1">是</el-radio>
-              <el-radio :label="2">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="是否强制审核" class="need-check-box">
-            <el-radio-group v-model="productConfig.needCheck">
-              <el-radio :label="2">否（根据绿色通道设定进行审核）</el-radio>
-              <el-radio :label="1">是强制审核限制（无视绿色通道）</el-radio>
-            </el-radio-group>
-            <div class="need-check-time-select" v-if="productConfig.needCheck === 1">
-              <div class="time-box">
-                <span>整体审核期限 </span>
-                <el-date-picker
-                  v-model="productConfig.checkTimeDay"
-                  value-format="yyyy-MM-dd"
-                  size="small"
-                  type="daterange"
-                  range-separator="~"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                />
-              </div>
-              <div class="time-box">
-                <span>每日审核时限 </span>
-                <el-time-picker
-                  is-range
-                  size="small"
-                  v-model="productConfig.checkTimeTime"
-                  value-format="HH:mm:ss"
-                  range-separator="~"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  placeholder="选择时间范围"
-                />
-              </div>
-            </div>
-          </el-form-item>
-          <el-form-item v-if="productConfig.needJoint === 1" label="拼接海草值">
-            <div slot="label" class="slot-label">
-              <span>拼接海草值</span>
-              <el-button type="text" @click="defaultJoinGrass">使用默认拼接海草值</el-button>
-              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.JOIN_GRASS)">一键修改拼接海草值</el-button>
-            </div>
-            <div class="list-data">
-              <div
-                v-for="(grassItem, grassIndex) in productConfig.joinGrassData"
-                :key="grassIndex"
-                class="panel"
-              >
-                <div class="info-title">{{ grassIndex }} 人</div>
-                <div class="panel-contetn">
-                  <input
-                    :key="grassIndex"
-                    v-model="productConfig.joinGrassData[grassIndex]"
-                    v-decimalOnly
-                    class="num-input"
-                    type="text"
-                    placeholder="0"
-                  >
-                </div>
-              </div>
-            </div>
-          </el-form-item>
-          <el-form-item v-if="productConfig.needJoint === 1" label="拼接收益配置">
-            <div slot="label" class="slot-label">
-              <span>拼接收益配置</span>
-              <el-button type="text" @click="defaultJointMoney">使用默认拼接收益</el-button>
-              <el-button type="text" @click="batchEditGrass(EDIT_TYPE.JOIN_MONEY)">一键修改拼接收益</el-button>
-            </div>
-            <div v-if="productConfig.standard !== 'blue'" class="list-data">
-              <div
-                v-for="(jointItem, jointIndex) in productConfig.jointMoney"
-                :key="jointIndex"
-                class="panel"
-              >
-                <div class="info-title">{{ jointIndex }} 人</div>
-                <div class="panel-contetn">
-                  <input
-                    v-model="productConfig.jointMoney[jointIndex]"
-                    v-decimalOnly
-                    class="num-input"
-                    type="text"
-                    placeholder="0"
-                  >
-                </div>
-              </div>
-            </div>
-            <div v-else class="blue-list-data">
-              <div class="list-title">
-                <span class="list-item">修图等级</span>
-                <span
-                  v-for="(blueItem, blueIndex) in productConfig.blueJointMoney"
-                  :key="blueIndex"
-                  class="list-item"
-                >
-                  {{ blueIndex | toCnLevel }}
-                </span>
-              </div>
-              <div class="list-content">
-                <div class="item-row">
-                  <div v-for="item in 20" :key="item" class="content-list-item">{{ item }}人</div>
-                </div>
-                <div
-                  v-for="(blueItem, blueIndex) in productConfig.blueJointMoney"
-                  :key="blueIndex"
-                  class="item-row"
-                >
-                  <div v-for="(moneyItem, moneyIndex) in blueItem" :key="moneyIndex" class="content-list-item">
-                    <input
-                      v-model="productConfig.blueJointMoney[blueIndex][moneyIndex]"
-                      v-decimalOnly
-                      class="num-input"
-                      placeholder="0"
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input
-              v-model="productConfig.productRemark"
-              type="textarea"
-              :rows="2"
-              placeholder="请输入备注"
-            />
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-if="+checkPass !== 2" class="pass-box">
-        <el-button
-          v-if="+checkPass === 1 && isPending"
-          type="primary"
-          plain
-          @click="cancelCheck"
-        >
-          取消
-        </el-button>
-        <el-button v-if="+checkPass === 1" type="primary" @click="passProductInfo">提交</el-button>
       </div>
     </div>
+
+    <!-- 审核按钮 -->
+    <div v-if="pendingCheck" class="check-box">
+      <el-button type="primary" @click="passProduct">审核通过</el-button>
+      <el-button type="danger" @click="rejectProduct">审核拒绝</el-button>
+    </div>
+
+    <!-- 拒绝 -->
+    <div v-if="pendingReject" class="reject-box">
+      <div class="reject-content search-item">
+        <span class="reject-content-title">拒绝原因</span>
+        <el-input
+          v-model="rejectValue"
+          type="textarea"
+          :rows="2"
+          placeholder="请输入拒绝原因"
+        />
+      </div>
+      <div class="reject-button">
+        <el-button type="info" @click="cancelCheck">取消</el-button>
+        <el-button type="danger" @click="refuseProduct">提交</el-button>
+      </div>
+    </div>
+  
+    <!-- 通过 -->
+    <div v-if="+checkPass !== 2" class="pass-box">
+      <el-button
+        v-if="+checkPass === 1 && isPending"
+        size="medium"
+        type="info"
+        class="pass-btn"
+        @click="cancelCheck"
+      >
+        取消
+      </el-button>
+      <el-button
+        v-if="+checkPass === 1"
+        type="primary"
+        size="medium"
+        class="pass-btn"
+        @click="passProductInfo"
+      >
+        提交
+      </el-button>
+    </div>
+
     <!-- 批量修改海草值 -->
     <el-dialog
       :title="batchEditInfo.title"
@@ -345,13 +576,16 @@
 
 <script>
 import PhotoBox from '@/components/PhotoBox'
+import LightingPointPhoto from './LightingPointPhoto'
+import ImpressionMaps from './ImpressionMaps'
 import WeightSelect from '@SelectBox/WeightSelect'
 import ProductClassificationSelect from '@SelectBox/ProductClassificationSelect'
+import SwitchBox from '@/components/SwitchBox'
 
+import { StaffLevelEnum } from '@/utils/enumerate.js'
 import { objEveryNumberValue, twoTierObjEveryNumberValue } from '@/utils/index.js'
 import * as Timespan from '@/utils/timespan.js'
 import * as MathUtil from '@/utils/mathUtil.js'
-import { StaffLevelEnum } from '@/utils/enumerate.js'
 import * as defaultGrass from '@/assets/config/grassConfig.js'
 import * as defaultMoney from '@/assets/config/moneyConfig.js'
 
@@ -366,7 +600,7 @@ const EDIT_TYPE = {
 
 export default {
   name: 'ProductInfo',
-  components: { PhotoBox, WeightSelect, ProductClassificationSelect },
+  components: { PhotoBox, WeightSelect, ProductClassificationSelect, LightingPointPhoto, SwitchBox, ImpressionMaps },
   filters: {
     toCnLevel (value) {
       return StaffLevelEnum[value]
@@ -380,28 +614,38 @@ export default {
     return {
       EDIT_TYPE,
       routeName: this.$route.name, // 路由名字
+      joinSwitcOption: [{label: '不拼接', value: 2}, {label: '拼接', value: 1}],
       rejectValue: '',
       productName: '', // 产品名称
       retouchRequire: '', // 修图要求
       samplePhoto: [], // 样片素材
       photographerOrgName: '', // 机构名称
+
+      editPhotographyImpression: null, // 拍摄底色
+      showEditPhotographyImpression: false,
+
       productConfig: {
         classificationId: '', // 修图分类id
         standard: '', // 修图标准
         weightType: '', // 权重等级
+        lightPhoto: [], // 灯位图接口
+        chartletMaps: [], // 贴图名称
+        photographyImpression: [], // 拍摄底色
+        photographyNotice: '', // 摄影注意事项
+        retouchNotice: '', // 修图注意事项
         needTemplate: '', // 是否需要模版
         templateSuffix: 'jpg', // 模版照类型
         grassData: {}, // 海草数据
         joinGrassData: {}, // 拼接海草
-        notJointMoney: {},
+        notJointMoney: {}, // 未拼接收益
         jointMoney: {}, // 拼接收益
-        blueNotJointMoney: {},
+        blueNotJointMoney: {}, // 蓝标拼接收益
         blueJointMoney: {}, // 拼接收益
-        needJoint: '', // 是否需要拼接
+        needJoint: 2, // 是否需要拼接
         needCheck: '', // 是否需要强制审核
         checkTimeDay: null, // 强制审核日期
         checkTimeTime: null, // 强制审核时间
-        productRemark: ''
+        productRemark: '' // 产品备注
       },
       batchEditInfo: {
         title: '一键更改海草值',
@@ -411,6 +655,14 @@ export default {
         value: 1
       },
       checkPass: 0 // 0 没审核 1 审核通过 2 拒绝审核
+    }
+  },
+  computed: {
+    pendingCheck () {
+      return this.isPending && +this.checkPass === 0
+    },
+    pendingReject () {
+      return this.isPending && +this.checkPass === 2
     }
   },
   created () {
@@ -565,6 +817,74 @@ export default {
       this.checkPass = 0
     },
     /**
+     * @description 添加贴图
+     */
+    addNewChartlet () {
+      this.productConfig.chartletMaps.push({
+        value: '',
+        type: 'input',
+      })
+    },
+    /**
+     * @description 删除贴图
+     */
+    deleteChartlet (key) {
+      this.productConfig.chartletMaps.splice(key, 1)
+    },
+    /**
+     * @description 添加修图底色
+     */
+    addNewPhotographyImpression () {
+      this.editPhotographyImpression = null
+      this.showEditPhotographyImpression = true
+    },
+    /**
+     * @description 编辑相关信息
+     */
+    editPhotographyImpressionItem (editInfo) {
+      this.editPhotographyImpression = editInfo
+      this.showEditPhotographyImpression = true
+    },
+    /**
+     * @description 删除底色
+     */
+    deletePhotographyImpression (uuid) {
+      const findDeleteIndex = this.productConfig.photographyImpression.findIndex(item => item.uuid === uuid)
+      if (findDeleteIndex < 0) return
+      this.productConfig.photographyImpression.splice(findDeleteIndex, 1)
+    },
+    /**
+     * @description 添加底色信息
+     */
+    onAddNewImpression (newData) {
+      const hasSameImpressionName = this.productConfig.photographyImpression.some(item => {
+        const sameName = item.photographyName === newData.photographyName
+        const isEditNowId = item.uuid === newData.uuid
+        return sameName && !isEditNowId
+      })
+      if (hasSameImpressionName) return this.$newMessage.warning('存在相同摄影底色名')
+      this.productConfig.photographyImpression.push(newData)
+      this.$newMessage.success('添加底色成功')
+      this.showEditPhotographyImpression = false
+    },
+    /**
+     * @description 编辑底色信息
+     */
+    onEditNewImpression (data) {
+      const findEditIndex = this.productConfig.photographyImpression.findIndex(item => item.uuid === data.uuid)
+      if (findEditIndex < 0) return
+
+      const hasSameImpressionName = this.productConfig.photographyImpression.some(item => {
+        const sameName = item.photographyName === data.photographyName
+        const isEditNowId = item.uuid === data.uuid
+        return sameName && !isEditNowId
+      })
+      if (hasSameImpressionName) return this.$newMessage.warning('存在相同摄影底色名')
+      this.productConfig.photographyImpression[findEditIndex] = data
+      this.$newMessage.success('修改底色成功')
+      this.showEditPhotographyImpression = false
+    },
+    /**
      * @description 默认海草数
      */
     defaultGrass () {
@@ -631,6 +951,13 @@ export default {
           this.productConfig.classificationId = data.productCategoryId || ''
           this.productConfig.needCheck = data.forceReview ? 1 : 2
 
+          // 灯位图
+          this.productConfig.lightPhoto = data.lightImgPath
+          this.productConfig.photographyImpression = data.photographyImpression
+          this.productConfig.chartletMaps = data.chartletMaps
+          this.productConfig.photographyNotice = data.photographyNotice
+          this.productConfig.retouchNotice = data.retouchNotice
+
           if (data.forceReviewStartAt && data.forceReviewEndAt) {
             this.productConfig.checkTimeDay = [
               Timespan.revertTimeSpan(data.forceReviewStartAt),
@@ -695,8 +1022,31 @@ export default {
         splicingSeaGrassConfig: this.productConfig.joinGrassData,
         note: this.productConfig.productRemark,
         forceReview: this.productConfig.needCheck === 1,
-        productCategoryId: this.productConfig.classificationId
+        productCategoryId: this.productConfig.classificationId,
+        photography_remark: this.productConfig.photographyNotice,
+        retouch_remark: this.productConfig.retouchNotice
       }
+
+      // 灯位图
+      const finishPhoto = this.productConfig.lightPhoto.filter(item => item.status === 'success')
+      const livePhotos = finishPhoto.map(item => item.path)
+      reqData.light_img_path = livePhotos
+
+      const photographyColor = this.productConfig.photographyImpression.map(item => {
+        return {
+          name: item.photographyName,
+          img_path: item.imgPathShow,
+          retouch_color: item.retouchColorId
+        }
+      })
+      reqData.photography_color = photographyColor
+
+      // 贴图名称
+      const hasDataChartletMaps = this.productConfig.chartletMaps.filter(item => item.value)
+      if (hasDataChartletMaps.length) {
+        reqData.texture_name = hasDataChartletMaps.map(item => item.value)
+      }
+
       // 是否需要强制审核
       if (this.productConfig.needCheck === 1) {
         reqData.forceReviewDayStart = this.productConfig.checkTimeTime[0]
@@ -759,6 +1109,27 @@ export default {
         this.$newMessage.warning('请填写是否需要强制审核')
         return false
       }
+      if (!this.productConfig.lightPhoto.length) {
+        this.$newMessage.warning('请上传灯位图')
+        return false
+      }
+      const isEveryUploaded = this.productConfig.lightPhoto.every(item => item.status === 'success')
+      if (!isEveryUploaded) {
+        this.$newMessage.warning('请等待上传完灯位图')
+        return false
+      }
+      if (!this.productConfig.photographyImpression.length) {
+        this.$newMessage.warning('请上传摄影底色相关信息')
+        return false
+      }
+      if (!this.productConfig.photographyNotice) {
+        this.$newMessage.warning('请填写摄影注意事项')
+        return false
+      }
+      if (!this.productConfig.retouchNotice) {
+        this.$newMessage.warning('请填写修图注意事项')
+        return false
+      }
       if (this.productConfig.needCheck === 1) {
         if (!this.productConfig.checkTimeDay || !this.productConfig.checkTimeTime) {
           this.$newMessage.warning('请填写强制审核日期或审核时间')
@@ -789,28 +1160,232 @@ export default {
 
 <style lang="less">
 .product-info {
-  .module-panel {
-    .panel-content {
-      font-size: 14px;
-      color: #606266;
+  .mb-5 {
+    margin-bottom: 20px;
+  }
+
+  .delete-btn {
+    color: @red;
+    cursor: pointer;
+
+    &:hover {
+      color: #f78989;
     }
   }
 
-  .info-box {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    margin-bottom: 10px;
+  .text-btn {
+    color: @blue;
+    cursor: pointer;
 
-    .info-panel {
-      display: flex;
-      margin-bottom: 24px;
+    &:hover {
+      color: #66b1ff;
+    }
+  }
 
-      .info-title {
-        width: 100px;
-        font-size: 14px;
-        font-weight: 700;
-        color: #606266;
+  .module-panel {
+    margin-bottom: 20px;
+
+    .panel-title {
+      margin-bottom: 20px;
+
+      .panel-title-switch {
+        margin-left: 14px;
       }
+    }
+
+    .panel-content {
+      font-size: 14px;
+      color: #303133;
+
+      .info-row {
+        display: flex;
+        align-items: center;
+        min-height: 60px;
+        margin: 0 20px;
+        border-bottom: 1px solid #ebeef5;
+
+        &:nth-last-of-type(1) {
+          border-bottom: none;
+        }
+
+        .info-col {
+          display: flex;
+          align-items: center;
+
+          .el-radio-group {
+            margin-right: 12px;
+          }
+        }
+
+        .info-title {
+          margin-right: 12px;
+        }
+      }
+    }
+
+    .base-info {
+      margin-bottom: 40px;
+
+      .panel-content {
+        background-color: #fafafa;
+      }
+    }
+
+    .sample-photo {
+      margin-bottom: 16px;
+
+      & > span {
+        width: 100px;
+        margin: 0;
+      }
+
+      .photo-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        width: calc(~'100% - 100px');
+        margin-right: -24px;
+
+        .photo-box {
+          width: 253px;
+          margin-right: 24px;
+          margin-bottom: 24px;
+        }
+      }
+    }
+
+    .no-chartlet {
+      padding: 20px;
+      color: #606266;
+      background-color: #fafafa;
+      border-radius: 4px;
+    }
+
+    .chartlet-impression {
+      .chartlet-list {
+        border-radius: 4px;
+      }
+
+      .chartlet-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #fafafa;
+
+        .charlet-content {
+          width: 80%;
+
+          .el-input {
+            width: 100%;
+          }
+        }
+      }
+
+      .operation-box {
+        margin-top: 16px;
+      }
+    }
+
+    .photography-impression {
+      .photography-impression-list {
+        flex-wrap: wrap;
+      }
+
+      .photography-impression-item {
+        margin-bottom: 24px;
+        color: #606266;
+        background: #fafafa;
+        border-radius: 4px;
+      }
+
+      .impression-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 0;
+        margin: 0 20px;
+        font-weight: 600;
+        color: #606266;
+        border-bottom: 1px solid #ebeef5;
+
+        .operation-box {
+          display: flex;
+          font-weight: 400;
+
+          .delete-btn {
+            margin-right: 20px;
+          }
+        }
+      }
+
+      .impression-content {
+        display: flex;
+
+        .impression-box {
+          display: inline-block;
+
+          .photography-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 4px;
+          }
+
+          .impression-name {
+            margin-top: 8px;
+            font-size: 12px;
+            line-height: 17px;
+            color: #606266;
+          }
+        }
+
+        .impression-photography {
+          padding: 20px 33px 10px 20px;
+          border-right: 1px solid #ebeef5;
+        }
+
+        .impression-retouch-list {
+          padding: 20px 20px 10px 20px;
+          overflow-x: auto;
+          white-space: nowrap;
+
+          .impression-box {
+            margin-right: 12px;
+          }
+
+          &::-webkit-scrollbar {
+            height: 8px;
+          }
+        }
+      }
+
+      .photography-operation-box {
+        margin-top: 16px;
+      }
+    }
+  }
+
+  .other-info {
+    .need-check-time-select {
+      display: flex;
+      margin-top: 12px;
+
+      .time-box {
+        margin-right: 12px;
+
+        & > span {
+          margin-right: 12px;
+          font-size: 14px;
+          color: #606266;
+        }
+
+        .el-date-editor {
+          width: 300px;
+        }
+      }
+    }
+
+    .remark-module {
+      margin-top: 40px;
     }
   }
 
@@ -818,32 +1393,7 @@ export default {
     display: flex;
   }
 
-  .sample-photo {
-    display: flex;
-    align-items: flex-start;
-
-    & > span {
-      width: 100px;
-      margin: 0;
-    }
-
-    .photo-list {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      width: calc(~'100% - 100px');
-      margin-right: -24px;
-
-      .photo-box {
-        width: 253px;
-        margin-right: 24px;
-        margin-bottom: 24px;
-      }
-    }
-  }
-
   .check-box {
-    padding-left: 100px;
     text-align: left;
   }
 
@@ -858,7 +1408,7 @@ export default {
         width: 500px;
       }
 
-      & > span {
+      .reject-content-title {
         width: 100px;
         margin-right: 0;
       }
@@ -883,62 +1433,45 @@ export default {
       }
     }
 
-    .need-check-box {
-      .need-check-time-select {
-        display: flex;
-        margin-top: 12px;
-
-        .time-box {
-          margin-right: 12px;
-
-          & > span {
-            margin-right: 12px;
-            font-size: 14px;
-            color: #606266;
-          }
-
-          .el-date-editor {
-            width: 300px;
-          }
-        }
-      }
-    }
-
-    .list-data {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      grid-gap: 1px;
-      font-size: 14px;
-      color: #303133;
-      text-align: center;
-      background-color: @borderColor;
-      border: 1px solid @borderColor;
-
-      .panel {
-        text-align: center;
-
-        .info-title {
-          background-color: #fafafa;
-        }
-
-        .panel-contetn {
-          background-color: #fff;
-
-          .el-input__inner {
-            text-align: center;
-            border: none;
-          }
-        }
-      }
-    }
-
     .template-box {
       margin-left: 24px;
     }
   }
 
   .pass-box {
-    margin-left: 190px;
+    text-align: center;
+
+    .pass-btn {
+      width: 180px;
+    }
+  }
+
+  .list-data {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-gap: 1px;
+    font-size: 14px;
+    color: #303133;
+    text-align: center;
+    background-color: @borderColor;
+    border: 1px solid @borderColor;
+
+    .panel {
+      text-align: center;
+
+      .people-info-title {
+        background-color: #fafafa;
+      }
+
+      .panel-contetn {
+        background-color: #fff;
+
+        .el-input__inner {
+          text-align: center;
+          border: none;
+        }
+      }
+    }
   }
 
   .blue-list-data {
