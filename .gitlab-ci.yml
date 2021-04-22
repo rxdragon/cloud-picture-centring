@@ -11,7 +11,7 @@ variables:
 # 下载依赖
 install:
   stage: install
-  image: node:12
+  image: registry.hzmantu.com/common/environment-node:12-deploy
   tags:
     - nodejs
   cache:
@@ -28,7 +28,7 @@ install:
 # 打包
 .build:
   stage: build
-  image: node:12
+  image: registry.hzmantu.com/common/environment-node:12-deploy
   tags:
     - nodejs
   cache:
