@@ -44,8 +44,8 @@ build-master:
   extends: .build
   script:
     - yarn build-asar
-    - yarn pack-vue
     - node /deploy-scripts/cloudDeployUpyun.js
+    - yarn pack-vue
     - rm -rf dist_vue
     - node print_version.js production
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
@@ -69,8 +69,8 @@ build-release:
   extends: .build
   script:
     - yarn build-asar
-    - yarn pack-vue
     - node /deploy-scripts/cloudDeployUpyun.js
+    - yarn pack-vue
     - rm -rf dist_vue
     - node print_version.js production
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
