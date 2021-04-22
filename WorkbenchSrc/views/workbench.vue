@@ -24,9 +24,9 @@
       </div>
     </div>
     <div class="workbench-content">
-      <retouch-workbench v-if="hasRetouchWorkbench" :isStickTop="isStickTop" :dark="darkMode" />
-      <online-workbench v-if="hasOnlineWorkbench" :dark="darkMode" />
-      <product-review-workbench v-if="hasProductReview" :dark="darkMode" />
+      <RetouchWorkbench v-if="hasRetouchWorkbench" :isStickTop="isStickTop" :dark="darkMode" />
+      <OnlineWorkbench v-if="hasOnlineWorkbench" :dark="darkMode" />
+      <ProductReviewWorkbench v-if="hasProductReview" :dark="darkMode" />
     </div>
   </div>
 </template>

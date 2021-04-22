@@ -69,6 +69,10 @@ export function getReviewInfo () {
     createData.retoucherName = (msg.retoucher && (msg.retoucher.name || msg.retoucher.real_name)) || '-'
     createData.referencePhoto = _.get(msg, 'tags.values.retouch_claim.referenceImg') || ''
     createData.referencePhoto = createData.referencePhoto ? store.getters.imgDomain + createData.referencePhoto : ''
+
+    createData.retouchNotice = _.get(msg, 'tags.values.retouch_remark') || '' // 修图注意事项
+    createData.retouchBackImgName = _.get(msg, 'tags.values.retouch_color.name') || '' // 底色图
+    createData.retouchBackImg = _.get(msg, 'tags.values.retouch_color.img_path') || '' // 底色地址
     return createData
   })
 }

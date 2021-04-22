@@ -37,7 +37,7 @@
           <!-- 工具 -->
           <MarkTool @changeTool="changeDrawType" :canvas-option="canvasOption" />
           <!-- 订单信息 -->
-          <order-info-module v-if="Object.keys(info).length" :order-info="info" />
+          <OrderInfoModule v-if="Object.keys(info).length" :order-info="info" />
         </div>
       </div>
       <!-- 图片 -->

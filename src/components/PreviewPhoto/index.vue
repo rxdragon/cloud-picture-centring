@@ -146,7 +146,7 @@
               </div>
             </div>
           </div>
-          <order-info-module v-if="showOrderInfo" :order-info="orderInfo" />
+          <OrderInfoModule v-if="showOrderInfo" :order-info="orderInfo" />
           <!-- 问题标签 -->
           <div class="order-label" v-if="showPhoto.hasCommitInfo">
             <div class="label-title">已打问题标签</div>

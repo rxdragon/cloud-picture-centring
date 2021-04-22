@@ -186,8 +186,6 @@ export default {
         const req = { imagePath: domain + findSelectPhoto.path }
         const data = await IdentifyImage.getPhotoStreamInfo(req)
         this.selectOrderInfo = data
-      } catch (error) {
-        console.error(error)
       } finally {
         this.photoInfoLoading = false
         this.percentageAge = 0
@@ -203,8 +201,6 @@ export default {
         const req = { imagePath: this.devImagePath }
         const data = await IdentifyImage.getPhotoStreamInfo(req)
         this.selectOrderInfo = data
-      } catch (error) {
-        console.error(error)
       } finally {
         this.photoInfoLoading = false
         this.percentageAge = 0

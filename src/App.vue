@@ -137,7 +137,7 @@ body {
   position: fixed;
   right: 24px;
   bottom: 34px;
-  z-index: 9999;
+  z-index: 9900;
   width: 400px;
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);

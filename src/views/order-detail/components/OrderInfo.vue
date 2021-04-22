@@ -74,7 +74,7 @@
         </div>
         <div class="panel-main-content" v-if="orderInfo.retouchNotice">
           <span class="title">修图注意事项：</span>
-          <span class="content">{{ orderInfo.retouchNotice }}</span>
+          <span class="content retouch-notice">{{ orderInfo.retouchNotice }}</span>
         </div>
         <div class="panel-main-content" v-if="orderInfo.retouchBackImg">
           <span class="title">修图底色：</span>
@@ -203,6 +203,10 @@ export default {
         line-height: 22px;
         color: #303133;
         border-bottom: 1px solid @borderColor;
+
+        .retouch-notice {
+          word-break: break-all;
+        }
 
         .title {
           width: 120px;
