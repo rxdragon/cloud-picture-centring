@@ -356,11 +356,13 @@ export default {
     .tooltop {
       position: absolute;
       display: none;
+      max-height: 200px;
       padding: 10px;
+      overflow-y: auto;
       color: #fff;
       background-color: #303133;
       border-radius: 4px;
-      transform: translateY(-125%);
+      transform: translateY(-120%);
     }
 
     &:hover {
