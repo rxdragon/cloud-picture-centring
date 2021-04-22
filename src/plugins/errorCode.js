@@ -80,11 +80,15 @@ const ProductException = [
   [0xA11002003, '普通收益数目不对'],
   [0xA11002004, '拼接收益数目不对'],
   [0xA11002005, '产品分类子类已存在'],
+  [0xA11002006, '修图底色名称已存在'],
+  [0xA11002007, '产品审核字段错误'],
 ]
 
 const QueueException = [
   [0xA11012001, '需要对象'],
-  [0xA11012002, '该订单已经指派']
+  [0xA11012002, '该订单已经指派'],
+  [0xA11012003, '10分钟内已刷新'],
+  [0xA11012004, '为找到产品对应配置']
 ]
 
 const StaffException = [
@@ -189,6 +193,10 @@ const AnnounceManageException = [
   [0xA25001005, '发送时间比当前更小']
 ]
 
+const QueueWeightTypeException = [
+  [0xA11019001, '存在的类别名称']
+]
+
 export const errText = [
   ...ApiException,
   ...CardException,
@@ -209,7 +217,8 @@ export const errText = [
   ...TimeIntervalRewardConfigException,
   ...ReturnToQueueException,
   ...AnnounceException,
-  ...AnnounceManageException
+  ...AnnounceManageException,
+  ...QueueWeightTypeException
 ]
 
 const errMap = new Map(errText)
