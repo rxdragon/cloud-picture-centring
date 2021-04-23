@@ -30,8 +30,11 @@
         <div class="retouch-remark">
           修图备注：{{ retouchingStream.retouchRemark }}
         </div>
-        <div class="retouch-remark" v-if="retouchingStream.retouchNotice">
-          修图注意事项：{{ retouchingStream.retouchNotice }}
+        <div class="retouch-remark retouch-notice" v-if="retouchingStream.retouchNotice">
+          <div class="content">
+            修图注意事项：{{ retouchingStream.retouchNotice }}
+          </div>
+          <div class="tooltop">{{ retouchingStream.retouchNotice }}</div>
         </div>
         <div class="retouch-remark" v-if="retouchingStream.retouchBackImg">
           修图底色：{{ retouchingStream.retouchBackImgName }}
@@ -318,7 +321,6 @@ export default {
 
   .retouch-remark {
     display: -webkit-box;
-    overflow: hidden;
     font-weight: 400;
     line-height: 20px;
     color: var(--descColor);
@@ -340,6 +342,32 @@ export default {
         padding: 0;
         font-size: 12px;
         vertical-align: bottom;
+      }
+    }
+  }
+
+  .retouch-notice {
+    position: relative;
+
+    .content {
+      overflow: hidden;
+    }
+
+    .tooltop {
+      position: absolute;
+      display: none;
+      max-height: 200px;
+      padding: 10px;
+      overflow-y: auto;
+      color: #fff;
+      background-color: #303133;
+      border-radius: 4px;
+      transform: translateY(-120%);
+    }
+
+    &:hover {
+      .tooltop {
+        display: block;
       }
     }
   }

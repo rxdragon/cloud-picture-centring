@@ -32,6 +32,18 @@
           <span class="title">修图备注：</span>
           <span class="content">{{ orderData.retouchRemark }}</span>
         </div>
+        <div class="panel-main-content" v-if="orderData.retouchNotice">
+          <span class="title">修图注意事项：</span>
+          <span class="content retouch-notice">{{ orderData.retouchNotice }}</span>
+        </div>
+        <div class="panel-main-content" v-if="orderData.retouchBackImg">
+          <span class="title">修图底色：</span>
+          <span class="content require-impression-color">
+            <span class="impression-name">{{ orderData.retouchBackImgName }}</span>
+            <ReferencePhoto :streamNum="orderData.streamNum" downMsg="下载底色图" :src="orderData.retouchBackImg" />
+          </span>
+        </div>
+
         <div v-if="orderData.backgroundColor" class="panel-main-content">
           <span class="title">背景图要求：</span>
           <div class="content require-background-color">
@@ -98,9 +110,11 @@
 <script>
 import DownIpc from '@electronMain/ipc/DownIpc'
 import { APPEAL_TYPE } from '@/utils/enumerate'
+import ReferencePhoto from '@/components/ReferencePhoto'
 
 export default {
   name: 'orderData',
+  components: { ReferencePhoto },
   props: {
     orderData: { type: Object, required: true },
     appealInfo: { type: Object, required: true }
@@ -210,6 +224,14 @@ export default {
           }
         }
 
+        .require-impression-color {
+          display: flex;
+
+          .impression-name {
+            margin-right: 12px;
+          }
+        }
+
         .require-reference-photo {
           display: flex;
           align-items: flex-end;
@@ -218,6 +240,10 @@ export default {
             width: 200px;
             height: 200px;
           }
+        }
+
+        .retouch-notice {
+          word-break: break-all;
         }
       }
 

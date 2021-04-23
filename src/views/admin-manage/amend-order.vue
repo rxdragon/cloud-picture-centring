@@ -269,7 +269,10 @@ export default {
         }
       })
 
-      if (!hasEveryNumber) throw new Error('请输入人数')
+      if (!hasEveryNumber) {
+        this.$newMessage.warning('请输入人数')
+        return false
+      }
       const req = {
         streamId: item.id,
         photos: photoData,

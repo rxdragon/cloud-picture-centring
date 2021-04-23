@@ -84,7 +84,7 @@
 
       <!-- 产品灯位图 -->
       <div class="light-photo-module mb-5" v-if="+checkPass === 1">
-        <div class="panel-title">摄影灯位图</div>
+        <div class="panel-title">摄影灯位图（最多9张）</div>
         <LightingPointPhoto v-model="productConfig.lightPhoto" />
       </div>
 
@@ -881,7 +881,7 @@ export default {
       })
       if (hasSameImpressionName) return this.$newMessage.warning('存在相同摄影底色名')
       this.productConfig.photographyImpression[findEditIndex] = data
-      this.$newMessage.success('添加底色成功')
+      this.$newMessage.success('修改底色成功')
       this.showEditPhotographyImpression = false
     },
     /**

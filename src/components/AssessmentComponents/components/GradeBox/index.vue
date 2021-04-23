@@ -57,7 +57,7 @@
           </div>
           <div class="retouch-remark panel-row" v-if="photoInfoData.streamInfo.retouchNotice">
             <div class="remark-title">修图注意事项：</div>
-            <div class="remark-content">{{ photoInfoData.streamInfo.retouchNotice }}</div>
+            <div class="remark-content retouch-notice">{{ photoInfoData.streamInfo.retouchNotice }}</div>
           </div>
           <div class="reference-photo panel-row" v-if="photoInfoData.streamInfo.retouchBackImg">
             <span class="order-info-title">修图底色：</span>
@@ -373,6 +373,10 @@ export default {
           .content-el-tag {
             margin-right: 10px;
           }
+        }
+
+        .retouch-notice {
+          word-break: break-all;
         }
       }
     }
