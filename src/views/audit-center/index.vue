@@ -45,7 +45,7 @@
       </div>
     </div>
     <!-- 照片信息 -->
-    <order-info v-if="orderData" show-retouch :order-data="orderData" />
+    <OrderInfo v-if="orderData" show-retouch :order-data="orderData" />
     <!-- 照片审核 -->
     <div v-if="orderData" class="check-photo module-panel">
       <div class="panel-title">

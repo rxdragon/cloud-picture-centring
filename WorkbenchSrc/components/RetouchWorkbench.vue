@@ -28,9 +28,24 @@
           <el-tag :effect="dark ? 'plain' : 'light'" v-if="retouchingStream.requireLabel.pimples" size="small">祛痣</el-tag>
         </div>
         <div class="retouch-remark">
-          备注：{{ retouchingStream.retouchRemark }}
+          修图备注：{{ retouchingStream.retouchRemark }}
+        </div>
+        <div class="retouch-remark retouch-notice" v-if="retouchingStream.retouchNotice">
+          <div class="content">
+            修图注意事项：{{ retouchingStream.retouchNotice }}
+          </div>
+          <div class="tooltop">{{ retouchingStream.retouchNotice }}</div>
+        </div>
+        <div class="retouch-remark" v-if="retouchingStream.retouchBackImg">
+          修图底色：{{ retouchingStream.retouchBackImgName }}
+          <div class="impression-box">
+            <img :src="retouchingStream.retouchBackImg" alt="">
+            <el-button class="down-retouch" type="text" @click="downImpressionPhoto">下载底色图</el-button>
+          </div>
         </div>
       </div>
+
+      <!-- 参考图 -->
       <div class="reference-photo" v-if="retouchingStream.referencePhoto">
         <img :src="retouchingStream.referencePhoto" alt="">
         <el-button type="text" @click="downReferencePhoto">下载参考图</el-button>
@@ -185,6 +200,23 @@ export default {
       } else {
         DownIpc.addDownloadFile(data)
       }
+    },
+    /**
+     * @description 下载参考图
+     */
+    downImpressionPhoto () {
+      if (!this.retouchingStream.retouchBackImg) return
+      const data = {
+        url: this.retouchingStream.retouchBackImg,
+        path: `${this.retouchingStream.streamNum}`
+      }
+
+      // 判断从那里下载文件
+      if (this.isStickTop) {
+        this.$ipcRenderer.sendSync('other-window-down', data)
+      } else {
+        DownIpc.addDownloadFile(data)
+      }
     }
   }
 }
@@ -289,7 +321,6 @@ export default {
 
   .retouch-remark {
     display: -webkit-box;
-    overflow: hidden;
     font-weight: 400;
     line-height: 20px;
     color: var(--descColor);
@@ -297,6 +328,48 @@ export default {
     word-break: break-all;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
+
+    .impression-box {
+      margin-left: 70px;
+
+      img {
+        width: 60px;
+        height: 60px;
+        vertical-align: top;
+      }
+
+      .down-retouch {
+        padding: 0;
+        font-size: 12px;
+        vertical-align: bottom;
+      }
+    }
+  }
+
+  .retouch-notice {
+    position: relative;
+
+    .content {
+      overflow: hidden;
+    }
+
+    .tooltop {
+      position: absolute;
+      display: none;
+      max-height: 200px;
+      padding: 10px;
+      overflow-y: auto;
+      color: #fff;
+      background-color: #303133;
+      border-radius: 4px;
+      transform: translateY(-120%);
+    }
+
+    &:hover {
+      .tooltop {
+        display: block;
+      }
+    }
   }
 }
 

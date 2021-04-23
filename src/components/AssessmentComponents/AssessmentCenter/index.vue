@@ -102,7 +102,7 @@
       <div class="description">共：{{ spotAllNum }}张</div>
     </el-dialog>
     <!-- 打分模块 -->
-    <grade-preview
+    <GradePreview
       v-if="gradeInfo && showGradePreview"
       :photo-version="showPhotoVersion"
       @submit="submitData"

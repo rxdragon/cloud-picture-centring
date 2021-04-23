@@ -19,7 +19,7 @@
     </div>
     <div class="order module-panel">
       <div class="panel-title">照片信息</div>
-      <order-info :is-work-board-info="isWorkBoardInfo" :order-data="orderData" />
+      <OrderInfo :is-work-board-info="isWorkBoardInfo" :order-data="orderData" />
     </div>
 
     <!-- 圣诞拼接信息 -->

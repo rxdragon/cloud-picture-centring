@@ -5,7 +5,7 @@
     </div>
     <div class="order module-panel">
       <div class="panel-title">照片信息</div>
-      <order-info :appeal-info="appealInfo" :order-data="orderData" />
+      <OrderInfo :appeal-info="appealInfo" :order-data="orderData" />
     </div>
     <!-- 照片列表 -->
     <div v-for="(photoItem, photoIndex) in photos" :key="photoIndex" class="photo-list module-panel">

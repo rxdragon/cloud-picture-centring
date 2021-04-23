@@ -61,6 +61,15 @@
           <span>参考图：</span>
           <reference-photo :streamNum="orderData.streamNum" :src="orderData.referencePhoto" />
         </div>
+        <div class="require-remark" v-if="orderData.retouchNotice">
+          <span>修图注意事项：</span>
+          <div class="remark-content">{{ orderData.retouchNotice }}</div>
+        </div>
+        <div class="require-remark" v-if="orderData.retouchBackImg">
+          <span>修图底色：</span>
+          <span>{{ orderData.retouchBackImgName }}</span>
+          <reference-photo :streamNum="orderData.streamNum" downMsg="下载底色图" :src="orderData.retouchBackImg" />
+        </div>
         <div v-if="orderData.reviewerNote" class="require-remark">
           <span>审核备注：</span>
           <div class="remark-content">{{ orderData.reviewerNote }}</div>
@@ -152,7 +161,7 @@ export default {
       border-top: 1px solid #dddfe6;
 
       & > span {
-        width: 90px;
+        width: 120px;
         font-size: 14px;
         color: #303133;
       }
@@ -161,6 +170,7 @@ export default {
         width: 632px;
         font-size: 14px;
         color: #303133;
+        word-break: break-all;
         white-space: pre-wrap;
       }
 

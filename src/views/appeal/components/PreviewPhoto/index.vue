@@ -23,50 +23,52 @@
     <div class="photoBox" v-loading="loading">
       <!-- 左侧 -->
       <div class="left-module">
-        <!-- 缩略图 -->
-        <div id="smallImg" v-loading="loading" class="small-img">
-          <div v-show="isShow" class="breviary-photo">
-            <div class="smallPhoto">
-              <div id="img-box" style="position: relative;">
-                <img
-                  ref="smallImg"
-                  :src="showPhoto.src"
-                  alt="缩略图"
-                  @mousemove="handMove"
-                  @mouseover="handOver"
-                  @mouseout="handOut"
+        <div class="scroll-box">
+          <!-- 缩略图 -->
+          <div id="smallImg" v-loading="loading" class="small-img">
+            <div v-show="isShow" class="breviary-photo">
+              <div class="smallPhoto">
+                <div id="img-box" style="position: relative;">
+                  <img
+                    ref="smallImg"
+                    :src="showPhoto.src"
+                    alt="缩略图"
+                    @mousemove="handMove"
+                    @mouseover="handOver"
+                    @mouseout="handOut"
+                  >
+                  <div ref="magnifier_zoom" class="_magnifier_zoom" />
+                </div>
+              </div>
+              <div class="contant">
+                <el-slider :show-tooltip="false" v-model="scaleNum" />
+                <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
+                <span class="down-button" @click.stop="downing">下载</span>
+              </div>
+              <div class="mark-show-btn" v-if="!isOriginalMode">
+                <el-button
+                  class="tag-btn"
+                  id="tagShowBtn"
+                  @click="showMarkPhoto"
+                  :class="!tagShow && 'tag-show-btn'"
+                  type="info"
                 >
-                <div ref="magnifier_zoom" class="_magnifier_zoom" />
+                  {{ tagShow ? '隐藏标记' : '显示标记' }}
+                </el-button>
               </div>
             </div>
-            <div class="contant">
-              <el-slider :show-tooltip="false" v-model="scaleNum" />
-              <span class="scale-box">{{ scaleNum * 4 + 100 }}%</span>
-              <span class="down-button" @click.stop="downing">下载</span>
-            </div>
-            <div class="mark-show-btn" v-if="!isOriginalMode">
-              <el-button
-                class="tag-btn"
-                id="tagShowBtn"
-                @click="showMarkPhoto"
-                :class="!tagShow && 'tag-show-btn'"
-                type="info"
-              >
-                {{ tagShow ? '隐藏标记' : '显示标记' }}
-              </el-button>
-            </div>
           </div>
+
+          <!-- 工具 -->
+          <MarkTool
+            v-if="isCloudEvaluate && isSecondCheck && checkResult === CHECK_RESULT_TYPE.ACCEPT"
+            @changeTool="changeDrawType"
+            :canvas-option="canvasOption"
+          />
+
+          <!-- 订单信息 -->
+          <order-info-module v-if="showOrderInfo" :order-info="photoInfo" show-other-note />
         </div>
-
-        <!-- 工具 -->
-        <MarkTool
-          v-if="isCloudEvaluate && isSecondCheck && checkResult === CHECK_RESULT_TYPE.ACCEPT"
-          @changeTool="changeDrawType"
-          :canvas-option="canvasOption"
-        />
-
-        <!-- 订单信息 -->
-        <order-info-module v-if="showOrderInfo" :order-info="photoInfo" show-other-note />
       </div>
 
       <!-- 图片 -->

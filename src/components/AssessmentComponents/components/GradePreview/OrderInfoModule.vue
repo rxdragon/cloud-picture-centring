@@ -36,6 +36,18 @@
         <div class="remark-title">修图备注：</div>
         <div class="remark-content">{{ infoData.streamInfo.retouchRemark || '-' }}</div>
       </div>
+      <div class="retouch-remark panel-row" v-if="infoData.streamInfo.retouchNotice">
+        <div class="remark-title">修图注意事项：</div>
+        <div class="remark-content retouch-notice">{{ infoData.streamInfo.retouchNotice || '-' }}</div>
+      </div>
+      <div class="retouch-remark panel-row" v-if="orderInfo.streamInfo.retouchBackImg">
+        <div class="remark-title">修图底色：</div>
+        <div class="impression-box">
+          <span>{{ orderInfo.streamInfo.retouchBackImgName }}</span>
+          <reference-photo :src="orderInfo.streamInfo.retouchBackImg" downMsg="下载" :streamNum="orderInfo.streamInfo.streamNum" />
+        </div>
+      </div>
+
       <div class="retouch-remark panel-row">
         <div class="remark-title">特效备注：</div>
         <div class="remark-content">{{ specialEfficacy }}</div>
@@ -120,11 +132,20 @@ export default {
     margin-bottom: 10px;
 
     .remark-title {
-      width: 60px;
+      width: 90px;
     }
 
     .remark-content {
       width: calc(100% - 80px);
+    }
+
+    .retouch-notice {
+      word-break: break-all;
+    }
+
+    .impression-box {
+      display: flex;
+      flex-direction: column;
     }
   }
 }

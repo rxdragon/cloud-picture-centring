@@ -1,5 +1,5 @@
 <template>
-  <div class="grade-configuration-main">
+  <div class="scoring-configuratio">
     <div class="header">
       <h3>{{ title }}</h3>
       <div>
@@ -27,7 +27,7 @@
         </el-popover>
         <el-button
           class="empty-button"
-          v-if="showEmptyCheckPool"
+          v-if="showEmptyCheckPool || showShowpicEmptyCheckPool"
           type="danger"
           @click="showEmptyDialog = true"
         >
@@ -134,7 +134,7 @@ function getScoreGroupBase (scoreTypeId) {
 }
 
 export default {
-  name: 'GradeConfigurationMain',
+  name: 'ScoringConfiguratio',
   components: { AssessmentItem, ScorerSelect },
   props: {
     title: String,
@@ -156,7 +156,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['showEmptyCheckPool']),
+    ...mapGetters(['showEmptyCheckPool', 'showShowpicEmptyCheckPool']),
     isShowEditCategoryButton () {
       return this.tabList.some(tab => tab.stringKey === this.tabKey)
     },
@@ -402,7 +402,7 @@ export default {
 
 <style scoped lang="less">
 
-.grade-configuration-main {
+.scoring-configuratio {
   position: relative;
   height: 100%;
 
