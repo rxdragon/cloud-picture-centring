@@ -68,10 +68,7 @@ build-dev:
 build-release:
   extends: .build
   script:
-    - yarn build-asar
-    - node /deploy-scripts/cloudDeployUpyun.js
-    - yarn pack-vue
-    - rm -rf dist_vue
+    - yarn build-asar-release
     - node print_version.js release
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
   environment:
