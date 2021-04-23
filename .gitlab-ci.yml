@@ -115,4 +115,6 @@ uploadConfig:
     - cd ./dist_electron
     - mc cp version-$CI_COMMIT_REF_NAME.json mainto/electron-release/cloud-launcher/
   only:
+    - master
+    - dev
     - /^release-([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/
