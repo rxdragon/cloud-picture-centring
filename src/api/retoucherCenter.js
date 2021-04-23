@@ -1,5 +1,4 @@
 // retoucherCenter
-const uuidv4 = require('uuid/v4')
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
 import ProductModel from '@/model/ProductModel.js'
@@ -226,27 +225,5 @@ export function getRetouchQuotaList (params) {
     })
     createData.list = msg.list
     return Object.freeze(createData)
-  })
-}
-
-/**
- * @description 获取历史修图报告列表
- * @param {*} params
- */
-export function getPhotoProblemTagSets () {
-  return axios({
-    url: '/project_cloud/common/getPhotoProblemTagSets',
-    method: 'GET'
-  }).then(msg => {
-    for (const key in msg) {
-      msg[key].forEach(item => {
-        item.key = uuidv4()
-        item.label = item.name
-        item.type = key === 'photography' ? 'problemTagPhotography' : 'problemTagMakeup'
-        item.select = false
-      })
-      msg[key].sort(() => Math.random() - 0.5)
-    }
-    return msg
   })
 }
