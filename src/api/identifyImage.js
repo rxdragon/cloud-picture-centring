@@ -4,6 +4,8 @@ import StreamModel from '@/model/StreamModel'
 import OrderModel from '@/model/OrderModel'
 import PhotoModel from '@/model/PhotoModel'
 
+console.warn('调试代码')
+
 /**
  * @description 获取获取相似照片列表
  * @param {*} params

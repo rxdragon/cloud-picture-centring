@@ -2,19 +2,24 @@ stages:
   - install
   - build
   - deploy
+  - uploadConfig
+
+variables:
+  ELECTRON_MIRROR: "https://npm.taobao.org/mirrors/electron/"
+  PHANTOMJS_CDNURL: "https://npm.taobao.org/dist/phantomjs"
 
 # 下载依赖
 install:
   stage: install
-  image: node:12
+  image: registry.hzmantu.com/common/environment-node:12-deploy
   tags:
-    - nodejs-outwall
+    - nodejs
   cache:
     key: cache
     paths:
       - node_modules/
   script:
-    - yarn install
+    - yarn
   only:
     - master
     - dev
@@ -23,9 +28,9 @@ install:
 # 打包
 .build:
   stage: build
-  image: node:12
+  image: registry.hzmantu.com/common/environment-node:12-deploy
   tags:
-    - nodejs-outwall
+    - nodejs
   cache:
     key: cache
     paths:
@@ -33,16 +38,16 @@ install:
   artifacts:
     paths:
       - dist_electron/
-      - dist_vue/
     expire_in: 1 day
 
 build-master:
   extends: .build
   script:
-    - yarn build
-    - yarn run build-background
-    - yarn run pack-vue
-    - node print_version.js
+    - yarn build-asar
+    - node /deploy-scripts/cloudDeployUpyun.js
+    - yarn pack-vue
+    - rm -rf dist_vue
+    - node print_version.js production
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
   environment:
     name: master
@@ -52,10 +57,8 @@ build-master:
 build-dev:
   extends: .build
   script:
-    - yarn run build-dev
-    - yarn run build-background-dev
-    - yarn run pack-vue
-    - node print_version.js
+    - yarn build-asar-dev
+    - node print_version.js development
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
   environment:
     name: staging/dev
@@ -65,10 +68,8 @@ build-dev:
 build-release:
   extends: .build
   script:
-    - yarn run build-release
-    - yarn run build-background-release
-    - yarn run pack-vue
-    - node print_version.js
+    - yarn build-asar-release
+    - node print_version.js release
     - mv ./dist_electron/dist_vue.asar ./dist_electron/app_$CI_COMMIT_SHA.asar
   environment:
     name: staging/release
@@ -82,15 +83,11 @@ build-release:
   script:
     - node /deploy-scripts/cloudUpload.js
 
-    
 deploy-master:
   extends: .deploy
   when: manual
   environment:
     name: master
-  script:
-    - node /deploy-scripts/cloudUpload.js
-    - node /deploy-scripts/cloudDeployUpyun.js
   only:
     - master
 
@@ -106,4 +103,18 @@ deploy-release:
   environment:
     name: staging/release
   only:
+    - /^release-([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/
+
+uploadConfig:
+  image: registry.hzmantu.com/common/service-minio-client
+  stage: uploadConfig
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - mc config host add mainto $S3_HOST $S3_KEY $S3_SECRET
+    - cd ./dist_electron
+    - mc cp version-$CI_COMMIT_REF_NAME.json mainto/electron-release/cloud-launcher/
+  only:
+    - master
+    - dev
     - /^release-([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/
