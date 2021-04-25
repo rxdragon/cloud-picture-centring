@@ -1,7 +1,8 @@
 <template>
   <div v-loading="loading" class="module-panel retouch-performance">
     <div class="panel-title">
-      修图绩效
+      <!--    todo naxi -->
+      <span>修图绩效 <span class="not-make"> 未完成目标天数：2天</span></span>
       <div class="title-plugin">
         <el-popover placement="bottom-end" width="900" trigger="hover">
           <div class="tip-plugin-content">
@@ -263,6 +264,14 @@ export default {
 .panel-title {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
+
+  .not-make {
+    margin: 10px 0 10px 10px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #303133;
+  }
 
   .title-plugin {
     .tip-box {

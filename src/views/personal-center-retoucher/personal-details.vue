@@ -6,7 +6,7 @@
     <div class="today-box">
       <!-- 今日指标 -->
       <div class="module-panel today-info">
-        <div class="panel-title">今日指标</div>
+        <div class="panel-title">今日目标完成量</div>
         <div class="panel-main">
           <el-progress
             :percentage="todayData.todayFinishPhotoNumProgress"

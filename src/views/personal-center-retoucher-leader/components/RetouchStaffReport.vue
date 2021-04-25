@@ -173,8 +173,6 @@ export default {
 
 <style lang="less" scoped>
 .module-panel {
-  border-top-left-radius: 0;
-
   .retoucher-chart {
     &:last-of-type {
       margin-bottom: -48px;

@@ -9,6 +9,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane v-if="showPartnerPerformance" label="伙伴绩效" name="PartnerPerformance" />
       <el-tab-pane v-if="showOverallPerformance" label="总体绩效" name="OverallPerformance" />
+      <el-tab-pane v-if="showRetouchingGroupGoals" label="修图组目标" name="RetouchingGroupGoals" />
       <el-tab-pane v-if="showRetoucherGroupPerformance" label="修图组绩效" name="RetoucherGroupPerformance" />
       <el-tab-pane v-if="showRetoucherChargeBackReport" label="退单统计" name="RetoucherChargeBackReport" />
       <el-tab-pane v-if="showTimeStatistics" label="用时统计" name="TimeStatistics" />
@@ -33,6 +34,7 @@
 <script>
 import PartnerPerformance from './components/PartnerPerformance' // 伙伴绩效
 import OverallPerformance from './components/OverallPerformance' // 总体绩效
+import RetouchingGroupGoals from './components/RetouchingGroupGoals' // 修图组目标
 import RetoucherGroupPerformance from './components/RetoucherGroupPerformance' // 修图组绩效
 import RetoucherChargeBackReport from './components/RetoucherChargeBackReport' // 退单统计
 import TimeStatistics from './components/TimeStatistics' // 用时统计
@@ -46,7 +48,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'PerformanceInquire',
-  components: { PartnerPerformance, OverallPerformance, RetoucherGroupPerformance, TimeStatistics, CheckerEvaluate, SearchRetouchRecord, RetoucherChargeBackReport, CloudCollegeReport, ShowPicCollegeReport },
+  components: { PartnerPerformance, OverallPerformance, RetoucherGroupPerformance, TimeStatistics, CheckerEvaluate, SearchRetouchRecord, RetoucherChargeBackReport, CloudCollegeReport, ShowPicCollegeReport, RetouchingGroupGoals },
   filters: {
     filterActiveName (value) {
 
@@ -55,6 +57,8 @@ export default {
           return '伙伴绩效'
         case 'OverallPerformance':
           return '总体绩效'
+        case 'RetouchingGroupGoals':
+          return '修图组目标'
         case 'RetoucherGroupPerformance':
           return '修图组绩效'
         case 'RetoucherChargeBackReport':
@@ -89,7 +93,9 @@ export default {
       'showRetoucherChargeBackReport',
       'showCloudCollegeReport',
       'showPicCollegeReport',
-    ])
+    ]),
+    // todo naxi
+    showRetouchingGroupGoals: () => true
   }
 }
 </script>
