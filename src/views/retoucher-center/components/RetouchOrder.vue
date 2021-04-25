@@ -171,13 +171,6 @@
       />
     </div>
 
-    <!-- 问题标签 -->
-    <issue-label
-      :issue-data="issueData"
-      :notes="notes"
-      :visible.sync="dialogVisible"
-      @submit="submitOrder"
-    />
     <!-- 预览 -->
     <preview-photo
       v-if="showPreview"
@@ -202,7 +195,6 @@ import PreviewModel from '@/model/PreviewModel'
 import OrderInfo from '@/components/OrderInfo'
 import PhotoBox from '@/components/PhotoBox'
 import UploadPhoto from './UploadPhoto.vue'
-import IssueLabel from './IssueLabel.vue'
 import DownIpc from '@electronMain/ipc/DownIpc'
 import PreviewPhoto from '@/components/PreviewPhoto/index.vue'
 import AutoRetouch from '@/components/AutoRetouch/index.vue'
@@ -219,7 +211,7 @@ import * as PhotoTool from '@/utils/photoTool'
 
 export default {
   name: 'RetouchOrder',
-  components: { OrderInfo, PhotoBox, UploadPhoto, IssueLabel, PreviewPhoto, AutoRetouch },
+  components: { OrderInfo, PhotoBox, UploadPhoto, PreviewPhoto, AutoRetouch },
   props: {
     showDetail: { type: Boolean }
   },
@@ -245,14 +237,8 @@ export default {
       overTime: 0, // 超时时间
       sandTime: 0, // 沙漏时间
       sandClass: '', // 沙漏样式
-      issueData: {},
-      notes: {
-        dressNote: '', // 化妆备注
-        photographNote: '' // 摄影备注
-      },
       realAid: '',
       preIndexPhoto: {},
-      dialogVisible: false,
       imgPreMask: false,
       showPreview: false,
       isReturnOrder: false, // 是否退单订单
@@ -384,12 +370,8 @@ export default {
         const filterPhotos = data.photos.filter(item => item.type !== 'template')
         this.autoRetouchPhoto = filterPhotos.map(item => item.orginPhotoPath)
         this.reviewerNote = data.reviewerNote
-        this.needPunchLabel = data.needPunchLabel
-        this.notes.dressNote = this.orderData.dresserNote
-        this.notes.photographNote = this.orderData.photographyNote
         LogStream.retoucherSee(+this.realAid)
         this.initPreviewPhoto()
-        this.getPhotoProblemTagSets()
       } catch (error) {
         console.error(error)
         SessionTool.removeSureRetouchOrder(this.realAid)
@@ -449,7 +431,7 @@ export default {
     /**
      * @description 提交审核
      */
-    async submitOrder (issue) {
+    async submitOrder () {
       const finishPhotoArr = Object.values(this.finishPhoto)
       const cachePhoto = this.$refs['uploadPhoto']._data.cachePhoto
       const uploadData = [...cachePhoto, ...finishPhotoArr]
@@ -473,8 +455,6 @@ export default {
         photoData: uploadData
       }
 
-      // 设置问题标签
-      if (issue) { reqData.streamTagData = issue }
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         await RetoucherCenter.submitStream(reqData)
@@ -509,11 +489,7 @@ export default {
     setIssueLabel () {
       try {
         this.canUploadPhoto()
-        if (this.needPunchLabel) {
-          this.dialogVisible = true
-        } else {
-          this.submitOrder()
-        }
+        this.submitOrder()
       } catch (error) {
         this.$newMessage.warning(error.message)
       }
@@ -542,13 +518,6 @@ export default {
         return createData
       })
       this.priviewPhotoData = previewData
-    },
-    /**
-     * @description 获取标签
-     */
-    async getPhotoProblemTagSets () {
-      const res = await RetoucherCenter.getPhotoProblemTagSets()
-      this.issueData = res
     },
     /**
      * @description 自动修图页面切换
