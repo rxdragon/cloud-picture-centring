@@ -88,10 +88,10 @@
       </div>
 
       <!-- 创建公告 -->
-      <create-announcement v-else-if="showModule === MODULE_NAME.CREATE" @refresh="showListPage('refresh')" @close="showListPage" />
+      <CreateAnnouncement v-else-if="showModule === MODULE_NAME.CREATE" @refresh="showListPage('refresh')" @close="showListPage" />
 
       <!-- 公告详情 -->
-      <detail-announcement :announcementId="detailId" v-else @close="showListPage" />
+      <DetailAnnouncement :announcementId="detailId" v-else @close="showListPage" />
     </transition>
   </div>
 </template>
