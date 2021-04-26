@@ -35,7 +35,7 @@
             <el-col :span="12" class="info-col">
               <div class="info-title">权重等级：</div>
               <div class="panel-content">
-                <weight-select v-model="productConfig.weightType" import-data />
+                <weight-select v-model="productConfig.weightSettingId" import-data />
               </div>
             </el-col>
           </el-row>
