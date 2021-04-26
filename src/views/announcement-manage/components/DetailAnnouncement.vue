@@ -43,7 +43,10 @@
             <div class="info-content">{{ announcementInfo.receiverTime }}</div>
           </div>
         </div>
-        <div class="base-row d-g1" v-if="announcementInfo.files.length">
+        <div
+          class="base-row d-g1"
+          v-if="announcementInfo.files && announcementInfo.files.length"
+        >
           <!-- 附加文件 -->
           <div class="base-info-item">
             <div class="info-title">附加文件：</div>
@@ -284,7 +287,7 @@ export default {
     }
 
     &.show-all {
-      max-height: 3000px;
+      max-height: 4000px;
     }
   }
 
