@@ -45,10 +45,11 @@ module.exports = {
   },
   pluginOptions: {
     electronBuilder: {
+      mainProcessWatch: ['src/background-main.js', 'src/electronMain'], // 检测主进程文件变化时候重新编译
       builderOptions: {
         appId: 'com.example.app',
         productName: '缦图云端',
-        copyright: 'Copyright © 2019'
+        copyright: 'Copyright © 2021'
       }
     },
     'style-resources-loader': {

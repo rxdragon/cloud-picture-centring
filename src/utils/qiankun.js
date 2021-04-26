@@ -93,6 +93,7 @@ export function registerApps () {
 
 // 指定加载某子应用
 export function loadApp (i = 0) {
+  console.log(apps[i])
   loadMicroApp(apps[i], {
     sandbox: { strictStyleIsolation: true },
     excludeAssetFilter: (assetUrl) => {
