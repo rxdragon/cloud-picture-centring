@@ -36,7 +36,7 @@
             <el-col v-if="!isPending" :span="6" :xl="4">
               <div class="search-item">
                 <span>权重等级</span>
-                <weight-select v-model="weightType" @change="onSearchChange" />
+                <weight-select v-model="weightSettingId" @change="onSearchChange" />
               </div>
             </el-col>
             <el-col :span="2" :xl="2">
@@ -62,9 +62,9 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column v-if="!isPending" prop="weight_level" label="权重等级">
+            <el-table-column v-if="!isPending" prop="weight_setting" label="权重等级">
               <template slot-scope="scope">
-                {{ scope.row.weight_level | filterWeightEnum }}
+                {{ scope.row.weightName }}
               </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -112,16 +112,10 @@ import ProductClassificationSelect from '@SelectBox/ProductClassificationSelect'
 import WeightSelect from '@SelectBox/WeightSelect'
 
 import * as OperationManage from '@/api/operationManage.js'
-import { WeightEnum } from '@/utils/enumerate.js'
 
 export default {
   name: 'ProductControl',
   components: { ProductInfo, InstitutionSelect, ProductSelect, WeightSelect, ProductClassificationSelect },
-  filters: {
-    filterWeightEnum (value) {
-      return WeightEnum[value]
-    }
-  },
   data () {
     return {
       routeName: this.$route.name, // 路由名字
@@ -130,7 +124,7 @@ export default {
       showInfo: false, // 是否显示详情
       productValue: [], // 产品值
       productClassValues: [], // 产品分类组
-      weightType: 0, // 权重等级
+      weightSettingId: 0, // 权重等级
       tableData: [], // 列表数据
       firstSearch: true, // 是否第一次搜索
       editId: '', // 编辑id
@@ -224,18 +218,16 @@ export default {
         if (!this.isPending && this.productClassValues.length) {
           reqData.productCategoryIdIn = this.productClassValues
         }
-        if (!this.isPending && this.weightType) {
-          reqData.weightLevel = this.weightType
+        if (!this.isPending && this.weightSettingId) {
+          reqData.weightSettingId = this.weightSettingId
         }
         this.$store.dispatch('setting/showLoading', this.routeName)
         const data = await OperationManage.getProductList(reqData)
         this.tableData = data.item
         this.pager.total = data.total
         this.firstSearch = false
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      } catch (error) {
-        this.$store.dispatch('setting/hiddenLoading', this.routeName)
-        console.error(error)
       }
     },
     /**

@@ -147,15 +147,6 @@ export const HourGlassSettingEnum = {
   staffEntryTagFormal: '正式伙伴'
 }
 
-// 权重等级
-export const WeightEnum = {
-  weight_first: '一类产品',
-  weight_second: '二类产品',
-  weight_third: '三类产品',
-  weight_fourth: '四类产品',
-  weight_fifth: '五类产品'
-}
-
 // 修图师等级
 export const StaffLevelEnum = {
   retouchingAssistant: '修图助理',
@@ -169,6 +160,21 @@ export const StaffLevelEnum = {
   chiefRetouchingExpert: '首席修图专家',
   masterCraftsman: '工匠大师',
   chiefCraftsmanMaster: '首席工匠大师'
+}
+
+// 修图等级
+export const STAFF_LEVEL = {
+  1: '修图助理',
+  2: '初级修图师',
+  3: '修图师',
+  4: '资深修图师',
+  5: '高级修图师',
+  6: '修图专家',
+  7: '资深修图专家',
+  8: '高级修图专家',
+  9: '首席修图专家',
+  10: '工匠大师',
+  11: '首席工匠大师'
 }
 
 export const PLANT_ID_MAP = {
