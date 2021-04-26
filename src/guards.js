@@ -8,7 +8,9 @@ import getPageTitle from '@/utils/get-page-title' // 获取页面title
 
 NProgress.configure({ showSpinner: false }) // 关闭加载微调器
 
-const whiteList = ['/', '/login', '/auth-redirect', '/401', '/404', '/network-debug', '/check-time'] // 白名单
+const baseWhiteList = ['/', '/login', '/auth-redirect', '/401', '/404']
+const appWhiteList = ['/network-debug', '/check-time', '/new_version', '/about']
+const whiteList = [...baseWhiteList, ...appWhiteList] // 白名单
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start() // 读取进度条

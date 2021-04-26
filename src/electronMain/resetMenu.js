@@ -57,6 +57,7 @@ const template = [{
   label: '关于',
   submenu: [{
     label: '版本',
+    accelerator: 'CmdOrCtrl+M',
     click: function (item, focusedWindow) {
       dialog.showMessageBoxSync({
         type: 'info',

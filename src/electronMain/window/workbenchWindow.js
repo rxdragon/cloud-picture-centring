@@ -21,6 +21,7 @@ export async function startWorkbenchWindow ({ url, width, height }) {
     titleBarStyle: 'hidden',
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       scrollBounce: true,
       backgroundThrottling: true
     }

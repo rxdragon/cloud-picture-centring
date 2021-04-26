@@ -24,6 +24,7 @@
         <div class="order-search search-item">
           <el-input
             v-model.trim="orderSearchValue"
+            clearable
             placeholder="请输入内容"
             class="input-with-select"
             @keyup.native.enter="getPhotoList(1)"
@@ -166,6 +167,11 @@ export default {
      * @description 获取列表
      */
     async getPhotoList () {
+      // 如果有额外搜索条件，则取消时间项
+      if (this.orderSearchValue) {
+        this.timeSpan = ''
+      }
+
       this.searchParams = {
         timeSpan: this.timeSpan,
         staffId: this.staffId,

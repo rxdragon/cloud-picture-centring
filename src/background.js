@@ -1,69 +1,39 @@
 /* eslint-disable no-console */
 'use strict'
-/* global __static */
 
-import { app, protocol } from 'electron'
+import { app, Menu, protocol } from 'electron'
 import EventEmitter from 'events'
-import installExtension, {VUEJS_DEVTOOLS} from "electron-devtools-installer"
+import path from 'path'
 
-// !!! 不要修改此文件，修改此文件没有任何作用，请修改对应 starter 项目文件 !!!
+// !!! 不要修改此文件，修改此文件没有任何作用，请修改对应 mainto-tech-utilities-launcher 项目文件 !!!
+global.launcherVersion = 'inline-launcher'
 global.env = process.env.NODE_ENV || 'dev'
 global.isDevelopment = global.env !== 'production'
 global.isTest = !!process.env.IS_TEST
-global.initWindow = null
+global.currentVersion = "local-dev"
 global.successInit = false
-global.userDir = app.getPath('userData')
-global.emit = new EventEmitter()
-
-// 注意，此处的 staticDir 实际指向 starter 项目的 public 文件夹
-global.staticDir = __static
+global.userDir = app.getPath("userData")
+global.emit = new EventEmitter.EventEmitter()
+// eslint-disable-next-line no-undef
+global.launcherStaticDir = __static
+// eslint-disable-next-line no-undef
+global.staticDir = path.join(__static, "static")
 
 global.isInSingleMode = global.env !== 'production'
 
-// 由 starter 管理的配置项
-global.config = () => undefined
-
+global.config = {}
 console.log(`cache dir: ${global.userDir}`)
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: 'cloud', privileges: { secure: true, standard: true } }])
-
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  app.quit()
-})
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { secure: true, standard: true } }
+])
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (global.isDevelopment && !global.isTest) {
-    // Install Vue Devtools
-    // Devtools extensions are broken in Electron 6.0.0 and greater
-    // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
-    // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
-    // If you are not using Windows 10 dark mode, you may uncomment these lines
-    // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
-    try {
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
-  require('./background-main')
-})
+  Menu.setApplicationMenu(null)
 
-// Exit cleanly on request from parent process in development mode.
-if (global.isDevelopment) {
-  if (process.platform === 'win32') {
-    process.on('message', data => {
-      if (data === 'graceful-exit') {
-        app.quit()
-      }
-    })
-  } else {
-    process.on('SIGTERM', () => {
-      app.quit()
-    })
-  }
-}
+  require("./background-main")
+})
