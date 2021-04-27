@@ -3,6 +3,7 @@ import store from '@/store' // vuex
 import { waitTime } from '@/utils/validate'
 import { keyToHump } from '@/utils/index'
 import { StreamState } from '@/utils/enumerate'
+import StreamModel from '@/model/StreamModel.js'
 import * as PhotoTool from '@/utils/photoTool.js'
 
 // 获取流水看板数据
@@ -191,6 +192,7 @@ export function getStreamInfo (params) {
   }).then(msg => {
     msg = msg[0]
     const data = keyToHump(msg)
+    const streamData = new StreamModel(msg)
     const createData = {}
     data.photos.forEach(photoItem => {
       photoItem.specialEfficacy = _.get(photoItem, 'tags.values.special_efficacy') || '无需特效'
@@ -221,7 +223,8 @@ export function getStreamInfo (params) {
       retoucherName: _.get(data, 'retoucher.name') || _.get(data, 'retoucher.real_name') || '-',
       reviewerName: _.get(data, 'reviewer.name') || '',
       photographerName: _.get(data, 'order.tags.values.photographer') || '-',
-      storeName: _.get(data, 'order.tags.values.store_name') || '-'
+      storeName: _.get(data, 'order.tags.values.store_name') || '-',
+      ...streamData
     }
     createData.photos = data.photos
     return createData
