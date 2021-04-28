@@ -87,6 +87,9 @@ export default class TargetModel {
   // nps评分
   retoucherNpsScoreAvg = 0
 
+  // 未达成天数 TODO
+  notReachDay = 20
+
   constructor (targetData) {
     this.base = targetData
     this.getStreamCount()

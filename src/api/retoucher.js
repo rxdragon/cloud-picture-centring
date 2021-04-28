@@ -1,7 +1,7 @@
 import axios from '@/plugins/axios.js'
 import TargetModel from '@/model/TargetModel'
 import { STAFF_LEVEL } from '@/utils/enumerate'
-import { keyToHump } from '@/utils/index.js'
+import { keyToHump, getAvg } from '@/utils/index.js'
 import * as MathUtil from '@/utils/mathUtil'
 
 /**
@@ -91,11 +91,9 @@ export function getSelfQuota () {
     todayTargetPhotoNum(-1 * data.vacateReducePhotoNum)
     data.todayTargetPhotoNum = todayTargetPhotoNum.toResult()
 
-    if (!todayAllFinishPhotoNum || !Number(data.todayTargetPhotoNum)) {
-      data.todayFinishPhotoNumProgress = 0
-    } else {
-      data.todayFinishPhotoNumProgress = (todayAllFinishPhotoNum / data.todayTargetPhotoNum) * 100
-    }
+   
+    const todayFinishPhotoNumProgress = getAvg(data.todayAllFinishPhotoNum, data.todayTargetPhotoNum)
+    data.todayFinishPhotoNumProgress = todayFinishPhotoNumProgress * 100
     return data
   })
 }
@@ -164,7 +162,10 @@ export function getRetouchQuota (params) {
     params
   }).then(msg => {
     const createData = new TargetModel(msg)
-    return [createData]
+    return {
+      list: [createData],
+      notReachDay: createData.notReachDay
+    }
   })
 }
 
