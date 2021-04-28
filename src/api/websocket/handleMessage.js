@@ -60,6 +60,10 @@ export default function handleMessage (data, chat) {
     case 'BeforeLogout':
       logoutApp()
       break
+    case 'WsInfo':
+      const { response } = typeMessage
+      handleWsInfo(response[0])
+      break
     default:
       break
   }
@@ -279,5 +283,19 @@ function logoutApp () {
     clearTimeout(timeOutCloseApp)
     timeOutCloseApp = null
   })
+}
 
+/**
+ * @description 处理下ws信息
+ * @param {*} typeMessage 
+ */
+function handleWsInfo (typeMessage) {
+  if (typeMessage === 'cloud_tool-network') {
+    Vue.prototype.$ipcRenderer.send('network-cloudtool')
+    Vue.prototype.$ipcRenderer.once('get-network-info', (e, data) => {
+      if (!Vue.prototype.$ws) return
+      const staffId = store.getters.staffId
+      Vue.prototype.$ws.sendMessage({ typeName: 'RecordWsInfo', message: data, staffId })
+    })
+  }
 }

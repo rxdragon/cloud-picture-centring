@@ -83,38 +83,44 @@ function pingMantu (event) {
   })
 }
 
+async function getNetworkInfo () {
+  let data = []
+  try {
+    data = await Promise.all([
+      pingBaidu(),
+      pingQQ(),
+      pingMantu(),
+      tracerouteNet()
+    ])
+  } catch (error) {
+    data = error
+  }
+  const myIp = ip.address()
+
+  let createData = ''
+  if (typeof data === 'string') {
+    createData = data
+  } else {
+    createData = data.join('\n--------------------------------------------------------------------------\n')
+  }
+  createData = `ip address: ${myIp} \n\n ${global.nslookupMantu} \n\n ${createData}`
+  return createData
+}
+
 function initDiagnoseNetWork (win, ipcMain) {
   // 检测网络信息
   async function diagnose (event, config) {
     try {
-      let data = []
-      try {
-        data = await Promise.all([
-          pingBaidu(),
-          pingQQ(),
-          pingMantu(),
-          tracerouteNet()
-        ])
-      } catch (error) {
-        data = error
-      }
-      const myIp = ip.address()
-
-      let createData = ''
-      if (typeof data === 'string') {
-        createData = data
-      } else {
-        createData = data.join('\n--------------------------------------------------------------------------\n')
-      }
-      createData = `ip address: ${myIp} \n\n ${global.nslookupMantu} \n\n ${createData}`
-
+      
+      const info = await getNetworkInfo()
       // 写入文件
       const time = new Date().getTime()
       const name = config.name || '-'
 
       const logName = `${time}-${name}.json`
       const jsonPath = path.join(networkLogPath, logName)
-      originalFs.writeFileSync(jsonPath, createData)
+      
+      originalFs.writeFileSync(jsonPath, info)
 
       try {
         await uploadNetworkLog()
@@ -122,7 +128,21 @@ function initDiagnoseNetWork (win, ipcMain) {
         console.warn(`上传失败：${error}`)
       }
 
-      event.returnValue = createData
+      event.returnValue = info
+    } catch (error) {
+      event.returnValue = error
+      return
+    }
+  }
+
+  // 调试云端消息
+  async function cloudtoolDiagnose (event) {
+    try {
+      const info = await getNetworkInfo()
+      const nowDate = new Date()
+      const res = `${nowDate} \n\n ${info}`
+      win.webContents.send('get-network-info', res)
+      event.returnValue = res
     } catch (error) {
       event.returnValue = error
       return
@@ -150,6 +170,7 @@ function initDiagnoseNetWork (win, ipcMain) {
     })
   }
 
+  ipcMain.on('network-cloudtool', cloudtoolDiagnose)
   ipcMain.on('network-diagnose', diagnose)
   ipcMain.on('network-uploadLog', uploadLog)
   ipcMain.on('network-nslookup-mainto', nslookupMainto)
