@@ -2,8 +2,9 @@ import Idb from 'idb-js' //  引入Idb
 import store from '@/store'
 import db_cloud_config from './db_cloud_config'
 import * as Setting from './getSetting.js'
-const { app } = require('electron').remote
-const downloadFolder = app.getPath('desktop')
+import { ipcRenderer } from 'electron'
+
+const downloadFolder = ipcRenderer.sendSync('app:getPath', 'desktop')
 
 export default function initIndexDb (resetData) {
   // eslint-disable-next-line new-cap

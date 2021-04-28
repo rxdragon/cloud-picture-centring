@@ -28,7 +28,9 @@
           <el-tag :effect="dark ? 'plain' : 'light'" v-if="retouchingStream.requireLabel.pimples" size="small">祛痣</el-tag>
         </div>
         <div class="retouch-remark">
-          修图备注：{{ retouchingStream.retouchRemark }}
+          <div class="content">
+            修图备注：{{ retouchingStream.retouchRemark }}
+          </div>
         </div>
         <div class="retouch-remark retouch-notice" v-if="retouchingStream.retouchNotice">
           <div class="content">
@@ -320,14 +322,18 @@ export default {
   }
 
   .retouch-remark {
-    display: -webkit-box;
     font-weight: 400;
     line-height: 20px;
     color: var(--descColor);
-    text-overflow: ellipsis;
-    word-break: break-all;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+
+    .content {
+      display: -webkit-box;
+      max-height: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+    }
 
     .impression-box {
       margin-left: 70px;
@@ -349,17 +355,15 @@ export default {
   .retouch-notice {
     position: relative;
 
-    .content {
-      overflow: hidden;
-    }
-
     .tooltop {
       position: absolute;
       display: none;
+      width: 225px;
       max-height: 200px;
       padding: 10px;
       overflow-y: auto;
       color: #fff;
+      word-break: break-all;
       background-color: #303133;
       border-radius: 4px;
       transform: translateY(-120%);
@@ -424,4 +428,5 @@ export default {
     }
   }
 }
+
 </style>

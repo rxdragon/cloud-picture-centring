@@ -28,7 +28,7 @@ export async function startWindow (name, url, options) {
       await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL + `#${url}`)
     } else {
       // Load the index.html when not in development
-      await win.loadURL(`cloud://${global.env}/index.html#${url}`)
+      await win.loadURL(`app://${global.env}/index.html#${url}`)
     }
 
     if (global.isDevelopment) win.webContents.openDevTools({ mode: "detach" })

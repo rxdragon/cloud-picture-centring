@@ -148,7 +148,7 @@ const message = `
 <p><span class="bold">修图总单量：</span>流水号以C开头的数量</p>
 <p><span class="bold">超时单量：</span>正常流水超时数量</p>
 <p><span class="bold">修图总张数：</span>正常流水的照片张数，不包含模版照</p>
-<p><span class="bold">点赞量/点踩量：</span>点赞量/点踩量，为流水纬度数量，存在云端审核完成门店未审核情况</p>
+<p><span class="bold">点赞量/点踩量：</span>点赞量/点踩量，为流水维度数量，存在云端审核完成门店未审核情况</p>
 `
 
 export default {

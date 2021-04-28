@@ -35,7 +35,7 @@
             <el-col :span="12" class="info-col">
               <div class="info-title">权重等级：</div>
               <div class="panel-content">
-                <weight-select v-model="productConfig.weightType" import-data />
+                <weight-select v-model="productConfig.weightSettingId" import-data />
               </div>
             </el-col>
           </el-row>
@@ -627,7 +627,7 @@ export default {
       productConfig: {
         classificationId: '', // 修图分类id
         standard: '', // 修图标准
-        weightType: '', // 权重等级
+        weightSettingId: '', // 权重等级
         lightPhoto: [], // 灯位图接口
         chartletMaps: [], // 贴图名称
         photographyImpression: [], // 拍摄底色
@@ -942,7 +942,7 @@ export default {
         data.splicingSeaGrassConfig && (this.productConfig.joinGrassData = data.splicingSeaGrassConfig)
         if (!this.isPending) {
           this.productConfig.standard = data.retouchStandard
-          this.productConfig.weightType = data.weightLevel
+          this.productConfig.weightSettingId = data.weightSettingId
           this.productConfig.needTemplate = data.needTemplate ? 1 : 2
           this.productConfig.needJoint = data.needSplicing ? 1 : 2
           this.productConfig.productRemark = data.note
@@ -1012,7 +1012,7 @@ export default {
       const reqData = {
         productId: this.editId,
         retouchStandard: this.productConfig.standard,
-        weightLevel: this.productConfig.weightType,
+        weightSettingId: this.productConfig.weightSettingId,
         needSplicing: +this.productConfig.needJoint === 1,
         needTemplate: +this.productConfig.needTemplate === 1,
         templateSuffix: this.productConfig.templateSuffix,
@@ -1085,8 +1085,8 @@ export default {
         this.$newMessage.warning('请选中产品分类')
         return false
       }
-      if (!this.productConfig.weightType) {
-        this.$newMessage.warning('请选中权重等级')
+      if (!this.productConfig.weightSettingId) {
+        this.$newMessage.warning('请选中权重类型')
         return false
       }
       if (!this.productConfig.needJoint) {
@@ -1109,27 +1109,13 @@ export default {
         this.$newMessage.warning('请填写是否需要强制审核')
         return false
       }
-      if (!this.productConfig.lightPhoto.length) {
-        this.$newMessage.warning('请上传灯位图')
-        return false
-      }
+
       const isEveryUploaded = this.productConfig.lightPhoto.every(item => item.status === 'success')
       if (!isEveryUploaded) {
         this.$newMessage.warning('请等待上传完灯位图')
         return false
       }
-      if (!this.productConfig.photographyImpression.length) {
-        this.$newMessage.warning('请上传摄影底色相关信息')
-        return false
-      }
-      if (!this.productConfig.photographyNotice) {
-        this.$newMessage.warning('请填写摄影注意事项')
-        return false
-      }
-      if (!this.productConfig.retouchNotice) {
-        this.$newMessage.warning('请填写修图注意事项')
-        return false
-      }
+
       if (this.productConfig.needCheck === 1) {
         if (!this.productConfig.checkTimeDay || !this.productConfig.checkTimeTime) {
           this.$newMessage.warning('请填写强制审核日期或审核时间')
