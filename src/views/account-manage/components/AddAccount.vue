@@ -15,7 +15,6 @@
             v-model="jobNumber"
             v-numberOnly
             :disabled="Boolean(isEdit)"
-            type="number"
             placeholder="请输入伙伴工号"
           />
         </div>
