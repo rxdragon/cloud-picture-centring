@@ -73,7 +73,7 @@ function pingQQ (event) {
 // ping 线上地址
 function pingMantu (event) {
   return new Promise((resolve, reject) => {
-    const execDirective = 'ping -c3 api.dev.hzmantu.com'
+    const execDirective = 'ping -c3 api-gateway.hzmantu.com'
     execute(execDirective, (error, stdout, stderr) => {
       if (error) {
         resolve(`${execDirective}\n${error}`)
@@ -106,7 +106,7 @@ function initDiagnoseNetWork (win, ipcMain) {
       } else {
         createData = data.join('\n--------------------------------------------------------------------------\n')
       }
-      createData = `ip address: ${myIp} \n\n ${createData}`
+      createData = `ip address: ${myIp} \n\n ${global.nslookupMantu} \n\n ${createData}`
 
       // 写入文件
       const time = new Date().getTime()
@@ -139,8 +139,20 @@ function initDiagnoseNetWork (win, ipcMain) {
     }
   }
 
+  // nslookup api地址
+  function nslookupMainto (event) {
+    const execDirective = 'nslookup api-gateway.hzmantu.com'
+    execute(execDirective, (error, stdout, stderr) => {
+      if (error) {
+        global.nslookupMantu = `${execDirective}\n${error}`
+      }
+      global.nslookupMantu = `### ${execDirective} ###\n${stdout}`
+    })
+  }
+
   ipcMain.on('network-diagnose', diagnose)
   ipcMain.on('network-uploadLog', uploadLog)
+  ipcMain.on('network-nslookup-mainto', nslookupMainto)
 }
 
 createNetworkDir()

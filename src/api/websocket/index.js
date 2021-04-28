@@ -5,6 +5,7 @@ import store from '@/store'
 import * as SessionTool from '@/utils/sessionTool.js'
 import { readConfig } from '@/utils/electronConfig'
 import Vue from 'vue'
+import { throttle } from '@/utils/throttle'
 
 /**
  * @description 获取ws票据
@@ -26,11 +27,11 @@ function getUrlHost (url) {
  * @description 断开连接时候记录日志
  * @param {*} params 
  */
-function saveNetworkLog (params) {
+const saveNetworkLog = throttle(() => {
   const userInfo = SessionTool.getUserInfo()
   const name = userInfo.name || userInfo.id || '-'
   Vue.prototype.$ipcRenderer.send('network-diagnose', { name })
-}
+}, 5000)
 
 class Ws {
   chat = null
@@ -147,6 +148,7 @@ class Ws {
           this.setState('connected')
           console.warn('连接成功', 'onFirstConnectCallback')
           Vue.prototype.$ipcRenderer.send('network-uploadLog')
+          Vue.prototype.$ipcRenderer.send('network-nslookup-mainto')
 
           this.initializeSendMessage(store.state.permission.isRetoucher)
           if (this.sendList.length) {
