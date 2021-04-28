@@ -67,11 +67,45 @@
               <div class="data-info">
                 <div class="num">
                   <span class="actual-num purple-color">
-                    <count-to v-if="showRecord" :end-value="quotaInfo.todayFinishNormalPhotoNum" />
-                    <div v-else class="photo-hidden-data">*</div>
-                    /
-                    <count-to :end-value="quotaInfo.todayFinishReworkPhotoNum" />
+                    <template v-if="showRecord">
+                      <count-to :end-value="quotaInfo.todayAllFinishPhotoNum" />
+                      /
+                      <count-to :end-value="quotaInfo.todayTargetPhotoNum" />
+                    </template>
+                    <template v-else>
+                      <div class="photo-hidden-data">*</div>
+                      /
+                      <div class="photo-hidden-data">*</div>
+                    </template>
                   </span>
+                  <div class="loss-num">
+                    <span class="loss-title">基础张数：</span>
+                    <span class="purple-color loss-value">
+                      <count-to v-if="showRecord" :end-value="quotaInfo.baseTargetPhotoNum" />
+                      <div v-else class="loss-hidden-data">**</div>张
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">浮动张数：</span>
+                    <span class="purple-color loss-value">
+                      <count-to v-if="showRecord" :end-value="quotaInfo.predictFloatPhotoNum" />
+                      <div v-else class="loss-hidden-data">**</div>张
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">请假减少张数：</span>
+                    <span class="pink-color loss-value">
+                      <count-to v-if="showRecord" :end-value="quotaInfo.vacateReducePhotoNum" />
+                      <div v-else class="loss-hidden-data">**</div>张
+                    </span>
+                  </div>
+                  <div class="loss-num">
+                    <span class="loss-title">抵扣张数：</span>
+                    <span class="purple-color loss-value">
+                      <count-to v-if="showRecord" :end-value="quotaInfo.deductionPhotoCount" />
+                      <div v-else class="loss-hidden-data">**</div>张
+                    </span>
+                  </div>
                 </div>
                 <div class="prop-icon-big-box">
                   <green-channel-icon :buff-info="buffInfo" size="40" />
@@ -244,6 +278,12 @@ export default {
       quotaInfo: { // 个人信息
         todayFinishNormalPhotoNum: 0,
         todayFinishReworkPhotoNum: 0,
+        todayAllFinishPhotoNum: 0, // 完成总张数
+        todayTargetPhotoNum: 0, // 目标张数
+        baseTargetPhotoNum: 0, // 基础张数
+        predictFloatPhotoNum: 0, // predictFloatPhotoNum
+        deductionPhotoCount: 0, // 抵扣张数
+        vacateReducePhotoNum: 0, // 请假减少张数
         todayExp: 0.00,
         todayRewordIncome: 0.00,
         todayPunishExp: 0,

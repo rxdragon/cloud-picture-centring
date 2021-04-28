@@ -2,6 +2,7 @@ import axios from '@/plugins/axios.js'
 import TargetModel from '@/model/TargetModel'
 import { STAFF_LEVEL } from '@/utils/enumerate'
 import { keyToHump } from '@/utils/index.js'
+import * as MathUtil from '@/utils/mathUtil'
 
 /**
  * @description 获取个人今日指标
@@ -45,17 +46,18 @@ export function getSelfQuota () {
     const rollbackIncomeRework = rollbackNormalIncome + rollbackReturnIncome // 退单回滚收益
     const rollbackIncomeOvertime = rollbackOvertimeIncome // 沙漏回滚收益
 
-    const todayIncome =
-      retouchIncome +
-      impulseIncome +
-      timeIntervalRewardIncome +
-      timeIntervalImpulseIncome +
-      rewardIncome -
-      incomePunish -
-      incomeOverTimePunish +
-      rollbackIncomeRework +
-      rollbackIncomeOvertime
-    data.todayRewordIncome = todayIncome.toFixed(2)
+    // 获取今日收益
+    const todayIncome = MathUtil.summation()
+    todayIncome(retouchIncome)
+    todayIncome(impulseIncome)
+    todayIncome(timeIntervalRewardIncome)
+    todayIncome(timeIntervalImpulseIncome)
+    todayIncome(rewardIncome)
+    todayIncome(-1 * incomePunish)
+    todayIncome(-1 * incomeOverTimePunish)
+    todayIncome(rollbackIncomeRework)
+    todayIncome(rollbackIncomeOvertime)
+    data.todayRewordIncome = todayIncome.toResult()
     
     const punishIncome = incomePunish + incomeOverTimePunish
     data.punishIncome = punishIncome.toFixed(2)
@@ -65,8 +67,30 @@ export function getSelfQuota () {
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
     data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
-    const todayAllFinishPhotoNum = data.todayFinishNormalPhotoNum + data.todayFinishReworkPhotoNum
-    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum
+    
+    // TODO 接口联调
+    const deductionPhotoCount = 20 // 抵扣张数
+    data.deductionPhotoCount = deductionPhotoCount
+    const todayAllFinishPhotoNum = MathUtil.summation()
+    todayAllFinishPhotoNum(data.todayFinishNormalPhotoNum)
+    todayAllFinishPhotoNum(data.todayFinishReworkPhotoNum)
+    todayAllFinishPhotoNum(data.deductionPhotoCount)
+    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum.toResult()
+
+    // TODO 接口联调
+    const baseTargetPhotoNum = 40
+    data.baseTargetPhotoNum = baseTargetPhotoNum
+    const predictFloatPhotoNum = 20
+    data.predictFloatPhotoNum = predictFloatPhotoNum
+    const vacateReducePhotoNum = 10
+    data.vacateReducePhotoNum = vacateReducePhotoNum
+
+    const todayTargetPhotoNum = MathUtil.summation()
+    todayTargetPhotoNum(data.baseTargetPhotoNum)
+    todayTargetPhotoNum(data.predictFloatPhotoNum)
+    todayTargetPhotoNum(-1 * data.vacateReducePhotoNum)
+    data.todayTargetPhotoNum = todayTargetPhotoNum.toResult()
+
     if (!todayAllFinishPhotoNum || !Number(data.todayTargetPhotoNum)) {
       data.todayFinishPhotoNumProgress = 0
     } else {
