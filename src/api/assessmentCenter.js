@@ -427,11 +427,13 @@ function filterLevel (list) {
           countSum
         })
       }
+      mapList[typeId].value += g.count
     } else {
       mapList[typeId] = {
         name: typeName,
         id: typeId,
         countSum,
+        value: g.count, // 标签数量累加
         children: [
           {
             id: parentId,
