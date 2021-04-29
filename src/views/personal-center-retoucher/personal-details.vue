@@ -27,93 +27,7 @@
         </div>
       </div>
       <!-- 个人修图等级 -->
-      <div class="module-panel level-info">
-        <div class="panel-title ">
-          <span>
-            个人修图等级
-            <el-tag size="medium">{{ gradeInfo.levelName }}（{{ gradeInfo.level }}级）</el-tag>
-          </span>
-          <div class="tip">
-            <el-popover placement="bottom-end" width="700" trigger="hover">
-              <div class="tip-content">
-                <div>修图等级升级规则：</div>
-                <div>1、退单率：近期修图获得的<span class="emphasis">质量问题退张数</span>占比，升级条件需<span class="emphasis">低于</span>退张合格率</div>
-                <div>2、总海草：历史获得海草(即经验值)，升级需达到<span class="emphasis">达标海草数</span>。</div>
-                <div>3、平均单张修图时长：近期平均单张修图时长不可超过升级规定的平均修图时长。</div>
-              </div>
-              <span slot="reference" class="tip-title"><i class="el-icon-warning-outline" />升级规则</span>
-            </el-popover>
-          </div>
-        </div>
-        <div class="panel-main">
-          <el-row :gutter="51">
-            <el-col :span="6">
-              <div class="main-content">
-                <span class="num plant-color">
-                  <count-to :end-value="gradeInfo.nearly30DaysGoodNum | getInteger" />
-                  <i>.<count-to
-                    decimals
-                    :end-value="gradeInfo.nearly30DaysGoodNum | getPoint"
-                  /></i>
-                </span>
-                <span>近30日点赞数</span>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="main-content">
-                <span class="num pull-color">
-                  <count-to :end-value="gradeInfo.nearly30DaysReturnNum | getInteger" />
-                  <i>.<count-to
-                    decimals
-                    :end-value="gradeInfo.nearly30DaysReturnNum | getPoint"
-                  /></i>
-                </span>
-                <span>近30日被退张数(质量问题)</span>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="main-content">
-                <span class="num">
-                  <count-to :end-value="gradeInfo.exp | getInteger" />
-                  <i>.<count-to decimals :end-value="gradeInfo.exp | getPoint" /></i>
-                </span>
-                <span>历史海草数</span>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="main-content">
-                <span class="num">
-                  <count-to :end-value="gradeInfo.avgRetouchTime | getInteger" />
-                  <i>.<count-to
-                    decimals
-                    decimalsCount="3"
-                    :end-value="gradeInfo.avgRetouchTime | getPointThree"
-                  /></i>
-                </span>
-                <span>平均单张修图时长（分钟）</span>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="panel-footer">
-          <el-row :gutter="51">
-            <el-col :span="12">
-              <div class="rote-title">
-                <span>近30日点赞率</span>
-                <span class="num">{{ gradeInfo.nearly30DaysGoodRate }}%</span>
-              </div>
-              <el-progress class="" :percentage="gradeInfo.nearly30DaysGoodRate" :show-text="false" />
-            </el-col>
-            <el-col :span="12" class="pull-box">
-              <div class="rote-title">
-                <span>近30日退张率(质量问题)</span>
-                <span class="num">{{ gradeInfo.nearly30DaysReturnRate }}%</span>
-              </div>
-              <el-progress :percentage="gradeInfo.nearly30DaysReturnRate" :show-text="false" />
-            </el-col>
-          </el-row>
-        </div>
-      </div>
+      <RetouchLevelDetail class="level-info" />
     </div>
 
     <!-- 修图绩效 -->
@@ -216,6 +130,7 @@ import ListTable from '@/components/ListTable'
 import CountTo from '@/components/CountTo'
 import NoData from '@/components/NoData'
 import RetouchPerformance from './components/RetouchPerformance'
+import RetouchLevelDetail from './components/RetouchLevelDetail'
 import Tip from '@/components/Tip'
 import PersonalCloudReport from '@/components/CloudReport/PersonalCloudReport'
 
@@ -225,30 +140,7 @@ import { CLOUD_ROLE, GRADE_LABEL_TYPE } from '@/utils/enumerate'
 
 export default {
   name: 'PersonalDetails',
-  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip, PersonalCloudReport },
-  filters: {
-    // 获取小数
-    getPoint (value) {
-      if (!value) return '00'
-      const num = Number(value).toFixed(2)
-      const pointIndex = num.indexOf('.')
-      const result = num.substring(pointIndex + 1, pointIndex + 3)
-      return result
-    },
-    getPointThree (value) {
-      if (!value) return '00'
-      const num = Number(value).toFixed(3)
-      const pointIndex = num.indexOf('.')
-      const result = num.substring(pointIndex + 1, pointIndex + 4)
-      return result
-    },
-    // 获取整数
-    getInteger (value) {
-      if (!Number(value)) return '0'
-      const result = Number(value)
-      return Math.floor(result)
-    }
-  },
+  components: { ListTable, CountTo, NoData, RetouchPerformance, Tip, PersonalCloudReport, RetouchLevelDetail },
   data () {
     return {
       CLOUD_ROLE,
@@ -256,7 +148,6 @@ export default {
       routeName: this.$route.name, // 路由名字
       yearValue: '',
       todayData: {}, // 今日指标
-      gradeInfo: {},
       awardInfo: [],
       propData: [],
       LittleBeeLoading: false, // 小蜜蜂 加载信息
@@ -268,7 +159,6 @@ export default {
     this.yearValue = nowYear.toString()
     Promise.all([
       this.getSelfQuota(),
-      this.getRankInfo(),
       this.getLittleBeeInfo(),
       this.getProps()
     ]).then(() => {
@@ -289,12 +179,6 @@ export default {
      */
     async getSelfQuota () {
       this.todayData = await Retoucher.getSelfQuota()
-    },
-    /**
-     * @description 获取个人等级
-     */
-    async getRankInfo () {
-      this.gradeInfo = await Retoucher.getRankInfo()
     },
     /**
      * @description 获取小蜜蜂奖
@@ -397,97 +281,6 @@ export default {
   .level-info {
     width: calc(~'100% - 289px');
     height: 282px;
-
-    .panel-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .tip {
-        font-size: 12px;
-        font-weight: 400;
-        color: @blue;
-
-        .el-icon-warning-outline {
-          margin-right: 4px;
-        }
-      }
-
-      & > span {
-        display: flex;
-        align-items: center;
-
-        .el-tag {
-          margin-left: 12px;
-        }
-      }
-    }
-
-    .panel-main {
-      border-bottom: 1px solid @borderColor;
-
-      .main-content {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 36px;
-        margin-top: 48px;
-        font-family: @DINAlternate;
-        font-size: 12px;
-        color: #909399;
-
-        .num {
-          font-size: 44px;
-          font-weight: bold;
-          color: #303133;
-
-          i {
-            font-size: 36px;
-            font-style: normal;
-          }
-        }
-      }
-    }
-
-    .panel-footer {
-      padding-bottom: 5px;
-      margin-top: 23px;
-
-      .rote-title {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        color: #606266;
-
-        .num {
-          font-family: @DINAlternate;
-          font-size: 14px;
-          font-weight: bold;
-          line-height: 16px;
-          color: #303133;
-        }
-      }
-
-      .el-progress {
-        margin-top: 4px;
-
-        .el-progress-bar__inner {
-          background: @gradualGreen;
-          box-shadow: @greenBoxShadow;
-        }
-      }
-
-      .col-two {
-        margin-top: 20px;
-      }
-
-      .pull-box {
-        .el-progress {
-          .el-progress-bar__inner {
-            background: @gradualRed;
-          }
-        }
-      }
-    }
   }
 
   .retouch-performance {

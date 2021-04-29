@@ -1,6 +1,7 @@
 import axios from '@/plugins/axios.js'
 import TargetModel from '@/model/TargetModel'
-import { keyToHump, getAvg } from '@/utils/index.js'
+import { STAFF_LEVEL } from '@/utils/enumerate'
+import { keyToHump } from '@/utils/index.js'
 
 /**
  * @description 获取个人今日指标
@@ -115,21 +116,15 @@ export function getSelfBuffInfo () {
  */
 export function getRankInfo () {
   return axios({
-    url: '/project_cloud/retoucher/getRankInfo',
-    method: 'GET'
+    url: '/project_cloud/staff/getLevelInfo',
+    method: 'POST'
   }).then(msg => {
-    const createData = keyToHump(msg)
-    createData.nearly30DaysGoodRate = Number((createData.nearly30DaysGoodRate * 100).toFixed(2))
-    createData.nearly30DaysReturnRate = Number((createData.nearly30DaysReturnRate * 100).toFixed(2))
-    createData.avgRetouchTime = getAvg(createData.retouchPhotoNumTimeSum, createData.retouchFinishPhotoNumCount * 60, 3)
-    createData.nearly30DaysPlantRate = (createData.nearly30DaysPlantRate * 100).toFixed(2)
-    createData.nearlyPlantRate = Math.floor(createData.nearly30DaysPlantRate)
-    createData.nearly30DaysPullRate = (createData.nearly30DaysPullRate * 100).toFixed(2)
-    createData.nearlyPullRate = Math.floor(createData.nearly30DaysPullRate)
-    createData.needLevelUpPhotoPlantRate = (createData.needLevelUpPhotoPlantRate * 100).toFixed(2)
-    createData.needLevelUpPlantRate = Math.floor(createData.needLevelUpPhotoPlantRate)
-    createData.needLevelUpPhotoPullRate = (createData.needLevelUpPhotoPullRate * 100).toFixed(2)
-    createData.needLevelUpPullRate = Math.floor(createData.needLevelUpPhotoPullRate)
+    const createData = {
+      level: msg.level,
+      levelName: STAFF_LEVEL[msg.level] || '-',
+      exp: Number(msg.exp),
+      staffLevelCheck: msg.staff_level_check || {}
+    }
     return createData
   })
 }

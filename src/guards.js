@@ -25,13 +25,16 @@ router.beforeEach(async (to, from, next) => {
     } else {
       if (whiteList.includes(to.path)) {
         next()
+        return
       }
       const name = store.getters.name
       if (name) {
         next()
+        return
       } else {
         await store.dispatch('user/getUserInfo')
         next({ ...to, replace: true })
+        return
       }
     }
   }

@@ -52,6 +52,12 @@ const adminConfiguration = {
       name: 'ProductClassification',
       component: () => import('@/views/admin-configuration/product-classification.vue'),
       meta: { title: '产品分类管理', icon: '' }
+    },
+    {
+      path: 'queue-weights-management',
+      name: 'QueueWeightsManagement',
+      component: () => import('@/views/admin-configuration/queue-weights-management.vue'),
+      meta: { title: '队列权重管理', icon: '' }
     }
   ]
 }
