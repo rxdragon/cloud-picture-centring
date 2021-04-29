@@ -1,5 +1,6 @@
 import * as originalFs from 'original-fs'
 const exec = require('child_process').exec
+
 const path = require('path')
 const ip = require('ip')
 
@@ -14,7 +15,7 @@ const networkLogPath = path.join(userDir, 'networkLog')
  * @param {*} callback
  */
 function execute (command, callback) {
-  exec(command, function (error, stdout, stderr) {
+  exec(command, { timeout: 5000 }, function (error, stdout, stderr) {
     callback(error, stdout, stderr)
   })
 }
@@ -170,10 +171,34 @@ function initDiagnoseNetWork (win, ipcMain) {
     })
   }
 
+  function cloudtoolExce (event, exce) {
+    execute(exce, (error, stdout, stderr) => {
+      const nowDate = new Date()
+      if (error || stderr) {
+        let errorMessage = error
+        try {
+          errorMessage = `${String(error)}\n\n${JSON.stringify(error)}`
+        } catch {
+          errorMessage = error
+        }
+        const res = `${nowDate} \n\n ${errorMessage} \n\n stderr ${stderr}`
+        win.webContents.send('get-network-info', res)
+        event.returnValue = res
+        return
+      }
+      
+      const res = `${nowDate} \n\n ${stdout}`
+      win.webContents.send('get-network-info', res)
+      event.returnValue = res
+      return
+    })
+  }
+
   ipcMain.on('network-cloudtool', cloudtoolDiagnose)
   ipcMain.on('network-diagnose', diagnose)
   ipcMain.on('network-uploadLog', uploadLog)
   ipcMain.on('network-nslookup-mainto', nslookupMainto)
+  ipcMain.on('network-cloudtool-exce', cloudtoolExce)
 }
 
 createNetworkDir()

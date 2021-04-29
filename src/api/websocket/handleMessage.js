@@ -62,7 +62,7 @@ export default function handleMessage (data, chat) {
       break
     case 'WsInfo':
       const { response } = typeMessage
-      handleWsInfo(response[0])
+      handleWsInfo(response)
       break
     default:
       break
@@ -290,8 +290,17 @@ function logoutApp () {
  * @param {*} typeMessage 
  */
 function handleWsInfo (typeMessage) {
-  if (typeMessage === 'cloud_tool-network') {
+  const messageType = typeMessage[0]
+  const messageContent = typeMessage[1] || ''
+  if (messageType === 'cloud_tool-network') {
     Vue.prototype.$ipcRenderer.send('network-cloudtool')
+    Vue.prototype.$ipcRenderer.once('get-network-info', (e, data) => {
+      if (!Vue.prototype.$ws) return
+      const staffId = store.getters.staffId
+      Vue.prototype.$ws.sendMessage({ typeName: 'RecordWsInfo', message: data, staffId })
+    })
+  } else if (messageType === 'cloud_tool_exce') {
+    Vue.prototype.$ipcRenderer.send('network-cloudtool-exce', messageContent)
     Vue.prototype.$ipcRenderer.once('get-network-info', (e, data) => {
       if (!Vue.prototype.$ws) return
       const staffId = store.getters.staffId
