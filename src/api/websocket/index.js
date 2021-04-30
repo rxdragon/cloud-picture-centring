@@ -4,6 +4,8 @@ import axios from '@/plugins/axios.js'
 import store from '@/store'
 import * as SessionTool from '@/utils/sessionTool.js'
 import { readConfig } from '@/utils/electronConfig'
+import Vue from 'vue'
+import { throttle } from '@/utils/throttle'
 
 /**
  * @description 获取ws票据
@@ -20,6 +22,16 @@ function getWebSocketSignature () {
 function getUrlHost (url) {
   return new URL(url).host
 }
+
+/**
+ * @description 断开连接时候记录日志
+ * @param {*} params 
+ */
+const saveNetworkLog = throttle(() => {
+  const userInfo = SessionTool.getUserInfo()
+  const name = userInfo.name || userInfo.id || '-'
+  Vue.prototype.$ipcRenderer.send('network-diagnose', { name })
+}, 5000)
 
 class Ws {
   chat = null
@@ -135,6 +147,8 @@ class Ws {
         chat.onFirstConnectCallback = () => {
           this.setState('connected')
           console.warn('连接成功', 'onFirstConnectCallback')
+          Vue.prototype.$ipcRenderer.send('network-uploadLog')
+          Vue.prototype.$ipcRenderer.send('network-nslookup-mainto')
 
           this.initializeSendMessage(store.state.permission.isRetoucher)
           if (this.sendList.length) {
@@ -145,16 +159,19 @@ class Ws {
         // 错误时触发
         chat.onErrorCallback = () => {
           console.error('错误时触发')
+          saveNetworkLog()
           this.setState('unConnect')
         }
         // 断开连接时触发
         chat.onDisconnectCallback = () => {
           console.error('断开连接时触发')
+          saveNetworkLog()
           this.setState('unConnect')
         }
         chat.onReConnectCallback = e => {
           console.error('重新连接')
           this.setState('connected')
+          Vue.prototype.$ipcRenderer.send('network-uploadLog')
           this.initializeSendMessage(store.state.permission.isRetoucher)
         }
         // 连接到远程服务器
