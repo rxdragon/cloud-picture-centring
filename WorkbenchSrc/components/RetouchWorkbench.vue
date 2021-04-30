@@ -358,10 +358,12 @@ export default {
     .tooltop {
       position: absolute;
       display: none;
+      width: 225px;
       max-height: 200px;
       padding: 10px;
       overflow-y: auto;
       color: #fff;
+      word-break: break-all;
       background-color: #303133;
       border-radius: 4px;
       transform: translateY(-120%);
