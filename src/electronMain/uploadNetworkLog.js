@@ -1,5 +1,5 @@
 const path = require('path')
-import * as originalFs from 'original-fs'
+const originalFs = require("original-fs")
 import upyun from 'upyun'
 
 const OPERATOR = 'dev'

@@ -1,4 +1,4 @@
-import * as originalFs from 'original-fs'
+const originalFs = require("original-fs")
 const exec = require('child_process').exec
 
 const path = require('path')
