@@ -5,13 +5,13 @@
       <el-col :span="8">
         <div class="search-item">
           <span>选择日期</span>
-          <date-picker type="date" v-model="timeSpan" />
+          <date-picker type="date" v-model="date" />
         </div>
       </el-col>
       <!-- 修图组 -->
       <el-col :span="8">
         <div class="staff-search search-item">
-          <el-button type="primary">查 询</el-button>
+          <el-button type="primary" @click="getRetoucherGoalList">查 询</el-button>
         </div>
       </el-col>
       <el-col :span="8">
@@ -82,6 +82,8 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
+import * as PerformanceApi from '@/api/performance.js'
+import dayjs from 'dayjs'
 
 export default {
   name: 'RetouchingGroupGoals',
@@ -90,12 +92,29 @@ export default {
     return {
       loading: false,
       showDialog: false,
-      timeSpan: null, // 查询时间
+      date: dayjs().format('YYYY-MM-DD'), // 查询时间
       tableData: [],
       totalGoals: 0
     }
   },
+  mounted () {
+    this.getRetoucherGoalList()
+  },
   methods: {
+    /**
+     * @description 获取列表
+     */
+    async getRetoucherGoalList () {
+      this.loading = true
+      const params = {
+        date: this.date
+      }
+      const tableData = await PerformanceApi.getRetoucherGoalList(params)
+        .finally(() => {
+          this.loading = false
+        })
+      this.tableData = tableData || []
+    },
     handleConfirm () {
       this.showDialog = false
       this.$message.success('设置云端今日目标完成值成功。')
