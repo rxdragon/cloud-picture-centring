@@ -13,6 +13,7 @@ import initDialog from './dialog'
 import initUtils from './utils'
 import registerIpc from './ipc/registerIpc'
 import onlineIpc from './ipc/onlineIpc'
+import initDiagnoseNetWork from './ipc/diagnoseNetWork'
 import initExecIncident from './execNode'
 import { setMenu } from './resetMenu.js'
 
@@ -61,6 +62,9 @@ function initPlugins (win) {
 
     // 注册命令行工具
     initExecIncident(win, ipcMain)
+
+    // 注册网络接口
+    initDiagnoseNetWork(win, ipcMain)
 
     // 初始化ipc通道信息
     registerIpc(win, ipcMain)
