@@ -4,14 +4,9 @@
       <span>{{ title }}</span>
       <slot name="other"></slot>
     </div>
-    <ve-histogram
-      :data="chartData"
-      :legend-visible="false"
-      :extend="extend"
-      height="300px"
-      :settings="chartSettings"
-      v-if="chartDatas.length"
-    />
+    <template v-if="chartDatas.length">
+      <div class="histogram" ref="histogramChart"></div>
+    </template>
     <NoData v-else></NoData>
   </div>
 </template>
@@ -48,6 +43,78 @@ const GreenLinearGradient = new echarts.graphic.LinearGradient(
   ]
 )
 
+const option = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  legend: {
+    data: ['张数', '占比率'],
+    right: '27',
+    top: '0',
+    icon: 'circle'
+  },
+  grid: { x: 30, x2: 20, y: 60 },
+  series: [
+    {
+      name: '张数',
+      type: 'bar',
+      itemStyle: {
+        borderRadius: [6, 6, 0, 0]
+      },
+      label: {
+        show: true,
+        position: 'top',
+        color: '#4669FB'
+      },
+      data: []
+    },
+    {
+      name: '占比率',
+      type: 'bar',
+      itemStyle: {
+        borderRadius: [6, 6, 0, 0]
+      },
+      label: {
+        show: true,
+        position: 'top',
+        color: '#38BC7F'
+      },
+      data: []
+    }
+  ],
+  color: [blueLinearGradient, GreenLinearGradient],
+  xAxis: {
+    boundaryGap: ['10%', '10%'],
+    axisLabel: {
+      color: '#45454D',
+      fontSize: '10',
+      interval: 0,
+      rotate: 30,
+      align: 'right'
+    },
+  },
+  yAxis: {
+    splitLine: {
+      lineStyle: {
+        color: '#DDDFE6',
+        type: 'dashed'
+      }
+    },
+    axisLabel: {
+      color: '#C0C4CC',
+      fontSize: '10'
+    }
+  }
+}
+
+const labelMap = {
+  '张数': 'count',
+  '占比率': 'percentage'
+}
+
 export default {
   name: 'chartTagsbar',
   components: { NoData },
@@ -65,68 +132,47 @@ export default {
     }
   },
   data () {
-    this.extend = {
-      legend: {
-        data: ['张数', '占比率'],
-        right: '27',
-        top: '0',
-        icon: 'circle'
-      },
-      grid: { x: 0, x2: 27, y: 60, y2: 0 },
-      series: {
-        barWidth: 24,
-        barCategoryGap: '80%',
-        itemStyle: {
-          barBorderRadius: [6, 6, 0, 0]
-        }
-      },
-      color: [blueLinearGradient, GreenLinearGradient],
-      xAxis: {
-        boundaryGap: ['10%', '10%'],
-        axisLabel: {
-          color: '#45454D',
-          fontSize: '10',
-          interval: 0
-        }
-      },
-      yAxis: {
-        splitLine: {
-          lineStyle: {
-            color: '#DDDFE6',
-            type: 'dashed'
-          }
-        },
-        axisLabel: {
-          color: '#C0C4CC',
-          fontSize: '10'
-        }
-      }
-    }
-    this.chartSettings = {
-      labelMap: {
-        'count': '张数',
-        'percentage': '占比率'
-      }
-    }
     return {
-      chartData: {
-        columns: ['name', 'count', 'percentage'],
-        rows: []
-      }
+      myChartObj: null
     }
   },
   watch: {
     chartDatas: {
-      immediate: true,
+      immediate: false,
       handler () {
         this.init()
       }
     }
   },
+  mounted () {
+    const dom = this.$refs['histogramChart']
+    if (!dom) return
+    this.myChartObj = echarts.init(dom)
+    this.init()
+    window.addEventListener('resize', this.resizeHandler)
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.resizeHandler)
+  },
   methods: {
+    /**
+     * @description 初始化视图
+     */
     init () {
       if (!this.chartDatas.length) return
-      this.chartData.rows = this.chartDatas
+      if (!this.myChartObj) return
+      option.series.forEach(item => {
+        const dataKey = labelMap[item.name]
+        item.data = this.chartDatas.map(item => item[dataKey])
+      })
+      option.xAxis.data = this.chartDatas.map(item => item.name) || []
+      this.myChartObj.setOption(option)
+    },
+    /**
+     * @description 重新渲染视图
+     */
+    resizeHandler () {
+      this.myChartObj.resize()
     }
   }
 }
@@ -158,9 +204,9 @@ export default {
     }
   }
 
-  .chart-bar-main {
+  .histogram {
     width: 100%;
-    height: 300px;
+    height: 400px;
   }
 }
 </style>

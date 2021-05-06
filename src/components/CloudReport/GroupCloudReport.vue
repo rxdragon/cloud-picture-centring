@@ -29,7 +29,7 @@
 
     <div class="total-chat-warp">
       <chart-bar title="平均分对比" :chartDatas="groupTotalRes">
-        <span slot="other">云端平均分：{{ avgScore }}</span>
+        <span slot="other">云端平均分：{{ avgScore || '-' }}</span>
       </chart-bar>
     </div>
     <div class="content-divider"></div>
@@ -46,6 +46,7 @@
         </el-tab-pane>
       </el-tabs>
       <el-divider class="divider"></el-divider>
+      <!-- 问题标签 -->
       <div class="chart-warp">
         <div class="group-search-box">
           <span>标签</span>
@@ -60,14 +61,13 @@
           </el-select>
           <el-button type="primary" class="button" @click="handleSearchProblemBy">查询</el-button>
         </div>
-        <chart-tags-bar
+        <ChartTagsBar
           v-for="item in problemList"
           :key="item.name"
           :title="`${item.name}问题对比`"
           class="detail-chart"
           :chartDatas="item.data"
-        >
-        </chart-tags-bar>
+        />
         <no-data class="chart" v-if="!problemList.length"></no-data>
       </div>
     </div>
@@ -256,6 +256,28 @@ export default {
 
     .detail-chart {
       margin-top: 24px;
+    }
+  }
+
+  & /deep/ .el-tabs__item {
+    &.is-active {
+      &::before {
+        content: none !important;
+      }
+
+      &::after {
+        content: none !important;
+      }
+    }
+
+    &.is-active + .el-tabs__item {
+      &::before {
+        content: none !important;
+      }
+
+      &::after {
+        content: none !important;
+      }
     }
   }
 }

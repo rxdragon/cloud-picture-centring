@@ -113,7 +113,9 @@ function initDiagnoseNetWork (win, ipcMain) {
   async function diagnose (event, config) {
     try {
       
-      const info = await getNetworkInfo()
+      const disconnectTime = new Date()
+      let info = await getNetworkInfo()
+      info = `${disconnectTime} \n\n ${info}`
       // 写入文件
       const time = new Date().getTime()
       const name = config.name || '-'
