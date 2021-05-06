@@ -25,7 +25,7 @@
     <!-- 退单统计 -->
     <div class="charge-back-chat charge-back-module">
       <div class="panel-title">退单统计</div>
-      <charge-back-chat :chart-datas="storeReworkChatData" />
+      <ChargeBackChat :chart-datas="storeReworkChatData" />
     </div>
     <!-- 其他数据 -->
     <div class="charge-back-chat charge-back-module">
@@ -50,7 +50,7 @@
         被退单单量统计
         <div class="desc">（张数为纯质量问题张数）</div>
       </div>
-      <charge-back-chat show-rate :chart-datas="chatData" />
+      <ChargeBackChat show-rate :chart-datas="chatData" />
     </div>
   </div>
 </template>
