@@ -36,8 +36,8 @@ import RetoucherGroupPerformance from './components/RetoucherGroupPerformance' /
 import RetoucherChargeBackReport from './components/RetoucherChargeBackReport' // 退单统计
 import TimeStatistics from './components/TimeStatistics' // 用时统计
 import CheckerEvaluate from './components/CheckerEvaluate' // 看片评价
-import CloudCollegeReport from './components/CloudCollegeReport' // 云学院评价
-import ShowPicCollegeReport from './components/ShowPicCollegeReport' // 云学院评价
+import CloudCollegeReport from './components/CloudCollegeReport' // 云学院抽查评价
+import ShowPicCollegeReport from './components/ShowPicCollegeReport' // 修修兽抽查评价
 import SearchRetouchRecord from '@/components/SearchRetouchRecord' // 云端查询
 
 import { SEARCH_ROLE } from '@/utils/enumerate'
