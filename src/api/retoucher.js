@@ -9,7 +9,7 @@ import * as MathUtil from '@/utils/mathUtil'
  */
 export function getSelfQuota () {
   return axios({
-    url: '/project_cloud/retoucher/getSelfQuota',
+    url: '/project_cloud_oa/retoucher/getSelfQuota',
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
@@ -68,21 +68,21 @@ export function getSelfQuota () {
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
     data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
     
-    // TODO 接口联调
-    const deductionPhotoCount = 20 // 抵扣张数
-    data.deductionPhotoCount = deductionPhotoCount
-    const todayAllFinishPhotoNum = MathUtil.summation()
-    todayAllFinishPhotoNum(data.todayFinishNormalPhotoNum)
-    todayAllFinishPhotoNum(data.todayFinishReworkPhotoNum)
-    todayAllFinishPhotoNum(data.deductionPhotoCount)
-    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum.toResult()
+    // 抵扣张数
+    data.deductionPhotoCount = Number(_.get(data, 'todayTargetPhotoNum.weight_increase_num') || 0)
 
-    // TODO 接口联调
-    const baseTargetPhotoNum = 40
+    // 今日完成总量
+    const todayAllFinishPhotoNum = Number(_.get(data, 'todayTargetPhotoNum.finish_num') || 0)
+    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum
+
+    // 目标值
+    const baseTargetPhotoNum = Number(_.get(data, 'todayTargetPhotoNum.base_goal_num') || 0)
     data.baseTargetPhotoNum = baseTargetPhotoNum
-    const predictFloatPhotoNum = 20
+    // 浮动张数
+    const predictFloatPhotoNum = Number(_.get(data, 'todayTargetPhotoNum.expect_float_num') || 0)
     data.predictFloatPhotoNum = predictFloatPhotoNum
-    const vacateReducePhotoNum = 10
+    // 请假减少
+    const vacateReducePhotoNum = Number(_.get(data, 'todayTargetPhotoNum.leave_decrease_num') || 0)
     data.vacateReducePhotoNum = vacateReducePhotoNum
 
     const todayTargetPhotoNum = MathUtil.summation()
@@ -91,7 +91,6 @@ export function getSelfQuota () {
     todayTargetPhotoNum(-1 * data.vacateReducePhotoNum)
     data.todayTargetPhotoNum = todayTargetPhotoNum.toResult()
 
-   
     const todayFinishPhotoNumProgress = getAvg(data.todayAllFinishPhotoNum, data.todayTargetPhotoNum)
     data.todayFinishPhotoNumProgress = todayFinishPhotoNumProgress * 100
     return data
@@ -157,14 +156,14 @@ export function getRankInfo () {
  */
 export function getRetouchQuota (params) {
   return axios({
-    url: '/project_cloud/retoucher/getRetouchQuota',
+    url: '/project_cloud_oa/retoucher/getRetouchQuota',
     method: 'GET',
     params
   }).then(msg => {
     const createData = new TargetModel(msg)
     return {
       list: [createData],
-      notReachDay: createData.notReachDay
+      notReachStandardDays: createData.notReachStandardDays
     }
   })
 }

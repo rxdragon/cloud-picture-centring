@@ -29,7 +29,7 @@ export function getTodayQuota () {
  */
 export function getGroupStaffQuotaInfo (params) {
   return axios({
-    url: '/project_cloud/retouchLeader/getGroupStaffQuotaInfo',
+    url: '/project_cloud_oa/retouchLeader/getGroupStaffQuotaInfo',
     method: 'GET',
     params
   }).then(msg => {
@@ -64,8 +64,7 @@ export function getGroupStaffQuotaInfo (params) {
     income(data.income.timeIntervalImpulse)
     createData.income = income.toResult().toFixed(2) // 正常收益
 
-    // TODO 接口联调整
-    createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
+    createData.notReachStandardDays = Number(data.notReachStandardDays) // 未完成指标（天）
 
     const storeEvaluateCount = _.get(data, 'storeEvaluate.count') || 0
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, storeEvaluateCount) // 点赞数 / 点赞率

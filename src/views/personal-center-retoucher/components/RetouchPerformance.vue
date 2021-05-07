@@ -62,7 +62,7 @@
       </el-col>
       <el-col :span="8" :xl="4">
         <div class="search-item target-day">
-          未完成目标天数<span class="day-info" :class="notReachDay && 'no-reach'">{{ notReachDay }}</span>天
+          未完成目标天数<span class="day-info" :class="notReachStandardDays && 'no-reach'">{{ notReachStandardDays }}</span>天
         </div>
       </el-col>
     </el-row>
@@ -234,7 +234,7 @@ export default {
       timeSpan: null, // 时间戳
       SearchType,
       loading: false,
-      notReachDay: 0 // 未达成目标天数
+      notReachStandardDays: 0 // 未达成目标天数
     }
   },
   mounted () {
@@ -256,7 +256,7 @@ export default {
         this.loading = true
         const res = await Retoucher.getRetouchQuota(reqData)
         this.performanceData = res.list
-        this.notReachDay = res.notReachDay
+        this.notReachStandardDays = res.notReachStandardDays
         this.$refs['panel-table'].doLayout()
       } finally {
         await delayLoading()

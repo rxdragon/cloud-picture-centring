@@ -87,8 +87,8 @@ export default class TargetModel {
   // nps评分
   retoucherNpsScoreAvg = 0
 
-  // 未达成天数 TODO
-  notReachDay = 20
+  // 未达成天数
+  notReachStandardDays = 0
 
   constructor (targetData) {
     this.base = targetData
@@ -108,6 +108,7 @@ export default class TargetModel {
     this.storeGoodRate = transformPercentage(this.storeGoodNum, this.storeEvaluateNum)
     this.storeBadRate = transformPercentage(this.storeBadNum, this.storeEvaluateNum)
     this.retoucherNpsScoreAvg = getAvg(targetData.retoucherNpsScore.sum, targetData.retoucherNpsScore.count)
+    this.notReachStandardDays = Number(targetData.notReachStandardDays || 0)
   }
 
   // 获取订单数量相关信息
