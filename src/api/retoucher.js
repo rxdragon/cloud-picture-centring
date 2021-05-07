@@ -72,8 +72,12 @@ export function getSelfQuota () {
     data.deductionPhotoCount = Number(_.get(data, 'todayTargetPhotoNum.weight_increase_num') || 0)
 
     // 今日完成总量
-    const todayAllFinishPhotoNum = Number(_.get(data, 'todayTargetPhotoNum.finish_num') || 0)
-    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum
+    // 实际完成
+    const finishNum = Number(_.get(data, 'todayTargetPhotoNum.finish_num') || 0)
+    const todayAllFinishPhotoNum = MathUtil.summation()
+    todayAllFinishPhotoNum(finishNum)
+    todayAllFinishPhotoNum(data.deductionPhotoCount)
+    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum.toResult()
 
     // 目标值
     const baseTargetPhotoNum = Number(_.get(data, 'todayTargetPhotoNum.base_goal_num') || 0)
