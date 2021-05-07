@@ -2,6 +2,7 @@
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
 import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
+import * as MathUtil from '@/utils/mathUtil'
 
 /**
  * @description 获取今日数据
@@ -28,7 +29,7 @@ export function getTodayQuota () {
  */
 export function getGroupStaffQuotaInfo (params) {
   return axios({
-    url: '/project_cloud/retouchLeader/getGroupStaffQuotaInfo',
+    url: '/project_cloud_oa/retouchLeader/getGroupStaffQuotaInfo',
     method: 'GET',
     params
   }).then(msg => {
@@ -40,12 +41,6 @@ export function getGroupStaffQuotaInfo (params) {
     for (const key in data.income) {
       data.income[key] = Number(data.income[key])
     }
-    const income =
-      data.income.retouch +
-      data.income.impulse +
-      data.income.reward +
-      data.income.timeIntervalReward +
-      data.income.timeIntervalImpulse
 
     data.spotCheckNonePhotoNum = data.spotCheckPhotoNum - data.spotCheckPlantPhotoNum - data.spotCheckPullPhotoNum
     const createData = {}
@@ -60,8 +55,16 @@ export function getGroupStaffQuotaInfo (params) {
     avgRetouchTimePhoto = timeFormat(avgRetouchTimePhoto, 'text', true)
 
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
-    createData.income = income.toFixed(2) // 正常收益
-    createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
+
+    const income = MathUtil.summation()
+    income(data.income.retouch)
+    income(data.income.impulse)
+    income(data.income.reward)
+    income(data.income.timeIntervalReward)
+    income(data.income.timeIntervalImpulse)
+    createData.income = income.toResult().toFixed(2) // 正常收益
+
+    createData.notReachStandardDays = Number(data.notReachStandardDays) // 未完成指标（天）
 
     const storeEvaluateCount = _.get(data, 'storeEvaluate.count') || 0
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, storeEvaluateCount) // 点赞数 / 点赞率
