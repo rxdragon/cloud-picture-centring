@@ -55,7 +55,7 @@ export function getStaffPerformance (params, isSearchAll = false) {
 
 /**
  * @description 保存伙伴分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function batchSaveStaffScores (params, isSearchAll = false) {
   const url = isSearchAll
@@ -70,7 +70,7 @@ export function batchSaveStaffScores (params, isSearchAll = false) {
 
 /**
  * @description 编辑分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function editStaffScore (params, isSearchAll = false) {
   const url = isSearchAll
@@ -85,7 +85,7 @@ export function editStaffScore (params, isSearchAll = false) {
 
 /**
  * @description 编辑分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function getGroupScoreRanks (params) {
   const groupId = params.groupId || ''
@@ -135,7 +135,7 @@ export function getGroupScoreRanks (params) {
 
 /**
  * @description 编辑分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function getSelfGroupScoreRanks (params) {
   return axios({
@@ -161,214 +161,56 @@ export function getSelfGroupScoreRanks (params) {
 
 /**
  * @description 获取修图组目标
- * @param { String } date retoucher 组员 retoucherLeader 组管
+ * @param { String } date
  */
 export function getRetoucherGoalList (params) {
-  const mock = [
-    {
-      "_id": "608a26299557a7151f5ea6e2",
-      "date": "2021-04-29",
-      "group_id": 1,
-      "staff_id": 613911,
-      "base_goal_num": 347,
-      "expect_float_num": 186,
-      "finish_num": 924,
-      "goal_num": 510,
-      "achieve": 1,
-      "extend": {
-        "leave_decrease_num": 33,
-        "weight_increase_num": 39
-      },
-      "retouch_standard": "大师",
-      "operator_id": "phpunit-test",
-      "duty_state": [
-        "new"
-      ],
-      "is_new_staff": 1,
-      "created_at": "1998-01-01 12:00:00",
-      "updated_at": "1998-01-01 12:00:00",
-      "staff": {
-        "id": 613911,
-        "name": "李生",
-        "nickname": "迈克"
-      }
-    },
-    {
-      "_id": "608a26299557a7151f5ea6e3",
-      "date": "2021-04-29",
-      "group_id": 1,
-      "staff_id": 613911,
-      "base_goal_num": 387,
-      "expect_float_num": 655,
-      "finish_num": 798,
-      "goal_num": 417,
-      "achieve": 0,
-      "extend": {
-        "leave_decrease_num": 30,
-        "weight_increase_num": 18
-      },
-      "retouch_standard": "大师",
-      "operator_id": "phpunit-test",
-      "duty_state": [
-        "new"
-      ],
-      "is_new_staff": 1,
-      "created_at": "1998-01-01 12:00:00",
-      "updated_at": "1998-01-01 12:00:00",
-      "staff": {
-        "id": 613911,
-        "name": "李生",
-        "nickname": "迈克"
-      }
-    },
-    {
-      "_id": "608a27a583f75d7a08116272",
-      "date": "2021-04-29",
-      "group_id": 1,
-      "staff_id": 613911,
-      "base_goal_num": 835,
-      "expect_float_num": 928,
-      "finish_num": 631,
-      "goal_num": 335,
-      "achieve": 0,
-      "extend": {
-        "leave_decrease_num": 35,
-        "weight_increase_num": 40
-      },
-      "retouch_standard": "大师",
-      "operator_id": "phpunit-test",
-      "duty_state": [
-        "new"
-      ],
-      "is_new_staff": 1,
-      "created_at": "1998-01-01 12:00:00",
-      "updated_at": "1998-01-01 12:00:00",
-      "staff": {
-        "id": 613911,
-        "name": "李生",
-        "nickname": "迈克"
-      }
-    },
-    {
-      "_id": "608a27a583f75d7a08116273",
-      "date": "2021-04-29",
-      "group_id": 1,
-      "staff_id": 613911,
-      "base_goal_num": 452,
-      "expect_float_num": 855,
-      "finish_num": 771,
-      "goal_num": 177,
-      "achieve": 1,
-      "extend": {
-        "leave_decrease_num": 10,
-        "weight_increase_num": 37
-      },
-      "retouch_standard": "大师",
-      "operator_id": "phpunit-test",
-      "duty_state": [
-        "new"
-      ],
-      "is_new_staff": 1,
-      "created_at": "1998-01-01 12:00:00",
-      "updated_at": "1998-01-01 12:00:00",
-      "staff": {
-        "id": 613911,
-        "name": "李生",
-        "nickname": "迈克"
-      }
-    },
-    {
-      "_id": "608a4777ee408c7cca66d412",
-      "date": "2021-04-29",
-      "group_id": 1,
-      "staff_id": 613911,
-      "base_goal_num": 249,
-      "expect_float_num": 357,
-      "finish_num": 747,
-      "goal_num": 816,
-      "achieve": 0,
-      "extend": {
-        "leave_decrease_num": 35,
-        "weight_increase_num": 33
-      },
-      "retouch_standard": "大师",
-      "operator_id": "phpunit-test",
-      "duty_state": [
-        "new"
-      ],
-      "is_new_staff": 1,
-      "created_at": "1998-01-01 12:00:00",
-      "updated_at": "1998-01-01 12:00:00",
-      "staff": {
-        "id": 613911,
-        "name": "李生",
-        "nickname": "迈克"
-      }
-    },
-    {
-      "_id": "608a4777ee408c7cca66d413",
-      "date": "2021-04-29",
-      "group_id": 2,
-      "staff_id": 613911,
-      "base_goal_num": 418,
-      "expect_float_num": 960,
-      "finish_num": 770,
-      "goal_num": 637,
-      "achieve": 1,
-      "extend": {
-        "leave_decrease_num": 26,
-        "weight_increase_num": 28
-      },
-      "retouch_standard": "大师",
-      "operator_id": "phpunit-test",
-      "duty_state": [
-        "new"
-      ],
-      "is_new_staff": 1,
-      "created_at": "1998-01-01 12:00:00",
-      "updated_at": "1998-01-01 12:00:00",
-      "staff": {
-        "id": 613911,
-        "name": "李生",
-        "nickname": "迈克"
-      }
-    },
-    {
-      "_id": "608a655dae438e57341e23d2",
-      "date": "2021-04-29",
-      "group_id": 2,
-      "staff_id": 613911,
-      "base_goal_num": 279,
-      "expect_float_num": 814,
-      "finish_num": 748,
-      "goal_num": 326,
-      "achieve": 0,
-      "extend": {
-        "leave_decrease_num": 13,
-        "weight_increase_num": 17
-      },
-      "retouch_standard": "大师",
-      "operator_id": "phpunit-test",
-      "duty_state": [
-        "new"
-      ],
-      "is_new_staff": 1,
-      "created_at": "1998-01-01 12:00:00",
-      "updated_at": "1998-01-01 12:00:00",
-      "staff": {
-        "id": 613911,
-        "name": "李生",
-        "nickname": "迈克"
-      }
-    }
-  ]
+  return axios({
+    url: '/project_cloud_oa/goal/retoucher/list',
+    method: 'GET',
+    params
+  }).then(msg => {
+    return msg
+  })
+}
 
-  return Promise.resolve(mock)
-  // return axios({
-  //   url: '/project_cloud_oa/goal/retoucher/list',
-  //   method: 'GET',
-  //   data: params
-  // }).then(msg => {
-  //   return msg
-  // })
+/**
+ * @description 设置云端总体目标
+ * @params { num, date }
+ */
+export function setOverallPhotoNumGoal (params) {
+  return axios({
+    url: '/project_cloud_oa/achievement/overall/photoNumGoal',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
+  })
+}
+
+/**
+ * @description 云端小组每日目标张数设定
+ * @params { num, date，groupId }
+ */
+export function setGroupPhotoNumGoal (params) {
+  return axios({
+    url: '/project_cloud_oa/achievement/retouchGroup/photoNumGoal',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
+  })
+}
+
+/**
+ * @description 云端总体张数相关统计
+ * @params { String } date
+ */
+export function getRetoucherGoalStatistics (params) {
+  return axios({
+    url: '/project_cloud_oa/achievement/overall/photoNumStatistics',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
+  })
 }

@@ -5,16 +5,11 @@
   >
     <el-row class="search-box" :gutter="20">
       <!-- 时间 -->
-      <el-col :span="8">
-        <div class="search-item">
+      <el-col :span="16">
+        <div class="date-item">
           <span>选择日期</span>
           <date-picker type="date" v-model="date" />
-        </div>
-      </el-col>
-      <!-- 修图组 -->
-      <el-col :span="8">
-        <div class="staff-search search-item">
-          <el-button type="primary" @click="queryData">查 询</el-button>
+          <el-button type="primary" class="ml-15"  @click="getData">查 询</el-button>
         </div>
       </el-col>
       <el-col :span="8">
@@ -31,59 +26,53 @@
       </el-col>
     </el-row>
 
-    <div class="module-table-box">
-      <el-table :data="tableData" style="width: 100%;">
-        <el-table-column prop="staff" label="修图师">
-          <template slot-scope="{ row }">
-            <p>
-              <span class="mr-10">{{ row.staff.nickname }}</span>
-              <!-- todo:naxi 加班请假标示-->
-              <el-tag
-                v-if="row.duty_state.includes('加班')"
-                type="warning"
-                effect="dark"
-                size="mini"
-              >
-                加班
-              </el-tag>
-              <el-tag
-                v-if="row.duty_state.includes('请假')"
-                type="danger"
-                effect="dark"
-                size="mini"
-              >
-                请假
-              </el-tag>
-              <el-tag
-                v-if="row.is_new_staff === 1"
-                type="success"
-                effect="dark"
-                size="mini"
-              >
-                新人
-              </el-tag>
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column prop="retouch_standard" label="修图标准" />
-        <el-table-column prop="base_goal_num" label="目标基础值(张)" />
-        <el-table-column prop="expect_float_num" label="预计浮动值(张)" />
-        <el-table-column prop="actual_float_num" label="实际浮动值(张)" />
-        <el-table-column prop="extend" label="其他张数">
-          <template slot-scope="{ row }">
-            <p>请假减少：{{ row.extend.leave_decrease_num }} 张</p>
-            <p>其他冲抵：{{ row.extend.weight_increase_num }} 张</p>
-          </template>
-        </el-table-column>
-        <el-table-column prop="goal_num" label="目标修图张数(张)" />
-        <el-table-column prop="finish_num" label="实际今日已完成(张)" />
-        <el-table-column prop="groupLeaderJobNumber" label="是否达标">
-          <template slot-scope="{ row }">
-            <p>{{ row.achieve === 1 ? '是' : '否' }}</p>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+    <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
+      <el-table-column prop="staff" label="修图师">
+        <template slot-scope="{ row }">
+          <p>
+            <span class="mr-10">{{ row.staff.nickname }}</span>
+            <!-- todo:naxi 加班请假标示-->
+            <el-tag
+              v-if="row.duty_state.includes('加班')"
+              type="warning"
+              effect="dark"
+              size="mini"
+            >
+              加班
+            </el-tag>
+            <el-tag
+              v-if="row.duty_state.includes('请假')"
+              type="danger"
+              effect="dark"
+              size="mini"
+            >
+              请假
+            </el-tag>
+            <el-tag
+              v-if="row.is_new_staff === 1"
+              type="success"
+              effect="dark"
+              size="mini"
+            >
+              新人
+            </el-tag>
+          </p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="retouch_standard_cn" label="修图标准" />
+      <el-table-column prop="base_goal_num" label="目标基础值(张)" />
+      <el-table-column prop="expect_float_num" label="预计浮动值(张)" />
+      <el-table-column prop="actual_float_num" label="实际浮动值(张)" />
+      <el-table-column prop="extend" label="其他张数">
+        <template slot-scope="{ row }">
+          <p>请假减少：{{ row.extend.leave_decrease_num }} 张</p>
+          <p>其他冲抵：{{ row.extend.weight_increase_num }} 张</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="goal_num" label="目标修图张数(张)" />
+      <el-table-column prop="finish_num" label="实际今日已完成(张)" />
+      <el-table-column prop="achieve_cn" label="是否达标" />
+    </el-table>
     <div class="set-info">
       <div><span>今日目标：</span><span>{{ goalStatistical.enable_float_staff_num || '-' }} 张</span></div>
       <div><span>实际今日已完成：</span><span>{{ goalStatistical.finish_num || '-' }} 张</span></div>
@@ -170,6 +159,7 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
+import { retouchStandardToCN } from '@/utils/enumerate'
 import dayjs from 'dayjs'
 import * as RetouchLeaderApi from '@/api/retouchLeader.js'
 
@@ -178,6 +168,7 @@ export default {
   components: { DatePicker },
   data () {
     return {
+      retouchStandardToCN,
       loading: true,
       showDialog: false,
       date: dayjs().format('YYYY-MM-DD'), // 查询时间
@@ -211,10 +202,13 @@ export default {
     }
   },
   mounted () {
-    this.queryData()
+    this.getData()
   },
   methods: {
-    async queryData () {
+    /**
+     * @description 获取数据
+     */
+    async getData () {
       if (!this.date) this.$message.error('请先选择时间')
       this.loading = true
       await Promise.all([this.getRetoucherGoalList(), this.getRetoucherStatistical()])
@@ -244,7 +238,7 @@ export default {
         date: this.date
       }
       const goalStatistical = await RetouchLeaderApi.getRetoucherStatistical(params)
-      this.goalStatistical = goalStatistical
+      this.goalStatistical = goalStatistical || {}
     },
     /**
      * @description 打开修图师目标张数的弹窗
@@ -278,6 +272,9 @@ export default {
         this.editData[index].float_num = this.editData[index].copy_float_num
       }
     },
+    /**
+     * @description 提交
+     */
     async handleConfirm () {
       this.loading = true
       const hasUndefined = this.editData.some(item => {
@@ -291,14 +288,24 @@ export default {
       if (this.allocationNum < needAllocationNum) return this.$message.error('已分配修图张数若小于今日预计完成总量')
       try {
         await RetouchLeaderApi.updateRetoucherGoal(this.editData)
-        await this.queryData()
+        await this.getData()
         this.showDialog = false
         this.$message.success('设置云端今日目标完成值成功。')
         this.loading = false
       } catch (err) {
         this.loading = false
       }
-
+    },
+    /**
+     * @description 预计浮动张数和实际浮动张数最低的一个特殊标注
+     */
+    handleTableCellClass ({ row, columnIndex }) {
+      if (columnIndex !== 3 && columnIndex !== 4) return ''
+      // 当前单元格的数据
+      const currentCellNum = columnIndex === 3 ? row.expect_float_num : row.actual_float_num
+      const contrastCellNum = columnIndex === 3 ? row.actual_float_num : row.expect_float_num
+      if (currentCellNum < contrastCellNum) return 'color-tag'
+      return ''
     }
   }
 }
@@ -307,6 +314,20 @@ export default {
 <style lang="less" scoped>
 .retoucher-goals {
   border-top-left-radius: 0;
+
+  .date-item {
+    display: flex;
+    align-items: center;
+    margin-right: 0;
+    margin-bottom: 20px;
+
+    > span {
+      flex-shrink: 0;
+      margin-right: 12px;
+      font-size: 14px;
+      color: #303133;
+    }
+  }
 
   .set-goals {
     justify-content: flex-end;
@@ -374,11 +395,21 @@ export default {
   margin-left: 5px;
 }
 
+.ml-15 {
+  margin-left: 15px;
+}
+
 .mr-5 {
   margin-right: 5px;
 }
 
 .mr-10 {
   margin-right: 10px;
+}
+</style>
+
+<style>
+.color-tag {
+  color: #ff3974;
 }
 </style>
