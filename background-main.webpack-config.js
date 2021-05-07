@@ -11,6 +11,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist_vue')
   },
   externals: {
-    'electron': 'require("electron")'
+    'electron': 'require("electron")',
+    'original-fs': 'require("original-fs")'
   }
 }

@@ -11,7 +11,7 @@
           <el-col :span="8" :xl="4">
             <div class="role-box search-item">
               <span>角色组名称</span>
-              <el-input v-model.trim="roleName" @keyup.native.enter="getRoleList(1)" />
+              <el-input v-model.trim="roleName" placeholder="请输入角色组名称" @keyup.native.enter="getRoleList(1)" />
             </div>
           </el-col>
           <el-col :span="8" :xl="4">
@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      <edit-role
+      <EditRole
         v-else
         :role-id="roleId"
         :show-edit.sync="showEdit"

@@ -31,11 +31,11 @@ function filterLabelName (data) {
       >
     </span>
     <span style="font-size:14px;color:#666;font-weight:400;margin-left:2px">
-      ${data.data.name}
+      ${data.dataIndex === 0 ? data.seriesName : data.data.name}
     </span>
     <span style="float:right;margin-left:20px;font-size:14px;color:#666;font-weight:900">
       ${data.data.value}个
-      占比：${Utils.transformPercentage(data.data.value, data.data.countSum)}
+      占比：${data.dataIndex === 0 ? '100%' : Utils.transformPercentage(data.data.value, data.data.countSum)}
     </span>
   `
   return msg
@@ -109,6 +109,7 @@ export default {
         option.color = nearColors
       }
       option.series.data = this.chartDatas
+      option.series.name = this.title
       this.myChart.setOption(option)
     }
   }

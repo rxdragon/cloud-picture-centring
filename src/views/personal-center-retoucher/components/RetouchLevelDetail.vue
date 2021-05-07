@@ -10,7 +10,7 @@
           placement="bottom-end"
           popper-class="level-tip-popover"
           width="700"
-          trigger="click"
+          trigger="hover"
         >
           <div class="tip-pop">
             <div class="tip-module">
@@ -139,79 +139,79 @@ const updateInfo = [
   {
     level: 1,
     levelName: '修图助理',
-    exp: '/',
-    updateScore: '/',
-    upSpotCount: '/',
+    exp: 800,
+    updateScore: 75,
+    upSpotCount: 10,
   },
   {
     level: 2,
     levelName: '初级修图师',
-    exp: 800,
-    updateScore: 81,
+    exp: 2000,
+    updateScore: 75,
     upSpotCount: 20,
   },
   {
     level: 3,
     levelName: '修图师',
-    exp: 2000,
-    updateScore: 82,
+    exp: 3500,
+    updateScore: 75,
     upSpotCount: 20
   },
   {
     level: 4,
     levelName: '资深修图师',
-    exp: 3500,
-    updateScore: 83,
+    exp: 7000,
+    updateScore: 76,
     upSpotCount: 30
   },
   {
     level: 5,
     levelName: '高级修图师',
-    exp: 7000,
-    updateScore: 84,
+    exp: 11000,
+    updateScore: 77,
     upSpotCount: 30
   },
   {
     level: 6,
     levelName: '修图专家',
-    exp: 11000,
-    updateScore: 85,
+    exp: 20000,
+    updateScore: 78,
     upSpotCount: 30
   },
   {
     level: 7,
     levelName: '资深修图专家',
-    exp: 20000,
-    updateScore: 86,
+    exp: 30000,
+    updateScore: 79,
     upSpotCount: 35
   },
   {
     level: 8,
     levelName: '高级修图专家',
-    exp: 30000,
-    updateScore: 87,
+    exp: 42000,
+    updateScore: 80,
     upSpotCount: 35
   },
   {
     level: 9,
     levelName: '首席修图专家',
-    exp: 42000,
-    updateScore: 88,
+    exp: 55000,
+    updateScore: 81,
     upSpotCount: 35
   },
   {
     level: 10,
     levelName: '工匠大师',
-    exp: 55000,
-    updateScore: 89,
+    exp: 70000,
+    updateScore: 84,
     upSpotCount: 40
   },
   {
     level: 11,
     levelName: '首席工匠大师',
-    exp: 70000,
-    updateScore: 90,
-    upSpotCount: 40
+    exp: '/',
+    updateScore: '/',
+    upSpotCount: '/'
   }
 ]
 

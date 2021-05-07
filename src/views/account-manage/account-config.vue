@@ -82,7 +82,7 @@
           </div>
         </div>
       </div>
-      <add-account
+      <AddAccount
         v-else
         :edit-data="editData"
         :show-edit.sync="showEdit"

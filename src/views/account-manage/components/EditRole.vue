@@ -9,7 +9,7 @@
     </div>
     <div class="role-name search-item">
       <span>角色组名称</span>
-      <el-input v-model="roleName" v-maxLength16 placeholder="请输入角色组名称" />
+      <el-input v-model="roleName" :maxlength="16" placeholder="请输入角色组名称" />
     </div>
     <div class="jurisdiction-box module-panel">
       <div class="panel-title">权限模块</div>
