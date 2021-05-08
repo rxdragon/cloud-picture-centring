@@ -10,7 +10,7 @@ import * as SessionTool from '@/utils/sessionTool'
 import * as RetoucherCenter from '@/api/retoucherCenter.js'
 import { announcementToCN } from '@/utils/enumerate'
 import * as UserApi from '@/api/user'
- 
+
 import errorPng from '@/assets/error.png'
 import photocount from '@/assets/photocount.png'
 
@@ -59,6 +59,9 @@ export default function handleMessage (data, chat) {
       break
     case 'BeforeLogout':
       logoutApp()
+      break
+    case 'GroupBaseGoalChange':
+      handleUpdateOverallPhotoNumGoal(typeMessage)
       break
     default:
       break
@@ -266,7 +269,7 @@ function logoutApp () {
   let timeOutCloseApp = setTimeout(() => {
     autoLogout()
   }, 30 * 1000)
-  
+
   MessageBox.confirm('', '在其他地方登录系统，不点击将在30s后自动关闭app', {
     confirmButtonText: '取消',
     center: true,
@@ -280,4 +283,18 @@ function logoutApp () {
     timeOutCloseApp = null
   })
 
+}
+
+/**
+ * @description 更改云端的每日修图目标
+ */
+function handleUpdateOverallPhotoNumGoal (message) {
+  const { content } = message
+  // 桌面通知
+  const notificationMsg = '修图目标更新通知'
+  const notificationData = {
+    title: notificationMsg,
+    body: content
+  }
+  Vue.prototype.$notification(notificationData)
 }

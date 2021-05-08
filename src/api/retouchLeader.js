@@ -197,6 +197,7 @@ export function getRetoucherGoalList (params) {
     msg.forEach(item => {
       item.retouch_standard_cn = retouchStandardToCN[item.retouch_standard]
       item.achieve_cn = msg.achieve ? '是' : '否'
+      item.staff_schedule = item.staff_schedule || {}
     })
     return msg
   })
@@ -220,7 +221,7 @@ export function getRetoucherStatistical (params) {
 
 /**
  * @description 修改组员目标值
- * @param { String } date retoucher 组员 retoucherLeader 组管
+ * @params { String } date
  */
 export function updateRetoucherGoal (params) {
   return axios({

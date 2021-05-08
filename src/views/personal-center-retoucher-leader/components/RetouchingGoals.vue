@@ -27,13 +27,12 @@
     </el-row>
 
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
-      <el-table-column prop="staff" label="修图师">
+      <el-table-column prop="staff_schedule" label="修图师">
         <template slot-scope="{ row }">
           <p>
             <span class="mr-10">{{ row.staff.nickname }}</span>
-            <!-- todo:naxi 加班请假标示-->
             <el-tag
-              v-if="row.duty_state.includes('加班')"
+              v-if="row.staff_schedule.work_over_time"
               type="warning"
               effect="dark"
               size="mini"
@@ -41,7 +40,7 @@
               加班
             </el-tag>
             <el-tag
-              v-if="row.duty_state.includes('请假')"
+              v-if="row.staff_schedule.leave_duration"
               type="danger"
               effect="dark"
               size="mini"
@@ -49,7 +48,7 @@
               请假
             </el-tag>
             <el-tag
-              v-if="row.is_new_staff === 1"
+              v-if="row.staff_schedule.is_new_staff"
               type="success"
               effect="dark"
               size="mini"
@@ -96,7 +95,7 @@
             <el-col :span="5">
               <span class="mr-5">{{ item.staff_name }}</span>
               <el-tag
-                v-if="item.duty_state.includes('加班')"
+                v-if="item.work_over_time"
                 type="warning"
                 effect="dark"
                 size="mini"
@@ -104,7 +103,7 @@
                 加班
               </el-tag>
               <el-tag
-                v-if="item.duty_state.includes('请假')"
+                v-if="item.leave_duration"
                 type="danger"
                 effect="dark"
                 size="mini"
@@ -112,7 +111,7 @@
                 请假
               </el-tag>
               <el-tag
-                v-if="item.is_new_staff === 1"
+                v-if="item.is_new_staff"
                 type="success"
                 effect="dark"
                 size="mini"
@@ -255,8 +254,9 @@ export default {
           float_num,
           copy_float_num: float_num,
           copy_base_goal_num: item.base_goal_num,
-          is_new_staff: item.is_new_staff,
-          duty_state: item.duty_state,
+          is_new_staff: item.staff_schedule.is_new_staff,
+          work_over_time: item.staff_schedule.work_over_time,
+          leave_duration: item.staff_schedule.leave_duration,
         }
       })
       this.editData = data
@@ -286,8 +286,18 @@ export default {
         return tol +(cur.base_goal_num ? cur.copy_base_goal_num : cur.copy_float_num)
       }, 0)
       if (this.allocationNum < needAllocationNum) return this.$message.error('已分配修图张数若小于今日预计完成总量')
+      const staffGoals = this.editData.map(item => {
+        return {
+          staffId: item.staff_id,
+          baseGoalNum: item.base_goal_num
+        }
+      })
+      const req = {
+        date: this.date,
+        staffGoals
+      }
       try {
-        await RetouchLeaderApi.updateRetoucherGoal(this.editData)
+        await RetouchLeaderApi.updateRetoucherGoal(req)
         await this.getData()
         this.showDialog = false
         this.$message.success('设置云端今日目标完成值成功。')
