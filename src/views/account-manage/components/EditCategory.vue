@@ -10,7 +10,7 @@
     </div>
     <div class="category-name search-item">
       <span>修图类别名称</span>
-      <el-input v-model="categoryName" v-maxLength16 placeholder="请输入修图类别名称" />
+      <el-input v-model="categoryName" :maxlength="16" placeholder="请输入修图类别名称" />
     </div>
     <div class="product-box module-panel">
       <div class="panel-title">可接产品</div>

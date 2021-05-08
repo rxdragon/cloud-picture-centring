@@ -7,20 +7,18 @@
       </div>
     </div>
     <el-tabs v-model="activeName">
-      <el-tab-pane v-if="showPartnerPerformance" label="伙伴绩效" name="PartnerPerformance" />
-      <el-tab-pane v-if="showOverallPerformance" label="总体绩效" name="OverallPerformance" />
-      <el-tab-pane v-if="showRetouchingGroupGoals" label="修图组目标" name="RetouchingGroupGoals" />
-      <el-tab-pane v-if="showRetoucherGroupPerformance" label="修图组绩效" name="RetoucherGroupPerformance" />
-      <el-tab-pane v-if="showRetoucherChargeBackReport" label="退单统计" name="RetoucherChargeBackReport" />
-      <el-tab-pane v-if="showTimeStatistics" label="用时统计" name="TimeStatistics" />
-      <el-tab-pane v-if="showCheckerEvaluate" label="看片评价" name="CheckerEvaluate" />
-      <el-tab-pane v-if="showCloudCollegeReport" label="云学院报告" name="CloudCollegeReport" />
-      <el-tab-pane v-if="showPicCollegeReport" label="修修兽报告" name="ShowPicCollegeReport" />
+      <el-tab-pane
+        v-for="tabItem in labelList"
+        :key="tabItem"
+        :label="tabItem | filterActiveName"
+        :name="tabItem"
+      />
     </el-tabs>
     <div
       class="table-box"
       :class="{'no-border': activeName === 'PartnerPerformance'}"
       v-show="!showSearchPage"
+      v-if="labelList.length"
     >
       <transition name="fade-transform" mode="out-in">
         <keep-alive>
@@ -39,8 +37,8 @@ import RetoucherGroupPerformance from './components/RetoucherGroupPerformance' /
 import RetoucherChargeBackReport from './components/RetoucherChargeBackReport' // 退单统计
 import TimeStatistics from './components/TimeStatistics' // 用时统计
 import CheckerEvaluate from './components/CheckerEvaluate' // 看片评价
-import CloudCollegeReport from './components/CloudCollegeReport' // 云学院评价
-import ShowPicCollegeReport from './components/ShowPicCollegeReport' // 云学院评价
+import CloudCollegeReport from './components/CloudCollegeReport' // 云学院抽查评价
+import ShowPicCollegeReport from './components/ShowPicCollegeReport' // 修修兽抽查评价
 import SearchRetouchRecord from '@/components/SearchRetouchRecord' // 云端查询
 
 import { SEARCH_ROLE } from '@/utils/enumerate'
@@ -79,8 +77,9 @@ export default {
   data () {
     return {
       SEARCH_ROLE,
-      activeName: 'PartnerPerformance',
-      showSearchPage: false
+      activeName: '',
+      showSearchPage: false,
+      defaultActiveName: ''
     }
   },
   computed: {
@@ -95,7 +94,47 @@ export default {
       'showPicCollegeReport',
     ]),
     // todo naxi
-    showRetouchingGroupGoals: () => true
+    showRetouchingGroupGoals: () => true,
+    labelList () {
+      const createData = []
+      if (this.showPartnerPerformance) {
+        createData.push('PartnerPerformance')
+      }
+      if (this.showOverallPerformance) {
+        createData.push('OverallPerformance')
+      }
+      if (this.showRetoucherGroupPerformance) {
+        createData.push('RetoucherGroupPerformance')
+      }
+      if (this.showRetouchingGroupGoals) {
+        createData.push('RetouchingGroupGoals')
+      }
+      if (this.showRetoucherChargeBackReport) {
+        createData.push('RetoucherChargeBackReport')
+      }
+      if (this.showTimeStatistics) {
+        createData.push('TimeStatistics')
+      }
+      if (this.showCheckerEvaluate) {
+        createData.push('CheckerEvaluate')
+      }
+      if (this.showCloudCollegeReport) {
+        createData.push('CloudCollegeReport')
+      }
+      if (this.showPicCollegeReport) {
+        createData.push('ShowPicCollegeReport')
+      }
+      return createData
+    }
+  },
+  watch: {
+    labelList: {
+      handler () {
+        this.activeName = this.labelList[0]
+        this.defaultActiveName = this.labelList[0]
+      },
+      immediate: true
+    }
   }
 }
 </script>

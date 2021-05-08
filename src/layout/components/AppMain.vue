@@ -20,7 +20,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import { loadApp } from '@/utils/qiankun.js'
+import { loadApp } from '@/utils/qiankun.js'
 
 export default {
   name: 'AppMain',
@@ -54,8 +54,7 @@ export default {
     if (this.isOnlineWatcher) {
       // eslint-disable-next-line no-console
       console.log(`%c LOAD_MICRO_WEB`, 'color:#3d91cf; font-weight: bold')
-      // TODO 调试
-      // loadApp()
+      loadApp()
     }
   },
   methods: {

@@ -1,14 +1,15 @@
 import axios from '@/plugins/axios.js'
 import TargetModel from '@/model/TargetModel'
 import { STAFF_LEVEL } from '@/utils/enumerate'
-import { keyToHump } from '@/utils/index.js'
+import { keyToHump, getAvg } from '@/utils/index.js'
+import * as MathUtil from '@/utils/mathUtil'
 
 /**
  * @description 获取个人今日指标
  */
 export function getSelfQuota () {
   return axios({
-    url: '/project_cloud/retoucher/getSelfQuota',
+    url: '/project_cloud_oa/retoucher/getSelfQuota',
     method: 'get'
   }).then(msg => {
     const data = keyToHump(msg)
@@ -45,17 +46,18 @@ export function getSelfQuota () {
     const rollbackIncomeRework = rollbackNormalIncome + rollbackReturnIncome // 退单回滚收益
     const rollbackIncomeOvertime = rollbackOvertimeIncome // 沙漏回滚收益
 
-    const todayIncome =
-      retouchIncome +
-      impulseIncome +
-      timeIntervalRewardIncome +
-      timeIntervalImpulseIncome +
-      rewardIncome -
-      incomePunish -
-      incomeOverTimePunish +
-      rollbackIncomeRework +
-      rollbackIncomeOvertime
-    data.todayRewordIncome = todayIncome.toFixed(2)
+    // 获取今日收益
+    const todayIncome = MathUtil.summation()
+    todayIncome(retouchIncome)
+    todayIncome(impulseIncome)
+    todayIncome(timeIntervalRewardIncome)
+    todayIncome(timeIntervalImpulseIncome)
+    todayIncome(rewardIncome)
+    todayIncome(-1 * incomePunish)
+    todayIncome(-1 * incomeOverTimePunish)
+    todayIncome(rollbackIncomeRework)
+    todayIncome(rollbackIncomeOvertime)
+    data.todayRewordIncome = todayIncome.toResult()
     
     const punishIncome = incomePunish + incomeOverTimePunish
     data.punishIncome = punishIncome.toFixed(2)
@@ -65,13 +67,36 @@ export function getSelfQuota () {
     // 获取修图总量
     data.todayFinishNormalPhotoNum = Number(data.todayFinishPhotoNum.normal) || 0
     data.todayFinishReworkPhotoNum = Number(data.todayFinishPhotoNum.rework) || 0
-    const todayAllFinishPhotoNum = data.todayFinishNormalPhotoNum + data.todayFinishReworkPhotoNum
-    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum
-    if (!todayAllFinishPhotoNum || !Number(data.todayTargetPhotoNum)) {
-      data.todayFinishPhotoNumProgress = 0
-    } else {
-      data.todayFinishPhotoNumProgress = (todayAllFinishPhotoNum / data.todayTargetPhotoNum) * 100
-    }
+    
+    // 抵扣张数
+    data.deductionPhotoCount = Number(_.get(data, 'todayTargetPhotoNum.weight_increase_num') || 0)
+
+    // 今日完成总量
+    // 实际完成
+    const finishNum = Number(_.get(data, 'todayTargetPhotoNum.finish_num') || 0)
+    const todayAllFinishPhotoNum = MathUtil.summation()
+    todayAllFinishPhotoNum(finishNum)
+    todayAllFinishPhotoNum(data.deductionPhotoCount)
+    data.todayAllFinishPhotoNum = todayAllFinishPhotoNum.toResult()
+
+    // 目标值
+    const baseTargetPhotoNum = Number(_.get(data, 'todayTargetPhotoNum.base_goal_num') || 0)
+    data.baseTargetPhotoNum = baseTargetPhotoNum
+    // 浮动张数
+    const predictFloatPhotoNum = Number(_.get(data, 'todayTargetPhotoNum.expect_float_num') || 0)
+    data.predictFloatPhotoNum = predictFloatPhotoNum
+    // 请假减少
+    const vacateReducePhotoNum = Number(_.get(data, 'todayTargetPhotoNum.leave_decrease_num') || 0)
+    data.vacateReducePhotoNum = vacateReducePhotoNum
+
+    const todayTargetPhotoNum = MathUtil.summation()
+    todayTargetPhotoNum(data.baseTargetPhotoNum)
+    todayTargetPhotoNum(data.predictFloatPhotoNum)
+    todayTargetPhotoNum(-1 * data.vacateReducePhotoNum)
+    data.todayTargetPhotoNum = todayTargetPhotoNum.toResult()
+
+    const todayFinishPhotoNumProgress = getAvg(data.todayAllFinishPhotoNum, data.todayTargetPhotoNum)
+    data.todayFinishPhotoNumProgress = todayFinishPhotoNumProgress * 100
     return data
   })
 }
@@ -135,12 +160,15 @@ export function getRankInfo () {
  */
 export function getRetouchQuota (params) {
   return axios({
-    url: '/project_cloud/retoucher/getRetouchQuota',
+    url: '/project_cloud_oa/retoucher/getRetouchQuota',
     method: 'GET',
     params
   }).then(msg => {
     const createData = new TargetModel(msg)
-    return [createData]
+    return {
+      list: [createData],
+      notReachStandardDays: createData.notReachStandardDays
+    }
   })
 }
 

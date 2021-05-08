@@ -1,6 +1,6 @@
 <template>
   <div class="assessment-report module-panel">
-    <group-cloud-report :searchRole="SEARCH_ROLE.GROUP_LEADER" :search-type="GRADE_LABEL_TYPE.CLOUD"/>
+    <GroupCloudReport :searchRole="SEARCH_ROLE.GROUP_LEADER" :search-type="GRADE_LABEL_TYPE.CLOUD"/>
   </div>
 </template>
 
