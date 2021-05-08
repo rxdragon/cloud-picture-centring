@@ -32,10 +32,9 @@
 
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
       <el-table-column prop="groupName" label="修图组">
-        <!-- todo xiutuzuzhanshi-->
         <template slot-scope="{ row }">
-          <p>组名：{{ row.group_info }}</p>
-          <p>主管：{{ row.group_info }}</p>
+          <p>组名：{{ row.groupName || '-'  }}</p>
+          <p>主管：{{ row.leaderName ? `${row.leaderName} (${row.leaderId})` : '-' }}</p>
         </template>
       </el-table-column>
       <el-table-column prop="on_duty_staff_num" label="上班人数" width="80px"/>

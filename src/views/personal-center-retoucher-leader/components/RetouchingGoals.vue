@@ -276,7 +276,6 @@ export default {
      * @description 提交
      */
     async handleConfirm () {
-      this.loading = true
       const hasUndefined = this.editData.some(item => {
         return item.base_goal_num === '' || item.base_goal_num === undefined
       })
@@ -286,6 +285,9 @@ export default {
         return tol +(cur.base_goal_num ? cur.copy_base_goal_num : cur.copy_float_num)
       }, 0)
       if (this.allocationNum < needAllocationNum) return this.$message.error('已分配修图张数若小于今日预计完成总量')
+
+      this.loading = true
+
       const staffGoals = this.editData.map(item => {
         return {
           staffId: item.staff_id,
@@ -296,6 +298,7 @@ export default {
         date: this.date,
         staffGoals
       }
+
       try {
         await RetouchLeaderApi.updateRetoucherGoal(req)
         await this.getData()
@@ -372,6 +375,10 @@ export default {
     align-items: center;
     padding: 15px 0;
     border-bottom: 1px solid #ecedee;
+
+    &:last-child {
+      border: none;
+    }
 
     .number-input {
       width: calc(100% - 100px);

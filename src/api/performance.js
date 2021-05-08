@@ -161,15 +161,24 @@ export function getSelfGroupScoreRanks (params) {
 
 /**
  * @description 获取修图组目标
- * @param { String } date
+ * @params { String } date
  */
 export function getRetoucherGoalList (params) {
   return axios({
-    url: '/project_cloud_oa/goal/retoucher/list',
-    method: 'GET',
-    params
+    url: '/project_cloud_oa/achievement/retouchGroup/getPhotoNumGoalByDate',
+    method: 'POST',
+    data: params
   }).then(msg => {
-    return msg
+    if (msg && msg.length) {
+      msg.forEach(item => {
+        item.groupName = _.get(item, 'group_info.name')
+        item.leaderName = _.get(item, 'group_info.leader_info.nickname')
+        item.leaderId = _.get(item, 'group_info.leader_info.id')
+      })
+
+      return msg
+    }
+    return []
   })
 }
 
