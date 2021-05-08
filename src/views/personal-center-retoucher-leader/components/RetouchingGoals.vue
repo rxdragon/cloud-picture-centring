@@ -284,7 +284,7 @@ export default {
       const needAllocationNum = this.editData.reduce((tol, cur) => {
         return tol +(cur.base_goal_num ? cur.copy_base_goal_num : cur.copy_float_num)
       }, 0)
-      if (this.allocationNum < needAllocationNum) return this.$message.error('已分配修图张数若小于今日预计完成总量')
+      if (this.allocationNum < needAllocationNum) return this.$message.error('已分配修图张数小于今日预计完成总量')
 
       this.loading = true
 
@@ -303,7 +303,7 @@ export default {
         await RetouchLeaderApi.updateRetoucherGoal(req)
         await this.getData()
         this.showDialog = false
-        this.$message.success('设置云端今日目标完成值成功。')
+        this.$message.success('设置云端今日目标值成功。')
         this.loading = false
       } catch (err) {
         this.loading = false
