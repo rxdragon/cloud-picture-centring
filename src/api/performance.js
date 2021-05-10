@@ -55,7 +55,7 @@ export function getStaffPerformance (params, isSearchAll = false) {
 
 /**
  * @description 保存伙伴分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function batchSaveStaffScores (params, isSearchAll = false) {
   const url = isSearchAll
@@ -70,7 +70,7 @@ export function batchSaveStaffScores (params, isSearchAll = false) {
 
 /**
  * @description 编辑分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function editStaffScore (params, isSearchAll = false) {
   const url = isSearchAll
@@ -85,7 +85,7 @@ export function editStaffScore (params, isSearchAll = false) {
 
 /**
  * @description 编辑分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function getGroupScoreRanks (params) {
   const groupId = params.groupId || ''
@@ -135,7 +135,7 @@ export function getGroupScoreRanks (params) {
 
 /**
  * @description 编辑分数
- * @param { String } type retoucher 组员 retoucherLeader 组管
+ * @params { String } type retoucher 组员 retoucherLeader 组管
  */
 export function getSelfGroupScoreRanks (params) {
   return axios({
@@ -156,5 +156,74 @@ export function getSelfGroupScoreRanks (params) {
       }
     })
     return createList
+  })
+}
+
+/**
+ * @description 获取修图组目标
+ * @params { String } date
+ */
+export function getRetoucherGoalList (params) {
+  return axios({
+    url: '/project_cloud_oa/achievement/retouchGroup/getPhotoNumGoalByDate',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    if (msg && msg.length) {
+      msg.forEach(item => {
+        item.groupName = _.get(item, 'group_info.name') || '-'
+        item.leaderName = _.get(item, 'group_info.leader_info.nickname')
+        item.leaderId = _.get(item, 'group_info.leader_info.id')
+        item.showLaderName = item.leaderName ? `${item.leaderName} (${item.leaderId})` : '-'
+        item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
+        item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
+        item.isAchieve = item.achieve === 1 ? '是' : '否'
+      })
+
+      return msg
+    }
+    return []
+  })
+}
+
+/**
+ * @description 设置云端总体目标
+ * @params { num, date }
+ */
+export function setOverallPhotoNumGoal (params) {
+  return axios({
+    url: '/project_cloud_oa/achievement/overall/photoNumGoal',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
+  })
+}
+
+/**
+ * @description 云端小组每日目标张数设定
+ * @params { num, date，groupId }
+ */
+export function setGroupPhotoNumGoal (params) {
+  return axios({
+    url: '/project_cloud_oa/achievement/retouchGroup/photoNumGoal',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
+  })
+}
+
+/**
+ * @description 云端总体张数相关统计
+ * @params { String } date
+ */
+export function getRetoucherGoalStatistics (params) {
+  return axios({
+    url: '/project_cloud_oa/achievement/overall/photoNumStatistics',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
   })
 }

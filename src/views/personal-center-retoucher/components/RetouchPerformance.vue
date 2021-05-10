@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading" class="module-panel retouch-performance">
     <div class="panel-title">
-      修图绩效
+      <span>修图绩效</span>
       <div class="title-plugin">
         <el-popover placement="bottom-end" width="900" trigger="hover">
           <div class="tip-plugin-content">
@@ -271,6 +271,7 @@ export default {
 .panel-title {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 
   .title-plugin {
     .tip-box {

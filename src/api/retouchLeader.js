@@ -1,6 +1,7 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
+import { retouchStandardToCN } from '@/utils/enumerate'
 import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
 import * as MathUtil from '@/utils/mathUtil'
 
@@ -182,5 +183,57 @@ export function getLittleBeeInfo (params) {
       value: data.rank || '-'
     }]
     return createData
+  })
+}
+
+/**
+ * @description 获取组员目标列表
+ * @params { String } date
+ */
+export function getRetoucherGoalList (params) {
+  return axios({
+    url: '/project_cloud_oa/goal/retoucher/list',
+    method: 'GET',
+    params
+  }).then(msg => {
+    if (!msg && msg.length) return []
+    msg.forEach(item => {
+      item.retouchStandardCn = retouchStandardToCN[item.retouch_standard]
+      item.achieveCn = msg.achieve ? '是' : '否'
+      item.staff_schedule = item.staff_schedule || {}
+      item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
+      item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
+    })
+    return msg
+  })
+}
+
+
+/**
+ * @description 获取今日目标统计
+ * @params { String }
+ */
+export function getRetoucherStatistical (params) {
+  return axios({
+    url: '/project_cloud_oa/goal/retoucher/total_num',
+    method: 'GET',
+    params
+  }).then(msg => {
+    return msg
+  })
+}
+
+
+/**
+ * @description 修改组员目标值
+ * @params { String } date
+ */
+export function updateRetoucherGoal (params) {
+  return axios({
+    url: '/project_cloud_oa/goal/retoucher/edit',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
   })
 }
