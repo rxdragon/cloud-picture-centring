@@ -177,7 +177,7 @@ export function getRetoucherGoalList (params) {
         item.showLaderName = item.leaderName ? `${item.leaderName} (${item.leaderId})` : '-'
         item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
         item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
-        item.isAchieve = item.achieve === 1 ? '是' : '否'
+        item.isAchieve = item.achieve ? '是' : '否'
       })
 
       return msg

@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column prop="goal_num" label="目标修图张数" />
       <el-table-column prop="finish_num" label="实际今日已完成" />
-      <el-table-column prop="achieve" label="是否达标" />
+      <el-table-column prop="isAchieve" label="是否达标" />
       <el-table-column label="操作" width="80px" v-if="showUpdateRetoucherGroupGoal">
         <template slot-scope="{ row }">
           <el-button @click="handleEditGroup(row)" :disabled="canEditRow">修改</el-button>
@@ -136,12 +136,14 @@ export default {
      */
     async getData () {
       this.$store.dispatch('setting/showLoading', this.routeName)
-      await Promise.all([
-        this.getRetoucherGoalList(),
-        this.getRetoucherGoalStatistics()
-      ]).finally(() => {
+      try {
+        await Promise.all([
+          this.getRetoucherGoalList(),
+          this.getRetoucherGoalStatistics()
+        ])
+      } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
-      })
+      }
     },
     /**
      * @description 获取云端总体张数相关统计
