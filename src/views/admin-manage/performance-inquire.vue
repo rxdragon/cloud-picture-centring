@@ -92,9 +92,8 @@ export default {
       'showRetoucherChargeBackReport',
       'showCloudCollegeReport',
       'showPicCollegeReport',
+      'showRetouchingGoalsView'
     ]),
-    // todo naxi
-    showRetouchingGroupGoals: () => true,
     labelList () {
       const createData = []
       if (this.showPartnerPerformance) {
@@ -106,7 +105,7 @@ export default {
       if (this.showRetoucherGroupPerformance) {
         createData.push('RetoucherGroupPerformance')
       }
-      if (this.showRetouchingGroupGoals) {
+      if (this.showRetouchingGoalsView) {
         createData.push('RetouchingGroupGoals')
       }
       if (this.showRetoucherChargeBackReport) {

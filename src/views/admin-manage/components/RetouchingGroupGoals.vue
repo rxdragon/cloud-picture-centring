@@ -24,10 +24,10 @@
     </el-row>
 
     <div class="set-info">
-      <div><span>今日设定值：</span><span>{{ retoucherStatistics.goal_num }} 张</span></div>
-      <div><span>今日基础总张数：</span><span>{{ retoucherStatistics.base_goal_num }} 张</span></div>
-      <div><span>实际已完成：</span><span>{{ retoucherStatistics.finish_num }} 张</span></div>
-      <div><span>摄影上传总张数：</span><span>{{ retoucherStatistics.photography_org_upload_num }} 张</span></div>
+      <div><span>今日设定值：</span><span>{{ retoucherStatistics.goal_num || '-' }} 张</span></div>
+      <div><span>今日基础总张数：</span><span>{{ retoucherStatistics.base_goal_num || '-' }} 张</span></div>
+      <div><span>实际已完成：</span><span>{{ retoucherStatistics.finish_num || '-' }} 张</span></div>
+      <div><span>摄影上传总张数：</span><span>{{ retoucherStatistics.photography_org_upload_num || '-' }} 张</span></div>
     </div>
 
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
@@ -40,8 +40,16 @@
       <el-table-column prop="on_duty_staff_num" label="上班人数" width="80px"/>
       <el-table-column prop="base_goal_num" label="基础修图总张数" />
       <el-table-column prop="enable_float_staff_num" label="加浮动人数" />
-      <el-table-column prop="expect_float_num" label="预计浮动张数" />
-      <el-table-column prop="actual_float_num" label="实际浮动张数" />
+      <el-table-column prop="expect_float_num" label="预计浮动张数" >
+        <template slot-scope="{ row }">
+          <p>{{ row.expect_float_num ? `${row.expect_float_num} 张/人` : '-' }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="actual_float_num" label="实际浮动张数" >
+        <template slot-scope="{ row }">
+          <p>{{ row.actual_float_num ? `${row.actual_float_num} 张/人` : '-' }}</p>
+        </template>
+      </el-table-column>
       <el-table-column prop="extend" label="其他张数">
         <template slot-scope="{ row }">
           <p>请假减少：{{ row.extend.leave_decrease_num }} 张</p>
@@ -55,7 +63,7 @@
           <p>{{ row.achieve === 1 ? '是' : '否' }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="80px">
+      <el-table-column label="操作" width="80px" v-if="showUpdateRetoucherGroupGoal">
         <template slot-scope="{ row }">
           <el-button @click="handleEditGroup(row)" :disabled="canEditRow">修改</el-button>
         </template>
@@ -90,6 +98,7 @@
 
 <script>
 import DatePicker from '@/components/DatePicker'
+import { mapGetters } from 'vuex'
 import * as PerformanceApi from '@/api/performance.js'
 import dayjs from 'dayjs'
 
@@ -109,8 +118,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['showUpdateRetoucherGoal', 'showUpdateRetoucherGroupGoal']),
+    // 修改云端工作目标权限
+    showRetoucherGoal () {
+      return this.$store.getters.showRetoucherGoal
+    },
     // 是否可以编辑
     canShowEditView () {
+      if (!this.showUpdateRetoucherGoal) return false
       // 每天7点 之前可以编辑当日的, 8点之前没有考勤数据， 所以取中间
       const endTag = dayjs().hour(17).startOf('hour')
       const startTag = dayjs().hour(8).startOf('hour')
@@ -173,6 +188,7 @@ export default {
      * @description 设置目标
      */
     async handleConfirm () {
+      if (this.editGoals === undefined) return this.$message.error('请填写基础张数')
       try {
         const req = {
           date: this.date,
@@ -203,7 +219,7 @@ export default {
     handleEditGroup (row) {
       this.editGoals = row.base_goal_num
       this.dialogMode = 'edit'
-      this.editGroupId = row.group_info.id // todo
+      this.editGroupId = row.group_info.id
       this.showDialog = true
     },
     /**
@@ -222,7 +238,8 @@ export default {
       // 当前单元格的数据
       const currentCellNum = columnIndex === 4 ? row.expect_float_num : row.actual_float_num
       const contrastCellNum = columnIndex === 4 ? row.actual_float_num : row.expect_float_num
-      if (currentCellNum < contrastCellNum) return 'color-tag'
+      if (currentCellNum < contrastCellNum && currentCellNum !== 0) return 'color-tag'
+      if (currentCellNum !== 0 && contrastCellNum === 0) return 'color-tag'
       return ''
     }
   }

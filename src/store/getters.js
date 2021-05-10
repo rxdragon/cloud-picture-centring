@@ -83,6 +83,11 @@ const permissionGetters = {
   // 通知栏目
   showInformation: state => state.permission.showInformation, // 是否显示消息通知
   showAnnouncementDelete: state => state.permission.showAnnouncementDelete, // 是否显示公告删除按钮
+
+  // 每日目标
+  showRetouchingGoalsView: state => state.permission.showRetouchingGoalsView, // 是否显示修图组目标页面
+  showUpdateRetoucherGoal: state => state.permission.showUpdateRetoucherGoal, // 是否可以设置每日目标
+  showUpdateRetoucherGroupGoal: state => state.permission.showUpdateRetoucherGroupGoal // 是否可以修改组的基础值
 }
 
 const getters = {

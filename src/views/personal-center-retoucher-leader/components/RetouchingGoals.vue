@@ -30,7 +30,7 @@
       <el-table-column prop="staff_schedule" label="修图师">
         <template slot-scope="{ row }">
           <p>
-            <span class="mr-10">{{ row.staff.nickname }}</span>
+            <span class="mr-10">{{ row.staff.nickname || row.staff.name }}</span>
             <el-tag
               v-if="row.staff_schedule.work_over_time"
               type="warning"
@@ -60,8 +60,16 @@
       </el-table-column>
       <el-table-column prop="retouch_standard_cn" label="修图标准" />
       <el-table-column prop="base_goal_num" label="目标基础值(张)" />
-      <el-table-column prop="expect_float_num" label="预计浮动值(张)" />
-      <el-table-column prop="actual_float_num" label="实际浮动值(张)" />
+      <el-table-column prop="expect_float_num" label="预计浮动张数" >
+        <template slot-scope="{ row }">
+          <p>{{ row.expect_float_num ? `${row.expect_float_num} 张/人` : '-' }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column prop="actual_float_num" label="实际浮动张数" >
+        <template slot-scope="{ row }">
+          <p>{{ row.actual_float_num ? `${row.actual_float_num} 张/人` : '-' }}</p>
+        </template>
+      </el-table-column>
       <el-table-column prop="extend" label="其他张数">
         <template slot-scope="{ row }">
           <p>请假减少：{{ row.extend.leave_decrease_num }} 张</p>
@@ -192,7 +200,7 @@ export default {
     // 已经分陪的修图张数
     allocationNum () {
       return this.editData.reduce((tol, cur) => {
-        return tol + (cur.base_goal_num || 0)
+        return tol + (cur.base_goal_num || 0) + (cur.float_num || 0)
       }, 0)
     },
     // 是否展示tio
@@ -244,11 +252,13 @@ export default {
      */
     handleOpenSetView () {
       const data = this.tableData.map(item => {
-        // 浮动涨势取预计浮动和实际浮动中最小的那个
-        const float_num = Math.min(Number(item.expect_float_num), Number(item.actual_float_num || Number.MAX_VALUE))
+        // 浮动张数取预计浮动和实际浮动中最小的那个
+        let float_num = Math.min(Number(item.expect_float_num), Number(item.actual_float_num || Number.MAX_VALUE))
+        // 如果这个人的基础涨势为0， 则浮动张数也是0
+        float_num = item.base_goal_num === 0 ? 0 : float_num
         return {
           staff_id: item.staff.id,
-          staff_name: item.staff.nickname,
+          staff_name: item.staff.nickname || item.staff.name,
           base_goal_num: item.base_goal_num,
           retouch_standard: item.retouch_standard,
           float_num,
@@ -281,10 +291,9 @@ export default {
       })
       if (hasUndefined) return this.$message.error('请填写基础张数')
       // 判断是否可以保存
-      const needAllocationNum = this.editData.reduce((tol, cur) => {
-        return tol +(cur.base_goal_num ? cur.copy_base_goal_num : cur.copy_float_num)
-      }, 0)
-      if (this.allocationNum < needAllocationNum) return this.$message.error('已分配修图张数小于今日预计完成总量')
+      if (this.allocationNum < this.goalStatistical.enable_float_staff_num) {
+        return this.$message.error('已分配修图张数小于今日预计完成总量')
+      }
 
       this.loading = true
 
@@ -317,7 +326,8 @@ export default {
       // 当前单元格的数据
       const currentCellNum = columnIndex === 3 ? row.expect_float_num : row.actual_float_num
       const contrastCellNum = columnIndex === 3 ? row.actual_float_num : row.expect_float_num
-      if (currentCellNum < contrastCellNum) return 'color-tag'
+      if (currentCellNum < contrastCellNum && currentCellNum !== 0) return 'color-tag'
+      if (currentCellNum !== 0 && contrastCellNum === 0) return 'color-tag'
       return ''
     }
   }
