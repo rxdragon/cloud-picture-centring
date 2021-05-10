@@ -188,7 +188,7 @@ export function getLittleBeeInfo (params) {
 
 /**
  * @description 获取组员目标列表
- * @params { String } date retoucher 组员 retoucherLeader 组管
+ * @params { String } date
  */
 export function getRetoucherGoalList (params) {
   return axios({
@@ -198,9 +198,11 @@ export function getRetoucherGoalList (params) {
   }).then(msg => {
     if (!msg && msg.length) return []
     msg.forEach(item => {
-      item.retouch_standard_cn = retouchStandardToCN[item.retouch_standard]
-      item.achieve_cn = msg.achieve ? '是' : '否'
+      item.retouchStandardCn = retouchStandardToCN[item.retouch_standard]
+      item.achieveCn = msg.achieve ? '是' : '否'
       item.staff_schedule = item.staff_schedule || {}
+      item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
+      item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
     })
     return msg
   })
@@ -209,7 +211,7 @@ export function getRetoucherGoalList (params) {
 
 /**
  * @description 获取今日目标统计
- * @params { String } date retoucher 组员 retoucherLeader 组管
+ * @params { String }
  */
 export function getRetoucherStatistical (params) {
   return axios({

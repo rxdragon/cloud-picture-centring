@@ -1,5 +1,5 @@
 <template>
-  <div class="retoucher-group-goals" v-loading="loading">
+  <div class="retoucher-group-goals">
     <el-row class="search-box" :gutter="20">
       <!-- 时间 -->
       <el-col :span="16">
@@ -33,23 +33,15 @@
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
       <el-table-column prop="groupName" label="修图组">
         <template slot-scope="{ row }">
-          <p>组名：{{ row.groupName || '-'  }}</p>
-          <p>主管：{{ row.leaderName ? `${row.leaderName} (${row.leaderId})` : '-' }}</p>
+          <p>组名：{{ row.groupName }}</p>
+          <p>主管：{{ row.showLaderName }}</p>
         </template>
       </el-table-column>
       <el-table-column prop="on_duty_staff_num" label="上班人数" width="80px"/>
       <el-table-column prop="base_goal_num" label="基础修图总张数" />
       <el-table-column prop="enable_float_staff_num" label="加浮动人数" />
-      <el-table-column prop="expect_float_num" label="预计浮动张数" >
-        <template slot-scope="{ row }">
-          <p>{{ row.expect_float_num ? `${row.expect_float_num} 张/人` : '-' }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column prop="actual_float_num" label="实际浮动张数" >
-        <template slot-scope="{ row }">
-          <p>{{ row.actual_float_num ? `${row.actual_float_num} 张/人` : '-' }}</p>
-        </template>
-      </el-table-column>
+      <el-table-column prop="showExpectFloatNum" label="预计浮动张数" />
+      <el-table-column prop="showActualFloatNum" label="实际浮动张数" />
       <el-table-column prop="extend" label="其他张数">
         <template slot-scope="{ row }">
           <p>请假减少：{{ row.extend.leave_decrease_num }} 张</p>
@@ -58,11 +50,7 @@
       </el-table-column>
       <el-table-column prop="goal_num" label="目标修图张数" />
       <el-table-column prop="finish_num" label="实际今日已完成" />
-      <el-table-column prop="achieve" label="是否达标">
-        <template slot-scope="{ row }">
-          <p>{{ row.achieve === 1 ? '是' : '否' }}</p>
-        </template>
-      </el-table-column>
+      <el-table-column prop="achieve" label="是否达标" />
       <el-table-column label="操作" width="80px" v-if="showUpdateRetoucherGroupGoal">
         <template slot-scope="{ row }">
           <el-button @click="handleEditGroup(row)" :disabled="canEditRow">修改</el-button>
@@ -107,7 +95,7 @@ export default {
   components: { DatePicker },
   data () {
     return {
-      loading: false,
+      routeName: this.$route.name,
       showDialog: false,
       dialogMode: 'create', // create or edit
       date: dayjs().format('YYYY-MM-DD'), // 查询时间
@@ -119,10 +107,6 @@ export default {
   },
   computed: {
     ...mapGetters(['showUpdateRetoucherGoal', 'showUpdateRetoucherGroupGoal']),
-    // 修改云端工作目标权限
-    showRetoucherGoal () {
-      return this.$store.getters.showRetoucherGoal
-    },
     // 是否可以编辑
     canShowEditView () {
       if (!this.showUpdateRetoucherGoal) return false
@@ -137,13 +121,10 @@ export default {
       }
       return true
     },
-    // 是否可以编辑修图组基础张数， 次日可以修改前日
+    // 是否可以编辑修图组基础张数， 只能修改今天的和昨天的
     canEditRow () {
       const yesterday = dayjs().subtract(1, 'day').startOf('date') // 昨天凌晨
-      if (dayjs(this.date).isBefore(yesterday)) {
-        return true
-      }
-      return false
+      return dayjs(this.date).isBefore(yesterday)
     },
   },
   mounted () {
@@ -154,12 +135,12 @@ export default {
      * @description 获取页面数据
      */
     async getData () {
-      this.loading = true
+      this.$store.dispatch('setting/showLoading', this.routeName)
       await Promise.all([
         this.getRetoucherGoalList(),
         this.getRetoucherGoalStatistics()
       ]).finally(() => {
-        this.loading = false
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       })
     },
     /**
@@ -174,21 +155,24 @@ export default {
      * @description 获取列表
      */
     async getRetoucherGoalList () {
-      this.loading = true
+      this.$store.dispatch('setting/showLoading', this.routeName)
       const params = {
         date: this.date
       }
-      const tableData = await PerformanceApi.getRetoucherGoalList(params)
-        .finally(() => {
-          this.loading = false
-        })
-      this.tableData = tableData || []
+      try {
+        const tableData = await PerformanceApi.getRetoucherGoalList(params)
+        this.tableData = tableData || []
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 设置目标
      */
     async handleConfirm () {
-      if (this.editGoals === undefined) return this.$message.error('请填写基础张数')
+      if (this.editGoals === undefined || this.editGoals === '') {
+        return this.$message.error('请填写基础张数')
+      }
       try {
         const req = {
           date: this.date,
@@ -203,14 +187,14 @@ export default {
         const successMessage = this.dialogMode === 'create'
           ? '设置云端今日目标完成值成功' // 总体
           : '修改修图组每日基础目标值成功' // 小组
-        this.loading = true
+        this.$store.dispatch('setting/showLoading', this.routeName)
         const res = await action(req)
         if (!res) throw new Error('设置修图目标失败')
         this.showDialog = false
         await this.getData()
         this.$message.success(successMessage)
       } finally {
-        this.loading = false
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**

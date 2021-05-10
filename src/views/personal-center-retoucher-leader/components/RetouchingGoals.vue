@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="retoucher-goals assessment-report module-panel"
-    v-loading="loading"
-  >
+  <div class="retoucher-goals assessment-report module-panel">
     <el-row class="search-box" :gutter="20">
       <!-- 时间 -->
       <el-col :span="16">
@@ -58,18 +55,10 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column prop="retouch_standard_cn" label="修图标准" />
+      <el-table-column prop="retouchStandardCn" label="修图标准" />
       <el-table-column prop="base_goal_num" label="目标基础值(张)" />
-      <el-table-column prop="expect_float_num" label="预计浮动张数" >
-        <template slot-scope="{ row }">
-          <p>{{ row.expect_float_num ? `${row.expect_float_num} 张/人` : '-' }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column prop="actual_float_num" label="实际浮动张数" >
-        <template slot-scope="{ row }">
-          <p>{{ row.actual_float_num ? `${row.actual_float_num} 张/人` : '-' }}</p>
-        </template>
-      </el-table-column>
+      <el-table-column prop="showExpectFloatNum" label="预计浮动张数" />
+      <el-table-column prop="showActualFloatNum" label="实际浮动张数" />
       <el-table-column prop="extend" label="其他张数">
         <template slot-scope="{ row }">
           <p>请假减少：{{ row.extend.leave_decrease_num }} 张</p>
@@ -78,7 +67,7 @@
       </el-table-column>
       <el-table-column prop="goal_num" label="目标修图张数(张)" />
       <el-table-column prop="finish_num" label="实际今日已完成(张)" />
-      <el-table-column prop="achieve_cn" label="是否达标" />
+      <el-table-column prop="achieveCn" label="是否达标" />
     </el-table>
     <div class="set-info">
       <div><span>今日目标：</span><span>{{ goalStatistical.enable_float_staff_num || '-' }} 张</span></div>
@@ -96,14 +85,14 @@
         <div class="group-item-wrap">
           <el-row
             class="item"
-            v-for="(item, index) in editData"
+            v-for="(groupMember, index) in editData"
             :key="index"
             :gutter="10"
           >
             <el-col :span="5">
-              <span class="mr-5">{{ item.staff_name }}</span>
+              <span class="mr-5">{{ groupMember.staff_name }}</span>
               <el-tag
-                v-if="item.work_over_time"
+                v-if="groupMember.work_over_time"
                 type="warning"
                 effect="dark"
                 size="mini"
@@ -111,7 +100,7 @@
                 加班
               </el-tag>
               <el-tag
-                v-if="item.leave_duration"
+                v-if="groupMember.leave_duration"
                 type="danger"
                 effect="dark"
                 size="mini"
@@ -119,7 +108,7 @@
                 请假
               </el-tag>
               <el-tag
-                v-if="item.is_new_staff"
+                v-if="groupMember.is_new_staff"
                 type="success"
                 effect="dark"
                 size="mini"
@@ -127,7 +116,7 @@
                 新人
               </el-tag>
               <span class="standard-icon">
-                <span :class="`iconmap-standard-${item.retouch_standard}`" />
+                <span :class="`iconmap-standard-${groupMember.retouch_standard}`" />
               </span>
             </el-col>
             <el-col :span="12">
@@ -139,12 +128,12 @@
                 :min="0"
                 :max="9999999"
                 @change="handleChangeBaseGoalNum($event, index)"
-                v-model.number="item.base_goal_num"
+                v-model.number="groupMember.base_goal_num"
               />
             </el-col>
             <el-col :span="5">
               <span>浮动张数：</span>
-              <span>{{ item.float_num }}张</span>
+              <span>{{ groupMember.float_num }}张</span>
             </el-col>
           </el-row>
         </div>
@@ -175,8 +164,8 @@ export default {
   components: { DatePicker },
   data () {
     return {
+      routeName: this.$route.name,
       retouchStandardToCN,
-      loading: true,
       showDialog: false,
       date: dayjs().format('YYYY-MM-DD'), // 查询时间
       goalStatistical: {}, //  获取今日目标统计
@@ -192,10 +181,7 @@ export default {
         return false
       }
       const yesterday = dayjs().subtract(1, 'day').startOf('date') // 昨天凌晨
-      if (dayjs(this.date).isBefore(yesterday)) {
-        return false
-      }
-      return true
+      return dayjs(this.date).isAfter(yesterday)
     },
     // 已经分陪的修图张数
     allocationNum () {
@@ -217,25 +203,27 @@ export default {
      */
     async getData () {
       if (!this.date) this.$message.error('请先选择时间')
-      this.loading = true
-      await Promise.all([this.getRetoucherGoalList(), this.getRetoucherStatistical()])
-        .finally(() => {
-          this.loading = false
-        })
+      this.$store.dispatch('setting/showLoading', this.routeName)
+      try {
+        await Promise.all([this.getRetoucherGoalList(), this.getRetoucherStatistical()])
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 获取组员目标
      */
     async getRetoucherGoalList () {
-      this.loading = true
+      this.$store.dispatch('setting/showLoading', this.routeName)
       const params = {
         date: this.date
       }
-      const tableData = await RetouchLeaderApi.getRetoucherGoalList(params)
-        .finally(() => {
-          this.loading = false
-        })
-      this.tableData = tableData || []
+      try {
+        const tableData = await RetouchLeaderApi.getRetoucherGoalList(params)
+        this.tableData = tableData || []
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
+      }
     },
     /**
      * @description 获取今日目标统计
@@ -254,7 +242,7 @@ export default {
       const data = this.tableData.map(item => {
         // 浮动张数取预计浮动和实际浮动中最小的那个
         let float_num = Math.min(Number(item.expect_float_num), Number(item.actual_float_num || Number.MAX_VALUE))
-        // 如果这个人的基础涨势为0， 则浮动张数也是0
+        // 如果这个人的基础张数为0， 则浮动张数也是0
         float_num = item.base_goal_num === 0 ? 0 : float_num
         return {
           staff_id: item.staff.id,
@@ -295,7 +283,7 @@ export default {
         return this.$message.error('已分配修图张数小于今日预计完成总量')
       }
 
-      this.loading = true
+      this.$store.dispatch('setting/showLoading', this.routeName)
 
       const staffGoals = this.editData.map(item => {
         return {
@@ -310,12 +298,11 @@ export default {
 
       try {
         await RetouchLeaderApi.updateRetoucherGoal(req)
-        await this.getData()
         this.showDialog = false
+        await this.getData()
         this.$message.success('设置云端今日目标值成功。')
-        this.loading = false
-      } catch (err) {
-        this.loading = false
+      } finally {
+        this.$store.dispatch('setting/hiddenLoading', this.routeName)
       }
     },
     /**
