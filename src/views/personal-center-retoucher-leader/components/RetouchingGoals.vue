@@ -153,7 +153,7 @@ export default {
       if (!this.goalStatistical.enable_float_staff_num){
         return false
       }
-      const yesterday = dayjs().subtract(1, 'day').startOf('date') // 昨天凌晨
+      const yesterday = dayjs().subtract(2, 'day').endOf('date') // 昨天凌晨
       return dayjs(this.date).isAfter(yesterday)
     },
     // 已经分陪的修图张数
