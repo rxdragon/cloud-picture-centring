@@ -135,13 +135,12 @@ const mutations = {
     // 删除
     state.showAnnouncementDelete = roles.includes('AnnouncementManage.announcementManageIndex.delete')
     // 每日目标
-    // todo:nx 是否有修图组目标的tag
-    state.showRetouchingGoalsView = roles.includes('AdminManage.performanceInquire.retoucherGoalView') || true
-    // todo:nx 是否可以设置每日目标
-    state.showUpdateRetoucherGoal = roles.includes('AdminManage.performanceInquire.setRetoucherGoal') || true
-    // todo:nx 是否可以修改组的基础值
-    state.showUpdateRetoucherGroupGoal = roles.includes('AdminManage.performanceInquire.setRetoucherGroupGoal') || true
-
+    // 是否可以看到修图组目标菜单
+    state.showRetouchingGoalsView = roles.includes('AdminManage.performanceInquire.retoucherGoalView')
+    // 是否可以设置每日目标
+    state.showUpdateRetoucherGoal = roles.includes('AdminManage.performanceInquire.setRetoucherGoal')
+    // 是否可以修改组的基础值
+    state.showUpdateRetoucherGroupGoal = roles.includes('AdminManage.performanceInquire.setRetouchGroupGoal')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {

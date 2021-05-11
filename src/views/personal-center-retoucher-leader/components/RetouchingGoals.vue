@@ -28,29 +28,16 @@
         <template slot-scope="{ row }">
           <p>
             <span class="mr-10">{{ row.staff.nickname || row.staff.name }}</span>
+
             <el-tag
-              v-if="row.staff_schedule.work_over_time"
-              type="warning"
+              v-for="(workState, index) in row.tags"
+              :key="index"
+              :type="workState.type"
               effect="dark"
               size="mini"
+              class="mr-10"
             >
-              加班
-            </el-tag>
-            <el-tag
-              v-if="row.staff_schedule.leave_duration"
-              type="danger"
-              effect="dark"
-              size="mini"
-            >
-              请假
-            </el-tag>
-            <el-tag
-              v-if="row.staff_schedule.is_new_staff"
-              type="success"
-              effect="dark"
-              size="mini"
-            >
-              新人
+              {{ workState.name }}
             </el-tag>
           </p>
         </template>
@@ -91,33 +78,19 @@
           >
             <el-col :span="5">
               <span class="mr-5">{{ groupMember.staff_name }}</span>
-              <el-tag
-                v-if="groupMember.work_over_time"
-                type="warning"
-                effect="dark"
-                size="mini"
-              >
-                加班
-              </el-tag>
-              <el-tag
-                v-if="groupMember.leave_duration"
-                type="danger"
-                effect="dark"
-                size="mini"
-              >
-                请假
-              </el-tag>
-              <el-tag
-                v-if="groupMember.is_new_staff"
-                type="success"
-                effect="dark"
-                size="mini"
-              >
-                新人
-              </el-tag>
-              <span class="standard-icon">
+              <span class="standard-icon mr-5">
                 <span :class="`iconmap-standard-${groupMember.retouch_standard}`" />
               </span>
+              <el-tag
+                v-for="(workState, index) in groupMember.tags"
+                :key="index"
+                :type="workState.type"
+                effect="dark"
+                size="mini"
+                class="mr-10"
+              >
+                {{ workState.name }}
+              </el-tag>
             </el-col>
             <el-col :span="12">
               <span class="mr-10">基础张数</span>
@@ -180,7 +153,7 @@ export default {
       if (!this.goalStatistical.enable_float_staff_num){
         return false
       }
-      const yesterday = dayjs().subtract(1, 'day').startOf('date') // 昨天凌晨
+      const yesterday = dayjs().subtract(2, 'day').endOf('date') // 昨天凌晨
       return dayjs(this.date).isAfter(yesterday)
     },
     // 已经分陪的修图张数
@@ -252,9 +225,7 @@ export default {
           float_num,
           copy_float_num: float_num,
           copy_base_goal_num: item.base_goal_num,
-          is_new_staff: item.staff_schedule.is_new_staff,
-          work_over_time: item.staff_schedule.work_over_time,
-          leave_duration: item.staff_schedule.leave_duration,
+          tags: item.tags
         }
       })
       this.editData = data

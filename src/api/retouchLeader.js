@@ -6,6 +6,27 @@ import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/inde
 import * as MathUtil from '@/utils/mathUtil'
 
 /**
+ * 组员的出勤状态
+ */
+const STAFF_WORK_STATUS = [
+  {
+    key: 'work_over_time',
+    name: '加班',
+    type: 'warning'
+  },
+  {
+    key: 'leave_duration',
+    name: '请假',
+    type: 'danger'
+  },
+  {
+    key: 'is_new_staff',
+    name: '新人',
+    type: 'dark'
+  }
+]
+
+/**
  * @description 获取今日数据
  */
 export function getTodayQuota () {
@@ -203,6 +224,7 @@ export function getRetoucherGoalList (params) {
       item.staff_schedule = item.staff_schedule || {}
       item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
       item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
+      item.tags = STAFF_WORK_STATUS.filter(state => _.get(item.staff_schedule, state.key))
     })
     return msg
   })
