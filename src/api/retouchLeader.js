@@ -220,7 +220,7 @@ export function getRetoucherGoalList (params) {
     if (!msg && msg.length) return []
     msg.forEach(item => {
       item.retouchStandardCn = retouchStandardToCN[item.retouch_standard]
-      item.achieveCn = msg.achieve ? '是' : '否'
+      item.achieveCn = item.achieve ? '是' : '否'
       item.staff_schedule = item.staff_schedule || {}
       item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
       item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
