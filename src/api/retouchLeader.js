@@ -228,7 +228,7 @@ export function getRetoucherGoalList (params) {
         const value = Number(_.get(item.staff_schedule, state.key))
         if (!value) return null
         if (state.key === 'leave_duration') {
-          return Object.assign({}, state, { name: `请假：${value} 小时` })
+          return Object.assign({}, state, { name: `请假：${value}小时` })
         } else {
           return state
         }

@@ -24,7 +24,7 @@
     </el-row>
 
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
-      <el-table-column prop="staff_schedule" label="修图师">
+      <el-table-column prop="staff_schedule" label="修图师" width="170px">
         <template slot-scope="{ row }">
           <div class="tag-wrap">
             <div class="mr-10 name">{{ row.staff.nickname || row.staff.name }}</div>
@@ -63,7 +63,7 @@
     </div>
 
     <el-dialog
-      width="40%"
+      width="45%"
       title="修改修图师基础张数"
       center
       custom-class="empty-dialog"
@@ -77,7 +77,7 @@
             :key="index"
             :gutter="10"
           >
-            <el-col :span="5">
+            <el-col :span="6">
               <div class="tag-wrap">
                 <div class="mr-5 name">{{ groupMember.staff_name }}</div>
                 <div>
