@@ -26,20 +26,21 @@
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
       <el-table-column prop="staff_schedule" label="修图师">
         <template slot-scope="{ row }">
-          <p>
-            <span class="mr-10">{{ row.staff.nickname || row.staff.name }}</span>
-
-            <el-tag
-              v-for="(workState, index) in row.tags"
-              :key="index"
-              :type="workState.type"
-              effect="dark"
-              size="mini"
-              class="mr-10"
-            >
-              {{ workState.name }}
-            </el-tag>
-          </p>
+          <div class="tag-wrap">
+            <div class="mr-10 name">{{ row.staff.nickname || row.staff.name }}</div>
+            <div>
+              <el-tag
+                v-for="(workState, index) in row.tags"
+                :key="index"
+                :type="workState.type"
+                effect="dark"
+                size="mini"
+                class="mr-10 mt-5"
+              >
+                {{ workState.name }}
+              </el-tag>
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="retouchStandardCn" label="修图标准" />
@@ -77,20 +78,26 @@
             :gutter="10"
           >
             <el-col :span="5">
-              <span class="mr-5">{{ groupMember.staff_name }}</span>
-              <span class="standard-icon mr-5">
-                <span :class="`iconmap-standard-${groupMember.retouch_standard}`" />
-              </span>
-              <el-tag
-                v-for="(workState, index) in groupMember.tags"
-                :key="index"
-                :type="workState.type"
-                effect="dark"
-                size="mini"
-                class="mr-10"
-              >
-                {{ workState.name }}
-              </el-tag>
+              <div class="tag-wrap">
+                <div class="mr-5 name">{{ groupMember.staff_name }}</div>
+                <div>
+                  <div class="standard-icon mr-5">
+                    <span :class="`iconmap-standard-${groupMember.retouch_standard}`" />
+                  </div>
+                  <div>
+                    <el-tag
+                      v-for="(workState, index) in groupMember.tags"
+                      :key="index"
+                      :type="workState.type"
+                      effect="dark"
+                      size="mini"
+                      class="mr-10 mt-5"
+                    >
+                      {{ workState.name }}
+                    </el-tag>
+                  </div>
+                </div>
+              </div>
             </el-col>
             <el-col :span="12">
               <span class="mr-10">基础张数</span>
@@ -341,7 +348,7 @@ export default {
   .item {
     display: flex;
     align-items: center;
-    padding: 15px 0;
+    padding: 10px 0;
     border-bottom: 1px solid #ecedee;
 
     &:last-child {
@@ -351,6 +358,17 @@ export default {
     .number-input {
       width: calc(100% - 100px);
     }
+  }
+}
+
+.tag-wrap {
+  display: flex;
+  align-items: center;
+
+  .name {
+    flex-shrink: 0;
+    min-width: 50px;
+    margin-left: 5px;
   }
 }
 
@@ -386,6 +404,10 @@ export default {
 
 .mr-5 {
   margin-right: 5px;
+}
+
+.mt-5 {
+  margin-top: 5px;
 }
 
 .mr-10 {

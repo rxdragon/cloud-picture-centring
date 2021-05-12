@@ -10,6 +10,11 @@ import * as MathUtil from '@/utils/mathUtil'
  */
 const STAFF_WORK_STATUS = [
   {
+    key: 'is_new_staff',
+    name: '新人',
+    type: 'dark'
+  },
+  {
     key: 'work_over_time',
     name: '加班',
     type: 'warning'
@@ -18,11 +23,6 @@ const STAFF_WORK_STATUS = [
     key: 'leave_duration',
     name: '请假',
     type: 'danger'
-  },
-  {
-    key: 'is_new_staff',
-    name: '新人',
-    type: 'dark'
   }
 ]
 
@@ -224,7 +224,15 @@ export function getRetoucherGoalList (params) {
       item.staff_schedule = item.staff_schedule || {}
       item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
       item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
-      item.tags = STAFF_WORK_STATUS.filter(state => _.get(item.staff_schedule, state.key))
+      item.tags = STAFF_WORK_STATUS.map(state => {
+        const value = Number(_.get(item.staff_schedule, state.key))
+        if (!value) return null
+        if (state.key === 'leave_duration') {
+          return Object.assign({}, state, { name: `请假：${value} 小时` })
+        } else {
+          return state
+        }
+      }).filter(state => Boolean(state))
     })
     return msg
   })
