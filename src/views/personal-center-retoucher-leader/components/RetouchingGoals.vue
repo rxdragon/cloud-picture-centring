@@ -182,7 +182,7 @@ export default {
      * @description 获取数据
      */
     async getData () {
-      if (!this.date) this.$message.error('请先选择时间')
+      if (!this.date) return this.$message.error('请先选择日期')
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         await Promise.all([this.getRetoucherGoalList(), this.getRetoucherStatistical()])
