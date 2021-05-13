@@ -142,6 +142,7 @@ export default {
      * @description 获取页面数据
      */
     async getData () {
+      if (!this.date) return this.$message.error('请选择日期')
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         await Promise.all([
