@@ -55,6 +55,14 @@ export async function getQueueWeightTypeList (params) {
             value: data.customer_urgent_weight[key]
           }
         })
+      data.take_photo_time = {
+        value: _.get(data, 'take_photo_time_set.value') || 0,
+        unit: _.get(data, 'take_photo_time_set.unit') || ''
+      }
+      data.critical_take_photo_time = {
+        value: _.get(data, 'critical_take_photo_time.value') || 0,
+        unit: _.get(data, 'critical_take_photo_time.unit') || '',
+      }
     })
 
     return res
