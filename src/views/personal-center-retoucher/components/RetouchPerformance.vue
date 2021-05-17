@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loading" class="module-panel retouch-performance">
     <div class="panel-title">
-      修图绩效
+      <span>修图绩效</span>
       <div class="title-plugin">
         <el-popover placement="bottom-end" width="900" trigger="hover">
           <div class="tip-plugin-content">
@@ -58,6 +58,11 @@
       <el-col :span="8" :xl="4">
         <div class="search-item">
           <el-button type="primary" @click="getRetouchQuota">查 询</el-button>
+        </div>
+      </el-col>
+      <el-col :span="8" :xl="4">
+        <div class="search-item target-day">
+          未完成目标天数<span class="day-info" :class="notReachStandardDays && 'no-reach'">{{ notReachStandardDays }}</span>天
         </div>
       </el-col>
     </el-row>
@@ -224,11 +229,12 @@ export default {
   components: { DatePicker },
   data () {
     return {
+      routeBase: '/retoucher-center/retouch-history',
       performanceData: [], // 修图绩效
       timeSpan: null, // 时间戳
       SearchType,
       loading: false,
-      routeBase: '/retoucher-center/retouch-history'
+      notReachStandardDays: 0 // 未达成目标天数
     }
   },
   mounted () {
@@ -248,7 +254,9 @@ export default {
           endAt: joinTimeSpan(this.timeSpan[1], 1)
         }
         this.loading = true
-        this.performanceData = await Retoucher.getRetouchQuota(reqData)
+        const res = await Retoucher.getRetouchQuota(reqData)
+        this.performanceData = res.list
+        this.notReachStandardDays = res.notReachStandardDays
         this.$refs['panel-table'].doLayout()
       } finally {
         await delayLoading()
@@ -263,6 +271,7 @@ export default {
 .panel-title {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 
   .title-plugin {
     .tip-box {
@@ -275,6 +284,21 @@ export default {
         margin-right: 10px;
         font-size: 14px;
       }
+    }
+  }
+}
+
+.target-day {
+  justify-content: flex-end;
+  font-size: 14px;
+
+  .day-info {
+    margin: 0 12px;
+    font-size: 16px;
+    color: @gray;
+
+    &.no-reach {
+      color: @red;
     }
   }
 }

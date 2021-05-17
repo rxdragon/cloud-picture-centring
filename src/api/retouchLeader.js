@@ -1,7 +1,30 @@
 // retouchLeader
 import axios from '@/plugins/axios.js'
 import StreamModel from '@/model/StreamModel.js'
+import { retouchStandardToCN } from '@/utils/enumerate'
 import { keyToHump, transformPercentage, timeFormat, getAvg } from '@/utils/index.js'
+import * as MathUtil from '@/utils/mathUtil'
+
+/**
+ * 组员的出勤状态
+ */
+const STAFF_WORK_STATUS = [
+  {
+    key: 'is_new_staff',
+    name: '新人',
+    type: 'dark'
+  },
+  {
+    key: 'work_over_time',
+    name: '加班',
+    type: 'warning'
+  },
+  {
+    key: 'leave_duration',
+    name: '请假',
+    type: 'danger'
+  }
+]
 
 /**
  * @description 获取今日数据
@@ -28,7 +51,7 @@ export function getTodayQuota () {
  */
 export function getGroupStaffQuotaInfo (params) {
   return axios({
-    url: '/project_cloud/retouchLeader/getGroupStaffQuotaInfo',
+    url: '/project_cloud_oa/retouchLeader/getGroupStaffQuotaInfo',
     method: 'GET',
     params
   }).then(msg => {
@@ -40,12 +63,6 @@ export function getGroupStaffQuotaInfo (params) {
     for (const key in data.income) {
       data.income[key] = Number(data.income[key])
     }
-    const income =
-      data.income.retouch +
-      data.income.impulse +
-      data.income.reward +
-      data.income.timeIntervalReward +
-      data.income.timeIntervalImpulse
 
     data.spotCheckNonePhotoNum = data.spotCheckPhotoNum - data.spotCheckPlantPhotoNum - data.spotCheckPullPhotoNum
     const createData = {}
@@ -60,8 +77,16 @@ export function getGroupStaffQuotaInfo (params) {
     avgRetouchTimePhoto = timeFormat(avgRetouchTimePhoto, 'text', true)
 
     createData.avgRetouchTime = [`${avgRetouchTimeStream}(单)`, `${avgRetouchTimePhoto}(张)`]
-    createData.income = income.toFixed(2) // 正常收益
-    createData.notReachStandardDays = data.notReachStandardDays // 未完成指标（天）
+
+    const income = MathUtil.summation()
+    income(data.income.retouch)
+    income(data.income.impulse)
+    income(data.income.reward)
+    income(data.income.timeIntervalReward)
+    income(data.income.timeIntervalImpulse)
+    createData.income = income.toResult().toFixed(2) // 正常收益
+
+    createData.notReachStandardDays = Number(data.notReachStandardDays) // 未完成指标（天）
 
     const storeEvaluateCount = _.get(data, 'storeEvaluate.count') || 0
     createData.goodEvaluationInfo = getRateInfo(data.goodStreamNum, storeEvaluateCount) // 点赞数 / 点赞率
@@ -179,5 +204,66 @@ export function getLittleBeeInfo (params) {
       value: data.rank || '-'
     }]
     return createData
+  })
+}
+
+/**
+ * @description 获取组员目标列表
+ * @params { String } date
+ */
+export function getRetoucherGoalList (params) {
+  return axios({
+    url: '/project_cloud_oa/goal/retoucher/list',
+    method: 'GET',
+    params
+  }).then(msg => {
+    if (!msg && msg.length) return []
+    msg.forEach(item => {
+      item.retouchStandardCn = retouchStandardToCN[item.retouch_standard]
+      item.achieveCn = item.achieve ? '是' : '否'
+      item.staff_schedule = item.staff_schedule || {}
+      item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
+      item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
+      item.tags = STAFF_WORK_STATUS.map(state => {
+        const value = Number(_.get(item.staff_schedule, state.key))
+        if (!value) return null
+        if (state.key === 'leave_duration') {
+          return Object.assign({}, state, { name: `请假：${value}小时` })
+        } else {
+          return state
+        }
+      }).filter(state => Boolean(state))
+    })
+    return msg
+  })
+}
+
+
+/**
+ * @description 获取今日目标统计
+ * @params { String }
+ */
+export function getRetoucherStatistical (params) {
+  return axios({
+    url: '/project_cloud_oa/goal/retoucher/total_num',
+    method: 'GET',
+    params
+  }).then(msg => {
+    return msg
+  })
+}
+
+
+/**
+ * @description 修改组员目标值
+ * @params { String } date
+ */
+export function updateRetoucherGoal (params) {
+  return axios({
+    url: '/project_cloud_oa/goal/retoucher/edit',
+    method: 'POST',
+    data: params
+  }).then(msg => {
+    return msg
   })
 }

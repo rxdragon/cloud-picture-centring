@@ -195,6 +195,12 @@ const QueueWeightTypeException = [
   [0xA11019001, '存在的类别名称']
 ]
 
+// 修图目标
+const RetoucherGoalException = [
+  [0xA25003001, '当前时间不可修改'],
+  [0xA25003002, '目标张数配置错误']
+]
+
 export const errText = [
   ...ApiException,
   ...CardException,
@@ -216,7 +222,8 @@ export const errText = [
   ...ReturnToQueueException,
   ...AnnounceException,
   ...AnnounceManageException,
-  ...QueueWeightTypeException
+  ...QueueWeightTypeException,
+  ...RetoucherGoalException
 ]
 
 const errMap = new Map(errText)
