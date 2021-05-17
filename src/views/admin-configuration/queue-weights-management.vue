@@ -18,9 +18,9 @@
         </el-table-column>
         <el-table-column prop="take_photo_time" label="取片时长">
           <template slot-scope="scope">
-            <div>约定时长: {{ scope.row.take_photo_time }} 分钟 / 张</div>
+            <div>约定时长: {{ scope.row.take_photo_time.value }} {{ TIME_SYMBOL[scope.row.take_photo_time.unit] }}</div>
+            <div>取片临界时长: {{ scope.row.critical_take_photo_time.value }} {{ TIME_SYMBOL[scope.row.critical_take_photo_time.unit] }}</div>
             <div>临界增加权重: {{ scope.row.critical_increase_weight }}</div>
-            <div>取片临界时长: {{ TIME_SYMBOL[scope.row.time_symbol] }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="product_count" label="归属产品数量"></el-table-column>
@@ -170,32 +170,32 @@
         </el-row>
         <el-row >
           <el-col :span="11">
-            <el-form-item label="约定取片时长：" prop="take_photo_time">
+            <el-form-item label="约定取片时长：" prop="take_photo_time.value">
               <div class="duration-wrap">
                 <el-input-number
                   :min="0"
                   :max="9999999"
                   v-number-only
-                  v-model.number="form.take_photo_time"
+                  v-model.number="form.take_photo_time.value"
                   class="duration"
                 ></el-input-number>
-                <el-radio-group class="duration-radio-wrap" v-model="form.time_symbol">
-                  <el-radio class="duration-radio" label="min">分钟 / 单</el-radio>
-                  <el-radio label="order">分钟 / 张</el-radio>
+                <el-radio-group class="duration-radio-wrap" v-model="form.take_photo_time.unit" @change="handleChangeTakePhotoTimeUnit">
+                  <el-radio class="duration-radio" label="bill">分钟 / 单</el-radio>
+                  <el-radio label="piece">分钟 / 张</el-radio>
                 </el-radio-group>
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="11">
-            <el-form-item label="取片临界时长：" prop="take_photo_time">
+            <el-form-item label="取片临界时长：" prop="critical_take_photo_time.value">
               <el-input-number
                 :min="0"
                 :max="9999999"
                 v-number-only
-                v-model.number="form.take_photo_time"
+                v-model.number="form.critical_take_photo_time.value"
                 class="take-photo-time"
               ></el-input-number>
-              <span>{{ TIME_SYMBOL[form.time_symbol] || '-' }}</span>
+              <span>{{ TIME_SYMBOL[form.take_photo_time.unit] || '-' }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -211,8 +211,8 @@
 <script>
 import * as queueWeightManageApi from '@/api/queueWeightManageApi'
 const TIME_SYMBOL = {
-  order: '分钟 / 单',
-  min: '分钟 / 张'
+  bill: '分钟 / 单',
+  piece: '分钟 / 张'
 }
 const baseData = {
   name: '',
@@ -225,8 +225,15 @@ const baseData = {
     customer_urgent_v3: 0,
     customer_urgent_v4: 0
   },
+  critical_take_photo_time: {
+    value: 0,
+    unit: 'piece'
+  },
   time_symbol: 'min',
-  take_photo_time: 30,
+  take_photo_time: {
+    value: 30,
+    unit: 'piece'
+  },
   critical_increase_weight: 0,
 }
 export default {
@@ -252,10 +259,20 @@ export default {
           customer_urgent_v3: [{ required: true, message: '请输入V3会员加急权重值', trigger: 'blur' }],
           customer_urgent_v4: [{ required: true, message: '请输入V4会员加急权重值', trigger: 'blur' }],
         },
-        take_photo_time: [
-          { required: true, message: '请输入约定取片时长', trigger: 'blur' },
-          { type: 'number', min: 30, max: 9999999, message: '约定取片时长 30 到 9999999 之间', trigger: 'blur' }
-        ],
+        take_photo_time: {
+          value: [
+            { required: true, message: '请输入约定取片时长', trigger: 'blur' },
+            { type: 'number', min: 30, max: 9999999, message: '约定取片时长 30 到 9999999 之间', trigger: 'blur' }
+          ],
+          unit: { required: true, message: '请选择时长单位', trigger: 'blur' }
+        },
+        critical_take_photo_time: {
+          value: [
+            { required: true, message: '请输入约定取片时长', trigger: 'blur' },
+            { type: 'number', min: 30, max: 9999999, message: '约定取片时长 30 到 9999999 之间', trigger: 'blur' }
+          ],
+          unit: { required: true, message: '请选择时长单位', trigger: 'blur' }
+        },
         critical_increase_weight: [{ required: true, message: '请输入临界增加权重值', trigger: 'blur' }]
       },
       tableData: [],
@@ -342,10 +359,17 @@ export default {
         increase_weight: row.increase_weight,
         urgent_weight: row.urgent_weight,
         customer_urgent_weight: _.cloneDeep(row.customer_urgent_weight),
-        take_photo_time: row.take_photo_time,
-        critical_increase_weight: row.critical_increase_weight,
+        take_photo_time: _.cloneDeep(row.take_photo_time),
+        critical_take_photo_time: _.cloneDeep(row.critical_take_photo_time),
+        critical_increase_weight: row.critical_increase_weight
       }
       this.showDialog = true
+    },
+    /**
+     @description 修改约定取片时长单位的时候， 同步修改取片临界时长单位
+     */
+    handleChangeTakePhotoTimeUnit () {
+      this.form.critical_take_photo_time.unit = this.form.take_photo_time.unit
     },
     /**
      @description 关闭编辑弹窗

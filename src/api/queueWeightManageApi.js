@@ -55,6 +55,15 @@ export async function getQueueWeightTypeList (params) {
             value: data.customer_urgent_weight[key]
           }
         })
+      // todo:nx
+      data.take_photo_time = {
+        value: 30,
+        unit: 'piece'
+      }
+      data.critical_take_photo_time = {
+        value: 30,
+        unit: 'piece'
+      }
     })
 
     return res
