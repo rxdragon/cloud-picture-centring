@@ -194,7 +194,7 @@
                   :max="9999999"
                   v-number-only
                   v-model.number="form.critical_take_photo_time.value"
-                  class="take-photo-time"
+                  class="duration"
                 ></el-input-number>
                 <el-radio-group class="duration-radio-wrap" v-model="form.critical_take_photo_time.unit">
                   <el-radio class="duration-radio" label="bill">分钟 / 单</el-radio>
@@ -449,11 +449,6 @@ export default {
         margin-right: 10px;
       }
     }
-  }
-
-  .take-photo-time {
-    width: 65%;
-    margin-right: 20px;
   }
 
   .refresh-queue-wrap {
