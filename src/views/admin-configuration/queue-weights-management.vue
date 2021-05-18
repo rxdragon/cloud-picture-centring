@@ -179,7 +179,7 @@
                   v-model.number="form.take_photo_time_set.value"
                   class="duration"
                 ></el-input-number>
-                <el-radio-group class="duration-radio-wrap" v-model="form.take_photo_time_set.unit" @change="handleChangeTakePhotoTimeUnit">
+                <el-radio-group class="duration-radio-wrap" v-model="form.take_photo_time_set.unit">
                   <el-radio class="duration-radio" label="bill">分钟 / 单</el-radio>
                   <el-radio label="piece">分钟 / 张</el-radio>
                 </el-radio-group>
@@ -188,14 +188,19 @@
           </el-col>
           <el-col :span="11">
             <el-form-item label="取片临界时长：" prop="critical_take_photo_time">
-              <el-input-number
-                :min="0"
-                :max="9999999"
-                v-number-only
-                v-model.number="form.critical_take_photo_time.value"
-                class="take-photo-time"
-              ></el-input-number>
-              <span>{{ TIME_SYMBOL[form.take_photo_time_set.unit] || '-' }}</span>
+              <div class="duration-wrap">
+                <el-input-number
+                  :min="0"
+                  :max="9999999"
+                  v-number-only
+                  v-model.number="form.critical_take_photo_time.value"
+                  class="duration"
+                ></el-input-number>
+                <el-radio-group class="duration-radio-wrap" v-model="form.critical_take_photo_time.unit">
+                  <el-radio class="duration-radio" label="bill">分钟 / 单</el-radio>
+                  <el-radio label="piece">分钟 / 张</el-radio>
+                </el-radio-group>
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -240,10 +245,10 @@ const baseData = {
 // 取片验证信息
 function validateTimeData (rule, value, callback) {
   if (!value.value) {
-    callback(new Error('请输入约定取片时长'))
+    callback(new Error('请输入时长'))
   }
   if (typeof value.value !== 'number' || value.value < 30 || value.value > 9999999) {
-    callback(new Error('约定取片时长 30 到 9999999 之间'))
+    callback(new Error('约定时长 30 到 9999999 之间'))
   }
   if (!value.unit) {
     callback(new Error('请选择时长单位'))
@@ -376,12 +381,6 @@ export default {
       this.showDialog = true
     },
     /**
-     @description 修改约定取片时长单位的时候， 同步修改取片临界时长单位
-     */
-    handleChangeTakePhotoTimeUnit () {
-      this.form.critical_take_photo_time.unit = this.form.take_photo_time_set.unit
-    },
-    /**
      @description 关闭编辑弹窗
      */
     handleCloseDialog () {
@@ -450,11 +449,6 @@ export default {
         margin-right: 10px;
       }
     }
-  }
-
-  .take-photo-time {
-    width: 65%;
-    margin-right: 20px;
   }
 
   .refresh-queue-wrap {
