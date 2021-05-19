@@ -395,6 +395,7 @@ export default {
       this.$store.dispatch('setting/showLoading', this.routeName)
       try {
         await queueWeightManageApi.refreshQueue()
+        this.$message.success('队列刷新成功')
         await this.getCanRefreshQueueTime()
       } finally {
         this.$store.dispatch('setting/hiddenLoading', this.routeName)
