@@ -236,7 +236,7 @@ const baseData = {
   },
   time_symbol: 'min',
   take_photo_time_set: {
-    value: 30,
+    value: 0,
     unit: 'piece'
   },
   critical_increase_weight: 0,
@@ -244,11 +244,11 @@ const baseData = {
 
 // 取片验证信息
 function validateTimeData (rule, value, callback) {
-  if (!value.value) {
+  if (value.value === undefined) {
     callback(new Error('请输入时长'))
   }
-  if (typeof value.value !== 'number' || value.value < 30 || value.value > 9999999) {
-    callback(new Error('约定时长 30 到 9999999 之间'))
+  if (typeof value.value !== 'number' || value.value < 0 || value.value > 9999999) {
+    callback(new Error('约定时长 0 到 9999999 之间'))
   }
   if (!value.unit) {
     callback(new Error('请选择时长单位'))
