@@ -5,7 +5,7 @@
       <el-col :span="16">
         <div class="date-item">
           <span>选择日期</span>
-          <date-picker type="date" v-model="date" />
+          <date-picker type="date" v-model="date" @change="handleChangeDate"/>
           <el-button type="primary" class="ml-15"  @click="getData">查 询</el-button>
         </div>
       </el-col>
@@ -178,6 +178,12 @@ export default {
     this.getData()
   },
   methods: {
+    /**
+     * 修改了时间之后需要吧之前的清楚， 否则会干扰canShowEditView的判断
+     */
+    handleChangeDate () {
+      this.goalStatistical = {}
+    },
     /**
      * @description 获取数据
      */
