@@ -58,7 +58,7 @@
       <el-table-column prop="achieveCn" label="是否达标" />
     </el-table>
     <div class="set-info">
-      <div><span>今日目标：</span><span>{{ goalStatistical.enable_float_staff_num || '-' }} 张</span></div>
+      <div><span>今日目标：</span><span>{{ goalStatistical.goal_num || '-' }} 张</span></div>
       <div><span>实际今日已完成：</span><span>{{ goalStatistical.finish_num || '-' }} 张</span></div>
     </div>
 
@@ -118,7 +118,7 @@
           </el-row>
         </div>
         <el-divider class="divider"></el-divider>
-        <p><span>今日预计完成总量：{{ goalStatistical.enable_float_staff_num }} 张</span></p>
+        <p><span>今日预计完成总量：{{ goalStatistical.goal_num }} 张</span></p>
         <p><span>已分配修图张数：{{ allocationNum }} 张</span></p>
         <p v-if="showTips" style="margin-top: 5px;">
           <span class="el-icon-info"></span>
@@ -157,7 +157,7 @@ export default {
   computed: {
     // 是否可以编辑
     canShowEditView () {
-      if (!this.goalStatistical.enable_float_staff_num){
+      if (!this.goalStatistical.goal_num){
         return false
       }
       const yesterday = dayjs().subtract(2, 'day').endOf('date') // 昨天凌晨
@@ -263,7 +263,7 @@ export default {
       })
       if (hasUndefined) return this.$message.error('请填写基础张数')
       // 判断是否可以保存
-      if (this.allocationNum < this.goalStatistical.enable_float_staff_num) {
+      if (this.allocationNum < this.goalStatistical.goal_num) {
         return this.$message.error('已分配修图张数小于今日预计完成总量')
       }
 
