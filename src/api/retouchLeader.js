@@ -233,6 +233,9 @@ export function getRetoucherGoalList (params) {
           return state
         }
       }).filter(state => Boolean(state))
+      // 如果是新人或者请假时间大雨8个小时， 则不计算浮动
+      item.hasNotFloat = _.get(item.staff_schedule, 'is_new_staff')
+        || Number(_.get(item.staff_schedule, 'leave_duration') || 0) >= 8
     })
     return msg
   })

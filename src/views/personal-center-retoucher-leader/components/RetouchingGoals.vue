@@ -227,9 +227,12 @@ export default {
     handleOpenSetView () {
       const data = this.tableData.map(item => {
         // 浮动张数取预计浮动和实际浮动中最小的那个
-        let float_num = this.getFloatNum()
         // 如果这个人的基础张数为0， 则浮动张数也是0
-        float_num = item.base_goal_num === 0 ? 0 : float_num
+        // 如果这个人是新人过着请假超过8小时， 浮动也是0
+        const float_num = item.hasNotFloat || item.base_goal_num === 0
+          ? 0
+          : this.getFloatNum()
+
         return {
           staff_id: item.staff.id,
           staff_name: item.staff.nickname || item.staff.name,
@@ -237,7 +240,8 @@ export default {
           retouch_standard: item.retouch_standard,
           float_num,
           copy_base_goal_num: item.base_goal_num,
-          tags: item.tags
+          tags: item.tags,
+          hasNotFloat: item.hasNotFloat
         }
       })
       this.editData = data
@@ -250,7 +254,8 @@ export default {
       if (num === 0) {
         this.editData[index].float_num = 0
       } else {
-        this.editData[index].float_num = this.getFloatNum()
+        const hasNotFloat = this.editData[index].hasNotFloat
+        this.editData[index].float_num = hasNotFloat ? 0 : this.getFloatNum()
       }
     },
     /**
