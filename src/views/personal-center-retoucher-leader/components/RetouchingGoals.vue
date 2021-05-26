@@ -227,7 +227,7 @@ export default {
     handleOpenSetView () {
       const data = this.tableData.map(item => {
         // 浮动张数取预计浮动和实际浮动中最小的那个
-        let float_num = Math.min(Number(item.expect_float_num), Number(item.actual_float_num || Number.MAX_VALUE))
+        let float_num = this.getFloatNum()
         // 如果这个人的基础张数为0， 则浮动张数也是0
         float_num = item.base_goal_num === 0 ? 0 : float_num
         return {
@@ -236,7 +236,6 @@ export default {
           base_goal_num: item.base_goal_num,
           retouch_standard: item.retouch_standard,
           float_num,
-          copy_float_num: float_num,
           copy_base_goal_num: item.base_goal_num,
           tags: item.tags
         }
@@ -251,7 +250,7 @@ export default {
       if (num === 0) {
         this.editData[index].float_num = 0
       } else {
-        this.editData[index].float_num = this.editData[index].copy_float_num
+        this.editData[index].float_num = this.getFloatNum()
       }
     },
     /**
@@ -300,6 +299,15 @@ export default {
       if (currentCellNum < contrastCellNum && currentCellNum !== 0) return 'color-tag'
       if (currentCellNum !== 0 && contrastCellNum === 0) return 'color-tag'
       return ''
+    },
+    /**
+     * @description 获取实际浮动张数, 从预计和实际中取最小的那个
+     */
+    getFloatNum () {
+      if (!this.goalStatistical.expect_float_num && !this.goalStatistical.actual_float_num) return 0
+      const expect_float_num = this.goalStatistical.expect_float_num || Number.MAX_VALUE
+      const actual_float_num = this.goalStatistical.actual_float_num || Number.MAX_VALUE
+      return Math.min(Number(expect_float_num), Number(actual_float_num))
     }
   }
 }
