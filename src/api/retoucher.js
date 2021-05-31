@@ -94,6 +94,7 @@ export function getSelfQuota () {
     todayTargetPhotoNum(data.predictFloatPhotoNum)
     todayTargetPhotoNum(-1 * data.vacateReducePhotoNum)
     data.todayTargetPhotoNum = todayTargetPhotoNum.toResult()
+    data.todayTargetPhotoNum = data.todayTargetPhotoNum <= 0 ? 0 : data.todayTargetPhotoNum
 
     const todayFinishPhotoNumProgress = getAvg(data.todayAllFinishPhotoNum, data.todayTargetPhotoNum)
     data.todayFinishPhotoNumProgress = todayFinishPhotoNumProgress * 100
