@@ -97,7 +97,7 @@ export function getSelfQuota () {
     data.todayTargetPhotoNum = data.todayTargetPhotoNum <= 0 ? 0 : data.todayTargetPhotoNum
 
     const todayFinishPhotoNumProgress = getAvg(data.todayAllFinishPhotoNum, data.todayTargetPhotoNum)
-    data.todayFinishPhotoNumProgress = todayFinishPhotoNumProgress * 100
+    data.todayFinishPhotoNumProgress = data.todayTargetPhotoNum === 0 ? 100 : todayFinishPhotoNumProgress * 100
     return data
   })
 }
