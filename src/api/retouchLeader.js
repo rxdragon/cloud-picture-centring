@@ -233,18 +233,21 @@ export function getRetoucherGoalList (params) {
       item.staff_schedule = item.staff_schedule || {}
       item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
       item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
-      item.tags = STAFF_WORK_STATUS.map(state => {
-        const value = _.get(item.staff_schedule, state.key)
-        if (!state.active(value)) return null
-        if (state.key === 'leave_duration') {
-          return Object.assign({}, state, { name: `请假：${value}小时` })
-        }
-        return state
-      }).filter(state => Boolean(state))
-      // 如果是新人或者请假时间大雨8个小时， 或者属于缦图摄影的， 则不计算浮动
+      item.tags = STAFF_WORK_STATUS
+        .map(state => {
+          const value = _.get(item.staff_schedule, state.key)
+          if (!state.active(value)) return null
+          if (state.key === 'leave_duration') {
+            return Object.assign({}, state, { name: `请假：${value}小时` })
+          }
+          return state
+        })
+        .filter(state => Boolean(state))
+      // 如果是1.新人 2.请假时间大雨8个小时 3.属于缦图摄影的 4.休息中 则不计算浮动
       item.hasNotFloat = _.get(item.staff_schedule, 'is_new_staff')
         || Number(_.get(item.staff_schedule, 'leave_duration') || 0) >= 8
         || _.get(item.staff_schedule, 'identity') === 'mainto'
+        || !_.get(item.staff_schedule, 'on_duty')
     })
     return msg
   })
