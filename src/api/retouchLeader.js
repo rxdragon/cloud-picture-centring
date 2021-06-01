@@ -12,17 +12,26 @@ const STAFF_WORK_STATUS = [
   {
     key: 'is_new_staff',
     name: '新人',
-    type: 'dark'
+    type: 'dark',
+    active: (value) => Boolean(value)
   },
   {
     key: 'work_over_time',
     name: '加班',
-    type: 'warning'
+    type: 'warning',
+    active: (value) => Boolean(Number(value))
   },
   {
     key: 'leave_duration',
     name: '请假',
-    type: 'danger'
+    type: 'danger',
+    active: (value) => Boolean(Number(value))
+  },
+  {
+    key: 'on_duty',
+    name: '休息',
+    type: 'danger',
+    active: (value) => !Boolean(value)
   }
 ]
 
@@ -225,14 +234,17 @@ export function getRetoucherGoalList (params) {
       item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
       item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
       item.tags = STAFF_WORK_STATUS.map(state => {
-        const value = Number(_.get(item.staff_schedule, state.key))
-        if (!value) return null
+        const value = _.get(item.staff_schedule, state.key)
+        if (!state.active(value)) return null
         if (state.key === 'leave_duration') {
           return Object.assign({}, state, { name: `请假：${value}小时` })
-        } else {
-          return state
         }
+        return state
       }).filter(state => Boolean(state))
+      // 如果是新人或者请假时间大雨8个小时， 或者属于缦图摄影的， 则不计算浮动
+      item.hasNotFloat = _.get(item.staff_schedule, 'is_new_staff')
+        || Number(_.get(item.staff_schedule, 'leave_duration') || 0) >= 8
+        || _.get(item.staff_schedule, 'identity') === 'mainto'
     })
     return msg
   })
