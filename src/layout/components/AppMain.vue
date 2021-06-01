@@ -54,7 +54,7 @@ export default {
     if (this.isOnlineWatcher) {
       // eslint-disable-next-line no-console
       console.log(`%c LOAD_MICRO_WEB`, 'color:#3d91cf; font-weight: bold')
-      loadApp()
+      // loadApp()
     }
   },
   methods: {

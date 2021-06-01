@@ -23,6 +23,9 @@ import './guards' // 路由守护
 import initIndexDb from './indexDB/index.js'
 import '@/directive'
 
+import { registerApps } from '@/utils/qiankun.js'
+
+
 initIndexDb(true)
 
 window._ = { get, cloneDeep }
@@ -52,3 +55,5 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+registerApps()

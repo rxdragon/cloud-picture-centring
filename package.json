@@ -114,17 +114,6 @@
     "> 1%",
     "last 2 versions"
   ],
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/vue-cli-plugin-commitlint/lib/cz"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint && lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "lint-staged": {
     "src/**/*.{less,vue}": [
       "yarn slint",

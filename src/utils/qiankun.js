@@ -30,6 +30,11 @@ const entryMap = {
     local: 'http://localhost:8081',
     development: 'http://fed.dev.hzmantu.com/picture-online-web/index.html',
     production: 'https://picture.hzmantu.com/picture-online-web/index.html',
+  },
+  'cloud-spot-check-center': {
+    local: '//localhost:5000/index.html',
+    development: 'http://fed.dev.hzmantu.com/picture-online-web/index.html',
+    production: 'https://picture.hzmantu.com/picture-online-web/index.html',
   }
 }
 
@@ -57,16 +62,37 @@ const mainLifeCycles = {
 }
 
 const apps = [
+  // {
+  //   name: 'pictureonline', // 需和子项目 vue.config.js 中 name 相同
+  //   container: '#picture-online',
+  //   // activeRule: genActiveRule('#/watcher-online'),
+  //   props: {
+  //     getXStreamId: () => SessionTool.getXStreamId(),
+  //     DownIpc: () => DownIpc,
+  //     store: () => store
+  //   }
+  // },
   {
-    name: 'pictureonline', // 需和子项目 vue.config.js 中 name 相同
+    name: 'cloud-spot-check-center', // 需和子项目 vue.config.js 中 name 相同
     container: '#picture-online',
-    // activeRule: genActiveRule('#/watcher-online'),
+    activeRule: (location) => {
+      return location.hash.startsWith('#/cloud-spot-check-center')
+    },
     props: {
       getXStreamId: () => SessionTool.getXStreamId(),
       DownIpc: () => DownIpc,
       store: () => store
-    }
-  }
+    },
+  },
+  // {
+  //   name: 'app-vue-vite',
+  //   container: '#picture-online',
+  //   entry: 'http://localhost:3333',
+  //   activeRule: (location) => {
+  //     return location.hash.startsWith('#/app-vue-vite')
+  //   },
+  //   // activeRule: '#/cloud-spot-check-center',
+  // }
 ]
 
 apps.forEach(app => {
@@ -81,7 +107,7 @@ export function prefetchMicroApps () {
 // 注册所有 应用
 export function registerApps () {
   registerMicroApps(apps, mainLifeCycles)
-  prefetchMicroApps()
+  // prefetchMicroApps()
   start({
     sandbox: { strictStyleIsolation: true },
     excludeAssetFilter: (assetUrl) => {

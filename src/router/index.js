@@ -25,6 +25,7 @@ import personalCenterRetoucher from './modules/personalCenterRetoucher.js' // �
 import personalCenterRetoucherLeader from './modules/personalCenterRetoucherLeader.js' // 个人中心（组长）
 import retoucherCenter from './modules/retoucherCenter.js' // 修图师中心
 import pictureOnline from './modules/pictureOnline.js' // 看片师中心
+import test from './modules/test.js' // 看片师中心
 import announcementManage from './modules/announcementManage.js' // 公告管理
 import announcementCenter from './modules/announcementCenter.js' // 公告中心
 
@@ -124,11 +125,11 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
-  {
-    path: '*',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  }
+  // {
+  //   path: '*',
+  //   component: () => import('@/views/error-page/404'),
+  //   hidden: true
+  // }
 ]
 
 export const lastBaseRoutes = [
@@ -162,6 +163,7 @@ export const asyncRoutes = [
   personalCenterRetoucher,
   personalCenterRetoucherLeader,
   pictureOnline,
+  test,
   announcementManage,
   announcementCenter
 ]
