@@ -136,7 +136,7 @@ const mutations = {
     state.showAnnouncementDelete = roles.includes('AnnouncementManage.announcementManageIndex.delete')
     // 每日目标
     // 是否可以看到修图组目标菜单
-    state.showRetouchingGoalsView = roles.includes('AdminManage.performanceInquire.retoucherGoalView')
+    state.showRetouchingGoalsView = roles.includes('AdminManage.performanceInquire.retouchGroupGoalView')
     // 是否可以设置每日目标
     state.showUpdateRetoucherGoal = roles.includes('AdminManage.performanceInquire.setOverallGoal')
     // 是否可以修改组的基础值
