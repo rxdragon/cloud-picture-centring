@@ -231,8 +231,8 @@ export function getRetoucherGoalList (params) {
       item.retouchStandardCn = retouchStandardToCN[item.retouch_standard]
       item.achieveCn = item.achieve ? '是' : '否'
       item.staff_schedule = item.staff_schedule || {}
-      item.showExpectFloatNum = `${item.expect_float_num} 张/人`
-      item.showActualFloatNum = `${item.actual_float_num} 张/人`
+      item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
+      item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
       item.tags = STAFF_WORK_STATUS
         .map(state => {
           const value = _.get(item.staff_schedule, state.key)

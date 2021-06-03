@@ -116,6 +116,8 @@ export default {
       // 每天7点 之前可以编辑当日的, 8点之前没有考勤数据， 所以取中间
       const endTag = dayjs().hour(17).startOf('hour')
       const startTag = dayjs().hour(8).startOf('hour')
+      // todo:nx 测试阶段放开限制, 上线前删掉
+      if (this.isTestEnv) return true
       if (dayjs().isAfter(endTag) || dayjs().isBefore(startTag)) {
         return false
       }
@@ -126,6 +128,8 @@ export default {
     },
     // 是否可以编辑修图组基础张数， 只能修改今天的和昨天的
     canEditRow () {
+      // todo:nx 测试阶段放开限制, 上线前删掉
+      if (this.isTestEnv) return false
       const yesterday = dayjs().subtract(1, 'day').startOf('date') // 昨天凌晨
       return dayjs(this.date).isBefore(yesterday)
     },
