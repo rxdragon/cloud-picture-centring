@@ -220,7 +220,10 @@ export default {
      * @description 云端小组每日目标张数设定, 修改小组的基础张数
      */
     handleSetGoalNum () {
-      this.editGoals = this.retoucherStatistics.base_goal_num || 0
+      this.editGoals = typeof this.retoucherStatistics.goal_num === 'number'
+        ? this.retoucherStatistics.goal_num
+        : (this.retoucherStatistics.base_goal_num
+          || 0)
       this.dialogMode = 'create'
       this.showDialog = true
     },
