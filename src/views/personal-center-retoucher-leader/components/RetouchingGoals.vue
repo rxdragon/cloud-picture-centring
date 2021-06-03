@@ -58,8 +58,8 @@
       <el-table-column prop="achieveCn" label="是否达标" />
     </el-table>
     <div class="set-info">
-      <div><span>今日目标：</span><span>{{ goalStatistical.goal_num || '-' }} 张</span></div>
-      <div><span>实际今日已完成：</span><span>{{ goalStatistical.finish_num || '-' }} 张</span></div>
+      <div><span>今日目标：</span><span>{{ goalStatistical.goal_num }} 张</span></div>
+      <div><span>实际今日已完成：</span><span>{{ goalStatistical.finish_num }} 张</span></div>
     </div>
 
     <el-dialog
@@ -157,9 +157,12 @@ export default {
   computed: {
     // 是否可以编辑
     canShowEditView () {
-      if (!this.goalStatistical.goal_num){
+      // 0 也可以编辑
+      if (typeof this.goalStatistical.goal_num !== 'number'){
         return false
       }
+      // 如果这个组一个人都没有
+      if (!this.tableData.length) return false
       const yesterday = dayjs().subtract(2, 'day').endOf('date') // 昨天凌晨
       return dayjs(this.date).isAfter(yesterday)
     },
