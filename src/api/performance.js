@@ -175,8 +175,8 @@ export function getRetoucherGoalList (params) {
         item.leaderName = _.get(item, 'group_info.leader_info.nickname')
         item.leaderId = _.get(item, 'group_info.leader_info.id')
         item.showLaderName = item.leaderName ? `${item.leaderName} (${item.leaderId})` : '-'
-        item.showExpectFloatNum = item.expect_float_num ? `${item.expect_float_num} 张/人` : '-'
-        item.showActualFloatNum = item.actual_float_num ? `${item.actual_float_num} 张/人` : '-'
+        item.showExpectFloatNum = `${item.expect_float_num} 张/人`
+        item.showActualFloatNum = `${item.actual_float_num} 张/人`
         item.isAchieve = item.achieve ? '是' : '否'
       })
 

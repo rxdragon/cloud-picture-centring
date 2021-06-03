@@ -24,10 +24,10 @@
     </el-row>
 
     <div class="set-info">
-      <div><span>今日设定值：</span><span>{{ retoucherStatistics.goal_num || '-' }} 张</span></div>
-      <div><span>今日基础总张数：</span><span>{{ retoucherStatistics.base_goal_num || '-' }} 张</span></div>
-      <div><span>实际已完成：</span><span>{{ retoucherStatistics.finish_num || '-' }} 张</span></div>
-      <div><span>摄影上传总张数：</span><span>{{ retoucherStatistics.photography_org_upload_num || '-' }} 张</span></div>
+      <div><span>今日设定值：</span><span>{{ retoucherStatistics.goal_num }} 张</span></div>
+      <div><span>今日基础总张数：</span><span>{{ retoucherStatistics.base_goal_num }} 张</span></div>
+      <div><span>实际已完成：</span><span>{{ retoucherStatistics.finish_num }} 张</span></div>
+      <div><span>摄影上传总张数：</span><span>{{ retoucherStatistics.photography_org_upload_num }} 张</span></div>
     </div>
 
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
@@ -216,7 +216,10 @@ export default {
      * @description 云端小组每日目标张数设定, 修改小组的基础张数
      */
     handleSetGoalNum () {
-      this.editGoals = this.retoucherStatistics.base_goal_num || 0
+      this.editGoals = typeof this.retoucherStatistics.goal_num === 'number'
+        ? this.retoucherStatistics.goal_num
+        : (this.retoucherStatistics.base_goal_num
+          || 0)
       this.dialogMode = 'create'
       this.showDialog = true
     },
