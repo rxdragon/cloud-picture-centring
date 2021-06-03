@@ -24,10 +24,10 @@
     </el-row>
 
     <div class="set-info">
-      <div><span>今日设定值：</span><span>{{ retoucherStatistics.goal_num || '-' }} 张</span></div>
-      <div><span>今日基础总张数：</span><span>{{ retoucherStatistics.base_goal_num || '-' }} 张</span></div>
-      <div><span>实际已完成：</span><span>{{ retoucherStatistics.finish_num || '-' }} 张</span></div>
-      <div><span>摄影上传总张数：</span><span>{{ retoucherStatistics.photography_org_upload_num || '-' }} 张</span></div>
+      <div><span>今日设定值：</span><span>{{ retoucherStatistics.goal_num }} 张</span></div>
+      <div><span>今日基础总张数：</span><span>{{ retoucherStatistics.base_goal_num }} 张</span></div>
+      <div><span>实际已完成：</span><span>{{ retoucherStatistics.finish_num }} 张</span></div>
+      <div><span>摄影上传总张数：</span><span>{{ retoucherStatistics.photography_org_upload_num }} 张</span></div>
     </div>
 
     <el-table :data="tableData" style="width: 100%;" :cell-class-name="handleTableCellClass">
