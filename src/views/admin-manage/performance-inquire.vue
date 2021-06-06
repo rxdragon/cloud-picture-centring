@@ -16,7 +16,7 @@
     </el-tabs>
     <div
       class="table-box"
-      :class="{'no-border': activeName === defaultActiveName}"
+      :class="{'no-border': activeName === 'PartnerPerformance'}"
       v-show="!showSearchPage"
       v-if="labelList.length"
     >
@@ -32,6 +32,7 @@
 <script>
 import PartnerPerformance from './components/PartnerPerformance' // 伙伴绩效
 import OverallPerformance from './components/OverallPerformance' // 总体绩效
+import RetouchingGroupGoals from './components/RetouchingGroupGoals' // 修图组目标
 import RetoucherGroupPerformance from './components/RetoucherGroupPerformance' // 修图组绩效
 import RetoucherChargeBackReport from './components/RetoucherChargeBackReport' // 退单统计
 import TimeStatistics from './components/TimeStatistics' // 用时统计
@@ -45,7 +46,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'PerformanceInquire',
-  components: { PartnerPerformance, OverallPerformance, RetoucherGroupPerformance, TimeStatistics, CheckerEvaluate, SearchRetouchRecord, RetoucherChargeBackReport, CloudCollegeReport, ShowPicCollegeReport },
+  components: { PartnerPerformance, OverallPerformance, RetoucherGroupPerformance, TimeStatistics, CheckerEvaluate, SearchRetouchRecord, RetoucherChargeBackReport, CloudCollegeReport, ShowPicCollegeReport, RetouchingGroupGoals },
   filters: {
     filterActiveName (value) {
 
@@ -54,6 +55,8 @@ export default {
           return '伙伴绩效'
         case 'OverallPerformance':
           return '总体绩效'
+        case 'RetouchingGroupGoals':
+          return '修图组目标'
         case 'RetoucherGroupPerformance':
           return '修图组绩效'
         case 'RetoucherChargeBackReport':
@@ -89,6 +92,7 @@ export default {
       'showRetoucherChargeBackReport',
       'showCloudCollegeReport',
       'showPicCollegeReport',
+      'showRetouchingGoalsView'
     ]),
     labelList () {
       const createData = []
@@ -100,6 +104,9 @@ export default {
       }
       if (this.showRetoucherGroupPerformance) {
         createData.push('RetoucherGroupPerformance')
+      }
+      if (this.showRetouchingGoalsView) {
+        createData.push('RetouchingGroupGoals')
       }
       if (this.showRetoucherChargeBackReport) {
         createData.push('RetoucherChargeBackReport')

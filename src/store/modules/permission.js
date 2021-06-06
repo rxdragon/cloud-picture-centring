@@ -70,7 +70,10 @@ const state = {
   showEditStaff: false, // 账号配置是否显示编辑按钮
   showEnableStaff: false, // 账号配置是否显示启用按钮
   showInformation: false, // 显示公告按钮
-  showAnnouncementDelete: false // 显示公告删除按钮
+  showAnnouncementDelete: false, // 显示公告删除按钮
+  showRetouchingGoalsView: false, // 是否有修图组目标的页面
+  showRetoucherGoal: false, // 修改全云端每日目标
+  showRetoucherGroupGoal: false // 修改某一个组的每日目标
 }
 
 const mutations = {
@@ -131,6 +134,13 @@ const mutations = {
     state.showInformation = roles.includes('AnnouncementCenter.announcementCenterIndex.list')
     // 删除
     state.showAnnouncementDelete = roles.includes('AnnouncementManage.announcementManageIndex.delete')
+    // 每日目标
+    // 是否可以看到修图组目标菜单
+    state.showRetouchingGoalsView = roles.includes('AdminManage.performanceInquire.retouchGroupGoalView')
+    // 是否可以设置每日目标
+    state.showUpdateRetoucherGoal = roles.includes('AdminManage.performanceInquire.setOverallGoal')
+    // 是否可以修改组的基础值
+    state.showUpdateRetoucherGroupGoal = roles.includes('AdminManage.performanceInquire.setRetouchGroupGoal')
     Vue.prototype.$ws = new Ws()
   },
   SET_PERSONAGE_ROUTES: (state, routes) => {

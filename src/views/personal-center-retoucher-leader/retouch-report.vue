@@ -7,6 +7,7 @@
       </div>
     </div>
     <el-tabs v-model="activeName">
+      <el-tab-pane label="组员目标" name="RetouchingGoals" />
       <el-tab-pane label="修图报告" name="RetouchStaffReport" />
       <el-tab-pane label="云学院报告" name="AssessmentReport" />
       <el-tab-pane label="修修兽报告" name="ShowPicPoolReport" />
@@ -20,6 +21,7 @@
 </template>
 
 <script>
+import RetouchingGoals from './components/RetouchingGoals'
 import RetouchStaffReport from './components/RetouchStaffReport'
 import AssessmentReport from './components/AssessmentReport'
 import ShowPicPoolReport from './components/ShowPicPoolReport'
@@ -30,11 +32,11 @@ import { SEARCH_ROLE, SearchType } from '@/utils/enumerate'
 
 export default {
   name: 'RetouchReport',
-  components: { RetouchStaffReport, ChargeBackReport, AssessmentReport, ShowPicPoolReport, CrewPerformanceManagement, SearchRetouchRecord },
+  components: { RetouchStaffReport, ChargeBackReport, AssessmentReport, ShowPicPoolReport, CrewPerformanceManagement, SearchRetouchRecord, RetouchingGoals },
   data () {
     return {
       SEARCH_ROLE,
-      activeName: 'RetouchStaffReport',
+      activeName: 'RetouchingGoals',
       showSearchPage: false
     }
   },

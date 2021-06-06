@@ -155,10 +155,7 @@ export default {
      * @description 搜索数据
      */
     searchData () {
-      if (!this.timeSpan) {
-        this.$newMessage.warning('请输入时间')
-        return false
-      }
+      if (!this.timeSpan) return this.$newMessage.warning('请输入时间')
       this.$store.dispatch('setting/showLoading', this.routeName)
       Promise.all([
         this.getGroupStaffQuotaInfo(),
@@ -173,8 +170,6 @@ export default {
 
 <style lang="less" scoped>
 .module-panel {
-  border-top-left-radius: 0;
-
   .retoucher-chart {
     &:last-of-type {
       margin-bottom: -48px;

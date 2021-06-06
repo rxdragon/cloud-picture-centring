@@ -6,7 +6,7 @@
     <div class="today-box">
       <!-- 今日指标 -->
       <div class="module-panel today-info">
-        <div class="panel-title">今日指标</div>
+        <div class="panel-title">今日目标完成量</div>
         <div class="panel-main">
           <el-progress
             :percentage="todayData.todayFinishPhotoNumProgress"
@@ -22,8 +22,8 @@
           </div>
         </div>
         <div class="panel-footer">
-          <div class="footer-left">目标张数：{{ todayData.todayTargetPhotoNum || '-' }}</div>
-          <div class="footer-right">已完成：{{ todayData.todayAllFinishPhotoNum || '-' }}</div>
+          <div class="footer-left">目标张数：{{ todayData.todayTargetPhotoNum || 0 }}</div>
+          <div class="footer-right">已完成：{{ todayData.todayAllFinishPhotoNum || 0 }}</div>
         </div>
       </div>
       <!-- 个人修图等级 -->
